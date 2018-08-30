@@ -99,14 +99,18 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\External\brofiler\ProfilerCore\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>ProfilerCore64.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\GLFW\Build\src\$(ConfigurationName)\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)$(ConfigurationName)\$(Platform)\ProfilerCore64.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>false</OptimizeReferences>
     </Link>
+    <PreBuildEvent>
+      <Command>XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(ConfigurationName)\Horde3D.dll" "$(TargetDir)"
+XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(ConfigurationName)\Horde3DUtils.dll" "$(TargetDir)"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -130,21 +134,31 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\External\brofiler\ProfilerCore\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ProfilerCore64.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\GLFW\Build\src\$(ConfigurationName)\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)$(ConfigurationName)\$(Platform)\ProfilerCore64.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(ConfigurationName)\Horde3D.dll" "$(TargetDir)"
+XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(ConfigurationName)\Horde3DUtils.dll" "$(TargetDir)"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="InputSystem\InputSystem.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="RenderSystem\RenderSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\External\brofiler\ProfilerCore\ProfilerCore.vcxproj">
       <Project>{a8e32855-f506-4e07-aa39-9fff743cffe6}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="InputSystem\InputSystem.h" />
+    <ClInclude Include="RenderSystem\RenderSystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
