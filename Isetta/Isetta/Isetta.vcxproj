@@ -132,6 +132,7 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="Core\Math\Matrix3.h" />
     <ClInclude Include="Core\Debug\Logger.h" />
     <ClInclude Include="Core\Debug\DebugDraw.h" />
+    <ClCompile Include="Core\Debug\Assert.h" />
     <ClInclude Include="Core\IModule.h" />
     <ClInclude Include="Core\ModuleManager.h" />
     <ClInclude Include="Core\Time.h" />
