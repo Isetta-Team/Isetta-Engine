@@ -1,0 +1,7 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/cpplint.py
+/Isetta/Isetta/Isetta.vcxproj.user
+/Isetta/.vs/Isetta/v15

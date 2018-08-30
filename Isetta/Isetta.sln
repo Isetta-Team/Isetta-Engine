@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2003
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Isetta", "Isetta\Isetta.vcxproj", "{31A996D0-D906-4351-968C-8CF1B76FDDAF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{31A996D0-D906-4351-968C-8CF1B76FDDAF}.Debug|x64.ActiveCfg = Debug|x64
+		{31A996D0-D906-4351-968C-8CF1B76FDDAF}.Debug|x64.Build.0 = Debug|x64
+		{31A996D0-D906-4351-968C-8CF1B76FDDAF}.Debug|x86.ActiveCfg = Debug|Win32
+		{31A996D0-D906-4351-968C-8CF1B76FDDAF}.Debug|x86.Build.0 = Debug|Win32
+		{31A996D0-D906-4351-968C-8CF1B76FDDAF}.Release|x64.ActiveCfg = Release|x64
+		{31A996D0-D906-4351-968C-8CF1B76FDDAF}.Release|x64.Build.0 = Release|x64
+		{31A996D0-D906-4351-968C-8CF1B76FDDAF}.Release|x86.ActiveCfg = Release|Win32
+		{31A996D0-D906-4351-968C-8CF1B76FDDAF}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A47234E9-EED9-475E-AE57-3B7BD0515EA9}
+	EndGlobalSection
+EndGlobal
