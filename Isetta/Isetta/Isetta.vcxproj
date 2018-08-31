@@ -101,6 +101,7 @@
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\GLFW\Build\src\$(ConfigurationName)\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)$(ConfigurationName)\$(Platform)\ProfilerCore64.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -135,6 +136,7 @@ XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(Configurati
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -150,6 +152,33 @@ XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(Configurati
     <ProjectReference Include="..\External\brofiler\ProfilerCore\ProfilerCore.vcxproj">
       <Project>{a8e32855-f506-4e07-aa39-9fff743cffe6}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Math\Matrix4.cpp" />
+    <ClCompile Include="Math\Quaternion.cpp" />
+    <ClCompile Include="Math\Rect.cpp" />
+    <ClCompile Include="Math\Utility.cpp" />
+    <ClCompile Include="Math\Vector2.cpp" />
+    <ClCompile Include="Math\Vector2Int.cpp" />
+    <ClCompile Include="Math\Vector3.cpp" />
+    <ClCompile Include="Math\Vector3Int.cpp" />
+    <ClCompile Include="Math\Vector4.cpp" />
+    <ClCompile Include="Math\Random.cpp" />
+    <ClCompile Include="Math\Matrix3.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Math\Matrix4.h" />
+    <ClInclude Include="Math\Quaternion.h" />
+    <ClInclude Include="Math\Rect.h" />
+    <ClInclude Include="Math\Utility.h" />
+    <ClInclude Include="Math\Vector2.h" />
+    <ClInclude Include="Math\Vector2Int.h" />
+    <ClInclude Include="Math\Vector3.h" />
+    <ClInclude Include="Math\Vector3Int.h" />
+    <ClInclude Include="Math\Vector4.h" />
+    <ClInclude Include="Math\Random.h" />
+    <ClInclude Include="Math\Matrix3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
