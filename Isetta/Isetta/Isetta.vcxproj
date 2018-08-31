@@ -147,18 +147,9 @@ XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(Configurati
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="InputSystem\InputSystem.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="RenderSystem\RenderSystem.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\External\brofiler\ProfilerCore\ProfilerCore.vcxproj">
       <Project>{a8e32855-f506-4e07-aa39-9fff743cffe6}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="InputSystem\InputSystem.h" />
-    <ClInclude Include="RenderSystem\RenderSystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
