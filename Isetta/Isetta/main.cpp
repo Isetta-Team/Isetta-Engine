@@ -2,6 +2,7 @@
 #include <chrono>
 #include "Audio.h"
 #include "Time.h"
+#include "Math/Random.h"
 
 using namespace std;
 
@@ -42,6 +43,11 @@ void ShutDown() {
 }
 
 int main() {
+
+    auto rnd = Isetta::Math::Random::GetRandomGenerator(1.f, 10.f);
+    float number = rnd.GetValue();
+    std::cout << number << std::endl;
+
 	using clock = std::chrono::high_resolution_clock;
 	using second = chrono::duration<float>;
 

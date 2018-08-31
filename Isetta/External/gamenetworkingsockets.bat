@@ -1,3 +1,4 @@
+﻿
 cd %~dp0\Isetta\External\GameNetworkingSockets
 git submodule add https://github.com/google/protobuf
 cd protobuf
@@ -34,3 +35,4 @@ cmake -G "Visual Studio 15 2017 Win64" ^
 -DProtobuf_INCLUDE_DIR="C:\Program Files\Protobuf SDK\protobuf-amd64\include" ^
 -DProtobuf_PROTOC_EXECUTABLE=..\protobuf\cmake_build\Release\protoc.exe ..
 devenv GameNetworkingSockets.sln /Build "Release|x64"
+pause
