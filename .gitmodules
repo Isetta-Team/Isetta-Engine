@@ -5,8 +5,8 @@
 [submodule "Isetta/External/GameNetworkingSockets"]
 	path = Isetta/External/GameNetworkingSockets
 	url = https://github.com/ValveSoftware/GameNetworkingSockets.git
-[submodule "Isetta\\External\\Horde3D"]
-	path = Isetta\\External\\Horde3D
+[submodule "Isetta/External/Horde3D"]
+	path = Isetta/External/Horde3D
 	url = https://github.com/horde3d/Horde3D.git
 [submodule "Isetta/External/GLFW"]
 	path = Isetta/External/GLFW
