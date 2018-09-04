@@ -1,70 +1,73 @@
 #include <iostream>
 #include <string>
 #include <chrono>
-#include "Core/Time.h"
-#include "Audio.h"
 #include "Math/Random.h"
-#include "Time.h"
-
+#include "Core/Time.h"
 #include "Core/Debug.h"
+#include "Core/Audio/Audio.h"
 
-using namespace Isetta;
+namespace Isetta {
+
+AudioSystem gAudioSystem;
 
 void StartUp() {
-    std::cout << "Initializing game" << std::endl;
-    Debug::StartUp();
+	std::cout << "Initializing game" << std::endl;
+
+	Debug::StartUp();
+	gAudioSystem.StartUp();
+
+	// Audio test code
+	auto sing = AudioSource::LoadSound("singing.wav");
+	sing->Play(true, 1.0f);
 }
 
 void Update() {
-    // cout << Time::time << endl;
-
-	if (Time::time > eventTime && !hasExecuted) {
-		cout << "Hit 3 seconds!" << endl;
-		sing->SetVolume(0.3);
-		// sing->Pause();
-		// sing->Continue();
-		// sing->Erase();
-		hasExecuted = true;
-	}
+	gAudioSystem.Update();
 }
 
 void ShutDown() {
-    std::cout << "Shutting down game" << std::endl;
-    Debug::ShutDown();
+	std::cout << "Shutting down game" << std::endl;
+	
+	Debug::ShutDown();
+	gAudioSystem.ShutDown();
 }
 
+} // namespace Isetta
+
+using namespace Isetta;
+
 int main() {
-  auto rnd = Isetta::Math::Random::GetRandomGenerator(1.f, 10.f);
-  float number = rnd.GetValue();
-  std::cout << number << std::endl;
+	auto rnd = Isetta::Math::Random::GetRandomGenerator(1.f, 10.f);
+	float number = rnd.GetValue();
+	std::cout << number << std::endl;
 
-  using clock = std::chrono::high_resolution_clock;
-  using second = std::chrono::duration<float>;
+	using clock = std::chrono::high_resolution_clock;
+	using second = std::chrono::duration<float>;
 
-    StartUp();
+	StartUp();
 
-    Debug::PrintF(Debug::Memory, Debug::Info, "Hi %s, you are %d", "Yidi", 10);
-    Debug::PrintF("Test\n");
+	Debug::PrintF(Debug::Memory, Debug::Info, "Hi %s, you are %d", "Jake", 10);
+	Debug::PrintF("Test\n");
 
-    const float gameMaxDuration = 10.0;
+	const float gameMaxDuration = 10.0;
 
-    Time::startTime = clock::now();
-    auto lastFrameStartTime = clock::now();
+	Time::startTime = clock::now();
+	auto lastFrameStartTime = clock::now();
 
-    while (true) {
-        Time::deltaTime = second(clock::now() - lastFrameStartTime).count();
-        Time::time = second(clock::now() - Time::startTime).count();
-        lastFrameStartTime = clock::now();
+	while (true) {
+		Time::deltaTime = second(clock::now() - lastFrameStartTime).count();
+		Time::time = second(clock::now() - Time::startTime).count();
+		lastFrameStartTime = clock::now();
 
-        Update();
-        Time::frameCount++;
+		Update();
+		Time::frameCount++;
 
-        if (Time::time > gameMaxDuration) {
-            break;
-        }
-    }
+		if (Time::time > gameMaxDuration) {
+			break;
+		}
+	}
 
-    ShutDown();
-    system("pause");
-    return 0;
+	ShutDown();
+	system("pause");
+	return 0;
 }

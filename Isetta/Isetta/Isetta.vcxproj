@@ -96,6 +96,7 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Core\Audio\Audio.cpp" />
     <ClCompile Include="Math\Matrix4.cpp" />
     <ClCompile Include="Math\Quaternion.cpp" />
     <ClCompile Include="Math\Rect.cpp" />
@@ -107,12 +108,11 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="Math\Vector4.cpp" />
     <ClCompile Include="Math\Random.cpp" />
     <ClCompile Include="Math\Matrix3.cpp" />
-    <ClCompile Include="Audio.cpp" />
     <ClCompile Include="Core\Debug.cpp" />
     <ClCompile Include="main.cpp" />
-
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Core\Audio\Audio.h" />
     <ClInclude Include="Math\Matrix4.h" />
     <ClInclude Include="Math\Quaternion.h" />
     <ClInclude Include="Math\Rect.h" />
@@ -124,8 +124,6 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="Math\Vector4.h" />
     <ClInclude Include="Math\Random.h" />
     <ClInclude Include="Math\Matrix3.h" />
-    <ClInclude Include="Audio.h" />
-    <ClInclude Include="Time.h" />
     <ClInclude Include="Core\Debug.h" />
     <ClInclude Include="Core\IModule.h" />
     <ClInclude Include="Core\Time.h" />
