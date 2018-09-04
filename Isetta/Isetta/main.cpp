@@ -1,71 +1,55 @@
 #include <iostream>
+#include <string>
 #include <chrono>
-#include "Audio.h"
-#include "Time.h"
+#include "Core/Time.h"
 
-using namespace std;
+#include "Core/Debug.h"
 
-Audio::AudioSource* sing;
+using namespace Isetta;
 
-bool hasExecuted = false;
-const float eventTime = 3.0;
-
-void InitGame() {
-	cout << "Initializing game" << endl;
-
-	Audio::Init(R"(Resources\Sound\)");
-
-	sing = Audio::LoadSound("singing.wav");
-	sing->Play(false, 1.0f);
-	cout << Audio::GetMemoryReport();
+void StartUp() {
+    std::cout << "Initializing game" << std::endl;
+    Debug::StartUp();
 }
 
 void Update() {
-	// cout << Time::time << endl;
-	Audio::Update();
+    // cout << Time::time << endl;
 
-	if (Time::time > eventTime && !hasExecuted) {
-		cout << "Hit 3 seconds!" << endl;
-		sing->SetVolume(0.3);
-		// sing->Pause();
-		// sing->Continue();
-		// sing->Erase();
-		hasExecuted = true;
-	}
 }
 
 void ShutDown() {
-	cout << "Shutting down game" << endl;
-
-	Audio::ShutDown();
-	cout << Audio::GetMemoryReport();
+    std::cout << "Shutting down game" << std::endl;
+    Debug::ShutDown();
 }
 
 int main() {
-	using clock = std::chrono::high_resolution_clock;
-	using second = chrono::duration<float>;
+    using clock = std::chrono::high_resolution_clock;
+    using second = chrono::duration<float>;
 
-	InitGame();
+    StartUp();
 
-	const float gameMaxDuration = 10.0;
+    Debug::PrintF(Debug::Memory, Debug::Info, "Hi %s, you are %d", "Yidi", 10);
+    Debug::PrintF("Test\n");
 
-	Time::startTime = clock::now();
-	auto lastFrameStartTime = clock::now();
+    const float gameMaxDuration = 10.0;
 
-	while (true) {
-		Time::deltaTime = second(clock::now() - lastFrameStartTime).count();
-		Time::time = second(clock::now() - Time::startTime).count();
-		lastFrameStartTime = clock::now();
+    Time::startTime = clock::now();
+    auto lastFrameStartTime = clock::now();
 
-		Update();
-		Time::frameCount++;
+    while (true) {
+        Time::deltaTime = second(clock::now() - lastFrameStartTime).count();
+        Time::time = second(clock::now() - Time::startTime).count();
+        lastFrameStartTime = clock::now();
 
-		if (Time::time > gameMaxDuration) {
-			break;
-		}
-	}
+        Update();
+        Time::frameCount++;
 
-	ShutDown();
-	system("pause");
-	return 0;
+        if (Time::time > gameMaxDuration) {
+            break;
+        }
+    }
+
+    ShutDown();
+    system("pause");
+    return 0;
 }
