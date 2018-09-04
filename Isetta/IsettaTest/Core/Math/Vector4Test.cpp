@@ -1,6 +1,6 @@
 #include <cmath>
 #include <limits>
-#include "../Isetta/Math/Vector4.h"
+#include "Core/Math/Vector4.h"
 #include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;

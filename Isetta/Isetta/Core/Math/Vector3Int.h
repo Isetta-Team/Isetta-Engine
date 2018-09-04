@@ -43,6 +43,7 @@ class Vector3Int {
 
   // Operators
 
+  int operator[](int i) const;
   inline bool operator==(const Vector3Int& rhs) const {
     return x == rhs.x && y == rhs.y && z == rhs.z;
   }

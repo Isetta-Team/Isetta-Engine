@@ -1,5 +1,5 @@
-#include "../Isetta/Math/Matrix3.h"
-#include "../Isetta/Math/Vector3.h"
+#include "Core/Math/Matrix3.h"
+#include "Core/Math/Vector3.h"
 #include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;

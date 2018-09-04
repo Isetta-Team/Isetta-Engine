@@ -2,7 +2,7 @@
 
 #include "Vector2Int.h"
 #include <cmath>
-
+#include <stdexcept>
 #include "Vector2.h"
 
 namespace Isetta::Math {
@@ -16,6 +16,17 @@ const Vector2Int Vector2Int::left = Vector2Int(-1, 0);
 
 Vector2Int::Vector2Int(const Vector2& inIntVector)
     : x{int(inIntVector.x)}, y{int(inIntVector.y)} {}
+
+int Vector2Int::operator[](int i) const {
+  switch (i) {
+    case 0:
+      return x;
+    case 1:
+      return y;
+    default:
+      throw std::logic_error;
+  }
+}
 
 float Vector2Int::Magnitude() const { return sqrtf(static_cast<float>(SqrMagnitude())); }
 int Vector2Int::SqrMagnitude() const { return x * x + y * y; }

@@ -1,5 +1,5 @@
 #include <cmath>
-#include "../Isetta/Math/Utility.h"
+#include "Core/Math/Utility.h"
 #include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -46,11 +46,15 @@ TEST_METHOD(Log10) { Assert::AreEqual(2.f, Math::Utility::Log10(100.f)); }
 TEST_METHOD(Max) {
   Assert::AreEqual(5.f, Math::Utility::Max({1.f, 2.f, 3.f, 5.f}));
 }
-TEST_METHOD(Max_INT) { Assert::AreEqual(5, Math::Utility::Max({1, 2, 3, 4, 5})); }
+TEST_METHOD(Max_INT) {
+  Assert::AreEqual(5, Math::Utility::Max({1, 2, 3, 4, 5}));
+}
 TEST_METHOD(Min) {
   Assert::AreEqual(1.f, Math::Utility::Min({1.f, 2.f, 3.f, 5.f}));
 }
-TEST_METHOD(Min_INT) { Assert::AreEqual(1, Math::Utility::Min({1, 2, 3, 4, 5})); }
+TEST_METHOD(Min_INT) {
+  Assert::AreEqual(1, Math::Utility::Min({1, 2, 3, 4, 5}));
+}
 TEST_METHOD(MoveTowards) {
   Assert::AreEqual(1.f, Math::Utility::MoveTowards(0.5f, 1.f, 0.7f));
 }

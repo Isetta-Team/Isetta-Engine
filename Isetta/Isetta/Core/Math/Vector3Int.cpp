@@ -2,7 +2,7 @@
 
 #include "Vector3Int.h"
 #include <cmath>
-
+#include <stdexcept>
 #include "Vector2Int.h"
 #include "Vector3.h"
 
@@ -22,6 +22,19 @@ Vector3Int::Vector3Int(const Vector3& inIntVector)
 
 Vector3Int::Vector3Int(const Vector2Int& inVector, int inZ)
     : x{inVector.x}, y{inVector.y}, z{inZ} {}
+
+int Vector3Int::operator[](int i) const {
+  switch (i) {
+    case 0:
+      return x;
+    case 1:
+      return y;
+    case 2:
+      return z;
+    default:
+      throw std::logic_error;
+  }
+}
 
 float Vector3Int::Magnitude() const {
   return sqrtf(static_cast<float>(SqrMagnitude()));

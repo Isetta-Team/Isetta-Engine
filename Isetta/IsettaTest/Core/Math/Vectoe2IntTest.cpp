@@ -1,6 +1,6 @@
 #include <cmath>
-#include "../Isetta/Math/Vector2.h"
-#include "../Isetta/Math/Vector2Int.h"
+#include "Core/Math/Vector2.h"
+#include "Core/Math/Vector2Int.h"
 #include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -12,7 +12,7 @@ TEST_CLASS(Vector2IntTest){
 
       TEST_METHOD(Magnitude){Math::Vector2Int vec{1, 1};
 Assert::AreEqual(sqrt(2.f), vec.Magnitude());
-}
+}  // namespace MathTest
 
 TEST_METHOD(SqrMagnitude) {
   Math::Vector2Int vec{1, 1};

@@ -41,6 +41,7 @@ class Vector2 {
 
   // Operators
 
+  float operator[](int i) const;
   inline bool operator==(const Vector2& rhs) const {
     return x == rhs.x && y == rhs.y;
   }

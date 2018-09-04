@@ -1,74 +1,94 @@
+// "Copyright [2018] Isetta"
 #pragma once
+#ifndef ISETTA_ISETTA_CORE_DEBUG_H_
+#define ISETTA_ISETTA_CORE_DEBUG_H_
 
+#include <Windows.h>
 #include <stdio.h>
 #include <cstdint>
-#include <Windows.h>
-#include <string>
 #include <fstream>
+#include <string>
 
-#include "IModule.h"
+#include "Core/Color.h"
+#include "Core/IModule.h"
+#include "Core/Math/Math.h"
 
 namespace Isetta {
-    class Debug : public IModule
-    {
-    public:
+class Debug : public IModule {
+ public:
+  enum Verbosity {
+    Off,
+    Error,
+    Warning,
+    Info,
+  };
 
-        enum Verbosity
-        {
-            Off,
-            Error,
-            Warning,
-            Info,
-        };
+  enum Channel {
+    General = (1u << 0),
+    Memory = (1u << 1),
+    Networking = (1u << 2),
+    Graphics = (1u << 3),
+    Physics = (1u << 4),
+    Gameplay = (1u << 5),
+    Sound = (1u << 6),
+  };
 
-        enum Channel
-        {
-            General = (1u << 0),
-            Memory = (1u << 1),
-            Networking = (1u << 2),
-            Graphics = (1u << 3),
-            Physics = (1u << 4),
-            Gameplay = (1u << 5),
-            Sound = (1u << 6),
-        };
+  static Verbosity gVerbosity;
+  static uint32_t gChannelMask;
+  static bool gAlwaysFlush;
 
-        static Verbosity gVerbosity;
-        static uint32_t gChannelMask;
-        static bool gAlwaysFlush;
+  static void StartUp();
+  static void ShutDown();
 
-        static void StartUp();
-        static void ShutDown();
+  static int PrintF(const std::string format, ...);
+  static int PrintF(const Channel channel, const std::string format, ...);
+  static int PrintF(const Channel channel, const Verbosity verbosity,
+                    const std::string format, ...);
 
-        static int PrintF(const std::string format, ...);
-        static int PrintF(const Channel channel, const std::string format, ...);
-        static int PrintF(const Channel channel, const Verbosity verbosity, const std::string format, ...);
+  static void LogInfo(const Channel channel, const std::string format, ...);
+  static void LogWarning(const Channel channel, const std::string format, ...);
+  static void LogError(const Channel channel, const std::string format, ...);
 
-        static void LogInfo(const Channel channel, const std::string format, ...);
-        static void LogWarning(const Channel channel, const std::string format, ...);
-        static void LogError(const Channel channel, const std::string format, ...);
-    protected:
-        static int VDebugPrintF(const bool outputDebug, const std::string format, va_list argList);
-    private:
-        static std::ofstream fout;
-        static bool CheckChannelMask(const Channel channel);
-        static bool CheckVerbosity(const Verbosity verbosity);
+  // static void DrawLine(Math::Vector3 start, Math::Vector3 end,
+  //                     Color color = Color::white, float duration = 0.0f,
+  //                     bool depthTest = true);
+  // static void DrawRay(Math::Vector3 start, Math::Vector3 dir,
+  //                    Color color = Color::white, float duration = 0.0f,
+  //                    bool depthTest = true);
 
-        static Verbosity defaultVerbosity;
-        static Channel defaultChannel;
+ protected:
+  static int VDebugPrintF(const bool outputDebug, const std::string format,
+                          va_list argList);
 
-        static inline const std::string to_string(Channel c)
-        {
-            switch (c)
-            {
-            case General: return "General";
-            case Memory: return "Memory";
-            case Networking: return "Networking";
-            case Graphics: return "Graphics";
-            case Physics: return "Physics";
-            case Gameplay: return "Gameplay";
-            case Sound: return "Sound";
-            default: return "Unknown";
-            }
-        }
-    };
-}
+ private:
+  static std::ofstream fout;
+  static bool CheckChannelMask(const Channel channel);
+  static bool CheckVerbosity(const Verbosity verbosity);
+
+  static Verbosity defaultVerbosity;
+  static Channel defaultChannel;
+
+  static inline const std::string to_string(Channel c) {
+    switch (c) {
+      case General:
+        return "General";
+      case Memory:
+        return "Memory";
+      case Networking:
+        return "Networking";
+      case Graphics:
+        return "Graphics";
+      case Physics:
+        return "Physics";
+      case Gameplay:
+        return "Gameplay";
+      case Sound:
+        return "Sound";
+      default:
+        return "Unknown";
+    }
+  }
+};
+}  // namespace Isetta
+
+#endif  // ISETTA_ISETTA_CORE_DEBUG_H_

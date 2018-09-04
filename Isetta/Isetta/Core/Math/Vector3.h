@@ -1,7 +1,7 @@
 // "Copyright [2018] Isetta"
 #pragma once
-#ifndef ISETTA_ISETTA_MATH_VECTOR3_H_
-#define ISETTA_ISETTA_MATH_VECTOR3_H_
+#ifndef ISETTA_ISETTA_CORE_MATH_VECTOR3_H_
+#define ISETTA_ISETTA_CORE_MATH_VECTOR3_H_
 
 namespace Isetta::Math {
 
@@ -42,6 +42,7 @@ class Vector3 {
 
   // Operators
 
+  float operator[](int i) const;
   inline bool operator==(const Vector3& rhs) const {
     return x == rhs.x && y == rhs.y && z == rhs.z;
   }
@@ -126,6 +127,6 @@ class Vector3 {
   static const Vector3 left;
   static const Vector3 back;
 };
-}  // namespace Math
+}  // namespace Isetta::Math
 
-#endif  // ISETTA_ISETTA_MATH_VECTOR3_H_
+#endif  // ISETTA_ISETTA_CORE_MATH_VECTOR3_H_

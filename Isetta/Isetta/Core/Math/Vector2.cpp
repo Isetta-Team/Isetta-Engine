@@ -4,6 +4,7 @@
 
 #include <cfloat>
 #include <cmath>
+#include <stdexcept>
 #include "Vector3Int.h"
 
 namespace Isetta::Math {
@@ -17,6 +18,17 @@ const Vector2 Vector2::left = Vector2(-1.f, 0.f);
 
 Vector2::Vector2(const Vector3Int& inIntVector)
     : x{float(inIntVector.x)}, y{float(inIntVector.y)} {}
+
+float Vector2::operator[](int i) const {
+  switch (i) {
+    case 0:
+      return x;
+    case 1:
+      return y;
+    default:
+      throw std::logic_error;
+  }
+}
 
 float Vector2::Magnitude() const { return sqrtf(SqrMagnitude()); }
 float Vector2::SqrMagnitude() const { return x * x + y * y; }

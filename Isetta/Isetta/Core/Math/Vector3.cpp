@@ -2,10 +2,11 @@
 
 #include "Vector3.h"
 
-#include <cmath>
 #include <cfloat>
-#include "Vector3Int.h"
+#include <cmath>
+#include <stdexcept>
 #include "Vector2.h"
+#include "Vector3Int.h"
 
 namespace Isetta::Math {
 
@@ -23,7 +24,21 @@ Vector3::Vector3(const Vector3Int& inIntVector)
       y{float(inIntVector.y)},
       z{float(inIntVector.z)} {}
 
-Vector3::Vector3(const Vector2& inVector, float inZ) : x{inVector.x}, y{inVector.y}, z{inZ} {}
+Vector3::Vector3(const Vector2& inVector, float inZ)
+    : x{inVector.x}, y{inVector.y}, z{inZ} {}
+
+float Vector3::operator[](int i) const {
+  switch (i) {
+    case 0:
+      return x;
+    case 1:
+      return y;
+    case 2:
+      return z;
+    default:
+      throw std::logic_error;
+  }
+}
 
 float Vector3::Magnitude() const { return sqrtf(SqrMagnitude()); }
 float Vector3::SqrMagnitude() const { return x * x + y * y + z * z; }
@@ -45,7 +60,8 @@ float Vector3::Dot(const Vector3& lhs, const Vector3& rhs) {
   return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
 }
 Vector3 Vector3::Cross(const Vector3& lhs, const Vector3& rhs) {
-  return Vector3(lhs.y * rhs.z - lhs.z * rhs.y, - lhs.x * rhs.z + lhs.z * rhs.x, lhs.x * rhs.y - lhs.y * rhs.x);
+  return Vector3(lhs.y * rhs.z - lhs.z * rhs.y, -lhs.x * rhs.z + lhs.z * rhs.x,
+                 lhs.x * rhs.y - lhs.y * rhs.x);
 }
 Vector3 Vector3::Lerp(const Vector3& start, const Vector3& end, float time) {
   return start * (1.f - time) + end * time;
@@ -61,7 +77,8 @@ Vector3 Vector3::Reflect(const Vector3& inVector, const Vector3& inNormal) {
   return inVector - normal * Dot(inVector, normal) * 2.f;
 }
 Vector3 Vector3::Scale(const Vector3& inVector, const Vector3& scalar) {
-  return Vector3(inVector.x * scalar.x, inVector.y * scalar.y, inVector.z * scalar.z);
+  return Vector3(inVector.x * scalar.x, inVector.y * scalar.y,
+                 inVector.z * scalar.z);
 }
 Vector3 Vector3::Slerp(const Vector3& start, const Vector3& end, float time) {
   float dot = Dot(start, end);
@@ -70,4 +87,4 @@ Vector3 Vector3::Slerp(const Vector3& start, const Vector3& end, float time) {
   Vector3 relativeVector = end - start * dot;
   return start * cosf(theta) + relativeVector * sinf(theta);
 }
-}  // namespace Math
+}  // namespace Isetta::Math

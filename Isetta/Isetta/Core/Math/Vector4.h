@@ -13,13 +13,15 @@ class Vector4 {
 
   Vector4() : x{0}, y{0}, z{0}, w{0} {}
   explicit Vector4(float value) : x{value}, y{value}, z{value}, w{value} {}
-  Vector4(float inX, float inY, float inZ, float inW) : x{inX}, y{inY}, z{inZ}, w{inW} {}
+  Vector4(float inX, float inY, float inZ, float inW)
+      : x{inX}, y{inY}, z{inZ}, w{inW} {}
 
   // Copy and move constructions
 
   Vector4(const Vector4& inVector)
       : x{inVector.x}, y{inVector.y}, z{inVector.z}, w{inVector.w} {}
-  Vector4(Vector4&& inVector) : x{inVector.x}, y{inVector.y}, z{inVector.z}, w{inVector.w} {}
+  Vector4(Vector4&& inVector)
+      : x{inVector.x}, y{inVector.y}, z{inVector.z}, w{inVector.w} {}
   inline Vector4& operator=(const Vector4& inVector) {
     x = inVector.x;
     y = inVector.y;
@@ -39,6 +41,7 @@ class Vector4 {
 
   // Operators
 
+  float operator[](int i) const;
   inline bool operator==(const Vector4& rhs) const {
     return x == rhs.x && y == rhs.y && z == rhs.z && w == rhs.w;
   }
@@ -85,7 +88,11 @@ class Vector4 {
     return *this;
   }
 
-  // functions
+  // Conversions
+
+  explicit Vector4(const class Color& c);
+
+  // Functions
 
   // Returns the length of the vector
   float Magnitude() const;
@@ -96,7 +103,7 @@ class Vector4 {
   // Normalizes current vector
   void Normalize() noexcept;
 
-  // static functions
+  // Static Functions
 
   // Checks if two vectors are equal (within a tolerence)
   static bool Equals(const Vector4& lhs, const Vector4& rhs);
@@ -117,6 +124,6 @@ class Vector4 {
   static const Vector4 zero;
   static const Vector4 one;
 };
-}  // namespace Math
+}  // namespace Isetta::Math
 
 #endif  // ISETTA_ISETTA_MATH_Vector4_H_

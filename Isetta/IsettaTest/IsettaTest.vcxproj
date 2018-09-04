@@ -92,7 +92,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;$(SolutionDir)Isetta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -154,27 +154,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Isetta\Math\Matrix3.h" />
-    <ClInclude Include="..\Isetta\Math\Rect.h" />
-    <ClInclude Include="..\Isetta\Math\Utility.h" />
-    <ClInclude Include="..\Isetta\Math\Vector2.h" />
-    <ClInclude Include="..\Isetta\Math\Vector2Int.h" />
-    <ClInclude Include="..\Isetta\Math\Vector3.h" />
-    <ClInclude Include="..\Isetta\Math\Vector3Int.h" />
-    <ClInclude Include="..\Isetta\Math\Vector4.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Isetta\Math\Matrix3.cpp" />
-    <ClCompile Include="..\Isetta\Math\Rect.cpp" />
-    <ClCompile Include="..\Isetta\Math\Utility.cpp" />
-    <ClCompile Include="..\Isetta\Math\Vector2.cpp" />
-    <ClCompile Include="..\Isetta\Math\Vector2Int.cpp" />
-    <ClCompile Include="..\Isetta\Math\Vector3.cpp" />
-    <ClCompile Include="..\Isetta\Math\Vector3Int.cpp" />
-    <ClCompile Include="..\Isetta\Math\Vector4.cpp" />
-    <ClCompile Include="Matrix3Test.cpp" />
+    <ClCompile Include="Core\ColorTest.cpp" />
+    <ClCompile Include="Core\Math\Matrix3Test.cpp" />
+    <ClCompile Include="Core\Math\UtilityTest.cpp" />
+    <ClCompile Include="Core\Math\Vectoe2IntTest.cpp" />
+    <ClCompile Include="Core\Math\Vector2Test.cpp" />
+    <ClCompile Include="Core\Math\Vector3IntTest.cpp" />
+    <ClCompile Include="Core\Math\Vector3Test.cpp" />
+    <ClCompile Include="Core\Math\Vector4Test.cpp" />
     <ClCompile Include="RectTest.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -182,12 +173,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="UtilityTest.cpp" />
-    <ClCompile Include="Vectoe2IntTest.cpp" />
-    <ClCompile Include="Vector2Test.cpp" />
-    <ClCompile Include="Vector3IntTest.cpp" />
-    <ClCompile Include="Vector3Test.cpp" />
-    <ClCompile Include="Vector4Test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Isetta\Isetta.vcxproj">

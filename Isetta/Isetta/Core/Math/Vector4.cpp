@@ -4,11 +4,30 @@
 
 #include <cfloat>
 #include <cmath>
+#include <stdexcept>
+#include "Core/Color.h"
 
 namespace Isetta::Math {
 
 const Vector4 Vector4::zero = Vector4();
 const Vector4 Vector4::one = Vector4(1.f);
+
+Vector4(const Color& c) : x{c.r}, y{c.g}, z{c.b}, w{c.a} {}
+
+float Vector4::operator[](int i) const {
+  switch (i) {
+    case 0:
+      return x;
+    case 1:
+      return y;
+    case 2:
+      return z;
+    case 3:
+      return w;
+    default:
+      throw std::logic_error;
+  }
+}
 
 float Vector4::Magnitude() const { return sqrtf(SqrMagnitude()); }
 float Vector4::SqrMagnitude() const { return x * x + y * y + z * z + w * w; }
@@ -50,4 +69,4 @@ Vector4 Vector4::Slerp(const Vector4& start, const Vector4& end, float time) {
   Vector4 relativeVector = end - start * dot;
   return start * cosf(theta) + relativeVector * sinf(theta);
 }
-}  // namespace Math
+}  // namespace Isetta::Math
