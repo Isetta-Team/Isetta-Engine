@@ -2,6 +2,9 @@
 #include <string>
 #include <chrono>
 #include "Core/Time.h"
+#include "Audio.h"
+#include "Math/Random.h"
+#include "Time.h"
 
 #include "Core/Debug.h"
 
@@ -15,6 +18,14 @@ void StartUp() {
 void Update() {
     // cout << Time::time << endl;
 
+	if (Time::time > eventTime && !hasExecuted) {
+		cout << "Hit 3 seconds!" << endl;
+		sing->SetVolume(0.3);
+		// sing->Pause();
+		// sing->Continue();
+		// sing->Erase();
+		hasExecuted = true;
+	}
 }
 
 void ShutDown() {
@@ -23,8 +34,12 @@ void ShutDown() {
 }
 
 int main() {
-    using clock = std::chrono::high_resolution_clock;
-    using second = chrono::duration<float>;
+  auto rnd = Isetta::Math::Random::GetRandomGenerator(1.f, 10.f);
+  float number = rnd.GetValue();
+  std::cout << number << std::endl;
+
+  using clock = std::chrono::high_resolution_clock;
+  using second = std::chrono::duration<float>;
 
     StartUp();
 
