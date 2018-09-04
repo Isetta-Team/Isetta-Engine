@@ -1,45 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Core\Debug.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Core\Audio\Audio.cpp">
       <Filter>Core\Audio</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Math\Matrix3.cpp">
-      <Filter>Math</Filter>
+      <Filter>Core\Math</Filter>
     </ClCompile>
     <ClCompile Include="Math\Matrix4.cpp">
-      <Filter>Math</Filter>
+      <Filter>Core\Math</Filter>
     </ClCompile>
     <ClCompile Include="Math\Quaternion.cpp">
-      <Filter>Math</Filter>
+      <Filter>Core\Math</Filter>
     </ClCompile>
     <ClCompile Include="Math\Random.cpp">
-      <Filter>Math</Filter>
+      <Filter>Core\Math</Filter>
     </ClCompile>
     <ClCompile Include="Math\Rect.cpp">
-      <Filter>Math</Filter>
+      <Filter>Core\Math</Filter>
     </ClCompile>
     <ClCompile Include="Math\Utility.cpp">
-      <Filter>Math</Filter>
+      <Filter>Core\Math</Filter>
     </ClCompile>
     <ClCompile Include="Math\Vector2.cpp">
-      <Filter>Math</Filter>
+      <Filter>Core\Math</Filter>
     </ClCompile>
     <ClCompile Include="Math\Vector2Int.cpp">
-      <Filter>Math</Filter>
+      <Filter>Core\Math</Filter>
     </ClCompile>
     <ClCompile Include="Math\Vector3.cpp">
-      <Filter>Math</Filter>
+      <Filter>Core\Math</Filter>
     </ClCompile>
     <ClCompile Include="Math\Vector3Int.cpp">
-      <Filter>Math</Filter>
+      <Filter>Core\Math</Filter>
     </ClCompile>
     <ClCompile Include="Math\Vector4.cpp">
-      <Filter>Math</Filter>
+      <Filter>Core\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -52,48 +52,48 @@
     <ClInclude Include="Core\Audio\Audio.h">
       <Filter>Core\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Math\Matrix3.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Math\Matrix4.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Math\Quaternion.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Math\Random.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Math\Rect.h">
-      <Filter>Math</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Time.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Math\Matrix3.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Matrix4.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Quaternion.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Random.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Rect.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
     <ClInclude Include="Math\Utility.h">
-      <Filter>Math</Filter>
+      <Filter>Core\Math</Filter>
     </ClInclude>
     <ClInclude Include="Math\Vector2.h">
-      <Filter>Math</Filter>
+      <Filter>Core\Math</Filter>
     </ClInclude>
     <ClInclude Include="Math\Vector2Int.h">
-      <Filter>Math</Filter>
+      <Filter>Core\Math</Filter>
     </ClInclude>
     <ClInclude Include="Math\Vector3.h">
-      <Filter>Math</Filter>
+      <Filter>Core\Math</Filter>
     </ClInclude>
     <ClInclude Include="Math\Vector3Int.h">
-      <Filter>Math</Filter>
+      <Filter>Core\Math</Filter>
     </ClInclude>
     <ClInclude Include="Math\Vector4.h">
-      <Filter>Math</Filter>
+      <Filter>Core\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
       <UniqueIdentifier>{0e34fc14-89dc-421e-ac9d-f65ab81666c9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Math">
+    <Filter Include="Core\Math">
       <UniqueIdentifier>{9e7d04b8-ef4c-4b77-a27e-75dfc008d3a3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\Audio">
