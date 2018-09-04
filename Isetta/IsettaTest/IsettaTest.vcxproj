@@ -155,6 +155,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Isetta\Math\Matrix3.h" />
+    <ClInclude Include="..\Isetta\Math\Rect.h" />
     <ClInclude Include="..\Isetta\Math\Utility.h" />
     <ClInclude Include="..\Isetta\Math\Vector2.h" />
     <ClInclude Include="..\Isetta\Math\Vector2Int.h" />
@@ -166,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Isetta\Math\Matrix3.cpp" />
+    <ClCompile Include="..\Isetta\Math\Rect.cpp" />
     <ClCompile Include="..\Isetta\Math\Utility.cpp" />
     <ClCompile Include="..\Isetta\Math\Vector2.cpp" />
     <ClCompile Include="..\Isetta\Math\Vector2Int.cpp" />
@@ -173,6 +175,7 @@
     <ClCompile Include="..\Isetta\Math\Vector3Int.cpp" />
     <ClCompile Include="..\Isetta\Math\Vector4.cpp" />
     <ClCompile Include="Matrix3Test.cpp" />
+    <ClCompile Include="RectTest.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

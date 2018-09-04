@@ -42,6 +42,9 @@
     <ClInclude Include="..\Isetta\Math\Matrix3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\Isetta\Math\Rect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -87,6 +90,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Matrix3Test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Isetta\Math\Rect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RectTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
