@@ -1,63 +1,47 @@
 #pragma once
 #include "fmod.hpp"
+// TODO: do error checking later
 // #include "fmod_errors.h"
 #include <string>
 #include <vector>
 
-using namespace std;
+namespace Isetta {
 
-namespace Audio {
+class AudioSource {
+ public:
+  explicit AudioSource(FMOD::Sound*);
+  void Play(bool loop, float volume);
+  // void Play3D(Vector3, bool loop, float volume);
+  void Pause() const;
+  void Continue() const;
+  void Stop() const;
+  void SetVolume(const float) const;
+  void Erase();
 
-	struct Vector3 {
-		float x, y, z;
-	};
+  bool isErased;
 
-	class AudioSource {
-	public:
-		explicit AudioSource(FMOD::Sound*);
-		void Play(bool loop, float volume);
-		// void Play3D(Vector3, bool loop, float volume);
-		void Pause() const;
-		void Continue() const;
-		void Stop() const;
-		void SetVolume(const float) const;
-		void Erase();
+ private:
+  FMOD::Sound* fmodSound;
+  FMOD::Channel* fmodChannel{};
 
-		bool isErased;
+  bool isChannelValid() const;
+};
 
-	private:
-		FMOD::Sound* fmodSound;
-		FMOD::Channel* fmodChannel{};
+class AudioSystem {
+ public:
+  static void Init(const std::string& filesRoot);
+  static void Update();
+  static void ShutDown();
 
-		bool isChannelValid() const;
-	};
+  static AudioSource* LoadSound(const std::string& soundName);
+  static FMOD::Channel* PlayFMODSound(FMOD::Sound* sound, bool loop,
+                                      float volume);
+  static void AddAudioSource(AudioSource* audioSource);
+  static std::string GetMemoryReport();
 
-	class AudioManager {
-
-	public:
-		static void Init(const string& filesRoot);
-		static AudioManager& Instance();
-		
-		void Update() const;
-		void ShutDown();
-
-		AudioSource* LoadSound(const string& soundName) const;
-		FMOD::Channel* PlayFMODSound(FMOD::Sound* sound, bool loop, float volume) const;
-		void AddAudioSource(AudioSource* audioSource);
-
-	private:
-		static AudioManager* instance;
-		FMOD::System* fmodSystem = nullptr;
-		string soundFilesRoot;
-		vector<AudioSource*> audioSources;
-		
-		unsigned int GetVersion() const;
-	};
-
-	void Init(const string &soundFilesRoot);
-	void Update();
-	void ShutDown();
-	
-	AudioSource* LoadSound(const string& soundName);
-	string GetMemoryReport();
-}
+ private:
+  static FMOD::System* fmodSystem;
+  static std::string soundFilesRoot;
+  static std::vector<AudioSource*> audioSources;
+};
+}  // namespace Isetta
