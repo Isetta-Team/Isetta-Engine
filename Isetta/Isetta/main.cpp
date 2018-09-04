@@ -1,55 +1,73 @@
 #include <iostream>
 #include <string>
 #include <chrono>
+#include "Math/Random.h"
 #include "Core/Time.h"
-
 #include "Core/Debug.h"
+#include "Core/Audio/Audio.h"
 
-using namespace Isetta;
+namespace Isetta {
+
+AudioSystem gAudioSystem;
 
 void StartUp() {
-    std::cout << "Initializing game" << std::endl;
-    Debug::StartUp();
+	std::cout << "Initializing game" << std::endl;
+
+	Debug::StartUp();
+	gAudioSystem.StartUp();
+
+	// Audio test code
+	auto sing = AudioSource::LoadSound("singing.wav");
+	sing->Play(true, 1.0f);
 }
 
 void Update() {
-    // cout << Time::time << endl;
-
+	gAudioSystem.Update();
 }
 
 void ShutDown() {
-    std::cout << "Shutting down game" << std::endl;
-    Debug::ShutDown();
+	std::cout << "Shutting down game" << std::endl;
+	
+	Debug::ShutDown();
+	gAudioSystem.ShutDown();
 }
 
+} // namespace Isetta
+
+using namespace Isetta;
+
 int main() {
-    using clock = std::chrono::high_resolution_clock;
-    using second = chrono::duration<float>;
+	auto rnd = Isetta::Math::Random::GetRandomGenerator(1.f, 10.f);
+	float number = rnd.GetValue();
+	std::cout << number << std::endl;
 
-    StartUp();
+	using clock = std::chrono::high_resolution_clock;
+	using second = std::chrono::duration<float>;
 
-    Debug::PrintF(Debug::Memory, Debug::Info, "Hi %s, you are %d", "Yidi", 10);
-    Debug::PrintF("Test\n");
+	StartUp();
 
-    const float gameMaxDuration = 10.0;
+	Debug::PrintF(Debug::Memory, Debug::Info, "Hi %s, you are %d", "Jake", 10);
+	Debug::PrintF("Test\n");
 
-    Time::startTime = clock::now();
-    auto lastFrameStartTime = clock::now();
+	const float gameMaxDuration = 10.0;
 
-    while (true) {
-        Time::deltaTime = second(clock::now() - lastFrameStartTime).count();
-        Time::time = second(clock::now() - Time::startTime).count();
-        lastFrameStartTime = clock::now();
+	Time::startTime = clock::now();
+	auto lastFrameStartTime = clock::now();
 
-        Update();
-        Time::frameCount++;
+	while (true) {
+		Time::deltaTime = second(clock::now() - lastFrameStartTime).count();
+		Time::time = second(clock::now() - Time::startTime).count();
+		lastFrameStartTime = clock::now();
 
-        if (Time::time > gameMaxDuration) {
-            break;
-        }
-    }
+		Update();
+		Time::frameCount++;
 
-    ShutDown();
-    system("pause");
-    return 0;
+		if (Time::time > gameMaxDuration) {
+			break;
+		}
+	}
+
+	ShutDown();
+	system("pause");
+	return 0;
 }

@@ -14,3 +14,6 @@
 [submodule "Isetta/External/string-id"]
 	path = Isetta/External/string-id
 	url = https://github.com/TheAllenChou/string-id.git
+[submodule "Isetta/External/protobuf"]
+	path = Isetta/External/protobuf
+	url = https://github.com/google/protobuf
