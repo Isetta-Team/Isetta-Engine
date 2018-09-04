@@ -1,77 +1,73 @@
-#include <iostream>
-#include <chrono>
 #include "Audio.h"
-#include "Time.h"
 #include "Math/Random.h"
+#include "Time.h"
+#include <chrono>
+#include <iostream>
 
-using namespace std;
-
-Audio::AudioSource* sing;
-
+Isetta::AudioSource *sing;
 bool hasExecuted = false;
 const float eventTime = 3.0;
 
 void InitGame() {
-	cout << "Initializing game" << endl;
+  std::cout << "Initializing game" << std::endl;
 
-	Audio::Init(R"(Resources\Sound\)");
+  Isetta::AudioSystem::Init(R"(Resources\Sound\)");
 
-	sing = Audio::LoadSound("singing.wav");
-	sing->Play(false, 1.0f);
-	cout << Audio::GetMemoryReport();
+  sing = Isetta::AudioSystem::LoadSound("singing.wav");
+  sing->Play(false, 1.0f);
+  std::cout << Isetta::AudioSystem::GetMemoryReport();
 }
 
 void Update() {
-	// cout << Time::time << endl;
-	Audio::Update();
+  // cout << Time::time << endl;
+  Isetta::AudioSystem::Update();
 
-	if (Time::time > eventTime && !hasExecuted) {
-		cout << "Hit 3 seconds!" << endl;
-		sing->SetVolume(0.3);
-		// sing->Pause();
-		// sing->Continue();
-		// sing->Erase();
-		hasExecuted = true;
-	}
+  if (Time::time > eventTime && !hasExecuted) {
+    std::cout << "Hit 3 seconds!" << std::endl;
+    sing->SetVolume(0.3f);
+    // sing->Pause();
+    // sing->Continue();
+    // sing->Erase();
+    hasExecuted = true;
+  }
 }
 
 void ShutDown() {
-	cout << "Shutting down game" << endl;
+  std::cout << "Shutting down game" << std::endl;
 
-	Audio::ShutDown();
-	cout << Audio::GetMemoryReport();
+  Isetta::AudioSystem::ShutDown();
+  std::cout << Isetta::AudioSystem::GetMemoryReport();
 }
 
 int main() {
+  auto rnd = Isetta::Math::Random::GetRandomGenerator(1.f, 10.f);
+  float number = rnd.GetValue();
+  std::cout << number << std::endl;
 
-    auto rnd = Isetta::Math::Random::GetRandomGenerator(1.f, 10.f);
-    float number = rnd.GetValue();
-    std::cout << number << std::endl;
+  using clock = std::chrono::high_resolution_clock;
+  using second = std::chrono::duration<float>;
 
-	using clock = std::chrono::high_resolution_clock;
-	using second = chrono::duration<float>;
+  InitGame();
 
-	InitGame();
+  const float gameMaxDuration = 10.0;
 
-	const float gameMaxDuration = 10.0;
+  Time::startTime = clock::now();
+  auto lastFrameStartTime = clock::now();
 
-	Time::startTime = clock::now();
-	auto lastFrameStartTime = clock::now();
+  while (true) {
+    Time::deltaTime = second(clock::now() - lastFrameStartTime).count();
+    Time::time = second(clock::now() - Time::startTime).count();
+    lastFrameStartTime = clock::now();
 
-	while (true) {
-		Time::deltaTime = second(clock::now() - lastFrameStartTime).count();
-		Time::time = second(clock::now() - Time::startTime).count();
-		lastFrameStartTime = clock::now();
+    Update();
+    Time::frameCount++;
 
-		Update();
-		Time::frameCount++;
+    if (Time::time > gameMaxDuration) {
+      break;
+    }
+  }
 
-		if (Time::time > gameMaxDuration) {
-			break;
-		}
-	}
-
-	ShutDown();
-	system("pause");
-	return 0;
+  ShutDown();
+  system("pause");
+  return 0;
 }
