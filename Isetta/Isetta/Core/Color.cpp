@@ -3,6 +3,7 @@
  */
 #include "Core/Color.h"
 
+#include <stdio.h>
 #include <stdexcept>
 #include "Core/Math/Vector4.h"
 
@@ -34,16 +35,14 @@ float Color::operator[](int i) const {
   }
 };
 
-Color Color::GreyScale() const {
-  float avg = (r + g + b) / 3.0f;
-  return Color(avg, avg, avg, a);
-}
+float Color::GreyScale() const { return (r + g + b) / 3.0f; }
 
 float Color::MaxColorComponent() const { return Math::Utility::Max({r, g, b}); }
 
 std::string Color::ToString() const {
-  return "Color(" + std::to_string(r) + ", " + std::to_string(g) + ", " +
-         std::to_string(b) + ", " + std::to_string(a) + ")";
+  char buffer[26];
+  sprintf_s(buffer, "Color(%1.1f, %1.1f, %1.1f, %1.1f)", r, g, b, a);
+  return buffer;
 }
 
 Color Color::Lerp(Color start, Color end, float time) {
