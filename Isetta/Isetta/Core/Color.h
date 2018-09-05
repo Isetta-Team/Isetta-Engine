@@ -39,6 +39,10 @@ class Color {
   // Operators
 
   float operator[](int i) const;
+  inline bool operator==(const Color& rhs) const {
+    return r == rhs.r && g == rhs.g && b == rhs.b && a == rhs.a;
+  }
+  inline bool operator!=(const Color& rhs) const { return !(*this == rhs); }
   inline Color operator+(const Color& rhs) const {
     return Color(
         Math::Utility::Clamp01(r + rhs.r), Math::Utility::Clamp01(g + rhs.g),

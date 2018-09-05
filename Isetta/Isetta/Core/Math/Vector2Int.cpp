@@ -17,7 +17,7 @@ const Vector2Int Vector2Int::down = Vector2Int(0, -1);
 const Vector2Int Vector2Int::left = Vector2Int(-1, 0);
 
 Vector2Int::Vector2Int(const Vector2& inIntVector)
-    : x{int(inIntVector.x)}, y{int(inIntVector.y)} {}
+    : x{static_cast<int>(inIntVector.x)}, y{static_cast<int>(inIntVector.y)} {}
 
 int Vector2Int::operator[](int i) const {
   switch (i) {
@@ -26,7 +26,7 @@ int Vector2Int::operator[](int i) const {
     case 1:
       return y;
     default:
-      throw std::out_of_range("Vector2Int:[] access out of range.");
+      throw std::out_of_range("Vector2Int::[]: Index access out of range.");
   }
 }
 

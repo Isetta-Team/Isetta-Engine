@@ -1,5 +1,6 @@
-// "Copyright [2018] Isetta"
-
+/*
+ * Copyright (c) 2018 Isetta
+ */
 #include "Vector3.h"
 
 #include <cfloat>
@@ -20,9 +21,9 @@ const Vector3 Vector3::left = Vector3(-1.f, 0.f, 0.f);
 const Vector3 Vector3::back = Vector3(0.f, 0.f, -1.f);
 
 Vector3::Vector3(const Vector3Int& inIntVector)
-    : x{float(inIntVector.x)},
-      y{float(inIntVector.y)},
-      z{float(inIntVector.z)} {}
+    : x{static_cast<float>(inIntVector.x)},
+      y{static_cast<float>(inIntVector.y)},
+      z{static_cast<float>(inIntVector.z)} {}
 
 Vector3::Vector3(const Vector2& inVector, float inZ)
     : x{inVector.x}, y{inVector.y}, z{inZ} {}
@@ -36,7 +37,7 @@ float Vector3::operator[](int i) const {
     case 2:
       return z;
     default:
-      throw std::out_of_range("Vector3:[] access out of range.");
+      throw std::out_of_range("Vector3::[] Index access out of range.");
   }
 }
 

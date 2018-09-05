@@ -20,7 +20,9 @@ const Vector3Int Vector3Int::left = Vector3Int(-1, 0, 0);
 const Vector3Int Vector3Int::back = Vector3Int(0, 0, -1);
 
 Vector3Int::Vector3Int(const Vector3& inIntVector)
-    : x{int(inIntVector.x)}, y{int(inIntVector.y)}, z{int(inIntVector.z)} {}
+    : x{static_cast<int>(inIntVector.x)},
+      y{static_cast<int>(inIntVector.y)},
+      z{static_cast<int>(inIntVector.z)} {}
 
 Vector3Int::Vector3Int(const Vector2Int& inVector, int inZ)
     : x{inVector.x}, y{inVector.y}, z{inZ} {}
@@ -34,7 +36,7 @@ int Vector3Int::operator[](int i) const {
     case 2:
       return z;
     default:
-      throw std::out_of_range("Vector3Int:[] access out of range.");
+      throw std::out_of_range("Vector3Int::[] Index access out of range.");
   }
 }
 
@@ -57,9 +59,9 @@ Vector3Int Vector3Int::Cross(const Vector3Int& lhs, const Vector3Int& rhs) {
 float Vector3Int::Distance(const Vector3Int& start, const Vector3Int& end) {
   return (start - end).Magnitude();
 }
-Vector3Int Vector3Int::Scale(const Vector3Int& inVector,
-                             const Vector3Int& scalar) {
-  return Vector3Int(inVector.x * scalar.x, inVector.y * scalar.y,
-                    inVector.z * scalar.z);
+Vector3Int Vector3Int::Scale(const Vector3Int& aVector,
+                             const Vector3Int& bVector) {
+  return Vector3Int(aVector.x * bVector.x, aVector.y * bVector.y,
+                    aVector.z * bVector.z);
 }
 }  // namespace Isetta::Math

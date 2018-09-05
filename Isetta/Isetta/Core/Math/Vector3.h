@@ -1,7 +1,7 @@
-// "Copyright [2018] Isetta"
+/*
+ * Copyright (c) 2018 Isetta
+ */
 #pragma once
-#ifndef ISETTA_ISETTA_CORE_MATH_VECTOR3_H_
-#define ISETTA_ISETTA_CORE_MATH_VECTOR3_H_
 
 namespace Isetta::Math {
 
@@ -128,5 +128,3 @@ class Vector3 {
   static const Vector3 back;
 };
 }  // namespace Isetta::Math
-
-#endif  // ISETTA_ISETTA_CORE_MATH_VECTOR3_H_

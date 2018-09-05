@@ -1,7 +1,7 @@
-// "Copyright [2018] Isetta"
+/*
+ * Copyright (c) 2018 Isetta
+ */
 #pragma once
-#ifndef ISETTA_ISETTA_MATH_MATRIX4_H_
-#define ISETTA_ISETTA_MATH_MATRIX4_H_
 
 namespace Isetta::Math {
 class Matrix4 {
@@ -54,6 +54,5 @@ class Matrix4 {
   static Matrix4 Translate(const class Vector3& translation);
   static Matrix4 Scale(const class Vector3 scale);
 };
-}  // namespace Math
+}  // namespace Isetta::Math
 
-#endif

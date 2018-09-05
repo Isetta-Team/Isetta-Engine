@@ -1,7 +1,7 @@
-// "Copyright [2018] Isetta"
+/*
+ * Copyright (c) 2018 Isetta
+ */
 #pragma once
-#ifndef ISETTA_ISETTA_MATH_VECTOR2INT_H_
-#define ISETTA_ISETTA_MATH_VECTOR2INT_H_
 
 namespace Isetta::Math {
 
@@ -17,10 +17,8 @@ class Vector2Int {
 
   // Copy and move constructions
 
-  Vector2Int(const Vector2Int& inVector)
-      : x{inVector.x}, y{inVector.y} {}
-  Vector2Int(Vector2Int&& inVector)
-      : x{inVector.x}, y{inVector.y} {}
+  Vector2Int(const Vector2Int& inVector) : x{inVector.x}, y{inVector.y} {}
+  Vector2Int(Vector2Int&& inVector) : x{inVector.x}, y{inVector.y} {}
   inline Vector2Int& operator=(const Vector2Int& inVector) {
     x = inVector.x;
     y = inVector.y;
@@ -110,7 +108,4 @@ class Vector2Int {
   static const Vector2Int down;
   static const Vector2Int left;
 };
-}  // namespace Math
-
-#endif  // ISETTA_ISETTA_MATH_Vector2_H_
-#pragma once
+}  // namespace Isetta::Math

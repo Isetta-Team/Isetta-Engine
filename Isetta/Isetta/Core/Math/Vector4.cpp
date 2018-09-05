@@ -8,10 +8,6 @@
 #include <stdexcept>
 #include "Core/Color.h"
 
-// namespace Isetta {
-// Math::Vector4::Vector4(const Color& c) : x{c.r}, y{c.g}, z{c.b}, w{c.a} {}
-//}  // namespace Isetta
-
 namespace Isetta::Math {
 
 const Vector4 Vector4::zero = Vector4();
@@ -28,9 +24,11 @@ float Vector4::operator[](int i) const {
     case 3:
       return w;
     default:
-      throw std::out_of_range("Vector4:[] access out of range.");
+      throw std::out_of_range("Vector4::[] Index access out of range.");
   }
 }
+
+Vector4::Vector4(const Isetta::Color& c) : x{c.r}, y{c.g}, z{c.b}, w{c.a} {}
 
 float Vector4::Magnitude() const { return sqrtf(SqrMagnitude()); }
 float Vector4::SqrMagnitude() const { return x * x + y * y + z * z + w * w; }
@@ -61,9 +59,9 @@ float Vector4::Distance(const Vector4& start, const Vector4& end) {
 Vector4 Vector4::Project(const Vector4& inVector, const Vector4& onNormal) {
   return onNormal.Normalized() * Dot(inVector, onNormal);
 }
-Vector4 Vector4::Scale(const Vector4& inVector, const Vector4& scalar) {
-  return Vector4(inVector.x * scalar.x, inVector.y * scalar.y,
-                 inVector.z * scalar.z, inVector.w * scalar.w);
+Vector4 Vector4::Scale(const Vector4& aVector, const Vector4& bVector) {
+  return Vector4(aVector.x * bVector.x, aVector.y * bVector.y,
+                 aVector.z * bVector.z, aVector.w * bVector.w);
 }
 Vector4 Vector4::Slerp(const Vector4& start, const Vector4& end, float time) {
   float dot = Dot(start, end);

@@ -1,13 +1,20 @@
-// "Copyright [2018] Isetta"
-
+/*
+ * Copyright (c) 2018 Isetta
+ */
 #pragma once
-#ifndef ISETTA_ISETTA_MATH_VECTOR2_H_
-#define ISETTA_ISETTA_MATH_VECTOR2_H_
 
 namespace Isetta::Math {
 
 class Vector2 {
  public:
+  // Constants
+  static const Vector2 zero;
+  static const Vector2 one;
+  static const Vector2 up;
+  static const Vector2 right;
+  static const Vector2 down;
+  static const Vector2 left;
+
   float x, y;
 
   // Construct by name
@@ -18,8 +25,7 @@ class Vector2 {
 
   // Copy and move constructions
 
-  Vector2(const Vector2& inVector)
-      : x{inVector.x}, y{inVector.y} {}
+  Vector2(const Vector2& inVector) : x{inVector.x}, y{inVector.y} {}
   Vector2(Vector2&& inVector) : x{inVector.x}, y{inVector.y} {}
   inline Vector2& operator=(const Vector2& inVector) {
     x = inVector.x;
@@ -111,15 +117,5 @@ class Vector2 {
   static Vector2 Scale(const Vector2& inVector, const Vector2& scalar);
   // Spherically interpolates between two vectors
   static Vector2 Slerp(const Vector2& start, const Vector2& end, float time);
-
-  // Constants
-  static const Vector2 zero;
-  static const Vector2 one;
-  static const Vector2 up;
-  static const Vector2 right;
-  static const Vector2 down;
-  static const Vector2 left;
 };
-}  // namespace Math
-
-#endif  // ISETTA_ISETTA_MATH_VECTOR2_H_
+}  // namespace Isetta::Math

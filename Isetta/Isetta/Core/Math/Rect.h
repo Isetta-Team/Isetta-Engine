@@ -1,7 +1,5 @@
 // "Copyright [2018] Isetta"
 #pragma once
-#ifndef ISETTA_ISETTA_MATH_RECT_H_
-#define ISETTA_ISETTA_MATH_RECT_H_
 namespace Isetta::Math {
 class Rect {
  public:
@@ -64,5 +62,4 @@ class Rect {
   static class Vector2 PointToNormalized(const Rect& rect,
                                          const class Vector2& point);
 };
-}  // namespace Math
-#endif
+}  // namespace Isetta::Math

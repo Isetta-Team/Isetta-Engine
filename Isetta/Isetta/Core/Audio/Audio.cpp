@@ -68,7 +68,7 @@ void AudioSystem::StartUp() {
   soundFilesRoot = R"(Resources\Sound\)";
 }
 
-void AudioSystem::Update() const { fmodSystem->update(); }
+void AudioSystem::Update() { fmodSystem->update(); }
 
 void AudioSystem::ShutDown() {
   for (auto it : audioSources) {

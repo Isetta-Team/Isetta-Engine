@@ -19,6 +19,9 @@
     <Filter Include="Core\Math">
       <UniqueIdentifier>{ef0c4bac-6bf2-4a50-9bce-7f0dd51dc6ce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\MathLibrary">
+      <UniqueIdentifier>{4bb2a662-ff91-47fe-80da-332fce65d89e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -30,9 +33,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RectTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Core\Math\Matrix3Test.cpp">

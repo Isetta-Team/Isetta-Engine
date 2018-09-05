@@ -3,6 +3,10 @@
 #ifndef ISETTA_ISETTA_MATH_VECTOR4_H_
 #define ISETTA_ISETTA_MATH_VECTOR4_H_
 
+namespace Isetta {
+class Color;
+}
+
 namespace Isetta::Math {
 
 class Vector4 {
@@ -91,7 +95,7 @@ class Vector4 {
   // Conversions
 
   // TODO: Fix
-  // explicit Vector4(const class Color& c);
+  explicit Vector4(const Color& c);
 
   // Functions
 
@@ -117,7 +121,7 @@ class Vector4 {
   // Projects a vector onto onNormal vector
   static Vector4 Project(const Vector4& inVector, const Vector4& onNormal);
   // Multiplies two vectors component-wise
-  static Vector4 Scale(const Vector4& inVector, const Vector4& scalar);
+  static Vector4 Scale(const Vector4& aVector, const Vector4& bVector);
   // Spherically interpolates between two vectors
   static Vector4 Slerp(const Vector4& start, const Vector4& end, float time);
 

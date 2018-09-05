@@ -1,7 +1,7 @@
-// "Copyright [2018] Isetta"
+/*
+ * Copyright (c) 2018 Isetta
+ */
 #pragma once
-#ifndef ISETTA_ISETTA_MATH_QUATERNION_H_
-#define ISETTA_ISETTA_MATH_QUATERNION_H_
 
 namespace Isetta::Math {
 class Quaternion {
@@ -54,5 +54,3 @@ Quaternion operator"" _j(long double inY);
 Quaternion operator"" _k(long double inZ);
 Quaternion operator"" _w(long double inW);
 }  // namespace Isetta::Math
-
-#endif

@@ -18,7 +18,8 @@ const Vector2 Vector2::down = Vector2(0.f, -1.f);
 const Vector2 Vector2::left = Vector2(-1.f, 0.f);
 
 Vector2::Vector2(const Vector3Int& inIntVector)
-    : x{float(inIntVector.x)}, y{float(inIntVector.y)} {}
+    : x{static_cast<float>(inIntVector.x)},
+      y{static_cast<float>(inIntVector.y)} {}
 
 float Vector2::operator[](int i) const {
   switch (i) {
@@ -27,7 +28,7 @@ float Vector2::operator[](int i) const {
     case 1:
       return y;
     default:
-      throw std::out_of_range("Vector2:[] access out of range.");
+      throw std::out_of_range("Vector2::[] Index Access out of range.");
   }
 }
 

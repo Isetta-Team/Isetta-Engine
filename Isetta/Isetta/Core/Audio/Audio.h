@@ -41,7 +41,7 @@ class AudioSystem : IModule {
   ~AudioSystem() final {}
 
   void StartUp() final;
-  void Update() const;
+  void Update() override;
   void ShutDown() final;
 
   static std::string GetMemoryReport();

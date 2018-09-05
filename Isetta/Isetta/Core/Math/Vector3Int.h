@@ -1,7 +1,7 @@
-// "Copyright [2018] Isetta"
+/*
+ * Copyright (c) 2018 Isetta
+ */
 #pragma once
-#ifndef ISETTA_ISETTA_MATH_VECTOR3INT_H_
-#define ISETTA_ISETTA_MATH_VECTOR3INT_H_
 
 namespace Isetta::Math {
 
@@ -106,7 +106,7 @@ class Vector3Int {
   // Returns the distance between two endpoints of the vectors
   static float Distance(const Vector3Int& start, const Vector3Int& end);
   // Multiplies two vectors component-wise
-  static Vector3Int Scale(const Vector3Int& inVector, const Vector3Int& scalar);
+  static Vector3Int Scale(const Vector3Int& aVector, const Vector3Int& bVector);
 
   // Constants
   static const Vector3Int zero;
@@ -118,6 +118,4 @@ class Vector3Int {
   static const Vector3Int left;
   static const Vector3Int back;
 };
-}  // namespace Math
-
-#endif  // ISETTA_ISETTA_MATH_VECTOR3_H_
+}  // namespace Isetta::Math

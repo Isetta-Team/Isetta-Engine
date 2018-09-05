@@ -1,8 +1,7 @@
-// "Copyright [2018] Isetta"
-
+/*
+ * Copyright (c) 2018 Isetta
+ */
 #pragma once
-#ifndef ISETTA_ISETTA_MATH_UTILITY_H_
-#define ISETTA_ISETTA_MATH_UTILITY_H_
 #include <initializer_list>
 
 namespace Isetta::Math {
@@ -58,6 +57,4 @@ class Utility {
   static int Square(int number);
   static float Tan(float radian);
 };
-}  // namespace Math
-
-#endif
+}  // namespace Isetta::Math

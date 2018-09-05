@@ -1,8 +1,6 @@
 // "Copyright [2018] Isetta"
 
 #pragma once
-#ifndef ISETTA_ISETTA_MATH_RANDOM_H_
-#define ISETTA_ISETTA_MATH_RANDOM_H_
 
 #include <random>
 #include <type_traits>
@@ -63,6 +61,4 @@ class Random {
  private:
   static RandomGenerator<float> randomFloatGen;
 };
-}  // namespace Math
-
-#endif  // ISETTA_ISETTA_MATH_RANDOM_H_
+}  // namespace Isetta::Math

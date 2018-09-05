@@ -1,13 +1,13 @@
-// "Copyright [2018] Isetta"
-
+/*
+ * Copyright (c) 2018 Isetta
+ */
 #pragma once
-#ifndef ISETTA_ISETTA_MATH_MATRIX3_H_
-#define ISETTA_ISETTA_MATH_MATRIX3_H_
 
 namespace Isetta::Math {
 class Matrix3 {
  private:
   float data[9];
+
  public:
   Matrix3();
   explicit Matrix3(float value);
@@ -50,6 +50,4 @@ class Matrix3 {
   static const Matrix3 zero;
   static const Matrix3 identity;
 };
-}  // namespace Math
-
-#endif
+}  // namespace Isetta::Math

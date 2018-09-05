@@ -97,6 +97,7 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Audio\Audio.cpp" />
+    <ClCompile Include="Core\Color.cpp" />
     <ClCompile Include="Core\Math\Matrix4.cpp" />
     <ClCompile Include="Core\Math\Quaternion.cpp" />
     <ClCompile Include="Core\Math\Rect.cpp" />
@@ -113,6 +114,7 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Audio\Audio.h" />
+    <ClInclude Include="Core\Color.h" />
     <ClInclude Include="Core\Math\Matrix4.h" />
     <ClInclude Include="Core\Math\Quaternion.h" />
     <ClInclude Include="Core\Math\Rect.h" />
