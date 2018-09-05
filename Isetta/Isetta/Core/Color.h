@@ -1,10 +1,14 @@
-// "Copyright [2018] Isetta"
+/*
+ * Copyright (c) 2018 Isetta
+ */
 #pragma once
-#ifndef ISETTA_ISETTA_CORE_COLOR_H_
-#define ISETTA_ISETTA_CORE_COLOR_H_
 
 #include <string>
 #include "Core/Math/Utility.h"
+
+namespace Isetta::Math {
+class Vector4;
+}
 
 namespace Isetta {
 class Color {
@@ -14,7 +18,6 @@ class Color {
   // Construction
 
   Color() : r{0}, g{0}, b{0}, a{0} {}
-  explicit Color(float c) : r{c}, g{c}, b{c}, a{c} {}
   Color(float r, float g, float b, float a) : r{r}, g{g}, b{b}, a{a} {}
 
   // Copy and move constructions
@@ -44,6 +47,7 @@ class Color {
   }
   inline bool operator!=(const Color& rhs) const { return !(*this == rhs); }
   inline Color operator+(const Color& rhs) const {
+    Math::Utility::Clamp01(0.5f);
     return Color(
         Math::Utility::Clamp01(r + rhs.r), Math::Utility::Clamp01(g + rhs.g),
         Math::Utility::Clamp01(b + rhs.b), Math::Utility::Clamp01(a + rhs.a));
@@ -82,15 +86,20 @@ class Color {
         Math::Utility::Clamp01(r / rhs), Math::Utility::Clamp01(g / rhs),
         Math::Utility::Clamp01(b / rhs), Math::Utility::Clamp01(a / rhs));
   }
+  inline bool operator==(const Color& c) const {
+    return (r == c.r && g == c.g && b == c.b && a == c.a);
+  }
 
   // Conversions
 
-  explicit Color(const class Vector4& c);
+  explicit Color(const Math::Vector4& v);
 
-  float GreyScale() const;
+  // Functions
+
+  Color GreyScale() const;
   float MaxColorComponent() const;
   std::string ToString() const;
-  Color Lerp(Color a, Color b, float t) const;
+  static Color Lerp(Color a, Color b, float t);
 
   // Constants
   static const Color black;
@@ -106,5 +115,3 @@ class Color {
  private:
 };
 }  // namespace Isetta
-
-#endif  // ISETTA_ISETTA_CORE_COLOR_H_

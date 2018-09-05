@@ -1,8 +1,6 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include <iostream>
-
 #include "Core/Debug.h"
 
 namespace Isetta {
@@ -36,7 +34,7 @@ int Debug::VDebugPrintF(const bool outputDebug, const std::string inFormat,
 
 int Debug::PrintF(const std::string inFormat, ...) {
   va_list argList;
-  va_start(argList, inFormat);
+  va_start(argList, &inFormat);
 
   const std::string format = "[TIME][General] " + inFormat;
 
@@ -45,13 +43,12 @@ int Debug::PrintF(const std::string inFormat, ...) {
       format, argList);
 
   va_end(argList);
-
   return charsWritten;
 }
 
 int Debug::PrintF(const Channel channel, const std::string inFormat, ...) {
   va_list argList;
-  va_start(argList, inFormat);
+  va_start(argList, &inFormat);
 
   const std::string format = "[TIME][" + ToString(channel) + "] " + inFormat;
 
@@ -67,7 +64,7 @@ int Debug::PrintF(const Channel channel, const std::string inFormat, ...) {
 int Debug::PrintF(const Channel channel, const Verbosity verbosity,
                   const std::string inFormat, ...) {
   va_list argList;
-  va_start(argList, inFormat);
+  va_start(argList, &inFormat);
 
   const std::string format = "[TIME][" + ToString(channel) + "] " + inFormat;
 
@@ -81,39 +78,36 @@ int Debug::PrintF(const Channel channel, const Verbosity verbosity,
 
 void Debug::LogInfo(const Channel channel, const std::string inFormat, ...) {
   va_list argList;
-  va_start(argList, inFormat);
+  va_start(argList, &inFormat);
 
   const std::string format = "[TIME][" + ToString(channel) + "] " + inFormat;
 
-  int charsWritten =
-      VDebugPrintF(CheckChannelMask(channel) && CheckVerbosity(Verbosity::Info),
-                   format, argList);
+  VDebugPrintF(CheckChannelMask(channel) && CheckVerbosity(Verbosity::Info),
+               format, argList);
 
   va_end(argList);
 }
 
 void Debug::LogWarning(const Channel channel, const std::string inFormat, ...) {
   va_list argList;
-  va_start(argList, inFormat);
+  va_start(argList, &inFormat);
 
   const std::string format = "[TIME][" + ToString(channel) + "] " + inFormat;
 
-  int charsWritten = VDebugPrintF(
-      CheckChannelMask(channel) && CheckVerbosity(Verbosity::Warning), format,
-      argList);
+  VDebugPrintF(CheckChannelMask(channel) && CheckVerbosity(Verbosity::Warning),
+               format, argList);
 
   va_end(argList);
 }
 
 void Debug::LogError(const Channel channel, const std::string inFormat, ...) {
   va_list argList;
-  va_start(argList, inFormat);
+  va_start(argList, &inFormat);
 
   const std::string format = "[TIME][" + ToString(channel) + "] " + inFormat;
 
-  int charsWritten = VDebugPrintF(
-      CheckChannelMask(channel) && CheckVerbosity(Verbosity::Error), format,
-      argList);
+  VDebugPrintF(CheckChannelMask(channel) && CheckVerbosity(Verbosity::Error),
+               format, argList);
 
   va_end(argList);
 }
@@ -137,7 +131,7 @@ void Debug::ShutDown() {
 }
 
 bool Debug::CheckChannelMask(const Channel channel) {
-  return (gChannelMask & channel) == channel;
+  return (gChannelMask & channel) == static_cast<uint32_t>(channel);
 }
 
 bool Debug::CheckVerbosity(const Verbosity verbosity) {

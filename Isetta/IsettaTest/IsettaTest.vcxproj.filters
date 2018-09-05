@@ -41,7 +41,7 @@
     <ClCompile Include="Core\Math\UtilityTest.cpp">
       <Filter>Core\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Math\Vectoe2IntTest.cpp">
+    <ClCompile Include="Core\Math\Vector2IntTest.cpp">
       <Filter>Core\Math</Filter>
     </ClCompile>
     <ClCompile Include="Core\Math\Vector2Test.cpp">
