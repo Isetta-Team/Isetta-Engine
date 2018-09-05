@@ -154,10 +154,35 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Isetta\Core\Color.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Math.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Matrix3.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Matrix4.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Quaternion.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Random.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Rect.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Utility.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Vector2.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Vector2Int.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Vector3.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Vector3Int.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Vector4.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Isetta\Core\Color.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Matrix3.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Matrix4.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Quaternion.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Random.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Rect.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Utility.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Vector2.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Vector2Int.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Vector3.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Vector3Int.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Vector4.cpp" />
     <ClCompile Include="Core\ColorTest.cpp" />
     <ClCompile Include="Core\Math\Matrix3Test.cpp" />
     <ClCompile Include="Core\Math\UtilityTest.cpp" />

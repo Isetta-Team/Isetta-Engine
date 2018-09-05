@@ -7,13 +7,15 @@
 #include "Core/Math/Vector4.h"
 
 namespace Isetta {
-const Color black = Color(0, 0, 0, 1);
-const Color blue = Color(0, 0, 1, 1);
-const Color clear = Color(0, 0, 0, 0), cyan = Color(0, 1, 1, 1);
-const Color grey = Color(0.5f, 0.5f, 0.5f, 1);
-const Color magenta = Color(1, 0, 1, 1), red = Color(1, 0, 0, 1);
-const Color white = Color(1, 1, 1, 1);
-const Color yellow = Color(1, 0.92f, 0.016f, 1);
+const Color Color::black = Color(0, 0, 0, 1);
+const Color Color::blue = Color(0, 0, 1, 1);
+const Color Color::clear = Color(0, 0, 0, 0);
+const Color Color::cyan = Color(0, 1, 1, 1);
+const Color Color::grey = Color(0.5f, 0.5f, 0.5f, 1);
+const Color Color::magenta = Color(1, 0, 1, 1);
+const Color Color::red = Color(1, 0, 0, 1);
+const Color Color::white = Color(1, 1, 1, 1);
+const Color Color::yellow = Color(1, 0.92f, 0.016f, 1);
 
 Color::Color(const Math::Vector4& v) : r{v.x}, g{v.y}, b{v.z}, a{v.w} {}
 

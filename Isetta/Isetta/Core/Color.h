@@ -13,6 +13,17 @@ class Vector4;
 namespace Isetta {
 class Color {
  public:
+  // Constants
+  static const Color black;
+  static const Color blue;
+  static const Color clear;
+  static const Color cyan;
+  static const Color grey;
+  static const Color magenta;
+  static const Color red;
+  static const Color white;
+  static const Color yellow;
+
   float r, g, b, a;
 
   // Construction
@@ -86,9 +97,6 @@ class Color {
         Math::Utility::Clamp01(r / rhs), Math::Utility::Clamp01(g / rhs),
         Math::Utility::Clamp01(b / rhs), Math::Utility::Clamp01(a / rhs));
   }
-  inline bool operator==(const Color& c) const {
-    return (r == c.r && g == c.g && b == c.b && a == c.a);
-  }
 
   // Conversions
 
@@ -100,17 +108,6 @@ class Color {
   float MaxColorComponent() const;
   std::string ToString() const;
   static Color Lerp(Color a, Color b, float t);
-
-  // Constants
-  static const Color black;
-  static const Color blue;
-  static const Color clear;
-  static const Color cyan;
-  static const Color grey;
-  static const Color magenta;
-  static const Color red;
-  static const Color white;
-  static const Color yellow;
 
  private:
 };
