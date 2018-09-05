@@ -1,5 +1,6 @@
-// "Copyright [2018] Isetta"
-
+/*
+ * Copyright (c) 2018 Isetta
+ */
 #include "Vector2.h"
 
 #include <cfloat>
@@ -26,7 +27,7 @@ float Vector2::operator[](int i) const {
     case 1:
       return y;
     default:
-      throw std::logic_error;
+      throw std::out_of_range("Vector2:[] access out of range.");
   }
 }
 
@@ -73,4 +74,4 @@ Vector2 Vector2::Slerp(const Vector2& start, const Vector2& end, float time) {
   Vector2 relativeVector = end - start * dot;
   return start * cosf(theta) + relativeVector * sinf(theta);
 }
-}  // namespace Math
+}  // namespace Isetta::Math

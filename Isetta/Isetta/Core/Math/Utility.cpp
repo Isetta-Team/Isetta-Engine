@@ -1,5 +1,6 @@
-// "Copyright [2018] Isetta"
-
+/*
+ * Copyright (c) 2018 Isetta
+ */
 #include "Utility.h"
 
 #define _USE_MATH_DEFINES
@@ -108,4 +109,4 @@ float Utility::Sqrt(float number) { return sqrtf(number); }
 float Utility::Square(float number) { return number * number; }
 int Utility::Square(int number) { return number * number; }
 float Utility::Tan(float radian) { return tanf(radian); }
-}  // namespace Math
+}  // namespace Isetta::Math

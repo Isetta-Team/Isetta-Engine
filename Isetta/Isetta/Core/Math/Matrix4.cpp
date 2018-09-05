@@ -347,4 +347,4 @@ Matrix4 Matrix4::Scale(const Vector3 scale) {
 const Matrix4 Matrix4::zero = Matrix4{};
 const Matrix4 Matrix4::identity =
     Matrix4{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
-}  // namespace Math
+}  // namespace Isetta::Math

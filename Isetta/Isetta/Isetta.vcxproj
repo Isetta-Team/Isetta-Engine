@@ -97,33 +97,33 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Audio\Audio.cpp" />
-    <ClCompile Include="Math\Matrix4.cpp" />
-    <ClCompile Include="Math\Quaternion.cpp" />
-    <ClCompile Include="Math\Rect.cpp" />
-    <ClCompile Include="Math\Utility.cpp" />
-    <ClCompile Include="Math\Vector2.cpp" />
-    <ClCompile Include="Math\Vector2Int.cpp" />
-    <ClCompile Include="Math\Vector3.cpp" />
-    <ClCompile Include="Math\Vector3Int.cpp" />
-    <ClCompile Include="Math\Vector4.cpp" />
-    <ClCompile Include="Math\Random.cpp" />
-    <ClCompile Include="Math\Matrix3.cpp" />
+    <ClCompile Include="Core\Math\Matrix4.cpp" />
+    <ClCompile Include="Core\Math\Quaternion.cpp" />
+    <ClCompile Include="Core\Math\Rect.cpp" />
+    <ClCompile Include="Core\Math\Utility.cpp" />
+    <ClCompile Include="Core\Math\Vector2.cpp" />
+    <ClCompile Include="Core\Math\Vector2Int.cpp" />
+    <ClCompile Include="Core\Math\Vector3.cpp" />
+    <ClCompile Include="Core\Math\Vector3Int.cpp" />
+    <ClCompile Include="Core\Math\Vector4.cpp" />
+    <ClCompile Include="Core\Math\Random.cpp" />
+    <ClCompile Include="Core\Math\Matrix3.cpp" />
     <ClCompile Include="Core\Debug.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Audio\Audio.h" />
-    <ClInclude Include="Math\Matrix4.h" />
-    <ClInclude Include="Math\Quaternion.h" />
-    <ClInclude Include="Math\Rect.h" />
-    <ClInclude Include="Math\Utility.h" />
-    <ClInclude Include="Math\Vector2.h" />
-    <ClInclude Include="Math\Vector2Int.h" />
-    <ClInclude Include="Math\Vector3.h" />
-    <ClInclude Include="Math\Vector3Int.h" />
-    <ClInclude Include="Math\Vector4.h" />
-    <ClInclude Include="Math\Random.h" />
-    <ClInclude Include="Math\Matrix3.h" />
+    <ClInclude Include="Core\Math\Matrix4.h" />
+    <ClInclude Include="Core\Math\Quaternion.h" />
+    <ClInclude Include="Core\Math\Rect.h" />
+    <ClInclude Include="Core\Math\Utility.h" />
+    <ClInclude Include="Core\Math\Vector2.h" />
+    <ClInclude Include="Core\Math\Vector2Int.h" />
+    <ClInclude Include="Core\Math\Vector3.h" />
+    <ClInclude Include="Core\Math\Vector3Int.h" />
+    <ClInclude Include="Core\Math\Vector4.h" />
+    <ClInclude Include="Core\Math\Random.h" />
+    <ClInclude Include="Core\Math\Matrix3.h" />
     <ClInclude Include="Core\Debug.h" />
     <ClInclude Include="Core\IModule.h" />
     <ClInclude Include="Core\Time.h" />

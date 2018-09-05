@@ -1,14 +1,13 @@
-// "Copyright [2018] Isetta"
+/*
+ * Copyright (c) 2018 Isetta
+ */
 #pragma once
-#ifndef ISETTA_ISETTA_CORE_DEBUG_H_
-#define ISETTA_ISETTA_CORE_DEBUG_H_
 
 #include <Windows.h>
 #include <stdio.h>
 #include <cstdint>
 #include <fstream>
 #include <string>
-
 #include "Core/Color.h"
 #include "Core/IModule.h"
 #include "Core/Math/Math.h"
@@ -68,7 +67,7 @@ class Debug : public IModule {
   static Verbosity defaultVerbosity;
   static Channel defaultChannel;
 
-  static inline const std::string to_string(Channel c) {
+  static inline const std::string ToString(Channel c) {
     switch (c) {
       case General:
         return "General";
@@ -90,5 +89,3 @@ class Debug : public IModule {
   }
 };
 }  // namespace Isetta
-
-#endif  // ISETTA_ISETTA_CORE_DEBUG_H_

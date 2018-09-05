@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2018 Isetta
+ */
 #include "Random.h"
 
 namespace Isetta::Math {
@@ -23,4 +26,4 @@ float Random::GetRandom01() { return randomFloatGen.GetValue(); }
 RandomGenerator<float> Random::randomFloatGen =
     RandomGenerator<float>(0.f, 1.f);
 
-}  // namespace Math
+}  // namespace Isetta::Math

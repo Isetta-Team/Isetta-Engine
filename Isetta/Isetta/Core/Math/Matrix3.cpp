@@ -175,7 +175,8 @@ void Matrix3::Set(int x, int y, float number) {
 Matrix3 Matrix3::Inverse() const {
   float det = Determinant();
   if (det == 0) {
-    throw std::logic_error("Matrix3: Cannot do inverse when determinant is zero.");
+    throw std::logic_error(
+        "Matrix3: Cannot do inverse when determinant is zero.");
   }
   Matrix3 ret{};
   Matrix3 t{Transpose()};
@@ -242,4 +243,4 @@ void Matrix3::SetCol(int col, Vector3 colData) {
 }
 const Matrix3 Matrix3::zero = Matrix3{};
 const Matrix3 Matrix3::identity = Matrix3{1, 0, 0, 0, 1, 0, 0, 0, 1};
-}  // namespace Math
+}  // namespace Isetta::Math

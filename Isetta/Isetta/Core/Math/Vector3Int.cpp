@@ -1,6 +1,8 @@
-// "Copyright [2018] Isetta"
-
+/*
+ * Copyright (c) 2018 Isetta
+ */
 #include "Vector3Int.h"
+
 #include <cmath>
 #include <stdexcept>
 #include "Vector2Int.h"
@@ -32,7 +34,7 @@ int Vector3Int::operator[](int i) const {
     case 2:
       return z;
     default:
-      throw std::logic_error;
+      throw std::out_of_range("Vector3Int:[] access out of range.");
   }
 }
 

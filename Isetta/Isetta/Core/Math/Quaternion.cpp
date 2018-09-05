@@ -1,5 +1,8 @@
-// "Copyright [2018] Isetta"
+/*
+ * Copyright (c) 2018 Isetta
+ */
 #include "Quaternion.h"
+
 #include "Utility.h"
 #include "Vector3.h"
 

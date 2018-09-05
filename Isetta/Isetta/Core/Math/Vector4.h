@@ -90,7 +90,8 @@ class Vector4 {
 
   // Conversions
 
-  explicit Vector4(const class Color& c);
+  // TODO: Fix
+  // explicit Vector4(const class Color& c);
 
   // Functions
 

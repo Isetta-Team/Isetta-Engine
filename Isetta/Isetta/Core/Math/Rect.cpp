@@ -1,4 +1,6 @@
-// "Copyright [2018] Isetta"
+/*
+ * Copyright (c) 2018 Isetta
+ */
 #include "Rect.h"
 
 #include "Vector2.h"
@@ -29,4 +31,4 @@ Vector2 Rect::PointToNormalized(const Rect& rect, const Vector2& point) {
                  (point.y - rect.y) / rect.height};
 }
 
-}  // namespace Math
+}  // namespace Isetta::Math

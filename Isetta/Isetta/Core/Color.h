@@ -59,13 +59,15 @@ class Color {
         Math::Utility::Clamp01(r * rhs), Math::Utility::Clamp01(g * rhs),
         Math::Utility::Clamp01(b * rhs), Math::Utility::Clamp01(a * rhs));
   }
-  inline Color operator*(const float lhs, Color rhs) const { return rhs * lhs; }
+  friend inline Color operator*(const float lhs, Color rhs) {
+    return rhs * lhs;
+  }
   inline Color operator*(const int rhs) const {
     return Color(
         Math::Utility::Clamp01(r * rhs), Math::Utility::Clamp01(g * rhs),
         Math::Utility::Clamp01(b * rhs), Math::Utility::Clamp01(a * rhs));
   }
-  inline Color operator*(const int lhs, Color rhs) const { return rhs * lhs; }
+  friend inline Color operator*(const int lhs, Color rhs) { return rhs * lhs; }
   inline Color operator/(const float rhs) const {
     return Color(
         Math::Utility::Clamp01(r / rhs), Math::Utility::Clamp01(g / rhs),

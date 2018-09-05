@@ -1,18 +1,21 @@
-// "Copyright [2018] Isetta"
-
-#include "Vector4.h"
+/*
+ * Copyright (c) 2018 Isetta
+ */
+#include "Core/Math/Vector4.h"
 
 #include <cfloat>
 #include <cmath>
 #include <stdexcept>
 #include "Core/Color.h"
 
+// namespace Isetta {
+// Math::Vector4::Vector4(const Color& c) : x{c.r}, y{c.g}, z{c.b}, w{c.a} {}
+//}  // namespace Isetta
+
 namespace Isetta::Math {
 
 const Vector4 Vector4::zero = Vector4();
 const Vector4 Vector4::one = Vector4(1.f);
-
-Vector4(const Color& c) : x{c.r}, y{c.g}, z{c.b}, w{c.a} {}
 
 float Vector4::operator[](int i) const {
   switch (i) {
@@ -25,7 +28,7 @@ float Vector4::operator[](int i) const {
     case 3:
       return w;
     default:
-      throw std::logic_error;
+      throw std::out_of_range("Vector4:[] access out of range.");
   }
 }
 

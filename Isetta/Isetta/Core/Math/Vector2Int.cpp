@@ -1,6 +1,8 @@
-// "Copyright [2018] Isetta"
-
+/*
+ * Copyright (c) 2018 Isetta
+ */
 #include "Vector2Int.h"
+
 #include <cmath>
 #include <stdexcept>
 #include "Vector2.h"
@@ -24,11 +26,13 @@ int Vector2Int::operator[](int i) const {
     case 1:
       return y;
     default:
-      throw std::logic_error;
+      throw std::out_of_range("Vector2Int:[] access out of range.");
   }
 }
 
-float Vector2Int::Magnitude() const { return sqrtf(static_cast<float>(SqrMagnitude())); }
+float Vector2Int::Magnitude() const {
+  return sqrtf(static_cast<float>(SqrMagnitude()));
+}
 int Vector2Int::SqrMagnitude() const { return x * x + y * y; }
 Vector2 Vector2Int::Normalized() const {
   float length{Magnitude()};
@@ -47,4 +51,4 @@ Vector2Int Vector2Int::Scale(const Vector2Int& inVector,
                              const Vector2Int& scalar) {
   return Vector2Int(inVector.x * scalar.x, inVector.y * scalar.y);
 }
-}  // namespace Math
+}  // namespace Isetta::Math
