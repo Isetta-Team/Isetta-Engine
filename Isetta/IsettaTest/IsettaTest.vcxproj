@@ -161,12 +161,11 @@
     <ClCompile Include="Core\ColorTest.cpp" />
     <ClCompile Include="Core\Math\Matrix3Test.cpp" />
     <ClCompile Include="Core\Math\UtilityTest.cpp" />
-    <ClCompile Include="Core\Math\Vectoe2IntTest.cpp" />
+    <ClCompile Include="Core\Math\Vector2IntTest.cpp" />
     <ClCompile Include="Core\Math\Vector2Test.cpp" />
     <ClCompile Include="Core\Math\Vector3IntTest.cpp" />
     <ClCompile Include="Core\Math\Vector3Test.cpp" />
     <ClCompile Include="Core\Math\Vector4Test.cpp" />
-    <ClCompile Include="RectTest.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

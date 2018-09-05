@@ -5,18 +5,26 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace Isetta;
 
 namespace ColorTest {
-TEST_CLASS(ColorTest) {
- public:
-  TEST_METHOD(Addition) {
-    Assert::AreEqual(
-        Color(0.25f, 0.25f, 0.25f, 1.0f) + Color(0.75f, 0.75f, 0.75f, 0.75f),
-        Color::white);
-  }
-  // TEST_METHOD(Get) { Assert::AreEqual(1.f, Math::Matrix3::identity.Get(1,
-  // 1)); } TEST_METHOD(Set) {
-  //  Math::Matrix3 mat{0.f, 0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 0.f, 0.f};
-  //  mat.Set(1, 1, 0.f);
-  //  Assert::IsTrue(mat == Math::Matrix3::zero);
+TEST_CLASS(ColorTest){public : TEST_METHOD(GreyScale){
+    Assert::IsTrue(Color(0.5f, 0.5f, 0.5f, 1.0f) == Color::white.GreyScale());
 }
-};  // namespace ColorTest
+
+public:
+TEST_METHOD(MaxColorComponent) {
+  Assert::IsTrue(0.3f == Color(0.1f, 0.2f, 0.3f, 1.0f).MaxColorComponent());
 }
+
+public:
+TEST_METHOD(ToString) {
+  Assert::IsTrue(std::string("Color(0.1,0.2,0.3,1)") ==
+                 Color(0.1f, 0.2f, 0.3f, 1.0f).ToString());
+}
+
+public:
+TEST_METHOD(Lerp) {
+  Assert::IsTrue(Color(0.25f, 0.25f, 0.25f, 1.0f) ==
+                 Color::Lerp(Color::white, Color::black, 0.25f));
+}
+}
+;
+}  // namespace ColorTest
