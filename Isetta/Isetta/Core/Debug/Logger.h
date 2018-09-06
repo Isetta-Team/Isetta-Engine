@@ -3,7 +3,11 @@
  */
 #pragma once
 
-#include <Windows.h>
+// TODO put in the Filesystem Module
+#define __FILENAME__ \
+  (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
+
+#include <afx.h>
 #include <stdio.h>
 #include <cstdint>
 #include <fstream>
@@ -16,10 +20,11 @@ namespace Isetta {
 
 namespace Debug {
 enum Verbosity {
-  Off = (1u << 0),
+  Off = 0,
   Error = (1u << 1),
   Warning = (1u << 2),
   Info = (1u << 3),
+  All = ~0
 };
 
 static inline const std::string ToString(Debug::Verbosity v) {
