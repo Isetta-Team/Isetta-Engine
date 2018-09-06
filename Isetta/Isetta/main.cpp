@@ -5,7 +5,7 @@
 #include <iostream>
 #include <string>
 #include "Core/Audio/Audio.h"
-#include "Core/Debug.h"
+#include "Core/Debug/Logger.h"
 #include "Core/Math/Random.h"
 #include "Core/Time.h"
 
@@ -16,7 +16,6 @@ AudioSystem gAudioSystem;
 void StartUp() {
   std::cout << "Initializing game" << std::endl;
 
-  Debug::StartUp();
   gAudioSystem.StartUp();
 
   // Audio test code
@@ -29,7 +28,6 @@ void Update() { gAudioSystem.Update(); }
 void ShutDown() {
   std::cout << "Shutting down game" << std::endl;
 
-  Debug::ShutDown();
   gAudioSystem.ShutDown();
 }
 
@@ -47,8 +45,8 @@ int main() {
 
   StartUp();
 
-  Debug::PrintF(Debug::Memory, Debug::Info, "Hi %s, you are %d", "Jake", 10);
-  Debug::PrintF("Test\n");
+  Logger::PrintF(Debug::Memory, Debug::Info, "Hi %s, you are %d", "Jake", 10);
+  Logger::PrintF("Test\n");
 
   const float gameMaxDuration = 10.0;
 

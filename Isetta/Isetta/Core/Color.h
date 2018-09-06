@@ -104,7 +104,7 @@ class Color {
 
   // Functions
 
-  Color GreyScale() const;
+  float GreyScale() const;
   float MaxColorComponent() const;
   std::string ToString() const;
   static Color Lerp(Color a, Color b, float t);

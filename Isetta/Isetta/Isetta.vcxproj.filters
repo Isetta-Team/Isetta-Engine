@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Core\Debug.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Audio\Audio.cpp">
       <Filter>Core\Audio</Filter>
     </ClCompile>
@@ -44,11 +41,14 @@
     <ClCompile Include="Core\Color.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Debug\Logger.cpp">
+      <Filter>Core\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Debug\DebugDraw.cpp">
+      <Filter>Core\Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Core\Debug.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Core\IModule.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -94,6 +94,12 @@
     <ClInclude Include="Core\Color.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Debug\Logger.h">
+      <Filter>Core\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Debug\DebugDraw.h">
+      <Filter>Core\Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -110,6 +116,9 @@
     </Filter>
     <Filter Include="Resources\Sound">
       <UniqueIdentifier>{3ba0afde-f615-4bc6-8d1c-7664d4d1b098}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Debug">
+      <UniqueIdentifier>{5d4f980d-9a8d-4d91-93c4-870cde0b8cb1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
