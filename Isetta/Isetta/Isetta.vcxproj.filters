@@ -55,6 +55,21 @@
     <ClCompile Include="Core\Debug\DebugDraw.cpp">
       <Filter>Core\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Graphics\Render.cpp">
+      <Filter>Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\RenderNode.cpp">
+      <Filter>Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\LightNode.cpp">
+      <Filter>Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\ModelNode.cpp">
+      <Filter>Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Input\Input.cpp">
+      <Filter>Core\Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\IModule.h">
@@ -119,6 +134,21 @@
     <ClInclude Include="Core\Debug\Assert.h">
       <Filter>Core\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Graphics\Render.h">
+      <Filter>Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\RenderNode.h">
+      <Filter>Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\LightNode.h">
+      <Filter>Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\ModelNode.h">
+      <Filter>Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Input\Input.h">
+      <Filter>Core\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -139,10 +169,62 @@
     <Filter Include="Core\Debug">
       <UniqueIdentifier>{5d4f980d-9a8d-4d91-93c4-870cde0b8cb1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Graphics">
+      <UniqueIdentifier>{f0a11195-75f3-4f60-80f3-d029a639f5d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Input">
+      <UniqueIdentifier>{4df4848a-1e54-4b90-8bad-773e71fa89de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\pipelines">
+      <UniqueIdentifier>{699798ff-ad5f-4318-af31-8a9533e02e91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\test">
+      <UniqueIdentifier>{5cc071fc-c36c-4764-9a4a-d63b2bc31c86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\materials">
+      <UniqueIdentifier>{8af1aad8-15c3-4b54-89a8-fddd75efab44}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Sound\singing.wav">
       <Filter>Resources\Sound</Filter>
     </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\test\Low-Poly-Racing-Car.geo">
+      <Filter>Resources\test</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="Resources\test\Low-Poly-Racing-Car.scene.xml">
+      <Filter>Resources\test</Filter>
+    </Xml>
+    <Xml Include="Resources\test\m0DefaultMaterial.material.xml">
+      <Filter>Resources\test</Filter>
+    </Xml>
+    <Xml Include="Resources\pipelines\deferred.pipeline.xml">
+      <Filter>Resources\pipelines</Filter>
+    </Xml>
+    <Xml Include="Resources\pipelines\forward.pipeline.xml">
+      <Filter>Resources\pipelines</Filter>
+    </Xml>
+    <Xml Include="Resources\pipelines\globalSettings.material.xml">
+      <Filter>Resources\pipelines</Filter>
+    </Xml>
+    <Xml Include="Resources\pipelines\hdr.pipeline.xml">
+      <Filter>Resources\pipelines</Filter>
+    </Xml>
+    <Xml Include="Resources\pipelines\postHDR.material.xml">
+      <Filter>Resources\pipelines</Filter>
+    </Xml>
+    <Xml Include="Resources\materials\compute.material.xml">
+      <Filter>Resources\materials</Filter>
+    </Xml>
+    <Xml Include="Resources\materials\computeDraw.material.xml">
+      <Filter>Resources\materials</Filter>
+    </Xml>
+    <Xml Include="Resources\materials\light.material.xml">
+      <Filter>Resources\materials</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

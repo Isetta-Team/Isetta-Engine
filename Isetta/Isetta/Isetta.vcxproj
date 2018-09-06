@@ -52,7 +52,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\string-id\src\lib\sid;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\FMOD\inc;$(SolutionDir)\Isetta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\FMOD\inc;$(SolutionDir)\Isetta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ShowIncludes>false</ShowIncludes>
@@ -100,6 +100,11 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
   <ItemGroup>
     <ClCompile Include="Core\Audio\Audio.cpp" />
     <ClCompile Include="Core\Color.cpp" />
+    <ClCompile Include="Core\Graphics\LightNode.cpp" />
+    <ClCompile Include="Core\Graphics\ModelNode.cpp" />
+    <ClCompile Include="Core\Graphics\Render.cpp" />
+    <ClCompile Include="Core\Graphics\RenderNode.cpp" />
+    <ClCompile Include="Core\Input\Input.cpp" />
     <ClCompile Include="Core\Math\Matrix4.cpp" />
     <ClCompile Include="Core\Math\Quaternion.cpp" />
     <ClCompile Include="Core\Math\Rect.cpp" />
@@ -119,6 +124,15 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
   <ItemGroup>
     <ClInclude Include="Core\Audio\Audio.h" />
     <ClInclude Include="Core\Color.h" />
+<<<<<<< HEAD
+=======
+    <ClInclude Include="Core\Debug\Assert.h" />
+    <ClInclude Include="Core\Graphics\LightNode.h" />
+    <ClInclude Include="Core\Graphics\ModelNode.h" />
+    <ClInclude Include="Core\Graphics\Render.h" />
+    <ClInclude Include="Core\Graphics\RenderNode.h" />
+    <ClInclude Include="Core\Input\Input.h" />
+>>>>>>> d2777a8... Added render system and input module
     <ClInclude Include="Core\Math\Matrix4.h" />
     <ClInclude Include="Core\Math\Quaternion.h" />
     <ClInclude Include="Core\Math\Rect.h" />
@@ -139,6 +153,21 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Sound\singing.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\test\Low-Poly-Racing-Car.geo" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="Resources\materials\compute.material.xml" />
+    <Xml Include="Resources\materials\computeDraw.material.xml" />
+    <Xml Include="Resources\materials\light.material.xml" />
+    <Xml Include="Resources\pipelines\deferred.pipeline.xml" />
+    <Xml Include="Resources\pipelines\forward.pipeline.xml" />
+    <Xml Include="Resources\pipelines\globalSettings.material.xml" />
+    <Xml Include="Resources\pipelines\hdr.pipeline.xml" />
+    <Xml Include="Resources\pipelines\postHDR.material.xml" />
+    <Xml Include="Resources\test\Low-Poly-Racing-Car.scene.xml" />
+    <Xml Include="Resources\test\m0DefaultMaterial.material.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
