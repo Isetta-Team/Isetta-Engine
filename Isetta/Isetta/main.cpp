@@ -3,7 +3,7 @@
  */
 #include <afx.h>
 #include <iostream>
-#include "SID/sid.h"
+#include "sid/sid.h"
 
 int main() {
   // Example copied from https://github.com/TheAllenChou/string-id.git
