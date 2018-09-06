@@ -11,6 +11,10 @@ namespace Isetta::Math {
 
 class Vector4 {
  public:
+  // Constants
+  static const Vector4 zero;
+  static const Vector4 one;
+
   float x, y, z, w;
 
   // Construct by name
@@ -124,10 +128,6 @@ class Vector4 {
   static Vector4 Scale(const Vector4& aVector, const Vector4& bVector);
   // Spherically interpolates between two vectors
   static Vector4 Slerp(const Vector4& start, const Vector4& end, float time);
-
-  // Constants
-  static const Vector4 zero;
-  static const Vector4 one;
 };
 }  // namespace Isetta::Math
 

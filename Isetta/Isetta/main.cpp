@@ -8,6 +8,7 @@
 #include "Core/Debug/Logger.h"
 #include "Core/Math/Random.h"
 #include "Core/Time.h"
+#include "Core/ModuleManager.h"
 
 namespace Isetta {
 
@@ -36,6 +37,8 @@ void ShutDown() {
 using namespace Isetta;
 
 int main() {
+
+  ModuleManager moduleManager;
   auto rnd = Isetta::Math::Random::GetRandomGenerator(1.f, 10.f);
   float number = rnd.GetValue();
   std::cout << number << std::endl;
@@ -43,7 +46,7 @@ int main() {
   using clock = std::chrono::high_resolution_clock;
   using second = std::chrono::duration<float>;
 
-  StartUp();
+  moduleManager.StartUp();
 
   Logger::PrintF(Debug::Memory, Debug::Info, "Hi %s, you are %d", "Jake", 10);
   Logger::PrintF("Test\n");
@@ -58,7 +61,7 @@ int main() {
     Time::time = second(clock::now() - Time::startTime).count();
     lastFrameStartTime = clock::now();
 
-    Update();
+    moduleManager.Update();
     Time::frameCount++;
 
     if (Time::time > gameMaxDuration) {
@@ -66,7 +69,7 @@ int main() {
     }
   }
 
-  ShutDown();
+  moduleManager.ShutDown();
   system("pause");
   return 0;
 }

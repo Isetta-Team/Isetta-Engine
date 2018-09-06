@@ -10,6 +10,10 @@
 #include "Vector4.h"
 
 namespace Isetta::Math {
+const Matrix4 Matrix4::zero = Matrix4{};
+const Matrix4 Matrix4::identity =
+    Matrix4{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
+
 Matrix4::Matrix4() { memset(data, 0, sizeof(data)); }
 
 Matrix4::Matrix4(float value) {
@@ -346,8 +350,4 @@ Matrix4 Matrix4::Scale(const Vector3 scale) {
   return Matrix4{scale.x, 0, 0,       0, 0, scale.y, 0, 0,
                  0,       0, scale.z, 0, 0, 0,       0, 1};
 }
-
-const Matrix4 Matrix4::zero = Matrix4{};
-const Matrix4 Matrix4::identity =
-    Matrix4{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
 }  // namespace Isetta::Math

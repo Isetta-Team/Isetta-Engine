@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include "Core/IModule.h"
+#include "Core/ModuleManager.h"
 
 namespace Isetta {
 
@@ -57,6 +58,9 @@ class AudioSystem : IModule {
   std::vector<AudioSource*> audioSources;
 
   friend class AudioSource;
+  friend void ModuleManager::StartUp();
+  friend void ModuleManager::Update();
+  friend void ModuleManager::ShutDown();
 };
 
 extern AudioSystem gAudioSystem;
