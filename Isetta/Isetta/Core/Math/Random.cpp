@@ -4,26 +4,24 @@
 #include "Random.h"
 
 namespace Isetta::Math {
-RandomGenerator<int> Random::GetRandomGenerator(int start, int end) {
-  return RandomGenerator<int>(start, end);
+RandomGeneratorInt Random::GetRandomGenerator(int start, int end) {
+  return RandomGeneratorInt(start, end);
 }
 
-RandomGenerator<int> Random::GetRandomGenerator(int start, int end, int seed) {
-  return RandomGenerator<int>(start, end, seed);
+RandomGeneratorInt Random::GetRandomGenerator(int start, int end, int seed) {
+  return RandomGeneratorInt(start, end, seed);
 }
 
-RandomGenerator<float> Random::GetRandomGenerator(float start, float end) {
-  return RandomGenerator<float>(start, end);
+RandomGenerator Random::GetRandomGenerator(float start, float end) {
+  return RandomGenerator(start, end);
 }
 
-RandomGenerator<float> Random::GetRandomGenerator(float start, float end,
-                                                  int seed) {
-  return RandomGenerator<float>(start, end, seed);
+RandomGenerator Random::GetRandomGenerator(float start, float end, int seed) {
+  return RandomGenerator(start, end, seed);
 }
 
 float Random::GetRandom01() { return randomFloatGen.GetValue(); }
 
-RandomGenerator<float> Random::randomFloatGen =
-    RandomGenerator<float>(0.f, 1.f);
+RandomGenerator Random::randomFloatGen = RandomGenerator(0.f, 1.f);
 
 }  // namespace Isetta::Math

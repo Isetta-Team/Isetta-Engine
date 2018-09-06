@@ -9,6 +9,9 @@ class Matrix4 {
   float data[16];
 
  public:
+  static const Matrix4 zero;
+  static const Matrix4 identity;
+
   Matrix4();
   explicit Matrix4(float value);
   Matrix4(float m11, float m12, float m13, float m14, float m21, float m22,
@@ -48,11 +51,7 @@ class Matrix4 {
   class Vector4 GetCol(int col) const;
   void SetCol(int col, class Vector4 colData);
 
-  static const Matrix4 zero;
-  static const Matrix4 identity;
-
   static Matrix4 Translate(const class Vector3& translation);
   static Matrix4 Scale(const class Vector3 scale);
 };
 }  // namespace Isetta::Math
-

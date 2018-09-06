@@ -9,6 +9,9 @@ class Matrix3 {
   float data[9];
 
  public:
+  static const Matrix3 zero;
+  static const Matrix3 identity;
+
   Matrix3();
   explicit Matrix3(float value);
   Matrix3(float m11, float m12, float m13, float m21, float m22, float m23,
@@ -46,8 +49,5 @@ class Matrix3 {
   void SetRow(int row, class Vector3 rowData);
   class Vector3 GetCol(int col) const;
   void SetCol(int col, class Vector3 colData);
-
-  static const Matrix3 zero;
-  static const Matrix3 identity;
 };
 }  // namespace Isetta::Math

@@ -7,6 +7,16 @@ namespace Isetta::Math {
 
 class Vector3 {
  public:
+  // Constants
+  static const Vector3 zero;
+  static const Vector3 one;
+  static const Vector3 up;
+  static const Vector3 right;
+  static const Vector3 forward;
+  static const Vector3 down;
+  static const Vector3 left;
+  static const Vector3 back;
+
   float x, y, z;
 
   // Construction
@@ -116,15 +126,5 @@ class Vector3 {
   static Vector3 Scale(const Vector3& inVector, const Vector3& scalar);
   // Spherically interpolates between two vectors
   static Vector3 Slerp(const Vector3& start, const Vector3& end, float time);
-
-  // Constants
-  static const Vector3 zero;
-  static const Vector3 one;
-  static const Vector3 up;
-  static const Vector3 right;
-  static const Vector3 forward;
-  static const Vector3 down;
-  static const Vector3 left;
-  static const Vector3 back;
 };
 }  // namespace Isetta::Math

@@ -7,6 +7,16 @@ namespace Isetta::Math {
 
 class Vector3Int {
  public:
+  // Constants
+  static const Vector3Int zero;
+  static const Vector3Int one;
+  static const Vector3Int up;
+  static const Vector3Int right;
+  static const Vector3Int forward;
+  static const Vector3Int down;
+  static const Vector3Int left;
+  static const Vector3Int back;
+
   int x, y, z;
 
   // Construct by name
@@ -107,15 +117,5 @@ class Vector3Int {
   static float Distance(const Vector3Int& start, const Vector3Int& end);
   // Multiplies two vectors component-wise
   static Vector3Int Scale(const Vector3Int& aVector, const Vector3Int& bVector);
-
-  // Constants
-  static const Vector3Int zero;
-  static const Vector3Int one;
-  static const Vector3Int up;
-  static const Vector3Int right;
-  static const Vector3Int forward;
-  static const Vector3Int down;
-  static const Vector3Int left;
-  static const Vector3Int back;
 };
 }  // namespace Isetta::Math
