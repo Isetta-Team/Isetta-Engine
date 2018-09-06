@@ -7,61 +7,60 @@
 // TODO: do error checking
 // #include "fmod_errors.h"
 #include <string>
+#include <unordered_map>
 #include <vector>
 #include "Core/IModule.h"
 #include "Core/ModuleManager.h"
 
 namespace Isetta {
+class AudioModule;
 
 // TODO: add 3d support
 class AudioSource {
  public:
-  static AudioSource* LoadSound(const std::string& soundName);
+  AudioSource();
+  ~AudioSource() { isDeleted = true; }
 
-  explicit AudioSource(FMOD::Sound*);
+  void SetAudioClip(const char* soundName);
   void Play(bool loop, float volume);
-  // void Play3D(Vector3, bool loop, float volume);
   void Pause() const;
   void Continue() const;
   void Stop() const;
   void SetVolume(const float) const;
-  void Erase();
-
-  bool isErased;
 
  private:
-  FMOD::Sound* fmodSound;
+  FMOD::Sound* fmodSound{};
   FMOD::Channel* fmodChannel{};
+  static AudioModule* audioSystem;
+  bool isDeleted;
 
   bool isChannelValid() const;
+  friend class AudioModule;
 };
 
-class AudioSystem : IModule {
+class AudioModule : private IModule {
  public:
-  AudioSystem() {}
-  ~AudioSystem() final {}
+  AudioModule() {}
+
+ private:
+  ~AudioModule() final {}
 
   void StartUp() final;
+  void LoadAllAudioClips();
   void Update() override;
   void ShutDown() final;
 
-  static std::string GetMemoryReport();
-
- private:
-  AudioSource* LoadSound(const std::string& soundName) const;
-  FMOD::Channel* PlayFMODSound(FMOD::Sound* sound, bool loop,
-                               float volume) const;
-  void AddAudioSource(AudioSource* audioSource);
+  void AddAudioSource(AudioSource*);
+  FMOD::Sound* FindSound(const char* soundName);
+  FMOD::Channel* Play(FMOD::Sound* sound, bool loop, float volume) const;
 
   FMOD::System* fmodSystem;
   std::string soundFilesRoot;
   std::vector<AudioSource*> audioSources;
+  std::unordered_map<std::uint64_t, FMOD::Sound*> soundMap;
 
   friend class AudioSource;
-  friend void ModuleManager::StartUp();
-  friend void ModuleManager::Update();
-  friend void ModuleManager::ShutDown();
+  friend class ModuleManager;
 };
 
-extern AudioSystem gAudioSystem;
 }  // namespace Isetta

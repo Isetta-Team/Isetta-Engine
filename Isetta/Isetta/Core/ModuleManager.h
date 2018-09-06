@@ -4,12 +4,17 @@
 #pragma once
 
 namespace Isetta {
+
+class AudioModule;
 class ModuleManager {
  public:
-  ModuleManager() {}
+  ModuleManager() = default;
 
   void StartUp();
   void Update();
   void ShutDown();
+
+ private:
+  AudioModule* audioModule;
 };
 }  // namespace Isetta

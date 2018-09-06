@@ -1,7 +1,21 @@
 #include "ModuleManager.h"
+#include "Audio/Audio.h"
 
-void Isetta::ModuleManager::StartUp() {}
+namespace Isetta {
 
-void Isetta::ModuleManager::Update() {}
+void ModuleManager::StartUp() {
+  audioModule = new AudioModule();
+  audioModule->StartUp();
+  
+  
+}
 
-void Isetta::ModuleManager::ShutDown() {}
+void ModuleManager::Update() {
+  audioModule->Update();
+}
+
+void ModuleManager::ShutDown() {
+  audioModule->ShutDown();
+}
+
+}  // namespace Isetta

@@ -7,54 +7,48 @@
 #include "Core/Audio/Audio.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Math/Random.h"
-#include "Core/Time.h"
 #include "Core/ModuleManager.h"
-
-namespace Isetta {
-
-AudioSystem gAudioSystem;
-
-void StartUp() {
-  std::cout << "Initializing game" << std::endl;
-
-  gAudioSystem.StartUp();
-
-  // Audio test code
-  auto sing = AudioSource::LoadSound("singing.wav");
-  sing->Play(true, 1.0f);
-}
-
-void Update() { gAudioSystem.Update(); }
-
-void ShutDown() {
-  std::cout << "Shutting down game" << std::endl;
-
-  gAudioSystem.ShutDown();
-}
-
-}  // namespace Isetta
+#include "Core/Time.h"
 
 using namespace Isetta;
 
 int main() {
-
   ModuleManager moduleManager;
+  moduleManager.StartUp();
+
+  // Random number test
   auto rnd = Isetta::Math::Random::GetRandomGenerator(1.f, 10.f);
   float number = rnd.GetValue();
   std::cout << number << std::endl;
 
+
   using clock = std::chrono::high_resolution_clock;
   using second = std::chrono::duration<float>;
 
-  moduleManager.StartUp();
+  // Logger::PrintF(Debug::Memory, Debug::Info, "Hi %s, you are %d", "Jake", 10);
+  // Logger::PrintF("Test\n");
+
+  // Logging test
+  // Logger::PrintF(Debug::Memory, Debug::Info, "Hi %s, you are %d", "Jake", 10);
+  // Logger::PrintF("Test\n");
 
   Logger::PrintF(Debug::Memory, Debug::Info, "Hi %s, you are %d", "Jake", 10);
   Logger::PrintF("Test\n");
+  // Game loop
+  const float gameMaxDuration = 10.0f;
 
-  const float gameMaxDuration = 10.0;
+  using clock = std::chrono::high_resolution_clock;
+  using second = std::chrono::duration<float>;
 
   Time::startTime = clock::now();
   auto lastFrameStartTime = clock::now();
+
+  // play first audio clip
+  auto audioSource = new AudioSource();
+  audioSource->SetAudioClip("wave.mp3");
+
+  audioSource->Play(true, 1.0f);
+  std::cout << "Playing first" << std::endl;
 
   while (true) {
     Time::deltaTime = second(clock::now() - lastFrameStartTime).count();
@@ -63,6 +57,14 @@ int main() {
 
     moduleManager.Update();
     Time::frameCount++;
+
+    // switch to playing the second audio clip
+    if (Time::frameCount == 1000000) {
+      audioSource->Stop();
+      audioSource->SetAudioClip("singing.wav");
+      audioSource->Play(false, 1.0f);
+      std::cout << "Playing second" << std::endl;
+    }
 
     if (Time::time > gameMaxDuration) {
       break;

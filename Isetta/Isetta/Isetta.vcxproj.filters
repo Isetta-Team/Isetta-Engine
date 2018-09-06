@@ -49,6 +49,11 @@
     </ClCompile>
     <ClCompile Include="Core\ModuleManager.cpp">
       <Filter>Core</Filter>
+    <ClCompile Include="Core\Debug\Logger.cpp">
+      <Filter>Core\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Debug\DebugDraw.cpp">
+      <Filter>Core\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -105,6 +110,11 @@
     </ClInclude>
     <ClInclude Include="Core\ModuleManager.h">
       <Filter>Core</Filter>
+    <ClInclude Include="Core\Debug\Logger.h">
+      <Filter>Core\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Debug\DebugDraw.h">
+      <Filter>Core\Debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
