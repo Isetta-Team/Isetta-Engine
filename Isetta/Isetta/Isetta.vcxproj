@@ -110,6 +110,7 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="Core\Math\Random.cpp" />
     <ClCompile Include="Core\Math\Matrix3.cpp" />
     <ClCompile Include="Core\Debug.cpp" />
+    <ClCompile Include="Core\ModuleManager.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -128,6 +129,7 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="Core\Math\Matrix3.h" />
     <ClInclude Include="Core\Debug.h" />
     <ClInclude Include="Core\IModule.h" />
+    <ClInclude Include="Core\ModuleManager.h" />
     <ClInclude Include="Core\Time.h" />
   </ItemGroup>
   <ItemGroup>
