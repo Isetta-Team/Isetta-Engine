@@ -9,6 +9,9 @@
 #include "Vector3.h"
 
 namespace Isetta::Math {
+const Matrix3 Matrix3::zero = Matrix3{};
+const Matrix3 Matrix3::identity = Matrix3{1, 0, 0, 0, 1, 0, 0, 0, 1};
+
 Matrix3::Matrix3() { memset(data, 0, sizeof(data)); }
 
 Matrix3::Matrix3(float value) {
@@ -247,6 +250,4 @@ void Matrix3::SetCol(int col, Vector3 colData) {
   data[3 + col] = colData.y;
   data[6 + col] = colData.z;
 }
-const Matrix3 Matrix3::zero = Matrix3{};
-const Matrix3 Matrix3::identity = Matrix3{1, 0, 0, 0, 1, 0, 0, 0, 1};
 }  // namespace Isetta::Math
