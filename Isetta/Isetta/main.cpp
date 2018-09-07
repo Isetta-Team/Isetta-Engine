@@ -2,7 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #include <chrono>
-#include <iostream>
 #include <string>
 #include "Core/Audio/Audio.h"
 #include "Core/Config/Config.h"
@@ -14,6 +13,7 @@
 #include "Core/Math/Vector3.h"
 #include "Core/ModuleManager.h"
 #include "Core/Time.h"
+#include "Core/Memory/Memory.h"
 
 using namespace Isetta;
 
@@ -44,16 +44,37 @@ int main() {
   // Random number test
   auto rnd = Isetta::Math::Random::GetRandomGenerator(1.f, 10.f);
   float number = rnd.GetValue();
-  std::cout << number << std::endl;
+  // std::cout << number << std::endl;
+
+  // Logging test
+  // Logger::PrintF(Debug::Memory, Debug::Info, "Hi %s, you are %d", "Jake",
+  // 10); Logger::PrintF("Test\n");
+
+  // Memory Allocation
+  StackAllocator stackAllocator(sizeof(AudioSource) * 10);
+  auto memAudio = stackAllocator.New<AudioSource>();
+  // memAudio->SetAudioClip("singing.wav");
+  // memAudio->Play(true, 1.0f);
 
   using clock = std::chrono::high_resolution_clock;
-  using second = std::chrono::duration<float>;
+  typedef std::chrono::duration<float> second;
 
+  // Benchmarking
+  const int testIterations = 10;
+  for (int a = 0; a < testIterations; a++) {
+    const auto benchmarkStart = clock::now();
+    const int count = 100000;
+
+    const auto benchmarkEnd = clock::now();
+
+    Logger::Log(
+        Debug::Channel::Memory,
+        "Bench mark results: " +
+            std::to_string(second(benchmarkEnd - benchmarkStart).count()) +
+            "s");
+  }
   // Game loop
   const float gameMaxDuration = 10.0f;
-
-  using clock = std::chrono::high_resolution_clock;
-  using second = std::chrono::duration<float>;
 
   Time::startTime = clock::now();
   auto lastFrameStartTime = clock::now();
@@ -63,7 +84,6 @@ int main() {
   audioSource->SetAudioClip("wave.mp3");
 
   audioSource->Play(true, 1.0f);
-  std::cout << "Playing first" << std::endl;
 
   ModelNode car{"test/Low-Poly-Racing-Car.scene.xml",
                 Isetta::Math::Vector3{0, -20, 0}, Isetta::Math::Vector3::zero,
@@ -72,8 +92,6 @@ int main() {
   LightNode light{"materials/light.material.xml",
                   Isetta::Math::Vector3{0, 200, 600},
                   Isetta::Math::Vector3{0, 0, 0}, Isetta::Math::Vector3::one};
-  Input::RegisterKeyPressCallback(KeyCode::U,
-                                  []() { std::cout << "U" << std::endl; });
 
   bool running{true};
 
@@ -84,14 +102,6 @@ int main() {
 
     moduleManager.Update();
     Time::frameCount++;
-
-    // switch to playing the second audio clip
-    if (Time::frameCount == 1000000) {
-      audioSource->Stop();
-      audioSource->SetAudioClip("singing.wav");
-      audioSource->Play(false, 1.0f);
-      std::cout << "Playing second" << std::endl;
-    }
 
     if (Time::time > gameMaxDuration) {
       break;

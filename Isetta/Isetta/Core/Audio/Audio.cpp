@@ -13,11 +13,6 @@ namespace Isetta {
 
 AudioModule* AudioSource::audioSystem;
 
-AudioSource::AudioSource() {
-  isDeleted = false;
-  audioSystem->AddAudioSource(this);
-}
-
 void AudioSource::SetAudioClip(const char* soundName) {
   fmodSound = audioSystem->FindSound(soundName);
 }
@@ -71,13 +66,6 @@ void AudioModule::StartUp() {
 void AudioModule::Update() { fmodSystem->update(); }
 
 void AudioModule::ShutDown() {
-  for (auto it : audioSources) {
-    if (!it->isDeleted) {
-      delete (it);
-    }
-  }
-
-  audioSources.clear();
   for (auto it : soundMap) {
     it.second->release();
   }
@@ -117,10 +105,6 @@ void AudioModule::LoadAllAudioClips() {
 
     soundMap.insert({hashedId.GetValue(), sound});
   }
-}
-
-void AudioModule::AddAudioSource(AudioSource* audioSource) {
-  audioSources.push_back(audioSource);
 }
 
 inline float MegaBytesFromBytes(const int byte) {

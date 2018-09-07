@@ -121,6 +121,7 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="Core\Math\Matrix3.cpp" />
     <ClCompile Include="Core\Debug\Logger.cpp" />
     <ClCompile Include="Core\Debug\DebugDraw.cpp" />
+    <ClCompile Include="Core\Memory\Memory.cpp" />
     <ClCompile Include="Core\ModuleManager.cpp" />
     <ClCompile Include="Core\Window.cpp" />
     <ClCompile Include="main.cpp" />
@@ -152,11 +153,13 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="Core\Debug\DebugDraw.h" />
     <ClCompile Include="Core\Debug\Assert.h" />
     <ClInclude Include="Core\IModule.h" />
+    <ClInclude Include="Core\Memory\Memory.h" />
     <ClInclude Include="Core\ModuleManager.h" />
     <ClInclude Include="Core\Time.h" />
     <ClInclude Include="Core\Config\CVar.h" />
     <ClInclude Include="Core\Config\CVarRegistry.h" />
     <ClInclude Include="Core\Window.h" />
+    <ClInclude Include="IsettaTypes.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Sound\singing.wav" />

@@ -8,7 +8,6 @@
 // #include "fmod_errors.h"
 #include <string>
 #include <unordered_map>
-#include <vector>
 #include "Core/IModule.h"
 #include "Core/ModuleManager.h"
 
@@ -18,8 +17,8 @@ class AudioModule;
 // TODO: add 3d support
 class AudioSource {
  public:
-  AudioSource();
-  ~AudioSource() { isDeleted = true; }
+  AudioSource() = default;
+  ~AudioSource() = default;
 
   void SetAudioClip(const char* soundName);
   void Play(bool loop, float volume);
@@ -50,13 +49,11 @@ class AudioModule : private IModule {
   void Update() override;
   void ShutDown() final;
 
-  void AddAudioSource(AudioSource*);
   FMOD::Sound* FindSound(const char* soundName);
   FMOD::Channel* Play(FMOD::Sound* sound, bool loop, float volume) const;
 
   FMOD::System* fmodSystem;
   std::string soundFilesRoot;
-  std::vector<AudioSource*> audioSources;
   std::unordered_map<std::uint64_t, FMOD::Sound*> soundMap;
 
   friend class AudioSource;

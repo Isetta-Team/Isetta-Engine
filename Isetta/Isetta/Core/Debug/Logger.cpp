@@ -5,6 +5,7 @@
 
 #include <Windows.h>
 #include <sstream>
+#include <iostream>
 
 namespace Isetta {
 
@@ -48,6 +49,9 @@ int Logger::VDebugPrintF(const Debug::Channel::Enum channel,
          << "][" << ToString(channel) << "] " << inFormat << '\n';
   int charsWritten =
       vsnprintf(sBuffer, MAX_CHARS, stream.str().c_str(), argList);
+
+  std::cout << stream.str();
+
   sBuffer[MAX_CHARS] = '\0';
 
   if (CheckChannelMask(channel)) {
