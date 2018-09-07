@@ -3,14 +3,10 @@
  */
 #pragma once
 
-#include <Windows.h>
 #include <stdio.h>
 #include <cstdint>
 #include <fstream>
 #include <string>
-#include "Core/Color.h"
-#include "Core/IModule.h"
-#include "Core/Math/Math.h"
 
 namespace Isetta {
 
@@ -91,13 +87,6 @@ class Logger {
                          ...);
   static void LogError(const Debug::Channel channel, const std::string format,
                        ...);
-
-  // static void DrawLine(Math::Vector3 start, Math::Vector3 end,
-  //                     Color color = Color::white, float duration = 0.0f,
-  //                     bool depthTest = true);
-  // static void DrawRay(Math::Vector3 start, Math::Vector3 dir,
-  //                    Color color = Color::white, float duration = 0.0f,
-  //                    bool depthTest = true);
 
  protected:
   static int VDebugPrintF(const Debug::Channel channel,
