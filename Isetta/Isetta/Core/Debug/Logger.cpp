@@ -3,6 +3,7 @@
  */
 #include "Core/Debug/Logger.h"
 
+#include <Windows.h>
 #include <sstream>
 
 namespace Isetta {
