@@ -6,12 +6,17 @@
 namespace Isetta {
 
 // class MemoryManager {
-//  public:
-//   static void* AllocateUnaligned(U32);
-//   static void* AllocateAligned(U32);
-//
-//   static void Free(void*);
+  // public:
+   // static void* AllocateUnaligned(U32);
+   // static void* AllocateAligned(U32);
+
+   // static void Free(void*);
 // };
+
+void* AllocateUnaligned(U32);
+void* AllocateAligned(U32 size, U32 alignment);
+
+void Free(void*);
 
 class StackAllocator {
  public:
@@ -25,6 +30,7 @@ class StackAllocator {
    * \param sizeInBytes Number of bytes you want
    * \return pointer to the allocated memory
    */
+  //TODO: alignment of the memory
   void* Alloc(U32 sizeInBytes);
 
   template <typename T>

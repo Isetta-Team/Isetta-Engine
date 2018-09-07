@@ -14,6 +14,7 @@
 #include "Core/ModuleManager.h"
 #include "Core/Time.h"
 #include "Core/Memory/Memory.h"
+#include <sstream>
 
 using namespace Isetta;
 
@@ -44,8 +45,8 @@ int main() {
   // Random number test
   auto rnd = Isetta::Math::Random::GetRandomGenerator(1.f, 10.f);
   float number = rnd.GetValue();
-  // std::cout << number << std::endl;
-
+  Logger::Log(Debug::Channel::General, "Random number: " + std::to_string(number));
+  
   // Logging test
   // Logger::PrintF(Debug::Memory, Debug::Info, "Hi %s, you are %d", "Jake",
   // 10); Logger::PrintF("Test\n");
@@ -55,26 +56,33 @@ int main() {
   auto memAudio = stackAllocator.New<AudioSource>();
   // memAudio->SetAudioClip("singing.wav");
   // memAudio->Play(true, 1.0f);
+  std::stringstream str;
+  str << "Hex" << std::hex << 16;
+  Logger::Log(Debug::Channel::General, str.str());
+
+
 
   using clock = std::chrono::high_resolution_clock;
   typedef std::chrono::duration<float> second;
 
   // Benchmarking
-  const int testIterations = 10;
-  for (int a = 0; a < testIterations; a++) {
-    const auto benchmarkStart = clock::now();
-    const int count = 100000;
 
-    const auto benchmarkEnd = clock::now();
+  // const int testIterations = 10;
+  // for (int a = 0; a < testIterations; a++) {
+    // const auto benchmarkStart = clock::now();
+    // const int count = 100000;
 
-    Logger::Log(
-        Debug::Channel::Memory,
-        "Bench mark results: " +
-            std::to_string(second(benchmarkEnd - benchmarkStart).count()) +
-            "s");
-  }
+    // const auto benchmarkEnd = clock::now();
+
+    // Logger::Log(
+        // Debug::Channel::Memory,
+        // "Bench mark results: " +
+            // std::to_string(second(benchmarkEnd - benchmarkStart).count()) +
+            // "s");
+  // }
+
   // Game loop
-  const float gameMaxDuration = 10.0f;
+  const float gameMaxDuration = 100.0f;
 
   Time::startTime = clock::now();
   auto lastFrameStartTime = clock::now();

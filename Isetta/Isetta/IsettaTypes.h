@@ -3,5 +3,5 @@
 
 namespace Isetta {
   typedef uint32_t U32;
-
+  // typedef byte
 }

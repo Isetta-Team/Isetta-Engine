@@ -3,11 +3,10 @@
  */
 #include "Audio.h"
 
-#include "combaseapi.h"
-
 #include <SID/sid.h>
 #include <iomanip>
 #include <sstream>
+#include "combaseapi.h"
 
 namespace Isetta {
 
@@ -54,6 +53,7 @@ bool AudioSource::isChannelValid() const {
 }
 
 void AudioModule::StartUp() {
+  CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
   fmodSystem = nullptr;
   FMOD::System_Create(&fmodSystem);
   fmodSystem->init(512, FMOD_INIT_NORMAL, nullptr);
