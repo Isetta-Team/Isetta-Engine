@@ -124,15 +124,11 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
   <ItemGroup>
     <ClInclude Include="Core\Audio\Audio.h" />
     <ClInclude Include="Core\Color.h" />
-<<<<<<< HEAD
-=======
-    <ClInclude Include="Core\Debug\Assert.h" />
     <ClInclude Include="Core\Graphics\LightNode.h" />
     <ClInclude Include="Core\Graphics\ModelNode.h" />
     <ClInclude Include="Core\Graphics\Render.h" />
     <ClInclude Include="Core\Graphics\RenderNode.h" />
     <ClInclude Include="Core\Input\Input.h" />
->>>>>>> d2777a8... Added render system and input module
     <ClInclude Include="Core\Math\Matrix4.h" />
     <ClInclude Include="Core\Math\Quaternion.h" />
     <ClInclude Include="Core\Math\Rect.h" />
