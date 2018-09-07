@@ -7,7 +7,7 @@
 #include <sstream>
 
 namespace Isetta {
-uint8_t Logger::gVerbosityMask = 255;
+uint8_t Logger::gVerbosityMask = Debug::Verbosity::All;
 uint32_t Logger::gChannelMask = ~0u;
 bool Logger::gAlwaysFlush = false;
 
@@ -41,13 +41,13 @@ int Logger::VDebugPrintF(const Debug::Channel channel,
                          const std::string inFormat, va_list argList) {
   const uint32_t MAX_CHARS = 1023;
   static char sBuffer[MAX_CHARS + 1];
-  // TODO time
+  // TODO add actual time
+  std::ostringstream stream;
+  stream << "[" << 12 << ":" << 12 << ":" << 12 << "][" << ToString(verbosity)
+         << "][" << ToString(channel) << "][" << __FILENAME__ << "]["
+         << __LINE__ << "] " << inFormat << '\n';
   int charsWritten =
-      snprintf(sBuffer, MAX_CHARS,
-               std::string("[%d][%s][%s][%s][%d]" + inFormat + '\n').c_str(), 0,
-               ToString(verbosity).c_str(), ToString(channel).c_str(), __FILE__,
-               __LINE__);
-  charsWritten = vsnprintf(sBuffer, MAX_CHARS, sBuffer, argList);
+      vsnprintf(sBuffer, MAX_CHARS, stream.str().c_str(), argList);
   sBuffer[MAX_CHARS] = '\0';
 
   if (CheckChannelMask(channel)) {
