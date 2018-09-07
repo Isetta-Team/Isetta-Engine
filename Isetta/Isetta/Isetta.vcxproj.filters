@@ -106,6 +106,9 @@
     <ClInclude Include="Core\ModuleManager.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Debug\Assert.h">
+      <Filter>Core\Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

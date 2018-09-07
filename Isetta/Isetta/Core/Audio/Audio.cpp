@@ -5,7 +5,7 @@
 
 #include "combaseapi.h"
 
-#include <sid/sid.h>
+#include <SID/sid.h>
 #include <iomanip>
 #include <sstream>
 
