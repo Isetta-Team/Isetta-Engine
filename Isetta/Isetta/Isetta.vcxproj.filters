@@ -116,6 +116,9 @@
     <ClInclude Include="Core\Debug\DebugDraw.h">
       <Filter>Core\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Debug\Assert.h">
+      <Filter>Core\Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
