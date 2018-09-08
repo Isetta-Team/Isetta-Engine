@@ -124,7 +124,6 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
   <ItemGroup>
     <ClInclude Include="Core\Audio\Audio.h" />
     <ClInclude Include="Core\Color.h" />
-    <ClInclude Include="Core\Debug\Assert.h" />
     <ClInclude Include="Core\Graphics\LightNode.h" />
     <ClInclude Include="Core\Graphics\ModelNode.h" />
     <ClInclude Include="Core\Graphics\Render.h" />
