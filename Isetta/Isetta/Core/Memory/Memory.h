@@ -1,22 +1,21 @@
 #pragma once
 
-#include <cstdlib>
 #include "IsettaTypes.h"
 
 namespace Isetta {
 
-// class MemoryManager {
-  // public:
-   // static void* AllocateUnaligned(U32);
-   // static void* AllocateAligned(U32);
+void* AllocateUnaligned(U32 size);
+void FreeUnaligned(void*);
 
-   // static void Free(void*);
-// };
-
-void* AllocateUnaligned(U32);
-void* AllocateAligned(U32 size, U32 alignment);
-
-void Free(void*);
+/**
+ * \brief 
+ * \tparam 
+ * \param size 
+ * \param alignment Alignment has to be power of 2
+ * \return a raw pointer to the newly allocated memory address
+ */
+void* AllocateAligned(U32 size, U8 alignment);
+void FreeAligned(void*);
 
 class StackAllocator {
  public:

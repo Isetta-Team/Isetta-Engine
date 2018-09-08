@@ -2,6 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #include <chrono>
+#include <sstream>
 #include <string>
 #include "Core/Audio/Audio.h"
 #include "Core/Config/Config.h"
@@ -11,10 +12,9 @@
 #include "Core/Input/InputInterface.h"
 #include "Core/Math/Random.h"
 #include "Core/Math/Vector3.h"
+#include "Core/Memory/Memory.h"
 #include "Core/ModuleManager.h"
 #include "Core/Time.h"
-#include "Core/Memory/Memory.h"
-#include <sstream>
 
 using namespace Isetta;
 
@@ -45,61 +45,66 @@ int main() {
   // Random number test
   auto rnd = Isetta::Math::Random::GetRandomGenerator(1.f, 10.f);
   float number = rnd.GetValue();
-  Logger::Log(Debug::Channel::General, "Random number: " + std::to_string(number));
-  
+  Logger::Log(Debug::Channel::General,
+              "Random number: " + std::to_string(number));
+
   // Logging test
   // Logger::PrintF(Debug::Memory, Debug::Info, "Hi %s, you are %d", "Jake",
   // 10); Logger::PrintF("Test\n");
 
   // Memory Allocation
-  StackAllocator stackAllocator(sizeof(AudioSource) * 10);
-  auto memAudio = stackAllocator.New<AudioSource>();
+  // StackAllocator stackAllocator(sizeof(AudioSource) * 10);
+  // auto memAudio = stackAllocator.New<AudioSource>();
   // memAudio->SetAudioClip("singing.wav");
   // memAudio->Play(true, 1.0f);
-  std::stringstream str;
-  str << "Hex" << std::hex << 16;
-  Logger::Log(Debug::Channel::General, str.str());
-
 
 
   using clock = std::chrono::high_resolution_clock;
   typedef std::chrono::duration<float> second;
 
   // Benchmarking
-
   // const int testIterations = 10;
   // for (int a = 0; a < testIterations; a++) {
-    // const auto benchmarkStart = clock::now();
-    // const int count = 100000;
+  // const auto benchmarkStart = clock::now();
+  // const int count = 100000;
 
-    // const auto benchmarkEnd = clock::now();
+  // const auto benchmarkEnd = clock::now();
 
-    // Logger::Log(
-        // Debug::Channel::Memory,
-        // "Bench mark results: " +
-            // std::to_string(second(benchmarkEnd - benchmarkStart).count()) +
-            // "s");
+  // const std::string result =
+  // "Bench mark result: " +
+  // std::to_string(second(benchmarkEnd - benchmarkStart).count()) + "s";
+
+  // Logger::Log(Debug::Channel::Memory, result);
   // }
 
   // Game loop
-  const float gameMaxDuration = 100.0f;
-
   Time::startTime = clock::now();
   auto lastFrameStartTime = clock::now();
 
-  // play first audio clip
-  auto audioSource = new AudioSource();
-  audioSource->SetAudioClip("wave.mp3");
+  Logger::Log(Debug::Channel::Memory, "Size of audiosource: " + std::to_string(sizeof(AudioSource)));
 
-  audioSource->Play(true, 1.0f);
+  
+  // void* mem = std::malloc(16 + 8);
+  // U8 alignment = 8;
+  // PtrInt rawAddress = reinterpret_cast<PtrInt>(mem);
+  // PtrInt misAlignment = rawAddress & (alignment - 1);
+  // PtrDiff adjustment = alignment - misAlignment;
+  // PtrInt alignedAddress = rawAddress + adjustment;
+  // U8* alignmentMemory = reinterpret_cast<U8*>(alignedAddress);
+  // alignmentMemory[-1] = adjustment;
+  // std::free(mem);
 
-  ModelNode car{"test/Low-Poly-Racing-Car.scene.xml",
-                Isetta::Math::Vector3{0, -20, 0}, Isetta::Math::Vector3::zero,
-                Isetta::Math::Vector3::one};
+  // Logger::Log(Debug::Channel::Memory, "Aligned Memory: " + std::to_string(alignmentMemory[0]));
 
-  LightNode light{"materials/light.material.xml",
-                  Isetta::Math::Vector3{0, 200, 600},
-                  Isetta::Math::Vector3{0, 0, 0}, Isetta::Math::Vector3::one};
+  // delete[](mem);
+
+  // ModelNode car{"test/Low-Poly-Racing-Car.scene.xml",
+  // Isetta::Math::Vector3{0, -20, 0}, Isetta::Math::Vector3::zero,
+  // Isetta::Math::Vector3::one};
+
+  // LightNode light{"materials/light.material.xml",
+  // Isetta::Math::Vector3{0, 200, 600},
+  // Isetta::Math::Vector3::zero, Isetta::Math::Vector3::one};
 
   bool running{true};
 
@@ -110,10 +115,6 @@ int main() {
 
     moduleManager.Update();
     Time::frameCount++;
-
-    if (Time::time > gameMaxDuration) {
-      break;
-    }
 
     if (Input::IsKeyPressed(KeyCode::ESCAPE)) {
       running = false;

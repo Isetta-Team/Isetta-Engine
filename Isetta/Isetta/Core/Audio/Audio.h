@@ -8,6 +8,7 @@
 // #include "fmod_errors.h"
 #include <string>
 #include <unordered_map>
+#include <vector>
 #include "Core/IModule.h"
 #include "Core/ModuleManager.h"
 
@@ -31,7 +32,6 @@ class AudioSource {
   FMOD::Sound* fmodSound{};
   FMOD::Channel* fmodChannel{};
   static AudioModule* audioSystem;
-  bool isDeleted;
 
   bool isChannelValid() const;
   friend class AudioModule;
@@ -39,10 +39,10 @@ class AudioSource {
 
 class AudioModule : private IModule {
  public:
-  AudioModule() {}
+  AudioModule() = default;
 
- private:
-  ~AudioModule() final {}
+private:
+  ~AudioModule() final = default;
 
   void StartUp() final;
   void LoadAllAudioClips();
