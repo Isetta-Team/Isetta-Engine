@@ -3,25 +3,29 @@
  */
 #include "Audio.h"
 
-#include <iomanip>
-#include <iostream>
-#include <sstream>
 #include "combaseapi.h"
+
+#include <SID/sid.h>
+#include <iomanip>
+#include <sstream>
 
 namespace Isetta {
 
-AudioSource* AudioSource::LoadSound(const std::string& soundName) {
-  return gAudioSystem.LoadSound(soundName);
+AudioModule* AudioSource::audioSystem;
+
+AudioSource::AudioSource() {
+  isDeleted = false;
+  audioSystem->AddAudioSource(this);
 }
 
-AudioSource::AudioSource(FMOD::Sound* sound) {
-  fmodSound = sound;
-  isErased = false;
-  gAudioSystem.AddAudioSource(this);
+void AudioSource::SetAudioClip(const char* soundName) {
+  fmodSound = audioSystem->FindSound(soundName);
 }
 
 void AudioSource::Play(const bool loop, const float volume) {
-  fmodChannel = gAudioSystem.PlayFMODSound(fmodSound, loop, volume);
+  if (fmodSound != nullptr) {
+    fmodChannel = audioSystem->Play(fmodSound, loop, volume);
+  }
 }
 
 void AudioSource::Pause() const {
@@ -48,51 +52,51 @@ void AudioSource::SetVolume(const float volume) const {
   }
 }
 
-void AudioSource::Erase() {
-  Stop();
-  isErased = true;
-  fmodSound->release();
-}
-
 bool AudioSource::isChannelValid() const {
   bool isPlaying = false;
   fmodChannel->isPlaying(&isPlaying);
   return fmodChannel != nullptr && isPlaying;
 }
 
-void AudioSystem::StartUp() {
+void AudioModule::StartUp() {
   fmodSystem = nullptr;
   FMOD::System_Create(&fmodSystem);
   fmodSystem->init(512, FMOD_INIT_NORMAL, nullptr);
   // TODO: Set this in engine config
   soundFilesRoot = R"(Resources\Sound\)";
+  LoadAllAudioClips();
+  AudioSource::audioSystem = this;
 }
 
-void AudioSystem::Update() { fmodSystem->update(); }
+void AudioModule::Update() { fmodSystem->update(); }
 
-void AudioSystem::ShutDown() {
+void AudioModule::ShutDown() {
   for (auto it : audioSources) {
-    it->Erase();
-    it->isErased = true;
-    delete (it);
+    if (!it->isDeleted) {
+      delete (it);
+    }
   }
 
   audioSources.clear();
+  for (auto it : soundMap) {
+    it.second->release();
+  }
+
+  soundMap.clear();
   fmodSystem->release();
   CoUninitialize();
 }
 
-AudioSource* AudioSystem::LoadSound(const std::string& soundName) const {
-  FMOD::Sound* sound = nullptr;
-  std::string path = soundFilesRoot + soundName;
-  std::cout << "Loading: " << path << std::endl;
-  fmodSystem->createSound(path.c_str(), FMOD_LOWMEM, nullptr, &sound);
-
-  return new AudioSource(sound);
+FMOD::Sound* AudioModule::FindSound(const char* soundName) {
+  const auto hashedValue = SID(soundName).GetValue();
+  if (soundMap.find(hashedValue) != soundMap.end()) {
+    return soundMap[hashedValue];
+  }
+  return nullptr;
 }
 
-FMOD::Channel* AudioSystem::PlayFMODSound(FMOD::Sound* sound, bool loop,
-                                          float volume) const {
+FMOD::Channel* AudioModule::Play(FMOD::Sound* sound, bool loop,
+                                 float volume) const {
   FMOD::Channel* channel = nullptr;
   sound->setMode(loop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF);
   fmodSystem->playSound(sound, nullptr, false, &channel);
@@ -100,7 +104,22 @@ FMOD::Channel* AudioSystem::PlayFMODSound(FMOD::Sound* sound, bool loop,
   return channel;
 }
 
-void AudioSystem::AddAudioSource(AudioSource* audioSource) {
+void AudioModule::LoadAllAudioClips() {
+  // TODO: get this array of string from game config
+  const char* files[]{"singing.wav", "wave.mp3"};
+
+  for (auto file : files) {
+    StringId hashedId = SID(file);
+
+    FMOD::Sound* sound = nullptr;
+    std::string path = soundFilesRoot + file;
+    fmodSystem->createSound(path.c_str(), FMOD_LOWMEM, nullptr, &sound);
+
+    soundMap.insert({hashedId.GetValue(), sound});
+  }
+}
+
+void AudioModule::AddAudioSource(AudioSource* audioSource) {
   audioSources.push_back(audioSource);
 }
 
@@ -108,7 +127,7 @@ inline float MegaBytesFromBytes(const int byte) {
   return byte / 1024.f / 1024.f;
 }
 
-std::string AudioSystem::GetMemoryReport() {
+std::string GetAudioSystemMemoryReport() {
   int currentAllocated;
   int maxAllocated;
   FMOD::Memory_GetStats(&currentAllocated, &maxAllocated);
