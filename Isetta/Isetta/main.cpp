@@ -5,18 +5,23 @@
 #include <iostream>
 #include <string>
 #include "Core/Audio/Audio.h"
+#include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Graphics/LightNode.h"
 #include "Core/Graphics/ModelNode.h"
+#include "Core/Input/Input.h"
 #include "Core/Math/Random.h"
 #include "Core/Math/Vector3.h"
 #include "Core/ModuleManager.h"
-#include "Core/Input/Input.h"
 #include "Core/Time.h"
 
 using namespace Isetta;
 
 int main() {
+  Config config;
+  Logger::Log(Debug::Channel::General,
+              config.vector3Var.GetV3Val().ToString().c_str());
+
   ModuleManager moduleManager;
   moduleManager.StartUp();
 
@@ -27,13 +32,6 @@ int main() {
 
   using clock = std::chrono::high_resolution_clock;
   using second = std::chrono::duration<float>;
-
-  // Logger::PrintF(Debug::Memory, Debug::Info, "Hi %s, you are %d", "Jake",
-  // 10); Logger::PrintF("Test\n");
-
-  // Logging test
-  // Logger::PrintF(Debug::Memory, Debug::Info, "Hi %s, you are %d", "Jake",
-  // 10); Logger::PrintF("Test\n");
 
   Logger::PrintF(Debug::Memory, Debug::Info, "Hi %s, you are %d", "Jake", 10);
   Logger::PrintF("Test\n");

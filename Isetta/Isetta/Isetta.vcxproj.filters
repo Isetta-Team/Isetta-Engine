@@ -65,6 +65,15 @@
     <ClCompile Include="Core\Input\Input.cpp">
       <Filter>Core\Input</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Debug\Assert.h">
+            <Filter>Core\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Config\Config.cpp">
+      <Filter>Core\Config</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Config\CVar.cpp">
+      <Filter>Core\Config</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\IModule.h">
@@ -121,9 +130,6 @@
     <ClInclude Include="Core\ModuleManager.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Debug\Assert.h">
-      <Filter>Core\Debug</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Graphics\Render.h">
       <Filter>Core\Graphics</Filter>
     </ClInclude>
@@ -138,6 +144,18 @@
     </ClInclude>
     <ClInclude Include="Core\Input\Input.h">
       <Filter>Core\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Config\Config.h">
+      <Filter>Core\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Config\CVar.h">
+      <Filter>Core\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Config\CVarRegistry.h">
+      <Filter>Core\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Config\Convert.h">
+      <Filter>Core\Config</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -174,6 +192,9 @@
     <Filter Include="Resources\materials">
       <UniqueIdentifier>{8af1aad8-15c3-4b54-89a8-fddd75efab44}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Config">
+      <UniqueIdentifier>{78b96f16-2074-4d8e-802c-ce826e96fe83}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Sound\singing.wav">
@@ -184,6 +205,7 @@
     <None Include="Resources\test\Low-Poly-Racing-Car.geo">
       <Filter>Resources\test</Filter>
     </None>
+    <None Include="config.cfg" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Resources\test\Low-Poly-Racing-Car.scene.xml">
