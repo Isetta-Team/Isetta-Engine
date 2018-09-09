@@ -3,7 +3,6 @@
  */
 #pragma once
 
-#include <iostream>
 #include <istream>
 
 namespace Isetta::Math {

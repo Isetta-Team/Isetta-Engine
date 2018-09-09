@@ -26,7 +26,6 @@ void ModuleManager::Update() {
 
 void ModuleManager::ShutDown() {
   audioModule->ShutDown();
-
   renderModule->ShutDown();
 }
 }  // namespace Isetta

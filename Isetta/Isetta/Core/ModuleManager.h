@@ -5,8 +5,6 @@
 
 namespace Isetta {
 
-class AudioModule;
-
 class ModuleManager {
  public:
   ModuleManager() = default;
@@ -16,7 +14,6 @@ class ModuleManager {
   void ShutDown();
 
  private:
-  AudioModule* audioModule;
   class AudioModule* audioModule;
   class RenderModule* renderModule;
   class InputModule* inputModule;
