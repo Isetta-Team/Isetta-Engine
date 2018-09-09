@@ -66,13 +66,19 @@
       <Filter>Core\Input</Filter>
     </ClCompile>
     <ClCompile Include="Core\Debug\Assert.h">
-            <Filter>Core\Debug</Filter>
+      <Filter>Core\Debug</Filter>
     </ClCompile>
     <ClCompile Include="Core\Config\Config.cpp">
       <Filter>Core\Config</Filter>
     </ClCompile>
     <ClCompile Include="Core\Config\CVar.cpp">
       <Filter>Core\Config</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Window.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Input\InputInterface.cpp">
+      <Filter>Core\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +162,15 @@
     </ClInclude>
     <ClInclude Include="Core\Config\Convert.h">
       <Filter>Core\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Window.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Input\InputInterface.h">
+      <Filter>Core\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Input\InputEnum.h">
+      <Filter>Core\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

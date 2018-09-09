@@ -3,8 +3,7 @@
  */
 #include "ModuleManager.h"
 #include "Audio/Audio.h"
-#include "Core/Graphics/Render.h"
-#include "Core/Input/Input.h"
+#include "Core\Window.h"
 
 namespace Isetta {
 
@@ -12,20 +11,19 @@ void ModuleManager::StartUp() {
   audioModule = new AudioModule();
   audioModule->StartUp();
 
-  renderModule = new RenderModule();
-  renderModule->StartUp();
+  windowModule = new WindowModule();
+  windowModule->StartUp();
 
-  inputModule = new InputModule();
-  inputModule->StartUp();
 }
 
 void ModuleManager::Update() {
   audioModule->Update();
-  renderModule->Update();
+  windowModule->Update();
 }
 
 void ModuleManager::ShutDown() {
   audioModule->ShutDown();
-  renderModule->ShutDown();
+  windowModule->ShutDown();
+  delete windowModule;
 }
 }  // namespace Isetta

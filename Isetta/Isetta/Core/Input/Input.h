@@ -3,29 +3,49 @@
  */
 #pragma once
 
+#include <GLFW/glfw3.h>
 #include <functional>
 #include <list>
-#include <GLFW/glfw3.h>
+#include <unordered_map>
 #include "Core/IModule.h"
+#include "Core/Input/InputEnum.h"
 
 namespace Isetta {
 class InputModule : IModule {
  public:
   void RegisterWindowCloseCallback(std::function<void()> callback);
-  static bool IsKeyPressed(int key);
+  bool IsKeyPressed(KeyCode key);
+  void RegisterKeyPressCallback(KeyCode key,const std::function<void()>& callback);
+  void RegisterKeyReleaseCallback(KeyCode key,const std::function<void()>& callback);
+  bool IsMouseButtonPressed(MouseButtonCode mouseButton);
+  void RegisterMousePressCallback(
+      MouseButtonCode mouseButton,const std::function<void()>& callback);
+  void RegisterMouseReleaseCallback(
+      MouseButtonCode mouseButton,const std::function<void()>& callback);
 
  private:
-  InputModule() = default;
+  static GLFWwindow* winHandle;
+
+  InputModule(GLFWwindow* winHandle);
   ~InputModule() final = default;
 
   void StartUp() final;
+  void Update() final;
   void ShutDown() final;
 
-  // #TODO Solve function pointer namespace problem
-  static std::list<std::function<void()>> windowCloseCallbacks;
+  int KeyCodeToGLFWKey(KeyCode key);
 
+  static std::list<std::function<void()>> windowCloseCallbacks;
   static void windowCloseListener(GLFWwindow* win);
 
-  friend class ModuleManager;
+  static std::unordered_map<int, std::list<std::function<void()>>>
+      keyPressCallbacks;
+  static std::unordered_map<int, std::list<std::function<void()>>>
+      keyReleaseCallbacks;
+  static void keyEventListener(GLFWwindow* win, int key, int scancode,
+                               int action, int mods);
+
+
+  friend class WindowModule;
 };
 }  // namespace Isetta

@@ -107,6 +107,7 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="Core\Graphics\Render.cpp" />
     <ClCompile Include="Core\Graphics\RenderNode.cpp" />
     <ClCompile Include="Core\Input\Input.cpp" />
+    <ClCompile Include="Core\Input\InputInterface.cpp" />
     <ClCompile Include="Core\Math\Matrix4.cpp" />
     <ClCompile Include="Core\Math\Quaternion.cpp" />
     <ClCompile Include="Core\Math\Rect.cpp" />
@@ -121,6 +122,7 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="Core\Debug\Logger.cpp" />
     <ClCompile Include="Core\Debug\DebugDraw.cpp" />
     <ClCompile Include="Core\ModuleManager.cpp" />
+    <ClCompile Include="Core\Window.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +135,8 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="Core\Graphics\Render.h" />
     <ClInclude Include="Core\Graphics\RenderNode.h" />
     <ClInclude Include="Core\Input\Input.h" />
+    <ClInclude Include="Core\Input\InputEnum.h" />
+    <ClInclude Include="Core\Input\InputInterface.h" />
     <ClInclude Include="Core\Math\Matrix4.h" />
     <ClInclude Include="Core\Math\Quaternion.h" />
     <ClInclude Include="Core\Math\Rect.h" />
@@ -152,6 +156,7 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="Core\Time.h" />
     <ClInclude Include="Core\Config\CVar.h" />
     <ClInclude Include="Core\Config\CVarRegistry.h" />
+    <ClInclude Include="Core\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Sound\singing.wav" />

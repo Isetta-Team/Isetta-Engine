@@ -3,12 +3,10 @@
 #include <stdexcept>
 
 namespace Isetta {
-GLFWwindow* RenderModule::winHandle{nullptr};
+RenderModule::RenderModule(GLFWwindow* win) : winHandle{win} {}
 
 void RenderModule::StartUp() {
-  glfwInit();
   InitRenderConfig();
-  InitWindow();
   InitH3D();
   InitHordeConfig();
   InitResources();
@@ -16,8 +14,6 @@ void RenderModule::StartUp() {
 
 void RenderModule::Update() {
   if (!cam) return;
-
-  glfwPollEvents();
 
   h3dRender(cam);
 
@@ -35,64 +31,12 @@ void RenderModule::ShutDown() {
   }
 }
 
-void RenderModule::InitWindow() {
-  // Create OpenGL window
-  glfwWindowHint(GLFW_RED_BITS, 8);
-  glfwWindowHint(GLFW_GREEN_BITS, 8);
-  glfwWindowHint(GLFW_BLUE_BITS, 8);
-  glfwWindowHint(GLFW_ALPHA_BITS, 8);
-  glfwWindowHint(GLFW_DEPTH_BITS, 24);
-
-  if (renderInterface == H3DRenderDevice::OpenGL4) {
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  }
-
-  if (winFullScreen) {
-    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    winHandle = glfwCreateWindow(mode->width, mode->height, winTitle.c_str(),
-                                 glfwGetPrimaryMonitor(), NULL);
-  } else {
-    winHandle = glfwCreateWindow(initWinWidth, initWinHeight, winTitle.c_str(),
-                                 NULL, NULL);
-  }
-
-  if (winHandle == NULL) {
-    // Fake message box
-    glfwDestroyWindow(winHandle);
-
-    winHandle = glfwCreateWindow(800, 50,
-                                 "Unable to initialize engine - Make sure you "
-                                 "have an OpenGL 2.0 compatible graphics card",
-                                 NULL, NULL);
-    double startTime = glfwGetTime();
-    while (glfwGetTime() - startTime < 5.0) { /* Sleep */
-    }
-
-    throw new std::exception(
-        "Render::InitWindow: Unable to initialize window. Make sure you have "
-        "an OpenGL compatible graphics card.");
-  }
-
-  glfwSetWindowUserPointer(winHandle, this);
-  glfwMakeContextCurrent(winHandle);
-
-  glfwSetInputMode(winHandle, GLFW_CURSOR,
-                   winShowCursor ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
-}
-
 void RenderModule::InitRenderConfig() {
   // #TODO Read from game config
-  winTitle = "Current Game";
   renderInterface = H3DRenderDevice::OpenGL4;
   fov = 45.f;
   nearPlane = 0.1f;
   farPlane = 1000.f;
-  initWinWidth = 1024;
-  initWinHeight = 576;
-  winFullScreen = false;
-  winShowCursor = false;
   resourcePath = R"(Resources)";
 }
 

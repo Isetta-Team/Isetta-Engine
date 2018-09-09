@@ -9,7 +9,7 @@
 #include "Core/Debug/Logger.h"
 #include "Core/Graphics/LightNode.h"
 #include "Core/Graphics/ModelNode.h"
-#include "Core/Input/Input.h"
+#include "Core/Input/InputInterface.h"
 #include "Core/Math/Random.h"
 #include "Core/Math/Vector3.h"
 #include "Core/ModuleManager.h"
@@ -58,6 +58,8 @@ int main() {
   LightNode light{"materials/light.material.xml",
                   Isetta::Math::Vector3{0, 200, 600},
                   Isetta::Math::Vector3::zero, Isetta::Math::Vector3::one};
+  Input::RegisterKeyPressCallback(KeyCode::U,
+                                  []() { std::cout << "U" << std::endl; });
 
   bool running{true};
 
@@ -81,7 +83,7 @@ int main() {
       break;
     }
 
-    if (InputModule::IsKeyPressed(256)) {
+    if (Input::IsKeyPressed(KeyCode::ESCAPE)) {
       running = false;
     }
   }

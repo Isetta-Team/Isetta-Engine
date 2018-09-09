@@ -12,12 +12,9 @@
 namespace Isetta {
 class RenderModule : IModule {
  public:
-  // #TODO InputModule depends on this, discuss how to design it
-  // Maybe Window Manager -> Render Module, Input Module
-  static GLFWwindow* winHandle;
 
  private:
-  RenderModule() = default;
+  RenderModule(GLFWwindow* win);
   ~RenderModule() final = default;
 
   void StartUp() final;
@@ -26,16 +23,10 @@ class RenderModule : IModule {
 
   int renderInterface;
   std::string resourcePath;
-  std::string winTitle;
-  int initWinWidth;
-  int initWinHeight;
   float fov;
   float nearPlane;
   float farPlane;
-  bool winFullScreen;
-  bool winShowCursor;
 
-  void InitWindow();
   void InitRenderConfig();
   void InitHordeConfig();
   void InitH3D();
@@ -48,6 +39,8 @@ class RenderModule : IModule {
   H3DRes fontMatRes, panelMatRes, logoMatRes;
   H3DNode cam;
 
-  friend class ModuleManager;
+  GLFWwindow* winHandle;
+
+  friend class WindowModule;
 };
 }  // namespace Isetta

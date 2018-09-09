@@ -15,7 +15,6 @@ class ModuleManager {
 
  private:
   class AudioModule* audioModule;
-  class RenderModule* renderModule;
-  class InputModule* inputModule;
+  class WindowModule* windowModule;
 };
 }  // namespace Isetta
