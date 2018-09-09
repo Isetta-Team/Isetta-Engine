@@ -120,7 +120,6 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="Core\Math\Matrix3.cpp" />
     <ClCompile Include="Core\Debug\Logger.cpp" />
     <ClCompile Include="Core\Debug\DebugDraw.cpp" />
-    <ClCompile Include="Core\Debug\Assert.cpp" />
     <ClCompile Include="Core\ModuleManager.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
