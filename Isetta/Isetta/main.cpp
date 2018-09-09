@@ -36,6 +36,10 @@ void ShutDown() {
 using namespace Isetta;
 
 int main() {
+  LOG(Debug::Channel::Memory, Debug::Verbosity::Info, "Hi %s, you are %d",
+      "Jake", 10);
+  return 0;
+
   auto rnd = Isetta::Math::Random::GetRandomGenerator(1.f, 10.f);
   float number = rnd.GetValue();
   std::cout << number << std::endl;
@@ -44,9 +48,6 @@ int main() {
   using second = std::chrono::duration<float>;
 
   StartUp();
-
-  Logger::PrintF(Debug::Memory, Debug::Info, "Hi %s, you are %d", "Jake", 10);
-  Logger::PrintF("Test\n");
 
   const float gameMaxDuration = 10.0;
 

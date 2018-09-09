@@ -14,18 +14,21 @@
 #include <string>
 
 namespace Isetta {
+#define LOG LogObject(__FILENAME__, __LINE__)
 
 namespace Debug {
-enum Verbosity {
-  Off = 0,
-  Error = (1u << 1),
-  Development = (1 << 2),
-  Warning = (1u << 3),
-  Info = (1u << 4),
-  All = ~0
+struct Verbosity {
+  enum Enum {
+    Off = 0,
+    Error = (1u << 1),
+    Development = (1 << 2),
+    Warning = (1u << 3),
+    Info = (1u << 4),
+    All = ~0
+  };
 };
 
-static inline const std::string ToString(Debug::Verbosity v) {
+static inline const std::string ToString(Verbosity::Enum v) {
   switch (v) {
     case Verbosity::Off:
       return "Off";
@@ -40,31 +43,33 @@ static inline const std::string ToString(Debug::Verbosity v) {
   }
 }
 
-enum Channel {
-  General = (1u << 0),
-  Memory = (1u << 1),
-  Networking = (1u << 2),
-  Graphics = (1u << 3),
-  Physics = (1u << 4),
-  Gameplay = (1u << 5),
-  Sound = (1u << 6),
+struct Channel {
+  enum Enum {
+    General = (1u << 0),
+    Memory = (1u << 1),
+    Networking = (1u << 2),
+    Graphics = (1u << 3),
+    Physics = (1u << 4),
+    Gameplay = (1u << 5),
+    Sound = (1u << 6),
+  };
 };
 
-static inline const std::string ToString(Debug::Channel c) {
+static inline const std::string ToString(Channel::Enum c) {
   switch (c) {
-    case Debug::General:
+    case Channel::General:
       return "General";
-    case Debug::Memory:
+    case Channel::Memory:
       return "Memory";
-    case Debug::Networking:
+    case Channel::Networking:
       return "Networking";
-    case Debug::Graphics:
+    case Channel::Graphics:
       return "Graphics";
-    case Debug::Physics:
+    case Channel::Physics:
       return "Physics";
-    case Debug::Gameplay:
+    case Channel::Gameplay:
       return "Gameplay";
-    case Debug::Sound:
+    case Channel::Sound:
       return "Sound";
     default:
       return "Unknown";
@@ -83,30 +88,53 @@ class Logger {
   static void SetLoggerChannelFile(std::ofstream* inChannelStream);
 
   static int PrintF(const std::string format, ...);
-  static int PrintF(const Debug::Channel channel, const std::string format,
-                    ...);
-  static int PrintF(const Debug::Channel channel,
-                    const Debug::Verbosity verbosity, const std::string format,
-                    ...);
+  static int PrintF(const Debug::Channel::Enum channel,
+                    const Debug::Verbosity::Enum verbosity,
+                    const std::string format, ...);
+  static int _PrintFMacro(const std::string file, const int line,
+                          const Debug::Channel::Enum channel,
+                          const Debug::Verbosity::Enum verbosity,
+                          const std::string format, va_list argList);
 
-  static void Log(const Debug::Channel channel, const std::string format, ...);
-  static void LogWarning(const Debug::Channel channel, const std::string format,
-                         ...);
-  static void LogError(const Debug::Channel channel, const std::string format,
-                       ...);
+  static void Log(const Debug::Channel::Enum channel, const std::string format,
+                  ...);
+  static void LogWarning(const Debug::Channel::Enum channel,
+                         const std::string format, ...);
+  static void LogDevelop(const Debug::Channel::Enum channel,
+                         const std::string format, ...);
+  static void LogError(const Debug::Channel::Enum channel,
+                       const std::string format, ...);
 
  protected:
-  static int VDebugPrintF(const Debug::Channel channel,
-                          const Debug::Verbosity verbosity,
+  static int VDebugPrintF(const Debug::Channel::Enum channel,
+                          const Debug::Verbosity::Enum verbosity,
                           const std::string format, va_list argList);
 
  private:
   static std::ofstream* engineStream;
   static std::ofstream* channelStream;
-  static bool CheckChannelMask(const Debug::Channel channel);
-  static bool CheckVerbosity(const Debug::Verbosity verbosity);
+  static bool CheckChannelMask(const Debug::Channel::Enum channel);
+  static bool CheckVerbosity(const Debug::Verbosity::Enum verbosity);
 
-  static Debug::Verbosity defaultVerbosity;
-  static Debug::Channel defaultChannel;
+  static Debug::Verbosity::Enum defaultVerbosity;
+  static Debug::Channel::Enum defaultChannel;
+};
+
+struct LogObject {
+  std::string file;
+  int line;
+
+  LogObject(const std::string file, const int line) : file{file}, line{line} {}
+
+  void operator()(const Debug::Channel::Enum channel,
+                  const Debug::Verbosity::Enum verbosity, const char* inFormat,
+                  ...) const {
+    va_list argList;
+    va_start(argList, &inFormat);
+
+    Logger::_PrintFMacro(file, line, channel, verbosity, inFormat, argList);
+
+    va_end(argList);
+  }
 };
 }  // namespace Isetta
