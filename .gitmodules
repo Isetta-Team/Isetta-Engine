@@ -12,5 +12,7 @@
 	path = Isetta/External/GLFW
 	url = https://github.com/glfw/glfw.git
 [submodule "Isetta/External/protobuf"]
+	
 	path = Isetta/External/protobuf
+	
 	url = https://github.com/google/protobuf
