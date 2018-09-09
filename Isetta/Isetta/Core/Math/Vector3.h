@@ -3,6 +3,9 @@
  */
 #pragma once
 
+#include <iostream>
+#include <istream>
+
 namespace Isetta::Math {
 
 class Vector3 {
@@ -94,6 +97,12 @@ class Vector3 {
     z /= scalar;
     return *this;
   }
+  inline friend std::istream& operator>>(std::istream& is, Vector3& inVector) {
+    char c;
+    (is >> std::skipws) >> c >> inVector.x >> c >> inVector.y >> c >>
+        inVector.z;
+    return is;
+  }
 
   // functions
 
@@ -105,6 +114,7 @@ class Vector3 {
   Vector3 Normalized() const;
   // Normalizes current vector
   void Normalize() noexcept;
+  std::string ToString() const;
 
   // static functions
 

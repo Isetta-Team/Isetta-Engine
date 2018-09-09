@@ -98,8 +98,10 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Core\Config\Config.cpp" />
     <ClCompile Include="Core\Audio\Audio.cpp" />
     <ClCompile Include="Core\Color.cpp" />
+    <ClCompile Include="Core\Config\CVar.cpp" />
     <ClCompile Include="Core\Graphics\LightNode.cpp" />
     <ClCompile Include="Core\Graphics\ModelNode.cpp" />
     <ClCompile Include="Core\Graphics\Render.cpp" />
@@ -122,8 +124,10 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Core\Config\Config.h" />
     <ClInclude Include="Core\Audio\Audio.h" />
     <ClInclude Include="Core\Color.h" />
+    <ClInclude Include="Core\Config\Convert.h" />
     <ClInclude Include="Core\Graphics\LightNode.h" />
     <ClInclude Include="Core\Graphics\ModelNode.h" />
     <ClInclude Include="Core\Graphics\Render.h" />
@@ -146,11 +150,14 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="Core\IModule.h" />
     <ClInclude Include="Core\ModuleManager.h" />
     <ClInclude Include="Core\Time.h" />
+    <ClInclude Include="Core\Config\CVar.h" />
+    <ClInclude Include="Core\Config\CVarRegistry.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Sound\singing.wav" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="config.cfg" />
     <None Include="Resources\test\Low-Poly-Racing-Car.geo" />
   </ItemGroup>
   <ItemGroup>

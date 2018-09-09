@@ -5,6 +5,7 @@
 
 #include <cfloat>
 #include <cmath>
+#include <sstream>
 #include <stdexcept>
 #include "Vector2.h"
 #include "Vector3Int.h"
@@ -53,6 +54,13 @@ void Vector3::Normalize() noexcept {
   y /= length;
   z /= length;
 }
+
+std::string Vector3::ToString() const {
+  std::ostringstream oss;
+  oss << "(" << x << ", " << y << ", " << z << ")";
+  return oss.str();
+}
+
 bool Vector3::Equals(const Vector3& lhs, const Vector3& rhs) {
   return abs(lhs.x - rhs.x) < FLT_EPSILON && abs(lhs.y - rhs.y) < FLT_EPSILON &&
          abs(lhs.z - rhs.z) < FLT_EPSILON;
