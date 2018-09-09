@@ -57,7 +57,7 @@ int main() {
 
   LightNode light{"materials/light.material.xml",
                   Isetta::Math::Vector3{0, 200, 600},
-                  Isetta::Math::Vector3::zero, Isetta::Math::Vector3::one};
+                  Isetta::Math::Vector3{0, 0, 0}, Isetta::Math::Vector3::one};
   Input::RegisterKeyPressCallback(KeyCode::U,
                                   []() { std::cout << "U" << std::endl; });
 
