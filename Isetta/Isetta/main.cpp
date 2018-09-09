@@ -81,30 +81,13 @@ int main() {
   Time::startTime = clock::now();
   auto lastFrameStartTime = clock::now();
 
-  Logger::Log(Debug::Channel::Memory, "Size of audiosource: " + std::to_string(sizeof(AudioSource)));
+  ModelNode car{"test/Low-Poly-Racing-Car.scene.xml",
+  Isetta::Math::Vector3{0, -20, 0}, Isetta::Math::Vector3::zero,
+  Isetta::Math::Vector3::one};
 
-  
-  // void* mem = std::malloc(16 + 8);
-  // U8 alignment = 8;
-  // PtrInt rawAddress = reinterpret_cast<PtrInt>(mem);
-  // PtrInt misAlignment = rawAddress & (alignment - 1);
-  // PtrDiff adjustment = alignment - misAlignment;
-  // PtrInt alignedAddress = rawAddress + adjustment;
-  // U8* alignmentMemory = reinterpret_cast<U8*>(alignedAddress);
-  // alignmentMemory[-1] = adjustment;
-  // std::free(mem);
-
-  // Logger::Log(Debug::Channel::Memory, "Aligned Memory: " + std::to_string(alignmentMemory[0]));
-
-  // delete[](mem);
-
-  // ModelNode car{"test/Low-Poly-Racing-Car.scene.xml",
-  // Isetta::Math::Vector3{0, -20, 0}, Isetta::Math::Vector3::zero,
-  // Isetta::Math::Vector3::one};
-
-  // LightNode light{"materials/light.material.xml",
-  // Isetta::Math::Vector3{0, 200, 600},
-  // Isetta::Math::Vector3::zero, Isetta::Math::Vector3::one};
+  LightNode light{"materials/light.material.xml",
+  Isetta::Math::Vector3{0, 200, 600},
+  Isetta::Math::Vector3::zero, Isetta::Math::Vector3::one};
 
   bool running{true};
 

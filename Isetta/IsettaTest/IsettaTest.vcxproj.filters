@@ -66,6 +66,9 @@
     <ClInclude Include="..\Isetta\Core\Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\Isetta\Core\Memory\Memory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -130,6 +133,12 @@
     </ClCompile>
     <ClCompile Include="..\Isetta\Core\Math\Vector4.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Isetta\Core\Memory\Memory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\MemoryTest.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

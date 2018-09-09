@@ -1,6 +1,6 @@
-#include "Memory.h"
-#include <iostream>
+#include "Core/Memory/Memory.h"
 #include <sstream>
+#include "Core/Debug/Assert.h"
 #include "Core/Debug/Logger.h"
 
 namespace Isetta {
@@ -12,25 +12,27 @@ std::string HexFromPtr(const PtrInt rawAddress) {
   return str.str();
 }
 
-void* AllocateUnaligned(const U32 size) {
+void* MemoryManager::AllocateUnaligned(const SizeInt size) {
   // looks like std::malloc always return 16 byte aligned memory
   return std::malloc(size);
 }
 
-void FreeUnaligned(void* mem) { std::free(mem); }
+void MemoryManager::FreeUnaligned(void* mem) { std::free(mem); }
 
-void* AllocateAligned(const U32 size, const U8 alignment) {
-  ASSERT(alignment >= 1);
-  ASSERT(alignment <= 128);
-  ASSERT((alignment & (alignment - 1)) == 0); // power of 2
+void* MemoryManager::AllocateAligned(const SizeInt size, const U8 alignment) {
+  const bool isValid = alignment >= 2 && alignment <= 128 &&
+                 (alignment & (alignment - 1)) == 0;  // power of 2
+  if (!isValid) {
+    Logger::LogError(Debug::Channel::Memory, "Illegal alignment requirement");
+  }
 
-  const U32 expandedSize = size + alignment;
+  const SizeInt expandedSize = size + alignment;
 
   const PtrInt rawAddress =
       reinterpret_cast<PtrInt>(AllocateUnaligned(expandedSize));
   // std::string add = HexFromPtr(rawAddress);
   const PtrInt misAlignment = rawAddress & (alignment - 1);
-  const PtrDiff adjustment = alignment - misAlignment;
+  const U8 adjustment = alignment - static_cast<U8>(misAlignment);
   const PtrInt alignedAddress = rawAddress + adjustment;
 
   U8* alignedMemory = reinterpret_cast<U8*>(alignedAddress);
@@ -40,7 +42,7 @@ void* AllocateAligned(const U32 size, const U8 alignment) {
   return static_cast<void*>(alignedMemory);
 }
 
-void FreeAligned(void* memoryPtr) {
+void MemoryManager::FreeAligned(void* memoryPtr) {
   const U8* alignedMemory = reinterpret_cast<U8*>(memoryPtr);
   const PtrDiff adjustment = static_cast<PtrDiff>(alignedMemory[-1]);
   const PtrInt alignedAddress = reinterpret_cast<PtrInt>(memoryPtr);
@@ -49,31 +51,32 @@ void FreeAligned(void* memoryPtr) {
   FreeUnaligned(rawMem);
 }
 
-StackAllocator::StackAllocator(const U32 stackSize)
+StackAllocator::StackAllocator(const SizeInt stackSize)
     : top(0), capacity(stackSize) {
-  bottom = new char[stackSize];
+  bottom = MemoryManager::AllocateUnaligned(stackSize);
+  bottomAddress = reinterpret_cast<PtrInt>(bottom);
 }
 
-void* StackAllocator::Alloc(const U32 sizeInBytes) {
-  const Marker newTop = top + sizeInBytes;
+void* StackAllocator::AllocAligned(const SizeInt size, const U8 alignment) {
+  PtrInt rawAddress = bottomAddress + top;
+  PtrInt misAlignment = rawAddress & (alignment - 1);
+  PtrDiff adjustment = alignment - misAlignment;
+  PtrInt alignedAddress = rawAddress + adjustment;
+  Marker newTop = alignment + size;
+
   if (newTop > capacity) {
     Logger::LogError(Debug::Channel::Memory,
                      "Not enough memory in stack allocator");
+    return MemoryManager::AllocateAligned(size, alignment);
   }
-
   top = newTop;
-  char* ret = bottom + sizeInBytes;
 
-  const auto rawAddress = reinterpret_cast<uintptr_t>(ret);
-
-  Logger::Log(Debug::Channel::Memory, HexFromPtr(rawAddress));
-
-  return static_cast<void*>(ret);
+  return reinterpret_cast<void*>(alignedAddress);
 }
 
 void StackAllocator::Erase() {
   Clear();
-  delete (bottom);
+  std::free(bottom);
 }
 
 }  // namespace Isetta

@@ -4,6 +4,8 @@
 
 namespace Isetta {
 typedef uint8_t         Byte;
+typedef size_t          SizeInt;
+
 typedef uint8_t         U8;
 typedef uint16_t        U16;
 typedef uint32_t        U32;
@@ -14,12 +16,6 @@ typedef int16_t         Int16;
 typedef int32_t         Int32;
 typedef int64_t         Int64;
 
-
-
-
-
 typedef std::ptrdiff_t  PtrDiff;
 typedef uintptr_t       PtrInt;
-
-
 }  // namespace Isetta

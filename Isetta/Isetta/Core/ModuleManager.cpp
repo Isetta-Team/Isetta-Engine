@@ -13,7 +13,6 @@ void ModuleManager::StartUp() {
 
   windowModule = new WindowModule();
   windowModule->StartUp();
-
 }
 
 void ModuleManager::Update() {
