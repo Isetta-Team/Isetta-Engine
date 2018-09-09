@@ -2,7 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #include <chrono>
-#include <sstream>
 #include <string>
 #include "Core/Audio/Audio.h"
 #include "Core/Config/Config.h"
@@ -43,51 +42,54 @@ int main() {
   moduleManager.StartUp();
 
   // Random number test
-  auto rnd = Isetta::Math::Random::GetRandomGenerator(1.f, 10.f);
-  float number = rnd.GetValue();
-  Logger::Log(Debug::Channel::General,
-              "Random number: " + std::to_string(number));
-
-  // Logging test
-  // Logger::PrintF(Debug::Memory, Debug::Info, "Hi %s, you are %d", "Jake",
-  // 10); Logger::PrintF("Test\n");
-
-  // Memory Allocation
-  // StackAllocator stackAllocator(sizeof(AudioSource) * 10);
-  // auto memAudio = stackAllocator.New<AudioSource>();
-  // memAudio->SetAudioClip("singing.wav");
-  // memAudio->Play(true, 1.0f);
+  // auto rnd = Math::Random::GetRandomGenerator(1.f, 10.f);
+  // float number = rnd.GetValue();
+  // Logger::Log(Debug::Channel::General,
+              // "Random number: " + std::to_string(number));
 
 
   using clock = std::chrono::high_resolution_clock;
   typedef std::chrono::duration<float> second;
 
+  Logger::Log(Debug::Channel::Memory, "Size: " + std::to_string(sizeof(AudioSource)));
+  StackAllocator stack (20000);
+
+  SizeInt marker = stack.GetMarker();
+  AudioSource* audio = new (stack.AllocUnaligned(sizeof(AudioSource))) AudioSource();
+  Logger::Log(Debug::Channel::Memory, "Marker: " + std::to_string(marker));
+
+  SizeInt marker1= stack.GetMarker();
+  AudioSource* audio1 = new (stack.AllocUnaligned(sizeof(AudioSource))) AudioSource();
+  Logger::Log(Debug::Channel::Memory, "Marker: " + std::to_string(marker1));
+
+  audio->~AudioSource();
+  audio1->~AudioSource();
+  stack.Clear();
+
+
   // Benchmarking
-  // const int testIterations = 10;
-  // for (int a = 0; a < testIterations; a++) {
-  // const auto benchmarkStart = clock::now();
-  // const int count = 100000;
+  const int testIterations = 10;
+  for (int a = 0; a < testIterations; a++) {
+    const auto benchmarkStart = clock::now();
+    // benchmark code here...
 
-  // const auto benchmarkEnd = clock::now();
-
-  // const std::string result =
-  // "Bench mark result: " +
-  // std::to_string(second(benchmarkEnd - benchmarkStart).count()) + "s";
-
-  // Logger::Log(Debug::Channel::Memory, result);
-  // }
+    const auto benchmarkEnd = clock::now();
+    Logger::Log(
+        Debug::Channel::Memory,
+        "Bench mark result: " +
+            std::to_string(second(benchmarkEnd - benchmarkStart).count()) +
+            "s");
+  }
 
   // Game loop
   Time::startTime = clock::now();
   auto lastFrameStartTime = clock::now();
 
-  ModelNode car{"test/Low-Poly-Racing-Car.scene.xml",
-  Isetta::Math::Vector3{0, -20, 0}, Isetta::Math::Vector3::zero,
-  Isetta::Math::Vector3::one};
+  // ModelNode car{"test/Low-Poly-Racing-Car.scene.xml", Math::Vector3{0, -20, 0},
+                // Math::Vector3::zero, Math::Vector3::one};
 
-  LightNode light{"materials/light.material.xml",
-  Isetta::Math::Vector3{0, 200, 600},
-  Isetta::Math::Vector3::zero, Isetta::Math::Vector3::one};
+  // LightNode light{"materials/light.material.xml", Math::Vector3{0, 200, 600},
+                  // Math::Vector3::zero, Math::Vector3::one};
 
   bool running{true};
 

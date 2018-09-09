@@ -137,8 +137,5 @@
     <ClCompile Include="..\Isetta\Core\Memory\Memory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\MemoryTest.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

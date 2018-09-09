@@ -21,9 +21,9 @@ void MemoryManager::FreeUnaligned(void* mem) { std::free(mem); }
 
 void* MemoryManager::AllocateAligned(const SizeInt size, const U8 alignment) {
   const bool isValid = alignment >= 2 && alignment <= 128 &&
-                 (alignment & (alignment - 1)) == 0;  // power of 2
+                       (alignment & (alignment - 1)) == 0;  // power of 2
   if (!isValid) {
-    Logger::LogError(Debug::Channel::Memory, "Illegal alignment requirement");
+    throw std::invalid_argument("Illegal alignment in allocator");
   }
 
   const SizeInt expandedSize = size + alignment;
@@ -52,7 +52,7 @@ void MemoryManager::FreeAligned(void* memoryPtr) {
 }
 
 StackAllocator::StackAllocator(const SizeInt stackSize)
-    : top(0), capacity(stackSize) {
+    : top(0), length(stackSize) {
   bottom = MemoryManager::AllocateUnaligned(stackSize);
   bottomAddress = reinterpret_cast<PtrInt>(bottom);
 }
@@ -62,16 +62,29 @@ void* StackAllocator::AllocAligned(const SizeInt size, const U8 alignment) {
   PtrInt misAlignment = rawAddress & (alignment - 1);
   PtrDiff adjustment = alignment - misAlignment;
   PtrInt alignedAddress = rawAddress + adjustment;
-  Marker newTop = alignment + size;
+  Marker newTop = top + size + adjustment;
 
-  if (newTop > capacity) {
-    Logger::LogError(Debug::Channel::Memory,
-                     "Not enough memory in stack allocator");
-    return MemoryManager::AllocateAligned(size, alignment);
+  if (newTop > length) {
+    // TODO: should I throw an exception here?
+    throw std::overflow_error("Not enough memory in stack allocator");
   }
+
   top = newTop;
 
   return reinterpret_cast<void*>(alignedAddress);
+}
+
+void* StackAllocator::AllocUnaligned(SizeInt size) {
+  Marker newTop = top + size;
+
+  if (newTop > length) {
+    // TODO: should I throw an exception here?
+    throw std::overflow_error("Not enough memory in stack allocator");
+  }
+
+  void* mem = reinterpret_cast<void*>(bottomAddress + top);
+  top = newTop;
+  return mem;
 }
 
 void StackAllocator::Erase() {

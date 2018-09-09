@@ -1,11 +1,10 @@
 #pragma once
-
 #include "IsettaTypes.h"
 
 namespace Isetta {
 
 class MemoryManager {
- public:
+ private:
   static void* AllocateUnaligned(SizeInt size);
   static void FreeUnaligned(void*);
 
@@ -18,6 +17,8 @@ class MemoryManager {
    */
   static void* AllocateAligned(SizeInt size, U8 alignment);
   static void FreeAligned(void*);
+
+  friend class StackAllocator;
 };
 
 class StackAllocator {
@@ -33,13 +34,25 @@ class StackAllocator {
    * memory
    */
   void* AllocAligned(SizeInt size, U8 alignment = 16);
+  void* AllocUnaligned(SizeInt size);
 
-  // TODO: find a proper way to delete placement new
+  /**
+   * \brief If you are using this, you probably need to call the destructor on
+   * your own
+   * \tparam T
+   * \return
+   */
   template <typename T>
-  T* New();
+  T* New() {
+    void* mem = AllocAligned(sizeof(T));
+    return new (mem) T();
+  };
 
   template <typename T>
-  T* New(Marker& marker);
+  T* New(Marker& outMarker) {
+    outMarker = top;
+    return New<T>();
+  };
 
   void FreeToMarker(const Marker marker) { top = marker; };
   void Clear() { top = 0; };
@@ -48,24 +61,17 @@ class StackAllocator {
 
  private:
   Marker top;
-  SizeInt capacity;
+  SizeInt length;
   void* bottom;
   PtrInt bottomAddress;
 };
 
-template <typename T>
-T* StackAllocator::New() {
-  void* mem = AllocAligned(sizeof(T));
-  return new (mem) T();
-}
+class PoolAllocator {
+public:
 
-template <typename T>
-T* StackAllocator::New(Marker& marker) {
-  void* mem = AllocAligned(sizeof(T));
-  marker = top;
-  return new (mem) T();
-}
-
-class PoolAllocator {};
+private:
+  SizeInt capacity;
+  SizeInt slotSize;
+};
 
 }  // namespace Isetta
