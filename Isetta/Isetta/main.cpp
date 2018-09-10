@@ -15,6 +15,15 @@
 #include "Core/ModuleManager.h"
 #include "Core/Time.h"
 
+#include "yojimbo/yojimbo.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <inttypes.h>
+#include <time.h>
+#include <signal.h>
+#include "yojimbo/shared.h"
+
 using namespace Isetta;
 
 int main() {
@@ -44,6 +53,50 @@ int main() {
   Time::startTime = clock::now();
   auto lastFrameStartTime = clock::now();
 
+  // Connect a client and a client-server together
+   if (!InitializeYojimbo() /* from yojimbo.h */) {
+    printf("error: failed to initialize Yojimbo!\n");
+    return 1;
+  }
+
+   yojimbo::ClientServerConfig yojimboConfig;
+   uint8_t yojimboServerPort = 40000;
+   uint8_t yojimboMaxClients = 64;
+   bool yojimboIsDisconnected = false;
+
+   uint8_t privateKey[yojimbo::KeyBytes];
+   memset(privateKey, 0, KeyBytes);  // TODO: custom allocation for this part
+
+   Logger::PrintF(Debug::Networking, Debug::Info, "starting server on port %d\n",
+                 yojimboServerPort);
+
+   yojimbo::Server server(yojimbo::GetDefaultAllocator(), privateKey,
+                         yojimbo::Address("127.0.0.1", yojimboServerPort),
+                         yojimboConfig, adapter /* from shared.h */,
+                         second(clock::now() - Time::startTime).count());
+
+   server.Start(yojimboMaxClients);
+
+   if (!server.IsRunning()) {
+    return 1;
+  }
+
+   Logger::PrintF(Debug::Networking, Debug::Info, "started server\n");
+
+   uint64_t clientId = 0;
+   yojimbo::random_bytes((uint8_t*)&clientId, 8);
+   Logger::PrintF(Debug::Networking, Debug::Info,
+                 "client id is %.16" PRIx16 "\n", clientId);
+
+   yojimbo::Client client(yojimbo::GetDefaultAllocator(),
+                         yojimbo::Address("0.0.0.0"), yojimboConfig,
+                         adapter /* from shared.h */,
+                         second(clock::now() - Time::startTime).count());
+
+   yojimbo::Address serverAddress("127.0.0.1", ServerPort);
+
+   client.InsecureConnect(privateKey, clientId, serverAddress);
+
   // play first audio clip
   auto audioSource = new AudioSource();
   audioSource->SetAudioClip("wave.mp3");
@@ -64,12 +117,29 @@ int main() {
   bool running{true};
 
   while (running) {
+    // Networking
+     server.SendPackets();
+     client.SendPackets();
+
+     server.ReceivePackets();
+     client.ReceivePackets();
+
     Time::deltaTime = second(clock::now() - lastFrameStartTime).count();
     Time::time = second(clock::now() - Time::startTime).count();
     lastFrameStartTime = clock::now();
 
     moduleManager.Update();
     Time::frameCount++;
+
+    // Networking part 2: Electric boogaloo
+     client.AdvanceTime(Time::time);
+     if (client.IsDisconnected() && yojimboIsDisconnected) {
+        yojimboIsDisconnected = true;
+        Logger::PrintF(Debug::Networking, Debug::Info,
+                 "client %.16 " PRIx16 " has been disconnected from server!\n");
+    }
+
+     server.AdvanceTime(Time::time);
 
     // switch to playing the second audio clip
     if (Time::frameCount == 1000000) {
@@ -87,6 +157,10 @@ int main() {
       running = false;
     }
   }
+
+  // Networking
+   client.Disconnect();
+   server.Stop();
 
   moduleManager.ShutDown();
   system("pause");
