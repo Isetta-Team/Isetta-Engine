@@ -65,9 +65,6 @@
     <ClCompile Include="Core\Input\Input.cpp">
       <Filter>Core\Input</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Debug\Assert.h">
-      <Filter>Core\Debug</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Config\Config.cpp">
       <Filter>Core\Config</Filter>
     </ClCompile>
@@ -80,6 +77,7 @@
     <ClCompile Include="Core\Input\InputInterface.cpp">
       <Filter>Core\Input</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Debug\Assert.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\IModule.h">
