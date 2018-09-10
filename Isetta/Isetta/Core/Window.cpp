@@ -26,6 +26,7 @@ void WindowModule::ShutDown() {
 
   glfwDestroyWindow(winHandle);
   winHandle = nullptr;
+  glfwTerminate();
 }
 
 void WindowModule::InitWindow() {  // Create OpenGL window
