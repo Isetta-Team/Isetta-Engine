@@ -51,20 +51,26 @@ int main() {
   using clock = std::chrono::high_resolution_clock;
   typedef std::chrono::duration<float> second;
 
-  Logger::Log(Debug::Channel::Memory, "Size: " + std::to_string(sizeof(AudioSource)));
-  StackAllocator stack (20000);
-
-  SizeInt marker = stack.GetMarker();
-  AudioSource* audio = new (stack.AllocUnaligned(sizeof(AudioSource))) AudioSource();
-  Logger::Log(Debug::Channel::Memory, "Marker: " + std::to_string(marker));
-
-  SizeInt marker1= stack.GetMarker();
-  AudioSource* audio1 = new (stack.AllocUnaligned(sizeof(AudioSource))) AudioSource();
-  Logger::Log(Debug::Channel::Memory, "Marker: " + std::to_string(marker1));
-
-  audio->~AudioSource();
-  audio1->~AudioSource();
-  stack.Clear();
+  // PoolAllocator<U64> poolAllocator(1000);
+  // U64* u1 = poolAllocator.Get();
+  // *u1 = 0xffffffffffffffff;
+  // U64* u2 = poolAllocator.Get();
+  // *u2 = 0xffffffffffffffff;
+  // U64* u3 = poolAllocator.Get();
+  // *u3 = 0xffffffffffffffff;
+  // U64* u4 = poolAllocator.Get();
+  // *u4 = 0xffffffffffffffff;
+  // U64* u5 = poolAllocator.Get(); 
+  // *u5 = 0xffffffffffffffff;
+  // poolAllocator.Free(u1);
+  // poolAllocator.Free(u2);
+  // u1 = poolAllocator.Get(); // will get the memory u2 was using
+  // *u1 = 0xffffffffffffffff;
+  // poolAllocator.Free(u3);
+  // poolAllocator.Free(u4);
+  // u1 = poolAllocator.Get(); // will get the memory u4 was using
+  // *u1 = 0xffffffffffffffff;
+  // poolAllocator.Free(u5);
 
 
   // Benchmarking
@@ -85,11 +91,11 @@ int main() {
   Time::startTime = clock::now();
   auto lastFrameStartTime = clock::now();
 
-  // ModelNode car{"test/Low-Poly-Racing-Car.scene.xml", Math::Vector3{0, -20, 0},
-                // Math::Vector3::zero, Math::Vector3::one};
+   ModelNode car{"test/Low-Poly-Racing-Car.scene.xml", Math::Vector3{0, -20, 0},
+                 Math::Vector3::zero, Math::Vector3::one};
 
-  // LightNode light{"materials/light.material.xml", Math::Vector3{0, 200, 600},
-                  // Math::Vector3::zero, Math::Vector3::one};
+   LightNode light{"materials/light.material.xml", Math::Vector3{0, 200, 600},
+                   Math::Vector3::zero, Math::Vector3::one};
 
   bool running{true};
 
@@ -107,6 +113,5 @@ int main() {
   }
 
   moduleManager.ShutDown();
-  system("pause");
   return 0;
 }
