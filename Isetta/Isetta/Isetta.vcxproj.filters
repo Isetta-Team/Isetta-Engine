@@ -80,6 +80,9 @@
     <ClCompile Include="Core\Input\InputInterface.cpp">
       <Filter>Core\Input</Filter>
     </ClCompile>
+    <ClCompile Include="FileSystem.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\IModule.h">
@@ -171,6 +174,9 @@
     </ClInclude>
     <ClInclude Include="Core\Input\InputEnum.h">
       <Filter>Core\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSystem.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

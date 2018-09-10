@@ -123,6 +123,7 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
     <ClCompile Include="Core\Debug\DebugDraw.cpp" />
     <ClCompile Include="Core\ModuleManager.cpp" />
     <ClCompile Include="Core\Window.cpp" />
+    <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +158,7 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="Core\Config\CVar.h" />
     <ClInclude Include="Core\Config\CVarRegistry.h" />
     <ClInclude Include="Core\Window.h" />
+    <ClInclude Include="FileSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Sound\singing.wav" />

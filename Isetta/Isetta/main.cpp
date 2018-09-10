@@ -14,9 +14,9 @@
 #include "Core/Math/Vector3.h"
 #include "Core/ModuleManager.h"
 #include "Core/Time.h"
+#include "FileSystem.h"
 
 using namespace Isetta;
-
 
 /*! \mainpage Isetta Engine
 Game engine development is a very wide field in the industry, but also a very
@@ -34,6 +34,10 @@ Between our own hands-on process and sage advice from veteran engineers, we hope
 to give newcomers a clearer representation of the engine-building process.
 */
 int main() {
+  FileSystem fds;
+  system("pause");
+  return 0;
+
   Config config;
   Logger::Log(Debug::Channel::General,
               config.vector3Var.GetV3Val().ToString().c_str());
