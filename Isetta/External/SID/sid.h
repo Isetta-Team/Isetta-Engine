@@ -53,8 +53,8 @@ class StringId {
 
   const Storage GetValue() const { return m_data; }
 
-  inline bool operator<(const StringId &sid) const {
-    return GetValue() < sid.GetValue();
+  inline bool operator<(const StringId rhs) const {
+    return GetValue() < rhs.GetValue();
   }
 
  private:

@@ -18,16 +18,11 @@ void RenderModule::Update() {
   h3dRender(cam);
 
   h3dFinalizeFrame();
-  h3dutDumpMessages();
-  glfwSwapBuffers(winHandle);
 }
 
 void RenderModule::ShutDown() {
   if (winHandle) {
     h3dRelease();
-
-    glfwDestroyWindow(winHandle);
-    winHandle = nullptr;
   }
 }
 

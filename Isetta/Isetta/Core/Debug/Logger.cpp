@@ -7,6 +7,7 @@
 #include <sstream>
 
 namespace Isetta {
+
 uint8_t Logger::gVerbosityMask = Debug::Verbosity::All;
 uint32_t Logger::gChannelMask = ~0u;
 bool Logger::gAlwaysFlush = false;
@@ -14,8 +15,8 @@ bool Logger::gAlwaysFlush = false;
 std::ofstream* Logger::engineStream = nullptr;
 std::ofstream* Logger::channelStream = nullptr;
 
-Debug::Verbosity Logger::defaultVerbosity = Debug::Verbosity::Info;
-Debug::Channel Logger::defaultChannel = Debug::Channel::General;
+Debug::Verbosity::Enum Logger::defaultVerbosity = Debug::Verbosity::Info;
+Debug::Channel::Enum Logger::defaultChannel = Debug::Channel::General;
 
 void Logger::SetLoggerFiles(std::ofstream* inEngineStream,
                             std::ofstream* inChannelStream) {
@@ -36,16 +37,15 @@ void Logger::SetLoggerChannelFile(std::ofstream* inChannelStream) {
   Logger::channelStream = inChannelStream;
 }
 
-int Logger::VDebugPrintF(const Debug::Channel channel,
-                         const Debug::Verbosity verbosity,
+int Logger::VDebugPrintF(const Debug::Channel::Enum channel,
+                         const Debug::Verbosity::Enum verbosity,
                          const std::string inFormat, va_list argList) {
   const uint32_t MAX_CHARS = 1023;
   static char sBuffer[MAX_CHARS + 1];
   // TODO add actual time
   std::ostringstream stream;
   stream << "[" << 12 << ":" << 12 << ":" << 12 << "][" << ToString(verbosity)
-         << "][" << ToString(channel) << "][" << __FILENAME__ << "]["
-         << __LINE__ << "] " << inFormat << '\n';
+         << "][" << ToString(channel) << "] " << inFormat << '\n';
   int charsWritten =
       vsnprintf(sBuffer, MAX_CHARS, stream.str().c_str(), argList);
   sBuffer[MAX_CHARS] = '\0';
@@ -80,21 +80,9 @@ int Logger::PrintF(const std::string inFormat, ...) {
   return charsWritten;
 }
 
-int Logger::PrintF(const Debug::Channel channel, const std::string inFormat,
-                   ...) {
-  va_list argList;
-  va_start(argList, &inFormat);
-
-  int charsWritten = VDebugPrintF(channel, defaultVerbosity, inFormat, argList);
-
-  va_end(argList);
-
-  return charsWritten;
-}
-
-int Logger::PrintF(const Debug::Channel channel,
-                   const Debug::Verbosity verbosity, const std::string inFormat,
-                   ...) {
+int Logger::PrintF(const Debug::Channel::Enum channel,
+                   const Debug::Verbosity::Enum verbosity,
+                   const std::string inFormat, ...) {
   va_list argList;
   va_start(argList, &inFormat);
 
@@ -105,7 +93,19 @@ int Logger::PrintF(const Debug::Channel channel,
   return charsWritten;
 }
 
-void Logger::Log(const Debug::Channel channel, const std::string inFormat,
+int Logger::_PrintFMacro(const std::string file, const int line,
+                         const Debug::Channel::Enum channel,
+                         const Debug::Verbosity::Enum verbosity,
+                         const std::string inFormat, va_list argList) {
+  std::ostringstream stream;
+  stream << file << "(" << line << ") " << inFormat << '\n';
+
+  int charsWritten = VDebugPrintF(channel, verbosity, stream.str(), argList);
+
+  return charsWritten;
+}
+
+void Logger::Log(const Debug::Channel::Enum channel, const std::string inFormat,
                  ...) {
   va_list argList;
   va_start(argList, &inFormat);
@@ -115,7 +115,7 @@ void Logger::Log(const Debug::Channel channel, const std::string inFormat,
   va_end(argList);
 }
 
-void Logger::LogWarning(const Debug::Channel channel,
+void Logger::LogWarning(const Debug::Channel::Enum channel,
                         const std::string inFormat, ...) {
   va_list argList;
   va_start(argList, &inFormat);
@@ -125,8 +125,18 @@ void Logger::LogWarning(const Debug::Channel channel,
   va_end(argList);
 }
 
-void Logger::LogError(const Debug::Channel channel, const std::string inFormat,
-                      ...) {
+void Logger::LogDevelop(const Debug::Channel::Enum channel,
+                        const std::string inFormat, ...) {
+  va_list argList;
+  va_start(argList, &inFormat);
+
+  VDebugPrintF(channel, Debug::Verbosity::Development, inFormat, argList);
+
+  va_end(argList);
+}
+
+void Logger::LogError(const Debug::Channel::Enum channel,
+                      const std::string inFormat, ...) {
   va_list argList;
   va_start(argList, &inFormat);
 
@@ -135,11 +145,11 @@ void Logger::LogError(const Debug::Channel channel, const std::string inFormat,
   va_end(argList);
 }
 
-bool Logger::CheckChannelMask(const Debug::Channel channel) {
+bool Logger::CheckChannelMask(const Debug::Channel::Enum channel) {
   return (gChannelMask & channel) == static_cast<uint32_t>(channel);
 }
 
-bool Logger::CheckVerbosity(const Debug::Verbosity verbosity) {
+bool Logger::CheckVerbosity(const Debug::Verbosity::Enum verbosity) {
   return (gVerbosityMask & verbosity) == static_cast<uint8_t>(verbosity);
 }
 }  // namespace Isetta

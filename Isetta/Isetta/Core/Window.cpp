@@ -15,6 +15,7 @@ void Isetta::WindowModule::StartUp() {
 void WindowModule::Update() {
   renderModule->Update();
   inputModule->Update();
+  glfwSwapBuffers(winHandle);
 }
 
 void WindowModule::ShutDown() {
@@ -22,6 +23,10 @@ void WindowModule::ShutDown() {
   delete renderModule;
   inputModule->ShutDown();
   delete inputModule;
+
+  glfwDestroyWindow(winHandle);
+  winHandle = nullptr;
+  glfwTerminate();
 }
 
 void WindowModule::InitWindow() {  // Create OpenGL window
