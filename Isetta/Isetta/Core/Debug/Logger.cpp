@@ -8,15 +8,12 @@
 
 namespace Isetta {
 
-uint8_t Logger::gVerbosityMask = Debug::Verbosity::All;
+uint8_t Logger::gVerbosityMask = ~0u;
 uint32_t Logger::gChannelMask = ~0u;
 bool Logger::gAlwaysFlush = false;
 
 std::ofstream* Logger::engineStream = nullptr;
 std::ofstream* Logger::channelStream = nullptr;
-
-Debug::Verbosity::Enum Logger::defaultVerbosity = Debug::Verbosity::Info;
-Debug::Channel::Enum Logger::defaultChannel = Debug::Channel::General;
 
 void Logger::SetLoggerFiles(std::ofstream* inEngineStream,
                             std::ofstream* inChannelStream) {
@@ -69,80 +66,16 @@ int Logger::VDebugPrintF(const Debug::Channel::Enum channel,
   return charsWritten;
 }
 
-int Logger::PrintF(const std::string inFormat, ...) {
-  va_list argList;
-  va_start(argList, &inFormat);
-
-  int charsWritten =
-      VDebugPrintF(defaultChannel, defaultVerbosity, inFormat, argList);
-
-  va_end(argList);
-  return charsWritten;
-}
-
-int Logger::PrintF(const Debug::Channel::Enum channel,
-                   const Debug::Verbosity::Enum verbosity,
-                   const std::string inFormat, ...) {
-  va_list argList;
-  va_start(argList, &inFormat);
-
-  int charsWritten = VDebugPrintF(channel, verbosity, inFormat, argList);
-
-  va_end(argList);
-
-  return charsWritten;
-}
-
-int Logger::_PrintFMacro(const std::string file, const int line,
-                         const Debug::Channel::Enum channel,
-                         const Debug::Verbosity::Enum verbosity,
-                         const std::string inFormat, va_list argList) {
+int Logger::DebugPrintF(const std::string file, const int line,
+                        const Debug::Channel::Enum channel,
+                        const Debug::Verbosity::Enum verbosity,
+                        const std::string inFormat, va_list argList) {
   std::ostringstream stream;
   stream << file << "(" << line << ") " << inFormat << '\n';
 
   int charsWritten = VDebugPrintF(channel, verbosity, stream.str(), argList);
 
   return charsWritten;
-}
-
-void Logger::Log(const Debug::Channel::Enum channel, const std::string inFormat,
-                 ...) {
-  va_list argList;
-  va_start(argList, &inFormat);
-
-  VDebugPrintF(channel, Debug::Verbosity::Info, inFormat, argList);
-
-  va_end(argList);
-}
-
-void Logger::LogWarning(const Debug::Channel::Enum channel,
-                        const std::string inFormat, ...) {
-  va_list argList;
-  va_start(argList, &inFormat);
-
-  VDebugPrintF(channel, Debug::Verbosity::Warning, inFormat, argList);
-
-  va_end(argList);
-}
-
-void Logger::LogDevelop(const Debug::Channel::Enum channel,
-                        const std::string inFormat, ...) {
-  va_list argList;
-  va_start(argList, &inFormat);
-
-  VDebugPrintF(channel, Debug::Verbosity::Development, inFormat, argList);
-
-  va_end(argList);
-}
-
-void Logger::LogError(const Debug::Channel::Enum channel,
-                      const std::string inFormat, ...) {
-  va_list argList;
-  va_start(argList, &inFormat);
-
-  VDebugPrintF(channel, Debug::Verbosity::Error, inFormat, argList);
-
-  va_end(argList);
 }
 
 bool Logger::CheckChannelMask(const Debug::Channel::Enum channel) {

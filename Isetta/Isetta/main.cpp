@@ -17,7 +17,6 @@
 
 using namespace Isetta;
 
-
 /*! \mainpage Isetta Engine
 Game engine development is a very wide field in the industry, but also a very
 inaccessible one. Budding engineers are advised to just jump into development to
@@ -35,8 +34,8 @@ to give newcomers a clearer representation of the engine-building process.
 */
 int main() {
   Config config;
-  Logger::Log(Debug::Channel::General,
-              config.vector3Var.GetV3Val().ToString().c_str());
+  LOG_INFO(Debug::Channel::General,
+           config.vector3Var.GetV3Val().ToString().c_str());
 
   ModuleManager moduleManager;
   moduleManager.StartUp();
