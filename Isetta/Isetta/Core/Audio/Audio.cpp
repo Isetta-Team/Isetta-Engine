@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <sstream>
 #include "combaseapi.h"
+#include "Core/IsettaTypes.h"
 
 namespace Isetta {
 
@@ -54,6 +55,7 @@ bool AudioSource::isChannelValid() const {
 
 void AudioModule::StartUp() {
   CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+  FMOD::Memory_Initialize(malloc(10_MB), 10_MB, nullptr, nullptr, nullptr);
   fmodSystem = nullptr;
   FMOD::System_Create(&fmodSystem);
   fmodSystem->init(512, FMOD_INIT_NORMAL, nullptr);

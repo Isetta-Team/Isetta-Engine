@@ -47,31 +47,8 @@ int main() {
   // Logger::Log(Debug::Channel::General,
               // "Random number: " + std::to_string(number));
 
-
   using clock = std::chrono::high_resolution_clock;
   typedef std::chrono::duration<float> second;
-
-  // PoolAllocator<U64> poolAllocator(1000);
-  // U64* u1 = poolAllocator.Get();
-  // *u1 = 0xffffffffffffffff;
-  // U64* u2 = poolAllocator.Get();
-  // *u2 = 0xffffffffffffffff;
-  // U64* u3 = poolAllocator.Get();
-  // *u3 = 0xffffffffffffffff;
-  // U64* u4 = poolAllocator.Get();
-  // *u4 = 0xffffffffffffffff;
-  // U64* u5 = poolAllocator.Get(); 
-  // *u5 = 0xffffffffffffffff;
-  // poolAllocator.Free(u1);
-  // poolAllocator.Free(u2);
-  // u1 = poolAllocator.Get(); // will get the memory u2 was using
-  // *u1 = 0xffffffffffffffff;
-  // poolAllocator.Free(u3);
-  // poolAllocator.Free(u4);
-  // u1 = poolAllocator.Get(); // will get the memory u4 was using
-  // *u1 = 0xffffffffffffffff;
-  // poolAllocator.Free(u5);
-
 
   // Benchmarking
   const int testIterations = 10;
