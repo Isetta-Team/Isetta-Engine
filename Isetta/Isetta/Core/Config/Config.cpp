@@ -8,13 +8,10 @@
 #include <sstream>
 #include <string>
 
-#include "Core/Config/CVar.h"
-#include "Core/Config/CVarRegistry.h"
-
 namespace Isetta {
-Config::Config() {
-  // TODO config file location + filesystem?
-  std::ifstream configFile("config.cfg");
+void Config::Read(std::string filepath) {
+  // TODO(jacob) config file location + filesystem?
+  std::ifstream configFile(filepath);
 
   std::string line;
   while (std::getline(configFile, line)) {
@@ -27,7 +24,7 @@ Config::Config() {
     ExtractKey(key, sepPos, line);
     ExtractValue(value, sepPos, line);
     StringId keySid = SID(key.c_str());
-    ICVar* cvar = CVarRegistry::Find(keySid);
+    ICVar* cvar = cvarsRegistry.Find(keySid);
     if (cvar != nullptr) {
       switch (cvar->GetType()) {
         case CVAR_INT:
@@ -43,17 +40,13 @@ Config::Config() {
           static_cast<CVarVector3*>(cvar)->SetVal(value);
           break;
         default:
-          static_cast<CVarString*>(cvar)->SetVal(value);
+          throw std::exception("Config::Read Unexpected type");
       }
-    } else {
-      // TODO Do we want to add variables? probably not
-      // CVarRegistry::RegisterVariable(new CVarString(key, value));
     }
   }
 }
 
 void Config::RemoveComments(std::string& line) const {
-  // TODO decide comments
   auto it = line.find('#');
   if (it != std::string::npos) {
     line.erase(it);

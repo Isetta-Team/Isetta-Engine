@@ -43,7 +43,7 @@ int Logger::VDebugPrintF(const Debug::Channel::Enum channel,
                          const std::string inFormat, va_list argList) {
   const uint32_t MAX_CHARS = 1023;
   static char sBuffer[MAX_CHARS + 1];
-  // TODO add actual time
+  // TODO(jacob) add actual time
   std::ostringstream stream;
   stream << "[" << 12 << ":" << 12 << ":" << 12 << "][" << ToString(verbosity)
          << "][" << ToString(channel) << "] " << inFormat << '\n';
@@ -80,7 +80,7 @@ int Logger::DebugPrintF(const std::string file, const int line,
                         const Debug::Verbosity::Enum verbosity,
                         const std::string inFormat, va_list argList) {
   std::ostringstream stream;
-  stream << file << "(" << line << ") " << inFormat << '\n';
+  stream << file << "(" << line << ") " << inFormat;
 
   int charsWritten = VDebugPrintF(channel, verbosity, stream.str(), argList);
 

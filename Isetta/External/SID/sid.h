@@ -73,6 +73,15 @@ static const bool operator!=(const StringId &lhs, const StringId &rhs) {
   return lhs.GetValue() != rhs.GetValue();
 }
 
+namespace std {
+template <>
+struct hash<StringId> {
+  std::size_t operator()(const StringId &sid) const {
+    return std::hash<uint64_t>()(sid.GetValue());
+  }
+};
+}  // namespace std
+
 //-----------------------------------------------------------------------------
 // end: String ID
 

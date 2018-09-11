@@ -16,6 +16,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ProfilerCore", "External\br
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IsettaTest", "IsettaTest\IsettaTest.vcxproj", "{CE874F05-14F7-4691-A23C-56B5174A6180}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SID", "SID", "{08B3AE20-E831-4892-852F-53C74CD5F2D8}"
+	ProjectSection(SolutionItems) = preProject
+		External\SID\sid.h = External\SID\sid.h
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Dynamic|Any CPU = Debug Dynamic|Any CPU

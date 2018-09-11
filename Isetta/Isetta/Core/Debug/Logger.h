@@ -3,7 +3,7 @@
  */
 #pragma once
 
-// TODO put in the Filesystem Module
+// TODO(jacob) put in the Filesystem Module
 #define __FILENAME__ \
   (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
 
@@ -124,7 +124,7 @@ struct LogObject {
   void operator()(const Debug::Channel::Enum channel,
                   const Debug::Verbosity::Enum verbosity,
                   const std::initializer_list<std::string>& inFormat) const;
-  //
+
   void operator()(const Debug::Channel::Enum channel, const char* inFormat,
                   ...) const;
   void operator()(const Debug::Channel::Enum channel,

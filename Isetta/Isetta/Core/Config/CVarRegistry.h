@@ -3,23 +3,20 @@
  */
 #pragma once
 
-#include <map>
+#include <unordered_map>
 #include "Core/Config/CVar.h"
 #include "SID/sid.h"
 
 namespace Isetta {
-// #define REGISTER_INT(str)
 class CVarRegistry {
  public:
-  // TODO Singleton??
-
   static inline void RegisterVariable(ICVar* cvar) {
     registry.emplace(cvar->sid, cvar);
   }
   static inline bool UnregisterVariable(const StringId sid) {
     return registry.erase(sid);
   }
-  static inline ICVar* Find(StringId sid) {
+  inline ICVar* Find(const StringId sid) {
     auto it = registry.find(sid);
     if (it == registry.end()) {
       return nullptr;
@@ -28,6 +25,6 @@ class CVarRegistry {
   }
 
  private:
-  static std::map<StringId, ICVar*> registry;
+  static std::unordered_map<StringId, ICVar*> registry;
 };
 }  // namespace Isetta

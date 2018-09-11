@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include <istream>
+#include <string>
 
 namespace Isetta::Math {
 
@@ -96,12 +96,6 @@ class Vector3 {
     z /= scalar;
     return *this;
   }
-  inline friend std::istream& operator>>(std::istream& is, Vector3& inVector) {
-    char c;
-    (is >> std::skipws) >> c >> inVector.x >> c >> inVector.y >> c >>
-        inVector.z;
-    return is;
-  }
 
   // functions
 
@@ -135,5 +129,6 @@ class Vector3 {
   static Vector3 Scale(const Vector3& inVector, const Vector3& scalar);
   // Spherically interpolates between two vectors
   static Vector3 Slerp(const Vector3& start, const Vector3& end, float time);
+  static Vector3 FromString(std::string str);
 };
 }  // namespace Isetta::Math

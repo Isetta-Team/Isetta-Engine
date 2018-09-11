@@ -34,8 +34,9 @@ to give newcomers a clearer representation of the engine-building process.
 */
 int main() {
   Config config;
+  config.Read("config.cfg");
   LOG_INFO(Debug::Channel::General,
-           config.vector3Var.GetV3Val().ToString().c_str());
+           config.vector3Var.GetVal().ToString().c_str());
 
   ModuleManager moduleManager;
   moduleManager.StartUp();
