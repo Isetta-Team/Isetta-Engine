@@ -2,7 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #include <chrono>
-#include <iostream>
 #include <string>
 #include "Core/Audio/Audio.h"
 #include "Core/Config/Config.h"
@@ -12,6 +11,7 @@
 #include "Core/Input/InputInterface.h"
 #include "Core/Math/Random.h"
 #include "Core/Math/Vector3.h"
+#include "Core/Memory/Memory.h"
 #include "Core/ModuleManager.h"
 #include "Core/Time.h"
 
@@ -41,38 +41,60 @@ int main() {
   moduleManager.StartUp();
 
   // Random number test
-  auto rnd = Isetta::Math::Random::GetRandomGenerator(1.f, 10.f);
-  float number = rnd.GetValue();
-  std::cout << number << std::endl;
+  // auto rnd = Math::Random::GetRandomGenerator(1.f, 10.f);
+  // float number = rnd.GetValue();
+  // Logger::Log(Debug::Channel::General,
+              // "Random number: " + std::to_string(number));
+
 
   using clock = std::chrono::high_resolution_clock;
-  using second = std::chrono::duration<float>;
+  typedef std::chrono::duration<float> second;
+
+  // PoolAllocator<U64> poolAllocator(1000);
+  // U64* u1 = poolAllocator.Get();
+  // *u1 = 0xffffffffffffffff;
+  // U64* u2 = poolAllocator.Get();
+  // *u2 = 0xffffffffffffffff;
+  // U64* u3 = poolAllocator.Get();
+  // *u3 = 0xffffffffffffffff;
+  // U64* u4 = poolAllocator.Get();
+  // *u4 = 0xffffffffffffffff;
+  // U64* u5 = poolAllocator.Get(); 
+  // *u5 = 0xffffffffffffffff;
+  // poolAllocator.Free(u1);
+  // poolAllocator.Free(u2);
+  // u1 = poolAllocator.Get(); // will get the memory u2 was using
+  // *u1 = 0xffffffffffffffff;
+  // poolAllocator.Free(u3);
+  // poolAllocator.Free(u4);
+  // u1 = poolAllocator.Get(); // will get the memory u4 was using
+  // *u1 = 0xffffffffffffffff;
+  // poolAllocator.Free(u5);
+
+
+  // Benchmarking
+  const int testIterations = 10;
+  for (int a = 0; a < testIterations; a++) {
+    const auto benchmarkStart = clock::now();
+    // benchmark code here...
+
+    const auto benchmarkEnd = clock::now();
+    Logger::Log(
+        Debug::Channel::Memory,
+        "Bench mark result: " +
+            std::to_string(second(benchmarkEnd - benchmarkStart).count()) +
+            "s");
+  }
 
   // Game loop
-  const float gameMaxDuration = 10.0f;
-
-  using clock = std::chrono::high_resolution_clock;
-  using second = std::chrono::duration<float>;
-
   Time::startTime = clock::now();
   auto lastFrameStartTime = clock::now();
 
-  // play first audio clip
-  auto audioSource = new AudioSource();
-  audioSource->SetAudioClip("wave.mp3");
+   ModelNode car{"test/Low-Poly-Racing-Car.scene.xml", Math::Vector3{0, -20, 0},
+                 Math::Vector3::zero, Math::Vector3::one};
 
-  audioSource->Play(true, 1.0f);
-  std::cout << "Playing first" << std::endl;
-
-  ModelNode car{"test/Low-Poly-Racing-Car.scene.xml",
-                Isetta::Math::Vector3{0, -20, 0}, Isetta::Math::Vector3::zero,
-                Isetta::Math::Vector3::one};
-
-  LightNode light{"materials/light.material.xml",
-                  Isetta::Math::Vector3{0, 200, 600},
-                  Isetta::Math::Vector3{0, 0, 0}, Isetta::Math::Vector3::one};
-  Input::RegisterKeyPressCallback(KeyCode::U,
-                                  []() { std::cout << "U" << std::endl; });
+   LightNode light{"materials/light.material.xml", Math::Vector3{0, 200, 600},
+                   Math::Vector3::zero, Math::Vector3::one};
 
   bool running{true};
 
@@ -84,24 +106,11 @@ int main() {
     moduleManager.Update();
     Time::frameCount++;
 
-    // switch to playing the second audio clip
-    if (Time::frameCount == 1000000) {
-      audioSource->Stop();
-      audioSource->SetAudioClip("singing.wav");
-      audioSource->Play(false, 1.0f);
-      std::cout << "Playing second" << std::endl;
-    }
-
-    if (Time::time > gameMaxDuration) {
-      break;
-    }
-
     if (Input::IsKeyPressed(KeyCode::ESCAPE)) {
       running = false;
     }
   }
 
   moduleManager.ShutDown();
-  system("pause");
   return 0;
 }

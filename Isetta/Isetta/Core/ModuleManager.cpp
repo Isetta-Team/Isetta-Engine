@@ -13,7 +13,6 @@ void ModuleManager::StartUp() {
 
   windowModule = new WindowModule();
   windowModule->StartUp();
-
 }
 
 void ModuleManager::Update() {
@@ -25,5 +24,6 @@ void ModuleManager::ShutDown() {
   audioModule->ShutDown();
   windowModule->ShutDown();
   delete windowModule;
+  delete audioModule;
 }
 }  // namespace Isetta

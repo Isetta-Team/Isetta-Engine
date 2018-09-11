@@ -3,20 +3,14 @@
  */
 #include "Audio.h"
 
-#include "combaseapi.h"
-
 #include <SID/sid.h>
 #include <iomanip>
 #include <sstream>
+#include "combaseapi.h"
 
 namespace Isetta {
 
 AudioModule* AudioSource::audioSystem;
-
-AudioSource::AudioSource() {
-  isDeleted = false;
-  audioSystem->AddAudioSource(this);
-}
 
 void AudioSource::SetAudioClip(const char* soundName) {
   fmodSound = audioSystem->FindSound(soundName);
@@ -59,6 +53,7 @@ bool AudioSource::isChannelValid() const {
 }
 
 void AudioModule::StartUp() {
+  CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
   fmodSystem = nullptr;
   FMOD::System_Create(&fmodSystem);
   fmodSystem->init(512, FMOD_INIT_NORMAL, nullptr);
@@ -71,13 +66,6 @@ void AudioModule::StartUp() {
 void AudioModule::Update() { fmodSystem->update(); }
 
 void AudioModule::ShutDown() {
-  for (auto it : audioSources) {
-    if (!it->isDeleted) {
-      delete (it);
-    }
-  }
-
-  audioSources.clear();
   for (auto it : soundMap) {
     it.second->release();
   }
@@ -117,10 +105,6 @@ void AudioModule::LoadAllAudioClips() {
 
     soundMap.insert({hashedId.GetValue(), sound});
   }
-}
-
-void AudioModule::AddAudioSource(AudioSource* audioSource) {
-  audioSources.push_back(audioSource);
 }
 
 inline float MegaBytesFromBytes(const int byte) {
