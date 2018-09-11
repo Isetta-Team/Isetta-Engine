@@ -4,14 +4,17 @@
 #include "Core/Debug/Logger.h"
 
 #include <Windows.h>
-#include <sstream>
+#include <fstream>
 #include <iostream>
+#include <sstream>
+#include "Core/Debug/Assert.h"
 
 namespace Isetta {
 
 uint8_t Logger::gVerbosityMask = ~0u;
 uint32_t Logger::gChannelMask = ~0u;
 bool Logger::gAlwaysFlush = false;
+bool Logger::gBreakOnError = false;
 
 std::ofstream* Logger::engineStream = nullptr;
 std::ofstream* Logger::channelStream = nullptr;
@@ -47,8 +50,6 @@ int Logger::VDebugPrintF(const Debug::Channel::Enum channel,
   int charsWritten =
       vsnprintf(sBuffer, MAX_CHARS, stream.str().c_str(), argList);
 
-  std::cout << stream.str();
-
   sBuffer[MAX_CHARS] = '\0';
 
   if (CheckChannelMask(channel)) {
@@ -65,6 +66,10 @@ int Logger::VDebugPrintF(const Debug::Channel::Enum channel,
 
   if (gAlwaysFlush) {
     Logger::engineStream->flush();
+  }
+  if (gBreakOnError && verbosity == Debug::Verbosity::Error &&
+      CheckVerbosity(Debug::Verbosity::Error)) {
+    ASSERT(false);
   }
 
   return charsWritten;
@@ -88,5 +93,60 @@ bool Logger::CheckChannelMask(const Debug::Channel::Enum channel) {
 
 bool Logger::CheckVerbosity(const Debug::Verbosity::Enum verbosity) {
   return (gVerbosityMask & verbosity) == static_cast<uint8_t>(verbosity);
+}
+void LogObject::operator()(const Debug::Channel::Enum channel,
+                           const Debug::Verbosity::Enum verbosity,
+                           const char* inFormat, ...) const {
+  va_list argList;
+  va_start(argList, &inFormat);
+
+  Logger::DebugPrintF(file, line, channel, verbosity, inFormat, argList);
+
+  va_end(argList);
+}
+
+void LogObject::operator()(const Debug::Channel::Enum channel,
+                           const Debug::Verbosity::Enum verbosity,
+                           const std::string& inFormat) const {
+  Logger::DebugPrintF(file, line, channel, verbosity, inFormat.c_str(), NULL);
+}
+
+void LogObject::operator()(
+    const Debug::Channel::Enum channel, const Debug::Verbosity::Enum verbosity,
+    const std::initializer_list<std::string>& inFormat) const {
+  std::ostringstream stream;
+  stream << file << "(" << line << ") ";
+  for (auto& elem : inFormat) {
+    stream << elem;
+  }
+  Logger::DebugPrintF(file, line, channel, verbosity, stream.str().c_str(),
+                      NULL);
+}
+
+void LogObject::operator()(const Debug::Channel::Enum channel,
+                           const char* inFormat, ...) const {
+  va_list argList;
+  va_start(argList, &inFormat);
+
+  Logger::DebugPrintF(file, line, channel, verbosity, inFormat, argList);
+
+  va_end(argList);
+}
+
+void LogObject::operator()(const Debug::Channel::Enum channel,
+                           const std::string& inFormat) const {
+  Logger::DebugPrintF(file, line, channel, verbosity, inFormat.c_str(), NULL);
+}
+
+void LogObject::operator()(
+    const Debug::Channel::Enum channel,
+    const std::initializer_list<std::string>& inFormat) const {
+  std::ostringstream stream;
+  stream << file << "(" << line << ") ";
+  for (auto& elem : inFormat) {
+    stream << elem;
+  }
+  Logger::DebugPrintF(file, line, channel, verbosity, stream.str().c_str(),
+                      NULL);
 }
 }  // namespace Isetta

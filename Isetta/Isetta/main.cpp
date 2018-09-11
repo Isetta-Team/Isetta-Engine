@@ -44,8 +44,7 @@ int main() {
   // auto rnd = Math::Random::GetRandomGenerator(1.f, 10.f);
   // float number = rnd.GetValue();
   // Logger::Log(Debug::Channel::General,
-              // "Random number: " + std::to_string(number));
-
+  // "Random number: " + std::to_string(number));
 
   using clock = std::chrono::high_resolution_clock;
   typedef std::chrono::duration<float> second;
@@ -59,7 +58,7 @@ int main() {
   // *u3 = 0xffffffffffffffff;
   // U64* u4 = poolAllocator.Get();
   // *u4 = 0xffffffffffffffff;
-  // U64* u5 = poolAllocator.Get(); 
+  // U64* u5 = poolAllocator.Get();
   // *u5 = 0xffffffffffffffff;
   // poolAllocator.Free(u1);
   // poolAllocator.Free(u2);
@@ -71,30 +70,27 @@ int main() {
   // *u1 = 0xffffffffffffffff;
   // poolAllocator.Free(u5);
 
-
   // Benchmarking
   const int testIterations = 10;
   for (int a = 0; a < testIterations; a++) {
     const auto benchmarkStart = clock::now();
     // benchmark code here...
-
     const auto benchmarkEnd = clock::now();
-    Logger::Log(
+    LOG_INFO(
         Debug::Channel::Memory,
-        "Bench mark result: " +
-            std::to_string(second(benchmarkEnd - benchmarkStart).count()) +
-            "s");
+        {"Bench mark result: ",
+         std::to_string(second(benchmarkEnd - benchmarkStart).count()), "s"});
   }
 
   // Game loop
   Time::startTime = clock::now();
   auto lastFrameStartTime = clock::now();
 
-   ModelNode car{"test/Low-Poly-Racing-Car.scene.xml", Math::Vector3{0, -20, 0},
-                 Math::Vector3::zero, Math::Vector3::one};
+  ModelNode car{"test/Low-Poly-Racing-Car.scene.xml", Math::Vector3{0, -20, 0},
+                Math::Vector3::zero, Math::Vector3::one};
 
-   LightNode light{"materials/light.material.xml", Math::Vector3{0, 200, 600},
-                   Math::Vector3::zero, Math::Vector3::one};
+  LightNode light{"materials/light.material.xml", Math::Vector3{0, 200, 600},
+                  Math::Vector3::zero, Math::Vector3::one};
 
   bool running{true};
 

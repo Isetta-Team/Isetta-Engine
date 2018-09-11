@@ -7,10 +7,8 @@
 #define __FILENAME__ \
   (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
 
-#include <Windows.h>
-#include <stdio.h>
 #include <cstdint>
-#include <fstream>
+#include <initializer_list>
 #include <string>
 
 namespace Isetta {
@@ -84,7 +82,7 @@ class Logger {
  public:
   static uint8_t gVerbosityMask;
   static uint32_t gChannelMask;
-  static bool gAlwaysFlush;
+  static bool gAlwaysFlush, gBreakOnError;
 
   static void SetLoggerFiles(std::ofstream* inEngineStream,
                              std::ofstream* inChannelStream = nullptr);
@@ -119,23 +117,19 @@ struct LogObject {
 
   void operator()(const Debug::Channel::Enum channel,
                   const Debug::Verbosity::Enum verbosity, const char* inFormat,
-                  ...) const {
-    va_list argList;
-    va_start(argList, &inFormat);
-
-    Logger::DebugPrintF(file, line, channel, verbosity, inFormat, argList);
-
-    va_end(argList);
-  }
-
+                  ...) const;
+  void operator()(const Debug::Channel::Enum channel,
+                  const Debug::Verbosity::Enum verbosity,
+                  const std::string& inFormat) const;
+  void operator()(const Debug::Channel::Enum channel,
+                  const Debug::Verbosity::Enum verbosity,
+                  const std::initializer_list<std::string>& inFormat) const;
+  //
   void operator()(const Debug::Channel::Enum channel, const char* inFormat,
-                  ...) const {
-    va_list argList;
-    va_start(argList, &inFormat);
-
-    Logger::DebugPrintF(file, line, channel, verbosity, inFormat, argList);
-
-    va_end(argList);
-  }
+                  ...) const;
+  void operator()(const Debug::Channel::Enum channel,
+                  const std::string& inFormat) const;
+  void operator()(const Debug::Channel::Enum channel,
+                  const std::initializer_list<std::string>& inFormat) const;
 };
 }  // namespace Isetta
