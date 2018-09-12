@@ -9,14 +9,14 @@
 #include <string>
 
 namespace Isetta {
-class WindowModule : IModule {
+class WindowModule {
  private:
   WindowModule() = default;
   ~WindowModule() = default;
 
-  void StartUp() final;
-  void Update() final;
-  void ShutDown() final;
+  void StartUp();
+  void Update();
+  void ShutDown();
 
   std::string winTitle;
   int initWinWidth;

@@ -99,10 +99,10 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Config\CVar.cpp" />
     <ClCompile Include="Core\Graphics\LightNode.cpp" />
     <ClCompile Include="Core\Graphics\ModelNode.cpp" />
-    <ClCompile Include="Core\Graphics\Render.cpp" />
+    <ClCompile Include="Core\Graphics\RenderModule.cpp" />
     <ClCompile Include="Core\Graphics\RenderNode.cpp" />
+    <ClCompile Include="Core\Input\InputModule.cpp" />
     <ClCompile Include="Core\Input\Input.cpp" />
-    <ClCompile Include="Core\Input\InputInterface.cpp" />
     <ClCompile Include="Core\Math\Matrix4.cpp" />
     <ClCompile Include="Core\Math\Quaternion.cpp" />
     <ClCompile Include="Core\Math\Rect.cpp" />
@@ -127,11 +127,11 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Color.h" />
     <ClInclude Include="Core\Graphics\LightNode.h" />
     <ClInclude Include="Core\Graphics\ModelNode.h" />
-    <ClInclude Include="Core\Graphics\Render.h" />
+    <ClInclude Include="Core\Graphics\RenderModule.h" />
     <ClInclude Include="Core\Graphics\RenderNode.h" />
-    <ClInclude Include="Core\Input\Input.h" />
+    <ClInclude Include="Core\Input\InputModule.h" />
     <ClInclude Include="Core\Input\InputEnum.h" />
-    <ClInclude Include="Core\Input\InputInterface.h" />
+    <ClInclude Include="Core\Input\Input.h" />
     <ClInclude Include="Core\Math\Matrix4.h" />
     <ClInclude Include="Core\Math\Quaternion.h" />
     <ClInclude Include="Core\Math\Rect.h" />

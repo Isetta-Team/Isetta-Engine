@@ -8,7 +8,7 @@
 #include "Core/Debug/Logger.h"
 #include "Core/Graphics/LightNode.h"
 #include "Core/Graphics/ModelNode.h"
-#include "Core/Input/InputInterface.h"
+#include "Core/Input/Input.h"
 #include "Core/Math/Random.h"
 #include "Core/Math/Vector3.h"
 #include "Core/Memory/Memory.h"

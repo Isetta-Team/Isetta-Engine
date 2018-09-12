@@ -53,9 +53,6 @@
     <ClCompile Include="Core\Memory\Memory.cpp">
       <Filter>Core\Memory</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Graphics\Render.cpp">
-      <Filter>Core\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Graphics\RenderNode.cpp">
       <Filter>Core\Graphics</Filter>
     </ClCompile>
@@ -64,9 +61,6 @@
     </ClCompile>
     <ClCompile Include="Core\Graphics\ModelNode.cpp">
       <Filter>Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Input\Input.cpp">
-      <Filter>Core\Input</Filter>
     </ClCompile>
     <ClCompile Include="Core\Memory\Memory.cpp">
       <Filter>Core\Memory</Filter>
@@ -80,12 +74,18 @@
     <ClCompile Include="Core\Window.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Input\InputInterface.cpp">
-      <Filter>Core\Input</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Debug\Assert.h" />
     <ClCompile Include="Core\Debug\Assert.h">
       <Filter>Core\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\RenderModule.cpp">
+      <Filter>Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Input\InputModule.cpp">
+      <Filter>Core\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Input\Input.cpp">
+      <Filter>Core\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -149,9 +149,6 @@
     <ClInclude Include="IsettaTypes.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\Render.h">
-      <Filter>Core\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Graphics\RenderNode.h">
       <Filter>Core\Graphics</Filter>
     </ClInclude>
@@ -160,9 +157,6 @@
     </ClInclude>
     <ClInclude Include="Core\Graphics\ModelNode.h">
       <Filter>Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Input\Input.h">
-      <Filter>Core\Input</Filter>
     </ClInclude>
     <ClInclude Include="Core\Config\Config.h">
       <Filter>Core\Config</Filter>
@@ -176,9 +170,6 @@
     <ClInclude Include="Core\Window.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Input\InputInterface.h">
-      <Filter>Core\Input</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Input\InputEnum.h">
       <Filter>Core\Input</Filter>
     </ClInclude>
@@ -187,6 +178,15 @@
     </ClInclude>
     <ClInclude Include="IsettaTypes.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Graphics\RenderModule.h">
+      <Filter>Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Input\InputModule.h">
+      <Filter>Core\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Input\Input.h">
+      <Filter>Core\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

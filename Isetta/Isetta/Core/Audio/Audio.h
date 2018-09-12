@@ -37,17 +37,17 @@ class AudioSource {
   friend class AudioModule;
 };
 
-class AudioModule : private IModule {
+class AudioModule {
  public:
   AudioModule() = default;
 
 private:
-  ~AudioModule() final = default;
+  ~AudioModule() = default;
 
-  void StartUp() final;
+  void StartUp();
   void LoadAllAudioClips();
-  void Update() override;
-  void ShutDown() final;
+  void Update();
+  void ShutDown();
 
   FMOD::Sound* FindSound(const char* soundName);
   FMOD::Channel* Play(FMOD::Sound* sound, bool loop, float volume) const;

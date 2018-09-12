@@ -1,29 +1,14 @@
 #include "Window.h"
-#include "Core/Graphics/Render.h"
-#include "Core/Input/Input.h"
 
 namespace Isetta {
 void Isetta::WindowModule::StartUp() {
   glfwInit();
   InitRenderConfig();
   InitWindow();
-  renderModule = new RenderModule{winHandle};
-  renderModule->StartUp();
-  inputModule = new InputModule{winHandle};
-  inputModule->StartUp();
 }
-void WindowModule::Update() {
-  renderModule->Update();
-  inputModule->Update();
-  glfwSwapBuffers(winHandle);
-}
+void WindowModule::Update() { glfwSwapBuffers(winHandle); }
 
 void WindowModule::ShutDown() {
-  renderModule->ShutDown();
-  delete renderModule;
-  inputModule->ShutDown();
-  delete inputModule;
-
   glfwDestroyWindow(winHandle);
   winHandle = nullptr;
   glfwTerminate();

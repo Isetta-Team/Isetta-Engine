@@ -1,11 +1,10 @@
-#include "Render.h"
+#include "Core\Graphics\RenderModule.h"
 
 #include <stdexcept>
 
 namespace Isetta {
-RenderModule::RenderModule(GLFWwindow* win) : winHandle{win} {}
-
-void RenderModule::StartUp() {
+void RenderModule::StartUp(GLFWwindow* win) {
+  winHandle = win;
   InitRenderConfig();
   InitH3D();
   InitHordeConfig();
@@ -27,7 +26,7 @@ void RenderModule::ShutDown() {
 }
 
 void RenderModule::InitRenderConfig() {
-  // #TODO Read from game config
+  // #TODO(Chaojie) Read from game config
   renderInterface = H3DRenderDevice::OpenGL4;
   fov = 45.f;
   nearPlane = 0.1f;
