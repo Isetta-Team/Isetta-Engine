@@ -18,7 +18,7 @@ LightNode::LightNode(std::string resourceName, const Math::Vector3& position,
 void LightNode::LoadResourceFromFile(std::string resourceName) {
   H3DRes lightMatRes =
       h3dAddResource(H3DResTypes::Material, "materials/light.material.xml", 0);
-  // #TODO read the resource path from game config
+  // #TODO(Chaojie) read the resource path from game config
   if (!h3dutLoadResourcesFromDisk(R"(Resources)")) {
     h3dutDumpMessages();
     throw std::exception(
@@ -28,7 +28,7 @@ void LightNode::LoadResourceFromFile(std::string resourceName) {
             .c_str());
   }
   renderNode = h3dAddLightNode(H3DRootNode, "Light1", lightMatRes, "LIGHTING", "SHADOWMAP");
-  // #TODO read from the game config
+  // #TODO(Chaojie) read from the game config
   h3dSetNodeParamF(renderNode, H3DLight::RadiusF, 0, 2500);
   h3dSetNodeParamF(renderNode, H3DLight::FovF, 0, 90);
   h3dSetNodeParamI(renderNode, H3DLight::ShadowMapCountI, 1);

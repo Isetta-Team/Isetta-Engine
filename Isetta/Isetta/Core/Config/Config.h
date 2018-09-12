@@ -3,21 +3,26 @@
  */
 #pragma once
 
-#include "CVar.h"
+#include "Core/Config/CVar.h"
+#include "Core/Config/CVarRegistry.h"
 #include "Core/Math/Vector3.h"
 
 namespace Isetta {
 class Config {
  public:
-  Config();
+  Config() = default;
 
-  CVarInt integerVar = CVarInt("integer", 0);
-  CVarFloat floatVar = CVarFloat("float", 0);
-  CVarString stringVar = CVarString("string", "test");
-  CVarVector3 vector3Var = CVarVector3("vec3", Math::Vector3::one);
-  CVarInt defaultValue = CVarInt("default", 10);
+  CVarInt integerVar{"integer", 0};
+  CVarFloat floatVar{"float"};
+  CVarString stringVar{"string", "test"};
+  CVarVector3 vector3Var{"vec3", Math::Vector3::one};
+  CVarInt defaultValue{"default", 10};
+
+  void Read(std::string filepath);
 
  private:
+  class CVarRegistry cvarsRegistry;
+
   void RemoveComments(std::string& line) const;
   bool OnlyWhitespace(const std::string& line) const;
   bool ValidLine(const std::string& line) const;
