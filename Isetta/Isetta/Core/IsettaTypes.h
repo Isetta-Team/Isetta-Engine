@@ -3,32 +3,26 @@
 #include <cstdint>
 
 namespace Isetta {
-typedef uint8_t Byte;
-typedef size_t SizeInt;
+using Byte = uint8_t;
+using SizeInt = size_t;
 
-typedef uint8_t U8;
-typedef uint16_t U16;
-typedef uint32_t U32;
-typedef uint64_t U64;
+using U8 = uint8_t;
+using U16 = uint16_t;
+using U32 = uint32_t;
+using U64 = uint64_t;
 
-typedef int8_t Int8;
-typedef int16_t Int16;
-typedef int32_t Int32;
-typedef int64_t Int64;
+using Int8 = int8_t;
+using Int16 = int16_t;
+using Int32 = int32_t;
+using Int64 = int64_t;
 
-typedef std::ptrdiff_t PtrDiff;
-typedef uintptr_t PtrInt;
+using PtrDiff = std::ptrdiff_t;
+using PtrInt = uintptr_t;
 
-inline auto operator""_KB(SizeInt const x) {
-  return 1024 * x;
-}
+inline auto operator""_KB(SizeInt const x) { return 1024 * x; }
 
-inline auto operator""_MB(SizeInt const x) {
-  return 1024 * 1024 * x;
-}
+inline auto operator""_MB(SizeInt const x) { return 1024 * 1024 * x; }
 
-inline auto operator""_GB(SizeInt const x) {
-  return 1024 * 1024 * 1024 * x;
-}
+inline auto operator""_GB(SizeInt const x) { return 1024 * 1024 * 1024 * x; }
 
 }  // namespace Isetta
