@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Vector3Int.h"
+#include "Core/Math/Vector3Int.h"
 
 #include <cmath>
 #include <stdexcept>

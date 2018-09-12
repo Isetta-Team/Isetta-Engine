@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2018 Isetta
+ */
 #pragma once
 #include <stdexcept>
 #include "Core/IsettaTypes.h"
@@ -51,18 +54,18 @@ class StackAllocator {
   T* New() {
     void* mem = AllocAligned(sizeof(T));
     return new (mem) T();
-  };
+  }
 
   template <typename T>
-  T* New(Marker& outMarker) {
+  T* New(const Marker& outMarker) {
     outMarker = top;
     return New<T>();
-  };
+  }
 
-  void FreeToMarker(const Marker marker) { top = marker; };
-  void Clear() { top = 0; };
+  void FreeToMarker(const Marker marker) { top = marker; }
+  void Clear() { top = 0; }
   void Erase();
-  Marker GetMarker() const { return top; };
+  Marker GetMarker() const { return top; }
 
  private:
   Marker top;
@@ -71,9 +74,7 @@ class StackAllocator {
   PtrInt bottomAddress;
 };
 
-class DoubleBufferedAllocator {
-  
-};
+class DoubleBufferedAllocator {};
 
 template <typename T>
 class PoolAllocator {
@@ -154,12 +155,8 @@ PoolAllocator<T>::Node::Node() {
   next = nullptr;
 }
 
-class LinearAllocator {
-  
-};
+class LinearAllocator {};
 
-class DynamicAllocator {
-  
-};
+class DynamicAllocator {};
 
 }  // namespace Isetta

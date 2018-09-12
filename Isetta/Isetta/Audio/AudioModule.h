@@ -3,10 +3,11 @@
  */
 #pragma once
 
-#include "fmod.hpp"
-// TODO_YIDI: do error checking
-// #include "fmod_errors.h"
+#include <string>
 #include <unordered_map>
+#include "fmod.hpp"
+// TODO(YIDI): do error checking
+// #include "fmod_errors.h"
 #include "Core/ModuleManager.h"
 
 namespace Isetta {
@@ -15,7 +16,7 @@ class AudioModule {
  public:
   AudioModule() = default;
 
-private:
+ private:
   ~AudioModule() = default;
 
   void StartUp();

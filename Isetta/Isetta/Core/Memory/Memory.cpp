@@ -1,5 +1,10 @@
+/*
+ * Copyright (c) 2018 Isetta
+ */
 #include "Core/Memory/Memory.h"
+
 #include <sstream>
+#include <string>
 #include "Core/Debug/Assert.h"
 #include "Core/Debug/Logger.h"
 
@@ -65,7 +70,7 @@ void* StackAllocator::AllocAligned(const SizeInt size, const U8 alignment) {
   Marker newTop = top + size + adjustment;
 
   if (newTop > length) {
-    // TODO: should I throw an exception here?
+    // TODO(YIDI): should I throw an exception here?
     throw std::overflow_error("Not enough memory in stack allocator");
   }
 
@@ -78,7 +83,7 @@ void* StackAllocator::AllocUnaligned(SizeInt size) {
   Marker newTop = top + size;
 
   if (newTop > length) {
-    // TODO: should I throw an exception here?
+    // TODO(YIDI): should I throw an exception here?
     throw std::overflow_error("Not enough memory in stack allocator");
   }
 

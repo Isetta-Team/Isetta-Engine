@@ -50,7 +50,7 @@ class CVarFloat : public ICVar {
 
   inline void SetVal(std::string strVal) override { fVal = stof(strVal); }
 
-  inline float GetVal() const { return fVal; };
+  inline float GetVal() const { return fVal; }
 
   inline int GetType() const override { return CVAR_FLOAT; }
 };

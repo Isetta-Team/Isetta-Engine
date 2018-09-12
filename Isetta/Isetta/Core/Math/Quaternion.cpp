@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Quaternion.h"
+#include "Core/Math/Quaternion.h"
 
 #include "Utility.h"
 #include "Vector3.h"

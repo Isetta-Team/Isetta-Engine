@@ -2,12 +2,13 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Audio/AudioModule.h"
-#include "Audio/AudioSource.h"
-#include <SID/sid.h>
+#include <combaseapi.h>
 #include <iomanip>
 #include <sstream>
-#include "combaseapi.h"
+#include <string>
+#include "Audio/AudioSource.h"
 #include "Core/IsettaTypes.h"
+#include "SID/sid.h"
 
 namespace Isetta {
 
@@ -17,7 +18,7 @@ void AudioModule::StartUp() {
   fmodSystem = nullptr;
   FMOD::System_Create(&fmodSystem);
   fmodSystem->init(512, FMOD_INIT_NORMAL, nullptr);
-  // TODO_YIDI: Set this in engine config
+  // TODO(YIDI): Set this in engine config
   soundFilesRoot = R"(Resources\Sound\)";
   LoadAllAudioClips();
   AudioSource::audioSystem = this;
@@ -53,7 +54,7 @@ FMOD::Channel* AudioModule::Play(FMOD::Sound* sound, bool loop,
 }
 
 void AudioModule::LoadAllAudioClips() {
-  // TODO_YIDI: get this array of string from game config
+  // TODO(YIDI): get this array of string from game config
   const char* files[]{"singing.wav", "wave.mp3"};
 
   for (auto file : files) {

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Vector2.h"
+#include "Core/Math/Vector2.h"
 
 #include <cfloat>
 #include <cmath>

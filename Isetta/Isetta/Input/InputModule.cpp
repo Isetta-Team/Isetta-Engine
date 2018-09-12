@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Core/Input/InputModule.h"
+#include "Input/InputModule.h"
 #include <GLFW/glfw3.h>
 #include "Core/Debug/Logger.h"
-#include "Core/Input/Input.h"
+#include "Input/Input.h"
 
 namespace Isetta {
 std::list<std::function<void()>> InputModule::windowCloseCallbacks{};
@@ -73,7 +73,8 @@ int InputModule::KeyCodeToGLFWKey(KeyCode key) {
     case KeyCode::NUM9:
     case KeyCode::SEMICOLON:
     case KeyCode::EQUAL:
-      glfw_key = GLFW_KEY_A - (int)KeyCode::A + (int)key;
+      glfw_key =
+          GLFW_KEY_A - static_cast<int>(KeyCode::A) + static_cast<int>(key);
       break;
     case KeyCode::A:
     case KeyCode::B:
@@ -104,7 +105,8 @@ int InputModule::KeyCodeToGLFWKey(KeyCode key) {
     case KeyCode::LEFT_BRACKET:
     case KeyCode::BACKSLASH:
     case KeyCode::RIGHT_BRACKET:
-      glfw_key = GLFW_KEY_A - (int)KeyCode::A + (int)key;
+      glfw_key =
+          GLFW_KEY_A - static_cast<int>(KeyCode::A) + static_cast<int>(key);
       break;
     case KeyCode::GRAVE_ACCENT:
       glfw_key = 96;
@@ -179,7 +181,8 @@ int InputModule::KeyCodeToGLFWKey(KeyCode key) {
     case KeyCode::RIGHT_ALT:
     case KeyCode::RIGHT_SUPER:
     case KeyCode::MENU:
-      glfw_key = GLFW_KEY_ESCAPE - (int)KeyCode::ESCAPE + (int)key;
+      glfw_key = GLFW_KEY_ESCAPE - static_cast<int>(KeyCode::ESCAPE) +
+                 static_cast<int>(key);
       break;
     default:
       glfw_key = GLFW_KEY_UNKNOWN;

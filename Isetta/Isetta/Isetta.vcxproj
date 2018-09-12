@@ -98,12 +98,12 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Config\Config.cpp" />
     <ClCompile Include="Core\Color.cpp" />
     <ClCompile Include="Core\Config\CVar.cpp" />
-    <ClCompile Include="Core\Graphics\LightNode.cpp" />
-    <ClCompile Include="Core\Graphics\ModelNode.cpp" />
-    <ClCompile Include="Core\Graphics\RenderModule.cpp" />
-    <ClCompile Include="Core\Graphics\RenderNode.cpp" />
-    <ClCompile Include="Core\Input\InputModule.cpp" />
-    <ClCompile Include="Core\Input\Input.cpp" />
+    <ClCompile Include="Graphics\LightNode.cpp" />
+    <ClCompile Include="Graphics\ModelNode.cpp" />
+    <ClCompile Include="Graphics\RenderModule.cpp" />
+    <ClCompile Include="Graphics\RenderNode.cpp" />
+    <ClCompile Include="Input\InputModule.cpp" />
+    <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="Core\Math\Matrix4.cpp" />
     <ClCompile Include="Core\Math\Quaternion.cpp" />
     <ClCompile Include="Core\Math\Rect.cpp" />
@@ -119,7 +119,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Debug\DebugDraw.cpp" />
     <ClCompile Include="Core\Memory\Memory.cpp" />
     <ClCompile Include="Core\ModuleManager.cpp" />
-    <ClCompile Include="Core\Window.cpp" />
+    <ClCompile Include="Graphics\Window.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -127,14 +127,13 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Audio\AudioSource.h" />
     <ClInclude Include="Core\Config\Config.h" />
     <ClInclude Include="Core\Color.h" />
-    <ClInclude Include="Core\Graphics\LightNode.h" />
-    <ClInclude Include="Core\Graphics\ModelNode.h" />
-    <ClInclude Include="Core\Graphics\RenderModule.h" />
-    <ClInclude Include="Core\Graphics\RenderNode.h" />
-    <ClInclude Include="Core\Input\InputModule.h" />
-    <ClInclude Include="Core\Input\InputEnum.h" />
-    <ClInclude Include="Core\Input\InputInterface.h" />
-    <ClInclude Include="Core\Input\Input.h" />
+    <ClInclude Include="Graphics\LightNode.h" />
+    <ClInclude Include="Graphics\ModelNode.h" />
+    <ClInclude Include="Graphics\RenderModule.h" />
+    <ClInclude Include="Graphics\RenderNode.h" />
+    <ClInclude Include="Input\InputModule.h" />
+    <ClInclude Include="Input\InputEnum.h" />
+    <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Core\IsettaTypes.h" />
     <ClInclude Include="Core\Math\Matrix4.h" />
     <ClInclude Include="Core\Math\Quaternion.h" />
@@ -156,7 +155,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Time.h" />
     <ClInclude Include="Core\Config\CVar.h" />
     <ClInclude Include="Core\Config\CVarRegistry.h" />
-    <ClInclude Include="Core\Window.h" />
+    <ClInclude Include="Graphics\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Sound\singing.wav" />

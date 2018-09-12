@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Random.h"
+#include "Core/Math/Random.h"
 
 namespace Isetta::Math {
 RandomGeneratorInt Random::GetRandomGenerator(int start, int end) {

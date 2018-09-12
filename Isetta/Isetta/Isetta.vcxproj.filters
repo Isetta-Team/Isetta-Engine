@@ -50,14 +50,14 @@
     <ClCompile Include="Core\Memory\Memory.cpp">
       <Filter>Core\Memory</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Graphics\RenderNode.cpp">
-      <Filter>Core\Graphics</Filter>
+    <ClCompile Include="Graphics\RenderNode.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Graphics\LightNode.cpp">
-      <Filter>Core\Graphics</Filter>
+    <ClCompile Include="Graphics\LightNode.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Graphics\ModelNode.cpp">
-      <Filter>Core\Graphics</Filter>
+    <ClCompile Include="Graphics\ModelNode.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Core\Memory\Memory.cpp">
       <Filter>Core\Memory</Filter>
@@ -68,26 +68,26 @@
     <ClCompile Include="Core\Config\CVar.cpp">
       <Filter>Core\Config</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Window.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Debug\Assert.h">
       <Filter>Core\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Graphics\RenderModule.cpp">
-      <Filter>Core\Graphics</Filter>
+    <ClCompile Include="Graphics\RenderModule.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Input\InputModule.cpp">
-      <Filter>Core\Input</Filter>
+    <ClCompile Include="Input\InputModule.cpp">
+      <Filter>Input</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Input\Input.cpp">
-      <Filter>Core\Input</Filter>
+    <ClCompile Include="Input\Input.cpp">
+      <Filter>Input</Filter>
     </ClCompile>
     <ClCompile Include="Audio\AudioModule.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
     <ClCompile Include="Audio\AudioSource.cpp">
       <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Window.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -145,14 +145,14 @@
     <ClInclude Include="Core\Memory\Memory.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\RenderNode.h">
-      <Filter>Core\Graphics</Filter>
+    <ClInclude Include="Graphics\RenderNode.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\LightNode.h">
-      <Filter>Core\Graphics</Filter>
+    <ClInclude Include="Graphics\LightNode.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\ModelNode.h">
-      <Filter>Core\Graphics</Filter>
+    <ClInclude Include="Graphics\ModelNode.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Core\Config\Config.h">
       <Filter>Core\Config</Filter>
@@ -163,28 +163,32 @@
     <ClInclude Include="Core\Config\CVarRegistry.h">
       <Filter>Core\Config</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Window.h">
-      <Filter>Core</Filter>
+    <ClInclude Include="Input\InputEnum.h">
+      <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Input\InputEnum.h">
-      <Filter>Core\Input</Filter>
+    <ClInclude Include="Graphics\RenderModule.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\RenderModule.h">
-      <Filter>Core\Graphics</Filter>
+    <ClInclude Include="Input\InputModule.h">
+      <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Input\InputModule.h">
-      <Filter>Core\Input</Filter>
+    <ClInclude Include="Input\Input.h">
+      <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Input\Input.h">
-      <Filter>Core\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Input\InputInterface.h" />
-    <ClInclude Include="Core\IsettaTypes.h" />
     <ClInclude Include="Audio\AudioModule.h">
       <Filter>Audio</Filter>
     </ClInclude>
     <ClInclude Include="Audio\AudioSource.h">
       <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\InputInterface.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IsettaTypes.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Window.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -206,12 +210,6 @@
     <Filter Include="Core\Memory">
       <UniqueIdentifier>{3c4c68c1-116d-471f-983d-eb27c2ad19f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Graphics">
-      <UniqueIdentifier>{f0a11195-75f3-4f60-80f3-d029a639f5d9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Input">
-      <UniqueIdentifier>{4df4848a-1e54-4b90-8bad-773e71fa89de}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resources\pipelines">
       <UniqueIdentifier>{699798ff-ad5f-4318-af31-8a9533e02e91}</UniqueIdentifier>
     </Filter>
@@ -229,6 +227,12 @@
     </Filter>
     <Filter Include="Audio">
       <UniqueIdentifier>{37af25bc-07be-4d7a-90b9-15e1379adb9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{f0a11195-75f3-4f60-80f3-d029a639f5d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{4df4848a-1e54-4b90-8bad-773e71fa89de}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

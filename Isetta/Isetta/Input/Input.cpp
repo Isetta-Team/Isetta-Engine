@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Core/Input/Input.h"
-#include "Core/Input/InputModule.h"
+#include "Input/Input.h"
+#include "Input/InputModule.h"
 namespace Isetta {
 
 InputModule* Input::inputModule{nullptr};
@@ -18,5 +18,5 @@ void Input::RegisterKeyPressCallback(KeyCode key,
 void Input::RegisterKeyReleaseCallback(KeyCode key,
                                        const std::function<void()>& callback) {
   inputModule->RegisterKeyReleaseCallback(key, callback);
-};
+}
 }  // namespace Isetta

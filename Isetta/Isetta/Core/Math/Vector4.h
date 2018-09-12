@@ -98,7 +98,7 @@ class Vector4 {
 
   // Conversions
 
-  // TODO: Fix
+  // TODO(JACOB): Fix
   explicit Vector4(const Color& c);
 
   // Functions
