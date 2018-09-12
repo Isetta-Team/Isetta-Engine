@@ -138,6 +138,7 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="Core\Input\Input.h" />
     <ClInclude Include="Core\Input\InputEnum.h" />
     <ClInclude Include="Core\Input\InputInterface.h" />
+    <ClInclude Include="Core\IsettaTypes.h" />
     <ClInclude Include="Core\Math\Matrix4.h" />
     <ClInclude Include="Core\Math\Quaternion.h" />
     <ClInclude Include="Core\Math\Rect.h" />
@@ -159,7 +160,6 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
     <ClInclude Include="Core\Config\CVar.h" />
     <ClInclude Include="Core\Config\CVarRegistry.h" />
     <ClInclude Include="Core\Window.h" />
-    <ClInclude Include="IsettaTypes.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Sound\singing.wav" />

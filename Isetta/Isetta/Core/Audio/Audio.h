@@ -6,9 +6,7 @@
 #include "fmod.hpp"
 // TODO: do error checking
 // #include "fmod_errors.h"
-#include <string>
 #include <unordered_map>
-#include <vector>
 #include "Core/IModule.h"
 #include "Core/ModuleManager.h"
 
@@ -26,7 +24,7 @@ class AudioSource {
   void Pause() const;
   void Continue() const;
   void Stop() const;
-  void SetVolume(const float) const;
+  void SetVolume(float) const;
 
  private:
   FMOD::Sound* fmodSound{};

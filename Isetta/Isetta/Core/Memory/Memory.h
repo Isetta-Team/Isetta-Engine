@@ -1,13 +1,13 @@
 #pragma once
 #include <stdexcept>
-#include "IsettaTypes.h"
+#include "Core/IsettaTypes.h"
 
 namespace Isetta {
 
-class MemoryManager {
+class MemoryAllocator {
  private:
-  static void* AllocateUnaligned(SizeInt size);
-  static void FreeUnaligned(void*);
+  static void* AllocateDefaultAligned(SizeInt size);
+  static void FreeDefaultAligned(void*);
 
   /**
    * \brief
@@ -18,6 +18,8 @@ class MemoryManager {
    */
   static void* AllocateAligned(SizeInt size, U8 alignment);
   static void FreeAligned(void*);
+
+  static class StackAllocator singleFrameAllocator;
 
   friend class StackAllocator;
   template <typename T>
@@ -69,6 +71,10 @@ class StackAllocator {
   PtrInt bottomAddress;
 };
 
+class DoubleBufferedAllocator {
+  
+};
+
 template <typename T>
 class PoolAllocator {
  public:
@@ -96,7 +102,7 @@ PoolAllocator<T>::PoolAllocator(const SizeInt count) {
   isErased = false;
   capacity = count;
   elementSize = sizeof(T);
-  memHead = MemoryManager::AllocateUnaligned(elementSize * capacity);
+  memHead = MemoryAllocator::AllocateDefaultAligned(elementSize * capacity);
   PtrInt address = reinterpret_cast<PtrInt>(memHead);
   head = new (memHead) Node();
   Node* cur = head;
@@ -112,7 +118,7 @@ PoolAllocator<T>::PoolAllocator(const SizeInt count) {
 template <typename T>
 PoolAllocator<T>::~PoolAllocator() {
   isErased = true;
-  MemoryManager::FreeUnaligned(memHead);
+  MemoryAllocator::FreeDefaultAligned(memHead);
 }
 
 template <typename T>
@@ -147,5 +153,13 @@ template <typename T>
 PoolAllocator<T>::Node::Node() {
   next = nullptr;
 }
+
+class LinearAllocator {
+  
+};
+
+class DynamicAllocator {
+  
+};
 
 }  // namespace Isetta

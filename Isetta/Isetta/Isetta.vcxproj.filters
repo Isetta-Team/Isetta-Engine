@@ -146,9 +146,6 @@
     <ClInclude Include="Core\Memory\Memory.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="IsettaTypes.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Graphics\Render.h">
       <Filter>Core\Graphics</Filter>
     </ClInclude>
@@ -191,6 +188,9 @@
     <ClInclude Include="IsettaTypes.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Core\IsettaTypes.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -211,7 +211,7 @@
     <Filter Include="Core\Debug">
       <UniqueIdentifier>{5d4f980d-9a8d-4d91-93c4-870cde0b8cb1}</UniqueIdentifier>
     </Filter>
-   <Filter Include="Core\Memory">
+    <Filter Include="Core\Memory">
       <UniqueIdentifier>{3c4c68c1-116d-471f-983d-eb27c2ad19f8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\Graphics">

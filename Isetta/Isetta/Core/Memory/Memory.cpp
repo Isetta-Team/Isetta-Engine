@@ -12,14 +12,14 @@ std::string HexFromPtr(const PtrInt rawAddress) {
   return str.str();
 }
 
-void* MemoryManager::AllocateUnaligned(const SizeInt size) {
+void* MemoryAllocator::AllocateDefaultAligned(const SizeInt size) {
   // looks like std::malloc always return 16 byte aligned memory
   return std::malloc(size);
 }
 
-void MemoryManager::FreeUnaligned(void* mem) { std::free(mem); }
+void MemoryAllocator::FreeDefaultAligned(void* mem) { std::free(mem); }
 
-void* MemoryManager::AllocateAligned(const SizeInt size, const U8 alignment) {
+void* MemoryAllocator::AllocateAligned(const SizeInt size, const U8 alignment) {
   const bool isValid = alignment >= 2 && alignment <= 128 &&
                        (alignment & (alignment - 1)) == 0;  // power of 2
   if (!isValid) {
@@ -29,7 +29,7 @@ void* MemoryManager::AllocateAligned(const SizeInt size, const U8 alignment) {
   const SizeInt expandedSize = size + alignment;
 
   const PtrInt rawAddress =
-      reinterpret_cast<PtrInt>(AllocateUnaligned(expandedSize));
+      reinterpret_cast<PtrInt>(AllocateDefaultAligned(expandedSize));
   // std::string add = HexFromPtr(rawAddress);
   const PtrInt misAlignment = rawAddress & (alignment - 1);
   const U8 adjustment = alignment - static_cast<U8>(misAlignment);
@@ -42,18 +42,18 @@ void* MemoryManager::AllocateAligned(const SizeInt size, const U8 alignment) {
   return static_cast<void*>(alignedMemory);
 }
 
-void MemoryManager::FreeAligned(void* memoryPtr) {
+void MemoryAllocator::FreeAligned(void* memoryPtr) {
   const U8* alignedMemory = reinterpret_cast<U8*>(memoryPtr);
   const PtrDiff adjustment = static_cast<PtrDiff>(alignedMemory[-1]);
   const PtrInt alignedAddress = reinterpret_cast<PtrInt>(memoryPtr);
   const PtrInt rawAddress = alignedAddress - adjustment;
   void* rawMem = reinterpret_cast<void*>(rawAddress);
-  FreeUnaligned(rawMem);
+  FreeDefaultAligned(rawMem);
 }
 
 StackAllocator::StackAllocator(const SizeInt stackSize)
     : top(0), length(stackSize) {
-  bottom = MemoryManager::AllocateUnaligned(stackSize);
+  bottom = MemoryAllocator::AllocateDefaultAligned(stackSize);
   bottomAddress = reinterpret_cast<PtrInt>(bottom);
 }
 
