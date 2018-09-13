@@ -54,7 +54,7 @@ int main() {
   using clock = std::chrono::high_resolution_clock;
   typedef std::chrono::duration<float> second;
 
-  RunBenchmarks();
+  // RunBenchmarks();
 
   // Game loop
   Time::startTime = clock::now();
