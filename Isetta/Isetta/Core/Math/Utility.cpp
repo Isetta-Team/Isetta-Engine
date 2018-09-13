@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Utility.h"
+#include "Core/Math/Utility.h"
 
 #define _USE_MATH_DEFINES
 #include <algorithm>

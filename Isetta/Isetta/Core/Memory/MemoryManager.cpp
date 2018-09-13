@@ -52,7 +52,4 @@ void MemoryAllocator::FreeAligned(void* memoryPtr) {
   void* rawMem = reinterpret_cast<void*>(rawAddress);
   FreeDefaultAligned(rawMem);
 }
-
-
-
 }  // namespace Isetta

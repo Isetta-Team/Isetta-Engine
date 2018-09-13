@@ -11,8 +11,6 @@
 
 namespace Isetta {
 class RenderModule {
- public:
-
  private:
   RenderModule() = default;
   ~RenderModule() = default;

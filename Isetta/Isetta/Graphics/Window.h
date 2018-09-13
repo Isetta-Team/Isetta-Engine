@@ -4,9 +4,9 @@
 #pragma once
 
 #include <GLFW/glfw3.h>
+#include <string>
 #include "Core/IModule.h"
 #include "Core/ModuleManager.h"
-#include <string>
 
 namespace Isetta {
 class WindowModule {

@@ -1,12 +1,13 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Vector3.h"
+#include "Core/Math/Vector3.h"
 
 #include <cfloat>
 #include <cmath>
 #include <sstream>
 #include <stdexcept>
+#include <string>
 #include "Vector2.h"
 #include "Vector3Int.h"
 

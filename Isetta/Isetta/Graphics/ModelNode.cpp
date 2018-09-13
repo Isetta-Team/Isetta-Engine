@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Core/Graphics/ModelNode.h"
+#include "Graphics/ModelNode.h"
 
 namespace Isetta {
 ModelNode::ModelNode(std::string resourceName) {

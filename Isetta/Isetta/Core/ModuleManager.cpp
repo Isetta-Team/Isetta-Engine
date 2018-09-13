@@ -3,9 +3,9 @@
  */
 #include "Core/ModuleManager.h"
 #include "Audio/AudioModule.h"
-#include "Core/Graphics/RenderModule.h"
-#include "Core/Input/InputModule.h"
-#include "Core/Window.h"
+#include "Graphics/RenderModule.h"
+#include "Graphics/Window.h"
+#include "Input/InputModule.h"
 
 namespace Isetta {
 ModuleManager::ModuleManager() {

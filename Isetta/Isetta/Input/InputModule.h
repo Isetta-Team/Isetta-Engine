@@ -8,19 +8,21 @@
 #include <list>
 #include <unordered_map>
 #include "Core/IModule.h"
-#include "Core/Input/InputEnum.h"
+#include "Input/InputEnum.h"
 
 namespace Isetta {
-class InputModule{
+class InputModule {
  public:
   void RegisterWindowCloseCallback(std::function<void()> callback);
   bool IsKeyPressed(KeyCode key);
-  void RegisterKeyPressCallback(KeyCode key,const std::function<void()>& callback);
-  void RegisterKeyReleaseCallback(KeyCode key,const std::function<void()>& callback);
-  //bool IsMouseButtonPressed(MouseButtonCode mouseButton);
-  //void RegisterMousePressCallback(
+  void RegisterKeyPressCallback(KeyCode key,
+                                const std::function<void()>& callback);
+  void RegisterKeyReleaseCallback(KeyCode key,
+                                  const std::function<void()>& callback);
+  // bool IsMouseButtonPressed(MouseButtonCode mouseButton);
+  // void RegisterMousePressCallback(
   //    MouseButtonCode mouseButton,const std::function<void()>& callback);
-  //void RegisterMouseReleaseCallback(
+  // void RegisterMouseReleaseCallback(
   //    MouseButtonCode mouseButton,const std::function<void()>& callback);
 
  private:
@@ -44,7 +46,6 @@ class InputModule{
       keyReleaseCallbacks;
   static void keyEventListener(GLFWwindow* win, int key, int scancode,
                                int action, int mods);
-
 
   friend class ModuleManager;
 };

@@ -1,4 +1,7 @@
-#include "Window.h"
+/*
+ * Copyright (c) 2018 Isetta
+ */
+#include "Graphics/Window.h"
 
 namespace Isetta {
 void Isetta::WindowModule::StartUp() {

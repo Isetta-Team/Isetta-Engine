@@ -1,7 +1,6 @@
 /*
-* Copyright (c) 2018 Isetta
-*/
-
+ * Copyright (c) 2018 Isetta
+ */
 #pragma once
 #include <cstddef>
 #include <cstdint>

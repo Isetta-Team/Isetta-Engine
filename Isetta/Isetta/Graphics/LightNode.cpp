@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Core/Graphics/LightNode.h"
+#include "Graphics/LightNode.h"
 
 namespace Isetta {
 LightNode::LightNode(std::string resourceName) {
@@ -27,7 +27,8 @@ void LightNode::LoadResourceFromFile(std::string resourceName) {
             resourceName)
             .c_str());
   }
-  renderNode = h3dAddLightNode(H3DRootNode, "Light1", lightMatRes, "LIGHTING", "SHADOWMAP");
+  renderNode = h3dAddLightNode(H3DRootNode, "Light1", lightMatRes, "LIGHTING",
+                               "SHADOWMAP");
   // #TODO(Chaojie) read from the game config
   h3dSetNodeParamF(renderNode, H3DLight::RadiusF, 0, 2500);
   h3dSetNodeParamF(renderNode, H3DLight::FovF, 0, 90);
@@ -38,4 +39,4 @@ void LightNode::LoadResourceFromFile(std::string resourceName) {
   h3dSetNodeParamF(renderNode, H3DLight::ColorF3, 2, 1.0f);
   h3dSetNodeParamF(renderNode, H3DLight::ColorMultiplierF, 0, 1.0f);
 }
-}
+}  // namespace Isetta

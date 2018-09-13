@@ -6,15 +6,15 @@
 #include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
-#include "Core/Graphics/LightNode.h"
-#include "Core/Graphics/ModelNode.h"
-#include "Core/Input/Input.h"
 #include "Core/Math/Random.h"
 #include "Core/Math/Vector3.h"
 #include "Core/Memory/PoolAllocator.h"
 #include "Core/Memory/StackAllocator.h"
 #include "Core/ModuleManager.h"
 #include "Core/Time.h"
+#include "Graphics/LightNode.h"
+#include "Graphics/ModelNode.h"
+#include "Input/Input.h"
 
 using namespace Isetta;
 

@@ -8,7 +8,7 @@
 namespace Isetta {
 class AudioModule;
 
-// TODO_YIDI: add 3d support
+// TODO(YIDI): add 3d support
 class AudioSource {
  public:
   AudioSource() = default;
