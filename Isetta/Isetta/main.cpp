@@ -105,7 +105,7 @@ int main() {
 
    double time = 0.0;
 
-   Address serverAddress("127.0.0.1", ServerPort);
+   Address serverAddress("172.25.106.33", ServerPort);
 
    Server server(yojimbo::GetDefaultAllocator(), privateKey, serverAddress,
                  yojimboConfig,
