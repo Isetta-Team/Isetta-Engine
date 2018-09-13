@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Core\Audio\Audio.cpp">
-      <Filter>Core\Audio</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Core\Math\Matrix3.cpp">
       <Filter>Core\Math</Filter>
@@ -50,17 +47,17 @@
     <ClCompile Include="Core\ModuleManager.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Graphics\Render.cpp">
-      <Filter>Core\Graphics</Filter>
+    <ClCompile Include="Core\Memory\Memory.cpp">
+      <Filter>Core\Memory</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Graphics\RenderNode.cpp">
-      <Filter>Core\Graphics</Filter>
+    <ClCompile Include="Graphics\RenderNode.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Graphics\LightNode.cpp">
-      <Filter>Core\Graphics</Filter>
+    <ClCompile Include="Graphics\LightNode.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Graphics\ModelNode.cpp">
-      <Filter>Core\Graphics</Filter>
+    <ClCompile Include="Graphics\ModelNode.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Core\Input\Input.cpp">
       <Filter>Core\Input</Filter>
@@ -71,20 +68,32 @@
     <ClCompile Include="Core\Config\CVar.cpp">
       <Filter>Core\Config</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Window.cpp">
-      <Filter>Core</Filter>
+    <ClCompile Include="Core\Debug\Assert.h">
+      <Filter>Core\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Input\InputInterface.cpp">
-      <Filter>Core\Input</Filter>
+    <ClCompile Include="Graphics\RenderModule.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\InputModule.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\Input.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\AudioModule.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\AudioSource.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Window.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Core\Debug\Assert.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\IModule.h">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Audio\Audio.h">
-      <Filter>Core\Audio</Filter>
     </ClInclude>
     <ClInclude Include="Core\Time.h">
       <Filter>Core</Filter>
@@ -134,20 +143,17 @@
     <ClInclude Include="Core\ModuleManager.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\Render.h">
-      <Filter>Core\Graphics</Filter>
+    <ClInclude Include="Core\Memory\Memory.h">
+      <Filter>Core\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\RenderNode.h">
-      <Filter>Core\Graphics</Filter>
+    <ClInclude Include="Graphics\RenderNode.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\LightNode.h">
-      <Filter>Core\Graphics</Filter>
+    <ClInclude Include="Graphics\LightNode.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Graphics\ModelNode.h">
-      <Filter>Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Input\Input.h">
-      <Filter>Core\Input</Filter>
+    <ClInclude Include="Graphics\ModelNode.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Core\Config\Config.h">
       <Filter>Core\Config</Filter>
@@ -158,17 +164,29 @@
     <ClInclude Include="Core\Config\CVarRegistry.h">
       <Filter>Core\Config</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Config\Convert.h">
-      <Filter>Core\Config</Filter>
+    <ClInclude Include="Input\InputEnum.h">
+      <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Window.h">
+    <ClInclude Include="Graphics\RenderModule.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\InputModule.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\Input.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioModule.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioSource.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IsettaTypes.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Input\InputInterface.h">
-      <Filter>Core\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Input\InputEnum.h">
-      <Filter>Core\Input</Filter>
+    <ClInclude Include="Graphics\Window.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -177,9 +195,6 @@
     </Filter>
     <Filter Include="Core\Math">
       <UniqueIdentifier>{9e7d04b8-ef4c-4b77-a27e-75dfc008d3a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Audio">
-      <UniqueIdentifier>{37af25bc-07be-4d7a-90b9-15e1379adb9d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resources">
       <UniqueIdentifier>{fd18d90e-c842-4f0a-abe6-d2e90e9093a7}</UniqueIdentifier>
@@ -190,11 +205,8 @@
     <Filter Include="Core\Debug">
       <UniqueIdentifier>{5d4f980d-9a8d-4d91-93c4-870cde0b8cb1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Graphics">
-      <UniqueIdentifier>{f0a11195-75f3-4f60-80f3-d029a639f5d9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Input">
-      <UniqueIdentifier>{4df4848a-1e54-4b90-8bad-773e71fa89de}</UniqueIdentifier>
+    <Filter Include="Core\Memory">
+      <UniqueIdentifier>{3c4c68c1-116d-471f-983d-eb27c2ad19f8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resources\pipelines">
       <UniqueIdentifier>{699798ff-ad5f-4318-af31-8a9533e02e91}</UniqueIdentifier>
@@ -207,6 +219,18 @@
     </Filter>
     <Filter Include="Core\Config">
       <UniqueIdentifier>{78b96f16-2074-4d8e-802c-ce826e96fe83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Memory">
+      <UniqueIdentifier>{3c4c68c1-116d-471f-983d-eb27c2ad19f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{37af25bc-07be-4d7a-90b9-15e1379adb9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{f0a11195-75f3-4f60-80f3-d029a639f5d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{4df4848a-1e54-4b90-8bad-773e71fa89de}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -2,18 +2,18 @@
  * Copyright (c) 2018 Isetta
  */
 #include <chrono>
-#include <iostream>
 #include <string>
-#include "Core/Audio/Audio.h"
+#include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
-#include "Core/Graphics/LightNode.h"
-#include "Core/Graphics/ModelNode.h"
-#include "Core/Input/InputInterface.h"
 #include "Core/Math/Random.h"
 #include "Core/Math/Vector3.h"
+#include "Core/Memory/Memory.h"
 #include "Core/ModuleManager.h"
 #include "Core/Time.h"
+#include "Graphics/LightNode.h"
+#include "Graphics/ModelNode.h"
+#include "Input/Input.h"
 
 #include "yojimbo/yojimbo.h"
 #include <stdio.h>
@@ -25,7 +25,6 @@
 #include "yojimbo/shared.h"
 
 using namespace Isetta;
-
 
 /*! \mainpage Isetta Engine
 Game engine development is a very wide field in the industry, but also a very
@@ -44,26 +43,39 @@ to give newcomers a clearer representation of the engine-building process.
 */
 int main() {
   Config config;
-  Logger::Log(Debug::Channel::General,
-              config.vector3Var.GetV3Val().ToString().c_str());
+  config.Read("config.cfg");
+  LOG_INFO(Debug::Channel::General,
+           config.vector3Var.GetVal().ToString().c_str());
 
   ModuleManager moduleManager;
   moduleManager.StartUp();
 
   // Random number test
-  auto rnd = Isetta::Math::Random::GetRandomGenerator(1.f, 10.f);
-  float number = rnd.GetValue();
-  std::cout << number << std::endl;
+  // auto rnd = Math::Random::GetRandomGenerator(1.f, 10.f);
+  // float number = rnd.GetValue();
+  // Logger::Log(Debug::Channel::General,
+  // "Random number: " + std::to_string(number));
 
   using clock = std::chrono::high_resolution_clock;
-  using second = std::chrono::duration<float>;
+  typedef std::chrono::duration<float> second;
+
+  auto audio = new AudioSource();
+  audio->SetAudioClip("singing.wav");
+  audio->Play(false, 1.0f);
+
+  // Benchmarking
+  const int testIterations = 10;
+  for (int a = 0; a < testIterations; a++) {
+    const auto benchmarkStart = clock::now();
+    // benchmark code here...
+    const auto benchmarkEnd = clock::now();
+    LOG_INFO(
+        Debug::Channel::Memory,
+        {"Bench mark result: ",
+         std::to_string(second(benchmarkEnd - benchmarkStart).count()), "s"});
+  }
 
   // Game loop
-  const float gameMaxDuration = 10.0f;
-
-  using clock = std::chrono::high_resolution_clock;
-  using second = std::chrono::duration<float>;
-
   Time::startTime = clock::now();
   auto lastFrameStartTime = clock::now();
 
@@ -142,16 +154,11 @@ int main() {
 
   audioSource->Play(true, 1.0f);
   std::cout << "Playing first" << std::endl;
+  ModelNode car{"test/Low-Poly-Racing-Car.scene.xml", Math::Vector3{0, -20, 0},
+                Math::Vector3::zero, Math::Vector3::one};
 
-  ModelNode car{"test/Low-Poly-Racing-Car.scene.xml",
-                Isetta::Math::Vector3{0, -20, 0}, Isetta::Math::Vector3::zero,
-                Isetta::Math::Vector3::one};
-
-  LightNode light{"materials/light.material.xml",
-                  Isetta::Math::Vector3{0, 200, 600},
-                  Isetta::Math::Vector3{0, 0, 0}, Isetta::Math::Vector3::one};
-  Input::RegisterKeyPressCallback(KeyCode::U,
-                                  []() { std::cout << "U" << std::endl; });
+  LightNode light{"materials/light.material.xml", Math::Vector3{0, 200, 600},
+                  Math::Vector3::zero, Math::Vector3::one};
 
   bool running{true};
 

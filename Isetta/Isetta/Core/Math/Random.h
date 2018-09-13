@@ -43,8 +43,7 @@ class Random {
   static RandomGeneratorInt GetRandomGenerator(int start, int end);
   static RandomGeneratorInt GetRandomGenerator(int start, int end, int seed);
   static RandomGenerator GetRandomGenerator(float start, float end);
-  static RandomGenerator GetRandomGenerator(float start, float end,
-                                                   int seed);
+  static RandomGenerator GetRandomGenerator(float start, float end, int seed);
   static float GetRandom01();
 
  private:

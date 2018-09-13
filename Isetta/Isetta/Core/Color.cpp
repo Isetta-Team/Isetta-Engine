@@ -33,7 +33,7 @@ float Color::operator[](int i) const {
     default:
       throw std::out_of_range("Color::[] access out of range");
   }
-};
+}
 
 float Color::GreyScale() const { return (r + g + b) / 3.0f; }
 

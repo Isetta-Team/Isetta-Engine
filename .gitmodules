@@ -14,8 +14,6 @@
 	url = https://github.com/glfw/glfw.git
     ignore = dirty
 [submodule "Isetta/External/protobuf"]
-	
 	path = Isetta/External/protobuf
-	
 	url = https://github.com/google/protobuf
     ignore = untracked

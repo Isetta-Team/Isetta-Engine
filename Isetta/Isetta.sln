@@ -27,6 +27,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "yojimbo", "yojimbo", "{F0F70A76-8E47-4481-9DA1-932AEE57D13D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "yojimbo", "External\yojimbo\yojimbo.vcxproj", "{5E88AC70-CA67-2B0C-D37F-B6E23FDE916D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SID", "SID", "{08B3AE20-E831-4892-852F-53C74CD5F2D8}"
+	ProjectSection(SolutionItems) = preProject
+		External\SID\sid.h = External\SID\sid.h
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

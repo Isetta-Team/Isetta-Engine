@@ -7,7 +7,8 @@ namespace Isetta {
 
 class ModuleManager {
  public:
-  ModuleManager() = default;
+  ModuleManager();
+  ~ModuleManager();
 
   void StartUp();
   void Update();
@@ -16,5 +17,7 @@ class ModuleManager {
  private:
   class AudioModule* audioModule;
   class WindowModule* windowModule;
+  class RenderModule* renderModule;
+  class InputModule* inputModule;
 };
 }  // namespace Isetta
