@@ -151,6 +151,10 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Time.h" />
     <ClInclude Include="Core\Config\CVar.h" />
     <ClInclude Include="Core\Config\CVarRegistry.h" />
+    <ClInclude Include="Graphics\LightNode.h" />
+    <ClInclude Include="Graphics\ModelNode.h" />
+    <ClInclude Include="Graphics\RenderModule.h" />
+    <ClInclude Include="Graphics\RenderNode.h" />
     <ClInclude Include="Graphics\Window.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Input\InputEnum.h" />
