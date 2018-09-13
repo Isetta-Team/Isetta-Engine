@@ -3,6 +3,8 @@
  */
 #pragma once
 
+#include <string>
+
 namespace Isetta::Math {
 
 class Vector3 {
@@ -105,6 +107,7 @@ class Vector3 {
   Vector3 Normalized() const;
   // Normalizes current vector
   void Normalize() noexcept;
+  std::string ToString() const;
 
   // static functions
 
@@ -126,5 +129,6 @@ class Vector3 {
   static Vector3 Scale(const Vector3& inVector, const Vector3& scalar);
   // Spherically interpolates between two vectors
   static Vector3 Slerp(const Vector3& start, const Vector3& end, float time);
+  static Vector3 FromString(std::string str);
 };
 }  // namespace Isetta::Math

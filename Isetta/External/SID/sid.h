@@ -10,6 +10,7 @@
 #define STRING_ID_H
 
 #include <cinttypes>
+#include <string>
 
 // FNV-1a hash
 // https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function
@@ -53,12 +54,16 @@ class StringId {
 
   const Storage GetValue() const { return m_data; }
 
+  inline bool operator<(const StringId rhs) const {
+    return GetValue() < rhs.GetValue();
+  }
+
  private:
   Storage m_data;
 };
 
 static std::ostream &operator<<(std::ostream &out, StringId sid) {
-  return out << "sid:" << sid.GetValue();
+  return out << R"(StringId: )" << std::to_string(sid.GetValue());
 }
 
 static const bool operator==(const StringId &lhs, const StringId &rhs) {
@@ -68,6 +73,15 @@ static const bool operator==(const StringId &lhs, const StringId &rhs) {
 static const bool operator!=(const StringId &lhs, const StringId &rhs) {
   return lhs.GetValue() != rhs.GetValue();
 }
+
+namespace std {
+template <>
+struct hash<StringId> {
+  std::size_t operator()(const StringId &sid) const {
+    return std::hash<uint64_t>()(sid.GetValue());
+  }
+};
+}  // namespace std
 
 //-----------------------------------------------------------------------------
 // end: String ID

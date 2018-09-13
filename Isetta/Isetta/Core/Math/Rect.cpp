@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Rect.h"
+#include "Core/Math/Rect.h"
 
 #include "Vector2.h"
 

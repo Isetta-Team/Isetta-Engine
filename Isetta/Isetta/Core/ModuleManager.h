@@ -5,16 +5,19 @@
 
 namespace Isetta {
 
-class AudioModule;
 class ModuleManager {
  public:
-  ModuleManager() = default;
+  ModuleManager();
+  ~ModuleManager();
 
   void StartUp();
   void Update();
   void ShutDown();
 
  private:
-  AudioModule* audioModule;
+  class AudioModule* audioModule;
+  class WindowModule* windowModule;
+  class RenderModule* renderModule;
+  class InputModule* inputModule;
 };
 }  // namespace Isetta

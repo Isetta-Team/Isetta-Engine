@@ -1,11 +1,13 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Vector3.h"
+#include "Core/Math/Vector3.h"
 
 #include <cfloat>
 #include <cmath>
+#include <sstream>
 #include <stdexcept>
+#include <string>
 #include "Vector2.h"
 #include "Vector3Int.h"
 
@@ -53,6 +55,13 @@ void Vector3::Normalize() noexcept {
   y /= length;
   z /= length;
 }
+
+std::string Vector3::ToString() const {
+  std::ostringstream oss;
+  oss << "(" << x << ", " << y << ", " << z << ")";
+  return oss.str();
+}
+
 bool Vector3::Equals(const Vector3& lhs, const Vector3& rhs) {
   return abs(lhs.x - rhs.x) < FLT_EPSILON && abs(lhs.y - rhs.y) < FLT_EPSILON &&
          abs(lhs.z - rhs.z) < FLT_EPSILON;
@@ -87,5 +96,12 @@ Vector3 Vector3::Slerp(const Vector3& start, const Vector3& end, float time) {
   float theta = acosf(dot) * time;
   Vector3 relativeVector = end - start * dot;
   return start * cosf(theta) + relativeVector * sinf(theta);
+}
+Vector3 Vector3::FromString(std::string str) {
+  Vector3 vec;
+  char c;
+  std::istringstream is;
+  (is >> std::skipws) >> c >> vec.x >> c >> vec.y >> c >> vec.z;
+  return vec;
 }
 }  // namespace Isetta::Math

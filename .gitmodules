@@ -2,6 +2,7 @@
 	path = Isetta/External/brofiler
 	url = https://github.com/The-Engine-Process/brofiler.git
 	branch = v1.1.2
+    ignore = untracked
 [submodule "Isetta/External/GameNetworkingSockets"]
 	path = Isetta/External/GameNetworkingSockets
 	url = https://github.com/ValveSoftware/GameNetworkingSockets.git
@@ -11,6 +12,8 @@
 [submodule "Isetta/External/GLFW"]
 	path = Isetta/External/GLFW
 	url = https://github.com/glfw/glfw.git
+    ignore = dirty
 [submodule "Isetta/External/protobuf"]
 	path = Isetta/External/protobuf
 	url = https://github.com/google/protobuf
+    ignore = untracked
