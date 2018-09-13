@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "ModuleManager.h"
+#include "Core/ModuleManager.h"
 #include "Audio/AudioModule.h"
 #include "Core/Graphics/RenderModule.h"
 #include "Core/Input/InputModule.h"

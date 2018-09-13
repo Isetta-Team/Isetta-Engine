@@ -117,7 +117,8 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Math\Matrix3.cpp" />
     <ClCompile Include="Core\Debug\Logger.cpp" />
     <ClCompile Include="Core\Debug\DebugDraw.cpp" />
-    <ClCompile Include="Core\Memory\Memory.cpp" />
+    <ClCompile Include="Core\Memory\MemoryManager.cpp" />
+    <ClCompile Include="Core\Memory\StackAllocator.cpp" />
     <ClCompile Include="Core\ModuleManager.cpp" />
     <ClCompile Include="Core\Window.cpp" />
     <ClCompile Include="main.cpp" />
@@ -135,7 +136,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Input\InputEnum.h" />
     <ClInclude Include="Core\Input\InputInterface.h" />
     <ClInclude Include="Core\Input\Input.h" />
-    <ClInclude Include="Core\IsettaTypes.h" />
+    <ClInclude Include="Core\IsettaAlias.h" />
     <ClInclude Include="Core\Math\Matrix4.h" />
     <ClInclude Include="Core\Math\Quaternion.h" />
     <ClInclude Include="Core\Math\Rect.h" />
@@ -151,7 +152,9 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Debug\DebugDraw.h" />
     <ClCompile Include="Core\Debug\Assert.h" />
     <ClInclude Include="Core\IModule.h" />
-    <ClInclude Include="Core\Memory\Memory.h" />
+    <ClInclude Include="Core\Memory\MemoryManager.h" />
+    <ClInclude Include="Core\Memory\PoolAllocator.h" />
+    <ClInclude Include="Core\Memory\StackAllocator.h" />
     <ClInclude Include="Core\ModuleManager.h" />
     <ClInclude Include="Core\Time.h" />
     <ClInclude Include="Core\Config\CVar.h" />
