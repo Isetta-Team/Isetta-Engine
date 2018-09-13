@@ -1,8 +1,11 @@
-#include "Core\Graphics\RenderNode.h"
+/*
+ * Copyright (c) 2018 Isetta
+ */
+#include "Graphics/RenderNode.h"
 
 #include <Horde3DUtils.h>
 #include <stdexcept>
-#include "Core\Math\Vector3.h"
+#include "Core/Math/Vector3.h"
 
 namespace Isetta {
 void RenderNode::SetTransform(const Isetta::Math::Vector3& position,
@@ -12,6 +15,5 @@ void RenderNode::SetTransform(const Isetta::Math::Vector3& position,
                       rotation.x, rotation.y, rotation.z, scale.x, scale.y,
                       scale.z);
 }
-
 
 }  // namespace Isetta

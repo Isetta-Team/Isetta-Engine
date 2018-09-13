@@ -1,11 +1,13 @@
-#include "Render.h"
+/*
+ * Copyright (c) 2018 Isetta
+ */
+#include "Graphics/RenderModule.h"
 
 #include <stdexcept>
 
 namespace Isetta {
-RenderModule::RenderModule(GLFWwindow* win) : winHandle{win} {}
-
-void RenderModule::StartUp() {
+void RenderModule::StartUp(GLFWwindow* win) {
+  winHandle = win;
   InitRenderConfig();
   InitH3D();
   InitHordeConfig();
@@ -27,7 +29,7 @@ void RenderModule::ShutDown() {
 }
 
 void RenderModule::InitRenderConfig() {
-  // #TODO Read from game config
+  // #TODO(Chaojie) Read from game config
   renderInterface = H3DRenderDevice::OpenGL4;
   fov = 45.f;
   nearPlane = 0.1f;
@@ -53,7 +55,6 @@ void RenderModule::InitH3D() {
 }
 
 void RenderModule::InitResources() {  // 1. Add resources
-
   pipelineRes[0] = h3dAddResource(H3DResTypes::Pipeline,
                                   "pipelines/forward.pipeline.xml", 0);
   pipelineRes[1] = h3dAddResource(H3DResTypes::Pipeline,
@@ -94,7 +95,8 @@ void RenderModule::ResizeViewport() {
   h3dSetNodeParamI(cam, H3DCamera::ViewportHeightI, height);
 
   // Set virtual camera parameters
-  h3dSetupCameraView(cam, fov, (float)width / height, nearPlane, farPlane);
+  h3dSetupCameraView(cam, fov, static_cast<float>(width) / height, nearPlane,
+                     farPlane);
   h3dResizePipelineBuffers(pipelineRes[0], width, height);
   h3dResizePipelineBuffers(pipelineRes[1], width, height);
   h3dResizePipelineBuffers(pipelineRes[2], width, height);

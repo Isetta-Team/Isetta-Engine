@@ -8,30 +8,32 @@
 #include <list>
 #include <unordered_map>
 #include "Core/IModule.h"
-#include "Core/Input/InputEnum.h"
+#include "Input/InputEnum.h"
 
 namespace Isetta {
-class InputModule : IModule {
+class InputModule {
  public:
   void RegisterWindowCloseCallback(std::function<void()> callback);
   bool IsKeyPressed(KeyCode key);
-  void RegisterKeyPressCallback(KeyCode key,const std::function<void()>& callback);
-  void RegisterKeyReleaseCallback(KeyCode key,const std::function<void()>& callback);
-  bool IsMouseButtonPressed(MouseButtonCode mouseButton);
-  void RegisterMousePressCallback(
-      MouseButtonCode mouseButton,const std::function<void()>& callback);
-  void RegisterMouseReleaseCallback(
-      MouseButtonCode mouseButton,const std::function<void()>& callback);
+  void RegisterKeyPressCallback(KeyCode key,
+                                const std::function<void()>& callback);
+  void RegisterKeyReleaseCallback(KeyCode key,
+                                  const std::function<void()>& callback);
+  // bool IsMouseButtonPressed(MouseButtonCode mouseButton);
+  // void RegisterMousePressCallback(
+  //    MouseButtonCode mouseButton,const std::function<void()>& callback);
+  // void RegisterMouseReleaseCallback(
+  //    MouseButtonCode mouseButton,const std::function<void()>& callback);
 
  private:
   static GLFWwindow* winHandle;
 
-  InputModule(GLFWwindow* winHandle);
-  ~InputModule() final = default;
+  InputModule() = default;
+  ~InputModule() = default;
 
-  void StartUp() final;
-  void Update() final;
-  void ShutDown() final;
+  void StartUp(GLFWwindow* win);
+  void Update();
+  void ShutDown();
 
   int KeyCodeToGLFWKey(KeyCode key);
 
@@ -45,7 +47,6 @@ class InputModule : IModule {
   static void keyEventListener(GLFWwindow* win, int key, int scancode,
                                int action, int mods);
 
-
-  friend class WindowModule;
+  friend class ModuleManager;
 };
 }  // namespace Isetta

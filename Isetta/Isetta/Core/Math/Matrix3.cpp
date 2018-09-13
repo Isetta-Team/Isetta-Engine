@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Matrix3.h"
+#include "Core/Math/Matrix3.h"
 
 #include <cstring>
 #include <stdexcept>

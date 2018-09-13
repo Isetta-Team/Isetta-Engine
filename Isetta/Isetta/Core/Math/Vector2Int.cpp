@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Vector2Int.h"
+#include "Core/Math/Vector2Int.h"
 
 #include <cmath>
 #include <stdexcept>

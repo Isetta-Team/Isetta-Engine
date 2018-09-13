@@ -1,33 +1,29 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Config.h"
+#include "Core/Config/Config.h"
 
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <string>
-
-#include "Core/Config/CVar.h"
-#include "Core/Config/CVarRegistry.h"
 
 namespace Isetta {
-Config::Config() {
-  // TODO config file location + filesystem?
-  std::ifstream configFile("config.cfg");
+void Config::Read(std::string filepath) {
+  // TODO(jacob) config file location + filesystem?
+  std::ifstream configFile(filepath);
 
   std::string line;
   while (std::getline(configFile, line)) {
-    RemoveComments(line);
+    RemoveComments(&line);
     if (OnlyWhitespace(line) || !ValidLine(line)) {
       continue;
     }
     size_t sepPos = line.find('=');
     std::string key, value;
-    ExtractKey(key, sepPos, line);
-    ExtractValue(value, sepPos, line);
+    ExtractKey(&key, sepPos, line);
+    ExtractValue(&value, sepPos, line);
     StringId keySid = SID(key.c_str());
-    ICVar* cvar = CVarRegistry::Find(keySid);
+    ICVar* cvar = cvarsRegistry.Find(keySid);
     if (cvar != nullptr) {
       switch (cvar->GetType()) {
         case CVAR_INT:
@@ -43,20 +39,16 @@ Config::Config() {
           static_cast<CVarVector3*>(cvar)->SetVal(value);
           break;
         default:
-          static_cast<CVarString*>(cvar)->SetVal(value);
+          throw std::exception("Config::Read Unexpected type");
       }
-    } else {
-      // TODO Do we want to add variables? probably not
-      // CVarRegistry::RegisterVariable(new CVarString(key, value));
     }
   }
 }
 
-void Config::RemoveComments(std::string& line) const {
-  // TODO decide comments
-  auto it = line.find('#');
+void Config::RemoveComments(std::string* line) const {
+  auto it = line->find('#');
   if (it != std::string::npos) {
-    line.erase(it);
+    line->erase(it);
   }
 }
 
@@ -80,20 +72,20 @@ bool Config::ValidLine(const std::string& line) const {
 
   return false;
 }
-void Config::ExtractKey(std::string& key, const size_t& sepPos,
+void Config::ExtractKey(std::string* key, const size_t& sepPos,
                         const std::string line) {
-  key = line.substr(0, sepPos);
-  size_t pos = key.find_first_of("\t ");
+  *key = line.substr(0, sepPos);
+  size_t pos = key->find_first_of("\t ");
   if (pos != std::string::npos) {
-    key.erase(pos);
+    key->erase(pos);
   }
 }
 
-void Config::ExtractValue(std::string& value, const size_t& sepPos,
+void Config::ExtractValue(std::string* value, const size_t& sepPos,
                           const std::string line) {
-  value = line.substr(sepPos + 1);
-  value.erase(0, value.find_first_not_of("\t "));
-  value.erase(value.find_last_not_of("\t ") + 1);
+  *value = line.substr(sepPos + 1);
+  value->erase(0, value->find_first_not_of("\t "));
+  value->erase(value->find_last_not_of("\t ") + 1);
 }
 
 }  // namespace Isetta

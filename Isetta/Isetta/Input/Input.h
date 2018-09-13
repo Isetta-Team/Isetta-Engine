@@ -4,7 +4,7 @@
 #pragma once
 
 #include <functional>
-#include "Core/Input/InputEnum.h"
+#include "Input/InputEnum.h"
 
 namespace Isetta {
 class Input {
@@ -16,10 +16,11 @@ class Input {
                                        const std::function<void()>& callback);
   static void RegisterKeyReleaseCallback(KeyCode key,
                                          const std::function<void()>& callback);
-  //static bool IsMouseButtonPressed(MouseButtonCode mouseButton);
-  //static void RegisterMousePressCallback(MouseButtonCode mouseButton,
-  //                                       const std::function<void()>& callback);
-  //static void RegisterMouseReleaseCallback(
+  // static bool IsMouseButtonPressed(MouseButtonCode mouseButton);
+  // static void RegisterMousePressCallback(MouseButtonCode mouseButton,
+  //                                       const std::function<void()>&
+  //                                       callback);
+  // static void RegisterMouseReleaseCallback(
   //    MouseButtonCode mouseButton, const std::function<void()>& callback);
 
  private:

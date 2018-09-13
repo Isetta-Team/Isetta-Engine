@@ -4,19 +4,19 @@
 #pragma once
 
 #include <GLFW/glfw3.h>
+#include <string>
 #include "Core/IModule.h"
 #include "Core/ModuleManager.h"
-#include <string>
 
 namespace Isetta {
-class WindowModule : IModule {
+class WindowModule {
  private:
   WindowModule() = default;
   ~WindowModule() = default;
 
-  void StartUp() final;
-  void Update() final;
-  void ShutDown() final;
+  void StartUp();
+  void Update();
+  void ShutDown();
 
   std::string winTitle;
   int initWinWidth;

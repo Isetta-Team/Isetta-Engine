@@ -10,16 +10,14 @@
 #include "Core/IModule.h"
 
 namespace Isetta {
-class RenderModule : IModule {
- public:
-
+class RenderModule {
  private:
-  RenderModule(GLFWwindow* win);
-  ~RenderModule() final = default;
+  RenderModule() = default;
+  ~RenderModule() = default;
 
-  void StartUp() final;
-  void Update() final;
-  void ShutDown() final;
+  void StartUp(GLFWwindow* win);
+  void Update();
+  void ShutDown();
 
   int renderInterface;
   std::string resourcePath;
@@ -41,6 +39,6 @@ class RenderModule : IModule {
 
   GLFWwindow* winHandle;
 
-  friend class WindowModule;
+  friend class ModuleManager;
 };
 }  // namespace Isetta

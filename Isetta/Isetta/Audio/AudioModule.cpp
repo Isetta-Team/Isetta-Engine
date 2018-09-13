@@ -1,68 +1,24 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Audio.h"
-
-#include "combaseapi.h"
-
-#include <SID/sid.h>
+#include "Audio/AudioModule.h"
+#include <combaseapi.h>
 #include <iomanip>
 #include <sstream>
+#include <string>
+#include "Audio/AudioSource.h"
+#include "Core/IsettaTypes.h"
+#include "SID/sid.h"
 
 namespace Isetta {
 
-AudioModule* AudioSource::audioSystem;
-
-AudioSource::AudioSource() {
-  isDeleted = false;
-  audioSystem->AddAudioSource(this);
-}
-
-void AudioSource::SetAudioClip(const char* soundName) {
-  fmodSound = audioSystem->FindSound(soundName);
-}
-
-void AudioSource::Play(const bool loop, const float volume) {
-  if (fmodSound != nullptr) {
-    fmodChannel = audioSystem->Play(fmodSound, loop, volume);
-  }
-}
-
-void AudioSource::Pause() const {
-  if (isChannelValid()) {
-    fmodChannel->setPaused(true);
-  }
-}
-
-void AudioSource::Continue() const {
-  if (isChannelValid()) {
-    fmodChannel->setPaused(false);
-  }
-}
-
-void AudioSource::Stop() const {
-  if (isChannelValid()) {
-    fmodChannel->stop();
-  }
-}
-
-void AudioSource::SetVolume(const float volume) const {
-  if (isChannelValid()) {
-    fmodChannel->setVolume(volume);
-  }
-}
-
-bool AudioSource::isChannelValid() const {
-  bool isPlaying = false;
-  fmodChannel->isPlaying(&isPlaying);
-  return fmodChannel != nullptr && isPlaying;
-}
-
 void AudioModule::StartUp() {
+  CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+  FMOD::Memory_Initialize(malloc(10_MB), 10_MB, nullptr, nullptr, nullptr);
   fmodSystem = nullptr;
   FMOD::System_Create(&fmodSystem);
   fmodSystem->init(512, FMOD_INIT_NORMAL, nullptr);
-  // TODO: Set this in engine config
+  // TODO(YIDI): Set this in engine config
   soundFilesRoot = R"(Resources\Sound\)";
   LoadAllAudioClips();
   AudioSource::audioSystem = this;
@@ -71,13 +27,6 @@ void AudioModule::StartUp() {
 void AudioModule::Update() { fmodSystem->update(); }
 
 void AudioModule::ShutDown() {
-  for (auto it : audioSources) {
-    if (!it->isDeleted) {
-      delete (it);
-    }
-  }
-
-  audioSources.clear();
   for (auto it : soundMap) {
     it.second->release();
   }
@@ -105,7 +54,7 @@ FMOD::Channel* AudioModule::Play(FMOD::Sound* sound, bool loop,
 }
 
 void AudioModule::LoadAllAudioClips() {
-  // TODO: get this array of string from game config
+  // TODO(YIDI): get this array of string from game config
   const char* files[]{"singing.wav", "wave.mp3"};
 
   for (auto file : files) {
@@ -117,10 +66,6 @@ void AudioModule::LoadAllAudioClips() {
 
     soundMap.insert({hashedId.GetValue(), sound});
   }
-}
-
-void AudioModule::AddAudioSource(AudioSource* audioSource) {
-  audioSources.push_back(audioSource);
 }
 
 inline float MegaBytesFromBytes(const int byte) {
