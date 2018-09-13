@@ -1,7 +1,8 @@
 /*
-* Copyright (c) 2018 Isetta
-*/
+ * Copyright (c) 2018 Isetta
+ */
 #pragma once
+#include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Memory/MemoryManager.h"
 
@@ -32,6 +33,12 @@ class PoolAllocator {
 
 template <typename T>
 PoolAllocator<T>::PoolAllocator(const SizeInt count) {
+  if (sizeof(T) > sizeof(Node*)) {
+    LOG_ERROR(Debug::Channel::Memory,
+              "Using PoolAllocator for type %s will incur more overhead memory than the memory actually "
+                  "needed for the elements", typeid(T).name());
+  }
+
   isErased = false;
   capacity = count;
   elementSize = sizeof(T);
