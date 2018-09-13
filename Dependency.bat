@@ -1,3 +1,5 @@
+set VisualStudioPath="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE"
+
 cd Isetta\External\GLFW
 set GLFW=%cd%
 mkdir Build
@@ -7,7 +9,7 @@ cmake ^
 -G "Visual Studio 15 2017 Win64" ^
 ..
 
-set PATH=%PATH%;"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE"
+set PATH=%PATH%;%VisualStudioPath%
 devenv GLFW.sln /Build "Debug|x64"
 devenv GLFW.sln /Build "Release|x64"
 
