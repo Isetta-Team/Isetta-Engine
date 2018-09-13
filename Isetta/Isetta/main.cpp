@@ -56,6 +56,23 @@ int main() {
 
   RunBenchmarks();
 
+  U64 handleA, handleB, handleC, handleD;
+  handleA = Input::RegisterKeyPressCallback(KeyCode::A, [&handleA]() {
+    LOG_INFO(Debug::Channel::General, "A pressed");
+    Input::UnregisterKeyPressCallback(KeyCode::A, handleA);
+  });
+  handleB = Input::RegisterKeyReleaseCallback(KeyCode::A, [&handleB]() {
+    LOG_INFO(Debug::Channel::General, "A released");
+    Input::UnregisterKeyReleaseCallback(KeyCode::A, handleB);
+  });
+  handleC = Input::RegisterMousePressCallback(
+      MouseButtonCode::MOUSE_LEFT, [&handleC]() {
+        LOG_INFO(Debug::Channel::General,
+                 {"Left pressed at: " + Input::GetMousePosition().ToString()});
+        Input::UnregisterMousePressCallback(MouseButtonCode::MOUSE_LEFT,
+                                            handleC);
+      });
+
   // Game loop
   Time::startTime = clock::now();
   auto lastFrameStartTime = clock::now();
@@ -117,7 +134,8 @@ void RunBenchmarks() {
   benchmarks.insert({"3. Stack Allocator", []() {
                        const int count = 10000;
                        AudioSource* audioSources[count];
-                       StackAllocator stackAllocator(sizeof(AudioSource) * count);
+                       StackAllocator stackAllocator(sizeof(AudioSource) *
+                                                     count);
                        for (auto& audioSource : audioSources) {
                          audioSource = stackAllocator.New<AudioSource>();
                        }

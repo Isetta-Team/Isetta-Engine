@@ -2,6 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include <string>
 
 namespace Isetta::Math {
 
@@ -26,13 +27,13 @@ class Vector2 {
   // Copy and move constructions
 
   Vector2(const Vector2& inVector) : x{inVector.x}, y{inVector.y} {}
-  Vector2(Vector2&& inVector) : x{inVector.x}, y{inVector.y} {}
+  Vector2(Vector2&& inVector) noexcept : x{inVector.x}, y{inVector.y} {}
   inline Vector2& operator=(const Vector2& inVector) {
     x = inVector.x;
     y = inVector.y;
     return *this;
   }
-  inline Vector2& operator=(Vector2&& inVector) {
+  inline Vector2& operator=(Vector2&& inVector) noexcept {
     x = inVector.x;
     y = inVector.y;
     return *this;
@@ -96,6 +97,8 @@ class Vector2 {
   Vector2 Normalized() const;
   // Normalizes current vector
   void Normalize() noexcept;
+  std::string ToString() const;
+
 
   // static functions
 

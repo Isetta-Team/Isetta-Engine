@@ -184,7 +184,6 @@
     <ClCompile Include="..\Isetta\Core\Math\Vector3.cpp" />
     <ClCompile Include="..\Isetta\Core\Math\Vector3Int.cpp" />
     <ClCompile Include="..\Isetta\Core\Math\Vector4.cpp" />
-    <ClCompile Include="..\Isetta\Core\Memory\Memory.cpp" />
     <ClCompile Include="Core\ColorTest.cpp" />
     <ClCompile Include="Core\Math\Matrix3Test.cpp" />
     <ClCompile Include="Core\Math\UtilityTest.cpp" />

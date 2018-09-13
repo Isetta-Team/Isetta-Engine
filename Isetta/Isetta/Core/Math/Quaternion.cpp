@@ -18,20 +18,24 @@ Quaternion::Quaternion(float eulerX, float eulerY, float eulerZ) {
   // Order: y * x * z
   *this = Normalize(pitch * roll * yaw);
 }
+
 Quaternion::Quaternion(Vector3 vector, float scalar)
-    : x{vector.x}, y{vector.y}, z{vector.z}, w{scalar} {
+  : w{scalar}, x{vector.x}, y{vector.y}, z{vector.z} {
   *this = Normalize(*this);
 }
+
 Quaternion::Quaternion(const Quaternion& inQuaternion)
-    : w{inQuaternion.w},
-      x{inQuaternion.x},
-      y{inQuaternion.y},
-      z{inQuaternion.z} {}
+  : w{inQuaternion.w},
+    x{inQuaternion.x},
+    y{inQuaternion.y},
+    z{inQuaternion.z} {}
+
 Quaternion::Quaternion(Quaternion&& inQuaternion)
-    : w{inQuaternion.w},
-      x{inQuaternion.x},
-      y{inQuaternion.y},
-      z{inQuaternion.z} {}
+  : w{inQuaternion.w},
+    x{inQuaternion.x},
+    y{inQuaternion.y},
+    z{inQuaternion.z} {}
+
 Quaternion& Quaternion::operator=(const Quaternion& inQuaternion) {
   w = inQuaternion.w;
   x = inQuaternion.x;
@@ -40,6 +44,7 @@ Quaternion& Quaternion::operator=(const Quaternion& inQuaternion) {
 
   return *this;
 }
+
 Quaternion& Quaternion::operator=(Quaternion&& inQuaternion) {
   w = inQuaternion.w;
   x = inQuaternion.x;
@@ -48,15 +53,19 @@ Quaternion& Quaternion::operator=(Quaternion&& inQuaternion) {
 
   return *this;
 }
+
 bool Quaternion::operator==(const Quaternion& rhs) const {
   return w == rhs.w && x == rhs.x && y == rhs.y && z == rhs.z;
 }
+
 bool Quaternion::operator!=(const Quaternion& rhs) const {
   return !(*this == rhs);
 }
+
 Quaternion Quaternion::operator+(const Quaternion& rhs) const {
   return Quaternion(w + rhs.w, x + rhs.x, y + rhs.y, z + rhs.z);
 }
+
 Quaternion& Quaternion::operator+=(const Quaternion& rhs) {
   w += rhs.w;
   x += rhs.x;
@@ -64,9 +73,11 @@ Quaternion& Quaternion::operator+=(const Quaternion& rhs) {
   z += rhs.z;
   return *this;
 }
+
 Quaternion Quaternion::operator-(const Quaternion& rhs) const {
   return Quaternion(w - rhs.w, x - rhs.x, y - rhs.y, z - rhs.z);
 }
+
 Quaternion& Quaternion::operator-=(const Quaternion& rhs) {
   w -= rhs.w;
   x -= rhs.x;
@@ -74,12 +85,14 @@ Quaternion& Quaternion::operator-=(const Quaternion& rhs) {
   z -= rhs.z;
   return *this;
 }
+
 Quaternion Quaternion::operator*(const Quaternion& rhs) const {
   return Quaternion(y * rhs.z - z * rhs.y + rhs.x * w + x * rhs.w,
                     z * rhs.x - x * rhs.z + rhs.y * w + y * rhs.w,
                     x * rhs.y - y * rhs.x + rhs.z * w + z * rhs.w,
                     w * rhs.w - (x * rhs.x + y * rhs.y + z * rhs.z));
 }
+
 Quaternion& Quaternion::operator*=(const Quaternion& rhs) {
   return *this = *this * rhs;
 }
@@ -98,10 +111,10 @@ Vector3 Quaternion::GetEulerAngles() const {
 
   // pitch (y-axis rotation)
   float sinp = 2.f * (q.w * q.y - q.z * q.x);
-  float pitch{};
+  float pitch;
   if (Utility::Abs(sinp) >= 1)
     pitch = Utility::PI / 2 *
-            Utility::Sign(sinp);  // use 90 degrees if out of range
+      Utility::Sign(sinp); // use 90 degrees if out of range
   else
     pitch = Utility::Asin(sinp);
 
@@ -117,9 +130,9 @@ void Quaternion::SetFromToRotation(const Vector3& fromDirection,
                                    const Vector3& toDirection) {
   float dot = Vector3::Dot(fromDirection, toDirection);
   float k =
-      Utility::Sqrt(fromDirection.SqrMagnitude() * toDirection.SqrMagnitude());
+    Utility::Sqrt(fromDirection.SqrMagnitude() * toDirection.SqrMagnitude());
   if (Utility::Abs(dot / k + 1) < Utility::EPSILON) {
-    Vector3 ortho{};
+    Vector3 ortho;
     if (fromDirection.z < fromDirection.x) {
       ortho = Vector3{fromDirection.y, -fromDirection.x, 0.f};
     } else {
@@ -132,13 +145,14 @@ void Quaternion::SetFromToRotation(const Vector3& fromDirection,
 }
 
 void Quaternion::SetLookRotation(
-    const Vector3& forwardDirection,
-    const Vector3& upDirection) {  // Normalize inputs
+  const Vector3& forwardDirection,
+  const Vector3& upDirection) {
+  // Normalize inputs
   Vector3 forward = forwardDirection.Normalized();
   Vector3 upwards = upDirection.Normalized();
   // Don't allow zero vectors
   if (Vector3::Equals(forward, Vector3::zero) ||
-      Vector3::Equals(upwards, Vector3::zero)) {
+    Vector3::Equals(upwards, Vector3::zero)) {
     x = 0.f;
     y = 0.f;
     z = 0.f;
@@ -189,12 +203,12 @@ float Quaternion::Angle(const Quaternion& aQuaternion,
 float Quaternion::Dot(const Quaternion& aQuaternion,
                       const Quaternion& bQuaternion) {
   return aQuaternion.x * bQuaternion.x + aQuaternion.y * bQuaternion.y +
-         aQuaternion.z * bQuaternion.z + aQuaternion.w * bQuaternion.w;
+    aQuaternion.z * bQuaternion.z + aQuaternion.w * bQuaternion.w;
 }
 
 Quaternion Quaternion::Inverse(const Quaternion& quaternion) {
   float length = quaternion.x * quaternion.x + quaternion.y * quaternion.y +
-                 quaternion.z * quaternion.z + quaternion.w * quaternion.w;
+    quaternion.z * quaternion.z + quaternion.w * quaternion.w;
   return Quaternion(quaternion.x / -length, quaternion.y / -length,
                     quaternion.z / -length, quaternion.w / -length);
 }
@@ -239,4 +253,4 @@ Quaternion operator""_w(long double inW) {
   return Quaternion{0.f, 0.f, 0.f, static_cast<float>(inW)};
 }
 
-}  // namespace Isetta::Math
+} // namespace Isetta::Math
