@@ -3,6 +3,7 @@
  */
 #include <chrono>
 #include <string>
+#include <iostream>
 #include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
@@ -12,10 +13,11 @@
 #include "Core/Memory/PoolAllocator.h"
 #include "Core/Memory/StackAllocator.h"
 #include "Core/ModuleManager.h"
-#include "Core/Time.h"
 #include "Graphics/LightNode.h"
 #include "Graphics/ModelNode.h"
 #include "Input/Input.h"
+#include <Windows.h>
+#include "Core/Time/Clock.h"
 
 using namespace Isetta;
 
@@ -37,6 +39,8 @@ Between our own hands-on process and sage advice from veteran engineers, we hope
 to give newcomers a clearer representation of the engine-building process.
 */
 int main() {
+  // TODO(Chaojie): maybe move to loop class later
+  Clock gameTime{};
   // config example
   FileSystem fds;
 
@@ -88,7 +92,6 @@ int main() {
       });
 
   // Game loop
-  Time::startTime = clock::now();
   auto lastFrameStartTime = clock::now();
 
   ModelNode car{"test/Low-Poly-Racing-Car.scene.xml", Math::Vector3{0, -20, 0},
@@ -100,12 +103,11 @@ int main() {
   bool running{true};
 
   while (running) {
-    Time::deltaTime = second(clock::now() - lastFrameStartTime).count();
-    Time::time = second(clock::now() - Time::startTime).count();
-    lastFrameStartTime = clock::now();
+    gameTime.UpdateTime();
 
-    moduleManager.Update();
-    Time::frameCount++;
+    moduleManager.Update(gameTime.GetDeltaTime());
+    LOG_INFO(Debug::Channel::General, {std::to_string(gameTime.GetDeltaTime())});
+
 
     if (Input::IsKeyPressed(KeyCode::ESCAPE)) {
       running = false;

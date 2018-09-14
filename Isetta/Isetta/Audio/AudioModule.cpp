@@ -23,7 +23,7 @@ void AudioModule::StartUp() {
   AudioSource::audioSystem = this;
 }
 
-void AudioModule::Update() { fmodSystem->update(); }
+void AudioModule::Update(float deltaTime) { fmodSystem->update(); }
 
 void AudioModule::ShutDown() {
   for (auto it : soundMap) {

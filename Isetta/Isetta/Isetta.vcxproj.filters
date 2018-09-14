@@ -95,12 +95,15 @@
     <ClCompile Include="FileSystem.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Time\Clock.cpp">
+      <Filter>Core\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Time\StopWatch.cpp">
+      <Filter>Core\Time</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\IModule.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Time.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Core\Math\Matrix3.h">
@@ -203,6 +206,12 @@
     <ClInclude Include="FileSystem.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Time\Clock.h">
+      <Filter>Core\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Time\StopWatch.h">
+      <Filter>Core\Time</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -243,6 +252,9 @@
     </Filter>
     <Filter Include="Input">
       <UniqueIdentifier>{4df4848a-1e54-4b90-8bad-773e71fa89de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Time">
+      <UniqueIdentifier>{263ba415-8b0e-4871-b9e3-6779bb9b8489}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

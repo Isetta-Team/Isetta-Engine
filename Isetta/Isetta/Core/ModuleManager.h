@@ -11,7 +11,7 @@ class ModuleManager {
   ~ModuleManager();
 
   void StartUp();
-  void Update();
+  void Update(float deltaTime);
   void ShutDown();
 
  private:

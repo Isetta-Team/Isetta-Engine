@@ -27,11 +27,11 @@ void ModuleManager::StartUp() {
   inputModule->StartUp(windowModule->winHandle);
 }
 
-void ModuleManager::Update() {
-  audioModule->Update();
-  inputModule->Update();
-  renderModule->Update();
-  windowModule->Update();
+void ModuleManager::Update(float deltaTime) {
+  audioModule->Update(deltaTime);
+  inputModule->Update(deltaTime);
+  renderModule->Update(deltaTime);
+  windowModule->Update(deltaTime);
 }
 
 void ModuleManager::ShutDown() {
