@@ -19,15 +19,22 @@ class FileSystem {
   typedef struct _OVERLAPIOINFO {
     OVERLAPPED overlapped;
     HANDLE hFile;
-    char* buf;
+    char* buffer;
     std::function<void(const char*)> callback;
   } OverlapIOInfo;
 
-  void Read(const char* file, OverlapIOInfo* info);
-  void Write(const char* file, OverlapIOInfo* info,
+  void Read(const char* fileName,
+            const std::function<void(const char*)> callback = nullptr);
+  void Write(const char* fileName, const char* contentBuffer,
+             const std::function<void(const char*)> callback = nullptr,
              const bool appendData = true);
-  void Read(const std::string& file, OverlapIOInfo* info);
-  void Write(const std::string& file, OverlapIOInfo* info,
+  void Read(const std::string& fileName,
+            const std::function<void(const char*)> callback = nullptr);
+  void Write(const std::string& fileName, const char* contentBuffer,
+             std::function<void(const char*)> callback = nullptr,
+             const bool appendData = true);
+  void Write(const std::string& fileName, const std::string& contentBuffer,
+             std::function<void(const char*)> callback = nullptr,
              const bool appendData = true);
 
   static HANDLE hIOCP;

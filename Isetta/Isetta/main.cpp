@@ -40,15 +40,15 @@ int main() {
   // config example
   FileSystem fds;
 
-  FileSystem::OverlapIOInfo* readO = new FileSystem::OverlapIOInfo{};
-  readO->callback = std::function<void(const char*)>(
-      [](const char* buf) { printf("%s\n", buf); });
-  fds.Read("Resources/test/async.in", readO);
+  fds.Read("Resources/test/async.in",
+           std::function<void(const char*)>(
+               [](const char* buf) { printf("%s\n", buf); }));
 
+  char* buf = "abcdefghijklmnopqrstuvwxyz\n";
   for (int i = 0; i < 5; i++) {
-    FileSystem::OverlapIOInfo* writeO = new FileSystem::OverlapIOInfo{};
-    writeO->buf = "abcdefghijklmnopqrstuvwxyz\n";
-    fds.Write("Resources/test/async.out", writeO);
+    fds.Write("Resources/test/async.out", buf,
+              std::function<void(const char*)>(
+                  [](const char* buf) { printf("> write done\n"); }));
   }
 
   Config config;

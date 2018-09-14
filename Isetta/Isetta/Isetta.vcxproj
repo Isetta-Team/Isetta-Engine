@@ -59,7 +59,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)External\FMOD\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\$(ConfigurationName)*\ProfilerCore64.lib;$(SolutionDir)External\GLFW\Build\src\$(ConfigurationName)\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\$(Configuration)*\ProfilerCore64.lib;$(SolutionDir)External\GLFW\Build\src\$(ConfigurationName)\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>false</OptimizeReferences>
     </Link>
