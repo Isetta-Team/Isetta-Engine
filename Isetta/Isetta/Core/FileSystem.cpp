@@ -1,0 +1,163 @@
+/*
+ * Copyright (c) 2018 Isetta
+ */
+#include "Core/FileSystem.h"
+
+#include <stdio.h>
+#include <tchar.h>
+#include <iostream>
+#include "Core/Debug/Assert.h"
+#include "Core/Debug/Logger.h"
+
+DWORD WINAPI SaveFileWorkerThread(LPVOID empty) {
+  ULONG_PTR completionKey;
+  BOOL completionStatus;
+  DWORD bytesTransferred;
+  DWORD err;
+  OVERLAPPED* overlap;
+  Isetta::FileSystem::OverlapIOInfo* info;
+
+  for (;;) {
+    completionStatus =
+        GetQueuedCompletionStatus(Isetta::FileSystem::hIOCP, &bytesTransferred,
+                                  &completionKey, &overlap, INFINITE);
+    err = GetLastError();
+
+    if (completionStatus) {
+      switch (completionKey) {
+        case IOCP_WRITE:
+          // fprintf(stderr, "wrote %d bytes\n", bytesTransferred);
+          break;
+
+        case IOCP_NOMORE:
+          info = (Isetta::FileSystem::OverlapIOInfo*)overlap;
+          if (info->callback) {
+            info->callback(info->buf);
+          }
+          CloseHandle(info->hFile);
+          delete info;
+          break;
+      }
+    } else {
+      if (overlap != NULL) {
+        fprintf(stderr, "overlap not null");
+      } else if (err != WAIT_TIMEOUT) {
+        fprintf(stderr, "timeout");
+      }
+    }
+  }
+}
+
+namespace Isetta {
+HANDLE FileSystem::hIOCP;
+FileSystem::FileSystem() {
+  hIOCP = CreateNewCompletionPort();
+  CreateThread(NULL, 0, SaveFileWorkerThread, NULL, 0, NULL);
+}
+
+HANDLE FileSystem::CreateNewCompletionPort() {
+  return CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
+}
+
+HANDLE FileSystem::OpenFile(const char* file, const DWORD access,
+                            const DWORD share) {
+  return CreateFile(file, access, share, nullptr, OPEN_EXISTING,
+                    FILE_FLAG_OVERLAPPED, nullptr);
+}
+
+BOOL FileSystem::AssociateFileCompletionPort(HANDLE hIoPort, HANDLE hFile,
+                                             DWORD completionKey) {
+  HANDLE h = CreateIoCompletionPort(hFile, hIoPort, completionKey, 0);
+  return h == hIoPort;
+}
+
+void FileSystem::GetError() {
+  DWORD dwError = 0;
+  switch (dwError = GetLastError()) {
+    case ERROR_IO_PENDING:  // not an error
+      break;
+    case ERROR_INVALID_USER_BUFFER:
+      LOG_ERROR(Debug::Channel::FileIO,
+                "FileSystem::GetError ERROR_INVALID_USER_BUFFER too many "
+                "outstanding asynchronous "
+                "I/O requests");
+      break;
+    case ERROR_NOT_ENOUGH_MEMORY:
+      LOG_ERROR(Debug::Channel::FileIO,
+                "FileSystem::GetError ERROR_NOT_ENOUGH_MEMORY too many "
+                "outstanding asynchronous I/O "
+                "requests");
+      break;
+    case ERROR_NOT_ENOUGH_QUOTA:
+      LOG_ERROR(Debug::Channel::FileIO,
+                "FileSystem::GetError ERROR_NOT_ENOUGH_QUOTA process's "
+                "buffer could not be page-locked");
+      break;
+    case ERROR_INSUFFICIENT_BUFFER:
+      LOG_ERROR(Debug::Channel::FileIO,
+                "FileSystem::GetError ERROR_INSUFFICIENT_BUFFER read from "
+                "a mailslot that has a buffer that is too small");
+      break;
+    case ERROR_OPERATION_ABORTED:
+      LOG_WARNING(Debug::Channel::FileIO,
+                  "FileSystem::GetError ERROR_OPERATION_ABORTED");
+    default: {
+      // Decode any other errors codes.
+      LPCTSTR errMsg = ErrorMessage(dwError);
+      _tprintf(TEXT("GetOverlappedResult failed (%d): %s\n"), dwError, errMsg);
+      LocalFree((LPVOID)errMsg);
+    }
+  }
+}
+
+LPCTSTR FileSystem::ErrorMessage(DWORD error) {
+  LPVOID lpMsgBuf;
+
+  FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
+                    FORMAT_MESSAGE_IGNORE_INSERTS,
+                NULL, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                (LPTSTR)&lpMsgBuf, 0, NULL);
+
+  return ((LPCTSTR)lpMsgBuf);
+}
+
+void FileSystem::Read(const char* file, OverlapIOInfo* info) {
+  HANDLE hFile = OpenFile(file, GENERIC_READ, FILE_SHARE_READ);
+  DWORD dwFileSize = GetFileSize(hFile, NULL);
+  DWORD dwBytesRead = 0;
+  AssociateFileCompletionPort(hIOCP, info, 1);
+  info->hFile = hFile;
+  info->buf = new char[dwFileSize + 1];
+  info->buf[dwFileSize] = '\0';
+  if (!ReadFile(hFile, info->buf, dwFileSize, &dwBytesRead,
+                &info->overlapped)) {
+    GetError();
+  }
+  PostQueuedCompletionStatus(hIOCP, 0, IOCP_NOMORE, &(info->overlapped));
+}
+
+void FileSystem::Write(const char* file, OverlapIOInfo* info,
+                       const bool appendData) {
+  HANDLE hFile = OpenFile(file, GENERIC_WRITE, FILE_SHARE_WRITE);
+  info->hFile = hFile;
+  AssociateFileCompletionPort(hIOCP, info->hFile, IOCP_WRITE);
+  DWORD dwBytesRead = 0;
+  if (appendData) {
+    info->overlapped.Offset += GetFileSize(hFile, NULL);
+  }
+  if (!WriteFile(info->hFile, info->buf, strlen(info->buf), &dwBytesRead,
+                 &info->overlapped)) {
+    GetError();
+  }
+  PostQueuedCompletionStatus(hIOCP, 0, IOCP_NOMORE, &(info->overlapped));
+}
+
+void FileSystem::Read(const std::string& file, OverlapIOInfo* info) {
+  Read(file.c_str(), info);
+}
+void FileSystem::Write(const std::string& file, OverlapIOInfo* info,
+                       const bool appendData) {
+  Write(file.c_str(), info, appendData);
+}
+
+}  // namespace Isetta

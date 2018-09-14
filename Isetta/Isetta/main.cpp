@@ -6,6 +6,7 @@
 #include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
+#include "Core/FileSystem.h"
 #include "Core/Math/Random.h"
 #include "Core/Math/Vector3.h"
 #include "Core/Memory/Memory.h"
@@ -33,6 +34,21 @@ Between our own hands-on process and sage advice from veteran engineers, we hope
 to give newcomers a clearer representation of the engine-building process.
 */
 int main() {
+  FileSystem fds;
+
+  FileSystem::OverlapIOInfo* readO = new FileSystem::OverlapIOInfo{};
+  readO->callback = std::function<void(const char*)>(
+      [](const char* buf) { printf("%s\n", buf); });
+  fds.Read("Resources/test/async.in", readO);
+
+  for (int i = 0; i < 5; i++) {
+    FileSystem::OverlapIOInfo* writeO = new FileSystem::OverlapIOInfo{};
+    writeO->buf = "abcdefghijklmnopqrstuvwxyz\n";
+    fds.Write("Resources/test/async.out", writeO);
+  }
+  system("pause");
+  return 0;
+
   Config config;
   config.Read("config.cfg");
   LOG_INFO(Debug::Channel::General,
