@@ -34,17 +34,17 @@ Between our own hands-on process and sage advice from veteran engineers, we hope
 to give newcomers a clearer representation of the engine-building process.
 */
 int main() {
-  FileSystem fds;
-
-  fds.Read("Resources/test/async.in",
-           std::function<void(const char*)>(
-               [](const char* buf) { printf("%s\n", buf); }));
+  FileSystem::Instance().Read(
+      "Resources/test/async.in",
+      std::function<void(const char*)>(
+          [](const char* buf) { printf("%s\n", buf); }));
 
   char* buf = "abcdefghijklmnopqrstuvwxyz\n";
   for (int i = 0; i < 5; i++) {
-    fds.Write("Resources/test/async.out", buf,
-              std::function<void(const char*)>(
-                  [](const char* buf) { printf("> write done\n"); }));
+    FileSystem::Instance().Write(
+        "Resources/test/async.out", buf,
+        std::function<void(const char*)>(
+            [](const char* buf) { printf("> write done\n"); }));
   }
   system("pause");
   return 0;

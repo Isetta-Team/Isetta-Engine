@@ -35,6 +35,9 @@ DWORD WINAPI SaveFileWorkerThread(LPVOID empty) {
             info->callback(info->buffer);
           }
           CloseHandle(info->hFile);
+          if (info->buffer) {
+            delete info->buffer;
+          }
           delete info;
           break;
       }
@@ -144,11 +147,14 @@ void FileSystem::Write(const char* fileName, const char* contentBuffer,
                        const bool appendData) {
   HANDLE hFile = OpenFile(fileName, GENERIC_WRITE, FILE_SHARE_WRITE);
   AssociateFileCompletionPort(hIOCP, hFile, IOCP_WRITE);
+  DWORD dwFileSize = strlen(contentBuffer);
   DWORD dwBytesRead = 0;
   OverlapIOInfo* info = new OverlapIOInfo{};
   info->hFile = hFile;
   info->callback = callback;
-  info->buffer = const_cast<char*>(contentBuffer);
+  info->buffer = new char[dwFileSize + 1];
+  info->buffer[dwFileSize] = '\0';
+  strncpy_s(info->buffer, dwFileSize + 1, contentBuffer, dwFileSize);
   if (appendData) {
     info->overlapped.Offset += GetFileSize(hFile, NULL);
   }
