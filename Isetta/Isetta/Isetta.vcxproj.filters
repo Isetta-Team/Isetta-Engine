@@ -92,6 +92,9 @@
     <ClCompile Include="Core\FileSystem.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="FileSystem.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\IModule.h">
@@ -191,6 +194,9 @@
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Core\FileSystem.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSystem.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>

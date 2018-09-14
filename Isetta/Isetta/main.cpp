@@ -12,9 +12,13 @@
 #include "Core/Memory/Memory.h"
 #include "Core/ModuleManager.h"
 #include "Core/Time.h"
+<<<<<<< HEAD
 #include "Graphics/LightNode.h"
 #include "Graphics/ModelNode.h"
 #include "Input/Input.h"
+=======
+#include "FileSystem.h"
+>>>>>>> eba1030885e7901ca744b4b5cdf1243de0e666a8
 
 using namespace Isetta;
 
@@ -35,6 +39,7 @@ to give newcomers a clearer representation of the engine-building process.
 */
 int main() {
   FileSystem fds;
+<<<<<<< HEAD
 
   FileSystem::OverlapIOInfo* readO = new FileSystem::OverlapIOInfo{};
   readO->callback = std::function<void(const char*)>(
@@ -46,6 +51,8 @@ int main() {
     writeO->buf = "abcdefghijklmnopqrstuvwxyz\n";
     fds.Write("Resources/test/async.out", writeO);
   }
+=======
+>>>>>>> eba1030885e7901ca744b4b5cdf1243de0e666a8
   system("pause");
   return 0;
 
