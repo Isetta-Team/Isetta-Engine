@@ -122,7 +122,7 @@ int main() {
 
    double time = 0.0;
 
-   Address serverAddress("172.25.106.33", ServerPort);
+   Address serverAddress("127.0.0.1", ServerPort);
 
    Server server(yojimbo::GetDefaultAllocator(), privateKey, serverAddress,
                  yojimboConfig,
@@ -131,6 +131,7 @@ int main() {
    server.Start(1);
 
    if (!server.IsRunning()) {
+     LOG(Debug::Channel::General, "Server ain't running!");
      return 1;
    }
 
