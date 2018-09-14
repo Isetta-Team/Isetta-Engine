@@ -32,7 +32,7 @@ DWORD WINAPI SaveFileWorkerThread(LPVOID empty) {
         case IOCP_NOMORE:
           info = (Isetta::FileSystem::OverlapIOInfo*)overlap;
           if (info->callback) {
-            info->callback(info->buf);
+            info->callback(info->buffer);
           }
           CloseHandle(info->hFile);
           delete info;
@@ -121,43 +121,59 @@ LPCTSTR FileSystem::ErrorMessage(DWORD error) {
   return ((LPCTSTR)lpMsgBuf);
 }
 
-void FileSystem::Read(const char* file, OverlapIOInfo* info) {
-  HANDLE hFile = OpenFile(file, GENERIC_READ, FILE_SHARE_READ);
+void FileSystem::Read(const char* fileName,
+                      const std::function<void(const char*)> callback) {
+  HANDLE hFile = OpenFile(fileName, GENERIC_READ, FILE_SHARE_READ);
+  AssociateFileCompletionPort(hIOCP, hFile, 1);
   DWORD dwFileSize = GetFileSize(hFile, NULL);
   DWORD dwBytesRead = 0;
-  AssociateFileCompletionPort(hIOCP, info, 1);
+  OverlapIOInfo* info = new OverlapIOInfo{};
   info->hFile = hFile;
-  info->buf = new char[dwFileSize + 1];
-  info->buf[dwFileSize] = '\0';
-  if (!ReadFile(hFile, info->buf, dwFileSize, &dwBytesRead,
+  info->callback = callback;
+  info->buffer = new char[dwFileSize + 1];
+  info->buffer[dwFileSize] = '\0';
+  if (!ReadFile(hFile, info->buffer, dwFileSize, &dwBytesRead,
                 &info->overlapped)) {
     GetError();
   }
   PostQueuedCompletionStatus(hIOCP, 0, IOCP_NOMORE, &(info->overlapped));
 }
 
-void FileSystem::Write(const char* file, OverlapIOInfo* info,
+void FileSystem::Write(const char* fileName, const char* contentBuffer,
+                       const std::function<void(const char*)> callback,
                        const bool appendData) {
-  HANDLE hFile = OpenFile(file, GENERIC_WRITE, FILE_SHARE_WRITE);
-  info->hFile = hFile;
-  AssociateFileCompletionPort(hIOCP, info->hFile, IOCP_WRITE);
+  HANDLE hFile = OpenFile(fileName, GENERIC_WRITE, FILE_SHARE_WRITE);
+  AssociateFileCompletionPort(hIOCP, hFile, IOCP_WRITE);
   DWORD dwBytesRead = 0;
+  OverlapIOInfo* info = new OverlapIOInfo{};
+  info->hFile = hFile;
+  info->callback = callback;
+  info->buffer = const_cast<char*>(contentBuffer);
   if (appendData) {
     info->overlapped.Offset += GetFileSize(hFile, NULL);
   }
-  if (!WriteFile(info->hFile, info->buf, strlen(info->buf), &dwBytesRead,
+  if (!WriteFile(info->hFile, info->buffer, strlen(info->buffer), &dwBytesRead,
                  &info->overlapped)) {
     GetError();
   }
   PostQueuedCompletionStatus(hIOCP, 0, IOCP_NOMORE, &(info->overlapped));
 }
 
-void FileSystem::Read(const std::string& file, OverlapIOInfo* info) {
-  Read(file.c_str(), info);
+void FileSystem::Read(const std::string& fileName,
+                      const std::function<void(const char*)> callback) {
+  Read(fileName.c_str(), callback);
 }
-void FileSystem::Write(const std::string& file, OverlapIOInfo* info,
+void FileSystem::Write(const std::string& fileName, const char* contentBuffer,
+                       const std::function<void(const char*)> callback,
                        const bool appendData) {
-  Write(file.c_str(), info, appendData);
+  Write(fileName.c_str(), contentBuffer, callback, appendData);
+}
+
+void FileSystem::Write(const std::string& fileName,
+                       const std::string& contentBuffer,
+                       const std::function<void(const char*)> callback,
+                       const bool appendData) {
+  Write(fileName.c_str(), contentBuffer.c_str(), callback, appendData);
 }
 
 }  // namespace Isetta
