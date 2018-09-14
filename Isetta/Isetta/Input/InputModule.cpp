@@ -92,7 +92,7 @@ void InputModule::StartUp(GLFWwindow* win) {
   glfwSetMouseButtonCallback(winHandle, MouseEventListener);
 }
 
-void InputModule::Update() { glfwPollEvents(); }
+void InputModule::Update(float deltaTime) { glfwPollEvents(); }
 
 void InputModule::ShutDown() {}
 

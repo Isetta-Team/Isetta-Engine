@@ -45,7 +45,7 @@ class InputModule {
   ~InputModule() = default;
 
   void StartUp(GLFWwindow* win);
-  void Update();
+  void Update(float deltaTime);
   void ShutDown();
 
   U64 RegisterCallback(int key, const std::function<void()>& callback,
