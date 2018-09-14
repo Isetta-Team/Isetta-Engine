@@ -6,8 +6,8 @@
 #include <chrono>
 
 namespace Time {
-std::chrono::time_point<std::chrono::high_resolution_clock> startTime;
-float time;
-float deltaTime;
-int frameCount;
+  extern std::chrono::time_point<std::chrono::high_resolution_clock> startTime;
+  extern float time;
+  extern float deltaTime;
+  extern int frameCount;
 }  // namespace Time

@@ -6,9 +6,42 @@
 #include "yojimbo/yojimbo.h"
 
 namespace Isetta {
+struct CustomMessage : public yojimbo::Message {
+  int handle;
+
+  CustomMessage() { handle = 0; }
+
+  // TODO(Caleb): choose a more reasonable range for the int serialization
+  template <typename Stream>
+  bool Serialize(Stream& stream) {
+    serialize_int(stream, handle, 0, 10);
+
+    return true;
+  }
+
+  YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS();
+};
+
+enum CustomMessageType { MESSAGE, NUM_MESSAGE_TYPES };
+
+YOJIMBO_MESSAGE_FACTORY_START(CustomMessageFactory, NUM_MESSAGE_TYPES);
+  YOJIMBO_DECLARE_MESSAGE_TYPE(MESSAGE, CustomMessage);
+YOJIMBO_MESSAGE_FACTORY_FINISH();
+
+class CustomAdapter : public yojimbo::Adapter {
+ public:
+  // TODO(Caleb): Change the CreateAllocator function to use our mem alloc
+  // instead of TLSF
+
+  // TODO(Caleb): something about the Linter with a const ref
+  yojimbo::MessageFactory* CreateMessageFactory(yojimbo::Allocator* allocator) {
+    return YOJIMBO_NEW(*allocator, CustomMessageFactory, *allocator);
+  }
+};
+
 class NetworkingModule {
  private:
-  static const CustomAdapter Adapter;
+  static CustomAdapter NetworkAdapter;
 
   // TODO(Caleb): Look into making the ports user-definable
   const uint16_t ClientPort = 30000;
@@ -46,42 +79,5 @@ class NetworkingModule {
   // Other
 
   friend class ModuleManager;
-};
-
-struct CustomMessage : public yojimbo::Message {
-  int handle;
-
-  CustomMessage() {
-    handle = 0;
-  }
-
-  // TODO(Caleb): choose a more reasonable range for the int serialization
-  template <typename Stream> bool Serialize(const Stream& stream) {
-    serialize_int(stream, handle, 0, 10);
-
-    return true;
-  }
-
-  YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS();
-};
-
-enum CustomMessageType {
-  MESSAGE,
-  NUM_MESSAGE_TYPES
-};
-
-YOJIMBO_MESSAGE_FACTORY_START(CustomMessageFactory, NUM_MESSAGE_TYPES);
-  YOJIMBO_DECLARE_MESSAGE_TYPE(MESSAGE, CustomMessage);
-YOJIMBO_MESSAGE_FACTORY_FINISH();
-
-class CustomAdapter : public yojimbo::Adapter {
- public:
-  // TODO(Caleb): Change the CreateAllocator function to use our mem alloc
-  // instead of TLSF
-
-  // TODO(Caleb): something about the Linter with a const ref
-  yojimbo::MessageFactory* CreateMessageFactory(yojimbo::Allocator* allocator) {
-    return YOJIMBO_NEW(*allocator, CustomMessageFactory, *allocator);
-  }
 };
 }  // namespace Isetta

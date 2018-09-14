@@ -6,6 +6,7 @@
 #include "Core/Time.h"
 
 namespace Isetta {
+CustomAdapter NetworkingModule::NetworkAdapter;
 void NetworkingModule::StartUp() {
   // TODO(Caleb): Add CVar inputs for the config options
   networkConfig.channel[0].type = yojimbo::CHANNEL_TYPE_UNRELIABLE_UNORDERED;
@@ -14,7 +15,8 @@ void NetworkingModule::StartUp() {
   // TODO(Caleb): change out the memory allocation with our own custom allocator
   client =
       new yojimbo::Client(yojimbo::GetDefaultAllocator(), clientAddress,
-                          networkConfig, NetworkingModule::Adapter, Time::time);
+                               networkConfig, NetworkingModule::NetworkAdapter,
+                               Time::time);
 
   privateKey = new uint8_t[KeyBytes];
   // TODO(Caleb): Need to do something more insightful with the private key than

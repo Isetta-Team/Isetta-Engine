@@ -14,8 +14,8 @@
 #include "Graphics/LightNode.h"
 #include "Graphics/ModelNode.h"
 #include "Input/Input.h"
+#include "Networking/NetworkingModule.h"
 
-#include "yojimbo/yojimbo.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -25,6 +25,11 @@
 #include "yojimbo/shared.h"
 
 using namespace Isetta;
+
+float Time::time = 0;
+std::chrono::time_point<std::chrono::high_resolution_clock> Time::startTime;
+float Time::deltaTime = 0;
+int Time::frameCount = 0;
 
 /*! \mainpage Isetta Engine
 Game engine development is a very wide field in the industry, but also a very
@@ -153,7 +158,6 @@ int main() {
   audioSource->SetAudioClip("wave.mp3");
 
   audioSource->Play(true, 1.0f);
-  std::cout << "Playing first" << std::endl;
   ModelNode car{"test/Low-Poly-Racing-Car.scene.xml", Math::Vector3{0, -20, 0},
                 Math::Vector3::zero, Math::Vector3::one};
 
@@ -349,15 +353,10 @@ int main() {
       audioSource->Stop();
       audioSource->SetAudioClip("singing.wav");
       audioSource->Play(false, 1.0f);
-      std::cout << "Playing second" << std::endl;
     }
 
     client.AdvanceTime(yTime);
     server.AdvanceTime(yTime);
-
-    if (Time::time > gameMaxDuration) {
-      //break;
-    }
 
     if (Input::IsKeyPressed(KeyCode::ESCAPE)) {
       running = false;
