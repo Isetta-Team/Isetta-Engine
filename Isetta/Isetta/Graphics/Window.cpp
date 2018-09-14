@@ -2,6 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Graphics/Window.h"
+#include "Core/Config/Config.h"
 
 namespace Isetta {
 void Isetta::WindowModule::StartUp() {
@@ -63,10 +64,12 @@ void WindowModule::InitWindow() {  // Create OpenGL window
                    winShowCursor ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 }
 void WindowModule::InitRenderConfig() {
-  winTitle = "Current Game";
-  initWinWidth = 1024;
-  initWinHeight = 576;
-  winFullScreen = false;
-  winShowCursor = true;
+  Config config;
+  config.Read("../config.cfg");
+  winTitle = config.windowTitle.GetVal();
+  initWinWidth = config.windowWidth.GetVal();
+  initWinHeight = config.windowHeight.GetVal();
+  winFullScreen = config.windowFullScreen.GetVal();
+  winShowCursor = config.windowShowCursor.GetVal();
 }
 }  // namespace Isetta

@@ -16,7 +16,7 @@ ModelNode::ModelNode(std::string resourceName, const Math::Vector3& position,
 void ModelNode::LoadResourceFromFile(std::string resourceName) {
   renderResource =
       h3dAddResource(H3DResTypes::SceneGraph, resourceName.c_str(), 0);
-  // #TODO(Chaojie) read the resource path from game config
+  // TODO(Chaojie) read the resource path from game config
   if (!h3dutLoadResourcesFromDisk(R"(Resources)")) {
     h3dutDumpMessages();
     throw std::exception(
@@ -25,7 +25,7 @@ void ModelNode::LoadResourceFromFile(std::string resourceName) {
             resourceName)
             .c_str());
   }
-  // #TODO(Chaojie) Scene graph and hierarchy
+  // TODO(Chaojie) Scene graph and hierarchy
   renderNode = h3dAddNodes(H3DRootNode, renderResource);
 }
 }  // namespace Isetta

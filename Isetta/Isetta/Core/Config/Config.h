@@ -23,6 +23,11 @@ class Config {
   CVarString stringVar{"string", "test"};
   CVarVector3 vector3Var{"vec3", Math::Vector3::one};
   CVarInt defaultValue{"default", 10};
+  CVarInt windowWidth{"window_width", 1024};
+  CVarInt windowHeight{"window_height", 768};
+  CVarString windowTitle{"window_title", "Game"};
+  CVarInt windowFullScreen{"window_fullscreen", 0};
+  CVarInt windowShowCursor{"window_show_cursor", 1};
 
   void Read(const std::string& filepath);
   void ProcessFile(const char* contentBuffer);

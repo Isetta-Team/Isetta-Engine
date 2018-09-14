@@ -29,7 +29,7 @@ void RenderModule::ShutDown() {
 }
 
 void RenderModule::InitRenderConfig() {
-  // #TODO(Chaojie) Read from game config
+  // TODO(Chaojie) Read from game config
   renderInterface = H3DRenderDevice::OpenGL4;
   fov = 45.f;
   nearPlane = 0.1f;
@@ -66,7 +66,6 @@ void RenderModule::InitResources() {  // 1. Add resources
     h3dutDumpMessages();
     throw std::exception(
         "Render::InitPipeline: Error in loading pipeline resources");
-    return;
   }
 
   // Probably later
@@ -75,8 +74,6 @@ void RenderModule::InitResources() {  // 1. Add resources
   h3dSetNodeTransform(cam, 0, 50, 600, 0, 0, 0, 1, 1, 1);
 
   ResizeViewport();
-
-  h3dutDumpMessages();
 }
 
 void RenderModule::ResizeViewport() {

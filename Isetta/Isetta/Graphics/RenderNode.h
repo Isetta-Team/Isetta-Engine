@@ -21,7 +21,7 @@ class RenderNode {
   virtual void LoadResourceFromFile(std::string resourceName) = 0;
 
  public:
-  // #TODO(Chaojie) Transform class
+  // TODO(Chaojie) Transform class
   void SetTransform(const Math::Vector3& position,
                     const Math::Vector3& rotation, const Math::Vector3& scale);
 };

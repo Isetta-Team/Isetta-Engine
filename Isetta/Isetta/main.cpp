@@ -81,12 +81,9 @@ int main() {
   // Logger::Log(Debug::Channel::General,
   // "Random number: " + std::to_string(number));
 
-  using clock = std::chrono::high_resolution_clock;
-  typedef std::chrono::duration<float> second;
-
   RunBenchmarks();
 
-  U64 handleA, handleB, handleC, handleD;
+  U64 handleA, handleB, handleC;
   handleA = Input::RegisterKeyPressCallback(KeyCode::A, [&handleA]() {
     LOG_INFO(Debug::Channel::General, "A pressed");
     Input::UnregisterKeyPressCallback(KeyCode::A, handleA);
