@@ -3,6 +3,7 @@
  */
 #pragma once
 #include <chrono>
+#include "Core/IsettaAlias.h"
 
 namespace Isetta {
 class Clock {
@@ -10,9 +11,11 @@ class Clock {
   using HighResClock = std::chrono::high_resolution_clock;
   using TimePoint = std::chrono::time_point<HighResClock>;
 
+  TimePoint startTime;
   TimePoint currentTime;
-  Milliseconds deltaMilliseconds;
-  float deltaTime;
+  double deltaTime;
+  double elapseTime;
+  double elapseUnscaledTime;
 
  public:
   Clock();
@@ -27,8 +30,9 @@ class Clock {
   bool isPause;
 
   void UpdateTime();
-
-  float GetDeltaTime() const;
+  double GetDeltaTime() const;
+  double GetElapseTime() const;
+  double GetElapseUnscaledTime() const;
 };
 
 }  // namespace Isetta

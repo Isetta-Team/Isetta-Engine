@@ -6,36 +6,48 @@
 
 namespace Isetta {
 Clock::Clock()
-    : currentTime{HighResClock::now()},
-      deltaMilliseconds{},
-      deltaTime(0),
+    : startTime{HighResClock::now()},
+      currentTime{HighResClock::now()},
+      deltaTime{},
+      elapseTime(0),
+      elapseUnscaledTime(0),
       timeScale{1.f},
       isPause{false} {}
 
 Clock::Clock(const Clock& inClock)
-    : currentTime{inClock.currentTime},
-      deltaMilliseconds{inClock.deltaMilliseconds},
-      deltaTime(0),
+    : startTime{inClock.startTime},
+      currentTime{inClock.currentTime},
+      deltaTime(inClock.deltaTime),
+      elapseTime{inClock.elapseTime},
+      elapseUnscaledTime{inClock.elapseUnscaledTime},
       timeScale{inClock.timeScale},
       isPause{inClock.isPause} {}
 
 Clock::Clock(Clock&& inClock) noexcept
-    : currentTime{inClock.currentTime},
-      deltaMilliseconds(),
-      deltaTime(0),
+    : startTime{inClock.startTime},
+      currentTime{inClock.currentTime},
+      deltaTime{inClock.deltaTime},
+      elapseTime{inClock.elapseTime},
+      elapseUnscaledTime{inClock.elapseUnscaledTime},
       timeScale{inClock.timeScale},
       isPause{inClock.isPause} {}
 
 void Clock::UpdateTime() {
-  deltaTime = 0.f;
+  deltaTime = 0.0;
   if (!isPause) {
     TimePoint newTime = HighResClock::now();
-    deltaMilliseconds =
+    Milliseconds delta =
         std::chrono::duration_cast<Milliseconds>(newTime - currentTime);
+    Milliseconds elapse =
+        std::chrono::duration_cast<Milliseconds>(newTime - startTime);
     currentTime = newTime;
-    deltaTime = deltaMilliseconds.count() / 1000.f * timeScale;
+    deltaTime = delta.count() / 1000.f * timeScale;
+    elapseTime += deltaTime;
+    elapseTime = elapse.count() / 1000.f;
   }
 }
 
-float Clock::GetDeltaTime() const { return deltaTime; }
+double Clock::GetDeltaTime() const { return deltaTime; }
+double Clock::GetElapseTime() const { return elapseTime; }
+double Clock::GetElapseUnscaledTime() const { return elapseUnscaledTime; }
 }  // namespace Isetta
