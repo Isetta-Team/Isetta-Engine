@@ -59,8 +59,8 @@
     <ClCompile Include="Graphics\ModelNode.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Input\Input.cpp">
-      <Filter>Core\Input</Filter>
+    <ClCompile Include="Core\Memory\Memory.cpp">
+      <Filter>Core\Memory</Filter>
     </ClCompile>
     <ClCompile Include="Core\Config\Config.cpp">
       <Filter>Core\Config</Filter>
@@ -89,7 +89,6 @@
     <ClCompile Include="Graphics\Window.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Debug\Assert.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\IModule.h">
@@ -188,6 +187,9 @@
     <ClInclude Include="Graphics\Window.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Networking\NetworkingModule.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -231,6 +233,9 @@
     </Filter>
     <Filter Include="Input">
       <UniqueIdentifier>{4df4848a-1e54-4b90-8bad-773e71fa89de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Networking">
+      <UniqueIdentifier>{274cf1b7-0679-4c44-bef9-7e5e861ef39a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

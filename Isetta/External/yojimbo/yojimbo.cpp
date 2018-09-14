@@ -3032,7 +3032,7 @@ namespace yojimbo
         yojimbo_assert( m_messageFactory == NULL );
         m_clientMemory = (uint8_t*) YOJIMBO_ALLOCATE( *m_allocator, m_config.clientMemory );
         m_clientAllocator = m_adapter->CreateAllocator( *m_allocator, m_clientMemory, m_config.clientMemory );
-        m_messageFactory = m_adapter->CreateMessageFactory( *m_clientAllocator );
+        m_messageFactory = m_adapter->CreateMessageFactory( m_clientAllocator );
         m_connection = YOJIMBO_NEW( *m_clientAllocator, Connection, *m_clientAllocator, *m_messageFactory, m_config, m_time );
         yojimbo_assert( m_connection );
         if ( m_config.networkSimulator )
@@ -3499,7 +3499,7 @@ namespace yojimbo
             m_clientAllocator[i] = m_adapter->CreateAllocator( *m_allocator, m_clientMemory[i], m_config.serverPerClientMemory );
             yojimbo_assert( m_clientAllocator[i] );
             
-            m_clientMessageFactory[i] = m_adapter->CreateMessageFactory( *m_clientAllocator[i] );
+            m_clientMessageFactory[i] = m_adapter->CreateMessageFactory( m_clientAllocator[i] );
             yojimbo_assert( m_clientMessageFactory[i] );
             
             m_clientConnection[i] = YOJIMBO_NEW( *m_clientAllocator[i], Connection, *m_clientAllocator[i], *m_clientMessageFactory[i], m_config, m_time );
