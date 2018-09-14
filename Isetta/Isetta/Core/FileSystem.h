@@ -14,7 +14,10 @@
 namespace Isetta {
 class FileSystem {
  public:
-  FileSystem();
+  static FileSystem& Instance() {
+    static FileSystem instance;
+    return instance;
+  }
 
   typedef struct _OVERLAPIOINFO {
     OVERLAPPED overlapped;
@@ -40,6 +43,8 @@ class FileSystem {
   static HANDLE hIOCP;
 
  private:
+  FileSystem();
+
   HANDLE CreateNewCompletionPort();
   HANDLE OpenFile(const char* file, const DWORD access, const DWORD share);
   BOOL AssociateFileCompletionPort(HANDLE hIoPort, HANDLE hFile,
@@ -47,8 +52,6 @@ class FileSystem {
 
   LPCTSTR ErrorMessage(DWORD error);
   void GetError();
-
-  std::unordered_set<HANDLE> handles;
 };
 
 }  // namespace Isetta
