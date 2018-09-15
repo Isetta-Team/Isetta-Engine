@@ -89,10 +89,9 @@
     <ClCompile Include="Graphics\Window.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-<<<<<<< HEAD
     <ClCompile Include="Core\Memory\PoolAllocator.cpp">
       <Filter>Core\Memory</Filter>
-=======
+    </ClCompile>
     <ClCompile Include="Core\FileSystem.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -104,7 +103,6 @@
     </ClCompile>
     <ClCompile Include="Core\Time\StopWatch.cpp">
       <Filter>Core\Time</Filter>
->>>>>>> origin/develop
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -202,13 +200,12 @@
     <ClInclude Include="Graphics\RenderNode.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="Core\Memory\TemplatePoolAllocator.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
     <ClInclude Include="Core\Memory\PoolAllocator.h">
       <Filter>Core\Memory</Filter>
-=======
+    </ClInclude>
     <ClInclude Include="Core\FileSystem.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -220,7 +217,6 @@
     </ClInclude>
     <ClInclude Include="Core\Time\StopWatch.h">
       <Filter>Core\Time</Filter>
->>>>>>> origin/develop
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
