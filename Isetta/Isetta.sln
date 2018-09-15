@@ -283,8 +283,6 @@ Global
 		{045B0D66-73D4-316A-86B6-FBD2D71430E3}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
 		{045B0D66-73D4-316A-86B6-FBD2D71430E3}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
 		{045B0D66-73D4-316A-86B6-FBD2D71430E3}.RelWithDebInfo|x86.ActiveCfg = RelWithDebInfo|x64
-<<<<<<< HEAD
-=======
 		{5E88AC70-CA67-2B0C-D37F-B6E23FDE916D}.Debug Dynamic|Any CPU.ActiveCfg = Release|x64
 		{5E88AC70-CA67-2B0C-D37F-B6E23FDE916D}.Debug Dynamic|Any CPU.Build.0 = Release|x64
 		{5E88AC70-CA67-2B0C-D37F-B6E23FDE916D}.Debug Dynamic|x64.ActiveCfg = Debug|x64
@@ -329,7 +327,6 @@ Global
 		{5E88AC70-CA67-2B0C-D37F-B6E23FDE916D}.RelWithDebInfo|x64.Build.0 = Release|x64
 		{5E88AC70-CA67-2B0C-D37F-B6E23FDE916D}.RelWithDebInfo|x86.ActiveCfg = Release|x64
 		{5E88AC70-CA67-2B0C-D37F-B6E23FDE916D}.RelWithDebInfo|x86.Build.0 = Release|x64
->>>>>>> develop
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -342,10 +339,7 @@ Global
 		{D5746B4B-8644-421E-AB87-C4C28BF476B8} = {4C9AB961-F6EA-4D68-B84C-A16A49F13B4B}
 		{045B0D66-73D4-316A-86B6-FBD2D71430E3} = {D5746B4B-8644-421E-AB87-C4C28BF476B8}
 		{F0F70A76-8E47-4481-9DA1-932AEE57D13D} = {4C9AB961-F6EA-4D68-B84C-A16A49F13B4B}
-<<<<<<< HEAD
-=======
 		{5E88AC70-CA67-2B0C-D37F-B6E23FDE916D} = {F0F70A76-8E47-4481-9DA1-932AEE57D13D}
->>>>>>> develop
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A47234E9-EED9-475E-AE57-3B7BD0515EA9}
