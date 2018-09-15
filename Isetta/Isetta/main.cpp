@@ -63,6 +63,8 @@ int main() {
       std::function<void(const char*)>(
           [](const char* buf) { printf("> write done\n"); }),
       false);
+  system("pause");
+  return 0;
 
   // config example
   Config::Instance().Read("config.cfg");

@@ -29,17 +29,17 @@ class FileSystem {
   } OverlapIOInfo;
 
   HANDLE Read(const char* fileName,
-              const std::function<void(const char*)> callback = nullptr);
+              const std::function<void(const char*)>& callback = nullptr);
   HANDLE Write(const char* fileName, const char* contentBuffer,
-               const std::function<void(const char*)> callback = nullptr,
+               const std::function<void(const char*)>& callback = nullptr,
                const bool appendData = true);
   HANDLE Read(const std::string& fileName,
-              const std::function<void(const char*)> callback = nullptr);
+              const std::function<void(const char*)>& callback = nullptr);
   HANDLE Write(const std::string& fileName, const char* contentBuffer,
-               std::function<void(const char*)> callback = nullptr,
+               const std::function<void(const char*)>& callback = nullptr,
                const bool appendData = true);
   HANDLE Write(const std::string& fileName, const std::string& contentBuffer,
-               std::function<void(const char*)> callback = nullptr,
+               const std::function<void(const char*)>& callback = nullptr,
                const bool appendData = true);
   bool Cancel(HANDLE hFile);
 

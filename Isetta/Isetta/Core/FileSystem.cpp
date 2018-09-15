@@ -25,7 +25,7 @@ DWORD WINAPI SaveFileWorkerThread(LPVOID empty) {
     if (completionStatus) {
       switch (completionKey) {
         case IOCP_WRITE:
-          // fprintf(stderr, "wrote %d bytes\n", bytesTransferred);
+          fprintf(stderr, "wrote %d bytes\n", bytesTransferred);
           break;
 
         case IOCP_EOF:
@@ -167,12 +167,13 @@ LPCTSTR FileSystem::ErrorMessage(DWORD error) {
 }
 
 HANDLE FileSystem::Read(const char* fileName,
-                        const std::function<void(const char*)> callback) {
-  HANDLE hFile = OpenFile(fileName, GENERIC_READ, NULL, OPEN_EXISTING);
+                        const std::function<void(const char*)>& callback) {
+  HANDLE hFile =
+      OpenFile(fileName, GENERIC_READ, FILE_SHARE_READ, OPEN_EXISTING);
   if (GetFileError()) {
     return NULL;
   }
-  AssociateFileCompletionPort(hIOCP, hFile, 1);
+  AssociateFileCompletionPort(hIOCP, hFile, IOCP_WRITE);
 
   DWORD dwFileSize = GetFileSize(hFile, NULL);
   DWORD dwBytesRead = 0;
@@ -194,7 +195,7 @@ HANDLE FileSystem::Read(const char* fileName,
 }
 
 HANDLE FileSystem::Write(const char* fileName, const char* contentBuffer,
-                         const std::function<void(const char*)> callback,
+                         const std::function<void(const char*)>& callback,
                          const bool appendData) {
   HANDLE hFile;
   if (appendData) {
@@ -234,17 +235,17 @@ HANDLE FileSystem::Write(const char* fileName, const char* contentBuffer,
 }
 
 HANDLE FileSystem::Read(const std::string& fileName,
-                        const std::function<void(const char*)> callback) {
+                        const std::function<void(const char*)>& callback) {
   return Read(fileName.c_str(), callback);
 }
 HANDLE FileSystem::Write(const std::string& fileName, const char* contentBuffer,
-                         const std::function<void(const char*)> callback,
+                         const std::function<void(const char*)>& callback,
                          const bool appendData) {
   return Write(fileName.c_str(), contentBuffer, callback, appendData);
 }
 HANDLE FileSystem::Write(const std::string& fileName,
                          const std::string& contentBuffer,
-                         const std::function<void(const char*)> callback,
+                         const std::function<void(const char*)>& callback,
                          const bool appendData) {
   return Write(fileName.c_str(), contentBuffer.c_str(), callback, appendData);
 }
