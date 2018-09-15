@@ -6,12 +6,16 @@
 #include <string>
 #include "Core/Config/CVar.h"
 #include "Core/Config/CVarRegistry.h"
+#include "Core/Debug/Assert.h"
 #include "Core/Math/Vector3.h"
 
 namespace Isetta {
 class Config {
  public:
-  Config() = default;
+  static Config& Instance() {
+    static Config instance;
+    return instance;
+  }
 
   CVarInt integerVar{"integer", 0};
   CVarFloat floatVar{"float"};
@@ -22,6 +26,7 @@ class Config {
   void Read(std::string filepath);
 
  private:
+  Config() = default;
   class CVarRegistry cvarsRegistry;
 
   void RemoveComments(std::string* line) const;
