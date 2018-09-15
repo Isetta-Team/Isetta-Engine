@@ -1,7 +1,9 @@
 /*
  * Copyright (c) 2018 Isetta
  */
+#include <Windows.h>
 #include <chrono>
+#include <iostream>
 #include <string>
 #include <iostream>
 #include "Audio/AudioSource.h"
@@ -13,6 +15,10 @@
 #include "Core/Memory/PoolAllocator.h"
 #include "Core/Memory/StackAllocator.h"
 #include "Core/ModuleManager.h"
+<<<<<<< 7974844bb5c54f4699e8505cc121143adec4eec6
+=======
+#include "Core/Time/Clock.h"
+>>>>>>> FileSystem destructor + cancel
 #include "Graphics/LightNode.h"
 #include "Graphics/ModelNode.h"
 #include "Input/Input.h"
@@ -41,8 +47,9 @@ to give newcomers a clearer representation of the engine-building process.
 int main() {
   // TODO(Chaojie): maybe move to loop class later
   Clock gameTime{};
+  // config example
 
-  FileSystem::Instance().Read(
+  auto h = FileSystem::Instance().Read(
       "Resources/test/async.in",
       std::function<void(const char*)>(
           [](const char* buf) { printf("%s\n", buf); }));
@@ -52,7 +59,8 @@ int main() {
     FileSystem::Instance().Write(
         "Resources/test/async.out", buf,
         std::function<void(const char*)>(
-            [](const char* buf) { printf("> write done\n"); }));
+            [](const char* buf) { printf("> write done\n"); }),
+        false);
   }
 
   // config example
@@ -105,10 +113,17 @@ int main() {
 
   while (running) {
     gameTime.UpdateTime();
+<<<<<<< 7974844bb5c54f4699e8505cc121143adec4eec6
 
     moduleManager.Update(gameTime.GetDeltaTime());
     LOG_INFO(Debug::Channel::General, {std::to_string(gameTime.GetDeltaTime())});
 
+=======
+
+    moduleManager.Update(gameTime.GetDeltaTime());
+    LOG_INFO(Debug::Channel::General,
+             {std::to_string(gameTime.GetDeltaTime())});
+>>>>>>> FileSystem destructor + cancel
 
     if (Input::IsKeyPressed(KeyCode::ESCAPE)) {
       running = false;
