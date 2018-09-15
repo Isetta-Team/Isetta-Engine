@@ -92,14 +92,14 @@
     <ClCompile Include="Core\FileSystem.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystem.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Time\Clock.cpp">
       <Filter>Core\Time</Filter>
     </ClCompile>
     <ClCompile Include="Core\Time\StopWatch.cpp">
       <Filter>Core\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DataStructures\RingBuffer.cpp">
+      <Filter>Core\DataStructures</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -203,14 +203,14 @@
     <ClInclude Include="Core\FileSystem.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="FileSystem.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Time\Clock.h">
       <Filter>Core\Time</Filter>
     </ClInclude>
     <ClInclude Include="Core\Time\StopWatch.h">
       <Filter>Core\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\RingBuffer.h">
+      <Filter>Core\DataStructures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -255,6 +255,9 @@
     </Filter>
     <Filter Include="Core\Time">
       <UniqueIdentifier>{263ba415-8b0e-4871-b9e3-6779bb9b8489}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DataStructures">
+      <UniqueIdentifier>{1a6466d1-5cab-4f45-b3c8-992fde0119e4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

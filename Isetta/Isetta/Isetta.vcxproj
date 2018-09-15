@@ -98,6 +98,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Config\Config.cpp" />
     <ClCompile Include="Core\Color.cpp" />
     <ClCompile Include="Core\Config\CVar.cpp" />
+    <ClCompile Include="Core\DataStructures\RingBuffer.cpp" />
     <ClCompile Include="Core\Time\Clock.cpp" />
     <ClCompile Include="Core\Time\StopWatch.cpp" />
     <ClCompile Include="Graphics\LightNode.cpp" />
@@ -131,6 +132,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Audio\AudioSource.h" />
     <ClInclude Include="Core\Config\Config.h" />
     <ClInclude Include="Core\Color.h" />
+    <ClInclude Include="Core\DataStructures\RingBuffer.h" />
     <ClInclude Include="Core\IsettaAlias.h" />
     <ClInclude Include="Core\Math\Matrix4.h" />
     <ClInclude Include="Core\Math\Quaternion.h" />
