@@ -2,9 +2,9 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include <cmath>
 #include <initializer_list>
 #include <stdexcept>
-#include <cmath>
 
 namespace Isetta {
 template <typename T>
@@ -17,14 +17,13 @@ class RingBuffer {
   explicit RingBuffer(int n);
   explicit RingBuffer(std::initializer_list<T> il);
   explicit RingBuffer(std::initializer_list<T> il, int n);
-  ~RingBuffer() {
-    delete buffer;
-  }
+  ~RingBuffer() { delete buffer; }
 
   // Copy and move constructors
 
   RingBuffer(const RingBuffer& rb);
   RingBuffer(RingBuffer&& rb) noexcept;
+  RingBuffer& operator=(const RingBuffer& rb);
 
   // Accessors and mutators
 
@@ -108,6 +107,12 @@ RingBuffer<T>::RingBuffer(const RingBuffer& rb) : size{rb.GetCapacity()} {
   for (auto i : copyList) {
     Put(i);
   }
+}
+
+template <typename T>
+RingBuffer<T>& RingBuffer<T>::operator=(const RingBuffer& rb) {
+  this(rb);
+  return *this;
 }
 
 template <typename T>
