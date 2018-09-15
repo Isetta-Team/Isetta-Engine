@@ -31,8 +31,8 @@ class Clock {
 
   void UpdateTime();
   double GetDeltaTime() const;
-  double GetElapseTime() const;
-  double GetElapseUnscaledTime() const;
+  double GetElapsedTime() const;
+  double GetElapsedUnscaledTime() const;
 };
 
 }  // namespace Isetta

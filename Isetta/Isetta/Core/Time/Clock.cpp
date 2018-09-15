@@ -48,6 +48,6 @@ void Clock::UpdateTime() {
 }
 
 double Clock::GetDeltaTime() const { return deltaTime; }
-double Clock::GetElapseTime() const { return elapseTime; }
-double Clock::GetElapseUnscaledTime() const { return elapseUnscaledTime; }
+double Clock::GetElapsedTime() const { return elapseTime; }
+double Clock::GetElapsedUnscaledTime() const { return elapseUnscaledTime; }
 }  // namespace Isetta
