@@ -14,8 +14,8 @@ class Clock {
   TimePoint startTime;
   TimePoint currentTime;
   double deltaTime;
-  double elapseTime;
-  double elapseUnscaledTime;
+  double elapsedTime;
+  double elapsedUnscaledTime;
 
  public:
   Clock();
