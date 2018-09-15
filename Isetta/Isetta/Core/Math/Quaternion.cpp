@@ -7,6 +7,8 @@
 #include "Vector3.h"
 
 namespace Isetta::Math {
+Quaternion::Quaternion(): w{0.f}, x{0.f}, y{0.f}, z{0.f} {}
+
 Quaternion::Quaternion(float eulerX, float eulerY, float eulerZ) {
   Quaternion roll(Utility::Sin(eulerX * 0.5f), 0, 0,
                   Utility::Cos(eulerX * 0.5f));
@@ -30,7 +32,7 @@ Quaternion::Quaternion(const Quaternion& inQuaternion)
     y{inQuaternion.y},
     z{inQuaternion.z} {}
 
-Quaternion::Quaternion(Quaternion&& inQuaternion)
+Quaternion::Quaternion(Quaternion&& inQuaternion) noexcept
   : w{inQuaternion.w},
     x{inQuaternion.x},
     y{inQuaternion.y},
@@ -45,7 +47,7 @@ Quaternion& Quaternion::operator=(const Quaternion& inQuaternion) {
   return *this;
 }
 
-Quaternion& Quaternion::operator=(Quaternion&& inQuaternion) {
+Quaternion& Quaternion::operator=(Quaternion&& inQuaternion) noexcept {
   w = inQuaternion.w;
   x = inQuaternion.x;
   y = inQuaternion.y;

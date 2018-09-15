@@ -23,8 +23,21 @@ class Vector3 {
 
   // Construction
 
+  /**
+   * \brief Create an empty vector
+   */
   Vector3() : x{0}, y{0}, z{0} {}
+  /**
+   * \brief Create a vector of a specific number
+   * \param value the values of the vector
+   */
   explicit Vector3(float value) : x{value}, y{value}, z{value} {}
+  /**
+   * \brief Create a vector of specific x, y and z
+   * \param inX The x of vector
+   * \param inY The y of vector
+   * \param inZ The z of vector
+   */
   Vector3(float inX, float inY, float inZ) : x{inX}, y{inY}, z{inZ} {}
 
   // Copy and move constructions
@@ -39,7 +52,7 @@ class Vector3 {
     z = inVector.z;
     return *this;
   }
-  inline Vector3& operator=(Vector3&& inVector) {
+  inline Vector3& operator=(Vector3&& inVector) noexcept {
     x = inVector.x;
     y = inVector.y;
     z = inVector.z;
@@ -100,36 +113,86 @@ class Vector3 {
 
   // functions
 
-  // Returns the length of the vector
+  /**
+   * \brief Returns the length of the vector
+   */
   float Magnitude() const;
-  // Returns the square of the lenght of the vector
+  /**
+   * \brief Returns the square of the length of the vector
+   */
   float SqrMagnitude() const;
-  // Returns a normalized vector of this vector
+  /**
+   * \brief Returns a normalized vector of this vector
+   */
   Vector3 Normalized() const;
-  // Normalizes current vector
+  /**
+   * \brief Normalizes current vector
+   */
   void Normalize() noexcept;
   std::string ToString() const;
 
   // static functions
 
-  // Checks if two vectors are equal (within a tolerence)
+  /**
+   * \brief Checks if two vectors are equal (within a tolerance)
+   * \param lhs The left vector
+   * \param rhs The right vector
+   */
   static bool Equals(const Vector3& lhs, const Vector3& rhs);
-  // Returns the dot product of two vectors
+  /**
+   * \brief Returns the dot product of two vectors
+   * \param lhs The left vector
+   * \param rhs The right vector
+   */
   static float Dot(const Vector3& lhs, const Vector3& rhs);
-  // Returns the cross product of two vectors
+  /**
+   * \brief Returns the cross product of two vectors
+   * \param lhs The left vector
+   * \param rhs The right vector
+   */
   static Vector3 Cross(const Vector3& lhs, const Vector3& rhs);
-  // Linearly interpolates between two vectors
+  /**
+   * \brief Linearly interpolates between two vectors
+   * \param start The starting vector
+   * \param end The ending vector
+   * \param time The time t
+   */
   static Vector3 Lerp(const Vector3& start, const Vector3& end, float time);
-  // Returns the distance between two endpoints of the vectors
+  /**
+   * \brief The distance between two endpoints of the two vectors
+   * \param start The starting vector
+   * \param end The ending vector
+   */
   static float Distance(const Vector3& start, const Vector3& end);
-  // Projects a vector onto onNormal vector
+  /**
+   * \brief Projects a vector onto onNormal vector
+   * \param inVector The in vector
+   * \param onNormal The target normal vector
+   */
   static Vector3 Project(const Vector3& inVector, const Vector3& onNormal);
-  // Reflects a vector off the plane defined by a normal
+  /**
+   * \brief Reflects a vector off the plane defined by a normal
+   * \param inVector The input vector
+   * \param inNormal The normal vector pointing into the surface
+   */
   static Vector3 Reflect(const Vector3& inVector, const Vector3& inNormal);
-  // Multiplies two vectors component-wise
+  /**
+   * \brief Multiplies two vectors component-wise
+   * \param inVector The input vector
+   * \param scalar The scalar vector
+   */
   static Vector3 Scale(const Vector3& inVector, const Vector3& scalar);
-  // Spherically interpolates between two vectors
+  /**
+   * \brief Spherically interpolates between two vectors
+   * \param start The starting vector
+   * \param end The ending vector
+   * \param time The time t
+   */
   static Vector3 Slerp(const Vector3& start, const Vector3& end, float time);
+  /**
+   * \brief Create a vector from the string
+   * \param str Reference string
+   */
   static Vector3 FromString(const std::string& str);
 };
 }  // namespace Isetta::Math

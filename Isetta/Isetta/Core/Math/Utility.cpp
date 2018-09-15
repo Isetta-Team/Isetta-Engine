@@ -15,6 +15,13 @@ const float Utility::PI = static_cast<float>(M_PI);
 const float Utility::EPSILON = FLT_EPSILON;
 const float Utility::DEG2RAD = Utility::PI / 180.f;
 const float Utility::RAD2DEG = 180.f * static_cast<float>(M_1_PI);
+
+float Utility::Abs(float number) {
+  return number < 0 ? -number : number;
+}
+
+int Utility::Abs(int number) { return number < 0 ? -number : number; }
+
 float Utility::Acos(float number) { return acosf(number); }
 float Utility::Asin(float number) { return asinf(number); }
 float Utility::Atan(float number) { return atanf(number); }

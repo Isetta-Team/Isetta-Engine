@@ -19,8 +19,20 @@ class Vector2Int {
 
   // Construct by name
 
+  /**
+   * \brief Create an empty vector
+   */
   Vector2Int() : x{0}, y{0} {}
+  /**
+   * \brief Create a vector of a specific number
+   * \param value the values of the vector
+   */
   explicit Vector2Int(int value) : x{value}, y{value} {}
+  /**
+   * \brief Create a vector of specific x and y
+   * \param inX The x of vector
+   * \param inY The y of vector
+   */
   Vector2Int(int inX, int inY) : x{inX}, y{inY} {}
 
   // Copy and move constructions
@@ -90,22 +102,44 @@ class Vector2Int {
 
   // functions
 
-  // Returns the length of the vector
+  /**
+   * \brief Returns the length of the vector
+   */
   float Magnitude() const;
-  // Returns the square of the lenght of the vector
+  /**
+   * \brief Returns the square of the length of the vector
+   */
   int SqrMagnitude() const;
-  // Returns a normalized vector of this vector
+  /**
+   * \brief Returns a normalized vector of this vector
+   */
   Vector2 Normalized() const;
 
   // static functions
 
-  // Returns the dot product of two vectors
+  /**
+   * \brief Returns the dot product of two vectors
+   * \param lhs The left vector
+   * \param rhs The right vector
+   */
   static int Dot(const Vector2Int& lhs, const Vector2Int& rhs);
-  // Returns the cross product of two vectors
+  /**
+   * \brief Returns the cross product of two vectors
+   * \param lhs The left vector
+   * \param rhs The right vector
+   */
   static int Cross(const Vector2Int& lhs, const Vector2Int& rhs);
-  // Returns the distance between two endpoints of the vectors
+  /**
+   * \brief The distance between two endpoints of the two vectors
+   * \param start The starting vector
+   * \param end The ending vector
+   */
   static float Distance(const Vector2Int& start, const Vector2Int& end);
-  // Multiplies two vectors component-wise
+  /**
+   * \brief Multiplies two vectors component-wise
+   * \param inVector The input vector
+   * \param scalar The scalar vector
+   */
   static Vector2Int Scale(const Vector2Int& inVector, const Vector2Int& scalar);
 };
 }  // namespace Isetta::Math
