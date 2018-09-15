@@ -69,8 +69,6 @@ int main() {
   Sleep(3000);
   LOG_INFO(Debug::Channel::General,
            Config::Instance().vector3Var.GetVal().ToString().c_str());
-  system("pause");
-  return 0;
 
   ModuleManager moduleManager;
   moduleManager.StartUp();
@@ -81,12 +79,9 @@ int main() {
   // Logger::Log(Debug::Channel::General,
   // "Random number: " + std::to_string(number));
 
-  using clock = std::chrono::high_resolution_clock;
-  typedef std::chrono::duration<float> second;
-
   RunBenchmarks();
 
-  U64 handleA, handleB, handleC, handleD;
+  U64 handleA, handleB, handleC;
   handleA = Input::RegisterKeyPressCallback(KeyCode::A, [&handleA]() {
     LOG_INFO(Debug::Channel::General, "A pressed");
     Input::UnregisterKeyPressCallback(KeyCode::A, handleA);
@@ -104,75 +99,6 @@ int main() {
       });
 
   // Game loop
-  auto lastFrameStartTime = clock::now();
-
-  // Connect a client and a client-server together
-  if (!InitializeYojimbo() /* from yojimbo.h */) {
-    printf("error: failed to initialize Yojimbo!\n");
-    return 1;
-  }
-
-  const int MaxPacketSize = 16 * 1024;
-  const int MaxSnapshotSize = 8 * 1024;
-  const int MaxBlockSize = 64 * 1024;
-
-  const int YOJ_UNORDERED = 0;
-  const int YOJ_ORDERED = 1;
-
-  const int yojimboServerPort = 40000;
-  const int yojimboMaxClients = 64;
-
-  double yTime =
-      0.0;  // TODO: Dunno how to get yojimbo working off of our time yet
-  double yTimeInc = .1;
-
-  yojimbo::ClientServerConfig yojimboConfig;
-  yojimboConfig.maxPacketSize = MaxPacketSize;
-  yojimboConfig.clientMemory = 10 * 1024 * 1024;
-  yojimboConfig.serverGlobalMemory = 10 * 1024 * 1024;
-  yojimboConfig.serverPerClientMemory = 10 * 1024 * 1024;
-  yojimboConfig.numChannels = 2;
-  yojimboConfig.channel[YOJ_UNORDERED].type = CHANNEL_TYPE_UNRELIABLE_UNORDERED;
-  yojimboConfig.channel[YOJ_UNORDERED].maxBlockSize = MaxSnapshotSize;
-  yojimboConfig.channel[YOJ_ORDERED].type = CHANNEL_TYPE_RELIABLE_ORDERED;
-  yojimboConfig.channel[YOJ_ORDERED].maxBlockSize = MaxBlockSize;
-  yojimboConfig.channel[YOJ_ORDERED].blockFragmentSize = 1024;
-
-  uint8_t privateKey[KeyBytes];
-  memset(privateKey, 0, KeyBytes);
-
-  double time = 0.0;
-
-  Address serverAddress("127.0.0.1", ServerPort);
-
-  Server server(yojimbo::GetDefaultAllocator(), privateKey, serverAddress,
-                yojimboConfig, adapter, time);
-
-  server.Start(1);
-
-  if (!server.IsRunning()) {
-    LOG(Debug::Channel::General, "Server ain't running!");
-    return 1;
-  }
-
-  uint64_t clientId = 0;
-  random_bytes((uint8_t *)&clientId, 8);
-
-  Client client(yojimbo::GetDefaultAllocator(), Address("0.0.0.0"),
-                yojimboConfig, adapter, time);
-
-  client.InsecureConnect(privateKey, clientId, serverAddress);
-
-  uint64_t yojMessagesToServer = 0;
-  uint64_t yojMessagesToClient = 0;
-  uint64_t yojMessagesFromServer = 0;
-  uint64_t yojMessagesFromClient = 0;
-
-  bool yojClientConnected = false;
-  bool yojServerConnected = false;
-
-  bool clientIsSending = true;
-  bool networkKeyPressed = false;
 
   // play first audio clip
   auto audioSource = new AudioSource();
@@ -188,204 +114,16 @@ int main() {
   bool running{true};
 
   while (running) {
-    // Networking
-    server.SendPackets();
-    client.SendPackets();
-
-    server.ReceivePackets();
-    client.ReceivePackets();
-
     gameTime.UpdateTime();
 
     moduleManager.Update(gameTime.GetDeltaTime());
     LOG_INFO(Debug::Channel::General,
              {std::to_string(gameTime.GetDeltaTime())});
 
-    // Networking part 2: Electric boogaloo
-    yTime += yTimeInc;
-    if (client.IsConnected()) {
-      yojClientConnected = true;
-      {
-        if (clientIsSending) {
-          if ((Input::IsKeyPressed(KeyCode::I) ||
-               Input::IsKeyPressed(KeyCode::O))) {
-            if (!networkKeyPressed) {
-              TestMessage *message = (TestMessage *)client.CreateMessage(
-                  TEST_MESSAGE); /* from shared.h */
-              if (message) {
-                message->sequence =
-                    uint16_t(Input::IsKeyPressed(KeyCode::I) ? 'I' : 'O');
-                client.SendMessage(YOJ_ORDERED, message);
-                yojMessagesToServer++;
-                clientIsSending = false;
-                networkKeyPressed = true;
-              }
-            }
-          } else {
-            networkKeyPressed = false;
-          }
-        }
-      }
-
-      const int clientIndex = client.GetClientIndex();
-
-      if (server.IsClientConnected(clientIndex)) {
-        yojServerConnected = true;
-        {
-          if (!clientIsSending) {
-            if ((Input::IsKeyPressed(KeyCode::I) ||
-                 Input::IsKeyPressed(KeyCode::O))) {
-              if (!networkKeyPressed) {
-                TestMessage *message = (TestMessage *)server.CreateMessage(
-                    clientIndex, TEST_MESSAGE); /* from shared.h */
-                if (message) {
-                  message->sequence =
-                      uint16_t(Input::IsKeyPressed(KeyCode::I) ? 'I' : 'O');
-                  server.SendMessage(clientIndex, YOJ_ORDERED, message);
-                  yojMessagesToClient++;
-                  clientIsSending = true;
-                  networkKeyPressed = true;
-                }
-              }
-            } else {
-              networkKeyPressed = false;
-            }
-          }
-        }
-
-        while (true) {
-          yojimbo::Message *message =
-              server.ReceiveMessage(clientIndex, YOJ_ORDERED);
-
-          if (!message) {
-            break;
-          }
-
-          yojimbo_assert(message->GetId() == (uint16_t)yojMessagesFromClient);
-
-          switch (message->GetType()) {
-            case TEST_MESSAGE: {
-              TestMessage *testMessage =
-                  (TestMessage *)message; /* from shared.h */
-              LOG(Debug::Channel::Networking, Debug::Verbosity::Info,
-                  "server received message %c\n", testMessage->sequence);
-              server.ReleaseMessage(clientIndex, message);
-              yojMessagesFromClient++;
-            } break;
-
-            case TEST_BLOCK_MESSAGE: {
-              TestBlockMessage *blockMessage =
-                  (TestBlockMessage *)message; /* from shared.h */
-              const int blockSize = blockMessage->GetBlockSize();
-              const int expectedBlockSize =
-                  1 + (int(yojMessagesFromClient) * 33) % MaxBlockSize;
-              if (blockSize != expectedBlockSize) {
-                LOG(Debug::Channel::Networking, Debug::Verbosity::Error,
-                    "error: block size mismatch. expected %d, got %d\n",
-                    expectedBlockSize, blockSize);
-                yojServerConnected = false;
-                break;
-              }
-              const uint8_t *blockData = blockMessage->GetBlockData();
-              yojimbo_assert(blockData);
-              for (int i = 0; i < blockSize; i++) {
-                if (blockData[i] != (uint8_t)yojMessagesFromClient + i) {
-                  LOG(Debug::Channel::Networking, Debug::Verbosity::Error,
-                      "error: block data mismatch. expected %d, but "
-                      "blockData[%d] = %c\n",
-                      uint8_t(yojMessagesFromClient + i), i, blockData[i]);
-                  yojServerConnected = false;
-                  break;
-                }
-              }
-              LOG(Debug::Channel::Networking, Debug::Verbosity::Info,
-                  "server received message %c\n",
-                  (uint16_t)yojMessagesFromClient);
-              server.ReleaseMessage(clientIndex, message);
-              yojMessagesFromClient++;
-            } break;
-          }
-        }
-
-        while (true) {
-          yojimbo::Message *message = client.ReceiveMessage(YOJ_ORDERED);
-
-          if (!message) {
-            break;
-          }
-
-          yojimbo_assert(message->GetId() == (uint16_t)yojMessagesFromServer);
-
-          switch (message->GetType()) {
-            case TEST_MESSAGE: {
-              TestMessage *testMessage =
-                  (TestMessage *)message; /* from shared.h */
-              LOG(Debug::Channel::Networking, Debug::Verbosity::Info,
-                  "client received message %c\n", testMessage->sequence);
-              client.ReleaseMessage(message);
-              yojMessagesFromServer++;
-            } break;
-
-            case TEST_BLOCK_MESSAGE: {
-              TestBlockMessage *blockMessage =
-                  (TestBlockMessage *)message; /* from shared.h */
-              const int blockSize = blockMessage->GetBlockSize();
-              const int expectedBlockSize =
-                  1 + (int(yojMessagesFromServer) * 33) % MaxBlockSize;
-              if (blockSize != expectedBlockSize) {
-                LOG(Debug::Channel::Networking, Debug::Verbosity::Error,
-                    "error: block size mismatch. expected %d, got %d\n",
-                    expectedBlockSize, blockSize);
-                yojServerConnected = false;
-                break;
-              }
-              const uint8_t *blockData = blockMessage->GetBlockData();
-              yojimbo_assert(blockData);
-              for (int i = 0; i < blockSize; i++) {
-                if (blockData[i] != (uint8_t)yojMessagesFromServer + i) {
-                  LOG(Debug::Channel::Networking, Debug::Verbosity::Error,
-                      "error: block data mismatch. expected %d, but "
-                      "blockData[%d] = %c\n",
-                      uint8_t(yojMessagesFromServer + i), i, blockData[i]);
-                  yojServerConnected = false;
-                  break;
-                }
-              }
-              LOG(Debug::Channel::Networking, Debug::Verbosity::Info,
-                  "client received message %c\n",
-                  (uint16_t)yojMessagesFromServer);
-              client.ReleaseMessage(message);
-              yojMessagesFromServer++;
-            } break;
-          }
-        }
-      }
-    }
-
-    if (client.IsDisconnected() && yojClientConnected) {
-      yojClientConnected = false;
-      LOG(Debug::Channel::Networking, Debug::Verbosity::Info,
-          "client %.16 " PRIx16 " has been disconnected from server!\n");
-    }
-
-    // switch to playing the second audio clip
-    if (gameTime.GetElapsedTime() == 10) {
-      audioSource->Stop();
-      audioSource->SetAudioClip("singing.wav");
-      audioSource->Play(false, 1.0f);
-    }
-
-    client.AdvanceTime(gameTime.GetElapsedTime());
-    server.AdvanceTime(gameTime.GetElapsedTime());
-
     if (Input::IsKeyPressed(KeyCode::ESCAPE)) {
       running = false;
     }
   }
-
-  // Networking
-  client.Disconnect();
-  server.Stop();
 
   moduleManager.ShutDown();
   return 0;
