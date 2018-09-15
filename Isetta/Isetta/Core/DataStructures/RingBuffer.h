@@ -23,7 +23,7 @@ class RingBuffer {
 
   RingBuffer(const RingBuffer& rb);
   RingBuffer(RingBuffer&& rb) noexcept;
-  RingBuffer& operator=(const RingBuffer& rb);
+  RingBuffer<T>& operator=(const RingBuffer& rb);
 
   // Accessors and mutators
 
