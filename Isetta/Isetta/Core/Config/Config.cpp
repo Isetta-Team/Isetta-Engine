@@ -4,9 +4,7 @@
 #include "Core/Config/Config.h"
 
 #include <string.h>
-#include <fstream>
 #include <functional>
-#include <iostream>
 #include <sstream>
 #include "Core/FileSystem.h"
 
@@ -60,6 +58,10 @@ void Config::ProcessFile(const char* contentBuffer) {
 
 void Config::RemoveComments(std::string* line) const {
   auto it = line->find('#');
+  if (it != std::string::npos) {
+    line->erase(it);
+  }
+  it = line->find('\r');
   if (it != std::string::npos) {
     line->erase(it);
   }

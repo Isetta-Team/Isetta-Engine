@@ -4,6 +4,7 @@
 #include "Graphics/RenderModule.h"
 
 #include <stdexcept>
+#include "Core/Config/Config.h"
 
 namespace Isetta {
 void RenderModule::StartUp(GLFWwindow* win) {
@@ -31,24 +32,31 @@ void RenderModule::ShutDown() {
 void RenderModule::InitRenderConfig() {
   // TODO(Chaojie) Read from game config
   renderInterface = H3DRenderDevice::OpenGL4;
-  fov = 45.f;
-  nearPlane = 0.1f;
-  farPlane = 1000.f;
-  resourcePath = R"(Resources)";
+  fov = Config::Instance().fieldOfView.GetVal();
+  nearPlane = Config::Instance().nearClippingPlane.GetVal();
+  farPlane = Config::Instance().farClippingPlane.GetVal();
+  resourcePath = Config::Instance().resourcePath.GetVal();
 }
 
 void RenderModule::InitHordeConfig() {
-  h3dSetOption(H3DOptions::LoadTextures, 1);
-  h3dSetOption(H3DOptions::TexCompression, 0);
-  h3dSetOption(H3DOptions::MaxAnisotropy, 4);
-  h3dSetOption(H3DOptions::ShadowMapSize, 2048);
-  h3dSetOption(H3DOptions::FastAnimation, 1);
-  h3dSetOption(H3DOptions::SampleCount, 0);
-  h3dSetOption(H3DOptions::DumpFailedShaders, 1);
+  h3dSetOption(H3DOptions::LoadTextures,
+               Config::Instance().hordeLoadTextures.GetVal());
+  h3dSetOption(H3DOptions::TexCompression,
+               Config::Instance().hordeTexCompression.GetVal());
+  h3dSetOption(H3DOptions::MaxAnisotropy,
+               Config::Instance().hordeMaxAnisotropy.GetVal());
+  h3dSetOption(H3DOptions::ShadowMapSize,
+               Config::Instance().hordeShadowmapSize.GetVal());
+  h3dSetOption(H3DOptions::FastAnimation,
+               Config::Instance().hordeFastAnimation.GetVal());
+  h3dSetOption(H3DOptions::SampleCount,
+               Config::Instance().hordeSampleCount.GetVal());
+  h3dSetOption(H3DOptions::DumpFailedShaders,
+               Config::Instance().hordeDumpFailedShaders.GetVal());
 }
 
 void RenderModule::InitH3D() {
-  if (!h3dInit((H3DRenderDevice::List)renderInterface)) {
+  if (!h3dInit(static_cast<H3DRenderDevice::List>(renderInterface))) {
     h3dutDumpMessages();
     throw std::exception("Render::InitH3D: Unable to initalize Horde3D");
   }

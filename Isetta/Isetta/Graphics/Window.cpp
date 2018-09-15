@@ -27,7 +27,7 @@ void WindowModule::InitWindow() {  // Create OpenGL window
 
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   if (winFullScreen) {
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -57,19 +57,18 @@ void WindowModule::InitWindow() {  // Create OpenGL window
 
   glfwSetWindowUserPointer(winHandle, this);
   glfwMakeContextCurrent(winHandle);
-  // TODO(Chaojie): Probally remove this line in the future and limit the max fps to 60fps
+  // TODO(Chaojie): Probally remove this line in the future and limit the max
+  // fps to 60fps
   glfwSwapInterval(0);
 
   glfwSetInputMode(winHandle, GLFW_CURSOR,
                    winShowCursor ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 }
 void WindowModule::InitRenderConfig() {
-  Config config;
-  config.Read("../config.cfg");
-  winTitle = config.windowTitle.GetVal();
-  initWinWidth = config.windowWidth.GetVal();
-  initWinHeight = config.windowHeight.GetVal();
-  winFullScreen = config.windowFullScreen.GetVal();
-  winShowCursor = config.windowShowCursor.GetVal();
+  winTitle = Config::Instance().windowTitle.GetVal();
+  initWinWidth = Config::Instance().windowWidth.GetVal();
+  initWinHeight = Config::Instance().windowHeight.GetVal();
+  winFullScreen = Config::Instance().windowFullScreen.GetVal();
+  winShowCursor = Config::Instance().windowShowCursor.GetVal();
 }
 }  // namespace Isetta
