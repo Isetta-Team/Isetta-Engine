@@ -4,7 +4,7 @@
 #pragma once
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
-#include "Core/Memory/MemoryManager.h"
+#include "Core/Memory/MemoryAllocator.h"
 
 namespace Isetta {
 

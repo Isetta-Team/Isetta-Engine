@@ -13,10 +13,8 @@
 namespace Isetta {
 
 class AudioModule {
- public:
-  AudioModule() = default;
-
  private:
+  AudioModule() = default;
   ~AudioModule() = default;
 
   void StartUp();

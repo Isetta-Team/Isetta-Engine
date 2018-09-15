@@ -1,9 +1,9 @@
 /*
 * Copyright (c) 2018 Isetta
 */
-#include "Core/Memory/PoolAllocator.h"
 #include "Core/Debug/Logger.h"
-#include "Core/Memory/MemoryManager.h"
+#include "Core/Memory/PoolAllocator.h"
+#include "Core/Memory/MemoryAllocator.h"
 
 namespace Isetta {
 

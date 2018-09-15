@@ -7,6 +7,7 @@ class StackAllocator {
   typedef SizeInt Marker;
 
   explicit StackAllocator(SizeInt stackSize);
+  ~StackAllocator();
 
   /**
    * \brief You probably want to manually call constructor after getting this

@@ -3,7 +3,7 @@
 */
 
 #include "Core/IsettaAlias.h"
-#include "Core/Memory/MemoryManager.h"
+#include "Core/Memory/MemoryAllocator.h"
 #include "Core/Memory/StackAllocator.h"
 #include <stdexcept>
 
@@ -12,6 +12,10 @@ StackAllocator::StackAllocator(const SizeInt stackSize)
     : top(0), length(stackSize) {
   bottom = MemoryAllocator::AllocateDefaultAligned(stackSize);
   bottomAddress = reinterpret_cast<PtrInt>(bottom);
+}
+
+StackAllocator::~StackAllocator() {
+  Erase();
 }
 
 void* StackAllocator::AllocAligned(const SizeInt size, const U8 alignment) {

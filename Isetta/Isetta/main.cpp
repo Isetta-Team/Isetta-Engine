@@ -19,6 +19,7 @@
 #include "Core/Memory/PoolAllocator.h"
 #include <Windows.h>
 #include "Core/Time/Clock.h"
+#include "Core/Memory/DoubleBufferedAllocator.h"
 
 using namespace Isetta;
 

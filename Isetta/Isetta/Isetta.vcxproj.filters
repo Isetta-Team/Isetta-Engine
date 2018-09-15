@@ -80,9 +80,6 @@
     <ClCompile Include="Audio\AudioSource.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Memory\MemoryManager.cpp">
-      <Filter>Core\Memory</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Memory\StackAllocator.cpp">
       <Filter>Core\Memory</Filter>
     </ClCompile>
@@ -95,14 +92,20 @@
     <ClCompile Include="Core\FileSystem.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystem.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Time\Clock.cpp">
       <Filter>Core\Time</Filter>
     </ClCompile>
     <ClCompile Include="Core\Time\StopWatch.cpp">
       <Filter>Core\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\MemoryAllocator.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\MemoryManager.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\DoubleBufferedAllocator.cpp">
+      <Filter>Core\Memory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -169,9 +172,6 @@
     <ClInclude Include="Audio\AudioSource.h">
       <Filter>Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Memory\MemoryManager.h">
-      <Filter>Core\Memory</Filter>
-    </ClInclude>
     <ClInclude Include="Core\IsettaAlias.h" />
     <ClInclude Include="Core\Memory\StackAllocator.h">
       <Filter>Core\Memory</Filter>
@@ -209,14 +209,20 @@
     <ClInclude Include="Core\FileSystem.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="FileSystem.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Time\Clock.h">
       <Filter>Core\Time</Filter>
     </ClInclude>
     <ClInclude Include="Core\Time\StopWatch.h">
       <Filter>Core\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\MemoryAllocator.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\MemoryManager.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\DoubleBufferedAllocator.h">
+      <Filter>Core\Memory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

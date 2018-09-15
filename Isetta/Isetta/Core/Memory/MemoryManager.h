@@ -1,29 +1,25 @@
 #pragma once
 #include "Core/IsettaAlias.h"
+#include "StackAllocator.h"
+#include "DoubleBufferedAllocator.h"
 
 namespace Isetta {
 
-class MemoryAllocator {
- private:
-  static void* AllocateDefaultAligned(SizeInt size);
-  static void FreeDefaultAligned(void*);
+class MemoryManager {
+public:
+  template<typename T>
+  T* SingleFrameNew();
 
-  /**
-   * \brief
-   * \tparam
-   * \param size
-   * \param alignment Alignment has to be power of 2
-   * \return a raw pointer to the newly allocated memory address
-   */
-  static void* AllocateAligned(SizeInt size, U8 alignment);
-  static void FreeAligned(void*);
+private:
+  explicit MemoryManager() = default;
+  ~MemoryManager() = default;
 
-  static class StackAllocator singleFrameAllocator;
+  void StartUp();
+  void Update();
+  void ShutDown();
 
-  friend class StackAllocator;
-  friend class PoolAllocator;
-  template <typename T>
-  friend class TemplatePoolAllocator;
+  StackAllocator singleFrameAllocator;
+  DoubleBufferedAllocator doubleBufferedAllocator;
 };
 
 }  // namespace Isetta
