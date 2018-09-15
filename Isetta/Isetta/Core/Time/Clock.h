@@ -14,8 +14,8 @@ class Clock {
   TimePoint startTime;
   TimePoint currentTime;
   double deltaTime;
-  double elapseTime;
-  double elapseUnscaledTime;
+  double elapsedTime;
+  double elapsedUnscaledTime;
 
  public:
   Clock();
@@ -31,8 +31,8 @@ class Clock {
 
   void UpdateTime();
   double GetDeltaTime() const;
-  double GetElapseTime() const;
-  double GetElapseUnscaledTime() const;
+  double GetElapsedTime() const;
+  double GetElapsedUnscaledTime() const;
 };
 
 }  // namespace Isetta
