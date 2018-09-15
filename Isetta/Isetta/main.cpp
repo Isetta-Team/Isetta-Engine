@@ -56,10 +56,10 @@ int main() {
       false);
 
   // config example
-  Config config;
-  config.Read("config.cfg");
+  Config::Instance().Read("config.cfg");
   LOG_INFO(Debug::Channel::General,
-           config.vector3Var.GetVal().ToString().c_str());
+           Config::Instance().vector3Var.GetVal().ToString().c_str());
+  return 0;
 
   ModuleManager moduleManager;
   moduleManager.StartUp();
