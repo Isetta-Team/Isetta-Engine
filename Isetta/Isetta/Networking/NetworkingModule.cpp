@@ -24,22 +24,58 @@ void NetworkingModule::StartUp() {
   memset(privateKey, 0, KeyBytes);
 
   yojimbo::random_bytes((uint8_t*)&clientId, 8);
+
+  clientSendRBuffer = new CustomMessage[ClientQueueSize];
+  clientReceiveRBuffer = new CustomMessage[ClientQueueSize];
+  serverSendRBuffer = new CustomMessage[ServerQueueSize];
+  serverReceiveRBuffer = new CustomMessage[ServerQueueSize];
 }
 
 void NetworkingModule::Update() {
-  // Nothing yet!
+  // Check for new connections
+  for (int i = 0; i < NumIterations; i++) {
+    PumpClientServerUpdate(Time::time);
+
+    if (client->ConnectionFailed() ||
+      (server && !server->IsRunning())) {
+      break;
+    }
+
+    if (!server && !client->IsConnecting() && client->IsConnected()) {
+      break;
+    }
+  }
+
+  // TODO(Caleb): The rest of the networking
 }
 
 void NetworkingModule::ShutDown() {
   // TODO(Caleb): Change the mem dealloc with our new manager
-  if (client) {
-    delete client;
-  }
+  delete client;
   if (server) {
     delete server;
   }
-  if (privateKey) {
-    delete privateKey;
+  delete privateKey;
+  delete clientSendRBuffer;
+  delete clientReceiveRBuffer;
+  delete serverSendRBuffer;
+  delete serverReceiveRBuffer;
+}
+
+void NetworkingModule::PumpClientServerUpdate(double time) {
+  client->SendPackets();
+  if (server) {
+    server->SendPackets();
+  }
+
+  client->ReceivePackets();
+  if (server) {
+    server->ReceivePackets();
+  }
+
+  client->AdvanceTime(time);
+  if (server) {
+    server->AdvanceTime(time);
   }
 }
 

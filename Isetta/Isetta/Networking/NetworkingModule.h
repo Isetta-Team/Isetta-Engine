@@ -48,6 +48,9 @@ class NetworkingModule {
   const uint16_t ServerPort = 40000;
   const int KeyBytes = 32;
   const int MaxClients = 64;
+  const int NumIterations = 1000;
+  const int ClientQueueSize = 256;
+  const int ServerQueueSize = 1024;
 
   yojimbo::Address clientAddress;
   yojimbo::Client* client;
@@ -57,6 +60,11 @@ class NetworkingModule {
 
   uint8_t* privateKey;
   uint64_t clientId;
+
+  CustomMessage* clientSendRBuffer;
+  CustomMessage* clientReceiveRBuffer;
+  CustomMessage* serverSendRBuffer;
+  CustomMessage* serverReceiveRBuffer;
 
   // Constructors
 
@@ -70,6 +78,12 @@ class NetworkingModule {
   void ShutDown();
 
   // Functions
+
+  void PumpClientServerUpdate(double time);
+  void SendClientToServerMessages();
+  void SendServerToClientMessages();
+  void ProcessClientToServerMessages();
+  void ProcessServerToClientMessages();
 
   void Connect(const char* serverAddress);
   void Disconnect();
