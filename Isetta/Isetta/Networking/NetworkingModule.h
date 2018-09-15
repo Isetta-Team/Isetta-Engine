@@ -47,6 +47,7 @@ class NetworkingModule {
   const uint16_t ClientPort = 30000;
   const uint16_t ServerPort = 40000;
   const int KeyBytes = 32;
+  const int MaxClients = 64;
 
   yojimbo::Address clientAddress;
   yojimbo::Client* client;
@@ -55,6 +56,7 @@ class NetworkingModule {
   yojimbo::ClientServerConfig networkConfig;
 
   uint8_t* privateKey;
+  uint64_t clientId;
 
   // Constructors
 
@@ -69,8 +71,7 @@ class NetworkingModule {
 
   // Functions
 
-  void Connect(uint8_t* privateKey, uint64_t clientId,
-               const char* serverAddress);
+  void Connect(const char* serverAddress);
   void Disconnect();
 
   void CreateServer(const char* address, int port);
