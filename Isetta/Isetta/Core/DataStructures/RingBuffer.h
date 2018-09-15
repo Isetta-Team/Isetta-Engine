@@ -21,9 +21,9 @@ class RingBuffer {
 
   // Copy and move constructors
 
-  RingBuffer(const RingBuffer& rb);
-  RingBuffer(RingBuffer&& rb) noexcept;
-  RingBuffer<T>& operator=(const RingBuffer& rb);
+  RingBuffer(const RingBuffer<T>& rb);
+  RingBuffer(RingBuffer<T>&& rb) noexcept;
+  RingBuffer<T>& operator=(const RingBuffer<T>& rb);
 
   // Accessors and mutators
 
@@ -99,7 +99,7 @@ RingBuffer<T>::RingBuffer(std::initializer_list<T> il, int n) : size{n + 1} {
 }
 
 template <typename T>
-RingBuffer<T>::RingBuffer(const RingBuffer& rb) : size{rb.GetCapacity()} {
+RingBuffer<T>::RingBuffer(const RingBuffer<T>& rb) : size{rb.GetCapacity()} {
   // TODO(Caleb): Change out with custom mem alloc
   buffer = new T[size];
 
@@ -110,13 +110,13 @@ RingBuffer<T>::RingBuffer(const RingBuffer& rb) : size{rb.GetCapacity()} {
 }
 
 template <typename T>
-RingBuffer<T>& RingBuffer<T>::operator=(const RingBuffer& rb) {
+RingBuffer<T>& RingBuffer<T>::operator=(const RingBuffer<T>& rb) {
   this(rb);
   return *this;
 }
 
 template <typename T>
-RingBuffer<T>::RingBuffer(RingBuffer&& rb) : size{rb.GetCapacity()} {
+RingBuffer<T>::RingBuffer(RingBuffer<T>&& rb) : size{rb.GetCapacity()} {
   // TODO(Caleb): Change out with custom mem alloc
   buffer = new T[size];
 
