@@ -31,7 +31,8 @@ class Vector3 {
 
   Vector3(const Vector3& inVector)
       : x{inVector.x}, y{inVector.y}, z{inVector.z} {}
-  Vector3(Vector3&& inVector) noexcept : x{inVector.x}, y{inVector.y}, z{inVector.z} {}
+  Vector3(Vector3&& inVector) noexcept
+      : x{inVector.x}, y{inVector.y}, z{inVector.z} {}
   inline Vector3& operator=(const Vector3& inVector) {
     x = inVector.x;
     y = inVector.y;
@@ -129,6 +130,6 @@ class Vector3 {
   static Vector3 Scale(const Vector3& inVector, const Vector3& scalar);
   // Spherically interpolates between two vectors
   static Vector3 Slerp(const Vector3& start, const Vector3& end, float time);
-  static Vector3 FromString(std::string str);
+  static Vector3 FromString(const std::string& str);
 };
 }  // namespace Isetta::Math

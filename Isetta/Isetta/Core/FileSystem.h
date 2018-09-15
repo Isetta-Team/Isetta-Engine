@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include <windows.h>
+#include <Windows.h>
 #include <functional>
 #include <string>
 #include <unordered_map>

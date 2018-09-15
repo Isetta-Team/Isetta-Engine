@@ -25,10 +25,11 @@ DWORD WINAPI SaveFileWorkerThread(LPVOID empty) {
     if (completionStatus) {
       switch (completionKey) {
         case IOCP_WRITE:
-          fprintf(stderr, "wrote %d bytes\n", bytesTransferred);
+          // fprintf(stderr, "wrote %d bytes\n", bytesTransferred);
           break;
 
         case IOCP_EOF:
+          // printf("eof\n");
           info = (Isetta::FileSystem::OverlapIOInfo*)overlap;
           if (info->callback) {
             info->callback(info->buffer);
@@ -168,8 +169,7 @@ LPCTSTR FileSystem::ErrorMessage(DWORD error) {
 
 HANDLE FileSystem::Read(const char* fileName,
                         const std::function<void(const char*)>& callback) {
-  HANDLE hFile =
-      OpenFile(fileName, GENERIC_READ, FILE_SHARE_READ, OPEN_EXISTING);
+  HANDLE hFile = OpenFile(fileName, GENERIC_READ, NULL, OPEN_EXISTING);
   if (GetFileError()) {
     return NULL;
   }
