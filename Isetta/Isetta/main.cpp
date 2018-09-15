@@ -15,10 +15,6 @@
 #include "Core/Memory/PoolAllocator.h"
 #include "Core/Memory/StackAllocator.h"
 #include "Core/ModuleManager.h"
-<<<<<<< 7974844bb5c54f4699e8505cc121143adec4eec6
-=======
-#include "Core/Time/Clock.h"
->>>>>>> FileSystem destructor + cancel
 #include "Graphics/LightNode.h"
 #include "Graphics/ModelNode.h"
 #include "Input/Input.h"
@@ -113,17 +109,10 @@ int main() {
 
   while (running) {
     gameTime.UpdateTime();
-<<<<<<< 7974844bb5c54f4699e8505cc121143adec4eec6
 
     moduleManager.Update(gameTime.GetDeltaTime());
     LOG_INFO(Debug::Channel::General, {std::to_string(gameTime.GetDeltaTime())});
 
-=======
-
-    moduleManager.Update(gameTime.GetDeltaTime());
-    LOG_INFO(Debug::Channel::General,
-             {std::to_string(gameTime.GetDeltaTime())});
->>>>>>> FileSystem destructor + cancel
 
     if (Input::IsKeyPressed(KeyCode::ESCAPE)) {
       running = false;
