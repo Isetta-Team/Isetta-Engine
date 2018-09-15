@@ -14,7 +14,7 @@ void RenderModule::StartUp(GLFWwindow* win) {
   InitResources();
 }
 
-void RenderModule::Update() {
+void RenderModule::Update(float deltaTime) {
   if (!cam) return;
 
   h3dRender(cam);

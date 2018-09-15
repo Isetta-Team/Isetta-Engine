@@ -7,14 +7,13 @@
 #include <sstream>
 #include <string>
 #include "Audio/AudioSource.h"
-#include "Core/IsettaTypes.h"
 #include "SID/sid.h"
 
 namespace Isetta {
 
 void AudioModule::StartUp() {
   CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
-  FMOD::Memory_Initialize(malloc(10_MB), 10_MB, nullptr, nullptr, nullptr);
+  // FMOD::Memory_Initialize(std::malloc(10_MB), 10_MB, nullptr, nullptr, nullptr);
   fmodSystem = nullptr;
   FMOD::System_Create(&fmodSystem);
   fmodSystem->init(512, FMOD_INIT_NORMAL, nullptr);
@@ -24,7 +23,7 @@ void AudioModule::StartUp() {
   AudioSource::audioSystem = this;
 }
 
-void AudioModule::Update() { fmodSystem->update(); }
+void AudioModule::Update(float deltaTime) { fmodSystem->update(); }
 
 void AudioModule::ShutDown() {
   for (auto it : soundMap) {

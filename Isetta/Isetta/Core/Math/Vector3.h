@@ -31,7 +31,7 @@ class Vector3 {
 
   Vector3(const Vector3& inVector)
       : x{inVector.x}, y{inVector.y}, z{inVector.z} {}
-  Vector3(Vector3&& inVector) : x{inVector.x}, y{inVector.y}, z{inVector.z} {}
+  Vector3(Vector3&& inVector) noexcept : x{inVector.x}, y{inVector.y}, z{inVector.z} {}
   inline Vector3& operator=(const Vector3& inVector) {
     x = inVector.x;
     y = inVector.y;

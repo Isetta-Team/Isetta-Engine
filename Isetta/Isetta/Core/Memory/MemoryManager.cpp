@@ -1,12 +1,9 @@
 /*
- * Copyright (c) 2018 Isetta
- */
-#include "Core/Memory/Memory.h"
-
-#include <sstream>
-#include <string>
+* Copyright (c) 2018 Isetta
+*/
+#include "Core/Memory/MemoryManager.h"
 #include "Core/Debug/Assert.h"
-#include "Core/Debug/Logger.h"
+#include <sstream>
 
 namespace Isetta {
 
@@ -55,46 +52,4 @@ void MemoryAllocator::FreeAligned(void* memoryPtr) {
   void* rawMem = reinterpret_cast<void*>(rawAddress);
   FreeDefaultAligned(rawMem);
 }
-
-StackAllocator::StackAllocator(const SizeInt stackSize)
-    : top(0), length(stackSize) {
-  bottom = MemoryAllocator::AllocateDefaultAligned(stackSize);
-  bottomAddress = reinterpret_cast<PtrInt>(bottom);
-}
-
-void* StackAllocator::AllocAligned(const SizeInt size, const U8 alignment) {
-  PtrInt rawAddress = bottomAddress + top;
-  PtrInt misAlignment = rawAddress & (alignment - 1);
-  PtrDiff adjustment = alignment - misAlignment;
-  PtrInt alignedAddress = rawAddress + adjustment;
-  Marker newTop = top + size + adjustment;
-
-  if (newTop > length) {
-    // TODO(YIDI): should I throw an exception here?
-    throw std::overflow_error("Not enough memory in stack allocator");
-  }
-
-  top = newTop;
-
-  return reinterpret_cast<void*>(alignedAddress);
-}
-
-void* StackAllocator::AllocUnaligned(SizeInt size) {
-  Marker newTop = top + size;
-
-  if (newTop > length) {
-    // TODO(YIDI): should I throw an exception here?
-    throw std::overflow_error("Not enough memory in stack allocator");
-  }
-
-  void* mem = reinterpret_cast<void*>(bottomAddress + top);
-  top = newTop;
-  return mem;
-}
-
-void StackAllocator::Erase() {
-  Clear();
-  std::free(bottom);
-}
-
 }  // namespace Isetta

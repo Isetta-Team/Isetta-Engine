@@ -4,6 +4,7 @@
 #pragma once
 #include <cstddef>
 #include <cstdint>
+#include <functional>
 
 namespace Isetta {
 using Byte = uint8_t;
@@ -21,6 +22,8 @@ using Int64 = int64_t;
 
 using PtrDiff = std::ptrdiff_t;
 using PtrInt = uintptr_t;
+
+using Action = std::function<void()>;
 
 inline auto operator""_KB(SizeInt const x) { return 1024 * x; }
 

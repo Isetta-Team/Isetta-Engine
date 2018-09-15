@@ -53,6 +53,7 @@ struct Channel {
     Physics = (1u << 4),
     Gameplay = (1u << 5),
     Sound = (1u << 6),
+    FileIO = (1u << 7),
   };
 };
 
@@ -72,6 +73,8 @@ static inline const std::string ToString(Channel::Enum c) {
       return "Gameplay";
     case Channel::Sound:
       return "Sound";
+    case Channel::FileIO:
+      return "File I/O";
     default:
       return "Unknown";
   }

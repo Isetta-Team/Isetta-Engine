@@ -1,16 +1,20 @@
 /*
  * Copyright (c) 2018 Isetta
  */
+#include <Windows.h>
 #include <chrono>
+#include <iostream>
 #include <string>
 #include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
+#include "Core/FileSystem.h"
 #include "Core/Math/Random.h"
 #include "Core/Math/Vector3.h"
-#include "Core/Memory/Memory.h"
+#include "Core/Memory/PoolAllocator.h"
+#include "Core/Memory/StackAllocator.h"
 #include "Core/ModuleManager.h"
-#include "Core/Time.h"
+#include "Core/Time/Clock.h"
 #include "Graphics/LightNode.h"
 #include "Graphics/ModelNode.h"
 #include "Input/Input.h"
@@ -26,10 +30,7 @@
 
 using namespace Isetta;
 
-float Time::time = 0;
-std::chrono::time_point<std::chrono::high_resolution_clock> Time::startTime;
-float Time::deltaTime = 0;
-int Time::frameCount = 0;
+void RunBenchmarks();
 
 /*! \mainpage Isetta Engine
 Game engine development is a very wide field in the industry, but also a very
@@ -47,10 +48,27 @@ Between our own hands-on process and sage advice from veteran engineers, we hope
 to give newcomers a clearer representation of the engine-building process.
 */
 int main() {
-  Config config;
-  config.Read("config.cfg");
+  // TODO(Chaojie): maybe move to loop class later
+  Clock gameTime{};
+  // config example
+
+  auto h = FileSystem::Instance().Read(
+      "Resources/test/async.in",
+      std::function<void(const char*)>(
+          [](const char* buf) { printf("%s\n", buf); }));
+
+  char* buf = "abcdefghijklmnopqrstuvwxyz\n";
+  FileSystem::Instance().Write(
+      "Resources/test/async.out", buf,
+      std::function<void(const char*)>(
+          [](const char* buf) { printf("> write done\n"); }),
+      false);
+
+  // config example
+  Config::Instance().Read("config.cfg");
   LOG_INFO(Debug::Channel::General,
-           config.vector3Var.GetVal().ToString().c_str());
+           Config::Instance().vector3Var.GetVal().ToString().c_str());
+  return 0;
 
   ModuleManager moduleManager;
   moduleManager.StartUp();
@@ -64,24 +82,26 @@ int main() {
   using clock = std::chrono::high_resolution_clock;
   typedef std::chrono::duration<float> second;
 
-  auto audio = new AudioSource();
-  audio->SetAudioClip("singing.wav");
-  audio->Play(false, 1.0f);
+  RunBenchmarks();
 
-  // Benchmarking
-  const int testIterations = 10;
-  for (int a = 0; a < testIterations; a++) {
-    const auto benchmarkStart = clock::now();
-    // benchmark code here...
-    const auto benchmarkEnd = clock::now();
-    LOG_INFO(
-        Debug::Channel::Memory,
-        {"Bench mark result: ",
-         std::to_string(second(benchmarkEnd - benchmarkStart).count()), "s"});
-  }
+  U64 handleA, handleB, handleC, handleD;
+  handleA = Input::RegisterKeyPressCallback(KeyCode::A, [&handleA]() {
+    LOG_INFO(Debug::Channel::General, "A pressed");
+    Input::UnregisterKeyPressCallback(KeyCode::A, handleA);
+  });
+  handleB = Input::RegisterKeyReleaseCallback(KeyCode::A, [&handleB]() {
+    LOG_INFO(Debug::Channel::General, "A released");
+    Input::UnregisterKeyReleaseCallback(KeyCode::A, handleB);
+  });
+  handleC = Input::RegisterMousePressCallback(
+      MouseButtonCode::MOUSE_LEFT, [&handleC]() {
+        LOG_INFO(Debug::Channel::General,
+                 {"Left pressed at: " + Input::GetMousePosition().ToString()});
+        Input::UnregisterMousePressCallback(MouseButtonCode::MOUSE_LEFT,
+                                            handleC);
+      });
 
   // Game loop
-  Time::startTime = clock::now();
   auto lastFrameStartTime = clock::now();
 
   // Connect a client and a client-server together
@@ -175,12 +195,11 @@ int main() {
     server.ReceivePackets();
     client.ReceivePackets();
 
-    Time::deltaTime = second(clock::now() - lastFrameStartTime).count();
-    Time::time = second(clock::now() - Time::startTime).count();
-    lastFrameStartTime = clock::now();
+    gameTime.UpdateTime();
 
-    moduleManager.Update();
-    Time::frameCount++;
+    moduleManager.Update(gameTime.GetDeltaTime());
+    LOG_INFO(Debug::Channel::General,
+             {std::to_string(gameTime.GetDeltaTime())});
 
     // Networking part 2: Electric boogaloo
     yTime += yTimeInc;
@@ -356,8 +375,8 @@ int main() {
       audioSource->Play(false, 1.0f);
     }
 
-    client.AdvanceTime(yTime);
-    server.AdvanceTime(yTime);
+    client.AdvanceTime(gameClock.GetElapsedTime());
+    server.AdvanceTime(gameClock.GetElapsedTime());
 
     if (Input::IsKeyPressed(KeyCode::ESCAPE)) {
       running = false;
@@ -370,4 +389,73 @@ int main() {
 
   moduleManager.ShutDown();
   return 0;
+}
+
+void RunBenchmarks() {
+  using clock = std::chrono::high_resolution_clock;
+  typedef std::chrono::duration<float> second;
+
+  std::unordered_map<std::string, std::function<void()>> benchmarks;
+
+  benchmarks.insert({"1. new and delete", []() {
+                       const int count = 10000;
+                       AudioSource* audioSources[count];
+                       for (auto& audioSource : audioSources) {
+                         audioSource = new AudioSource();
+                       }
+                       for (auto& audioSource : audioSources) {
+                         delete audioSource;
+                       }
+                     }});
+
+  benchmarks.insert({"2. malloc and free", []() {
+                       const int count = 10000;
+                       AudioSource* audioSources[count];
+                       for (auto& audioSource : audioSources) {
+                         audioSource = new (std::malloc(sizeof(AudioSource)))
+                             AudioSource();
+                       }
+                       for (auto& audioSource : audioSources) {
+                         std::free(audioSource);
+                       }
+                     }});
+
+  benchmarks.insert({"3. Stack Allocator", []() {
+                       const int count = 10000;
+                       AudioSource* audioSources[count];
+                       StackAllocator stackAllocator(sizeof(AudioSource) *
+                                                     count);
+                       for (auto& audioSource : audioSources) {
+                         audioSource = stackAllocator.New<AudioSource>();
+                       }
+                       stackAllocator.Erase();
+                     }});
+
+  benchmarks.insert({"4. Pool Allocator", []() {
+                       const int count = 10000;
+                       AudioSource* audioSources[count];
+                       PoolAllocator<AudioSource> poolAllocator(count);
+                       for (auto& audioSource : audioSources) {
+                         audioSource = poolAllocator.Get();
+                       }
+
+                       for (auto& audioSource : audioSources) {
+                         poolAllocator.Free(audioSource);
+                       }
+                       poolAllocator.Erase();
+                     }});
+
+  // Benchmarking
+  const int testIterations = 10;
+  for (auto& test : benchmarks) {
+    float time = 0;
+    for (int a = 0; a < testIterations; a++) {
+      const auto benchmarkStart = clock::now();
+      test.second();
+      const auto benchmarkEnd = clock::now();
+      time += second(benchmarkEnd - benchmarkStart).count();
+    }
+    std::string duration = std::to_string((time / testIterations)) + "s";
+    LOG_INFO(Debug::Channel::Memory, {test.first + ": " + duration});
+  }
 }
