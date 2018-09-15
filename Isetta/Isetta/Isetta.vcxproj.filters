@@ -89,6 +89,9 @@
     <ClCompile Include="Graphics\Window.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Memory\PoolAllocator.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\IModule.h">
@@ -161,9 +164,6 @@
       <Filter>Core\Memory</Filter>
     </ClInclude>
     <ClInclude Include="Core\IsettaAlias.h" />
-    <ClInclude Include="Core\Memory\PoolAllocator.h">
-      <Filter>Core\Memory</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Memory\StackAllocator.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
@@ -190,6 +190,12 @@
     </ClInclude>
     <ClInclude Include="Graphics\RenderNode.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\TemplatePoolAllocator.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\PoolAllocator.h">
+      <Filter>Core\Memory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

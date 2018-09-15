@@ -8,13 +8,14 @@
 #include "Core/Debug/Logger.h"
 #include "Core/Math/Random.h"
 #include "Core/Math/Vector3.h"
-#include "Core/Memory/PoolAllocator.h"
+#include "Core/Memory/TemplatePoolAllocator.h"
 #include "Core/Memory/StackAllocator.h"
 #include "Core/ModuleManager.h"
 #include "Core/Time.h"
 #include "Graphics/LightNode.h"
 #include "Graphics/ModelNode.h"
 #include "Input/Input.h"
+#include "Core/Memory/PoolAllocator.h"
 
 using namespace Isetta;
 
@@ -124,10 +125,10 @@ void RunBenchmarks() {
                        stackAllocator.Erase();
                      }});
 
-  benchmarks.insert({"4. Pool Allocator", []() {
+  benchmarks.insert({"4. Template Pool Allocator", []() {
                        const int count = 10000;
                        AudioSource* audioSources[count];
-                       PoolAllocator<AudioSource> poolAllocator(count);
+                       TemplatePoolAllocator<AudioSource> poolAllocator(count);
                        for (auto& audioSource : audioSources) {
                          audioSource = poolAllocator.Get();
                        }

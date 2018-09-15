@@ -21,8 +21,9 @@ class MemoryAllocator {
   static class StackAllocator singleFrameAllocator;
 
   friend class StackAllocator;
-  template <typename T>
   friend class PoolAllocator;
+  template <typename T>
+  friend class TemplatePoolAllocator;
 };
 
 }  // namespace Isetta
