@@ -16,7 +16,7 @@ class RenderModule {
   ~RenderModule() = default;
 
   void StartUp(GLFWwindow* win);
-  void Update();
+  void Update(float deltaTime);
   void ShutDown();
 
   int renderInterface;

@@ -15,7 +15,7 @@ class WindowModule {
   ~WindowModule() = default;
 
   void StartUp();
-  void Update();
+  void Update(float deltaTime);
   void ShutDown();
 
   std::string winTitle;

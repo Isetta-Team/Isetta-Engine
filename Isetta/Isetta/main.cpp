@@ -3,19 +3,22 @@
  */
 #include <chrono>
 #include <string>
+#include <iostream>
 #include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
+#include "Core/FileSystem.h"
 #include "Core/Math/Random.h"
 #include "Core/Math/Vector3.h"
 #include "Core/Memory/TemplatePoolAllocator.h"
 #include "Core/Memory/StackAllocator.h"
 #include "Core/ModuleManager.h"
-#include "Core/Time.h"
 #include "Graphics/LightNode.h"
 #include "Graphics/ModelNode.h"
 #include "Input/Input.h"
 #include "Core/Memory/PoolAllocator.h"
+#include <Windows.h>
+#include "Core/Time/Clock.h"
 
 using namespace Isetta;
 
@@ -37,7 +40,22 @@ Between our own hands-on process and sage advice from veteran engineers, we hope
 to give newcomers a clearer representation of the engine-building process.
 */
 int main() {
+  // TODO(Chaojie): maybe move to loop class later
+  Clock gameTime{};
   // config example
+  FileSystem fds;
+
+  fds.Read("Resources/test/async.in",
+           std::function<void(const char*)>(
+               [](const char* buf) { printf("%s\n", buf); }));
+
+  char* buf = "abcdefghijklmnopqrstuvwxyz\n";
+  for (int i = 0; i < 5; i++) {
+    fds.Write("Resources/test/async.out", buf,
+              std::function<void(const char*)>(
+                  [](const char* buf) { printf("> write done\n"); }));
+  }
+
   Config config;
   config.Read("config.cfg");
   LOG_INFO(Debug::Channel::General,
@@ -57,8 +75,24 @@ int main() {
 
   // RunBenchmarks();
 
+  U64 handleA, handleB, handleC, handleD;
+  handleA = Input::RegisterKeyPressCallback(KeyCode::A, [&handleA]() {
+    LOG_INFO(Debug::Channel::General, "A pressed");
+    Input::UnregisterKeyPressCallback(KeyCode::A, handleA);
+  });
+  handleB = Input::RegisterKeyReleaseCallback(KeyCode::A, [&handleB]() {
+    LOG_INFO(Debug::Channel::General, "A released");
+    Input::UnregisterKeyReleaseCallback(KeyCode::A, handleB);
+  });
+  handleC = Input::RegisterMousePressCallback(
+      MouseButtonCode::MOUSE_LEFT, [&handleC]() {
+        LOG_INFO(Debug::Channel::General,
+                 {"Left pressed at: " + Input::GetMousePosition().ToString()});
+        Input::UnregisterMousePressCallback(MouseButtonCode::MOUSE_LEFT,
+                                            handleC);
+      });
+
   // Game loop
-  Time::startTime = clock::now();
   auto lastFrameStartTime = clock::now();
 
   ModelNode car{"test/Low-Poly-Racing-Car.scene.xml", Math::Vector3{0, -20, 0},
@@ -70,12 +104,11 @@ int main() {
   bool running{true};
 
   while (running) {
-    Time::deltaTime = second(clock::now() - lastFrameStartTime).count();
-    Time::time = second(clock::now() - Time::startTime).count();
-    lastFrameStartTime = clock::now();
+    gameTime.UpdateTime();
 
-    moduleManager.Update();
-    Time::frameCount++;
+    moduleManager.Update(gameTime.GetDeltaTime());
+    LOG_INFO(Debug::Channel::General, {std::to_string(gameTime.GetDeltaTime())});
+
 
     if (Input::IsKeyPressed(KeyCode::ESCAPE)) {
       running = false;
@@ -118,7 +151,8 @@ void RunBenchmarks() {
   benchmarks.insert({"3. Stack Allocator", []() {
                        const int count = 10000;
                        AudioSource* audioSources[count];
-                       StackAllocator stackAllocator(sizeof(AudioSource) * count);
+                       StackAllocator stackAllocator(sizeof(AudioSource) *
+                                                     count);
                        for (auto& audioSource : audioSources) {
                          audioSource = stackAllocator.New<AudioSource>();
                        }

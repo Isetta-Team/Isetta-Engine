@@ -59,7 +59,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)External\FMOD\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\$(ConfigurationName)*\*.lib;$(SolutionDir)External\GLFW\Build\src\$(ConfigurationName)\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)$(ConfigurationName)\$(Platform)\ProfilerCore64.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\$(Configuration)*\ProfilerCore64.lib;$(SolutionDir)External\GLFW\Build\src\$(ConfigurationName)\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>false</OptimizeReferences>
     </Link>
@@ -98,7 +98,8 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Config\Config.cpp" />
     <ClCompile Include="Core\Color.cpp" />
     <ClCompile Include="Core\Config\CVar.cpp" />
-    <ClCompile Include="Core\Memory\PoolAllocator.cpp" />
+    <ClCompile Include="Core\Time\Clock.cpp" />
+    <ClCompile Include="Core\Time\StopWatch.cpp" />
     <ClCompile Include="Graphics\LightNode.cpp" />
     <ClCompile Include="Graphics\ModelNode.cpp" />
     <ClCompile Include="Graphics\RenderModule.cpp" />
@@ -120,8 +121,10 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Debug\DebugDraw.cpp" />
     <ClCompile Include="Core\Memory\MemoryManager.cpp" />
     <ClCompile Include="Core\Memory\StackAllocator.cpp" />
+    <ClCompile Include="Core\Memory\PoolAllocator.cpp" />
     <ClCompile Include="Core\ModuleManager.cpp" />
     <ClCompile Include="Graphics\Window.cpp" />
+    <ClCompile Include="Core\FileSystem.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -150,9 +153,10 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Memory\TemplatePoolAllocator.h" />
     <ClInclude Include="Core\Memory\StackAllocator.h" />
     <ClInclude Include="Core\ModuleManager.h" />
-    <ClInclude Include="Core\Time.h" />
     <ClInclude Include="Core\Config\CVar.h" />
     <ClInclude Include="Core\Config\CVarRegistry.h" />
+    <ClInclude Include="Core\Time\Clock.h" />
+    <ClInclude Include="Core\Time\StopWatch.h" />
     <ClInclude Include="Graphics\LightNode.h" />
     <ClInclude Include="Graphics\ModelNode.h" />
     <ClInclude Include="Graphics\RenderModule.h" />
@@ -161,6 +165,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Input\InputEnum.h" />
     <ClInclude Include="Input\InputModule.h" />
+    <ClInclude Include="Core\FileSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Sound\singing.wav" />
