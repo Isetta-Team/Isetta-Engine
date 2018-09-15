@@ -33,22 +33,15 @@ DWORD WINAPI SaveFileWorkerThread(LPVOID empty) {
           if (info->callback) {
             info->callback(info->buffer);
           }
-          CloseHandle(info->hFile);
-          if (info->buffer) {
-            delete info->buffer;
-          }
-          delete info;
+          Isetta::FileSystem::Instance().Cancel(info->hFile);
           break;
       }
-      return 1;
     } else {
       if (overlap != NULL) {
         fprintf(stderr, "overlap not null");
       } else if (err != WAIT_TIMEOUT) {
         fprintf(stderr, "timeout");
-        break;
       }
-      return 0;
     }
   }
 }
@@ -258,14 +251,15 @@ HANDLE FileSystem::Write(const std::string& fileName,
 
 bool FileSystem::Cancel(HANDLE hFile) {
   OverlapIOInfo* info = overlapInfo[hFile];
-  bool completionStatus = info;
-  if (completionStatus) {
+  bool completionStatus = info == nullptr;
+  if (!completionStatus) {
     CancelIo(info->hFile);
     CloseHandle(info->hFile);
     if (info->buffer) {
       delete info->buffer;
     }
     delete info;
+    overlapInfo[hFile] == nullptr;
   }
   overlapInfo.erase(hFile);
   return completionStatus;
