@@ -3,7 +3,6 @@
  */
 
 #include "Networking/NetworkingModule.h"
-#include "Core/Time.h"
 
 namespace Isetta {
 CustomAdapter NetworkingModule::NetworkAdapter;
@@ -16,7 +15,7 @@ void NetworkingModule::StartUp() {
   client =
       new yojimbo::Client(yojimbo::GetDefaultAllocator(), clientAddress,
                                networkConfig, NetworkingModule::NetworkAdapter,
-                               Time::time);
+                               clock.GetElapsedTime());
 
   privateKey = new uint8_t[KeyBytes];
   // TODO(Caleb): Need to do something more insightful with the private key than
@@ -32,9 +31,11 @@ void NetworkingModule::StartUp() {
 }
 
 void NetworkingModule::Update() {
+  clock.UpdateTime();
+
   // Check for new connections
   for (int i = 0; i < NumIterations; i++) {
-    PumpClientServerUpdate(Time::time);
+    PumpClientServerUpdate(clock.GetElapsedTime());
 
     if (client->ConnectionFailed() ||
       (server && !server->IsRunning())) {
@@ -98,8 +99,7 @@ void NetworkingModule::CreateServer(const char* address, int port) {
   serverAddress = yojimbo::Address("127.0.0.1", NetworkingModule::ServerPort);
   // TODO(Caleb): change out the memory allocation with our own custom allocator
   server = new yojimbo::Server(yojimbo::GetDefaultAllocator(), privateKey, serverAddress,
-                               networkConfig, NetworkingModule::NetworkAdapter,
-                               Time::time);
+                               networkConfig, NetworkingModule::NetworkAdapter, clock.GetElapsedTime());
   server->Start(MaxClients);
 
   if (!server->IsRunning()) {

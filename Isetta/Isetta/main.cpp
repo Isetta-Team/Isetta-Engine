@@ -369,14 +369,14 @@ int main() {
     }
 
     // switch to playing the second audio clip
-    if (Time::frameCount == 1000000) {
+    if (gameTime.GetElapsedTime() == 10) {
       audioSource->Stop();
       audioSource->SetAudioClip("singing.wav");
       audioSource->Play(false, 1.0f);
     }
 
-    client.AdvanceTime(gameClock.GetElapsedTime());
-    server.AdvanceTime(gameClock.GetElapsedTime());
+    client.AdvanceTime(gameTime.GetElapsedTime());
+    server.AdvanceTime(gameTime.GetElapsedTime());
 
     if (Input::IsKeyPressed(KeyCode::ESCAPE)) {
       running = false;

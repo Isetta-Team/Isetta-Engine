@@ -4,6 +4,7 @@
 #pragma once
 
 #include "yojimbo/yojimbo.h"
+#include "Core/Time/Clock.h"
 
 namespace Isetta {
 struct CustomMessage : public yojimbo::Message {
@@ -51,6 +52,8 @@ class NetworkingModule {
   const int NumIterations = 1000;
   const int ClientQueueSize = 256;
   const int ServerQueueSize = 1024;
+
+  Clock clock;
 
   yojimbo::Address clientAddress;
   yojimbo::Client* client;
