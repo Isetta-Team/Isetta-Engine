@@ -55,8 +55,9 @@ class FileSystem {
                                    DWORD completionKey);
 
   LPCTSTR ErrorMessage(DWORD error);
-  void GetError();
-  
+  DWORD GetFileError();
+  void GetReadWriteError();
+
   HANDLE thread;
   HANDLE hIOCP;
   std::unordered_map<HANDLE, OverlapIOInfo*> overlapInfo;

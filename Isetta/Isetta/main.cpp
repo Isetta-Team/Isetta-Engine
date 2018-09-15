@@ -5,7 +5,6 @@
 #include <chrono>
 #include <iostream>
 #include <string>
-#include <iostream>
 #include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
@@ -15,11 +14,10 @@
 #include "Core/Memory/PoolAllocator.h"
 #include "Core/Memory/StackAllocator.h"
 #include "Core/ModuleManager.h"
+#include "Core/Time/Clock.h"
 #include "Graphics/LightNode.h"
 #include "Graphics/ModelNode.h"
 #include "Input/Input.h"
-#include <Windows.h>
-#include "Core/Time/Clock.h"
 
 using namespace Isetta;
 
@@ -51,13 +49,11 @@ int main() {
           [](const char* buf) { printf("%s\n", buf); }));
 
   char* buf = "abcdefghijklmnopqrstuvwxyz\n";
-  for (int i = 0; i < 5; i++) {
-    FileSystem::Instance().Write(
-        "Resources/test/async.out", buf,
-        std::function<void(const char*)>(
-            [](const char* buf) { printf("> write done\n"); }),
-        false);
-  }
+  FileSystem::Instance().Write(
+      "Resources/test/async.out", buf,
+      std::function<void(const char*)>(
+          [](const char* buf) { printf("> write done\n"); }),
+      false);
 
   // config example
   Config config;
@@ -111,8 +107,8 @@ int main() {
     gameTime.UpdateTime();
 
     moduleManager.Update(gameTime.GetDeltaTime());
-    LOG_INFO(Debug::Channel::General, {std::to_string(gameTime.GetDeltaTime())});
-
+    LOG_INFO(Debug::Channel::General,
+             {std::to_string(gameTime.GetDeltaTime())});
 
     if (Input::IsKeyPressed(KeyCode::ESCAPE)) {
       running = false;
