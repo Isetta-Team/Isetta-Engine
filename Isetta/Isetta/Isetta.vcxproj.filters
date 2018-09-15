@@ -101,9 +101,6 @@
     <ClCompile Include="Core\Time\StopWatch.cpp">
       <Filter>Core\Time</Filter>
     </ClCompile>
-    <ClCompile Include="Core\DataStructures\RingBuffer.cpp">
-      <Filter>Core\DataStructures</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\IModule.h">

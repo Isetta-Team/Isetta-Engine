@@ -3,6 +3,7 @@
  */
 #pragma once
 
+#include <Windows.h>
 #include <string>
 #include "Core/Config/CVar.h"
 #include "Core/Config/CVarRegistry.h"
@@ -23,7 +24,8 @@ class Config {
   CVarVector3 vector3Var{"vec3", Math::Vector3::one};
   CVarInt defaultValue{"default", 10};
 
-  void Read(std::string filepath);
+  void Read(const std::string& filepath);
+  void ProcessFile(const char* contentBuffer);
 
  private:
   Config() = default;
@@ -36,5 +38,7 @@ class Config {
                   const std::string line);
   void ExtractValue(std::string* value, const size_t& sepPos,
                     const std::string line);
+
+  HANDLE readFile;
 };
 }  // namespace Isetta

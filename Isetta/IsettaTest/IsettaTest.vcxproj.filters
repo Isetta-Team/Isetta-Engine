@@ -140,9 +140,6 @@
     <ClCompile Include="..\Isetta\Core\Math\Vector4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Core\DataStructures\RingBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Core\DataStructures\RingBufferTest.cpp">
       <Filter>Core\DataStructures</Filter>
     </ClCompile>

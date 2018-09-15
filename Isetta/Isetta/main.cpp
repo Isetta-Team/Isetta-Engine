@@ -20,12 +20,12 @@
 #include "Input/Input.h"
 #include "Networking/NetworkingModule.h"
 
+#include <inttypes.h>
+#include <signal.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
-#include <inttypes.h>
 #include <time.h>
-#include <signal.h>
 #include "yojimbo/shared.h"
 
 using namespace Isetta;
@@ -50,24 +50,26 @@ to give newcomers a clearer representation of the engine-building process.
 int main() {
   // TODO(Chaojie): maybe move to loop class later
   Clock gameTime{};
-  // config example
 
-  auto h = FileSystem::Instance().Read(
-      "Resources/test/async.in",
-      std::function<void(const char*)>(
-          [](const char* buf) { printf("%s\n", buf); }));
+  // auto h = FileSystem::Instance().Read(
+  //    "Resources/test/async.in",
+  //    std::function<void(const char *)>(
+  //        [](const char *buf) { printf("%s\n", buf); }));
+  // auto h = FileSystem::Instance().Read("Resources/test/async.in");
 
-  char* buf = "abcdefghijklmnopqrstuvwxyz\n";
-  FileSystem::Instance().Write(
-      "Resources/test/async.out", buf,
-      std::function<void(const char*)>(
-          [](const char* buf) { printf("> write done\n"); }),
-      false);
+  // char* buf = "abcdefghijklmnopqrstuvwxyz\n";
+  // FileSystem::Instance().Write(
+  //    "Resources/test/async.out", buf,
+  //    std::function<void(const char*)>(
+  //        [](const char* buf) { printf("> write done\n"); }),
+  //    false);
 
   // config example
   Config::Instance().Read("config.cfg");
+  Sleep(3000);
   LOG_INFO(Debug::Channel::General,
            Config::Instance().vector3Var.GetVal().ToString().c_str());
+  system("pause");
   return 0;
 
   ModuleManager moduleManager;
@@ -105,74 +107,72 @@ int main() {
   auto lastFrameStartTime = clock::now();
 
   // Connect a client and a client-server together
-   if (!InitializeYojimbo() /* from yojimbo.h */) {
+  if (!InitializeYojimbo() /* from yojimbo.h */) {
     printf("error: failed to initialize Yojimbo!\n");
     return 1;
-   }
+  }
 
-   const int MaxPacketSize = 16 * 1024;
-   const int MaxSnapshotSize = 8 * 1024;
-   const int MaxBlockSize = 64 * 1024;
+  const int MaxPacketSize = 16 * 1024;
+  const int MaxSnapshotSize = 8 * 1024;
+  const int MaxBlockSize = 64 * 1024;
 
-   const int YOJ_UNORDERED = 0;
-   const int YOJ_ORDERED = 1;
+  const int YOJ_UNORDERED = 0;
+  const int YOJ_ORDERED = 1;
 
-   const int yojimboServerPort = 40000;
-   const int yojimboMaxClients = 64;
+  const int yojimboServerPort = 40000;
+  const int yojimboMaxClients = 64;
 
-   double yTime = 0.0;  // TODO: Dunno how to get yojimbo working off of our time yet
-   double yTimeInc = .1;
+  double yTime =
+      0.0;  // TODO: Dunno how to get yojimbo working off of our time yet
+  double yTimeInc = .1;
 
-   yojimbo::ClientServerConfig yojimboConfig;
-   yojimboConfig.maxPacketSize = MaxPacketSize;
-   yojimboConfig.clientMemory = 10 * 1024 * 1024;
-   yojimboConfig.serverGlobalMemory = 10 * 1024 * 1024;
-   yojimboConfig.serverPerClientMemory = 10 * 1024 * 1024;
-   yojimboConfig.numChannels = 2;
-   yojimboConfig.channel[YOJ_UNORDERED].type =
-       CHANNEL_TYPE_UNRELIABLE_UNORDERED;
-   yojimboConfig.channel[YOJ_UNORDERED].maxBlockSize = MaxSnapshotSize;
-   yojimboConfig.channel[YOJ_ORDERED].type =
-       CHANNEL_TYPE_RELIABLE_ORDERED;
-   yojimboConfig.channel[YOJ_ORDERED].maxBlockSize = MaxBlockSize;
-   yojimboConfig.channel[YOJ_ORDERED].blockFragmentSize = 1024;
+  yojimbo::ClientServerConfig yojimboConfig;
+  yojimboConfig.maxPacketSize = MaxPacketSize;
+  yojimboConfig.clientMemory = 10 * 1024 * 1024;
+  yojimboConfig.serverGlobalMemory = 10 * 1024 * 1024;
+  yojimboConfig.serverPerClientMemory = 10 * 1024 * 1024;
+  yojimboConfig.numChannels = 2;
+  yojimboConfig.channel[YOJ_UNORDERED].type = CHANNEL_TYPE_UNRELIABLE_UNORDERED;
+  yojimboConfig.channel[YOJ_UNORDERED].maxBlockSize = MaxSnapshotSize;
+  yojimboConfig.channel[YOJ_ORDERED].type = CHANNEL_TYPE_RELIABLE_ORDERED;
+  yojimboConfig.channel[YOJ_ORDERED].maxBlockSize = MaxBlockSize;
+  yojimboConfig.channel[YOJ_ORDERED].blockFragmentSize = 1024;
 
-   uint8_t privateKey[KeyBytes];
-   memset(privateKey, 0, KeyBytes);
+  uint8_t privateKey[KeyBytes];
+  memset(privateKey, 0, KeyBytes);
 
-   double time = 0.0;
+  double time = 0.0;
 
-   Address serverAddress("127.0.0.1", ServerPort);
+  Address serverAddress("127.0.0.1", ServerPort);
 
-   Server server(yojimbo::GetDefaultAllocator(), privateKey, serverAddress,
-                 yojimboConfig,
-                 adapter, time);
+  Server server(yojimbo::GetDefaultAllocator(), privateKey, serverAddress,
+                yojimboConfig, adapter, time);
 
-   server.Start(1);
+  server.Start(1);
 
-   if (!server.IsRunning()) {
-     LOG(Debug::Channel::General, "Server ain't running!");
-     return 1;
-   }
+  if (!server.IsRunning()) {
+    LOG(Debug::Channel::General, "Server ain't running!");
+    return 1;
+  }
 
-   uint64_t clientId = 0;
-   random_bytes((uint8_t *)&clientId, 8);
+  uint64_t clientId = 0;
+  random_bytes((uint8_t *)&clientId, 8);
 
-   Client client(yojimbo::GetDefaultAllocator(), Address("0.0.0.0"), yojimboConfig, adapter,
-                 time);
+  Client client(yojimbo::GetDefaultAllocator(), Address("0.0.0.0"),
+                yojimboConfig, adapter, time);
 
-   client.InsecureConnect(privateKey, clientId, serverAddress);
+  client.InsecureConnect(privateKey, clientId, serverAddress);
 
-   uint64_t yojMessagesToServer = 0;
-   uint64_t yojMessagesToClient = 0;
-   uint64_t yojMessagesFromServer = 0;
-   uint64_t yojMessagesFromClient = 0;
+  uint64_t yojMessagesToServer = 0;
+  uint64_t yojMessagesToClient = 0;
+  uint64_t yojMessagesFromServer = 0;
+  uint64_t yojMessagesFromClient = 0;
 
-   bool yojClientConnected = false;
-   bool yojServerConnected = false;
+  bool yojClientConnected = false;
+  bool yojServerConnected = false;
 
-   bool clientIsSending = true;
-   bool networkKeyPressed = false;
+  bool clientIsSending = true;
+  bool networkKeyPressed = false;
 
   // play first audio clip
   auto audioSource = new AudioSource();
@@ -208,7 +208,7 @@ int main() {
       {
         if (clientIsSending) {
           if ((Input::IsKeyPressed(KeyCode::I) ||
-              Input::IsKeyPressed(KeyCode::O))) {
+               Input::IsKeyPressed(KeyCode::O))) {
             if (!networkKeyPressed) {
               TestMessage *message = (TestMessage *)client.CreateMessage(
                   TEST_MESSAGE); /* from shared.h */
@@ -236,8 +236,8 @@ int main() {
             if ((Input::IsKeyPressed(KeyCode::I) ||
                  Input::IsKeyPressed(KeyCode::O))) {
               if (!networkKeyPressed) {
-                TestMessage *message = (TestMessage *)server.CreateMessage(clientIndex,
-                    TEST_MESSAGE); /* from shared.h */
+                TestMessage *message = (TestMessage *)server.CreateMessage(
+                    clientIndex, TEST_MESSAGE); /* from shared.h */
                 if (message) {
                   message->sequence =
                       uint16_t(Input::IsKeyPressed(KeyCode::I) ? 'I' : 'O');
@@ -254,7 +254,8 @@ int main() {
         }
 
         while (true) {
-          yojimbo::Message *message = server.ReceiveMessage(clientIndex, YOJ_ORDERED);
+          yojimbo::Message *message =
+              server.ReceiveMessage(clientIndex, YOJ_ORDERED);
 
           if (!message) {
             break;
@@ -364,8 +365,7 @@ int main() {
     if (client.IsDisconnected() && yojClientConnected) {
       yojClientConnected = false;
       LOG(Debug::Channel::Networking, Debug::Verbosity::Info,
-                    "client %.16 " PRIx16
-                    " has been disconnected from server!\n");
+          "client %.16 " PRIx16 " has been disconnected from server!\n");
     }
 
     // switch to playing the second audio clip
@@ -384,8 +384,8 @@ int main() {
   }
 
   // Networking
-   client.Disconnect();
-   server.Stop();
+  client.Disconnect();
+  server.Stop();
 
   moduleManager.ShutDown();
   return 0;
@@ -399,33 +399,33 @@ void RunBenchmarks() {
 
   benchmarks.insert({"1. new and delete", []() {
                        const int count = 10000;
-                       AudioSource* audioSources[count];
-                       for (auto& audioSource : audioSources) {
+                       AudioSource *audioSources[count];
+                       for (auto &audioSource : audioSources) {
                          audioSource = new AudioSource();
                        }
-                       for (auto& audioSource : audioSources) {
+                       for (auto &audioSource : audioSources) {
                          delete audioSource;
                        }
                      }});
 
   benchmarks.insert({"2. malloc and free", []() {
                        const int count = 10000;
-                       AudioSource* audioSources[count];
-                       for (auto& audioSource : audioSources) {
+                       AudioSource *audioSources[count];
+                       for (auto &audioSource : audioSources) {
                          audioSource = new (std::malloc(sizeof(AudioSource)))
                              AudioSource();
                        }
-                       for (auto& audioSource : audioSources) {
+                       for (auto &audioSource : audioSources) {
                          std::free(audioSource);
                        }
                      }});
 
   benchmarks.insert({"3. Stack Allocator", []() {
                        const int count = 10000;
-                       AudioSource* audioSources[count];
+                       AudioSource *audioSources[count];
                        StackAllocator stackAllocator(sizeof(AudioSource) *
                                                      count);
-                       for (auto& audioSource : audioSources) {
+                       for (auto &audioSource : audioSources) {
                          audioSource = stackAllocator.New<AudioSource>();
                        }
                        stackAllocator.Erase();
@@ -433,13 +433,13 @@ void RunBenchmarks() {
 
   benchmarks.insert({"4. Pool Allocator", []() {
                        const int count = 10000;
-                       AudioSource* audioSources[count];
+                       AudioSource *audioSources[count];
                        PoolAllocator<AudioSource> poolAllocator(count);
-                       for (auto& audioSource : audioSources) {
+                       for (auto &audioSource : audioSources) {
                          audioSource = poolAllocator.Get();
                        }
 
-                       for (auto& audioSource : audioSources) {
+                       for (auto &audioSource : audioSources) {
                          poolAllocator.Free(audioSource);
                        }
                        poolAllocator.Erase();
@@ -447,7 +447,7 @@ void RunBenchmarks() {
 
   // Benchmarking
   const int testIterations = 10;
-  for (auto& test : benchmarks) {
+  for (auto &test : benchmarks) {
     float time = 0;
     for (int a = 0; a < testIterations; a++) {
       const auto benchmarkStart = clock::now();
