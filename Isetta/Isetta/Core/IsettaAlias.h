@@ -15,6 +15,8 @@ using U16 = uint16_t;
 using U32 = uint32_t;
 using U64 = uint64_t;
 
+constexpr auto U64_MAX = 0xFFFFFFFFFFFFFFFF;
+
 using Int8 = int8_t;
 using Int16 = int16_t;
 using Int32 = int32_t;

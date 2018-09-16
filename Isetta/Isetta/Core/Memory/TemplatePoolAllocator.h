@@ -33,7 +33,7 @@ class TemplatePoolAllocator {
 
 template <typename T>
 TemplatePoolAllocator<T>::TemplatePoolAllocator(const SizeInt count) {
-  if (sizeof(T) > sizeof(Node*)) {
+  if (sizeof(Node*) > sizeof(T)) {
     LOG_ERROR(Debug::Channel::Memory,
               "Using TemplatePoolAllocator for type %s will incur more overhead memory than the memory actually "
                   "needed for the elements", typeid(T).name());

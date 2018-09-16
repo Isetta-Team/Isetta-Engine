@@ -107,6 +107,9 @@
     <ClCompile Include="Core\Memory\DoubleBufferedAllocator.cpp">
       <Filter>Core\Memory</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Memory\ObjectHandle.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\IModule.h">
@@ -222,6 +225,9 @@
       <Filter>Core\Memory</Filter>
     </ClInclude>
     <ClInclude Include="Core\Memory\DoubleBufferedAllocator.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\ObjectHandle.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,28 +1,31 @@
 /*
  * Copyright (c) 2018 Isetta
  */
+#include <Windows.h>
 #include <chrono>
-#include <string>
 #include <iostream>
+#include <string>
 #include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
 #include "Core/FileSystem.h"
 #include "Core/Math/Random.h"
 #include "Core/Math/Vector3.h"
-#include "Core/Memory/TemplatePoolAllocator.h"
+#include "Core/Memory/DoubleBufferedAllocator.h"
+#include "Core/Memory/PoolAllocator.h"
 #include "Core/Memory/StackAllocator.h"
+#include "Core/Memory/TemplatePoolAllocator.h"
 #include "Core/ModuleManager.h"
+#include "Core/Time/Clock.h"
 #include "Graphics/LightNode.h"
 #include "Graphics/ModelNode.h"
 #include "Input/Input.h"
-#include "Core/Memory/PoolAllocator.h"
-#include <Windows.h>
-#include "Core/Time/Clock.h"
-#include "Core/Memory/DoubleBufferedAllocator.h"
+#include "Core/Memory/ObjectHandle.h"
+#include "Core/Memory/MemoryManager.h"
 
 using namespace Isetta;
 
+void RunYidiTestCases();
 void RunBenchmarks();
 
 /*! \mainpage Isetta Engine
@@ -40,22 +43,10 @@ engines before.
 Between our own hands-on process and sage advice from veteran engineers, we hope
 to give newcomers a clearer representation of the engine-building process.
 */
+
 int main() {
   // TODO(Chaojie): maybe move to loop class later
   Clock gameTime{};
-  // config example
-  FileSystem fds;
-
-  fds.Read("Resources/test/async.in",
-           std::function<void(const char*)>(
-               [](const char* buf) { printf("%s\n", buf); }));
-
-  char* buf = "abcdefghijklmnopqrstuvwxyz\n";
-  for (int i = 0; i < 5; i++) {
-    fds.Write("Resources/test/async.out", buf,
-              std::function<void(const char*)>(
-                  [](const char* buf) { printf("> write done\n"); }));
-  }
 
   Config config;
   config.Read("config.cfg");
@@ -64,6 +55,8 @@ int main() {
 
   ModuleManager moduleManager;
   moduleManager.StartUp();
+
+  RunYidiTestCases();
 
   // Random number test
   // auto rnd = Math::Random::GetRandomGenerator(1.f, 10.f);
@@ -108,8 +101,6 @@ int main() {
     gameTime.UpdateTime();
 
     moduleManager.Update(gameTime.GetDeltaTime());
-    LOG_INFO(Debug::Channel::General, {std::to_string(gameTime.GetDeltaTime())});
-
 
     if (Input::IsKeyPressed(KeyCode::ESCAPE)) {
       running = false;
@@ -118,6 +109,10 @@ int main() {
 
   moduleManager.ShutDown();
   return 0;
+}
+
+void RunYidiTestCases() {
+
 }
 
 void RunBenchmarks() {

@@ -100,6 +100,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Config\CVar.cpp" />
     <ClCompile Include="Core\Memory\DoubleBufferedAllocator.cpp" />
     <ClCompile Include="Core\Memory\MemoryManager.cpp" />
+    <ClCompile Include="Core\Memory\ObjectHandle.cpp" />
     <ClCompile Include="Core\Time\Clock.cpp" />
     <ClCompile Include="Core\Time\StopWatch.cpp" />
     <ClCompile Include="Graphics\LightNode.cpp" />
@@ -153,6 +154,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Memory\DoubleBufferedAllocator.h" />
     <ClInclude Include="Core\Memory\MemoryAllocator.h" />
     <ClInclude Include="Core\Memory\MemoryManager.h" />
+    <ClInclude Include="Core\Memory\ObjectHandle.h" />
     <ClInclude Include="Core\Memory\PoolAllocator.h" />
     <ClInclude Include="Core\Memory\TemplatePoolAllocator.h" />
     <ClInclude Include="Core\Memory\StackAllocator.h" />

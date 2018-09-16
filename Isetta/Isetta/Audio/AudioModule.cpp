@@ -8,6 +8,7 @@
 #include <string>
 #include "Audio/AudioSource.h"
 #include "SID/sid.h"
+#include "Core/Debug/Logger.h"
 
 namespace Isetta {
 
@@ -40,6 +41,7 @@ FMOD::Sound* AudioModule::FindSound(const char* soundName) {
   if (soundMap.find(hashedValue) != soundMap.end()) {
     return soundMap[hashedValue];
   }
+  LOG_ERROR(Debug::Channel::Sound, "Sound file %s not found.", soundName);
   return nullptr;
 }
 

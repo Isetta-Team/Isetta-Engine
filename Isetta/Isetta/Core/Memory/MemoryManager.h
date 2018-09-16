@@ -1,16 +1,22 @@
 #pragma once
-#include "Core/IsettaAlias.h"
-#include "StackAllocator.h"
-#include "DoubleBufferedAllocator.h"
+#include "Core/Memory/DoubleBufferedAllocator.h"
+#include "Core/Memory/ObjectHandle.h"
+#include "Core/Memory/StackAllocator.h"
 
 namespace Isetta {
 
 class MemoryManager {
-public:
-  template<typename T>
-  T* SingleFrameNew();
+ public:
+  template <typename T>
+  T* NewSingleFrame();
 
-private:
+  template <typename T>
+  static T* NewDoubleBuffered();
+
+  template <typename T>
+  static ObjectHandle<T> NewDynamic();
+
+ private:
   explicit MemoryManager() = default;
   ~MemoryManager() = default;
 
@@ -21,5 +27,10 @@ private:
   StackAllocator singleFrameAllocator;
   DoubleBufferedAllocator doubleBufferedAllocator;
 };
+
+template <typename T>
+ObjectHandle<T> MemoryManager::NewDynamic() {
+  return ObjectHandle<T>{};
+}
 
 }  // namespace Isetta
