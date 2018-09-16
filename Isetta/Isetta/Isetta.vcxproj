@@ -100,6 +100,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Config\CVar.cpp" />
     <ClCompile Include="Core\Time\Clock.cpp" />
     <ClCompile Include="Core\Time\StopWatch.cpp" />
+    <ClCompile Include="EngineLoop.cpp" />
     <ClCompile Include="Graphics\LightNode.cpp" />
     <ClCompile Include="Graphics\ModelNode.cpp" />
     <ClCompile Include="Graphics\RenderModule.cpp" />
@@ -157,6 +158,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Config\CVarRegistry.h" />
     <ClInclude Include="Core\Time\Clock.h" />
     <ClInclude Include="Core\Time\StopWatch.h" />
+    <ClInclude Include="EngineLoop.h" />
     <ClInclude Include="Graphics\LightNode.h" />
     <ClInclude Include="Graphics\ModelNode.h" />
     <ClInclude Include="Graphics\RenderModule.h" />

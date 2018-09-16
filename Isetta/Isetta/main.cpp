@@ -3,30 +3,18 @@
  */
 #include <Windows.h>
 #include <chrono>
-#include <iostream>
 #include <string>
 #include "Audio/AudioSource.h"
-#include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
 #include "Core/FileSystem.h"
 #include "Core/Math/Random.h"
-#include "Core/Math/Vector3.h"
 #include "Core/Memory/PoolAllocator.h"
 #include "Core/Memory/StackAllocator.h"
-#include "Core/ModuleManager.h"
-#include "Core/Time/Clock.h"
-#include "Graphics/LightNode.h"
-#include "Graphics/ModelNode.h"
 #include "Input/Input.h"
-#include "Networking/NetworkingModule.h"
-
 #include <inttypes.h>
-#include <signal.h>
-#include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include "yojimbo/shared.h"
+#include "EngineLoop.h"
 
 using namespace Isetta;
 
@@ -48,9 +36,8 @@ Between our own hands-on process and sage advice from veteran engineers, we hope
 to give newcomers a clearer representation of the engine-building process.
 */
 int main() {
-  // TODO(Chaojie): maybe move to loop class later
-  Clock gameTime{};
-
+  EngineLoop loop;
+  loop.Run();
   // auto h = FileSystem::Instance().Read(
   //    "Resources/test/async.in",
   //    std::function<void(const char *)>(
@@ -64,14 +51,6 @@ int main() {
   //        [](const char* buf) { printf("> write done\n"); }),
   //    false);
 
-  // config example
-  Config::Instance().Read("config.cfg");
-  Sleep(3000);
-  LOG_INFO(Debug::Channel::General,
-           Config::Instance().vector3Var.GetVal().ToString().c_str());
-
-  ModuleManager moduleManager;
-  moduleManager.StartUp();
 
   // Random number test
   // auto rnd = Math::Random::GetRandomGenerator(1.f, 10.f);
@@ -81,51 +60,7 @@ int main() {
 
   RunBenchmarks();
 
-  U64 handleA, handleB, handleC;
-  handleA = Input::RegisterKeyPressCallback(KeyCode::A, [&handleA]() {
-    LOG_INFO(Debug::Channel::General, "A pressed");
-    Input::UnregisterKeyPressCallback(KeyCode::A, handleA);
-  });
-  handleB = Input::RegisterKeyReleaseCallback(KeyCode::A, [&handleB]() {
-    LOG_INFO(Debug::Channel::General, "A released");
-    Input::UnregisterKeyReleaseCallback(KeyCode::A, handleB);
-  });
-  handleC = Input::RegisterMousePressCallback(
-      MouseButtonCode::MOUSE_LEFT, [&handleC]() {
-        LOG_INFO(Debug::Channel::General,
-                 {"Left pressed at: " + Input::GetMousePosition().ToString()});
-        Input::UnregisterMousePressCallback(MouseButtonCode::MOUSE_LEFT,
-                                            handleC);
-      });
 
-  // Game loop
-
-  // play first audio clip
-  auto audioSource = new AudioSource();
-  audioSource->SetAudioClip("wave.mp3");
-
-  audioSource->Play(true, 1.0f);
-  ModelNode car{"test/Low-Poly-Racing-Car.scene.xml", Math::Vector3{0, -20, 0},
-                Math::Vector3::zero, Math::Vector3::one};
-
-  LightNode light{"materials/light.material.xml", Math::Vector3{0, 200, 600},
-                  Math::Vector3::zero, Math::Vector3::one};
-
-  bool running{true};
-
-  while (running) {
-    gameTime.UpdateTime();
-
-    moduleManager.Update(gameTime.GetDeltaTime());
-    LOG_INFO(Debug::Channel::General,
-             {std::to_string(gameTime.GetDeltaTime())});
-
-    if (Input::IsKeyPressed(KeyCode::ESCAPE)) {
-      running = false;
-    }
-  }
-
-  moduleManager.ShutDown();
   return 0;
 }
 

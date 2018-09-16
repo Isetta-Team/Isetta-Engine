@@ -43,7 +43,7 @@ void Clock::UpdateTime() {
     currentTime = newTime;
     deltaTime = delta.count() / 1000.f * timeScale;
     elapsedTime += deltaTime;
-    elapsedTime = elapse.count() / 1000.f;
+    elapsedUnscaledTime = elapse.count() / 1000.f;
   }
 }
 

@@ -101,6 +101,7 @@
     <ClCompile Include="Core\Time\StopWatch.cpp">
       <Filter>Core\Time</Filter>
     </ClCompile>
+    <ClCompile Include="EngineLoop.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\IModule.h">
@@ -215,6 +216,7 @@
     <ClInclude Include="Core\DataStructures\RingBuffer.h">
       <Filter>Core\DataStructures</Filter>
     </ClInclude>
+    <ClInclude Include="EngineLoop.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
