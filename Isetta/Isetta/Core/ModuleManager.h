@@ -11,7 +11,8 @@ class ModuleManager {
   ~ModuleManager();
 
   void StartUp();
-  void Update(float deltaTime);
+  void SimulationUpdate(float deltaTime);
+  void RenderUpdate(float deltaTime);
   void ShutDown();
 
  private:

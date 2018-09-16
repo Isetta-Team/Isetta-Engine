@@ -86,8 +86,8 @@
     <ClCompile Include="Graphics\Window.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Memory\PoolAllocator.cpp">
-      <Filter>Core\Memory</Filter>
+    <ClCompile Include="Networking\NetworkingModule.cpp">
+      <Filter>Networking</Filter>
     </ClCompile>
     <ClCompile Include="Core\FileSystem.cpp">
       <Filter>Core</Filter>
@@ -104,12 +104,25 @@
     <ClCompile Include="Core\Memory\MemoryManager.cpp">
       <Filter>Core\Memory</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Memory\StackAllocator.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\PoolAllocator.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\MemoryAllocator.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\MemoryManager.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
     <ClCompile Include="Core\Memory\DoubleBufferedAllocator.cpp">
       <Filter>Core\Memory</Filter>
     </ClCompile>
     <ClCompile Include="Core\Memory\ObjectHandle.cpp">
       <Filter>Core\Memory</Filter>
     </ClCompile>
+    <ClCompile Include="EngineLoop.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\IModule.h">
@@ -200,14 +213,11 @@
     <ClInclude Include="Graphics\RenderModule.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Networking\NetworkingModule.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
     <ClInclude Include="Graphics\RenderNode.h">
       <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Memory\TemplatePoolAllocator.h">
-      <Filter>Core\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Memory\PoolAllocator.h">
-      <Filter>Core\Memory</Filter>
     </ClInclude>
     <ClInclude Include="Core\FileSystem.h">
       <Filter>Core</Filter>
@@ -227,9 +237,19 @@
     <ClInclude Include="Core\Memory\DoubleBufferedAllocator.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Memory\PoolAllocator.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\TemplatePoolAllocator.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
     <ClInclude Include="Core\Memory\ObjectHandle.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
+    <ClInclude Include="Core\DataStructures\RingBuffer.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineLoop.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -271,8 +291,14 @@
     <Filter Include="Input">
       <UniqueIdentifier>{4df4848a-1e54-4b90-8bad-773e71fa89de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Networking">
+      <UniqueIdentifier>{274cf1b7-0679-4c44-bef9-7e5e861ef39a}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Core\Time">
       <UniqueIdentifier>{263ba415-8b0e-4871-b9e3-6779bb9b8489}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DataStructures">
+      <UniqueIdentifier>{1a6466d1-5cab-4f45-b3c8-992fde0119e4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

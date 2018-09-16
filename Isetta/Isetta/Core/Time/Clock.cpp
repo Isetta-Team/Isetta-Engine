@@ -9,8 +9,8 @@ Clock::Clock()
     : startTime{HighResClock::now()},
       currentTime{HighResClock::now()},
       deltaTime{},
-      elapseTime(0),
-      elapseUnscaledTime(0),
+      elapsedTime(0),
+      elapsedUnscaledTime(0),
       timeScale{1.f},
       isPause{false} {}
 
@@ -18,8 +18,8 @@ Clock::Clock(const Clock& inClock)
     : startTime{inClock.startTime},
       currentTime{inClock.currentTime},
       deltaTime(inClock.deltaTime),
-      elapseTime{inClock.elapseTime},
-      elapseUnscaledTime{inClock.elapseUnscaledTime},
+      elapsedTime{inClock.elapsedTime},
+      elapsedUnscaledTime{inClock.elapsedUnscaledTime},
       timeScale{inClock.timeScale},
       isPause{inClock.isPause} {}
 
@@ -27,8 +27,8 @@ Clock::Clock(Clock&& inClock) noexcept
     : startTime{inClock.startTime},
       currentTime{inClock.currentTime},
       deltaTime{inClock.deltaTime},
-      elapseTime{inClock.elapseTime},
-      elapseUnscaledTime{inClock.elapseUnscaledTime},
+      elapsedTime{inClock.elapsedTime},
+      elapsedUnscaledTime{inClock.elapsedUnscaledTime},
       timeScale{inClock.timeScale},
       isPause{inClock.isPause} {}
 
@@ -42,12 +42,12 @@ void Clock::UpdateTime() {
         std::chrono::duration_cast<Milliseconds>(newTime - startTime);
     currentTime = newTime;
     deltaTime = delta.count() / 1000.f * timeScale;
-    elapseTime += deltaTime;
-    elapseTime = elapse.count() / 1000.f;
+    elapsedTime += deltaTime;
+    elapsedUnscaledTime = elapse.count() / 1000.f;
   }
 }
 
 double Clock::GetDeltaTime() const { return deltaTime; }
-double Clock::GetElapseTime() const { return elapseTime; }
-double Clock::GetElapseUnscaledTime() const { return elapseUnscaledTime; }
+double Clock::GetElapsedTime() const { return elapsedTime; }
+double Clock::GetElapsedUnscaledTime() const { return elapsedUnscaledTime; }
 }  // namespace Isetta

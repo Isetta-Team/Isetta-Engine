@@ -27,9 +27,12 @@ void ModuleManager::StartUp() {
   inputModule->StartUp(windowModule->winHandle);
 }
 
-void ModuleManager::Update(float deltaTime) {
+void ModuleManager::SimulationUpdate(float deltaTime) {
   audioModule->Update(deltaTime);
   inputModule->Update(deltaTime);
+}
+
+void ModuleManager::RenderUpdate(float deltaTime) {
   renderModule->Update(deltaTime);
   windowModule->Update(deltaTime);
 }

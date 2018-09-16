@@ -3,19 +3,29 @@
  */
 #include "Core/Config/Config.h"
 
-#include <fstream>
-#include <iostream>
+#include <string.h>
+#include <functional>
 #include <sstream>
+#include "Core/FileSystem.h"
+
+void test(const char* t) {}
 
 namespace Isetta {
-void Config::Read(std::string filepath) {
-  // TODO(jacob) config file location + filesystem?
-  std::ifstream configFile(filepath);
+void Config::Read(const std::string& filepath) {
+  std::function<void(const char*)> fProcess =
+      std::bind(&Config::ProcessFile, this, std::placeholders::_1);
+  readFile = FileSystem::Instance().Read(filepath, fProcess);
+}
 
-  std::string line;
-  while (std::getline(configFile, line)) {
+void Config::ProcessFile(const char* contentBuffer) {
+  char* nextToken;
+  char* lines = strtok_s(const_cast<char*>(contentBuffer), "\n", &nextToken);
+  while (lines != NULL) {
+    // printf("%s\n", lines);
+    std::string line(lines);
     RemoveComments(&line);
     if (OnlyWhitespace(line) || !ValidLine(line)) {
+      lines = strtok_s(NULL, "\n", &nextToken);
       continue;
     }
     size_t sepPos = line.find('=');
@@ -42,11 +52,16 @@ void Config::Read(std::string filepath) {
           throw std::exception("Config::Read Unexpected type");
       }
     }
+    lines = strtok_s(NULL, "\n", &nextToken);
   }
 }
 
 void Config::RemoveComments(std::string* line) const {
   auto it = line->find('#');
+  if (it != std::string::npos) {
+    line->erase(it);
+  }
+  it = line->find('\r');
   if (it != std::string::npos) {
     line->erase(it);
   }
