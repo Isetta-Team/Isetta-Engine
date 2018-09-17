@@ -16,6 +16,7 @@ class ModuleManager {
   void ShutDown();
 
  private:
+  class MemoryManager* memoryManager;
   class AudioModule* audioModule;
   class WindowModule* windowModule;
   class RenderModule* renderModule;

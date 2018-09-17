@@ -2,14 +2,14 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Core/IsettaAlias.h"
-#include "Core/Memory/StackAllocator.h"
-#include "Core/Memory/DoubleBufferedAllocator.h"
 #include "Core/Debug/Logger.h"
+#include "Core/IsettaAlias.h"
+#include "Core/Memory/DoubleBufferedAllocator.h"
+#include "Core/Memory/StackAllocator.h"
 
 namespace Isetta {
 
-template<typename T>
+template <typename T>
 class ObjectHandle;
 
 class MemoryManager {
@@ -34,21 +34,24 @@ class MemoryManager {
   void Update();
   void ShutDown();
 
-  StackAllocator singleFrameAllocator;
-  DoubleBufferedAllocator doubleBufferedAllocator;
+  StackAllocator singleFrameAllocator{};
+  DoubleBufferedAllocator doubleBufferedAllocator{};
 
-  // these can't be put in ObjectHandle because it creates new ones for each type
+  // can't be put in ObjectHandle because it creates new ones for each type
   inline static U32 nextUniqueID = 0;
   const static U32 maxTableSize = 2048;
   static class HandleEntry handleTable[];
 
-  template<typename T>
+  template <typename T>
   friend class ObjectHandle;
+  friend class ModuleManager;
 };
 
 template <typename T>
 ObjectHandle<T>& MemoryManager::NewDynamic() {
   // TODO(YIDI): use a pool to manage object handles
+  // TODO(YIDI): I'm not sure this is the right way to implement object handles,
+  // the handle itself should not need to be freed
   auto hand = new ObjectHandle<T>{};
   return *(hand);
 }

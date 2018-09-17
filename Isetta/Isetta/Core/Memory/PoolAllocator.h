@@ -9,11 +9,11 @@ namespace Isetta {
 class PoolAllocator {
  public:
   explicit PoolAllocator(SizeInt chunkSize, SizeInt count);
-  ~PoolAllocator();
+  ~PoolAllocator() = default;
 
   void* Get();
   void Free(void*);
-  void Erase();
+  void Erase() const;
 
  private:
   union Node {
@@ -25,7 +25,6 @@ class PoolAllocator {
   SizeInt elementSize;
   Node* head;
   void* memHead;
-  bool isErased;
 };
 
 }  // namespace Isetta

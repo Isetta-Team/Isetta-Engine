@@ -93,7 +93,7 @@ void RunBenchmarks() {
                        const int count = 10000;
                        AudioSource *audioSources[count];
                        StackAllocator stackAllocator(sizeof(AudioSource) *
-                                                     count);
+                                                     count + 100);
                        for (auto &audioSource : audioSources) {
                          audioSource = stackAllocator.New<AudioSource>();
                        }

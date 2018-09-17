@@ -12,10 +12,10 @@ template <typename T>
 class TemplatePoolAllocator {
  public:
   explicit TemplatePoolAllocator(SizeInt count);
-  ~TemplatePoolAllocator();
+  ~TemplatePoolAllocator() = default;
   T* Get();
   void Free(T*);
-  void Erase();
+  void Erase() const;
 
  private:
   union Node {
@@ -28,19 +28,19 @@ class TemplatePoolAllocator {
   SizeInt elementSize;
   Node* head;
   void* memHead;
-  bool isErased;
 };
 
 template <typename T>
 TemplatePoolAllocator<T>::TemplatePoolAllocator(const SizeInt count) {
   if (sizeof(Node*) > sizeof(T)) {
     LOG_ERROR(Debug::Channel::Memory,
-              "Using TemplatePoolAllocator for type %s will incur more overhead memory than the memory actually "
-                  "needed for the elements", typeid(T).name());
+              "Using TemplatePoolAllocator for type %s will incur more "
+              "overhead memory than the memory actually "
+              "needed for the elements",
+              typeid(T).name());
     return;
   }
 
-  isErased = false;
   capacity = count;
   elementSize = sizeof(T);
   memHead = MemoryAllocator::AllocateDefaultAligned(elementSize * capacity);
@@ -57,34 +57,23 @@ TemplatePoolAllocator<T>::TemplatePoolAllocator(const SizeInt count) {
 }
 
 template <typename T>
-TemplatePoolAllocator<T>::~TemplatePoolAllocator() {
-  Erase();
-}
-
-template <typename T>
 T* TemplatePoolAllocator<T>::Get() {
-  if (isErased) {
-    throw std::exception("TemplatePoolAllocator::Get(): TemplatePoolAllocator already erased");
-  }
-
   if (head == nullptr) {
     throw std::out_of_range(
-        "TemplatePoolAllocator::Get(): Not enough memory in TemplatePoolAllocator");
+        "TemplatePoolAllocator::Get(): Not enough memory in "
+        "TemplatePoolAllocator");
   }
 
   Node* next = head->next;
   // head's content will be overriden when constructing T
   // so it's next must be cached before that
-  T* t = new (head) T(); 
+  T* t = new (head) T();
   head = next;
   return t;
 }
 
 template <typename T>
 void TemplatePoolAllocator<T>::Free(T* t) {
-  if (isErased) {
-    LOG_ERROR(Debug::Channel::Memory, "TemplatePoolAllocator::Free(): TemplatePoolAllocator already erased");
-  }
   t->~T();
   Node* node = new (t) Node();
   node->next = head;
@@ -92,12 +81,7 @@ void TemplatePoolAllocator<T>::Free(T* t) {
 }
 
 template <typename T>
-void TemplatePoolAllocator<T>::Erase() {
-  if (isErased) {
-    LOG_ERROR(Debug::Channel::Memory, "TemplatePoolAllocator::Erase(): TemplatePoolAllocator already erased");
-    return;
-  }
-  isErased = true;
+void TemplatePoolAllocator<T>::Erase() const {
   MemoryAllocator::FreeDefaultAligned(memHead);
 }
 

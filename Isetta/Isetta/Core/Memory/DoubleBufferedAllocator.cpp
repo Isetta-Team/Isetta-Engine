@@ -11,8 +11,8 @@ DoubleBufferedAllocator::DoubleBufferedAllocator(const SizeInt size)
 
 DoubleBufferedAllocator::~DoubleBufferedAllocator() {
   // TODO(YIDI): Not sure if this is done automatically when then go out of scope
-  stacks[0].Erase();
-  stacks[1].Erase();
+  // stacks[0].Erase();
+  // stacks[1].Erase();
 }
 
 void* DoubleBufferedAllocator::Alloc(const SizeInt size, const U8 alignment) {
@@ -25,6 +25,11 @@ void DoubleBufferedAllocator::SwapBuffer() {
 
 void DoubleBufferedAllocator::ClearCurrentBuffer() {
   stacks[curStackIndex].Clear();
+}
+
+void DoubleBufferedAllocator::Erase() {
+  stacks[0].Erase();
+  stacks[1].Erase();
 }
 
 }  // namespace Isetta

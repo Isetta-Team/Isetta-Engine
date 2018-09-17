@@ -29,23 +29,9 @@ PoolAllocator::PoolAllocator(SizeInt chunkSize, SizeInt count) {
     cur->next = node;
     cur = cur->next;
   }
-
-  isErased = false;
-}
-
-PoolAllocator::~PoolAllocator() {
-  if (isErased) {
-    return;
-  }
-  isErased = true;
-  MemoryAllocator::FreeDefaultAligned(memHead);
 }
 
 void* PoolAllocator::Get() {
-  if (isErased) {
-    throw std::exception("PoolAllocator::Get(): PoolAllocator already erased");
-  }
-
   if (head == nullptr) {
     throw std::out_of_range(
         "PoolAllocator::Get(): Not enough memory in PoolAllocator");
@@ -58,25 +44,16 @@ void* PoolAllocator::Get() {
 }
 
 void PoolAllocator::Free(void* mem) {
-  if (isErased) {
-    throw std::exception("PoolAllocator::Free(): PoolAllocator already erased");
-  }
-  
   Node* node = new (mem) Node{head};
   head = node;
 }
 
-void PoolAllocator::Erase() {
-  if (isErased) {
-    throw std::exception("PoolAllocator::Get(): PoolAllocator already erased");
-  }
-  isErased = true;
+void PoolAllocator::Erase() const {
   MemoryAllocator::FreeDefaultAligned(memHead);
 }
 
 PoolAllocator::Node::Node(Node* next) {
   this->next = next;
 }
-
 
 }  // namespace Isetta

@@ -10,21 +10,12 @@
 
 namespace Isetta {
 StackAllocator::StackAllocator(const SizeInt stackSize)
-  : top(0), length(stackSize), isErased(false) {
+  : top(0), length(stackSize) {
   bottom = MemoryAllocator::AllocateDefaultAligned(stackSize);
   bottomAddress = reinterpret_cast<PtrInt>(bottom);
 }
 
-StackAllocator::~StackAllocator() {
-  Erase();
-}
-
 void* StackAllocator::AllocAligned(const SizeInt size, const U8 alignment) {
-  if (isErased) {
-    LOG_ERROR(Debug::Channel::Memory, "StackAllocator::AllocUnaligned() : Stack Allocator is already erased");
-    return nullptr;
-  }
-
   const bool isValid = alignment >= 2 && alignment <= 128 &&
                        (alignment & (alignment - 1)) == 0;  // power of 2
   if (!isValid) {
@@ -51,11 +42,6 @@ void* StackAllocator::AllocAligned(const SizeInt size, const U8 alignment) {
 }
 
 void* StackAllocator::AllocUnaligned(SizeInt size) {
-  if (isErased) {
-    LOG_ERROR(Debug::Channel::Memory, "StackAllocator::AllocUnaligned() : Stack Allocator is already erased");
-    return nullptr;
-  }
-
   Marker newTop = top + size;
 
   if (newTop > length) {
@@ -69,12 +55,7 @@ void* StackAllocator::AllocUnaligned(SizeInt size) {
 }
 
 void StackAllocator::Erase() {
-  if (isErased) {
-    LOG_ERROR(Debug::Channel::Memory, "StackAllocator::Erase() : Stack Allocator is already erased");
-    return;
-  }
   Clear();
   std::free(bottom);
-  isErased = true;
 }
 }

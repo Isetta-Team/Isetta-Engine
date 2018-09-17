@@ -72,7 +72,7 @@ void EngineLoop::Update() {
   for (int i = 0; i < maxSimulationCount && accumulateTime > intervalTime;
        i++) {
     moduleManager.SimulationUpdate(intervalTime);
-    LOG_INFO(Debug::Channel::General, std::to_string(accumulateTime));
+    // LOG_INFO(Debug::Channel::General, std::to_string(accumulateTime));
     accumulateTime -= intervalTime;
   }
 

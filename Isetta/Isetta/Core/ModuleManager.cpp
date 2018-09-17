@@ -3,12 +3,14 @@
  */
 #include "Core/ModuleManager.h"
 #include "Audio/AudioModule.h"
+#include "Core/Memory/MemoryManager.h"
 #include "Graphics/RenderModule.h"
 #include "Graphics/Window.h"
 #include "Input/InputModule.h"
 
 namespace Isetta {
 ModuleManager::ModuleManager() {
+  memoryManager = new MemoryManager{};
   audioModule = new AudioModule{};
   windowModule = new WindowModule{};
   renderModule = new RenderModule{};
@@ -19,8 +21,11 @@ ModuleManager::~ModuleManager() {
   delete audioModule;
   delete renderModule;
   delete inputModule;
+  delete memoryManager;
 }
+
 void ModuleManager::StartUp() {
+  memoryManager->StartUp();
   audioModule->StartUp();
   windowModule->StartUp();
   renderModule->StartUp(windowModule->winHandle);
@@ -30,6 +35,7 @@ void ModuleManager::StartUp() {
 void ModuleManager::SimulationUpdate(float deltaTime) {
   audioModule->Update(deltaTime);
   inputModule->Update(deltaTime);
+  memoryManager->Update();
 }
 
 void ModuleManager::RenderUpdate(float deltaTime) {
@@ -42,5 +48,6 @@ void ModuleManager::ShutDown() {
   renderModule->ShutDown();
   inputModule->ShutDown();
   windowModule->ShutDown();
+  memoryManager->ShutDown();
 }
 }  // namespace Isetta

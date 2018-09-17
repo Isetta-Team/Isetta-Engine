@@ -6,8 +6,9 @@ class StackAllocator {
  public:
   typedef SizeInt Marker;
 
+  StackAllocator() = default;
   explicit StackAllocator(SizeInt stackSize);
-  ~StackAllocator();
+  ~StackAllocator() = default;
 
   /**
    * \brief You probably want to manually call constructor after getting this
@@ -46,6 +47,5 @@ class StackAllocator {
   SizeInt length;
   void* bottom;
   PtrInt bottomAddress;
-  bool isErased;
 };
 }
