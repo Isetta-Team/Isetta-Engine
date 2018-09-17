@@ -15,8 +15,12 @@ DoubleBufferedAllocator::~DoubleBufferedAllocator() {
   // stacks[1].Erase();
 }
 
+void* DoubleBufferedAllocator::AllocUnAligned(const SizeInt size) {
+  return stacks[curStackIndex].AllocUnaligned(size);
+}
+
 void* DoubleBufferedAllocator::Alloc(const SizeInt size, const U8 alignment) {
-  return stacks[curStackIndex].AllocAligned(size, alignment);
+  return stacks[curStackIndex].Alloc(size, alignment);
 }
 
 void DoubleBufferedAllocator::SwapBuffer() {

@@ -1,21 +1,21 @@
 /*
-* Copyright (c) 2018 Isetta
-*/
+ * Copyright (c) 2018 Isetta
+ */
 
-#include "Core/IsettaAlias.h"
-#include "Core/Memory/MemoryAllocator.h"
 #include "Core/Memory/StackAllocator.h"
 #include <stdexcept>
 #include "Core/Debug/Logger.h"
+#include "Core/IsettaAlias.h"
+#include "Core/Memory/MemoryAllocator.h"
 
 namespace Isetta {
 StackAllocator::StackAllocator(const SizeInt stackSize)
-  : top(0), length(stackSize) {
+    : top(0), length(stackSize) {
   bottom = MemoryAllocator::AllocateDefaultAligned(stackSize);
   bottomAddress = reinterpret_cast<PtrInt>(bottom);
 }
 
-void* StackAllocator::AllocAligned(const SizeInt size, const U8 alignment) {
+void* StackAllocator::Alloc(const SizeInt size, const U8 alignment) {
   const bool isValid = alignment >= 2 && alignment <= 128 &&
                        (alignment & (alignment - 1)) == 0;  // power of 2
   if (!isValid) {
@@ -27,7 +27,7 @@ void* StackAllocator::AllocAligned(const SizeInt size, const U8 alignment) {
   PtrDiff adjustment = alignment - misAlignment;
   // for the special case when misAlignment = 0
   // make sure we don't shift the address by its alignment
-  adjustment = adjustment & (alignment - 1); 
+  adjustment = adjustment & (alignment - 1);
   PtrInt alignedAddress = rawAddress + adjustment;
   Marker newTop = top + size + adjustment;
 
@@ -41,7 +41,7 @@ void* StackAllocator::AllocAligned(const SizeInt size, const U8 alignment) {
   return reinterpret_cast<void*>(alignedAddress);
 }
 
-void* StackAllocator::AllocUnaligned(SizeInt size) {
+void* StackAllocator::AllocUnaligned(const SizeInt size) {
   Marker newTop = top + size;
 
   if (newTop > length) {
@@ -58,4 +58,4 @@ void StackAllocator::Erase() {
   Clear();
   std::free(bottom);
 }
-}
+}  // namespace Isetta

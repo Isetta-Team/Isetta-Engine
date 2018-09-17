@@ -17,8 +17,14 @@ class MemoryManager {
   template <typename T>
   T* NewSingleFrame();
 
+  void* AllocSingleFrameUnAligned(SizeInt size);
+  void* AllocSingleFrame(SizeInt size, U8 alignment = 16);
+
   template <typename T>
   static T* NewDoubleBuffered();
+
+  void* AllocDoubleBufferedUnAligned(SizeInt size);
+  void* AllocDoubleBuffered(SizeInt size, U8 alignment = 16);
 
   template <typename T>
   static ObjectHandle<T>& NewDynamic();
@@ -46,6 +52,16 @@ class MemoryManager {
   friend class ObjectHandle;
   friend class ModuleManager;
 };
+
+template <typename T>
+T* MemoryManager::NewSingleFrame() {
+  return singleFrameAllocator.New<T>();
+}
+
+template <typename T>
+T* MemoryManager::NewDoubleBuffered() {
+  return doubleBufferedAllocator.New<T>();
+}
 
 template <typename T>
 ObjectHandle<T>& MemoryManager::NewDynamic() {

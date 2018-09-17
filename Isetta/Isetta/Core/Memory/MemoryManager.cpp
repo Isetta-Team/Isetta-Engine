@@ -9,9 +9,27 @@ namespace Isetta {
 // TODO(YIDI): Use config for max table size
 HandleEntry MemoryManager::handleTable[maxTableSize];
 
+void* MemoryManager::AllocSingleFrameUnAligned(const SizeInt size) {
+  return singleFrameAllocator.AllocUnaligned(size);
+}
+
+void* MemoryManager::AllocSingleFrame(const SizeInt size,
+                                             const U8 alignment) {
+  return singleFrameAllocator.Alloc(size, alignment);
+}
+
+void* MemoryManager::AllocDoubleBufferedUnAligned(const SizeInt size) {
+  return doubleBufferedAllocator.AllocUnAligned(size);
+}
+
+void* MemoryManager::AllocDoubleBuffered(const SizeInt size,
+                                                const U8 alignment) {
+  return doubleBufferedAllocator.Alloc(size, alignment);
+}
+
 MemoryManager::MemoryManager() {
-  // TODO(YIDI): The two allocators are still initialized here by automatically calling their
-  // default constructors, find a better way to handle this
+  // TODO(YIDI): The two allocators are still initialized here by automatically
+  // calling their default constructors, find a better way to handle this
 }
 
 void MemoryManager::StartUp() {
@@ -20,7 +38,8 @@ void MemoryManager::StartUp() {
   doubleBufferedAllocator = DoubleBufferedAllocator(10_MB);
 }
 
-// Memory Manager's update needs to be called after everything that need memory allocation
+// Memory Manager's update needs to be called after everything that need memory
+// allocation
 void MemoryManager::Update() {
   singleFrameAllocator.Clear();
   doubleBufferedAllocator.SwapBuffer();

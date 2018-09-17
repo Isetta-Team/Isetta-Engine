@@ -16,7 +16,7 @@ class StackAllocator {
    * sizeInBytes Number of bytes you want \return pointer to the allocated
    * memory
    */
-  void* AllocAligned(SizeInt size, U8 alignment = 16);
+  void* Alloc(SizeInt size, U8 alignment = 16);
   void* AllocUnaligned(SizeInt size);
 
   /**
@@ -27,7 +27,7 @@ class StackAllocator {
    */
   template <typename T>
   T* New() {
-    void* mem = AllocAligned(sizeof(T));
+    void* mem = Alloc(sizeof(T));
     return new (mem) T();
   };
 
