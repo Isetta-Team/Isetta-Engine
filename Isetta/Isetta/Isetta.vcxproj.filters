@@ -215,6 +215,9 @@
     <ClInclude Include="Core\DataStructures\RingBuffer.h">
       <Filter>Core\DataStructures</Filter>
     </ClInclude>
+    <ClInclude Include="Networking\Messages.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

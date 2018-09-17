@@ -13,6 +13,7 @@ class ModuleManager {
   void StartUp();
   void Update(float deltaTime);
   void ShutDown();
+  class NetworkingModule* networkingModule;
 
  private:
   class AudioModule* audioModule;

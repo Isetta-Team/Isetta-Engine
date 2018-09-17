@@ -113,8 +113,36 @@ int main() {
 
   bool running{true};
 
+  // Set up some networking testing stuff
+  bool sIsPressed = false;
+  bool cIsPressed = false;
+  moduleManager.networkingModule->CreateServer("127.0.0.1", moduleManager.networkingModule->ServerPort);
+  moduleManager.networkingModule->Connect("127.0.0.1");
+
   while (running) {
     gameTime.UpdateTime();
+
+    // Networking update
+    LOG(Debug::Channel::Networking, "%d", moduleManager.networkingModule->client->IsConnected());
+    if (!sIsPressed && Input::IsKeyPressed(KeyCode::S)) {
+      sIsPressed = true;
+      StringMessage* message = (StringMessage*) moduleManager.networkingModule->server->CreateMessage(0, STRING_MESSAGE);
+      message->string = "Hi!";
+      moduleManager.networkingModule->AddServerToClientMessage(0, message);
+    } else {
+      sIsPressed = false;
+    }
+    if (!cIsPressed && Input::IsKeyPressed(KeyCode::C)) {
+      cIsPressed = true;
+      StringMessage *message = (StringMessage *)moduleManager.networkingModule
+                                   ->client->CreateMessage(STRING_MESSAGE);
+      message->string = "Hi!";
+      moduleManager.networkingModule->AddClientToServerMessage(message);
+    } else {
+      cIsPressed = false;
+    }
+
+    // end Networking update
 
     moduleManager.Update(gameTime.GetDeltaTime());
     LOG_INFO(Debug::Channel::General,

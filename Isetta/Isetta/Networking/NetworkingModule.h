@@ -3,45 +3,14 @@
  */
 #pragma once
 
-#include "yojimbo/yojimbo.h"
+#include "Core/DataStructures/RingBuffer.h"
 #include "Core/Time/Clock.h"
+#include "Networking/Messages.h"
+#include "yojimbo/yojimbo.h"
 
 namespace Isetta {
-struct CustomMessage : public yojimbo::Message {
-  int handle;
-
-  CustomMessage() { handle = 0; }
-
-  // TODO(Caleb): choose a more reasonable range for the int serialization
-  template <typename Stream>
-  bool Serialize(Stream& stream) {
-    serialize_int(stream, handle, 0, 10);
-
-    return true;
-  }
-
-  YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS();
-};
-
-enum CustomMessageType { MESSAGE, NUM_MESSAGE_TYPES };
-
-YOJIMBO_MESSAGE_FACTORY_START(CustomMessageFactory, NUM_MESSAGE_TYPES);
-  YOJIMBO_DECLARE_MESSAGE_TYPE(MESSAGE, CustomMessage);
-YOJIMBO_MESSAGE_FACTORY_FINISH();
-
-class CustomAdapter : public yojimbo::Adapter {
- public:
-  // TODO(Caleb): Change the CreateAllocator function to use our mem alloc
-  // instead of TLSF
-
-  // TODO(Caleb): something about the Linter with a const ref
-  yojimbo::MessageFactory* CreateMessageFactory(yojimbo::Allocator* allocator) {
-    return YOJIMBO_NEW(*allocator, CustomMessageFactory, *allocator);
-  }
-};
-
 class NetworkingModule {
- private:
+ public:
   static CustomAdapter NetworkAdapter;
 
   // TODO(Caleb): Look into making the ports user-definable
@@ -49,9 +18,9 @@ class NetworkingModule {
   const uint16_t ServerPort = 40000;
   const int KeyBytes = 32;
   const int MaxClients = 64;
-  const int NumIterations = 1000;
+  const int NumIterations = 100;
   const int ClientQueueSize = 256;
-  const int ServerQueueSize = 1024;
+  const int ServerQueueSizePerClient = 256;
 
   Clock clock;
 
@@ -64,10 +33,8 @@ class NetworkingModule {
   uint8_t* privateKey;
   uint64_t clientId;
 
-  CustomMessage* clientSendRBuffer;
-  CustomMessage* clientReceiveRBuffer;
-  CustomMessage* serverSendRBuffer;
-  CustomMessage* serverReceiveRBuffer;
+  RingBuffer<yojimbo::Message*> clientSendBuffer;
+  RingBuffer<yojimbo::Message*>* serverSendBufferArray;
 
   // Constructors
 
@@ -77,15 +44,19 @@ class NetworkingModule {
   // Module functions
 
   void StartUp();
-  void Update();
+  void Update(float deltaTime);
   void ShutDown();
 
   // Functions
 
+  void AddClientToServerMessage(yojimbo::Message* message);
+  void AddServerToClientMessage(int clientIdx, yojimbo::Message* message);
+
   void PumpClientServerUpdate(double time);
+
   void SendClientToServerMessages();
-  void SendServerToClientMessages();
-  void ProcessClientToServerMessages();
+  void SendServerToClientMessages(int clientIdx);
+  void ProcessClientToServerMessages(int clientIdx);
   void ProcessServerToClientMessages();
 
   void Connect(const char* serverAddress);
