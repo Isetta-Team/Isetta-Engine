@@ -75,7 +75,7 @@ T& ObjectHandle<T>::operator*() {
 
 template <typename T>
 T* ObjectHandle<T>::GetObjectPtr() const {
-  HandleEntry entry = MemoryManager::handleEntryTable[index];
+  HandleEntry& entry = MemoryManager::handleEntryTable[index];
 
   if (entry.isEmpty) {
     throw std::exception{"ObjectHandle::GetObject() : Object already deleted"};
@@ -93,7 +93,7 @@ T* ObjectHandle<T>::GetObjectPtr() const {
 
 template <typename T>
 void ObjectHandle<T>::EraseObject() const {
-  HandleEntry entry = MemoryManager::handleEntryTable[index];
+  HandleEntry& entry = MemoryManager::handleEntryTable[index];
 
   if (entry.isEmpty) {
     // TODO(YIDI): Is this a good use of log_error?
