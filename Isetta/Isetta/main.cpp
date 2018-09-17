@@ -2,19 +2,19 @@
  * Copyright (c) 2018 Isetta
  */
 #include <Windows.h>
+#include <inttypes.h>
+#include <stdlib.h>
 #include <chrono>
 #include <string>
 #include "Audio/AudioSource.h"
 #include "Core/Debug/Logger.h"
 #include "Core/FileSystem.h"
 #include "Core/Math/Random.h"
-#include "Core/Memory/PoolAllocator.h"
 #include "Core/Memory/StackAllocator.h"
-#include "Input/Input.h"
-#include <inttypes.h>
-#include <stdlib.h>
-#include "yojimbo/shared.h"
+#include "Core/Memory/TemplatePoolAllocator.h"
 #include "EngineLoop.h"
+#include "Input/Input.h"
+#include "yojimbo/shared.h"
 
 using namespace Isetta;
 
@@ -38,6 +38,7 @@ to give newcomers a clearer representation of the engine-building process.
 int main() {
   EngineLoop loop;
   loop.Run();
+
   // auto h = FileSystem::Instance().Read(
   //    "Resources/test/async.in",
   //    std::function<void(const char *)>(
@@ -51,15 +52,7 @@ int main() {
   //        [](const char* buf) { printf("> write done\n"); }),
   //    false);
 
-
-  // Random number test
-  // auto rnd = Math::Random::GetRandomGenerator(1.f, 10.f);
-  // float number = rnd.GetValue();
-  // Logger::Log(Debug::Channel::General,
-  // "Random number: " + std::to_string(number));
-
-  RunBenchmarks();
-
+  // RunBenchmarks();
 
   return 0;
 }
@@ -97,17 +90,16 @@ void RunBenchmarks() {
                        const int count = 10000;
                        AudioSource *audioSources[count];
                        StackAllocator stackAllocator(sizeof(AudioSource) *
-                                                     count);
+                                                     count + 100);
                        for (auto &audioSource : audioSources) {
                          audioSource = stackAllocator.New<AudioSource>();
                        }
-                       stackAllocator.Erase();
                      }});
 
   benchmarks.insert({"4. Pool Allocator", []() {
                        const int count = 10000;
                        AudioSource *audioSources[count];
-                       PoolAllocator<AudioSource> poolAllocator(count);
+                       TemplatePoolAllocator<AudioSource> poolAllocator(count);
                        for (auto &audioSource : audioSources) {
                          audioSource = poolAllocator.Get();
                        }
@@ -115,7 +107,6 @@ void RunBenchmarks() {
                        for (auto &audioSource : audioSources) {
                          poolAllocator.Free(audioSource);
                        }
-                       poolAllocator.Erase();
                      }});
 
   // Benchmarking

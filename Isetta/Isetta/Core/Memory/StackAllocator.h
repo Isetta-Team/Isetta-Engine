@@ -45,6 +45,7 @@ class StackAllocator {
   Marker top;
   SizeInt length;
   void* bottom;
-  Isetta::PtrInt bottomAddress;
+  PtrInt bottomAddress;
+  bool isErased;
 };
 }

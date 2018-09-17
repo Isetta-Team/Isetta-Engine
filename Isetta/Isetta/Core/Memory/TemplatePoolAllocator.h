@@ -37,6 +37,7 @@ TemplatePoolAllocator<T>::TemplatePoolAllocator(const SizeInt count) {
     LOG_ERROR(Debug::Channel::Memory,
               "Using TemplatePoolAllocator for type %s will incur more overhead memory than the memory actually "
                   "needed for the elements", typeid(T).name());
+    return;
   }
 
   isErased = false;
@@ -57,11 +58,7 @@ TemplatePoolAllocator<T>::TemplatePoolAllocator(const SizeInt count) {
 
 template <typename T>
 TemplatePoolAllocator<T>::~TemplatePoolAllocator() {
-  if (isErased) {
-    return;
-  }
-  isErased = true;
-  MemoryAllocator::FreeDefaultAligned(memHead);
+  Erase();
 }
 
 template <typename T>
@@ -86,7 +83,7 @@ T* TemplatePoolAllocator<T>::Get() {
 template <typename T>
 void TemplatePoolAllocator<T>::Free(T* t) {
   if (isErased) {
-    throw std::exception("TemplatePoolAllocator::Free(): TemplatePoolAllocator already erased");
+    LOG_ERROR(Debug::Channel::Memory, "TemplatePoolAllocator::Free(): TemplatePoolAllocator already erased");
   }
   t->~T();
   Node* node = new (t) Node();
@@ -97,7 +94,8 @@ void TemplatePoolAllocator<T>::Free(T* t) {
 template <typename T>
 void TemplatePoolAllocator<T>::Erase() {
   if (isErased) {
-    throw std::exception("TemplatePoolAllocator::Get(): TemplatePoolAllocator already erased");
+    LOG_ERROR(Debug::Channel::Memory, "TemplatePoolAllocator::Erase(): TemplatePoolAllocator already erased");
+    return;
   }
   isErased = true;
   MemoryAllocator::FreeDefaultAligned(memHead);
