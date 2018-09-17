@@ -4,6 +4,7 @@
 #include "Graphics/RenderModule.h"
 
 #include <stdexcept>
+#include "Horde3DUtils.h"
 #include "Core/Config/Config.h"
 
 namespace Isetta {
@@ -32,27 +33,27 @@ void RenderModule::ShutDown() {
 void RenderModule::InitRenderConfig() {
   // TODO(Chaojie) Read from game config
   renderInterface = H3DRenderDevice::OpenGL4;
-  fov = Config::Instance().fieldOfView.GetVal();
-  nearPlane = Config::Instance().nearClippingPlane.GetVal();
-  farPlane = Config::Instance().farClippingPlane.GetVal();
+  fov = Config::Instance().renderConfig.fieldOfView.GetVal();
+  nearPlane = Config::Instance().renderConfig.nearClippingPlane.GetVal();
+  farPlane = Config::Instance().renderConfig.farClippingPlane.GetVal();
   resourcePath = Config::Instance().resourcePath.GetVal();
 }
 
 void RenderModule::InitHordeConfig() {
   h3dSetOption(H3DOptions::LoadTextures,
-               Config::Instance().hordeLoadTextures.GetVal());
+               Config::Instance().renderConfig.hordeLoadTextures.GetVal());
   h3dSetOption(H3DOptions::TexCompression,
-               Config::Instance().hordeTexCompression.GetVal());
+               Config::Instance().renderConfig.hordeTexCompression.GetVal());
   h3dSetOption(H3DOptions::MaxAnisotropy,
-               Config::Instance().hordeMaxAnisotropy.GetVal());
+               Config::Instance().renderConfig.hordeMaxAnisotropy.GetVal());
   h3dSetOption(H3DOptions::ShadowMapSize,
-               Config::Instance().hordeShadowmapSize.GetVal());
+               Config::Instance().renderConfig.hordeShadowmapSize.GetVal());
   h3dSetOption(H3DOptions::FastAnimation,
-               Config::Instance().hordeFastAnimation.GetVal());
+               Config::Instance().renderConfig.hordeFastAnimation.GetVal());
   h3dSetOption(H3DOptions::SampleCount,
-               Config::Instance().hordeSampleCount.GetVal());
+               Config::Instance().renderConfig.hordeSampleCount.GetVal());
   h3dSetOption(H3DOptions::DumpFailedShaders,
-               Config::Instance().hordeDumpFailedShaders.GetVal());
+               Config::Instance().renderConfig.hordeDumpFailedShaders.GetVal());
 }
 
 void RenderModule::InitH3D() {

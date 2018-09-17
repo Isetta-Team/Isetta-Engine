@@ -3,6 +3,7 @@
  */
 
 #include "Core/Time/Clock.h"
+#include "Core/Debug/Logger.h"
 
 namespace Isetta {
 Clock::Clock()
@@ -36,14 +37,15 @@ void Clock::UpdateTime() {
   deltaTime = 0.0;
   if (!isPause) {
     TimePoint newTime = HighResClock::now();
-    Milliseconds delta =
-        std::chrono::duration_cast<Milliseconds>(newTime - currentTime);
-    Milliseconds elapse =
-        std::chrono::duration_cast<Milliseconds>(newTime - startTime);
+    Nanoseconds delta =
+        std::chrono::duration_cast<Nanoseconds>(newTime - currentTime);
+    Nanoseconds elapse =
+        std::chrono::duration_cast<Nanoseconds>(newTime - startTime);
+
     currentTime = newTime;
-    deltaTime = delta.count() / 1000.f * timeScale;
+    deltaTime = delta.count() * 1e-9 * timeScale;
     elapsedTime += deltaTime;
-    elapsedUnscaledTime = elapse.count() / 1000.f;
+    elapsedUnscaledTime = elapse.count() * 1e-9;
   }
 }
 

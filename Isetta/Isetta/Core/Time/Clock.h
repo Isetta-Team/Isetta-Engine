@@ -7,7 +7,7 @@
 
 namespace Isetta {
 class Clock {
-  using Milliseconds = std::chrono::milliseconds;
+  using Nanoseconds = std::chrono::nanoseconds;
   using HighResClock = std::chrono::high_resolution_clock;
   using TimePoint = std::chrono::time_point<HighResClock>;
 
