@@ -15,7 +15,6 @@ template <typename T>
 class ObjectHandle;
 
 // TODO(YIDI): Add LSR
-// TODO(YIDI): Add PoolAllocators
 // TODO(YIDI): Implement de-fragmentation
 class MemoryManager {
  public:
@@ -76,17 +75,19 @@ ObjectHandle<T>& MemoryManager::NewDynamic() {
   // TODO(YIDI): I'm not sure this is the right way to implement object handles,
   // the handle itself should not need to be freed. But I think usage-wise this
   // is optimal
-  void* ptr = instance->handlePool.Get();
-  ObjectHandle<T>* hand = new (ptr) ObjectHandle<T>();
+  auto hand = new (instance->handlePool.Get()) ObjectHandle<T>{};
   instance->handleLoopUp[hand->index] = hand;
   return *(hand);
 }
 
 template <typename T>
 void MemoryManager::FreeDynamic(ObjectHandle<T>& objToFree) {
-  objToFree.EraseObject();
   if (instance->handleLoopUp[objToFree.index] != nullptr) {
+    objToFree.EraseObject();
     instance->handlePool.Free(instance->handleLoopUp[objToFree.index]);
+    instance->handleLoopUp[objToFree.index] = nullptr;
+  } else {
+    LOG_ERROR(Debug::Channel::Memory, "Double deleting handle!");
   }
 }
 
