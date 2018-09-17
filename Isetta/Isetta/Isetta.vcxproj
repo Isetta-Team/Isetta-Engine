@@ -138,6 +138,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Config\Config.h" />
     <ClInclude Include="Core\Color.h" />
     <ClInclude Include="Core\DataStructures\RingBuffer.h" />
+    <ClInclude Include="Core\Debug\Debug.h" />
     <ClInclude Include="Core\IsettaAlias.h" />
     <ClInclude Include="Core\Math\Matrix4.h" />
     <ClInclude Include="Core\Math\Quaternion.h" />

@@ -13,9 +13,10 @@
 
 namespace Isetta {
 void EngineLoop::StartUp() {
-  // config example
+  Logger();
   Config::Instance().Read("config.cfg");
-  Sleep(3000);
+  // TODO(Jacob) make file read synchronus
+  Sleep(500);
 
   intervalTime = 1.0 / Config::Instance().loopConfig.maxFps.GetVal();
   maxSimulationCount = Config::Instance().loopConfig.maxSimCount.GetVal();
@@ -69,7 +70,7 @@ void EngineLoop::Update() {
   for (int i = 0; i < maxSimulationCount && accumulateTime > intervalTime;
        i++) {
     moduleManager.SimulationUpdate(intervalTime);
-    LOG_INFO(Debug::Channel::General, std::to_string(accumulateTime));
+    // LOG_INFO(Debug::Channel::General, std::to_string(accumulateTime));
     accumulateTime -= intervalTime;
   }
 

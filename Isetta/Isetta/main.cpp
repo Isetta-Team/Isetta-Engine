@@ -7,6 +7,7 @@
 #include <chrono>
 #include <string>
 #include "Audio/AudioSource.h"
+#include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
 #include "Core/FileSystem.h"
 #include "Core/Math/Random.h"
@@ -89,8 +90,8 @@ void RunBenchmarks() {
   benchmarks.insert({"3. Stack Allocator", []() {
                        const int count = 10000;
                        AudioSource *audioSources[count];
-                       StackAllocator stackAllocator(sizeof(AudioSource) *
-                                                     count + 100);
+                       StackAllocator stackAllocator(
+                           sizeof(AudioSource) * count + 100);
                        for (auto &audioSource : audioSources) {
                          audioSource = stackAllocator.New<AudioSource>();
                        }
