@@ -21,5 +21,6 @@ class ModuleManager {
   class WindowModule* windowModule;
   class RenderModule* renderModule;
   class InputModule* inputModule;
+  class NetworkingModule* networkingModule;
 };
 }  // namespace Isetta
