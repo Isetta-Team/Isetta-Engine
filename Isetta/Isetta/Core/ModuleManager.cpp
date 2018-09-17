@@ -7,6 +7,7 @@
 #include "Graphics/RenderModule.h"
 #include "Graphics/Window.h"
 #include "Input/InputModule.h"
+#include "Networking/NetworkingModule.h"
 
 namespace Isetta {
 ModuleManager::ModuleManager() {
@@ -15,6 +16,7 @@ ModuleManager::ModuleManager() {
   windowModule = new WindowModule{};
   renderModule = new RenderModule{};
   inputModule = new InputModule{};
+  networkingModule = new NetworkingModule{};
 }
 ModuleManager::~ModuleManager() {
   delete windowModule;
@@ -22,6 +24,7 @@ ModuleManager::~ModuleManager() {
   delete renderModule;
   delete inputModule;
   delete memoryManager;
+  delete networkingModule;
 }
 
 void ModuleManager::StartUp() {
@@ -30,12 +33,14 @@ void ModuleManager::StartUp() {
   windowModule->StartUp();
   renderModule->StartUp(windowModule->winHandle);
   inputModule->StartUp(windowModule->winHandle);
+  networkingModule->StartUp();
 }
 
 void ModuleManager::SimulationUpdate(float deltaTime) {
   audioModule->Update(deltaTime);
   inputModule->Update(deltaTime);
   memoryManager->Update();
+  //networkingModule->Update(deltaTime);
 }
 
 void ModuleManager::RenderUpdate(float deltaTime) {
@@ -49,5 +54,6 @@ void ModuleManager::ShutDown() {
   inputModule->ShutDown();
   windowModule->ShutDown();
   memoryManager->ShutDown();
+  networkingModule->ShutDown();
 }
 }  // namespace Isetta

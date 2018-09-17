@@ -13,7 +13,7 @@ class RingBuffer {
   // Constructors
 
   // TODO(Caleb): Update for the custom mem alloc
-  RingBuffer() : buffer(new T[size]) {}
+  RingBuffer();
   explicit RingBuffer(int n);
   explicit RingBuffer(std::initializer_list<T> il);
   explicit RingBuffer(std::initializer_list<T> il, int n);
@@ -22,7 +22,7 @@ class RingBuffer {
   // Copy and move constructors
 
   RingBuffer(const RingBuffer<T>& rb);
-  RingBuffer(RingBuffer<T>&& rb) noexcept;
+  RingBuffer(RingBuffer<T>&& rb);
   RingBuffer<T>& operator=(const RingBuffer<T>& rb);
 
   // Accessors and mutators
@@ -32,7 +32,7 @@ class RingBuffer {
   T GetBack();
   void PutFront(T o);
   void Clear();
-  T* ToList();
+  T* ToList() const;
 
   // Property accessors
 
@@ -45,14 +45,20 @@ class RingBuffer {
   T* buffer;
   int head = 0;
   int tail = 0;
-  const int size = 64;  // The buffer allows usage of size - 1 slots so that we
-                        // can test for fullness without checking every put/get
+  int size = 64;  // The buffer allows usage of size - 1 slots so that we
+                  // can test for fullness without checking every put/get
   // The final number of usable slots is equivalent to the user's passed size
   // to the constructor size
   // Also cannot be unsigned because it is used for negative modulus calculation
 };
 
 // Class implementation
+
+template <typename T>
+RingBuffer<T>::RingBuffer() {
+  // TODO(Caleb): Change out with custom mem alloc
+  buffer = new T[size];
+}
 
 template <typename T>
 RingBuffer<T>::RingBuffer(int n) : size{n + 1} {
@@ -101,23 +107,41 @@ RingBuffer<T>::RingBuffer(std::initializer_list<T> il, int n) : size{n + 1} {
 template <typename T>
 RingBuffer<T>::RingBuffer(const RingBuffer<T>& rb) : size{rb.GetCapacity()} {
   // TODO(Caleb): Change out with custom mem alloc
+  delete[] buffer;
   buffer = new T[size];
 
-  copyList = rb.ToList();
-  for (auto i : copyList) {
-    Put(i);
+  T* copyList = rb.ToList();
+  for (int i = 0; i < rb.GetLength(); i++) {
+    Put(copyList[i]);
   }
+  delete[] copyList;
 }
 
 template <typename T>
 RingBuffer<T>& RingBuffer<T>::operator=(const RingBuffer<T>& rb) {
-  this(rb);
+  if (this == &rb) {
+    return *this;
+  }
+
+  size = rb.GetCapacity();
+
+  // TODO(Caleb): Change out with custom mem alloc
+  delete[] buffer;
+  buffer = new T[size];
+
+  T* copyList = rb.ToList();
+  for (int i = 0; i < rb.GetLength(); i++) {
+    Put(copyList[i]);
+  }
+  delete[] copyList;
+
   return *this;
 }
 
 template <typename T>
 RingBuffer<T>::RingBuffer(RingBuffer<T>&& rb) : size{rb.GetCapacity()} {
   // TODO(Caleb): Change out with custom mem alloc
+  delete[] buffer;
   buffer = new T[size];
 
   while (!rb.IsEmpty()) {
@@ -175,10 +199,10 @@ void RingBuffer<T>::Clear() {
 }
 
 template <typename T>
-T* RingBuffer<T>::ToList() {
+T* RingBuffer<T>::ToList() const {
   T* list = new T[GetLength()];
-  count = 0;
-  idx = head;
+  int count = 0;
+  int idx = head;
   while (idx != tail) {
     list[count] = buffer[idx];
     idx = (idx + 1) % size;

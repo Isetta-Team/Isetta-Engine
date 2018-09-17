@@ -173,6 +173,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Graphics\RenderModule.h" />
     <ClInclude Include="Graphics\RenderNode.h" />
     <ClInclude Include="Graphics\Window.h" />
+    <ClInclude Include="Networking\Messages.h" />
     <ClInclude Include="Networking\NetworkingModule.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Input\InputEnum.h" />
