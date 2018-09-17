@@ -65,10 +65,10 @@ void WindowModule::InitWindow() {  // Create OpenGL window
                    winShowCursor ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 }
 void WindowModule::InitRenderConfig() {
-  winTitle = Config::Instance().windowTitle.GetVal();
-  initWinWidth = Config::Instance().windowWidth.GetVal();
-  initWinHeight = Config::Instance().windowHeight.GetVal();
-  winFullScreen = Config::Instance().windowFullScreen.GetVal();
-  winShowCursor = Config::Instance().windowShowCursor.GetVal();
+  winTitle = Config::Instance().windowConfig.windowTitle.GetVal();
+  initWinWidth = Config::Instance().windowConfig.windowWidth.GetVal();
+  initWinHeight = Config::Instance().windowConfig.windowHeight.GetVal();
+  winFullScreen = Config::Instance().windowConfig.windowFullScreen.GetVal();
+  winShowCursor = Config::Instance().windowConfig.windowShowCursor.GetVal();
 }
 }  // namespace Isetta

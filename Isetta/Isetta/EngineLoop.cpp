@@ -17,8 +17,8 @@ void EngineLoop::StartUp() {
   Config::Instance().Read("config.cfg");
   Sleep(3000);
 
-  intervalTime = 1.0 / Config::Instance().maxFps.GetVal();
-  maxSimulationCount = Config::Instance().maxSimCount.GetVal();
+  intervalTime = 1.0 / Config::Instance().loopConfig.maxFps.GetVal();
+  maxSimulationCount = Config::Instance().loopConfig.maxSimCount.GetVal();
 
   moduleManager.StartUp();
 
