@@ -7,9 +7,21 @@
 #include <string>
 #include "Core/Config/CVar.h"
 #include "Core/Config/CVarRegistry.h"
+#include "Core/Debug/Logger.h"
 #include "Core/Math/Vector3.h"
 
 namespace Isetta {
+class TestModule {
+ public:
+  struct TestConfig {
+    CVarInt integerVar{"integer", 0};
+    CVarFloat floatVar{"float"};
+    CVarString stringVar{"string", "test"};
+    CVarVector3 vector3Var{"vec3", Math::Vector3::one};
+    CVarInt defaultValue{"default", 10};
+  };
+};
+
 class Config {
  public:
   static Config& Instance() {
@@ -17,11 +29,10 @@ class Config {
     return instance;
   }
 
-  CVarInt integerVar{"integer", 0};
-  CVarFloat floatVar{"float"};
-  CVarString stringVar{"string", "test"};
-  CVarVector3 vector3Var{"vec3", Math::Vector3::one};
-  CVarInt defaultValue{"default", 10};
+  // example of how to do it
+  TestModule::TestConfig test;
+  Logger::LoggerConfig logger;
+
   CVarInt maxFps = {"max_fps", 16};
   CVarInt maxSimCount = {"max_simulation_count", 5};
   CVarString resourcePath{"resource_path", ""};
@@ -57,5 +68,5 @@ class Config {
                     const std::string line);
 
   HANDLE readFile;
-};
+};  // namespace Isetta
 }  // namespace Isetta

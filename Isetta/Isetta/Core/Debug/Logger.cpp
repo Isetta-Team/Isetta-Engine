@@ -3,39 +3,22 @@
  */
 #include "Core/Debug/Logger.h"
 
-#include <Windows.h>
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include "Core/Config/Config.h"
 #include "Core/Debug/Assert.h"
+#include "Core/FileSystem.h"
 
 namespace Isetta {
+std::string Logger::engineFileName = "isetta-log.log";
+std::string Logger::channelFileName = "isetta-channel-log.log";
+std::ostringstream Logger::engineStream;
+std::ostringstream Logger::channelStream;
 
-uint8_t Logger::gVerbosityMask = ~0u;
-uint32_t Logger::gChannelMask = ~0u;
-bool Logger::gAlwaysFlush = false;
-bool Logger::gBreakOnError = false;
-
-std::ofstream* Logger::engineStream = nullptr;
-std::ofstream* Logger::channelStream = nullptr;
-
-void Logger::SetLoggerFiles(std::ofstream* inEngineStream,
-                            std::ofstream* inChannelStream) {
-  Logger::engineStream = inEngineStream;
-  if (inChannelStream) {
-    Logger::channelStream = inChannelStream;
-  }
-}
-void Logger::SetLoggerChannelFile(std::ofstream* inChannelStream) {
-  if (!Logger::engineStream) {
-    throw std::logic_error(
-        "Logger::SetLoggerChannel must have engine log file before changing "
-        "channel file");
-  }
-  if (Logger::channelStream) {
-    Logger::channelStream->close();
-  }
-  Logger::channelStream = inChannelStream;
+Logger::Logger() {
+  FileSystem::Instance().Write(channelFileName, "", nullptr, false);
+  FileSystem::Instance().Write(engineFileName, "", nullptr, false);
 }
 
 int Logger::VDebugPrintF(const Debug::Channel::Enum channel,
@@ -56,18 +39,13 @@ int Logger::VDebugPrintF(const Debug::Channel::Enum channel,
     if (CheckVerbosity(verbosity)) {
       OutputDebugString(sBuffer);
     }
-    if (Logger::channelStream) {
-      *Logger::channelStream << sBuffer;
-    }
-  }
-  if (Logger::engineStream) {
-    *Logger::engineStream << sBuffer;
+    BufferWrite(channelFileName, &channelStream, sBuffer);
   }
 
-  if (gAlwaysFlush) {
-    Logger::engineStream->flush();
-  }
-  if (gBreakOnError && verbosity == Debug::Verbosity::Error &&
+  BufferWrite(engineFileName, &engineStream, sBuffer);
+
+  if (Config::Instance().logger.breakOnError.GetVal() &&
+      verbosity == Debug::Verbosity::Error &&
       CheckVerbosity(Debug::Verbosity::Error)) {
     ASSERT(false);
   }
@@ -88,12 +66,29 @@ int Logger::DebugPrintF(const std::string file, const int line,
 }
 
 bool Logger::CheckChannelMask(const Debug::Channel::Enum channel) {
-  return (gChannelMask & channel) == static_cast<uint32_t>(channel);
+  return (Config::Instance().logger.channelMask.GetVal() & channel) ==
+         static_cast<uint32_t>(channel);
 }
 
 bool Logger::CheckVerbosity(const Debug::Verbosity::Enum verbosity) {
-  return (gVerbosityMask & verbosity) == static_cast<uint8_t>(verbosity);
+  return (Config::Instance().logger.verbosityMask.GetVal() & verbosity) ==
+         static_cast<uint8_t>(verbosity);
 }
+
+void Logger::BufferWrite(const std::string fileName, std::ostringstream* stream,
+                         const char* buffer) {
+  stream->write(buffer, strlen(buffer));
+  stream->seekp(0, std::ios::end);
+  if (static_cast<int>(stream->tellp()) >=
+      Config::Instance().logger.bytesToBuffer.GetVal()) {
+    stream->flush();
+    FileSystem::Instance().Write(fileName, stream->str());
+    stream->str("");
+    stream->clear();
+    stream->seekp(0, std::ios::beg);
+  }
+}
+
 void LogObject::operator()(const Debug::Channel::Enum channel,
                            const Debug::Verbosity::Enum verbosity,
                            const char* inFormat, ...) const {

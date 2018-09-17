@@ -250,6 +250,9 @@
       <Filter>Core\DataStructures</Filter>
     </ClInclude>
     <ClInclude Include="EngineLoop.h" />
+    <ClInclude Include="Core\Debug\Debug.h">
+      <Filter>Core\Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

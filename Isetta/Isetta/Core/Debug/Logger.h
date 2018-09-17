@@ -7,9 +7,13 @@
 #define __FILENAME__ \
   (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
 
+#include <Windows.h>
 #include <cstdint>
 #include <initializer_list>
 #include <string>
+#include "Core/Config/CVar.h"
+#include "Core/Debug/Assert.h"
+#include "Core/Debug/Debug.h"
 
 namespace Isetta {
 #define LOG LogObject(__FILENAME__, __LINE__)
@@ -17,79 +21,19 @@ namespace Isetta {
 #define LOG_WARNING LogObject(__FILENAME__, __LINE__, Debug::Verbosity::Warning)
 #define LOG_ERROR LogObject(__FILENAME__, __LINE__, Debug::Verbosity::Error)
 
-namespace Debug {
-struct Verbosity {
-  enum Enum {
-    // Off = 0, // enum not needed, can set mask to 0
-    Error = (1u << 1),
-    Development = (1 << 2),
-    Warning = (1u << 3),
-    Info = (1u << 4),
-    // All = ~0
-  };
-};
-
-static inline const std::string ToString(Verbosity::Enum v) {
-  switch (v) {
-    // case Verbosity::Off:
-    //  return "Off";
-    case Verbosity::Error:
-      return "Error";
-    case Verbosity::Warning:
-      return "Warning";
-    case Verbosity::Info:
-      return "Info";
-    default:
-      return "Unknown";
-  }
-}
-
-struct Channel {
-  enum Enum {
-    General = (1u << 0),
-    Memory = (1u << 1),
-    Networking = (1u << 2),
-    Graphics = (1u << 3),
-    Physics = (1u << 4),
-    Gameplay = (1u << 5),
-    Sound = (1u << 6),
-    FileIO = (1u << 7),
-  };
-};
-
-static inline const std::string ToString(Channel::Enum c) {
-  switch (c) {
-    case Channel::General:
-      return "General";
-    case Channel::Memory:
-      return "Memory";
-    case Channel::Networking:
-      return "Networking";
-    case Channel::Graphics:
-      return "Graphics";
-    case Channel::Physics:
-      return "Physics";
-    case Channel::Gameplay:
-      return "Gameplay";
-    case Channel::Sound:
-      return "Sound";
-    case Channel::FileIO:
-      return "File I/O";
-    default:
-      return "Unknown";
-  }
-}
-}  // namespace Debug
-
 class Logger {
  public:
-  static uint8_t gVerbosityMask;
-  static uint32_t gChannelMask;
-  static bool gAlwaysFlush, gBreakOnError;
+  struct LoggerConfig {
+    CVarInt verbosityMask{"verbosity_mask", ~0u};
+    CVarInt channelMask{"channel_mask", ~0u};
+    CVarInt breakOnError{"break_on_error", ~0u};
+    CVarInt bytesToBuffer{"bytesToBuffer", 4096};
+  };
 
-  static void SetLoggerFiles(std::ofstream* inEngineStream,
-                             std::ofstream* inChannelStream = nullptr);
-  static void SetLoggerChannelFile(std::ofstream* inChannelStream);
+  // static uint8_t gVerbosityMask;
+  // static uint32_t gChannelMask;
+  // static bool gAlwaysFlush, gBreakOnError;
+  Logger();
 
   static int DebugPrintF(const std::string file, const int line,
                          const Debug::Channel::Enum channel,
@@ -102,10 +46,15 @@ class Logger {
                           const std::string format, va_list argList);
 
  private:
-  static std::ofstream* engineStream;
-  static std::ofstream* channelStream;
+  static std::string engineFileName;
+  static std::string channelFileName;
+  static std::ostringstream engineStream;
+  static std::ostringstream channelStream;
+
   static bool CheckChannelMask(const Debug::Channel::Enum channel);
   static bool CheckVerbosity(const Debug::Verbosity::Enum verbosity);
+  static void BufferWrite(const std::string fileName,
+                          std::ostringstream* stream, const char* buffer);
 };
 
 struct LogObject {

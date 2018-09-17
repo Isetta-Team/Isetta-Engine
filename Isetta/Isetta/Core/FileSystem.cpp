@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <tchar.h>
+#include <iostream>
 #include <stdexcept>
 #include "Core/Debug/Logger.h"
 
@@ -199,11 +200,12 @@ HANDLE FileSystem::Write(const char* fileName, const char* contentBuffer,
                          const bool appendData) {
   HANDLE hFile;
   if (appendData) {
-    hFile = OpenFile(fileName, GENERIC_WRITE, NULL, OPEN_EXISTING);
+    hFile = OpenFile(fileName, GENERIC_WRITE, FILE_SHARE_WRITE, OPEN_EXISTING);
   } else {
-    hFile = OpenFile(fileName, GENERIC_WRITE, NULL, TRUNCATE_EXISTING);
+    hFile =
+        OpenFile(fileName, GENERIC_WRITE, FILE_SHARE_WRITE, TRUNCATE_EXISTING);
     if (GetLastError() == ERROR_FILE_NOT_FOUND) {
-      hFile = OpenFile(fileName, GENERIC_WRITE, NULL, CREATE_NEW);
+      hFile = OpenFile(fileName, GENERIC_WRITE, FILE_SHARE_WRITE, CREATE_NEW);
     }
   }
   if (GetFileError()) {
