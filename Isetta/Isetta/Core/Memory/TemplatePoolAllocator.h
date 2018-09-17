@@ -11,6 +11,7 @@ namespace Isetta {
 template <typename T>
 class TemplatePoolAllocator {
  public:
+  TemplatePoolAllocator() = default;
   explicit TemplatePoolAllocator(SizeInt count);
   ~TemplatePoolAllocator() = default;
   T* Get();

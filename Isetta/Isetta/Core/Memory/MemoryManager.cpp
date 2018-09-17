@@ -7,7 +7,8 @@
 namespace Isetta {
 
 // TODO(YIDI): Use config for max table size
-HandleEntry MemoryManager::handleTable[maxTableSize];
+HandleEntry MemoryManager::handleEntryTable[maxTableSize];
+MemoryManager* MemoryManager::instance;
 
 void* MemoryManager::AllocSingleFrameUnAligned(const SizeInt size) {
   return singleFrameAllocator.AllocUnaligned(size);
@@ -27,9 +28,10 @@ void* MemoryManager::AllocDoubleBuffered(const SizeInt size,
   return doubleBufferedAllocator.Alloc(size, alignment);
 }
 
-MemoryManager::MemoryManager() {
+MemoryManager::MemoryManager() : handlePool(8, maxTableSize){
   // TODO(YIDI): The two allocators are still initialized here by automatically
   // calling their default constructors, find a better way to handle this
+  instance = this;
 }
 
 void MemoryManager::StartUp() {
@@ -49,5 +51,6 @@ void MemoryManager::Update() {
 void MemoryManager::ShutDown() {
   singleFrameAllocator.Erase();
   doubleBufferedAllocator.Erase();
+  handlePool.Erase();
 }
 }  // namespace Isetta

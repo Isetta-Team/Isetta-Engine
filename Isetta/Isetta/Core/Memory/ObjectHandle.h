@@ -26,7 +26,7 @@ class HandleEntry {
 template <typename T>
 class ObjectHandle {
  public:
-  ~ObjectHandle();
+  ~ObjectHandle() = default;
   T* operator->() const;
   T& operator*();
 
@@ -34,7 +34,6 @@ class ObjectHandle {
   ObjectHandle();
   T* GetObjectPtr() const;
   void EraseObject() const;
-
   U32 uniqueID;
   U32 index;
 
@@ -42,13 +41,14 @@ class ObjectHandle {
 };
 
 template <typename T>
-ObjectHandle<T>::ObjectHandle() : uniqueID(MemoryManager::nextUniqueID++) {
+ObjectHandle<T>::ObjectHandle() {
+  uniqueID = MemoryManager::nextUniqueID++;
   HandleEntry* entry = nullptr;
 
   for (U32 i = 0; i < MemoryManager::maxTableSize; i++) {
-    if (MemoryManager::handleTable[i].isEmpty) {
+    if (MemoryManager::handleEntryTable[i].isEmpty) {
       index = i;
-      entry = &MemoryManager::handleTable[index];
+      entry = &MemoryManager::handleEntryTable[index];
       break;
     }
   }
@@ -64,9 +64,6 @@ ObjectHandle<T>::ObjectHandle() : uniqueID(MemoryManager::nextUniqueID++) {
 }
 
 template <typename T>
-ObjectHandle<T>::~ObjectHandle() {}
-
-template <typename T>
 T* ObjectHandle<T>::operator->() const {
   return GetObjectPtr();
 }
@@ -78,7 +75,7 @@ T& ObjectHandle<T>::operator*() {
 
 template <typename T>
 T* ObjectHandle<T>::GetObjectPtr() const {
-  HandleEntry entry = MemoryManager::handleTable[index];
+  HandleEntry entry = MemoryManager::handleEntryTable[index];
 
   if (entry.isEmpty) {
     throw std::exception{"ObjectHandle::GetObject() : Object already deleted"};
@@ -96,7 +93,7 @@ T* ObjectHandle<T>::GetObjectPtr() const {
 
 template <typename T>
 void ObjectHandle<T>::EraseObject() const {
-  HandleEntry entry = MemoryManager::handleTable[index];
+  HandleEntry entry = MemoryManager::handleEntryTable[index];
 
   if (entry.isEmpty) {
     // TODO(YIDI): Is this a good use of log_error?

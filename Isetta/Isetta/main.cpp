@@ -21,7 +21,6 @@
 using namespace Isetta;
 
 void RunBenchmarks();
-void RunYidiTest();
 
 /*! \mainpage Isetta Engine
 Game engine development is a very wide field in the industry, but also a very
@@ -56,7 +55,7 @@ int main() {
   //    false);
 
   // RunBenchmarks();
-  RunYidiTest();
+  // RunYidiTest();
 
   return 0;
 }
@@ -126,26 +125,4 @@ void RunBenchmarks() {
     std::string duration = std::to_string((time / testIterations)) + "s";
     LOG_INFO(Debug::Channel::Memory, {test.first + ": " + duration});
   }
-}
-
-void RunYidiTest() {
-  auto &audio = MemoryManager::NewDynamic<AudioSource>();
-
-  const U32 count = 10;
-  std::vector<ObjectHandle<U64> *> arr;
-  arr.reserve(count);
-  for (U32 i = 0; i < count; i++) {
-    auto &ref = MemoryManager::NewDynamic<U64>();
-    *ref = i;
-    arr.push_back(&ref);
-  }
-
-  for (U32 i = 0; i < count; i++) {
-    MemoryManager::FreeDynamic(*arr[i]);
-  }
-
-  MemoryManager::FreeDynamic(audio);
-
-  // auto &hi = MemoryManager::NewDynamic<U64>();
-  // MemoryManager::FreeDynamic(hi);
 }

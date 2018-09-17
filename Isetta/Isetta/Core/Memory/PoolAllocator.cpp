@@ -7,7 +7,7 @@
 
 namespace Isetta {
 
-PoolAllocator::PoolAllocator(SizeInt chunkSize, SizeInt count) {
+PoolAllocator::PoolAllocator(const SizeInt chunkSize, const SizeInt count) {
   elementSize = chunkSize;
 
   if (elementSize > sizeof(Node*)) {

@@ -5,6 +5,8 @@
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Memory/DoubleBufferedAllocator.h"
+#include "Core/Memory/ObjectHandle.h"
+#include "Core/Memory/PoolAllocator.h"
 #include "Core/Memory/StackAllocator.h"
 
 namespace Isetta {
@@ -43,13 +45,16 @@ class MemoryManager {
   void Update();
   void ShutDown();
 
+  static MemoryManager* instance;
   StackAllocator singleFrameAllocator{};
   DoubleBufferedAllocator doubleBufferedAllocator{};
+  PoolAllocator handlePool;
 
   // can't be put in ObjectHandle because it creates new ones for each type
   inline static U32 nextUniqueID = 0;
   const static U32 maxTableSize = 2048;
-  static class HandleEntry handleTable[];
+  static class HandleEntry handleEntryTable[];
+  inline static void* handleLoopUp[maxTableSize] = {nullptr};
 
   template <typename T>
   friend class ObjectHandle;
@@ -68,18 +73,21 @@ T* MemoryManager::NewDoubleBuffered() {
 
 template <typename T>
 ObjectHandle<T>& MemoryManager::NewDynamic() {
-  // TODO(YIDI): use a pool to manage object handles
   // TODO(YIDI): I'm not sure this is the right way to implement object handles,
-  // the handle itself should not need to be freed
-  auto hand = new ObjectHandle<T>{};
+  // the handle itself should not need to be freed. But I think usage-wise this
+  // is optimal
+  void* ptr = instance->handlePool.Get();
+  ObjectHandle<T>* hand = new (ptr) ObjectHandle<T>();
+  instance->handleLoopUp[hand->index] = hand;
   return *(hand);
 }
 
 template <typename T>
 void MemoryManager::FreeDynamic(ObjectHandle<T>& objToFree) {
   objToFree.EraseObject();
-  // TODO(YIDI): Use a pool allocator for this
-  delete &objToFree;
+  if (instance->handleLoopUp[objToFree.index] != nullptr) {
+    instance->handlePool.Free(instance->handleLoopUp[objToFree.index]);
+  }
 }
 
 }  // namespace Isetta

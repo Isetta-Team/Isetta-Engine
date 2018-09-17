@@ -2,8 +2,10 @@
  * Copyright (c) 2018 Isetta
  */
 #include "EngineLoop.h"
+#include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
+#include "Core/Memory/ObjectHandle.h"
 #include "Core/ModuleManager.h"
 #include "Core/Time/Clock.h"
 #include "Graphics/LightNode.h"
@@ -12,12 +14,15 @@
 #include "Input/InputEnum.h"
 
 namespace Isetta {
+
+void RunYidiTest();
+
 void EngineLoop::StartUp() {
   Logger();
   Config::Instance().Read("config.cfg");
   // TODO(Jacob) make file read synchronus
   Sleep(500);
-  
+
   intervalTime = 1.0 / Config::Instance().loopConfig.maxFps.GetVal();
   maxSimulationCount = Config::Instance().loopConfig.maxSimCount.GetVal();
 
@@ -57,6 +62,8 @@ void EngineLoop::StartUp() {
         Input::UnregisterMousePressCallback(MouseButtonCode::MOUSE_LEFT,
                                             handleC);
       });
+
+  RunYidiTest();
 }
 
 void EngineLoop::Update() {
@@ -92,4 +99,24 @@ Clock& EngineLoop::GetGameClock() {
   static Clock gameTime{};
   return gameTime;
 }
+
+void RunYidiTest() {
+  auto audio = MemoryManager::NewDynamic<AudioSource>();
+  MemoryManager::FreeDynamic(audio);
+  // const U32 count = 10;
+  // std::vector<ObjectHandle<U64>> arr;
+  // arr.reserve(count);
+  // for (U32 i = 0; i < count; i++) {
+  // auto ref = MemoryManager::NewDynamic<U64>();
+  // *ref = i;
+  // arr.push_back(ref);
+  // }
+
+  // for (U32 i = 0; i < count; i++) {
+  // MemoryManager::FreeDynamic(arr[i]);
+  // }
+
+  
+}
+
 }  // namespace Isetta
