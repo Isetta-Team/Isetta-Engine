@@ -22,7 +22,7 @@ class Config {
   CVarString stringVar{"string", "test"};
   CVarVector3 vector3Var{"vec3", Math::Vector3::one};
   CVarInt defaultValue{"default", 10};
-  CVarInt fixedInterval = {"fixed_interval_milliseconds", 16};
+  CVarInt maxFps = {"max_fps", 16};
   CVarInt maxSimCount = {"max_simulation_count", 5};
   CVarString resourcePath{"resource_path", ""};
   CVarInt windowWidth{"window_width", 1024};

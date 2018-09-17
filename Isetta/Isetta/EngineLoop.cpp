@@ -2,7 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #include "EngineLoop.h"
-#include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
 #include "Core/ModuleManager.h"
@@ -18,7 +17,7 @@ void EngineLoop::StartUp() {
   Config::Instance().Read("config.cfg");
   Sleep(3000);
 
-  intervalTime = Config::Instance().fixedInterval.GetVal() / 1000.0;
+  intervalTime = 1.0 / Config::Instance().maxFps.GetVal();
   maxSimulationCount = Config::Instance().maxSimCount.GetVal();
 
   moduleManager.StartUp();
