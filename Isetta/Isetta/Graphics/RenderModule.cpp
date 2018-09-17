@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include "Horde3DUtils.h"
 #include "Core/Config/Config.h"
+#include "Graphics/AnimationNode.h"
 
 namespace Isetta {
 void RenderModule::StartUp(GLFWwindow* win) {
@@ -14,10 +15,14 @@ void RenderModule::StartUp(GLFWwindow* win) {
   InitH3D();
   InitHordeConfig();
   InitResources();
+  AnimationNode::renderModule = this;
 }
 
 void RenderModule::Update(float deltaTime) {
   if (!cam) return;
+  for (const auto& anim : animationNodes) {
+    anim->UpdateAnimation(deltaTime);
+  }
 
   h3dRender(cam);
 
@@ -31,7 +36,6 @@ void RenderModule::ShutDown() {
 }
 
 void RenderModule::InitRenderConfig() {
-  // TODO(Chaojie) Read from game config
   renderInterface = H3DRenderDevice::OpenGL4;
   fov = Config::Instance().renderConfig.fieldOfView.GetVal();
   nearPlane = Config::Instance().renderConfig.nearClippingPlane.GetVal();

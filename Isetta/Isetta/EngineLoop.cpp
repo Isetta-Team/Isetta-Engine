@@ -7,12 +7,13 @@
 #include "Core/Memory/ObjectHandle.h"
 #include "Core/ModuleManager.h"
 #include "Core/Time/Clock.h"
+#include "Graphics/AnimationNode.h"
 #include "Graphics/LightNode.h"
 #include "Graphics/ModelNode.h"
 #include "Input/Input.h"
 #include "Input/InputEnum.h"
-#include "Networking/NetworkManager.h"
 #include "Networking/Messages.h"
+#include "Networking/NetworkManager.h"
 
 namespace Isetta {
 
@@ -36,14 +37,19 @@ void EngineLoop::StartUp() {
   // Game Init Part
 
   // Networking
-  NetworkManager::CreateServer(
-      "127.0.0.1");
-  NetworkManager::ConnectToServer("127.0.0.1", [](bool b) {LOG(Debug::Channel::Networking, "Client connection state: %d", b);});
+  NetworkManager::CreateServer("127.0.0.1");
+  NetworkManager::ConnectToServer("127.0.0.1", [](bool b) {
+    LOG(Debug::Channel::Networking, "Client connection state: %d", b);
+  });
 
-  // Read scene from scene file
-  ModelNode car{"test/Low-Poly-Racing-Car.scene.xml", Math::Vector3{0, -20, 0},
-                Math::Vector3::zero, Math::Vector3::one};
-
+  // TODO(All) Read scene from scene file
+  // ModelNode car{"test/Low-Poly-Racing-Car.scene.xml", Math::Vector3{0, -20,
+  // 0},
+  //              Math::Vector3::zero, Math::Vector3::one};
+  static ModelNode car{"push/Pushing.scene.xml", Math::Vector3{-200, -100, 0},
+                       Math::Vector3{0, 90, 0}, Math::Vector3::one};
+  static AnimationNode animation{&car};
+  animation.AddAnimation("push/Pushing.anim", 0, "", false);
   LightNode light{"materials/light.material.xml", Math::Vector3{0, 200, 600},
                   Math::Vector3::zero, Math::Vector3::one};
 
@@ -67,6 +73,22 @@ void EngineLoop::StartUp() {
                                             handleC);
       });
 
+  Input::RegisterKeyPressCallback(KeyCode::P, []() {
+    if (NetworkManager::ClientIsConnected()) {
+      NetworkManager::SendHandleMessageFromClient(0);
+    }
+  });
+  Input::RegisterKeyPressCallback(KeyCode::O, []() {
+    if (NetworkManager::ClientIsConnected()) {
+      NetworkManager::SendHandleMessageFromClient(1);
+    }
+  });
+  Input::RegisterMousePressCallback(MouseButtonCode::MOUSE_LEFT, []() {
+    if (NetworkManager::ClientIsConnected()) {
+      NetworkManager::SendHandleMessageFromClient(2);
+    }
+  });
+
   // RunYidiTest();
 }
 
@@ -85,7 +107,7 @@ void EngineLoop::Update() {
       if (NetworkManager::ServerIsRunning()) {
         NetworkManager::SendStringMessageFromServer(0, "Hi!");
       }
-    } 
+    }
   } else {
     sIsPressed = false;
   }
@@ -95,7 +117,7 @@ void EngineLoop::Update() {
       if (NetworkManager::ClientIsConnected()) {
         NetworkManager::SendStringMessageFromClient("Hi!");
       }
-    } 
+    }
   } else {
     cIsPressed = false;
   }

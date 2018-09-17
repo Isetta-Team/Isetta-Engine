@@ -126,6 +126,9 @@
     <ClCompile Include="Networking\NetworkManager.cpp">
       <Filter>Networking</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\AnimationNode.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Math\Matrix3.h">
@@ -261,6 +264,9 @@
     </ClInclude>
     <ClInclude Include="Networking\NetworkManager.h">
       <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\AnimationNode.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
