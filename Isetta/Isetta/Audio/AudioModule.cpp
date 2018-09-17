@@ -56,7 +56,7 @@ FMOD::Channel* AudioModule::Play(FMOD::Sound* sound, bool loop,
 
 void AudioModule::LoadAllAudioClips() {
   // TODO(YIDI): get this array of string from game config
-  const char* files[]{"singing.wav", "wave.mp3"};
+  const char* files[]{"singing.wav", "wave.mp3", "gunshot.aiff"};
 
   for (auto file : files) {
     StringId hashedId = SID(file);

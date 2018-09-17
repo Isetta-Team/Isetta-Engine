@@ -13,8 +13,8 @@ class ModelNode : RenderNode {
             const Math::Vector3& rotation, const Math::Vector3& scale);
 
  protected:
-  void LoadResourceFromFile(std::string resourceName) override;
+  H3DRes LoadResourceFromFile(std::string resourceName) override;
 
- private:
+  friend class AnimationNode;
 };
 }  // namespace Isetta

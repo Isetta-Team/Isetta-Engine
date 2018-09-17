@@ -7,6 +7,7 @@
 #include <Horde3D.h>
 #include <string>
 #include "Core/Config/CVar.h"
+#include <list>
 
 namespace Isetta {
 class RenderModule {
@@ -23,6 +24,8 @@ class RenderModule {
     CVar<float> nearClippingPlane{"near_clipping_plane", 0.1};
     CVar<float> farClippingPlane{"far_clipping_plane", 1000.0};
   };
+
+  std::list<class AnimationNode*> animationNodes;
 
  private:
   RenderModule() = default;
