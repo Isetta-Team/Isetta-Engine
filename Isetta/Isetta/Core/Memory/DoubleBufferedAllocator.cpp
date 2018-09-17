@@ -9,12 +9,6 @@ DoubleBufferedAllocator::DoubleBufferedAllocator(const SizeInt size)
     : stacks{StackAllocator{size}, StackAllocator{size}}, curStackIndex(0) {
 }
 
-DoubleBufferedAllocator::~DoubleBufferedAllocator() {
-  // TODO(YIDI): Not sure if this is done automatically when then go out of scope
-  // stacks[0].Erase();
-  // stacks[1].Erase();
-}
-
 void* DoubleBufferedAllocator::AllocUnAligned(const SizeInt size) {
   return stacks[curStackIndex].AllocUnaligned(size);
 }

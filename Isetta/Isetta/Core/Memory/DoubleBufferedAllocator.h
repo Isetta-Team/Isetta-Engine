@@ -1,14 +1,14 @@
 #pragma once
 #include "Core/IsettaAlias.h"
-#include "StackAllocator.h"
+#include "Core/Memory/StackAllocator.h"
 
 namespace Isetta {
 // TODO(YIDI): This class hasn't been tested
 class DoubleBufferedAllocator {
-public:
+ public:
   DoubleBufferedAllocator() = default;
   explicit DoubleBufferedAllocator(SizeInt size);
-  ~DoubleBufferedAllocator();
+  ~DoubleBufferedAllocator() = default;
   void* AllocUnAligned(SizeInt size);
   void* Alloc(SizeInt size, U8 alignment = 16);
   void SwapBuffer();
@@ -20,8 +20,8 @@ public:
     void* mem = Alloc(sizeof(T));
     return new (mem) T();
   };
-  
-private:
+
+ private:
   StackAllocator stacks[2];
   U8 curStackIndex;
 };

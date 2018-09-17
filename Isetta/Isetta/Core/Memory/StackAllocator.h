@@ -48,4 +48,4 @@ class StackAllocator {
   void* bottom;
   PtrInt bottomAddress;
 };
-}
+}  // namespace Isetta

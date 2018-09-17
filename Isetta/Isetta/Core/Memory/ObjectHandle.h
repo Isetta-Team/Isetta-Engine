@@ -57,10 +57,8 @@ ObjectHandle<T>::ObjectHandle() {
     throw std::out_of_range{"No empty slot in handle table"};
   }
 
-  // TODO(YIDI): use our own memory mgt
-  T* t = new T{};
-  void* ptr = static_cast<void*>(t);
-  entry->Set(uniqueID, ptr, false);
+  T* t = new (MemoryManager::AllocDynamic(sizeof(T))) T{};
+  entry->Set(uniqueID, static_cast<void*>(t), false);
 }
 
 template <typename T>
@@ -78,7 +76,7 @@ T* ObjectHandle<T>::GetObjectPtr() const {
   HandleEntry& entry = MemoryManager::handleEntryTable[index];
 
   if (entry.isEmpty) {
-    throw std::exception{"ObjectHandle::GetObject() : Object already deleted"};
+    throw std::exception{"ObjectHandle::GetObjectPtr() : Object already deleted"};
   }
 
   // prevent the problem of "stale pointer"
@@ -87,7 +85,7 @@ T* ObjectHandle<T>::GetObjectPtr() const {
   }
 
   throw std::exception{
-      "ObjectHandle::GetObject() : Object you are trying to access was "
+      "ObjectHandle::GetObjectPtr() : Object you are trying to access was "
       "replaced by a new object"};
 }
 
@@ -102,8 +100,8 @@ void ObjectHandle<T>::EraseObject() const {
     return;
   }
 
-  // TODO(YIDI): Use our own memory mgt
-  delete static_cast<T*>(entry.ptr);
+  static_cast<T*>(entry.ptr)->~T();
+  MemoryManager::FreeDynamic(entry.ptr);
   entry.isEmpty = true;
 }
 

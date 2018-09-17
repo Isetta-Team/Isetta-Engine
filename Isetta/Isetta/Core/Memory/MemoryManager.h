@@ -8,6 +8,8 @@
 #include "Core/Memory/ObjectHandle.h"
 #include "Core/Memory/PoolAllocator.h"
 #include "Core/Memory/StackAllocator.h"
+#include "TemplatePoolAllocator.h"
+#include <any>
 
 namespace Isetta {
 
@@ -34,7 +36,7 @@ class MemoryManager {
   static ObjectHandle<T>& NewDynamic();
 
   template <typename T>
-  static void FreeDynamic(ObjectHandle<T>& objToFree);
+  static void DeleteDynamic(ObjectHandle<T>& objToFree);
 
  private:
   MemoryManager();
@@ -43,9 +45,14 @@ class MemoryManager {
   void StartUp();
   void Update();
   void ShutDown();
+  void Defragment();
+
+  static void* AllocDynamic(SizeInt size, U8 alignment = 16);
+  static void FreeDynamic(void* ptrToFree);
 
   static MemoryManager* instance;
   StackAllocator singleFrameAllocator{};
+  StackAllocator dynamicArena{};
   DoubleBufferedAllocator doubleBufferedAllocator{};
   PoolAllocator handlePool;
 
@@ -81,7 +88,7 @@ ObjectHandle<T>& MemoryManager::NewDynamic() {
 }
 
 template <typename T>
-void MemoryManager::FreeDynamic(ObjectHandle<T>& objToFree) {
+void MemoryManager::DeleteDynamic(ObjectHandle<T>& objToFree) {
   if (instance->handleLoopUp[objToFree.index] != nullptr) {
     objToFree.EraseObject();
     instance->handlePool.Free(instance->handleLoopUp[objToFree.index]);

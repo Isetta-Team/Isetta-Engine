@@ -113,7 +113,7 @@ void RunYidiTest() {
   }
 
   for (U32 i = 0; i < count; i++) {
-    MemoryManager::FreeDynamic(arr[i]);
+    MemoryManager::DeleteDynamic(arr[i]);
   }
 }
 
