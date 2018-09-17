@@ -12,6 +12,9 @@ namespace Isetta {
 template <typename T>
 class ObjectHandle;
 
+// TODO(YIDI): Add LSR
+// TODO(YIDI): Add PoolAllocators
+// TODO(YIDI): Implement de-fragmentation
 class MemoryManager {
  public:
   template <typename T>
