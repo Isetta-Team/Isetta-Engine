@@ -2,14 +2,15 @@
  * Copyright (c) 2018 Isetta
  */
 #include <Windows.h>
-#include <inttypes.h>
-#include <stdlib.h>
 #include <chrono>
+#include <cstdlib>
 #include <string>
 #include "Audio/AudioSource.h"
 #include "Core/Debug/Logger.h"
 #include "Core/FileSystem.h"
 #include "Core/Math/Random.h"
+#include "Core/Memory/MemoryManager.h"
+#include "Core/Memory/ObjectHandle.h"
 #include "Core/Memory/StackAllocator.h"
 #include "Core/Memory/TemplatePoolAllocator.h"
 #include "EngineLoop.h"
@@ -19,6 +20,7 @@
 using namespace Isetta;
 
 void RunBenchmarks();
+void RunYidiTest();
 
 /*! \mainpage Isetta Engine
 Game engine development is a very wide field in the industry, but also a very
@@ -53,6 +55,7 @@ int main() {
   //    false);
 
   // RunBenchmarks();
+  RunYidiTest();
 
   return 0;
 }
@@ -90,7 +93,7 @@ void RunBenchmarks() {
                        const int count = 10000;
                        AudioSource *audioSources[count];
                        StackAllocator stackAllocator(sizeof(AudioSource) *
-                                                     count + 100);
+                                                     count);
                        for (auto &audioSource : audioSources) {
                          audioSource = stackAllocator.New<AudioSource>();
                        }
@@ -122,4 +125,26 @@ void RunBenchmarks() {
     std::string duration = std::to_string((time / testIterations)) + "s";
     LOG_INFO(Debug::Channel::Memory, {test.first + ": " + duration});
   }
+}
+
+void RunYidiTest() {
+  auto &audio = MemoryManager::NewDynamic<AudioSource>();
+
+  const U32 count = 10;
+  std::vector<ObjectHandle<U64> *> arr;
+  arr.reserve(count);
+  for (U32 i = 0; i < count; i++) {
+    auto &ref = MemoryManager::NewDynamic<U64>();
+    *ref = i;
+    arr.push_back(&ref);
+  }
+
+  for (U32 i = 0; i < count; i++) {
+    MemoryManager::FreeDynamic(*arr[i]);
+  }
+
+  MemoryManager::FreeDynamic(audio);
+
+  // auto &hi = MemoryManager::NewDynamic<U64>();
+  // MemoryManager::FreeDynamic(hi);
 }

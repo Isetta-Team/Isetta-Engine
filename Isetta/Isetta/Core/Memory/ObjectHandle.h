@@ -1,9 +1,12 @@
+/*
+ * Copyright (c) 2018 Isetta
+ */
 #pragma once
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
+#include "Core/Memory/MemoryManager.h"
 
 namespace Isetta {
-
 class HandleEntry {
  private:
   HandleEntry() = default;
@@ -17,6 +20,7 @@ class HandleEntry {
 
   template <typename T>
   friend class ObjectHandle;
+  friend class MemoryManager;
 };
 
 template <typename T>
@@ -27,26 +31,24 @@ class ObjectHandle {
   T& operator*();
 
  private:
-  explicit ObjectHandle();
+  ObjectHandle();
   T* GetObjectPtr() const;
+  void EraseObject() const;
 
   U32 uniqueID;
   U32 index;
-  inline static U32 nextID = 0;
-  static const int maxTableSize = 2048;
-  inline static HandleEntry table[maxTableSize];
 
   friend class MemoryManager;
 };
 
 template <typename T>
-ObjectHandle<T>::ObjectHandle() : uniqueID(nextID++) {
+ObjectHandle<T>::ObjectHandle() : uniqueID(MemoryManager::nextUniqueID++) {
   HandleEntry* entry = nullptr;
 
-  for (int i = 0; i < maxTableSize; i++) {
-    if (table[i].isEmpty) {
+  for (U32 i = 0; i < MemoryManager::maxTableSize; i++) {
+    if (MemoryManager::handleTable[i].isEmpty) {
       index = i;
-      entry = &table[i];
+      entry = &MemoryManager::handleTable[index];
       break;
     }
   }
@@ -57,23 +59,12 @@ ObjectHandle<T>::ObjectHandle() : uniqueID(nextID++) {
 
   // TODO(YIDI): use our own memory mgt
   T* t = new T{};
-  entry->Set(uniqueID, static_cast<void*>(t), false);
+  void* ptr = static_cast<void*>(t);
+  entry->Set(uniqueID, ptr, false);
 }
 
 template <typename T>
-ObjectHandle<T>::~ObjectHandle() {
-  HandleEntry entry = table[index];
-  if (entry.isEmpty) {
-    // TODO(YIDI): Is this a good use of log_error?
-    LOG_ERROR(Debug::Channel::Memory,
-              "ObjectHandle::DeleteObject() : Double deleting handle!");
-    return;
-  }
-
-  // TODO(YIDI): Use our own memory mgt
-  delete static_cast<T*>(entry.ptr);
-  entry.isEmpty = true;
-}
+ObjectHandle<T>::~ObjectHandle() {}
 
 template <typename T>
 T* ObjectHandle<T>::operator->() const {
@@ -87,7 +78,7 @@ T& ObjectHandle<T>::operator*() {
 
 template <typename T>
 T* ObjectHandle<T>::GetObjectPtr() const {
-  HandleEntry entry = table[index];
+  HandleEntry entry = MemoryManager::handleTable[index];
 
   if (entry.isEmpty) {
     throw std::exception{"ObjectHandle::GetObject() : Object already deleted"};
@@ -101,6 +92,22 @@ T* ObjectHandle<T>::GetObjectPtr() const {
   throw std::exception{
       "ObjectHandle::GetObject() : Object you are trying to access was "
       "replaced by a new object"};
+}
+
+template <typename T>
+void ObjectHandle<T>::EraseObject() const {
+  HandleEntry entry = MemoryManager::handleTable[index];
+
+  if (entry.isEmpty) {
+    // TODO(YIDI): Is this a good use of log_error?
+    LOG_ERROR(Debug::Channel::Memory,
+              "ObjectHandle::DeleteObject() : Double deleting handle!");
+    return;
+  }
+
+  // TODO(YIDI): Use our own memory mgt
+  delete static_cast<T*>(entry.ptr);
+  entry.isEmpty = true;
 }
 
 }  // namespace Isetta

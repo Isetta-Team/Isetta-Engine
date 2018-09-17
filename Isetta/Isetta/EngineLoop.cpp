@@ -16,7 +16,9 @@ namespace Isetta {
 void EngineLoop::StartUp() {
   // config example
   Config::Instance().Read("config.cfg");
-  Sleep(3000);
+
+  // TODO(YIDI): Commented out by yidi
+  // Sleep(3000);
 
   intervalTime = Config::Instance().fixedInterval.GetVal() / 1000.0;
   maxSimulationCount = Config::Instance().maxSimCount.GetVal();
