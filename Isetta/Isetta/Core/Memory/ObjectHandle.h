@@ -30,6 +30,14 @@ class ObjectHandle {
   T* operator->() const;
   T& operator*();
 
+  friend bool operator<(const ObjectHandle& a, const ObjectHandle& b) {
+    // TODO(YIDI): Optimize this after debugging
+    PtrInt aAddress = reinterpret_cast<PtrInt>(a.GetObjectPtr());
+    PtrInt bAddress = reinterpret_cast<PtrInt>(b.GetObjectPtr());
+    bool isASmaller = aAddress < bAddress;
+    return isASmaller;
+  }
+
  private:
   ObjectHandle();
   T* GetObjectPtr() const;
@@ -76,7 +84,8 @@ T* ObjectHandle<T>::GetObjectPtr() const {
   HandleEntry& entry = MemoryManager::handleEntryTable[index];
 
   if (entry.isEmpty) {
-    throw std::exception{"ObjectHandle::GetObjectPtr() : Object already deleted"};
+    throw std::exception{
+        "ObjectHandle::GetObjectPtr() : Object already deleted"};
   }
 
   // prevent the problem of "stale pointer"
@@ -97,6 +106,13 @@ void ObjectHandle<T>::EraseObject() const {
     // TODO(YIDI): Is this a good use of log_error?
     LOG_ERROR(Debug::Channel::Memory,
               "ObjectHandle::DeleteObject() : Double deleting handle!");
+    return;
+  }
+
+  if (uniqueID != entry.uniqueID) {
+    LOG_ERROR(Debug::Channel::Memory,
+              "ObjectHandle::DeleteObject() : You are trying to delete an "
+              "object you don't own!");
     return;
   }
 

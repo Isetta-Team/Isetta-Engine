@@ -8,8 +8,6 @@
 #include "Core/Memory/ObjectHandle.h"
 #include "Core/Memory/PoolAllocator.h"
 #include "Core/Memory/StackAllocator.h"
-#include "TemplatePoolAllocator.h"
-#include <any>
 
 namespace Isetta {
 

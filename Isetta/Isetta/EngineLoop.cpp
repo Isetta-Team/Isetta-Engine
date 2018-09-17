@@ -2,7 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #include "EngineLoop.h"
-#include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Memory/ObjectHandle.h"
@@ -63,7 +62,7 @@ void EngineLoop::StartUp() {
                                             handleC);
       });
 
-  RunYidiTest();
+  // RunYidiTest();
 }
 
 void EngineLoop::Update() {
@@ -101,7 +100,6 @@ Clock& EngineLoop::GetGameClock() {
 }
 
 void RunYidiTest() {
-
   const U32 count = 10;
   std::vector<ObjectHandle<U64>> arr;
   arr.reserve(count);
@@ -109,7 +107,6 @@ void RunYidiTest() {
     auto ref = MemoryManager::NewDynamic<U64>();
     *ref = i;
     arr.push_back(ref);
-    LOG_INFO(Debug::Channel::General, "New number: %d", *arr[i]);
   }
 
   for (U32 i = 0; i < count; i++) {
