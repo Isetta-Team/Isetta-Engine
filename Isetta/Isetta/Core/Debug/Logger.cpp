@@ -18,8 +18,10 @@ std::ostringstream Logger::channelStream;
 
 void Logger::NewSession() {
   // TODO(Jacob) timestamp
-  engineFileName = "isetta-log.log";
-  channelFileName = "isetta-channel-log.log";
+  engineFileName =
+      "isetta-log_" + std::to_string(Clock::GetTimestamp()) + ".log";
+  channelFileName =
+      "isetta-channel-log_" + std::to_string(Clock::GetTimestamp()) + ".log";
   FileSystem::Instance().Write(channelFileName, "", nullptr, false);
   FileSystem::Instance().Write(engineFileName, "", nullptr, false);
 }
@@ -31,7 +33,7 @@ int Logger::VDebugPrintF(const Debug::Channel channel,
   static char sBuffer[MAX_CHARS + 1];
   // TODO(Jacob) elapsed or unscaled time?
   std::ostringstream stream;
-  stream << "[" << EngineLoop::GetGameClock().GetElapsedTime() << "]["
+  stream << "[" << EngineLoop::GetGameClock().GetElapsedUnscaledTime() << "]["
          << ToString(verbosity) << "][" << ToString(channel) << "] " << inFormat
          << '\n';
   int charsWritten =
