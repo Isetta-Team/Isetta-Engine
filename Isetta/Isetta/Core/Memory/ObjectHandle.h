@@ -7,14 +7,16 @@
 #include "Core/Memory/MemoryManager.h"
 
 namespace Isetta {
+// FUTURE: If we want reference counting (probably not), it can be done here
 class HandleEntry {
  private:
   HandleEntry() = default;
   ~HandleEntry() = default;
 
-  void Set(U32 uniqueID, void* ptr, bool isEmpty);
+  void Set(U32 uniqueID, void* ptr, bool isEmpty, SizeInt size);
 
   U32 uniqueID{};
+  SizeInt size{};
   void* ptr{};
   bool isEmpty{true};
 
@@ -42,6 +44,7 @@ class ObjectHandle {
   ObjectHandle();
   T* GetObjectPtr() const;
   void EraseObject() const;
+  PtrInt GetObjAddress() const;
   U32 uniqueID;
   U32 index;
 
@@ -53,10 +56,10 @@ ObjectHandle<T>::ObjectHandle() {
   uniqueID = MemoryManager::nextUniqueID++;
   HandleEntry* entry = nullptr;
 
-  for (U32 i = 0; i < MemoryManager::maxTableSize; i++) {
-    if (MemoryManager::handleEntryTable[i].isEmpty) {
+  for (U32 i = 0; i < MemoryManager::maxHandleCount; i++) {
+    if (MemoryManager::entryArr[i].isEmpty) {
       index = i;
-      entry = &MemoryManager::handleEntryTable[index];
+      entry = &MemoryManager::entryArr[index];
       break;
     }
   }
@@ -65,8 +68,9 @@ ObjectHandle<T>::ObjectHandle() {
     throw std::out_of_range{"No empty slot in handle table"};
   }
 
-  T* t = new (MemoryManager::AllocDynamic(sizeof(T))) T{};
-  entry->Set(uniqueID, static_cast<void*>(t), false);
+  SizeInt size = sizeof(T);
+  T* t = new (MemoryManager::AllocDynamic(size)) T{};
+  entry->Set(uniqueID, static_cast<void*>(t), false, size);
 }
 
 template <typename T>
@@ -81,7 +85,7 @@ T& ObjectHandle<T>::operator*() {
 
 template <typename T>
 T* ObjectHandle<T>::GetObjectPtr() const {
-  HandleEntry& entry = MemoryManager::handleEntryTable[index];
+  HandleEntry& entry = MemoryManager::entryArr[index];
 
   if (entry.isEmpty) {
     throw std::exception{
@@ -100,7 +104,7 @@ T* ObjectHandle<T>::GetObjectPtr() const {
 
 template <typename T>
 void ObjectHandle<T>::EraseObject() const {
-  HandleEntry& entry = MemoryManager::handleEntryTable[index];
+  HandleEntry& entry = MemoryManager::entryArr[index];
 
   if (entry.isEmpty) {
     // TODO(YIDI): Is this a good use of log_error?
@@ -119,6 +123,11 @@ void ObjectHandle<T>::EraseObject() const {
   static_cast<T*>(entry.ptr)->~T();
   MemoryManager::FreeDynamic(entry.ptr);
   entry.isEmpty = true;
+}
+
+template <typename T>
+PtrInt ObjectHandle<T>::GetObjAddress() const {
+  return reinterpret_cast<PtrInt>(GetObjectPtr());
 }
 
 }  // namespace Isetta

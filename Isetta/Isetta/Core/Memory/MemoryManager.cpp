@@ -1,14 +1,13 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include <any>
 #include "Core/Memory/MemoryManager.h"
 #include "Core/Memory/ObjectHandle.h"
 
 namespace Isetta {
 
 // TODO(YIDI): Use config for max table size
-HandleEntry MemoryManager::handleEntryTable[maxTableSize];
+HandleEntry MemoryManager::entryArr[maxHandleCount];
 MemoryManager* MemoryManager::instance;
 
 void* MemoryManager::AllocSingleFrameUnAligned(const SizeInt size) {
@@ -28,8 +27,7 @@ void* MemoryManager::AllocDoubleBuffered(const SizeInt size,
   return doubleBufferedAllocator.Alloc(size, alignment);
 }
 
-MemoryManager::MemoryManager()
-    : handlePool(sizeof(ObjectHandle<std::any>), maxTableSize) {
+MemoryManager::MemoryManager() {
   // TODO(YIDI): The two allocators are still initialized here by automatically
   // calling their default constructors, find a better way to handle this
   instance = this;
@@ -55,11 +53,17 @@ void MemoryManager::ShutDown() {
   singleFrameAllocator.Erase();
   doubleBufferedAllocator.Erase();
   dynamicArena.Erase();
-  handlePool.Erase();
 }
 
 // TODO(YIDI): Implemented this
-void MemoryManager::Defragment() {}
+void MemoryManager::Defragment() {
+  LOG_INFO(Debug::Channel::Memory, "[Address, index, size]");
+  for (auto& pair : addressIndexMap) {
+    PtrInt address = pair.first;
+    int index = pair.second;
+    LOG_INFO(Debug::Channel::Memory, "[%lu, %d, %lu]", address, index, entryArr[index].size);
+  }
+}
 
 // TODO(YIDI): Implement this
 void* MemoryManager::AllocDynamic(const SizeInt size, const U8 alignment) {

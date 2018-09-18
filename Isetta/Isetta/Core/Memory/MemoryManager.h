@@ -2,6 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include <map>
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Memory/DoubleBufferedAllocator.h"
@@ -52,13 +53,12 @@ class MemoryManager {
   StackAllocator singleFrameAllocator{};
   StackAllocator dynamicArena{};
   DoubleBufferedAllocator doubleBufferedAllocator{};
-  PoolAllocator handlePool;
 
   // can't be put in ObjectHandle because it creates new ones for each type
   inline static U32 nextUniqueID = 0;
-  const static U32 maxTableSize = 2048;
-  static class HandleEntry handleEntryTable[];
-  inline static void* handleLoopUp[maxTableSize] = {nullptr};
+  const static U32 maxHandleCount = 2048;
+  static class HandleEntry entryArr[];
+  std::map<PtrInt, int> addressIndexMap;
 
   template <typename T>
   friend class ObjectHandle;
@@ -80,17 +80,20 @@ ObjectHandle<T>& MemoryManager::NewDynamic() {
   // TODO(YIDI): I'm not sure this is the right way to implement object handles,
   // the handle itself should not need to be freed. But I think usage-wise this
   // is optimal
-  auto hand = new (instance->handlePool.Get()) ObjectHandle<T>{};
-  instance->handleLoopUp[hand->index] = hand;
-  return *(hand);
+  auto handle = ObjectHandle<T>{};
+  instance->addressIndexMap.emplace(handle.GetObjAddress(), handle.index);
+  return handle;
 }
 
 template <typename T>
-void MemoryManager::DeleteDynamic(ObjectHandle<T>& objToFree) {
-  if (instance->handleLoopUp[objToFree.index] != nullptr) {
-    objToFree.EraseObject();
-    instance->handlePool.Free(instance->handleLoopUp[objToFree.index]);
-    instance->handleLoopUp[objToFree.index] = nullptr;
+void MemoryManager::DeleteDynamic(ObjectHandle<T>& handleToDelete) {
+  auto addressIndexPair = instance->addressIndexMap.find(handleToDelete.GetObjAddress());
+
+  if (addressIndexPair != instance->addressIndexMap.end()) {
+    LOG_INFO(Debug::Channel::Memory, "Deleting handle [%d, %lu]",
+             handleToDelete.index, handleToDelete.GetObjAddress());
+    instance->addressIndexMap.erase(addressIndexPair);
+    handleToDelete.EraseObject();
   } else {
     LOG_ERROR(Debug::Channel::Memory, "Double deleting handle!");
   }

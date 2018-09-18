@@ -62,7 +62,7 @@ void EngineLoop::StartUp() {
                                             handleC);
       });
 
-  // RunYidiTest();
+  RunYidiTest();
 }
 
 void EngineLoop::Update() {
@@ -112,6 +112,8 @@ void RunYidiTest() {
   for (U32 i = 0; i < count; i++) {
     MemoryManager::DeleteDynamic(arr[i]);
   }
+
+  MemoryManager::DeleteDynamic(arr[0]);
 }
 
 }  // namespace Isetta
