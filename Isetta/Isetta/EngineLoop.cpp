@@ -27,7 +27,7 @@ void EngineLoop::StartUp() {
 
   moduleManager.StartUp();
 
-  GetGameClock();
+  StartGameClock();
   isGameRunning = true;
 
   Input::RegisterKeyPressCallback(KeyCode::ESCAPE,
@@ -85,6 +85,9 @@ void EngineLoop::Update() {
 }
 
 void EngineLoop::ShutDown() { moduleManager.ShutDown(); }
+void EngineLoop::StartGameClock() const {
+  GetGameClock();
+}
 
 void EngineLoop::Run() {
   StartUp();

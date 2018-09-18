@@ -26,6 +26,8 @@ class EngineLoop {
   void Update();
   void ShutDown();
 
+  void StartGameClock() const;
+
  public:
   EngineLoop() = default;
   ~EngineLoop() = default;
