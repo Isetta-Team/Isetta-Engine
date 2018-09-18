@@ -8,7 +8,7 @@
 
 namespace Isetta {
 using Byte = uint8_t;
-using SizeInt = size_t;
+using Size = size_t;
 
 using U8 = uint8_t;
 using U16 = uint16_t;

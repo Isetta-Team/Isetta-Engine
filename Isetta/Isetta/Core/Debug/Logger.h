@@ -13,6 +13,7 @@
 #include <string>
 #include "Core/Config/CVar.h"
 #include "Core/Debug/Debug.h"
+#include "Core/IsettaAlias.h"
 
 namespace Isetta {
 #define LOG LogObject(__FILENAME__, __LINE__)
@@ -23,8 +24,8 @@ namespace Isetta {
 class Logger {
  public:
   struct LoggerConfig {
-    CVar<uint8_t> verbosityMask{"verbosity_mask", ~0u};
-    CVar<uint32_t> channelMask{"channel_mask", ~0u};
+    CVar<U8> verbosityMask{"verbosity_mask", ~0u};
+    CVar<U32> channelMask{"channel_mask", ~0u};
     CVar<int> breakOnError{"break_on_error", 1};
     CVar<int> bytesToBuffer{"bytes_to_buffer", 10000};
     CVarString logFolder{"logger_folder", "Logs"};

@@ -4,9 +4,10 @@
 #pragma once
 
 #include <string>
+#include "Core/IsettaAlias.h"
 
 namespace Isetta::Debug {
-enum class Verbosity : uint8_t {
+enum class Verbosity : U8 {
   Off = 0,  // enum not needed, can set mask to 0
   Error = (1u << 0),
   Warning = (1u << 1),
@@ -31,7 +32,7 @@ static inline const std::string ToString(Verbosity v) {
   }
 }
 
-enum class Channel : uint16_t {
+enum class Channel : U16 {
   General = (1u << 0),
   Memory = (1u << 1),
   Networking = (1u << 2),

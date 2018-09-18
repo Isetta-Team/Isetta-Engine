@@ -29,7 +29,7 @@ void Config::ProcessFile(const char* contentBuffer) {
       lines = strtok_s(NULL, "\n", &nextToken);
       continue;
     }
-    size_t sepPos = line.find('=');
+    Size sepPos = line.find('=');
     std::string key, value;
     ExtractKey(&key, sepPos, line);
     ExtractValue(&value, sepPos, line);
@@ -65,7 +65,7 @@ bool Config::ValidLine(const std::string& line) const {
   }
 
   int size = tmp.length();
-  for (size_t i = tmp.find('=') + 1; i < size; i++) {
+  for (Size i = tmp.find('=') + 1; i < size; i++) {
     if (tmp[i] != ' ') {
       return true;
     }
@@ -73,16 +73,16 @@ bool Config::ValidLine(const std::string& line) const {
 
   return false;
 }
-void Config::ExtractKey(std::string* key, const size_t& sepPos,
+void Config::ExtractKey(std::string* key, const Size& sepPos,
                         const std::string line) {
   *key = line.substr(0, sepPos);
-  size_t pos = key->find_first_of("\t ");
+  Size pos = key->find_first_of("\t ");
   if (pos != std::string::npos) {
     key->erase(pos);
   }
 }
 
-void Config::ExtractValue(std::string* value, const size_t& sepPos,
+void Config::ExtractValue(std::string* value, const Size& sepPos,
                           const std::string line) {
   *value = line.substr(sepPos + 1);
   value->erase(0, value->find_first_not_of("\t "));

@@ -31,7 +31,7 @@ void Logger::NewSession() {
 int Logger::VDebugPrintF(const Debug::Channel channel,
                          const Debug::Verbosity verbosity,
                          const std::string inFormat, va_list argList) {
-  const uint32_t MAX_CHARS = 1023;
+  const U32 MAX_CHARS = 1023;
   static char sBuffer[MAX_CHARS + 1];
   // TODO(Jacob) elapsed or unscaled time?
   std::ostringstream stream;
