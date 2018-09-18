@@ -12,9 +12,8 @@ void test(const char* t) {}
 
 namespace Isetta {
 void Config::Read(const std::string& filepath) {
-  std::function<void(const char*)> fProcess =
-      std::bind(&Config::ProcessFile, this, std::placeholders::_1);
-  readFile = FileSystem::Instance().Read(filepath, fProcess);
+  const char* contents = FileSystem::Instance().Read(filepath);
+  ProcessFile(contents);
 }
 
 void Config::ProcessFile(const char* contentBuffer) {

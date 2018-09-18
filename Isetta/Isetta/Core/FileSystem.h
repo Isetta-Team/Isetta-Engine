@@ -28,20 +28,25 @@ class FileSystem {
     std::function<void(const char*)> callback;
   } OverlapIOInfo;
 
-  HANDLE Read(const char* fileName,
-              const std::function<void(const char*)>& callback = nullptr);
-  HANDLE Write(const char* fileName, const char* contentBuffer,
-               const std::function<void(const char*)>& callback = nullptr,
-               const bool appendData = true);
-  HANDLE Read(const std::string& fileName,
-              const std::function<void(const char*)>& callback = nullptr);
-  HANDLE Write(const std::string& fileName, const char* contentBuffer,
-               const std::function<void(const char*)>& callback = nullptr,
-               const bool appendData = true);
-  HANDLE Write(const std::string& fileName, const std::string& contentBuffer,
-               const std::function<void(const char*)>& callback = nullptr,
-               const bool appendData = true);
+  char* Read(const char* fileName);
+  char* Read(const std::string& fileName);
+  HANDLE ReadAsync(const char* fileName,
+                   const std::function<void(const char*)>& callback = nullptr);
+  HANDLE WriteAsync(const char* fileName, const char* contentBuffer,
+                    const std::function<void(const char*)>& callback = nullptr,
+                    const bool appendData = true);
+  HANDLE ReadAsync(const std::string& fileName,
+                   const std::function<void(const char*)>& callback = nullptr);
+  HANDLE WriteAsync(const std::string& fileName, const char* contentBuffer,
+                    const std::function<void(const char*)>& callback = nullptr,
+                    const bool appendData = true);
+  HANDLE WriteAsync(const std::string& fileName,
+                    const std::string& contentBuffer,
+                    const std::function<void(const char*)>& callback = nullptr,
+                    const bool appendData = true);
   bool Cancel(HANDLE hFile);
+  HANDLE AccessFile(const char* file, const DWORD access, const DWORD share,
+                    const DWORD creation, DWORD async);
 
   inline HANDLE GethIOCP() { return hIOCP; }
 
@@ -49,10 +54,9 @@ class FileSystem {
   FileSystem();
 
   HANDLE CreateNewCompletionPort();
-  HANDLE OpenFile(const char* file, const DWORD access, const DWORD share,
-                  const DWORD creation);
   BOOL AssociateFileCompletionPort(HANDLE hIoPort, HANDLE hFile,
                                    DWORD completionKey);
+  BOOL FileExists(const char* file);
 
   LPCTSTR ErrorMessage(DWORD error);
   DWORD GetFileError();

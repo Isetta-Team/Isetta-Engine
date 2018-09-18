@@ -17,8 +17,8 @@ std::ostringstream Logger::engineStream;
 std::ostringstream Logger::channelStream;
 
 Logger::Logger() {
-  FileSystem::Instance().Write(channelFileName, "", nullptr, false);
-  FileSystem::Instance().Write(engineFileName, "", nullptr, false);
+  FileSystem::Instance().WriteAsync(channelFileName, "", nullptr, false);
+  FileSystem::Instance().WriteAsync(engineFileName, "", nullptr, false);
 }
 
 int Logger::VDebugPrintF(const Debug::Channel::Enum channel,
@@ -82,7 +82,7 @@ void Logger::BufferWrite(const std::string fileName, std::ostringstream* stream,
   if (static_cast<int>(stream->tellp()) >=
       Config::Instance().logger.bytesToBuffer.GetVal()) {
     stream->flush();
-    FileSystem::Instance().Write(fileName, stream->str());
+    FileSystem::Instance().WriteAsync(fileName, stream->str());
     stream->str("");
     stream->clear();
     stream->seekp(0, std::ios::beg);
