@@ -33,6 +33,8 @@ class Clock {
   double GetDeltaTime() const;
   double GetElapsedTime() const;
   double GetElapsedUnscaledTime() const;
+
+  static U64 GetTimestamp();
 };
 
 }  // namespace Isetta

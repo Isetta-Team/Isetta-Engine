@@ -4,6 +4,7 @@
 
 #include "Core/Time/Clock.h"
 #include "Core/Debug/Logger.h"
+#include <ctime>
 
 namespace Isetta {
 Clock::Clock()
@@ -52,4 +53,8 @@ void Clock::UpdateTime() {
 double Clock::GetDeltaTime() const { return deltaTime; }
 double Clock::GetElapsedTime() const { return elapsedTime; }
 double Clock::GetElapsedUnscaledTime() const { return elapsedUnscaledTime; }
+U64 Clock::GetTimestamp() {
+  U64 unixTimestamp = std::chrono::seconds(std::time(nullptr)).count();
+  return unixTimestamp;
+}
 }  // namespace Isetta
