@@ -6,6 +6,8 @@
 #include <string.h>
 #include <functional>
 #include <sstream>
+#include <type_traits>
+#include "Core/Config/ICVar.h"
 #include "Core/FileSystem.h"
 
 void test(const char* t) {}
@@ -35,22 +37,7 @@ void Config::ProcessFile(const char* contentBuffer) {
     StringId keySid = SID(key.c_str());
     ICVar* cvar = cvarsRegistry.Find(keySid);
     if (cvar != nullptr) {
-      switch (cvar->GetType()) {
-        case CVAR_INT:
-          static_cast<CVarInt*>(cvar)->SetVal(value);
-          break;
-        case CVAR_FLOAT:
-          static_cast<CVarFloat*>(cvar)->SetVal(value);
-          break;
-        case CVAR_STRING:
-          static_cast<CVarString*>(cvar)->SetVal(value);
-          break;
-        case CVAR_VECTOR3:
-          static_cast<CVarVector3*>(cvar)->SetVal(value);
-          break;
-        default:
-          throw std::exception("Config::Read Unexpected type");
-      }
+      cvar->SetVal(value);
     }
     lines = strtok_s(NULL, "\n", &nextToken);
   }

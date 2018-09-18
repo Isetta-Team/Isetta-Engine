@@ -9,30 +9,25 @@
 #include "Core/Config/CVarRegistry.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Math/Vector3.h"
-#include "Graphics/Window.h"
 #include "EngineLoop.h"
 #include "Graphics/RenderModule.h"
+#include "Graphics/Window.h"
 
-namespace Isetta
-{
-class TestModule
-{
-public:
-  struct TestConfig
-  {
-    CVarInt integerVar{"integer", 0};
-    CVarFloat floatVar{"float"};
+namespace Isetta {
+class TestModule {
+ public:
+  struct TestConfig {
+    CVar<int> integerVar{"integer", 10};
+    CVar<float> floatVar{"float", 1.12};
     CVarString stringVar{"string", "test"};
     CVarVector3 vector3Var{"vec3", Math::Vector3::one};
-    CVarInt defaultValue{"default", 10};
+    CVar<int> defaultValue{"default", 10};
   };
 };
 
-class Config
-{
-public:
-  static Config &Instance()
-  {
+class Config {
+ public:
+  static Config &Instance() {
     static Config instance;
     return instance;
   }
@@ -45,14 +40,14 @@ public:
   EngineLoop::LoopConfig loopConfig;
   RenderModule::RenderConfig renderConfig;
 
-  CVarInt maxFps = {"max_fps", 16};
-  CVarInt maxSimCount = {"max_simulation_count", 5};
+  CVar<int> maxFps = {"max_fps", 16};
+  CVar<int> maxSimCount = {"max_simulation_count", 5};
   CVarString resourcePath{"resource_path", ""};
 
   void Read(const std::string &filepath);
   void ProcessFile(const char *contentBuffer);
 
-private:
+ private:
   Config() = default;
   class CVarRegistry cvarsRegistry;
 
@@ -65,5 +60,5 @@ private:
                     const std::string line);
 
   HANDLE readFile;
-}; // namespace Isetta
-} // namespace Isetta
+};  // namespace Isetta
+}  // namespace Isetta

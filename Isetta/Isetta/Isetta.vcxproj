@@ -137,6 +137,8 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Audio\AudioSource.h" />
     <ClInclude Include="Core\Config\Config.h" />
     <ClInclude Include="Core\Color.h" />
+    <ClInclude Include="Core\Config\ICVar.h" />
+    <ClInclude Include="Core\Config\IStringConvertible.h" />
     <ClInclude Include="Core\DataStructures\RingBuffer.h" />
     <ClInclude Include="Core\Debug\Debug.h" />
     <ClInclude Include="Core\IsettaAlias.h" />

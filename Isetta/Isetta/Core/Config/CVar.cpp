@@ -9,37 +9,21 @@
 namespace Isetta {
 std::unordered_map<StringId, ICVar*> CVarRegistry::registry;
 
-CVarInt::CVarInt(std::string name, int value) : ICVar(name), iVal{value} {
-  CVarRegistry::RegisterVariable(this);
-}
-
-CVarInt::CVarInt(std::string name) : ICVar(name) {
-  CVarRegistry::RegisterVariable(this);
-}
-
-CVarFloat::CVarFloat(std::string name, float value) : ICVar(name), fVal{value} {
-  CVarRegistry::RegisterVariable(this);
-}
-
-CVarFloat::CVarFloat(std::string name) : ICVar(name) {
-  CVarRegistry::RegisterVariable(this);
-}
-
-CVarString::CVarString(std::string name, std::string value)
+CVarString::CVarString(const std::string& name, const std::string& value)
     : ICVar(name), sVal{value} {
   CVarRegistry::RegisterVariable(this);
 }
 
-CVarString::CVarString(std::string name) : ICVar(name) {
+CVarString::CVarString(const std::string& name) : ICVar(name) {
   CVarRegistry::RegisterVariable(this);
 }
 
-CVarVector3::CVarVector3(std::string name, Math::Vector3 value)
+CVarVector3::CVarVector3(const std::string& name, const Math::Vector3& value)
     : ICVar(name), v3Val{value} {
   CVarRegistry::RegisterVariable(this);
 }
 
-CVarVector3::CVarVector3(std::string name) : ICVar(name) {
+CVarVector3::CVarVector3(const std::string& name) : ICVar(name) {
   CVarRegistry::RegisterVariable(this);
 }
 }  // namespace Isetta

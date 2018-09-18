@@ -3,86 +3,58 @@
  */
 #pragma once
 
+#include <sstream>
 #include <string>
+#include "Core/Config/ICVar.h"
 #include "Core/Math/Vector3.h"
 #include "SID/sid.h"
 
 namespace Isetta {
 
-#define CVAR_INT 1
-#define CVAR_FLOAT 2
-#define CVAR_STRING 3
-#define CVAR_VECTOR3 4
-
-class ICVar {
+template <typename T>
+class CVar : public ICVar {
  public:
-  const std::string name;
-  const StringId sid;
+  T val;
 
-  virtual void SetVal(std::string strVal) = 0;
-  virtual int GetType() const = 0;
+  CVar(const std::string& name, const T& value) : ICVar(name), val{value} {
+    CVarRegistry::RegisterVariable(this);
+  }
+  explicit CVar(const std::string& name) : ICVar(name), val{T()} {
+    CVarRegistry::RegisterVariable(this);
+  }
 
- protected:
-  explicit ICVar(std::string name) : name{name}, sid{SID(name.c_str())} {}
-  virtual ~ICVar() {}
-};
+  inline void SetVal(const std::string& strVal) override {
+    std::istringstream iss(strVal);
+    iss >> val;
+  }
 
-class CVarInt : public ICVar {
- public:
-  int iVal;
-
-  CVarInt(std::string name, int value);
-  explicit CVarInt(std::string name);
-
-  inline void SetVal(std::string strVal) override { iVal = stoi(strVal); }
-
-  inline int GetVal() const { return iVal; }
-
-  int GetType() const override { return CVAR_INT; }
-};
-
-class CVarFloat : public ICVar {
- public:
-  float fVal;
-
-  CVarFloat(std::string name, float value);
-  explicit CVarFloat(std::string name);
-
-  inline void SetVal(std::string strVal) override { fVal = stof(strVal); }
-
-  inline float GetVal() const { return fVal; }
-
-  inline int GetType() const override { return CVAR_FLOAT; }
+  inline T GetVal() const { return val; }
 };
 
 class CVarString : public ICVar {
  public:
   std::string sVal;
 
-  CVarString(std::string name, std::string value);
-  explicit CVarString(std::string name);
+  CVarString(const std::string& name, const std::string& value);
+  explicit CVarString(const std::string& name);
 
-  inline void SetVal(std::string strVal) override { sVal = strVal; }
+  inline void SetVal(const std::string& strVal) override { sVal = strVal; }
 
   inline std::string GetVal() const { return sVal; }
-
-  inline int GetType() const override { return CVAR_STRING; }
 };
 
 class CVarVector3 : public ICVar {
  public:
   Math::Vector3 v3Val;
 
-  CVarVector3(std::string name, Math::Vector3 value);
-  explicit CVarVector3(std::string name);
+  CVarVector3(const std::string& name, const Math::Vector3& value);
+  explicit CVarVector3(const std::string& name);
 
-  inline void SetVal(std::string strVal) override {
+  inline void SetVal(const std::string& strVal) override {
     v3Val = Math::Vector3::FromString(strVal);
   }
 
   inline Math::Vector3 GetVal() const { return v3Val; }
-
-  inline int GetType() const override { return CVAR_VECTOR3; }
 };
 
 }  // namespace Isetta

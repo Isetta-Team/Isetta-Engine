@@ -4,9 +4,11 @@
 #include <Windows.h>
 #include <chrono>
 #include <cstdlib>
+#include <iostream>
 #include <string>
 #include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
+#include "Core/Debug/Assert.h"
 #include "Core/Debug/Logger.h"
 #include "Core/FileSystem.h"
 #include "Core/Math/Random.h"

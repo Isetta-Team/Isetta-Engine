@@ -12,7 +12,6 @@
 #include <initializer_list>
 #include <string>
 #include "Core/Config/CVar.h"
-#include "Core/Debug/Assert.h"
 #include "Core/Debug/Debug.h"
 
 namespace Isetta {
@@ -24,25 +23,21 @@ namespace Isetta {
 class Logger {
  public:
   struct LoggerConfig {
-    CVarInt verbosityMask{"verbosity_mask", ~0u};
-    CVarInt channelMask{"channel_mask", ~0u};
-    CVarInt breakOnError{"break_on_error", ~0u};
-    CVarInt bytesToBuffer{"bytesToBuffer", 4096};
+    CVar<uint8_t> verbosityMask{"verbosity_mask", ~0u};
+    CVar<uint32_t> channelMask{"channel_mask", ~0u};
+    CVar<int> breakOnError{"break_on_error", 1};
+    CVar<int> bytesToBuffer{"bytesToBuffer", 10000};
   };
 
-  // static uint8_t gVerbosityMask;
-  // static uint32_t gChannelMask;
-  // static bool gAlwaysFlush, gBreakOnError;
-  Logger();
-
+  static void NewSession();
   static int DebugPrintF(const std::string file, const int line,
-                         const Debug::Channel::Enum channel,
-                         const Debug::Verbosity::Enum verbosity,
+                         const Debug::Channel channel,
+                         const Debug::Verbosity verbosity,
                          const std::string format, va_list argList);
 
  protected:
-  static int VDebugPrintF(const Debug::Channel::Enum channel,
-                          const Debug::Verbosity::Enum verbosity,
+  static int VDebugPrintF(const Debug::Channel channel,
+                          const Debug::Verbosity verbosity,
                           const std::string format, va_list argList);
 
  private:
@@ -51,37 +46,36 @@ class Logger {
   static std::ostringstream engineStream;
   static std::ostringstream channelStream;
 
-  static bool CheckChannelMask(const Debug::Channel::Enum channel);
-  static bool CheckVerbosity(const Debug::Verbosity::Enum verbosity);
+  static bool CheckChannelMask(const Debug::Channel channel);
+  static bool CheckVerbosity(const Debug::Verbosity verbosity);
   static void BufferWrite(const std::string fileName,
                           std::ostringstream* stream, const char* buffer);
-};
+};  // namespace Isetta
 
 struct LogObject {
   std::string file;
   int line;
-  Debug::Verbosity::Enum verbosity = Debug::Verbosity::Info;
+  Debug::Verbosity verbosity = Debug::Verbosity::Info;
 
   LogObject(const std::string file, const int line) : file{file}, line{line} {}
-  LogObject(const std::string file, const int line,
-            Debug::Verbosity::Enum verbosity)
+  LogObject(const std::string file, const int line, Debug::Verbosity verbosity)
       : file{file}, line{line}, verbosity{verbosity} {}
 
-  void operator()(const Debug::Channel::Enum channel,
-                  const Debug::Verbosity::Enum verbosity, const char* inFormat,
+  void operator()(const Debug::Channel channel,
+                  const Debug::Verbosity verbosity, const char* inFormat,
                   ...) const;
-  void operator()(const Debug::Channel::Enum channel,
-                  const Debug::Verbosity::Enum verbosity,
+  void operator()(const Debug::Channel channel,
+                  const Debug::Verbosity verbosity,
                   const std::string& inFormat) const;
-  void operator()(const Debug::Channel::Enum channel,
-                  const Debug::Verbosity::Enum verbosity,
+  void operator()(const Debug::Channel channel,
+                  const Debug::Verbosity verbosity,
                   const std::initializer_list<std::string>& inFormat) const;
 
-  void operator()(const Debug::Channel::Enum channel, const char* inFormat,
+  void operator()(const Debug::Channel channel, const char* inFormat,
                   ...) const;
-  void operator()(const Debug::Channel::Enum channel,
+  void operator()(const Debug::Channel channel,
                   const std::string& inFormat) const;
-  void operator()(const Debug::Channel::Enum channel,
+  void operator()(const Debug::Channel channel,
                   const std::initializer_list<std::string>& inFormat) const;
 };
 }  // namespace Isetta

@@ -3,33 +3,37 @@
  */
 #include "Core/Debug/Logger.h"
 
-#include <fstream>
-#include <iostream>
 #include <sstream>
+#include <type_traits>
 #include "Core/Config/Config.h"
 #include "Core/Debug/Assert.h"
 #include "Core/FileSystem.h"
+#include "Core/Time/Clock.h"
 
 namespace Isetta {
-std::string Logger::engineFileName = "isetta-log.log";
-std::string Logger::channelFileName = "isetta-channel-log.log";
+std::string Logger::engineFileName;
+std::string Logger::channelFileName;
 std::ostringstream Logger::engineStream;
 std::ostringstream Logger::channelStream;
 
-Logger::Logger() {
+void Logger::NewSession() {
+  // TODO(Jacob) timestamp
+  engineFileName = "isetta-log.log";
+  channelFileName = "isetta-channel-log.log";
   FileSystem::Instance().Write(channelFileName, "", nullptr, false);
   FileSystem::Instance().Write(engineFileName, "", nullptr, false);
 }
 
-int Logger::VDebugPrintF(const Debug::Channel::Enum channel,
-                         const Debug::Verbosity::Enum verbosity,
+int Logger::VDebugPrintF(const Debug::Channel channel,
+                         const Debug::Verbosity verbosity,
                          const std::string inFormat, va_list argList) {
   const uint32_t MAX_CHARS = 1023;
   static char sBuffer[MAX_CHARS + 1];
-  // TODO(jacob) add actual time
+  // TODO(Jacob) elapsed or unscaled time?
   std::ostringstream stream;
-  stream << "[" << 12 << ":" << 12 << ":" << 12 << "][" << ToString(verbosity)
-         << "][" << ToString(channel) << "] " << inFormat << '\n';
+  stream << "[" << EngineLoop::GetGameClock().GetElapsedTime() << "]["
+         << ToString(verbosity) << "][" << ToString(channel) << "] " << inFormat
+         << '\n';
   int charsWritten =
       vsnprintf(sBuffer, MAX_CHARS, stream.str().c_str(), argList);
 
@@ -37,9 +41,11 @@ int Logger::VDebugPrintF(const Debug::Channel::Enum channel,
 
   if (CheckChannelMask(channel)) {
     if (CheckVerbosity(verbosity)) {
+#ifdef _DEBUG
       OutputDebugString(sBuffer);
+#endif
+      BufferWrite(channelFileName, &channelStream, sBuffer);
     }
-    BufferWrite(channelFileName, &channelStream, sBuffer);
   }
 
   BufferWrite(engineFileName, &engineStream, sBuffer);
@@ -54,8 +60,8 @@ int Logger::VDebugPrintF(const Debug::Channel::Enum channel,
 }
 
 int Logger::DebugPrintF(const std::string file, const int line,
-                        const Debug::Channel::Enum channel,
-                        const Debug::Verbosity::Enum verbosity,
+                        const Debug::Channel channel,
+                        const Debug::Verbosity verbosity,
                         const std::string inFormat, va_list argList) {
   std::ostringstream stream;
   stream << file << "(" << line << ") " << inFormat;
@@ -65,19 +71,21 @@ int Logger::DebugPrintF(const std::string file, const int line,
   return charsWritten;
 }
 
-bool Logger::CheckChannelMask(const Debug::Channel::Enum channel) {
-  return (Config::Instance().logger.channelMask.GetVal() & channel) ==
-         static_cast<uint32_t>(channel);
+bool Logger::CheckChannelMask(const Debug::Channel channel) {
+  typedef std::underlying_type<Debug::Channel>::type utype;
+  return (Config::Instance().logger.channelMask.GetVal() &
+          static_cast<utype>(channel)) == static_cast<utype>(channel);
 }
 
-bool Logger::CheckVerbosity(const Debug::Verbosity::Enum verbosity) {
-  return (Config::Instance().logger.verbosityMask.GetVal() & verbosity) ==
-         static_cast<uint8_t>(verbosity);
+bool Logger::CheckVerbosity(const Debug::Verbosity verbosity) {
+  typedef std::underlying_type<Debug::Verbosity>::type utype;
+  return (Config::Instance().logger.verbosityMask.GetVal() &
+          static_cast<utype>(verbosity)) == static_cast<utype>(verbosity);
 }
 
 void Logger::BufferWrite(const std::string fileName, std::ostringstream* stream,
                          const char* buffer) {
-  stream->write(buffer, strlen(buffer));
+  *stream << buffer;
   stream->seekp(0, std::ios::end);
   if (static_cast<int>(stream->tellp()) >=
       Config::Instance().logger.bytesToBuffer.GetVal()) {
@@ -89,8 +97,8 @@ void Logger::BufferWrite(const std::string fileName, std::ostringstream* stream,
   }
 }
 
-void LogObject::operator()(const Debug::Channel::Enum channel,
-                           const Debug::Verbosity::Enum verbosity,
+void LogObject::operator()(const Debug::Channel channel,
+                           const Debug::Verbosity verbosity,
                            const char* inFormat, ...) const {
   va_list argList;
   va_start(argList, &inFormat);
@@ -100,14 +108,14 @@ void LogObject::operator()(const Debug::Channel::Enum channel,
   va_end(argList);
 }
 
-void LogObject::operator()(const Debug::Channel::Enum channel,
-                           const Debug::Verbosity::Enum verbosity,
+void LogObject::operator()(const Debug::Channel channel,
+                           const Debug::Verbosity verbosity,
                            const std::string& inFormat) const {
   Logger::DebugPrintF(file, line, channel, verbosity, inFormat.c_str(), NULL);
 }
 
 void LogObject::operator()(
-    const Debug::Channel::Enum channel, const Debug::Verbosity::Enum verbosity,
+    const Debug::Channel channel, const Debug::Verbosity verbosity,
     const std::initializer_list<std::string>& inFormat) const {
   std::ostringstream stream;
   stream << file << "(" << line << ") ";
@@ -118,8 +126,8 @@ void LogObject::operator()(
                       NULL);
 }
 
-void LogObject::operator()(const Debug::Channel::Enum channel,
-                           const char* inFormat, ...) const {
+void LogObject::operator()(const Debug::Channel channel, const char* inFormat,
+                           ...) const {
   va_list argList;
   va_start(argList, &inFormat);
 
@@ -128,13 +136,13 @@ void LogObject::operator()(const Debug::Channel::Enum channel,
   va_end(argList);
 }
 
-void LogObject::operator()(const Debug::Channel::Enum channel,
+void LogObject::operator()(const Debug::Channel channel,
                            const std::string& inFormat) const {
   Logger::DebugPrintF(file, line, channel, verbosity, inFormat.c_str(), NULL);
 }
 
 void LogObject::operator()(
-    const Debug::Channel::Enum channel,
+    const Debug::Channel channel,
     const std::initializer_list<std::string>& inFormat) const {
   std::ostringstream stream;
   stream << file << "(" << line << ") ";

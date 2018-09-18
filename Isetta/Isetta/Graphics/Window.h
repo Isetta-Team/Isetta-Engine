@@ -13,11 +13,11 @@ namespace Isetta {
 class WindowModule {
  public:
   struct WindowConfig {
-    CVarInt windowWidth{"window_width", 1024};
-    CVarInt windowHeight{"window_height", 768};
+    CVar<int> windowWidth{"window_width", 1024};
+    CVar<int> windowHeight{"window_height", 768};
     CVarString windowTitle{"window_title", "Game"};
-    CVarInt windowFullScreen{"window_fullscreen", 0};
-    CVarInt windowShowCursor{"window_show_cursor", 1};
+    CVar<int> windowFullScreen{"window_fullscreen", 0};
+    CVar<int> windowShowCursor{"window_show_cursor", 1};
   };
 
  private:
