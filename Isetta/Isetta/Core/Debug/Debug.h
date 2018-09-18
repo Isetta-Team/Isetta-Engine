@@ -6,46 +6,44 @@
 #include <string>
 
 namespace Isetta::Debug {
-struct Verbosity {
-  enum Enum {
-    // Off = 0, // enum not needed, can set mask to 0
-    Error = (1u << 1),
-    Development = (1 << 2),
-    Warning = (1u << 3),
-    Info = (1u << 4),
-    // All = ~0
-  };
+enum class Verbosity : uint8_t {
+  Off = 0,  // enum not needed, can set mask to 0
+  Error = (1u << 0),
+  Warning = (1u << 1),
+  Info = (1u << 2),
+  All = ~0
 };
 
-static inline const std::string ToString(Verbosity::Enum v) {
+static inline const std::string ToString(Verbosity v) {
   switch (v) {
-    // case Verbosity::Off:
-    //  return "Off";
+    case Verbosity::Off:
+      return "Off";
     case Verbosity::Error:
       return "Error";
     case Verbosity::Warning:
       return "Warning";
     case Verbosity::Info:
       return "Info";
+    case Verbosity::All:
+      return "All";
     default:
       return "Unknown";
   }
 }
 
-struct Channel {
-  enum Enum {
-    General = (1u << 0),
-    Memory = (1u << 1),
-    Networking = (1u << 2),
-    Graphics = (1u << 3),
-    Physics = (1u << 4),
-    Gameplay = (1u << 5),
-    Sound = (1u << 6),
-    FileIO = (1u << 7),
-  };
+enum class Channel : uint16_t {
+  General = (1u << 0),
+  Memory = (1u << 1),
+  Networking = (1u << 2),
+  Graphics = (1u << 3),
+  Horde3D = (1u << 4),
+  Physics = (1u << 5),
+  Gameplay = (1u << 6),
+  Sound = (1u << 7),
+  FileIO = (1u << 8),
 };
 
-static inline const std::string ToString(Channel::Enum c) {
+static inline const std::string ToString(Channel c) {
   switch (c) {
     case Channel::General:
       return "General";
@@ -55,6 +53,8 @@ static inline const std::string ToString(Channel::Enum c) {
       return "Networking";
     case Channel::Graphics:
       return "Graphics";
+    case Channel::Horde3D:
+      return "Horde3D";
     case Channel::Physics:
       return "Physics";
     case Channel::Gameplay:
@@ -64,7 +64,7 @@ static inline const std::string ToString(Channel::Enum c) {
     case Channel::FileIO:
       return "File I/O";
     default:
-      return "Unknown";
+      return "Unknown-Channel";
   }
 }
 }  // namespace Isetta::Debug

@@ -4,14 +4,14 @@
 #pragma once
 
 #include <unordered_map>
-#include "Core/Config/CVar.h"
+#include "Core/Config/ICVar.h"
 #include "SID/sid.h"
 
 namespace Isetta {
 class CVarRegistry {
  public:
   static inline void RegisterVariable(ICVar* cvar) {
-    registry.emplace(cvar->sid, cvar);
+    registry.emplace(cvar->nameID, cvar);
   }
   static inline bool UnregisterVariable(const StringId sid) {
     return registry.erase(sid);
