@@ -27,6 +27,7 @@ class Logger {
     CVar<uint32_t> channelMask{"channel_mask", ~0u};
     CVar<int> breakOnError{"break_on_error", 1};
     CVar<int> bytesToBuffer{"bytes_to_buffer", 10000};
+    CVarString logFolder{"logger_folder", "Logs"};
   };
 
   static void NewSession();

@@ -45,8 +45,8 @@ class FileSystem {
                     const std::function<void(const char*)>& callback = nullptr,
                     const bool appendData = true);
   bool Cancel(HANDLE hFile);
-  HANDLE AccessFile(const char* file, const DWORD access, const DWORD share,
-                    const DWORD creation, DWORD async);
+  void Touch(const char* fileName);
+  void Touch(const std::string& fileName);
 
   inline HANDLE GethIOCP() { return hIOCP; }
 
@@ -56,6 +56,8 @@ class FileSystem {
   HANDLE CreateNewCompletionPort();
   BOOL AssociateFileCompletionPort(HANDLE hIoPort, HANDLE hFile,
                                    DWORD completionKey);
+  HANDLE AccessFile(const char* file, const DWORD access, const DWORD share,
+                    const DWORD creation, DWORD async);
   BOOL FileExists(const char* file);
 
   LPCTSTR ErrorMessage(DWORD error);

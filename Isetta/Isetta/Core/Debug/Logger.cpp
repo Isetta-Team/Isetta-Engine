@@ -24,8 +24,8 @@ void Logger::NewSession() {
   std::string timestamp = std::to_string(Clock::GetTimestamp());
   engineFileName = folder + "isetta-log_" + timestamp + ".log";
   channelFileName = folder + "isetta-channel-log_" + timestamp + ".log";
-  FileSystem::Instance().TouchFile(channelFileName);
-  FileSystem::Instance().TouchFile(engineFileName);
+  FileSystem::Instance().Touch(channelFileName);
+  FileSystem::Instance().Touch(engineFileName);
 }
 
 int Logger::VDebugPrintF(const Debug::Channel channel,

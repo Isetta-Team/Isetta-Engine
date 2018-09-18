@@ -72,13 +72,16 @@ HANDLE FileSystem::CreateNewCompletionPort() {
   return CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
 }
 
-HANDLE FileSystem::AccessFile(const char* file, const DWORD access,
+HANDLE FileSystem::AccessFile(const char* filePath, const DWORD access,
                               const DWORD share, const DWORD creation,
                               DWORD async) {
-  if (!FileExists(file)) {
+  if (!FileExists(filePath)) {
     const char* delim = "\\";
     char* nextToken;
-    char* folder = strtok_s(const_cast<char*>(file), delim, &nextToken);
+    char* filePathTok = new char[strlen(filePath) + 1];
+    strncpy_s(filePathTok, strlen(filePath) + 1, filePath,
+              strlen(filePath) + 1);
+    char* folder = strtok_s(filePathTok, delim, &nextToken);
     while (folder != NULL) {
       char* next = strtok_s(NULL, delim, &nextToken);
       if (next == NULL) {
@@ -88,7 +91,7 @@ HANDLE FileSystem::AccessFile(const char* file, const DWORD access,
       folder = next;
     }
   }
-  return CreateFile(file, access, share, nullptr, creation, async, nullptr);
+  return CreateFile(filePath, access, share, NULL, creation, async, NULL);
 }
 
 BOOL FileSystem::AssociateFileCompletionPort(HANDLE hIoPort, HANDLE hFile,
@@ -316,5 +319,14 @@ bool FileSystem::Cancel(HANDLE hFile) {
   overlapInfo.erase(hFile);
   return completionStatus;
 }
+
+void FileSystem::Touch(const char* fileName) {
+  HANDLE hFile = AccessFile(fileName, NULL, NULL, CREATE_NEW, NULL);
+  if (GetFileError()) {
+    return;
+  }
+  CloseHandle(hFile);
+}
+void FileSystem::Touch(const std::string& fileName) { Touch(fileName.c_str()); }
 
 }  // namespace Isetta
