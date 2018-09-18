@@ -26,7 +26,7 @@ class Logger {
     CVar<uint8_t> verbosityMask{"verbosity_mask", ~0u};
     CVar<uint32_t> channelMask{"channel_mask", ~0u};
     CVar<int> breakOnError{"break_on_error", 1};
-    CVar<int> bytesToBuffer{"bytesToBuffer", 10000};
+    CVar<int> bytesToBuffer{"bytes_to_buffer", 10000};
   };
 
   static void NewSession();
@@ -41,6 +41,8 @@ class Logger {
                           const std::string format, va_list argList);
 
  private:
+  Logger() = default;
+
   static std::string engineFileName;
   static std::string channelFileName;
   static std::ostringstream engineStream;

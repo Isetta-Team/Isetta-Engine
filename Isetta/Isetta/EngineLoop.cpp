@@ -17,7 +17,7 @@ namespace Isetta {
 void RunYidiTest();
 
 void EngineLoop::StartUp() {
-  Logger();
+  Logger::NewSession();
   Config::Instance().Read("config.cfg");
 
   intervalTime = 1.0 / Config::Instance().loopConfig.maxFps.GetVal();

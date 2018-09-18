@@ -19,9 +19,9 @@ std::ostringstream Logger::channelStream;
 void Logger::NewSession() {
   // TODO(Jacob) timestamp
   engineFileName =
-      "isetta-log_" + std::to_string(Clock::GetTimestamp()) + ".log";
-  channelFileName =
-      "isetta-channel-log_" + std::to_string(Clock::GetTimestamp()) + ".log";
+      "Logs/isetta-log_" + std::to_string(Clock::GetTimestamp()) + ".log";
+  channelFileName = "Logs/isetta-channel-log_" +
+                    std::to_string(Clock::GetTimestamp()) + ".log";
   FileSystem::Instance().Write(channelFileName, "", nullptr, false);
   FileSystem::Instance().Write(engineFileName, "", nullptr, false);
 }
