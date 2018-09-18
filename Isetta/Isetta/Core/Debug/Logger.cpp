@@ -17,13 +17,15 @@ std::ostringstream Logger::engineStream;
 std::ostringstream Logger::channelStream;
 
 void Logger::NewSession() {
-  // TODO(Jacob) timestamp
-  engineFileName =
-      "Logs/isetta-log_" + std::to_string(Clock::GetTimestamp()) + ".log";
-  channelFileName = "Logs/isetta-channel-log_" +
-                    std::to_string(Clock::GetTimestamp()) + ".log";
-  FileSystem::Instance().Write(channelFileName, "", nullptr, false);
-  FileSystem::Instance().Write(engineFileName, "", nullptr, false);
+  std::string folder;
+  if (!Config::Instance().logger.logFolder.GetVal().empty()) {
+    folder = Config::Instance().logger.logFolder.GetVal() + "\\";
+  }
+  std::string timestamp = std::to_string(Clock::GetTimestamp());
+  engineFileName = folder + "isetta-log_" + timestamp + ".log";
+  channelFileName = folder + "isetta-channel-log_" + timestamp + ".log";
+  FileSystem::Instance().TouchFile(channelFileName);
+  FileSystem::Instance().TouchFile(engineFileName);
 }
 
 int Logger::VDebugPrintF(const Debug::Channel channel,
