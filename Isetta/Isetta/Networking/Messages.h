@@ -31,7 +31,7 @@ struct StringMessage : public yojimbo::Message {
   // TODO(Caleb): choose a more reasonable range for the int serialization
   template <typename Stream>
   bool Serialize(Stream& stream) {
-    serialize_string(stream, (char*)string.c_str(), 512);
+    serialize_string(stream, const_cast<char*>(string.c_str()), 512);
 
     return true;
   }

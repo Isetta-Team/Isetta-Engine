@@ -78,7 +78,9 @@ void EngineLoop::Update() {
   if (Input::IsKeyPressed(KeyCode::S)) {
     if (!sIsPressed) {
       sIsPressed = true;
-      NetworkManager::SendStringMessageFromServer(0, "Hi!");
+      if (NetworkManager::ServerIsRunning()) {
+        NetworkManager::SendStringMessageFromServer(0, "Hi!");
+      }
     } 
   } else {
     sIsPressed = false;
@@ -86,7 +88,9 @@ void EngineLoop::Update() {
   if (Input::IsKeyPressed(KeyCode::C)) {
     if (!cIsPressed) {
       cIsPressed = true;
-      NetworkManager::SendStringMessageFromClient("Hi!");
+      if (NetworkManager::ClientIsConnected()) {
+        NetworkManager::SendStringMessageFromClient("Hi!");
+      }
     } 
   } else {
     cIsPressed = false;

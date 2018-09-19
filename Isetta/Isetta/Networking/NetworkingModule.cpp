@@ -20,13 +20,14 @@ void NetworkingModule::StartUp() {
 
   if (!InitializeYojimbo()) {
     throw std::exception(
-        "NetworkingModule::StartUp() Could not initialize yojimbo.");
+        "NetworkingModule::StartUp => Could not initialize yojimbo.");
   }
   srand((unsigned int)time(NULL));
 
   // TODO(Caleb): Add CVar inputs for the config options
   networkConfig.numChannels = 1;
   networkConfig.channel[0].type = yojimbo::CHANNEL_TYPE_UNRELIABLE_UNORDERED;
+  networkConfig.timeout = 20;
 
   privateKey = new uint8_t[KeyBytes];
   // TODO(Caleb): Need to do something more insightful with the private key
@@ -72,6 +73,11 @@ void NetworkingModule::Update(float deltaTime) {
 
 void NetworkingModule::ShutDown() {
   ShutdownYojimbo();
+
+  try {
+    Disconnect();
+  } catch (std::exception e) {
+  }
 
   // TODO(Caleb): Change the mem dealloc with our new manager
   delete client;
@@ -187,14 +193,12 @@ void NetworkingModule::ProcessServerToClientMessages() {
 
     switch (message->GetType()) {
       case HANDLE_MESSAGE: {
-        HandleMessage* handleMessage =
-            reinterpret_cast<HandleMessage*>(message);
+        HandleMessage* handleMessage = static_cast<HandleMessage*>(message);
         LOG(Debug::Channel::Networking, "Server sends handle #%d",
             handleMessage->handle);
       } break;
       case STRING_MESSAGE: {
-        StringMessage* stringMessage =
-            reinterpret_cast<StringMessage*>(message);
+        StringMessage* stringMessage = static_cast<StringMessage*>(message);
         LOG(Debug::Channel::Networking, "Server says: %s",
             stringMessage->string.c_str());
       } break;
@@ -215,15 +219,18 @@ void NetworkingModule::Connect(const char* serverAddress, int serverPort,
 }
 
 void NetworkingModule::Disconnect() {
-  if (client->IsConnected()) {
-    client->Disconnect();
+  if (!client->IsConnected()) {
+    throw std::exception(
+        "NetworkingModule::Disconnect => Cannot disconnect the client if it is "
+        "not already connected.");
   }
+  client->Disconnect();
 }
 
 void NetworkingModule::CreateServer(const char* address, int port) {
   if (server) {
     throw std::exception(
-        "NetworkingModule::CreateServer() Cannot create a server while one is "
+        "NetworkingModule::CreateServer => Cannot create a server while one is "
         "already running.");
   }
   serverSendBufferArray = new RingBuffer<yojimbo::Message*>[MaxClients];
