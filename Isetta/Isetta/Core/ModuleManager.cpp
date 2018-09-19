@@ -40,7 +40,7 @@ void ModuleManager::SimulationUpdate(float deltaTime) {
   audioModule->Update(deltaTime);
   inputModule->Update(deltaTime);
   memoryManager->Update();
-  //networkingModule->Update(deltaTime);
+  networkingModule->Update(deltaTime);
 }
 
 void ModuleManager::RenderUpdate(float deltaTime) {

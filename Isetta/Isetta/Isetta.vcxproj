@@ -131,6 +131,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\FileSystem.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Networking\NetworkingModule.cpp" />
+    <ClCompile Include="Networking\NetworkManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioModule.h" />
@@ -179,6 +180,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Input\InputEnum.h" />
     <ClInclude Include="Input\InputModule.h" />
     <ClInclude Include="Core\FileSystem.h" />
+    <ClInclude Include="Networking\NetworkManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Sound\singing.wav" />
