@@ -46,17 +46,7 @@ void NetworkingModule::Update(float deltaTime) {
   clock.UpdateTime();
 
   // Check for new connections
-  for (int i = 0; i < NumIterations; i++) {
-    PumpClientServerUpdate(clock.GetElapsedTime());
-
-    if (client->ConnectionFailed() || (server && !server->IsRunning())) {
-      break;
-    }
-
-    if (!server && !client->IsConnecting() && client->IsConnected()) {
-      break;
-    }
-  }
+  PumpClientServerUpdate(clock.GetElapsedTime());
 
   // Send out our messages
   SendClientToServerMessages();
@@ -67,17 +57,15 @@ void NetworkingModule::Update(float deltaTime) {
   }
 
   // Receive and process the messages from the other side
-  for (int i = 0; i < NumIterations; i++) {
-    PumpClientServerUpdate(clock.GetElapsedTime());
+  PumpClientServerUpdate(clock.GetElapsedTime());
 
-    if (client->IsConnected()) {
-      ProcessServerToClientMessages();
-    }
+  if (client->IsConnected()) {
+    ProcessServerToClientMessages();
+  }
 
-    if (server) {
-      for (int i = 0; i < MaxClients; i++) {
-        ProcessClientToServerMessages(i);
-      }
+  if (server) {
+    for (int i = 0; i < MaxClients; i++) {
+      ProcessClientToServerMessages(i);
     }
   }
 }
@@ -217,14 +205,13 @@ void NetworkingModule::ProcessServerToClientMessages() {
 }
 
 void NetworkingModule::Connect(const char* serverAddress, int serverPort,
-                               std::function<void()> callback) {
+                               std::function<void(bool)> callback) {
   yojimbo::Address address(serverAddress, serverPort);
   if (!address.IsValid()) {
     return;
   }
 
-  connectionCallback = callback;
-  client->InsecureConnect(privateKey, clientId, address);
+  client->InsecureConnect(privateKey, clientId, address, callback);
 }
 
 void NetworkingModule::Disconnect() {

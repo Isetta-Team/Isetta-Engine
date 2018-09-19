@@ -36,7 +36,7 @@ void EngineLoop::StartUp() {
   // Networking
   NetworkManager::CreateServer(
       "127.0.0.1");
-  NetworkManager::ConnectToServer("127.0.0.1");
+  NetworkManager::ConnectToServer("127.0.0.1", [](bool b) {LOG(Debug::Channel::Networking, "Client connection state: %d", b);});
 
   // Read scene from scene file
   ModelNode car{"test/Low-Poly-Racing-Car.scene.xml", Math::Vector3{0, -20, 0},
@@ -75,17 +75,19 @@ void EngineLoop::Update() {
   static bool cIsPressed = false;
 
   // Networking update
-  LOG(Debug::Channel::Networking, "%d",
-      NetworkManager::ClientIsConnected());
-  if (!sIsPressed && Input::IsKeyPressed(KeyCode::S)) {
-    sIsPressed = true;
-    NetworkManager::SendStringMessageFromServer(0, "Hi!");
+  if (Input::IsKeyPressed(KeyCode::S)) {
+    if (!sIsPressed) {
+      sIsPressed = true;
+      NetworkManager::SendStringMessageFromServer(0, "Hi!");
+    } 
   } else {
     sIsPressed = false;
   }
-  if (!cIsPressed && Input::IsKeyPressed(KeyCode::C)) {
-    cIsPressed = true;
-    NetworkManager::SendStringMessageFromClient("Hi!");
+  if (Input::IsKeyPressed(KeyCode::C)) {
+    if (!cIsPressed) {
+      cIsPressed = true;
+      NetworkManager::SendStringMessageFromClient("Hi!");
+    } 
   } else {
     cIsPressed = false;
   }

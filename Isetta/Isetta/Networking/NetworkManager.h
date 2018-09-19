@@ -16,7 +16,7 @@ class NetworkManager {
   static void SendStringMessageFromServer(int clientIdx, std::string string);
 
   static void ConnectToServer(const char* serverAddress,
-                        std::function<void()> callback=nullptr);
+                        std::function<void(bool)> callback=nullptr);
   static void DisconnectFromServer();
 
   static void CreateServer(const char* address);

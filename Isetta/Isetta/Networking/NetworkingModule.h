@@ -18,8 +18,7 @@ class NetworkingModule {
   const uint16_t ClientPort = 30000;
   const uint16_t ServerPort = 40000;
   const int KeyBytes = 32;
-  const int MaxClients = 64;
-  const int NumIterations = 100;
+  const int MaxClients = 2;
   const int ClientQueueSize = 256;
   const int ServerQueueSizePerClient = 256;
 
@@ -36,8 +35,6 @@ class NetworkingModule {
 
   RingBuffer<yojimbo::Message*> clientSendBuffer;
   RingBuffer<yojimbo::Message*>* serverSendBufferArray;
-
-  std::function<void()> connectionCallback{nullptr};
 
   // Constructors
 
@@ -63,7 +60,7 @@ class NetworkingModule {
   void ProcessServerToClientMessages();
 
   void Connect(const char* serverAddress, int serverPort,
-               std::function<void()> callback=nullptr);
+               std::function<void(bool)> callback=nullptr);
   void Disconnect();
 
   void CreateServer(const char* address, int port);
