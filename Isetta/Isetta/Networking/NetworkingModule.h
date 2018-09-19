@@ -3,6 +3,7 @@
  */
 #pragma once
 
+#include <functional>
 #include "Core/DataStructures/RingBuffer.h"
 #include "Core/Time/Clock.h"
 #include "Networking/Messages.h"
@@ -36,6 +37,8 @@ class NetworkingModule {
   RingBuffer<yojimbo::Message*> clientSendBuffer;
   RingBuffer<yojimbo::Message*>* serverSendBufferArray;
 
+  std::function<void()> connectionCallback{nullptr};
+
   // Constructors
 
   NetworkingModule() = default;
@@ -59,7 +62,8 @@ class NetworkingModule {
   void ProcessClientToServerMessages(int clientIdx);
   void ProcessServerToClientMessages();
 
-  void Connect(const char* serverAddress);
+  void Connect(const char* serverAddress, int serverPort,
+               std::function<void()> callback=nullptr);
   void Disconnect();
 
   void CreateServer(const char* address, int port);
@@ -67,6 +71,7 @@ class NetworkingModule {
 
   // Other
 
+  friend class NetworkManager;
   friend class ModuleManager;
 };
 }  // namespace Isetta

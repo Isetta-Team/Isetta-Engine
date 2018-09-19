@@ -6,31 +6,38 @@
 #include <stdexcept>
 #include <string>
 #include "Core/Debug/Logger.h"
+#include "Networking/NetworkManager.h"
+
+// F Windows
+#ifdef SendMessage
+#undef SendMessage
+#endif
 
 namespace Isetta {
 CustomAdapter NetworkingModule::NetworkAdapter;
 void NetworkingModule::StartUp() {
+  NetworkManager::networkingModule = this;
+
   if (!InitializeYojimbo()) {
     throw std::exception(
         "NetworkingModule::StartUp() Could not initialize yojimbo.");
   }
+  srand((unsigned int)time(NULL));
 
   // TODO(Caleb): Add CVar inputs for the config options
   networkConfig.numChannels = 1;
   networkConfig.channel[0].type = yojimbo::CHANNEL_TYPE_UNRELIABLE_UNORDERED;
 
-  clientAddress = yojimbo::Address("0.0.0.0", NetworkingModule::ClientPort);
-  // TODO(Caleb): change out the memory allocation with our own custom allocator
-  client = new yojimbo::Client(yojimbo::GetDefaultAllocator(), clientAddress,
-                               networkConfig, NetworkingModule::NetworkAdapter,
-                               clock.GetElapsedTime());
-
   privateKey = new uint8_t[KeyBytes];
-  // TODO(Caleb): Need to do something more insightful with the private key than
-  // all 0s
+  // TODO(Caleb): Need to do something more insightful with the private key
+  // than / all 0s
   memset(privateKey, 0, KeyBytes);
 
-  yojimbo::random_bytes(reinterpret_cast<uint8_t*>(&clientId), 8);
+  clientId = 0;
+
+  client = new yojimbo::Client(yojimbo::GetDefaultAllocator(),
+                               yojimbo::Address("0.0.0.0"), networkConfig,
+                               NetworkAdapter, clock.GetElapsedTime());
 
   clientSendBuffer = RingBuffer<yojimbo::Message*>(ClientQueueSize);
 }
@@ -76,12 +83,16 @@ void NetworkingModule::Update(float deltaTime) {
 }
 
 void NetworkingModule::ShutDown() {
+  ShutdownYojimbo();
+
   // TODO(Caleb): Change the mem dealloc with our new manager
   delete client;
-  if (server) {
-    delete server;
-  }
   delete privateKey;
+
+  try {
+    CloseServer();
+  } catch (std::exception e) {
+  }
 }
 
 // NOTE: Deletes the oldest message in the queue if the queue is
@@ -133,7 +144,7 @@ void NetworkingModule::SendClientToServerMessages() {
     }
 
     yojimbo::Message* message = clientSendBuffer.Get();
-    //client->SendMessage(channelIdx, message);  // bugged out
+    client->SendMessage(channelIdx, message);  // bugged out
   }
 }
 
@@ -145,7 +156,7 @@ void NetworkingModule::SendServerToClientMessages(int clientIdx) {
     }
 
     yojimbo::Message* message = serverSendBufferArray[clientIdx].Get();
-    //server->SendMessage(clientIdx, channelIdx, message);  // bugged out
+    server->SendMessage(clientIdx, channelIdx, message);  // bugged out
   }
 }
 
@@ -205,12 +216,14 @@ void NetworkingModule::ProcessServerToClientMessages() {
   }
 }
 
-void NetworkingModule::Connect(const char* serverAddress) {
-  yojimbo::Address address(serverAddress);
+void NetworkingModule::Connect(const char* serverAddress, int serverPort,
+                               std::function<void()> callback) {
+  yojimbo::Address address(serverAddress, serverPort);
   if (!address.IsValid()) {
     return;
   }
 
+  connectionCallback = callback;
   client->InsecureConnect(privateKey, clientId, address);
 }
 
@@ -232,7 +245,7 @@ void NetworkingModule::CreateServer(const char* address, int port) {
         RingBuffer<yojimbo::Message*>(ServerQueueSizePerClient);
   }
 
-  serverAddress = yojimbo::Address("127.0.0.1", NetworkingModule::ServerPort);
+  serverAddress = yojimbo::Address(address, NetworkingModule::ServerPort);
   // TODO(Caleb): change out the memory allocation with our own custom allocator
   server = new yojimbo::Server(
       yojimbo::GetDefaultAllocator(), privateKey, serverAddress, networkConfig,

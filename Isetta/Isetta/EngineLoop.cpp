@@ -10,6 +10,8 @@
 #include "Graphics/ModelNode.h"
 #include "Input/Input.h"
 #include "Input/InputEnum.h"
+#include "Networking/NetworkManager.h"
+#include "Networking/Messages.h"
 
 namespace Isetta {
 void EngineLoop::StartUp() {
@@ -30,6 +32,11 @@ void EngineLoop::StartUp() {
                                   [&]() { isGameRunning = false; });
 
   // Game Init Part
+
+  // Networking
+  NetworkManager::CreateServer(
+      "127.0.0.1");
+  NetworkManager::ConnectToServer("127.0.0.1");
 
   // Read scene from scene file
   ModelNode car{"test/Low-Poly-Racing-Car.scene.xml", Math::Vector3{0, -20, 0},
@@ -63,6 +70,27 @@ void EngineLoop::Update() {
   GetGameClock().UpdateTime();
 
   // TODO(All) Add networking update
+
+  static bool sIsPressed = false;
+  static bool cIsPressed = false;
+
+  // Networking update
+  LOG(Debug::Channel::Networking, "%d",
+      NetworkManager::ClientIsConnected());
+  if (!sIsPressed && Input::IsKeyPressed(KeyCode::S)) {
+    sIsPressed = true;
+    NetworkManager::SendStringMessageFromServer(0, "Hi!");
+  } else {
+    sIsPressed = false;
+  }
+  if (!cIsPressed && Input::IsKeyPressed(KeyCode::C)) {
+    cIsPressed = true;
+    NetworkManager::SendStringMessageFromClient("Hi!");
+  } else {
+    cIsPressed = false;
+  }
+
+  // end Networking update
 
   // Client part
   accumulateTime += GetGameClock().GetDeltaTime();
