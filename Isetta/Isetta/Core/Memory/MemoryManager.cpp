@@ -3,6 +3,9 @@
  */
 #include "Core/Memory/MemoryManager.h"
 #include "Core/Memory/ObjectHandle.h"
+#include "Input/Input.h"
+#include "Input/InputEnum.h"
+#include "Core/Math/Random.h"
 
 namespace Isetta {
 
@@ -53,6 +56,29 @@ void MemoryManager::ShutDown() {
   singleFrameAllocator.Erase();
   doubleBufferedAllocator.Erase();
   dynamicArena.Erase();
+}
+
+void MemoryManager::RegisterCallbacks() {
+  Input::RegisterKeyPressCallback(KeyCode::P, [&]() { dynamicArena.Print(); });
+}
+
+void MemoryManager::Test() {
+  const U32 count = 2048;
+  std::vector<ObjectHandle<U64>> arr;
+
+  for (U32 i = 0; i < count; i++) {
+    auto ref = NewDynamic<U64>();
+    *ref = i;
+    arr.push_back(ref);
+  }
+
+  auto map = instance->dynamicArena.addressIndexMap;
+  
+  for (U32 i = 0; i < count / 2; i++) {
+    int index = Math::Random::GetRandomGenerator(0, arr.size() - 1).GetValue();
+    DeleteDynamic(arr[index]);
+    arr.erase(arr.begin() + index);
+  }
 }
 
 }  // namespace Isetta

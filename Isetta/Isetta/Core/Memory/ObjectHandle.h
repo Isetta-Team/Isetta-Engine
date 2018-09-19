@@ -18,7 +18,7 @@ class HandleEntry {
 
   U32 uniqueID{};
   SizeInt size{};
-  void* ptr{};
+  mutable void* ptr{};
   bool isEmpty{true};
 
   template <typename T>
@@ -29,31 +29,12 @@ class HandleEntry {
 template <typename T>
 class ObjectHandle {
  public:
+  ObjectHandle() = default;
   ~ObjectHandle() = default;
   T* operator->() const;
   T& operator*();
 
-  ObjectHandle(void* mem, const U32 uniqueID, const SizeInt size)
-      : uniqueID(uniqueID) {
-    HandleEntry* entry = nullptr;
-
-    // FUTURE: To optimize the speed of this, remember last index
-    for (U32 i = 0; i < MemoryArena::maxHandleCount; i++) {
-      if (MemoryArena::entryArr[i].isEmpty) {
-        index = i;
-        entry = &MemoryArena::entryArr[index];
-        break;
-      }
-    }
-
-    if (entry == nullptr) {
-      throw std::out_of_range{
-          "ObjectHandle => No empty slot in handle table"};
-    }
-
-    T* t = new (mem) T{};
-    entry->Set(uniqueID, static_cast<void*>(t), false, size);
-  }
+  ObjectHandle(void* mem, U32 uniqueID, SizeInt size);
 
   T* GetObjectPtr() const;
   void EraseObject() const;
@@ -70,6 +51,29 @@ T* ObjectHandle<T>::operator->() const {
 template <typename T>
 T& ObjectHandle<T>::operator*() {
   return *GetObjectPtr();
+}
+
+template <typename T>
+ObjectHandle<T>::ObjectHandle(void* mem, const U32 uniqueID, const SizeInt size): uniqueID(uniqueID) {
+  HandleEntry* entry = nullptr;
+
+  // FUTURE: To optimize the speed of this, remember last index
+  for (U32 i = 0; i < MemoryArena::maxHandleCount; i++) {
+    if (MemoryArena::entryArr[i].isEmpty) {
+      index = i;
+      entry = &MemoryArena::entryArr[index];
+      break;
+    }
+  }
+
+  if (entry == nullptr) {
+    throw std::out_of_range{
+      "ObjectHandle => No empty slot in handle table"
+    };
+  }
+
+  T* t = new(mem) T{};
+  entry->Set(uniqueID, static_cast<void*>(t), false, size);
 }
 
 template <typename T>

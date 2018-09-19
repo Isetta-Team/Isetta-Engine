@@ -31,6 +31,7 @@ class MemoryManager {
   template <typename T>
   static void DeleteDynamic(ObjectHandle<T>& objToFree);
 
+  static void Test();
  private:
   MemoryManager();
   ~MemoryManager() = default;
@@ -38,6 +39,7 @@ class MemoryManager {
   void StartUp();
   void Update();
   void ShutDown();
+  void RegisterCallbacks();
 
   static MemoryManager* instance;
   StackAllocator singleFrameAllocator{};

@@ -1,3 +1,6 @@
+/*
+* Copyright (c) 2018 Isetta
+*/
 #pragma once
 #include "Core/IsettaAlias.h"
 #include "Core/Memory/StackAllocator.h"
@@ -19,7 +22,7 @@ class DoubleBufferedAllocator {
   T* New() {
     void* mem = Alloc(sizeof(T));
     return new (mem) T();
-  };
+  }
 
  private:
   StackAllocator stacks[2];

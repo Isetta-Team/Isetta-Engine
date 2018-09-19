@@ -31,14 +31,18 @@ class MemoryArena {
   void Defragment();
   void MoveLeft(U32 index);
   void Erase() const;
-  static void Move(PtrInt dest, PtrInt& src, SizeInt count);
+  void Print() const;
+  PtrInt GetSize() const;
 
   // can't be put in ObjectHandle because it creates new ones for each type
   inline static U32 nextUniqueID = 0;
   const static U32 maxHandleCount = 2048;
   const static U8 alignment = 16;
   static class HandleEntry entryArr[];
+  // TODO(YIDI): Make a custom container rather than using map
+  // O(1) random access, O(log n) insert
   std::map<PtrInt, int> addressIndexMap;
+  U32 index = 0;
 
   template <typename T>
   friend class ObjectHandle;

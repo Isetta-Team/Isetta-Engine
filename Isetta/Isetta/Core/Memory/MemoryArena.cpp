@@ -3,13 +3,14 @@
  */
 #include "Core/Memory/MemoryArena.h"
 #include "Core/Debug/Logger.h"
-#include "Core/Math/Utility.h"
 #include "Core/Memory/ObjectHandle.h"
+#include "Input/Input.h"
 
 namespace Isetta {
 
 HandleEntry MemoryArena::entryArr[maxHandleCount];
 
+// TODO(YIDI): This is only allocating from top
 void* MemoryArena::Alloc(const SizeInt size, SizeInt& outSize) {
   PtrInt lastAddress;
   SizeInt lastSize;
@@ -39,10 +40,16 @@ void* MemoryArena::Alloc(const SizeInt size, SizeInt& outSize) {
 }
 
 void MemoryArena::Defragment() {
-  LOG_INFO(Debug::Channel::Memory, "[address, index, size]");
-  for (const auto& pair : addressIndexMap) {
-    LOG_INFO(Debug::Channel::Memory, "[%lu, %d, %lu]", pair.first, pair.second,
-             entryArr[pair.second].size);
+  if (addressIndexMap.empty()) return;
+
+  for (int i = 0; i < 6; i++) {
+    index++;
+    if (index >= addressIndexMap.size()) {
+      index = 0;
+    }
+    MoveLeft(index);
+    LOG_INFO(Debug::Channel::Memory, "Cur size: %I64u", GetSize());
+    
   }
 }
 
@@ -58,27 +65,67 @@ PtrInt NextMultiplyOfBase(const PtrInt number, const U32 base) {
 
 void MemoryArena::MoveLeft(const U32 index) {
   ASSERT(index <= addressIndexMap.size() - 1);
+  // LOG_INFO(Debug::Channel::Memory, "Trying to align %d", index);
 
-  const auto& entry = entryArr[addressIndexMap[index]];
+  std::vector<int> arr;
+  arr.reserve(addressIndexMap.size());
+  for (const auto& pair : addressIndexMap) {
+    arr.push_back(pair.second);
+  }
+
+  const auto& entry = entryArr[arr[index]];
+
   PtrInt lastAvailableAddress;
   if (index == 0) {
     lastAvailableAddress = leftAddress;
   } else {
-    const auto& lastEntry = entryArr[addressIndexMap[index - 1]];
+    const auto& lastEntry = entryArr[arr[index - 1]];
     lastAvailableAddress = lastEntry.GetAddress() + lastEntry.size;
   }
 
   lastAvailableAddress = NextMultiplyOfBase(lastAvailableAddress, alignment);
+
   if (lastAvailableAddress < entry.GetAddress()) {
-    Move(entry.GetAddress(), lastAvailableAddress, entry.size);
+    void* newAdd = reinterpret_cast<void*>(lastAvailableAddress);
+    // remove from map and add back
+    addressIndexMap.erase(
+        addressIndexMap.find(reinterpret_cast<PtrInt>(entry.ptr)));
+    addressIndexMap.emplace(reinterpret_cast<PtrInt>(newAdd), arr[index]);
+
+    std::memmove(newAdd, entry.ptr, entry.size);
+    // LOG_INFO(Debug::Channel::Memory, "Moving from %p to %p of size %u",
+             // entry.ptr, lastAvailableAddress, entry.size);
+    entry.ptr = newAdd;
   }
 }
 
 void MemoryArena::Erase() const { std::free(memHead); }
 
-void MemoryArena::Move(const PtrInt dest, PtrInt& src, const SizeInt count) {
-  std::memmove(reinterpret_cast<void*>(dest), reinterpret_cast<void*>(src),
-               count);
+void MemoryArena::Print() const {
+  LOG_INFO(Debug::Channel::Memory, "[address, index, size]");
+  int count = 0;
+  for (const auto& pair : addressIndexMap) {
+    LOG_INFO(Debug::Channel::Memory, "%d [%p, %d, %u]", count++, pair.first,
+             pair.second, entryArr[pair.second].size);
+  }
+}
+
+PtrInt MemoryArena::GetSize() const {
+  PtrInt lastAddress;
+  SizeInt lastSize;
+
+  if (addressIndexMap.empty()) {
+    lastAddress = leftAddress;
+    lastSize = 0;
+  } else {
+    auto lastPair = --addressIndexMap.end();
+    lastAddress = lastPair->first;
+    lastSize = entryArr[lastPair->second].size;
+  }
+  auto& arr = entryArr;
+  auto lastPair = --addressIndexMap.end();
+
+  return (lastAddress + lastSize) - leftAddress;
 }
 
 MemoryArena::MemoryArena(const SizeInt size) {

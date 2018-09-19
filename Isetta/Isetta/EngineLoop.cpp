@@ -63,7 +63,7 @@ void EngineLoop::StartUp() {
                                             handleC);
       });
 
-  RunYidiTest();
+  // RunYidiTest();
 }
 
 void EngineLoop::Update() {
@@ -101,23 +101,7 @@ Clock& EngineLoop::GetGameClock() {
 }
 
 void RunYidiTest() {
-  const U32 count = 10;
-  std::vector<ObjectHandle<MemTestObj>> arr;
-  arr.reserve(count);
-
-  for (U32 i = 0; i < count; i++) {
-    auto ref = MemoryManager::NewDynamic<MemTestObj>();
-    // ref->num1 = i;
-    arr.push_back(ref);
-  }
-
-  // MemoryManager::DeleteDynamic(arr[1]);
-  // MemoryManager::DeleteDynamic(arr[2]);
-  // MemoryManager::DeleteDynamic(arr[4]);
-
-  for (U32 i = 0; i < count; i++) {
-    MemoryManager::DeleteDynamic(arr[i]);
-  }
+  Input::RegisterKeyPressCallback(KeyCode::T, []() { MemoryManager::Test(); });
 }
 
 }  // namespace Isetta

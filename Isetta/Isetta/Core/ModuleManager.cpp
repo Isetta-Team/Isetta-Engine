@@ -34,6 +34,7 @@ void ModuleManager::StartUp() {
   renderModule->StartUp(windowModule->winHandle);
   inputModule->StartUp(windowModule->winHandle);
   networkingModule->StartUp();
+  memoryManager->RegisterCallbacks();
 }
 
 void ModuleManager::SimulationUpdate(float deltaTime) {
