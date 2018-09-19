@@ -123,6 +123,9 @@
       <Filter>Core\Memory</Filter>
     </ClCompile>
     <ClCompile Include="EngineLoop.cpp" />
+    <ClCompile Include="Core\Memory\MemoryArena.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\IModule.h">
@@ -255,6 +258,9 @@
     </ClInclude>
     <ClInclude Include="Networking\Messages.h">
       <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\MemoryArena.h">
+      <Filter>Core\Memory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,7 @@
 #include "EngineLoop.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
-#include "Core/Memory/ObjectHandle.h"
+#include "Core/Memory/MemoryManager.h"
 #include "Core/ModuleManager.h"
 #include "Core/Time/Clock.h"
 #include "Graphics/LightNode.h"
@@ -112,8 +112,6 @@ void RunYidiTest() {
   for (U32 i = 0; i < count; i++) {
     MemoryManager::DeleteDynamic(arr[i]);
   }
-
-  MemoryManager::DeleteDynamic(arr[0]);
 }
 
 }  // namespace Isetta

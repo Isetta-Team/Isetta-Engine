@@ -39,10 +39,10 @@ int Logger::VDebugPrintF(const Debug::Channel::Enum channel,
     if (CheckVerbosity(verbosity)) {
       OutputDebugString(sBuffer);
     }
-    BufferWrite(channelFileName, &channelStream, sBuffer);
+    // BufferWrite(channelFileName, &channelStream, sBuffer);
   }
 
-  BufferWrite(engineFileName, &engineStream, sBuffer);
+  // BufferWrite(engineFileName, &engineStream, sBuffer);
 
   if (Config::Instance().logger.breakOnError.GetVal() &&
       verbosity == Debug::Verbosity::Error &&

@@ -2,9 +2,8 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
-#include "Core/Memory/MemoryManager.h"
+#include "Core/Memory/MemoryArena.h"
 
 namespace Isetta {
 // FUTURE: If we want reference counting (probably not), it can be done here
@@ -13,6 +12,7 @@ class HandleEntry {
   HandleEntry() = default;
   ~HandleEntry() = default;
 
+  // just a help function
   void Set(U32 uniqueID, void* ptr, bool isEmpty, SizeInt size);
 
   U32 uniqueID{};
@@ -22,7 +22,7 @@ class HandleEntry {
 
   template <typename T>
   friend class ObjectHandle;
-  friend class MemoryManager;
+  friend class MemoryArena;
 };
 
 template <typename T>
@@ -32,46 +32,34 @@ class ObjectHandle {
   T* operator->() const;
   T& operator*();
 
-  friend bool operator<(const ObjectHandle& a, const ObjectHandle& b) {
-    // TODO(YIDI): Optimize this after debugging
-    PtrInt aAddress = reinterpret_cast<PtrInt>(a.GetObjectPtr());
-    PtrInt bAddress = reinterpret_cast<PtrInt>(b.GetObjectPtr());
-    bool isASmaller = aAddress < bAddress;
-    return isASmaller;
+  ObjectHandle(void* mem, const U32 uniqueID, const SizeInt size)
+      : uniqueID(uniqueID) {
+    HandleEntry* entry = nullptr;
+
+    // FUTURE: To optimize the speed of this, remember last index
+    for (U32 i = 0; i < MemoryArena::maxHandleCount; i++) {
+      if (MemoryArena::entryArr[i].isEmpty) {
+        index = i;
+        entry = &MemoryArena::entryArr[index];
+        break;
+      }
+    }
+
+    if (entry == nullptr) {
+      throw std::out_of_range{
+          "ObjectHandle => No empty slot in handle table"};
+    }
+
+    T* t = new (mem) T{};
+    entry->Set(uniqueID, static_cast<void*>(t), false, size);
   }
 
- private:
-  ObjectHandle();
   T* GetObjectPtr() const;
   void EraseObject() const;
   PtrInt GetObjAddress() const;
   U32 uniqueID;
   U32 index;
-
-  friend class MemoryManager;
 };
-
-template <typename T>
-ObjectHandle<T>::ObjectHandle() {
-  uniqueID = MemoryManager::nextUniqueID++;
-  HandleEntry* entry = nullptr;
-
-  for (U32 i = 0; i < MemoryManager::maxHandleCount; i++) {
-    if (MemoryManager::entryArr[i].isEmpty) {
-      index = i;
-      entry = &MemoryManager::entryArr[index];
-      break;
-    }
-  }
-
-  if (entry == nullptr) {
-    throw std::out_of_range{"No empty slot in handle table"};
-  }
-
-  SizeInt size = sizeof(T);
-  T* t = new (MemoryManager::AllocDynamic(size)) T{};
-  entry->Set(uniqueID, static_cast<void*>(t), false, size);
-}
 
 template <typename T>
 T* ObjectHandle<T>::operator->() const {
@@ -85,43 +73,39 @@ T& ObjectHandle<T>::operator*() {
 
 template <typename T>
 T* ObjectHandle<T>::GetObjectPtr() const {
-  HandleEntry& entry = MemoryManager::entryArr[index];
+  HandleEntry& entry = MemoryArena::entryArr[index];
 
   if (entry.isEmpty) {
     throw std::exception{
-        "ObjectHandle::GetObjectPtr() : Object already deleted"};
+        "ObjectHandle::GetObjectPtr => Object already deleted"};
   }
 
   // prevent the problem of "stale pointer"
-  if (uniqueID == entry.uniqueID) {
-    return static_cast<T*>(entry.ptr);
+  if (uniqueID != entry.uniqueID) {
+    throw std::exception{
+        "ObjectHandle::GetObjectPtr => Object you are trying to access was "
+        "replaced by a new object"};
   }
 
-  throw std::exception{
-      "ObjectHandle::GetObjectPtr() : Object you are trying to access was "
-      "replaced by a new object"};
+  return static_cast<T*>(entry.ptr);
 }
 
 template <typename T>
 void ObjectHandle<T>::EraseObject() const {
-  HandleEntry& entry = MemoryManager::entryArr[index];
+  HandleEntry& entry = MemoryArena::entryArr[index];
 
   if (entry.isEmpty) {
-    // TODO(YIDI): Is this a good use of log_error?
-    LOG_ERROR(Debug::Channel::Memory,
-              "ObjectHandle::DeleteObject() : Double deleting handle!");
-    return;
+    throw std::exception{
+        "ObjectHandle::DeleteObject => Double deleting handle!"};
   }
 
   if (uniqueID != entry.uniqueID) {
-    LOG_ERROR(Debug::Channel::Memory,
-              "ObjectHandle::DeleteObject() : You are trying to delete an "
-              "object you don't own!");
-    return;
+    throw std::exception{
+        "ObjectHandle::DeleteObject => You are trying to delete an "
+        "object you don't own!"};
   }
 
   static_cast<T*>(entry.ptr)->~T();
-  MemoryManager::FreeDynamic(entry.ptr);
   entry.isEmpty = true;
 }
 

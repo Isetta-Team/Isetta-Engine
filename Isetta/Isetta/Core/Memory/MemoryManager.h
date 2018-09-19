@@ -2,18 +2,12 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include <map>
-#include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Memory/DoubleBufferedAllocator.h"
 #include "Core/Memory/ObjectHandle.h"
-#include "Core/Memory/PoolAllocator.h"
 #include "Core/Memory/StackAllocator.h"
 
 namespace Isetta {
-
-template <typename T>
-class ObjectHandle;
 
 // TODO(YIDI): Add LSR
 // TODO(YIDI): Implement de-fragmentation
@@ -44,24 +38,12 @@ class MemoryManager {
   void StartUp();
   void Update();
   void ShutDown();
-  void Defragment();
-
-  static void* AllocDynamic(SizeInt size, U8 alignment = 16);
-  static void FreeDynamic(void* ptrToFree);
 
   static MemoryManager* instance;
   StackAllocator singleFrameAllocator{};
-  StackAllocator dynamicArena{};
   DoubleBufferedAllocator doubleBufferedAllocator{};
+  MemoryArena dynamicArena{};
 
-  // can't be put in ObjectHandle because it creates new ones for each type
-  inline static U32 nextUniqueID = 0;
-  const static U32 maxHandleCount = 2048;
-  static class HandleEntry entryArr[];
-  std::map<PtrInt, int> addressIndexMap;
-
-  template <typename T>
-  friend class ObjectHandle;
   friend class ModuleManager;
 };
 
@@ -77,26 +59,12 @@ T* MemoryManager::NewDoubleBuffered() {
 
 template <typename T>
 ObjectHandle<T>& MemoryManager::NewDynamic() {
-  // TODO(YIDI): I'm not sure this is the right way to implement object handles,
-  // the handle itself should not need to be freed. But I think usage-wise this
-  // is optimal
-  auto handle = ObjectHandle<T>{};
-  instance->addressIndexMap.emplace(handle.GetObjAddress(), handle.index);
-  return handle;
+  return instance->dynamicArena.NewDynamic<T>();
 }
 
 template <typename T>
-void MemoryManager::DeleteDynamic(ObjectHandle<T>& handleToDelete) {
-  auto addressIndexPair = instance->addressIndexMap.find(handleToDelete.GetObjAddress());
-
-  if (addressIndexPair != instance->addressIndexMap.end()) {
-    LOG_INFO(Debug::Channel::Memory, "Deleting handle [%d, %lu]",
-             handleToDelete.index, handleToDelete.GetObjAddress());
-    instance->addressIndexMap.erase(addressIndexPair);
-    handleToDelete.EraseObject();
-  } else {
-    LOG_ERROR(Debug::Channel::Memory, "Double deleting handle!");
-  }
+void MemoryManager::DeleteDynamic(ObjectHandle<T>& objToFree) {
+  instance->dynamicArena.DeleteDynamic(objToFree);
 }
 
 }  // namespace Isetta
