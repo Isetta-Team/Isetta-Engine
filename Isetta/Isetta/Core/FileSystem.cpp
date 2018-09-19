@@ -236,7 +236,7 @@ HANDLE FileSystem::ReadAsync(const char* fileName,
   info->callback = callback;
   info->buffer = new char[dwFileSize + 1];
   info->buffer[dwFileSize] = '\0';
-  overlapInfo.insert({hFile, info});
+  // overlapInfo.insert({hFile, info});
 
   if (!ReadFile(hFile, info->buffer, dwFileSize, &dwBytesRead,
                 &info->overlapped)) {
@@ -273,7 +273,7 @@ HANDLE FileSystem::WriteAsync(const char* fileName, const char* contentBuffer,
   info->buffer = new char[dwBufferSize + 1];
   info->buffer[dwBufferSize] = '\0';
   strncpy_s(info->buffer, dwBufferSize + 1, contentBuffer, dwBufferSize);
-  overlapInfo.insert({hFile, info});
+  // overlapInfo.insert({hFile, info});
 
   if (appendData) {
     info->overlapped.Offset += GetFileSize(hFile, NULL);
@@ -307,36 +307,21 @@ HANDLE FileSystem::WriteAsync(const std::string& fileName,
                     appendData);
 }
 
-// bool FileSystem::Close(HANDLE hFile) {
-//   OverlapIOInfo* info = overlapInfo[hFile];
-//   bool completionStatus = info == nullptr;
-//   if (!completionStatus) {
-//     CloseHandle(info->hFile);
-//     if (info->buffer) {
-//       delete info->buffer;
-//     }
-//     delete info;
-//     overlapInfo[hFile] == nullptr;
-//   }
-//   overlapInfo.erase(hFile);
-//   return completionStatus;
-// }
-
-bool FileSystem::Cancel(HANDLE hFile) {
-  OverlapIOInfo* info = overlapInfo[hFile];
-  bool completionStatus = info == nullptr;
-  if (!completionStatus) {
-    CancelIo(info->hFile);
-    CloseHandle(info->hFile);
-    if (info->buffer) {
-      delete info->buffer;
-    }
-    delete info;
-    overlapInfo[hFile] == nullptr;
-  }
-  overlapInfo.erase(hFile);
-  return completionStatus;
-}
+// bool FileSystem::Cancel(HANDLE hFile) {
+//  OverlapIOInfo* info = overlapInfo[hFile];
+//  bool completionStatus = info == nullptr;
+//  if (!completionStatus) {
+//    CancelIo(info->hFile);
+//    CloseHandle(info->hFile);
+//    if (info->buffer) {
+//      delete info->buffer;
+//    }
+//    delete info;
+//    overlapInfo[hFile] == nullptr;
+//  }
+//  overlapInfo.erase(hFile);
+//  return completionStatus;
+//}
 
 void FileSystem::Touch(const char* fileName) {
   HANDLE hFile = AccessFile(fileName, NULL, NULL, CREATE_NEW, NULL);

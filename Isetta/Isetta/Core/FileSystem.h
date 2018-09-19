@@ -13,18 +13,18 @@
 #define IOCP_CANCEL 0
 
 namespace Isetta {
-  /**
-   * @brief [Singleton] Handles opening/closing, reading, and writing files. Integrated with the
-   * Microsoft API
-   * 
-   */
+/**
+ * @brief [Singleton] Handles opening/closing, reading, and writing files.
+ * Integrated with the Microsoft API
+ *
+ */
 class FileSystem {
  public:
- /**
-  * @brief Singleton class instance
-  * 
-  * @return FileSystem& 
-  */
+  /**
+   * @brief Singleton class instance
+   *
+   * @return FileSystem&
+   */
   static FileSystem& Instance() {
     static FileSystem instance;
     return instance;
@@ -32,13 +32,13 @@ class FileSystem {
   /**
    * @brief Destroy the File System object, cancel all current processes,
    * close files, I/O completion port, and delete all buffers created
-   * 
+   *
    */
   ~FileSystem();
 
   /**
    * @brief For ease of use with Microsoft API
-   * 
+   *
    */
   typedef struct _OVERLAPIOINFO {
     /// Microsoft overlapped datastructure used by asynchronus file I/O
@@ -53,22 +53,22 @@ class FileSystem {
 
   /**
    * @brief Read the specificed filename (with file path) synchronusly
-   * 
-   * @param fileName 
+   *
+   * @param fileName
    * @return char* the contents of the read file
    */
   char* Read(const char* fileName);
   /**
    * @brief Read the specificed filename (with file path) synchronusly
-   * 
-   * @param fileName 
+   *
+   * @param fileName
    * @return char* the contents of the read file
    */
   char* Read(const std::string& fileName);
   /**
    * @brief Read the specificed filename (with file path) asynchronusly
-   * 
-   * @param fileName 
+   *
+   * @param fileName
    * @param callback called on status completion
    * @return HANDLE a handle to the file which was opened (see Microsoft API)
    */
@@ -76,11 +76,12 @@ class FileSystem {
                    const std::function<void(const char*)>& callback = nullptr);
   /**
    * @brief Write to the specificed filename (with file path) asynchronusly
-   * 
-   * @param fileName 
+   *
+   * @param fileName
    * @param contentBuffer is the content to write
    * @param callback called on status completion
-   * @param appendData whether the content should be appended to the end of the file, or clobber the file
+   * @param appendData whether the content should be appended to the end of the
+   * file, or clobber the file
    * @return HANDLE a handle to the file which was opened (see Microsoft API)
    */
   HANDLE WriteAsync(const char* fileName, const char* contentBuffer,
@@ -88,8 +89,8 @@ class FileSystem {
                     const bool appendData = true);
   /**
    * @brief Read the specificed filename (with file path) asynchronusly
-   * 
-   * @param fileName 
+   *
+   * @param fileName
    * @param callback the callback used on status completion
    * @return HANDLE a handle to the file which was opened (see Microsoft API)
    */
@@ -97,11 +98,12 @@ class FileSystem {
                    const std::function<void(const char*)>& callback = nullptr);
   /**
    * @brief Write to the specificed filename (with file path) asynchronusly
-   * 
-   * @param fileName 
+   *
+   * @param fileName
    * @param contentBuffer is the content to write
    * @param callback called on status completion
-   * @param appendData whether the content should be appended to the end of the file, or clobber the file
+   * @param appendData whether the content should be appended to the end of the
+   * file, or clobber the file
    * @return HANDLE a handle to the file which was opened (see Microsoft API)
    */
   HANDLE WriteAsync(const std::string& fileName, const char* contentBuffer,
@@ -109,11 +111,12 @@ class FileSystem {
                     const bool appendData = true);
   /**
    * @brief Write to the specificed filename (with file path) asynchronusly
-   * 
-   * @param fileName 
+   *
+   * @param fileName
    * @param contentBuffer is the content to write
    * @param callback called on status completion
-   * @param appendData whether the content should be appended to the end of the file, or clobber the file
+   * @param appendData whether the content should be appended to the end of the
+   * file, or clobber the file
    * @return HANDLE a handle to the file which was opened (see Microsoft API)
    */
   HANDLE WriteAsync(const std::string& fileName,
@@ -121,95 +124,99 @@ class FileSystem {
                     const std::function<void(const char*)>& callback = nullptr,
                     const bool appendData = true);
   /**
-   * @brief Cancel any/all operations of the given handle 
+   * @brief Cancel any/all operations of the given handle
    * (if multiple files have operations to this handle), all will be canceled
-   * 
-   * @param hFile 
+   *
+   * @param hFile
    * @return true the file was successfully canceled
    * @return false the file was already completed, thus can't be canceled
    */
-  bool Cancel(HANDLE hFile);
+  // TODO(Jacob) Causes memory leak - add if needed
+  // bool Cancel(HANDLE hFile);
   /**
    * @brief Touch a new file with the name and path
-   * 
-   * @param fileName 
+   *
+   * @param fileName
    */
   void Touch(const char* fileName);
-    /**
+  /**
    * @brief Touch a new file with the name and path
-   * 
-   * @param fileName 
+   *
+   * @param fileName
    */
   void Touch(const std::string& fileName);
 
   /**
    * @brief Get the I/O completion port
-   * 
+   *
    * @return HANDLE to the I/O completion port
    */
   inline HANDLE GethIOCP() { return hIOCP; }
 
  private:
- /**
-  * @brief Construct a new File System object, private b/c Singleton
-  * 
-  */
+  /**
+   * @brief Construct a new File System object, private b/c Singleton
+   *
+   */
   FileSystem();
 
   /**
    * @brief Create a New Completion Port object
-   * 
+   *
    * @return HANDLE to the I/O completion port
    */
   HANDLE CreateNewCompletionPort();
   /**
-   * @brief Associate the file with the I/O completion port, calls specified key on completion
-   * 
-   * @param hIoPort 
-   * @param hFile 
-   * @param completionKey 
+   * @brief Associate the file with the I/O completion port, calls specified key
+   * on completion
+   *
+   * @param hIoPort
+   * @param hFile
+   * @param completionKey
    * @return BOOL true if successfully associated
    */
   BOOL AssociateFileCompletionPort(HANDLE hIoPort, HANDLE hFile,
                                    DWORD completionKey);
   /**
-   * @brief Create/Open the file (named access because Microsoft API has Create) with the given parameters,
-   * see Microsoft documentaion for more details
-   * 
+   * @brief Create/Open the file (named access because Microsoft API has Create)
+   * with the given parameters, see Microsoft documentaion for more details
+   *
    * @param fileName including path to the file to open
    * @param access rights (read|write|delete|all)
-   * @param share rights whether to allow multiple handles to access the same file
-   * @param creation whether the file is opened/created and how its handled on fail, and errors if failed
+   * @param share rights whether to allow multiple handles to access the same
+   * file
+   * @param creation whether the file is opened/created and how its handled on
+   * fail, and errors if failed
    * @param async whether the call is asynchronus (overlapped)
    * @return HANDLE the handle to the file opened
    */
   HANDLE AccessFile(const char* fileName, const DWORD access, const DWORD share,
                     const DWORD creation, DWORD async);
   /**
-   * @brief Check if the file exists in the directory (cannot determine if the file doesn't
-   * exist or simply the folder structure doesn't)
-   * 
-   * @param file 
+   * @brief Check if the file exists in the directory (cannot determine if the
+   * file doesn't exist or simply the folder structure doesn't)
+   *
+   * @param file
    * @return BOOL true if the file exists, false otherwise
    */
   BOOL FileExists(const char* file);
 
   /**
    * @brief Format generic, uncaught Microsoft error messages
-   * 
-   * @param error 
-   * @return LPCTSTR 
+   *
+   * @param error
+   * @return LPCTSTR
    */
   LPCTSTR ErrorMessage(DWORD error);
   /**
    * @brief Get/handle the error associated with accessing a file
-   * 
-   * @return DWORD 
+   *
+   * @return DWORD
    */
   DWORD GetFileError();
   /**
    * @brief Get/handle the error associated with reading/writing to a file
-   * 
+   *
    */
   void GetReadWriteError();
 
@@ -218,7 +225,8 @@ class FileSystem {
   /// Handle for the I/O completion port
   HANDLE hIOCP;
   /// Map to track the handles with their data
-  std::unordered_map<HANDLE, OverlapIOInfo*> overlapInfo;
+  // TODO(Jacob) Causes memory leak - add if needed
+  // std::unordered_map<HANDLE, OverlapIOInfo*> overlapInfo;
 };
 
 }  // namespace Isetta
