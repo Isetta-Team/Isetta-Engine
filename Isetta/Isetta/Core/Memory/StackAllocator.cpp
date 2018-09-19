@@ -9,13 +9,13 @@
 #include "Core/Memory/MemoryAllocator.h"
 
 namespace Isetta {
-StackAllocator::StackAllocator(const SizeInt stackSize)
+StackAllocator::StackAllocator(const Size stackSize)
     : top(0), length(stackSize) {
   bottom = MemoryAllocator::AllocateDefaultAligned(stackSize);
   bottomAddress = reinterpret_cast<PtrInt>(bottom);
 }
 
-void* StackAllocator::Alloc(const SizeInt size, const U8 alignment) {
+void* StackAllocator::Alloc(const Size size, const U8 alignment) {
   const bool isValid = alignment >= 2 && alignment <= 128 &&
                        (alignment & (alignment - 1)) == 0;  // power of 2
   if (!isValid) {
@@ -41,7 +41,7 @@ void* StackAllocator::Alloc(const SizeInt size, const U8 alignment) {
   return reinterpret_cast<void*>(alignedAddress);
 }
 
-void* StackAllocator::AllocUnaligned(const SizeInt size) {
+void* StackAllocator::AllocUnaligned(const Size size) {
   Marker newTop = top + size;
 
   if (newTop > length) {

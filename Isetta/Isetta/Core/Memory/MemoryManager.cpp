@@ -11,19 +11,19 @@ namespace Isetta {
 HandleEntry MemoryManager::handleEntryTable[maxTableSize];
 MemoryManager* MemoryManager::instance;
 
-void* MemoryManager::AllocSingleFrameUnAligned(const SizeInt size) {
+void* MemoryManager::AllocSingleFrameUnAligned(const Size size) {
   return singleFrameAllocator.AllocUnaligned(size);
 }
 
-void* MemoryManager::AllocSingleFrame(const SizeInt size, const U8 alignment) {
+void* MemoryManager::AllocSingleFrame(const Size size, const U8 alignment) {
   return singleFrameAllocator.Alloc(size, alignment);
 }
 
-void* MemoryManager::AllocDoubleBufferedUnAligned(const SizeInt size) {
+void* MemoryManager::AllocDoubleBufferedUnAligned(const Size size) {
   return doubleBufferedAllocator.AllocUnAligned(size);
 }
 
-void* MemoryManager::AllocDoubleBuffered(const SizeInt size,
+void* MemoryManager::AllocDoubleBuffered(const Size size,
                                          const U8 alignment) {
   return doubleBufferedAllocator.Alloc(size, alignment);
 }
@@ -62,7 +62,7 @@ void MemoryManager::ShutDown() {
 void MemoryManager::Defragment() {}
 
 // TODO(YIDI): Implement this
-void* MemoryManager::AllocDynamic(const SizeInt size, const U8 alignment) {
+void* MemoryManager::AllocDynamic(const Size size, const U8 alignment) {
   return instance->dynamicArena.Alloc(size, alignment);
 }
 

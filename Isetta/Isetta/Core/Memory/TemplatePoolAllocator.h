@@ -12,7 +12,7 @@ template <typename T>
 class TemplatePoolAllocator {
  public:
   TemplatePoolAllocator() = default;
-  explicit TemplatePoolAllocator(SizeInt count);
+  explicit TemplatePoolAllocator(Size count);
   ~TemplatePoolAllocator() = default;
   T* Get();
   void Free(T*);
@@ -25,14 +25,14 @@ class TemplatePoolAllocator {
     Node();
   };
 
-  SizeInt capacity;
-  SizeInt elementSize;
+  Size capacity;
+  Size elementSize;
   Node* head;
   void* memHead;
 };
 
 template <typename T>
-TemplatePoolAllocator<T>::TemplatePoolAllocator(const SizeInt count) {
+TemplatePoolAllocator<T>::TemplatePoolAllocator(const Size count) {
   if (sizeof(Node*) > sizeof(T)) {
     LOG_ERROR(Debug::Channel::Memory,
               "Using TemplatePoolAllocator for type %s will incur more "
@@ -49,7 +49,7 @@ TemplatePoolAllocator<T>::TemplatePoolAllocator(const SizeInt count) {
   head = new (memHead) Node();
   Node* cur = head;
 
-  for (SizeInt i = 1; i < count; i++) {
+  for (Size i = 1; i < count; i++) {
     address += elementSize;
     Node* node = new (reinterpret_cast<void*>(address)) Node();
     cur->next = node;

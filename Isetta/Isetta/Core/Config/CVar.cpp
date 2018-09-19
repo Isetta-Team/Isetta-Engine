@@ -9,8 +9,8 @@
 namespace Isetta {
 std::unordered_map<StringId, ICVar*> CVarRegistry::registry;
 
-CVarString::CVarString(const std::string& name, const std::string& value)
-    : ICVar(name), sVal{value} {
+CVarString::CVarString(const std::string& name, const std::string& defaultValue)
+    : ICVar(name), sVal{defaultValue} {
   CVarRegistry::RegisterVariable(this);
 }
 
@@ -18,8 +18,9 @@ CVarString::CVarString(const std::string& name) : ICVar(name) {
   CVarRegistry::RegisterVariable(this);
 }
 
-CVarVector3::CVarVector3(const std::string& name, const Math::Vector3& value)
-    : ICVar(name), v3Val{value} {
+CVarVector3::CVarVector3(const std::string& name,
+                         const Math::Vector3& defaultValue)
+    : ICVar(name), v3Val{defaultValue} {
   CVarRegistry::RegisterVariable(this);
 }
 

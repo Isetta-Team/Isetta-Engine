@@ -7,14 +7,26 @@
 #include "Core/IsettaAlias.h"
 
 namespace Isetta::Debug {
+  /**
+   * @brief Verbosity of the logger:
+   * Off - no messages will be output (only needed for mask)
+   * Error - most severe messages
+   * Warning - messages to warn the developer
+   * Info - messages to inform developers/users
+   * All - all messages will be output (only needed for mask)
+   */
 enum class Verbosity : U8 {
-  Off = 0,  // enum not needed, can set mask to 0
+  Off = 0, 
   Error = (1u << 0),
   Warning = (1u << 1),
   Info = (1u << 2),
   All = ~0
 };
 
+/**
+ * @brief Converts Verbosity enum to string
+ * 
+ */
 static inline const std::string ToString(Verbosity v) {
   switch (v) {
     case Verbosity::Off:
@@ -32,6 +44,12 @@ static inline const std::string ToString(Verbosity v) {
   }
 }
 
+/**
+ * @brief Channel of the logger:
+ * General - any type of general message
+ * Horde3D - messages stripped from Horde3D (so they can be surpressed)
+ * All others are messages associated with the modules
+ */
 enum class Channel : U16 {
   General = (1u << 0),
   Memory = (1u << 1),
@@ -44,6 +62,10 @@ enum class Channel : U16 {
   FileIO = (1u << 8),
 };
 
+/**
+ * @brief Converts Channel enum to string
+ * 
+ */
 static inline const std::string ToString(Channel c) {
   switch (c) {
     case Channel::General:

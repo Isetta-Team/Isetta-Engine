@@ -8,7 +8,7 @@ namespace Isetta {
 
 class PoolAllocator {
  public:
-  explicit PoolAllocator(SizeInt chunkSize, SizeInt count);
+  explicit PoolAllocator(Size chunkSize, Size count);
   ~PoolAllocator() = default;
 
   void* Get();
@@ -21,8 +21,8 @@ class PoolAllocator {
     Node(Node* next);
   };
 
-  SizeInt capacity;
-  SizeInt elementSize;
+  Size capacity;
+  Size elementSize;
   Node* head;
   void* memHead;
 };

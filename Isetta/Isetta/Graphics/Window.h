@@ -6,7 +6,6 @@
 #include <GLFW/glfw3.h>
 #include <string>
 #include "Core/Config/CVar.h"
-#include "Core/IModule.h"
 #include "Core/ModuleManager.h"
 
 namespace Isetta {

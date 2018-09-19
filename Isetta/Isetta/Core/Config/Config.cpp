@@ -10,11 +10,9 @@
 #include "Core/Config/ICVar.h"
 #include "Core/FileSystem.h"
 
-void test(const char* t) {}
-
 namespace Isetta {
-void Config::Read(const std::string& filepath) {
-  const char* contents = FileSystem::Instance().Read(filepath);
+void Config::Read(const std::string& filePath) {
+  const char* contents = FileSystem::Instance().Read(filePath);
   ProcessFile(contents);
 }
 

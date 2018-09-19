@@ -125,9 +125,6 @@
     <ClCompile Include="EngineLoop.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Core\IModule.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Math\Matrix3.h">
       <Filter>Core\Math</Filter>
     </ClInclude>
@@ -258,9 +255,6 @@
     </ClInclude>
     <ClInclude Include="Core\Config\ICVar.h">
       <Filter>Core\Config</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Config\IStringConvertible.h">
-      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

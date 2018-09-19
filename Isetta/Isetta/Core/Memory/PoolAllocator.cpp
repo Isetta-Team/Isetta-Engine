@@ -7,7 +7,7 @@
 
 namespace Isetta {
 
-PoolAllocator::PoolAllocator(const SizeInt chunkSize, const SizeInt count) {
+PoolAllocator::PoolAllocator(const Size chunkSize, const Size count) {
   elementSize = chunkSize;
 
   if (elementSize > sizeof(Node*)) {
@@ -23,7 +23,7 @@ PoolAllocator::PoolAllocator(const SizeInt chunkSize, const SizeInt count) {
 
   PtrInt address = reinterpret_cast<PtrInt>(memHead);
 
-  for (SizeInt i = 1; i < count; i++) {
+  for (Size i = 1; i < count; i++) {
     address += elementSize;
     Node* node = new (reinterpret_cast<void*>(address)) Node{nullptr};
     cur->next = node;

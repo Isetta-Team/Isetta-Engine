@@ -14,21 +14,21 @@ std::string HexFromPtr(const PtrInt rawAddress) {
   return str.str();
 }
 
-void* MemoryAllocator::AllocateDefaultAligned(const SizeInt size) {
+void* MemoryAllocator::AllocateDefaultAligned(const Size size) {
   // looks like std::malloc always return 16 byte aligned memory
   return std::malloc(size);
 }
 
 void MemoryAllocator::FreeDefaultAligned(void* mem) { std::free(mem); }
 
-void* MemoryAllocator::AllocateAligned(const SizeInt size, const U8 alignment) {
+void* MemoryAllocator::AllocateAligned(const Size size, const U8 alignment) {
   const bool isValid = alignment >= 2 && alignment <= 128 &&
                        (alignment & (alignment - 1)) == 0;  // power of 2
   if (!isValid) {
     throw std::invalid_argument("Illegal alignment in allocator");
   }
 
-  const SizeInt expandedSize = size + alignment;
+  const Size expandedSize = size + alignment;
 
   const PtrInt rawAddress =
       reinterpret_cast<PtrInt>(AllocateDefaultAligned(expandedSize));

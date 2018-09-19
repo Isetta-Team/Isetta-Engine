@@ -21,14 +21,14 @@ class MemoryManager {
   template <typename T>
   T* NewSingleFrame();
 
-  void* AllocSingleFrameUnAligned(SizeInt size);
-  void* AllocSingleFrame(SizeInt size, U8 alignment = 16);
+  void* AllocSingleFrameUnAligned(Size size);
+  void* AllocSingleFrame(Size size, U8 alignment = 16);
 
   template <typename T>
   static T* NewDoubleBuffered();
 
-  void* AllocDoubleBufferedUnAligned(SizeInt size);
-  void* AllocDoubleBuffered(SizeInt size, U8 alignment = 16);
+  void* AllocDoubleBufferedUnAligned(Size size);
+  void* AllocDoubleBuffered(Size size, U8 alignment = 16);
 
   template <typename T>
   static ObjectHandle<T>& NewDynamic();
@@ -45,7 +45,7 @@ class MemoryManager {
   void ShutDown();
   void Defragment();
 
-  static void* AllocDynamic(SizeInt size, U8 alignment = 16);
+  static void* AllocDynamic(Size size, U8 alignment = 16);
   static void FreeDynamic(void* ptrToFree);
 
   static MemoryManager* instance;

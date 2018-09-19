@@ -27,10 +27,10 @@ using PtrInt = uintptr_t;
 
 using Action = std::function<void()>;
 
-inline auto operator""_KB(SizeInt const x) { return 1024 * x; }
+inline auto operator""_KB(Size const x) { return 1024 * x; }
 
-inline auto operator""_MB(SizeInt const x) { return 1024 * 1024 * x; }
+inline auto operator""_MB(Size const x) { return 1024 * 1024 * x; }
 
-inline auto operator""_GB(SizeInt const x) { return 1024 * 1024 * 1024 * x; }
+inline auto operator""_GB(Size const x) { return 1024 * 1024 * 1024 * x; }
 
 }  // namespace Isetta
