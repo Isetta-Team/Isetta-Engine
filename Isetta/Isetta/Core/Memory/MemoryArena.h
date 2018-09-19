@@ -27,13 +27,16 @@ class MemoryArena {
   template <typename T>
   void DeleteDynamic(ObjectHandle<T>& objectToFree);
 
-  void* Alloc(SizeInt size, SizeInt& outSize, U8 alignment = 16);
+  void* Alloc(SizeInt size, SizeInt& outSize);
   void Defragment();
+  void MoveLeft(U32 index);
   void Erase() const;
+  static void Move(PtrInt dest, PtrInt& src, SizeInt count);
 
   // can't be put in ObjectHandle because it creates new ones for each type
   inline static U32 nextUniqueID = 0;
   const static U32 maxHandleCount = 2048;
+  const static U8 alignment = 16;
   static class HandleEntry entryArr[];
   std::map<PtrInt, int> addressIndexMap;
 

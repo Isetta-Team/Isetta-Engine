@@ -11,6 +11,7 @@
 #include "Graphics/ModelNode.h"
 #include "Input/Input.h"
 #include "Input/InputEnum.h"
+#include "MemTestObj.h"
 
 namespace Isetta {
 
@@ -101,13 +102,18 @@ Clock& EngineLoop::GetGameClock() {
 
 void RunYidiTest() {
   const U32 count = 10;
-  std::vector<ObjectHandle<U64>> arr;
+  std::vector<ObjectHandle<MemTestObj>> arr;
   arr.reserve(count);
+
   for (U32 i = 0; i < count; i++) {
-    auto ref = MemoryManager::NewDynamic<U64>();
-    *ref = i;
+    auto ref = MemoryManager::NewDynamic<MemTestObj>();
+    // ref->num1 = i;
     arr.push_back(ref);
   }
+
+  // MemoryManager::DeleteDynamic(arr[1]);
+  // MemoryManager::DeleteDynamic(arr[2]);
+  // MemoryManager::DeleteDynamic(arr[4]);
 
   for (U32 i = 0; i < count; i++) {
     MemoryManager::DeleteDynamic(arr[i]);

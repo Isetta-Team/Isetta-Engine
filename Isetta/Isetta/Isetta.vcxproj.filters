@@ -262,6 +262,9 @@
     <ClInclude Include="Core\Memory\MemoryArena.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
+    <ClInclude Include="MemTestObj.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

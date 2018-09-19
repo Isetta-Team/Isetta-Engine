@@ -11,6 +11,7 @@ class HandleEntry {
  private:
   HandleEntry() = default;
   ~HandleEntry() = default;
+  PtrInt GetAddress() const;
 
   // just a help function
   void Set(U32 uniqueID, void* ptr, bool isEmpty, SizeInt size);
