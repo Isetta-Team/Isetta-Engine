@@ -19,6 +19,9 @@
     <Filter Include="Core\Math">
       <UniqueIdentifier>{ef0c4bac-6bf2-4a50-9bce-7f0dd51dc6ce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\DataStructures">
+      <UniqueIdentifier>{dfaff1dd-ff3e-4495-ad9e-9aeeb8f226f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -67,6 +70,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Isetta\Core\Memory\Memory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Isetta\Core\DataStructures\RingBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -134,8 +140,8 @@
     <ClCompile Include="..\Isetta\Core\Math\Vector4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Memory\Memory.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Core\DataStructures\RingBufferTest.cpp">
+      <Filter>Core\DataStructures</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

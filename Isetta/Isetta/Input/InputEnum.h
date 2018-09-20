@@ -124,6 +124,6 @@ enum class KeyCode {
   RIGHT_SUPER,
   MENU
 };
-enum MouseButtonCode { MOUSE1, MOUSE2, MOUSE3, ALL };
+enum class MouseButtonCode { MOUSE_LEFT, MOUSE_RIGHT, MOUSE_MIDDLE, ALL };
 
 }  // namespace Isetta

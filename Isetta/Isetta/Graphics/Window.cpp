@@ -2,6 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Graphics/Window.h"
+#include "Core/Config/Config.h"
 
 namespace Isetta {
 void Isetta::WindowModule::StartUp() {
@@ -9,7 +10,7 @@ void Isetta::WindowModule::StartUp() {
   InitRenderConfig();
   InitWindow();
 }
-void WindowModule::Update() { glfwSwapBuffers(winHandle); }
+void WindowModule::Update(float deltaTime) { glfwSwapBuffers(winHandle); }
 
 void WindowModule::ShutDown() {
   glfwDestroyWindow(winHandle);
@@ -26,7 +27,7 @@ void WindowModule::InitWindow() {  // Create OpenGL window
 
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   if (winFullScreen) {
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -56,15 +57,18 @@ void WindowModule::InitWindow() {  // Create OpenGL window
 
   glfwSetWindowUserPointer(winHandle, this);
   glfwMakeContextCurrent(winHandle);
+  // TODO(Chaojie): Probally remove this line in the future and limit the max
+  // fps to 60fps
+  glfwSwapInterval(0);
 
   glfwSetInputMode(winHandle, GLFW_CURSOR,
                    winShowCursor ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 }
 void WindowModule::InitRenderConfig() {
-  winTitle = "Current Game";
-  initWinWidth = 1024;
-  initWinHeight = 576;
-  winFullScreen = false;
-  winShowCursor = true;
+  winTitle = Config::Instance().windowConfig.windowTitle.GetVal();
+  initWinWidth = Config::Instance().windowConfig.windowWidth.GetVal();
+  initWinHeight = Config::Instance().windowConfig.windowHeight.GetVal();
+  winFullScreen = Config::Instance().windowConfig.windowFullScreen.GetVal();
+  winShowCursor = Config::Instance().windowConfig.windowShowCursor.GetVal();
 }
 }  // namespace Isetta

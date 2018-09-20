@@ -20,6 +20,7 @@ class AudioSource {
   void Continue() const;
   void Stop() const;
   void SetVolume(float) const;
+  bool IsPlaying() const;
 
  private:
   FMOD::Sound* fmodSound{};

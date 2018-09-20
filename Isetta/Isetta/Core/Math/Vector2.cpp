@@ -5,6 +5,7 @@
 
 #include <cfloat>
 #include <cmath>
+#include <sstream>
 #include <stdexcept>
 #include "Vector3Int.h"
 
@@ -16,6 +17,8 @@ const Vector2 Vector2::up = Vector2(0.f, 1.f);
 const Vector2 Vector2::right = Vector2(1.f, 0.f);
 const Vector2 Vector2::down = Vector2(0.f, -1.f);
 const Vector2 Vector2::left = Vector2(-1.f, 0.f);
+
+Vector2::Vector2(float inX, float inY): x{inX}, y{inY} {}
 
 Vector2::Vector2(const Vector3Int& inIntVector)
     : x{static_cast<float>(inIntVector.x)},
@@ -43,6 +46,13 @@ void Vector2::Normalize() noexcept {
   x /= length;
   y /= length;
 }
+
+std::string Vector2::ToString() const {
+  std::ostringstream oss;
+  oss << "(" << x << ", " << y << ")";
+  return oss.str();
+}
+
 bool Vector2::Equals(const Vector2& lhs, const Vector2& rhs) {
   return abs(lhs.x - rhs.x) < FLT_EPSILON && abs(lhs.y - rhs.y) < FLT_EPSILON;
 }

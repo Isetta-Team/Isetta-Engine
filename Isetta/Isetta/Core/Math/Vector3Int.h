@@ -21,15 +21,28 @@ class Vector3Int {
 
   // Construct by name
 
+  /**
+   * \brief Create an empty vector
+   */
   Vector3Int() : x{0}, y{0}, z{0} {}
+  /**
+   * \brief Create a vector of a specific number
+   * \param value the values of the vector
+   */
   explicit Vector3Int(int value) : x{value}, y{value}, z{value} {}
+  /**
+   * \brief Create a vector of specific x, y and z
+   * \param inX The x of vector
+   * \param inY The y of vector
+   * \param inZ The z of vector
+   */
   Vector3Int(int inX, int inY, int inZ) : x{inX}, y{inY}, z{inZ} {}
 
   // Copy and move constructions
 
   Vector3Int(const Vector3Int& inVector)
       : x{inVector.x}, y{inVector.y}, z{inVector.z} {}
-  Vector3Int(Vector3Int&& inVector)
+  Vector3Int(Vector3Int&& inVector) noexcept
       : x{inVector.x}, y{inVector.y}, z{inVector.z} {}
   inline Vector3Int& operator=(const Vector3Int& inVector) {
     x = inVector.x;
@@ -37,7 +50,7 @@ class Vector3Int {
     z = inVector.z;
     return *this;
   }
-  inline Vector3Int& operator=(Vector3Int&& inVector) {
+  inline Vector3Int& operator=(Vector3Int&& inVector) noexcept {
     x = inVector.x;
     y = inVector.y;
     z = inVector.z;
@@ -100,22 +113,44 @@ class Vector3Int {
 
   // functions
 
-  // Returns the length of the vector
+  /**
+   * \brief Returns the length of the vector
+   */
   float Magnitude() const;
-  // Returns the square of the lenght of the vector
+  /**
+   * \brief Returns the square of the length of the vector
+   */
   int SqrMagnitude() const;
-  // Returns a normalized vector of this vector
+  /**
+   * \brief Returns a normalized vector of this vector
+   */
   Vector3 Normalized() const;
 
   // static functions
 
-  // Returns the dot product of two vectors
+  /**
+   * \brief Returns the dot product of two vectors
+   * \param lhs The left vector
+   * \param rhs The right vector
+   */
   static int Dot(const Vector3Int& lhs, const Vector3Int& rhs);
-  // Returns the cross product of two vectors
+  /**
+   * \brief Returns the cross product of two vectors
+   * \param lhs The left vector
+   * \param rhs The right vector
+   */
   static Vector3Int Cross(const Vector3Int& lhs, const Vector3Int& rhs);
-  // Returns the distance between two endpoints of the vectors
+  /**
+   * \brief The distance between two endpoints of the two vectors
+   * \param start The starting vector
+   * \param end The ending vector
+   */
   static float Distance(const Vector3Int& start, const Vector3Int& end);
-  // Multiplies two vectors component-wise
+  /**
+   * \brief Multiplies two vectors component-wise
+   * \param aVector The input vector
+   * \param bVector The scalar vector
+   */
   static Vector3Int Scale(const Vector3Int& aVector, const Vector3Int& bVector);
 };
 }  // namespace Isetta::Math

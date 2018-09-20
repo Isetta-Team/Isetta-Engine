@@ -10,6 +10,10 @@ class Vector3;
 }
 
 namespace Isetta {
+  /**
+   * @brief static class for drawing on the screen and other debug drawing features
+   * 
+   */
 class DebugDraw {
  public:
   // static void DrawLine(Math::Vector3 start, Math::Vector3 end,
