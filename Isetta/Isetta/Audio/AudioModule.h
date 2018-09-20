@@ -20,7 +20,7 @@ class AudioModule {
 
   void StartUp();
   void LoadAllAudioClips();
-  void Update(float deltaTime);
+  void Update(float deltaTime) const;
   void ShutDown();
 
   FMOD::Sound* FindSound(const char* soundName);

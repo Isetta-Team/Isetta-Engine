@@ -3,18 +3,16 @@
  */
 #include "Audio/AudioModule.h"
 #include <combaseapi.h>
-#include <iomanip>
-#include <sstream>
-#include <string>
 #include "Audio/AudioSource.h"
-#include "SID/sid.h"
 #include "Core/Debug/Logger.h"
+#include "SID/sid.h"
 
 namespace Isetta {
 
 void AudioModule::StartUp() {
   CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
-  // FMOD::Memory_Initialize(std::malloc(10_MB), 10_MB, nullptr, nullptr, nullptr);
+  // FMOD::Memory_Initialize(std::malloc(10_MB), 10_MB, nullptr, nullptr,
+  // nullptr);
   fmodSystem = nullptr;
   FMOD::System_Create(&fmodSystem);
   fmodSystem->init(512, FMOD_INIT_NORMAL, nullptr);
@@ -24,7 +22,7 @@ void AudioModule::StartUp() {
   AudioSource::audioSystem = this;
 }
 
-void AudioModule::Update(float deltaTime) { fmodSystem->update(); }
+void AudioModule::Update(float deltaTime) const { fmodSystem->update(); }
 
 void AudioModule::ShutDown() {
   for (auto it : soundMap) {
@@ -41,12 +39,14 @@ FMOD::Sound* AudioModule::FindSound(const char* soundName) {
   if (soundMap.find(hashedValue) != soundMap.end()) {
     return soundMap[hashedValue];
   }
-  LOG_ERROR(Debug::Channel::Sound, "Sound file %s not found.", soundName);
-  return nullptr;
+
+  throw std::exception{std::string("AudioModule::FindSound => Sound file " +
+                                   std::string(soundName) + " found!")
+                           .c_str()};
 }
 
-FMOD::Channel* AudioModule::Play(FMOD::Sound* sound, bool loop,
-                                 float volume) const {
+FMOD::Channel* AudioModule::Play(FMOD::Sound* sound, const bool loop,
+                                 const float volume) const {
   FMOD::Channel* channel = nullptr;
   sound->setMode(loop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF);
   fmodSystem->playSound(sound, nullptr, false, &channel);
@@ -73,19 +73,13 @@ inline float MegaBytesFromBytes(const int byte) {
   return byte / 1024.f / 1024.f;
 }
 
-std::string GetAudioSystemMemoryReport() {
+void PrintAudioMemoryUsage() {
   int currentAllocated;
   int maxAllocated;
   FMOD::Memory_GetStats(&currentAllocated, &maxAllocated);
 
-  std::stringstream memReport;
-  memReport << std::fixed << std::setprecision(2)
-            << "------------- Audio Engine Memory Usage ------------------"
-            << std::endl
-            << "Current usage: " << MegaBytesFromBytes(currentAllocated)
-            << "mb, Max usage: " << MegaBytesFromBytes(maxAllocated) << "mb.\n"
-            << std::endl;
-
-  return memReport.str();
+  LOG_INFO(Debug::Channel::Sound, "CurMem: %d MB, MaxMem %d MB",
+           MegaBytesFromBytes(currentAllocated),
+           MegaBytesFromBytes(maxAllocated));
 }
 }  // namespace Isetta
