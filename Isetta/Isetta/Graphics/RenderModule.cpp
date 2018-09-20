@@ -3,7 +3,9 @@
  */
 #include "Graphics/RenderModule.h"
 
-#include <stdexcept>
+#include "Horde3DUtils.h"
+#include "Core/Config/Config.h"
+#include "Graphics/AnimationNode.h"
 
 namespace Isetta {
 void RenderModule::StartUp(GLFWwindow* win) {
@@ -12,10 +14,14 @@ void RenderModule::StartUp(GLFWwindow* win) {
   InitH3D();
   InitHordeConfig();
   InitResources();
+  AnimationNode::renderModule = this;
 }
 
-void RenderModule::Update() {
+void RenderModule::Update(float deltaTime) {
   if (!cam) return;
+  for (const auto& anim : animationNodes) {
+    anim->UpdateAnimation(deltaTime);
+  }
 
   h3dRender(cam);
 
@@ -29,26 +35,33 @@ void RenderModule::ShutDown() {
 }
 
 void RenderModule::InitRenderConfig() {
-  // #TODO(Chaojie) Read from game config
   renderInterface = H3DRenderDevice::OpenGL4;
-  fov = 45.f;
-  nearPlane = 0.1f;
-  farPlane = 1000.f;
-  resourcePath = R"(Resources)";
+  fov = Config::Instance().renderConfig.fieldOfView.GetVal();
+  nearPlane = Config::Instance().renderConfig.nearClippingPlane.GetVal();
+  farPlane = Config::Instance().renderConfig.farClippingPlane.GetVal();
+  resourcePath = Config::Instance().resourcePath.GetVal();
 }
 
 void RenderModule::InitHordeConfig() {
-  h3dSetOption(H3DOptions::LoadTextures, 1);
-  h3dSetOption(H3DOptions::TexCompression, 0);
-  h3dSetOption(H3DOptions::MaxAnisotropy, 4);
-  h3dSetOption(H3DOptions::ShadowMapSize, 2048);
-  h3dSetOption(H3DOptions::FastAnimation, 1);
-  h3dSetOption(H3DOptions::SampleCount, 0);
-  h3dSetOption(H3DOptions::DumpFailedShaders, 1);
+  h3dSetOption(H3DOptions::MaxLogLevel, 0);
+  h3dSetOption(H3DOptions::LoadTextures,
+               Config::Instance().renderConfig.hordeLoadTextures.GetVal());
+  h3dSetOption(H3DOptions::TexCompression,
+               Config::Instance().renderConfig.hordeTexCompression.GetVal());
+  h3dSetOption(H3DOptions::MaxAnisotropy,
+               Config::Instance().renderConfig.hordeMaxAnisotropy.GetVal());
+  h3dSetOption(H3DOptions::ShadowMapSize,
+               Config::Instance().renderConfig.hordeShadowmapSize.GetVal());
+  h3dSetOption(H3DOptions::FastAnimation,
+               Config::Instance().renderConfig.hordeFastAnimation.GetVal());
+  h3dSetOption(H3DOptions::SampleCount,
+               Config::Instance().renderConfig.hordeSampleCount.GetVal());
+  h3dSetOption(H3DOptions::DumpFailedShaders,
+               Config::Instance().renderConfig.hordeDumpFailedShaders.GetVal());
 }
 
 void RenderModule::InitH3D() {
-  if (!h3dInit((H3DRenderDevice::List)renderInterface)) {
+  if (!h3dInit(static_cast<H3DRenderDevice::List>(renderInterface))) {
     h3dutDumpMessages();
     throw std::exception("Render::InitH3D: Unable to initalize Horde3D");
   }
@@ -66,7 +79,6 @@ void RenderModule::InitResources() {  // 1. Add resources
     h3dutDumpMessages();
     throw std::exception(
         "Render::InitPipeline: Error in loading pipeline resources");
-    return;
   }
 
   // Probably later
@@ -75,8 +87,6 @@ void RenderModule::InitResources() {  // 1. Add resources
   h3dSetNodeTransform(cam, 0, 50, 600, 0, 0, 0, 1, 1, 1);
 
   ResizeViewport();
-
-  h3dutDumpMessages();
 }
 
 void RenderModule::ResizeViewport() {

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Audio/AudioModule.h"
 #include "Audio/AudioSource.h"
+#include "Audio/AudioModule.h"
 
 namespace Isetta {
 
@@ -15,11 +15,14 @@ void AudioSource::SetAudioClip(const char* soundName) {
 void AudioSource::Play(const bool loop, const float volume) {
   if (fmodSound != nullptr) {
     fmodChannel = audioSystem->Play(fmodSound, loop, volume);
+  } else {
+    throw std::exception{
+        "AudioSource::Play => Sound clip for this audio source is not found!"};
   }
 }
 
 void AudioSource::Pause() const {
-  if (isChannelValid()) {
+  if (isChannelValid() && IsPlaying()) {
     fmodChannel->setPaused(true);
   }
 }
@@ -31,7 +34,7 @@ void AudioSource::Continue() const {
 }
 
 void AudioSource::Stop() const {
-  if (isChannelValid()) {
+  if (isChannelValid() && IsPlaying()) {
     fmodChannel->stop();
   }
 }
@@ -42,9 +45,19 @@ void AudioSource::SetVolume(const float volume) const {
   }
 }
 
-bool AudioSource::isChannelValid() const {
+bool AudioSource::IsPlaying() const {
   bool isPlaying = false;
   fmodChannel->isPlaying(&isPlaying);
-  return fmodChannel != nullptr && isPlaying;
+  return isPlaying;
+}
+
+bool AudioSource::isChannelValid() const {
+  if (fmodChannel == nullptr) {
+    throw std::exception{
+        "AudioSource::isChannelValid => There is no sound playing on this "
+        "AudioSource"};
+  }
+
+  return true;
 }
 }  // namespace Isetta

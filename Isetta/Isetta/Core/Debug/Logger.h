@@ -7,9 +7,13 @@
 #define __FILENAME__ \
   (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
 
+#include <Windows.h>
 #include <cstdint>
 #include <initializer_list>
 #include <string>
+#include "Core/Config/CVar.h"
+#include "Core/Debug/Debug.h"
+#include "Core/IsettaAlias.h"
 
 namespace Isetta {
 #define LOG LogObject(__FILENAME__, __LINE__)
@@ -17,119 +21,208 @@ namespace Isetta {
 #define LOG_WARNING LogObject(__FILENAME__, __LINE__, Debug::Verbosity::Warning)
 #define LOG_ERROR LogObject(__FILENAME__, __LINE__, Debug::Verbosity::Error)
 
-namespace Debug {
-struct Verbosity {
-  enum Enum {
-    // Off = 0, // enum not needed, can set mask to 0
-    Error = (1u << 1),
-    Development = (1 << 2),
-    Warning = (1u << 3),
-    Info = (1u << 4),
-    // All = ~0
-  };
-};
-
-static inline const std::string ToString(Verbosity::Enum v) {
-  switch (v) {
-    // case Verbosity::Off:
-    //  return "Off";
-    case Verbosity::Error:
-      return "Error";
-    case Verbosity::Warning:
-      return "Warning";
-    case Verbosity::Info:
-      return "Info";
-    default:
-      return "Unknown";
-  }
-}
-
-struct Channel {
-  enum Enum {
-    General = (1u << 0),
-    Memory = (1u << 1),
-    Networking = (1u << 2),
-    Graphics = (1u << 3),
-    Physics = (1u << 4),
-    Gameplay = (1u << 5),
-    Sound = (1u << 6),
-  };
-};
-
-static inline const std::string ToString(Channel::Enum c) {
-  switch (c) {
-    case Channel::General:
-      return "General";
-    case Channel::Memory:
-      return "Memory";
-    case Channel::Networking:
-      return "Networking";
-    case Channel::Graphics:
-      return "Graphics";
-    case Channel::Physics:
-      return "Physics";
-    case Channel::Gameplay:
-      return "Gameplay";
-    case Channel::Sound:
-      return "Sound";
-    default:
-      return "Unknown";
-  }
-}
-}  // namespace Debug
-
+/**
+ * @brief static class for outputing to the Visual Studio Output window in Debug mode and
+ * to log file(s) (1 for all output messages and 1 for specific channel mask messages)
+ * 
+ */
 class Logger {
  public:
-  static uint8_t gVerbosityMask;
-  static uint32_t gChannelMask;
-  static bool gAlwaysFlush, gBreakOnError;
+ /**
+  * @brief Logger configuration CVar struct
+  * 
+  */
+  struct LoggerConfig {
+    /// Determines the severity needed for what output messages are shown
+    CVar<U8> verbosityMask{"verbosity_mask", ~0u};
+    /// Determines the channels which get output and which are written to the channel file
+    CVar<U32> channelMask{"channel_mask", ~0u};
+    /// If the engine breaks into a breakpoint with LOG_ERROR
+    CVar<int> breakOnError{"break_on_error", 1};
+    /// Number of characters/bytes to write before flushing to the output buffer
+    CVar<int> bytesToBuffer{"bytes_to_buffer", 10000};
+    /// Folder location where the log files are written
+    CVarString logFolder{"logger_folder", "Logs"};
+  };
 
-  static void SetLoggerFiles(std::ofstream* inEngineStream,
-                             std::ofstream* inChannelStream = nullptr);
-  static void SetLoggerChannelFile(std::ofstream* inChannelStream);
-
+  /**
+   * @brief Creates a new session of the logger, which attempts to create a new engine and
+   * channel log file in log folder with timestamp.
+   * 
+   */
+  static void NewSession();
+  /**
+   * @brief The function which parses the input parameters, then calls VDebugPrintF for the
+   * actual output. Should default to LOG macros rather than calling this method directly.
+   * 
+   * @param file which file the error is in, can use __FILE__
+   * @param line which line the error is on, can use __LINE__
+   * @param channel specified which channel the message is associated with
+   * @param verbosity specifies how severe the message is
+   * @param format follows the same format as prinft function
+   * @param argList the arguments to be inserted into the printf string
+   * @return int number of characters printed to the output
+   */
   static int DebugPrintF(const std::string file, const int line,
-                         const Debug::Channel::Enum channel,
-                         const Debug::Verbosity::Enum verbosity,
+                         const Debug::Channel channel,
+                         const Debug::Verbosity verbosity,
                          const std::string format, va_list argList);
 
  protected:
-  static int VDebugPrintF(const Debug::Channel::Enum channel,
-                          const Debug::Verbosity::Enum verbosity,
+ /**
+  * @brief Function which actually outputs to Visual Studio Output as well as channel and engine
+  * log files. Formats the message with time, channel, and verbosity. The function filters the verbosity and channel by the set mask to stop from outputting
+  * to the window. Only the filtered messages go to the output. All messages go to engine log file,
+  * filtered messages go the the channel log file.
+  * 
+  * @param channel specified which channel the message is associated with
+  * @param verbosity specifies how severe the message is
+  * @param format follows the same format as prinft function
+  * @param argList the arguments to be inserted into the printf string
+  * @return int number of characters printed to the output 
+  */
+  static int VDebugPrintF(const Debug::Channel channel,
+                          const Debug::Verbosity verbosity,
                           const std::string format, va_list argList);
 
  private:
-  static std::ofstream* engineStream;
-  static std::ofstream* channelStream;
-  static bool CheckChannelMask(const Debug::Channel::Enum channel);
-  static bool CheckVerbosity(const Debug::Verbosity::Enum verbosity);
-};
+ /**
+  * @brief Construct a new Logger object - cannot instance this object
+  * 
+  */
+  Logger() = default;
 
+  /// The file path of the engine log file (with timestamp)
+  static std::string engineFileName;
+  /// The file path of the channel log file (with timestamp)
+  static std::string channelFileName;
+  /// The stream containing all the characters before pushing to the engine file
+  static std::ostringstream engineStream;
+  /// The stream containing the filtered channel characters before pushing to the channel file
+  static std::ostringstream channelStream;
+
+  /**
+   * @brief Checks if the given channel enum is part of the channel mask, masking non-marked
+   * channels
+   * 
+   * @param channel of the input message
+   * @return true if the channel enum is included in the channel mask
+   * @return false if the channel enum is not part of the channel mask
+   */
+  static bool CheckChannelMask(const Debug::Channel channel);
+  /**
+   * @brief Checks if the given verbosity enum is part of the verbosity mask, masking non-marked
+   * verbosity
+   * 
+   * @param verbosity of the input message
+   * @return true if the verbosity enum is included in the verbosity mask
+   * @return false if the verbosity enum is not part of the verbosity mask
+   */
+  static bool CheckVerbosity(const Debug::Verbosity verbosity);
+  /**
+   * @brief Adds the buffer to the stream if it passes the verbosity and channel checks,
+   * then writes to the file.
+   * 
+   * @param fileName of the file to write to if the stream buffer is above the byte threshold
+   * @param stream which the buffer is written to, to store information
+   * @param buffer which contains the characters of the message (formatted)
+   */
+  static void BufferWrite(const std::string fileName,
+                          std::ostringstream* stream, const char* buffer);
+};  // namespace Isetta
+
+/**
+ * @brief Helper object for the log macros, so __FILE__ and __LINE__ can be passed by default
+ * at the given position
+ * 
+ */
 struct LogObject {
+  /// File where the log macro is called from
   std::string file;
+  // Line where the log macro is called from
   int line;
-  Debug::Verbosity::Enum verbosity = Debug::Verbosity::Info;
+  // Default verbosity level if not set
+  Debug::Verbosity verbosity = Debug::Verbosity::Info;
 
+  /**
+   * @brief Construct a new Log Object object (uses default verbosity)
+   * 
+   * @param file of where the object is called
+   * @param line of where the object is called
+   */
   LogObject(const std::string file, const int line) : file{file}, line{line} {}
-  LogObject(const std::string file, const int line,
-            Debug::Verbosity::Enum verbosity)
+  /**
+   * @brief Construct a new Log Object object
+   * 
+   * @param file of where the object is called
+   * @param line of where the object is called
+   * @param verbosity of how the severe the message is
+   */
+  LogObject(const std::string file, const int line, Debug::Verbosity verbosity)
       : file{file}, line{line}, verbosity{verbosity} {}
 
-  void operator()(const Debug::Channel::Enum channel,
-                  const Debug::Verbosity::Enum verbosity, const char* inFormat,
+  /**
+   * @brief Call to DebugPrintF to output a log message
+   * 
+   * @param channel of the message
+   * @param verbosity of the message
+   * @param inFormat the format string similar to printf
+   * @param ... input arguments to fill the formats
+   */
+  void operator()(const Debug::Channel channel,
+                  const Debug::Verbosity verbosity, const char* inFormat,
                   ...) const;
-  void operator()(const Debug::Channel::Enum channel,
-                  const Debug::Verbosity::Enum verbosity,
+  /**
+   * @brief Call to DebugPrintF to output a log message
+   * 
+   * @param channel of the message
+   * @param verbosity of the message
+   * @param inFormat the string to output
+   */
+  void operator()(const Debug::Channel channel,
+                  const Debug::Verbosity verbosity,
                   const std::string& inFormat) const;
-  void operator()(const Debug::Channel::Enum channel,
-                  const Debug::Verbosity::Enum verbosity,
+  /**
+   * @brief Call to DebugPrintF to output a log message
+   * 
+   * @param channel of the message
+   * @param verbosity of the message
+   * @param inFormat initializer list of strings to output
+   */
+  void operator()(const Debug::Channel channel,
+                  const Debug::Verbosity verbosity,
                   const std::initializer_list<std::string>& inFormat) const;
 
-  void operator()(const Debug::Channel::Enum channel, const char* inFormat,
+  /**
+   * @brief Call to DebugPrintF to output a log message,
+   * verbosity set in constructor
+   * 
+   * @param channel of the message
+   * @param verbosity of the message
+   * @param inFormat the format string similar to printf
+   * @param ... input arguments to fill the formats
+   */
+  void operator()(const Debug::Channel channel, const char* inFormat,
                   ...) const;
-  void operator()(const Debug::Channel::Enum channel,
+  /**
+   * @brief Call to DebugPrintF to output a log message,
+   * verbosity set in constructor
+   * 
+   * @param channel of the message
+   * @param verbosity of the message
+   * @param inFormat the string to output
+   */
+  void operator()(const Debug::Channel channel,
                   const std::string& inFormat) const;
-  void operator()(const Debug::Channel::Enum channel,
+  /**
+   * @brief Call to DebugPrintF to output a log message,
+   * verbosity set in constructor
+   * 
+   * @param channel of the message
+   * @param verbosity of the message
+   * @param inFormat initializer list of strings to output
+   */
+  void operator()(const Debug::Channel channel,
                   const std::initializer_list<std::string>& inFormat) const;
 };
 }  // namespace Isetta

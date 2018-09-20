@@ -9,12 +9,20 @@
 #include <iostream>
 #include <limits>
 #include <stdexcept>
+#include "Core/IsettaAlias.h"
 
 namespace Isetta::Math {
 const float Utility::PI = static_cast<float>(M_PI);
 const float Utility::EPSILON = FLT_EPSILON;
 const float Utility::DEG2RAD = Utility::PI / 180.f;
 const float Utility::RAD2DEG = 180.f * static_cast<float>(M_1_PI);
+
+float Utility::Abs(float number) {
+  return number < 0 ? -number : number;
+}
+
+int Utility::Abs(int number) { return number < 0 ? -number : number; }
+
 float Utility::Acos(float number) { return acosf(number); }
 float Utility::Asin(float number) { return asinf(number); }
 float Utility::Atan(float number) { return atanf(number); }
@@ -35,7 +43,7 @@ int Utility::ClosestPowerOfTwo(int number) {
     throw std::out_of_range(
         "Utility::ClosestPowerOfTwo: Negative numbers are not supported.");
   int ceil = number - 1;
-  for (size_t i = 1; i < sizeof(ceil) * CHAR_BIT; i *= 2) {
+  for (Size i = 1; i < sizeof(ceil) * CHAR_BIT; i *= 2) {
     ceil |= ceil >> i;
   }
   ceil++;
@@ -91,7 +99,7 @@ int Utility::NextPowerOfTwo(int number) {
     throw std::out_of_range(
         "Utility::NextPowerOfTwo: Negative numbers are not supported.");
   int ceil = number - 1;
-  for (size_t i = 1; i < sizeof(ceil) * CHAR_BIT; i *= 2) {
+  for (Size i = 1; i < sizeof(ceil) * CHAR_BIT; i *= 2) {
     ceil |= ceil >> i;
   }
   ceil++;

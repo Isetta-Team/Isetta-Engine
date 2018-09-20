@@ -27,5 +27,7 @@ Instruction:
 # Building brofiler, FMOD, SID
 Should be setup after running, 'git submodule update --init'
 
-# Building GameNetworkingSockets
-More information to come, still a early work in progress.
+# Building yojimbo
+- Run `git submodule update --init --recursive` in the git project or in the yojimbo folder
+- Go to the yojimbo folder and run `.\premake5.exe solution` to create a Visual Studio solution
+- Build the yojimbo project inside of Yojimbo.sln for both the Release and Debug configurations

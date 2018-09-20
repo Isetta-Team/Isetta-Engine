@@ -47,9 +47,6 @@
     <ClCompile Include="Core\ModuleManager.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Memory\Memory.cpp">
-      <Filter>Core\Memory</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\RenderNode.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -58,9 +55,6 @@
     </ClCompile>
     <ClCompile Include="Graphics\ModelNode.cpp">
       <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Memory\Memory.cpp">
-      <Filter>Core\Memory</Filter>
     </ClCompile>
     <ClCompile Include="Core\Config\Config.cpp">
       <Filter>Core\Config</Filter>
@@ -86,17 +80,57 @@
     <ClCompile Include="Audio\AudioSource.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Memory\StackAllocator.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
     <ClCompile Include="Graphics\Window.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Networking\NetworkingModule.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\FileSystem.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Time\Clock.cpp">
+      <Filter>Core\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Time\StopWatch.cpp">
+      <Filter>Core\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\MemoryAllocator.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\MemoryManager.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\StackAllocator.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\PoolAllocator.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\MemoryAllocator.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\MemoryManager.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\DoubleBufferedAllocator.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\ObjectHandle.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineLoop.cpp" />
+    <ClCompile Include="Networking\NetworkManager.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\AnimationNode.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Core\IModule.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Time.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Math\Matrix3.h">
       <Filter>Core\Math</Filter>
     </ClInclude>
@@ -142,18 +176,6 @@
     <ClInclude Include="Core\ModuleManager.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Memory\Memory.h">
-      <Filter>Core\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\RenderNode.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\LightNode.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\ModelNode.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Config\Config.h">
       <Filter>Core\Config</Filter>
     </ClInclude>
@@ -163,30 +185,92 @@
     <ClInclude Include="Core\Config\CVarRegistry.h">
       <Filter>Core\Config</Filter>
     </ClInclude>
-    <ClInclude Include="Input\InputEnum.h">
-      <Filter>Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\RenderModule.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Input\InputModule.h">
-      <Filter>Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Input\Input.h">
-      <Filter>Input</Filter>
-    </ClInclude>
     <ClInclude Include="Audio\AudioModule.h">
       <Filter>Audio</Filter>
     </ClInclude>
     <ClInclude Include="Audio\AudioSource.h">
       <Filter>Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Core\IsettaTypes.h">
-      <Filter>Core</Filter>
+    <ClInclude Include="Core\Memory\StackAllocator.h">
+      <Filter>Core\Memory</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Window.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Input\Input.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\InputEnum.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\InputModule.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\LightNode.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ModelNode.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\RenderModule.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Networking\NetworkingModule.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\RenderNode.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\FileSystem.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Time\Clock.h">
+      <Filter>Core\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Time\StopWatch.h">
+      <Filter>Core\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\MemoryAllocator.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\MemoryManager.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\DoubleBufferedAllocator.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\PoolAllocator.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\TemplatePoolAllocator.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\ObjectHandle.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\RingBuffer.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineLoop.h" />
+    <ClInclude Include="Core\Debug\Debug.h">
+      <Filter>Core\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Networking\Messages.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Config\ICVar.h">
+      <Filter>Core\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="Networking\NetworkManager.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\AnimationNode.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IsettaAlias.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -219,9 +303,6 @@
     <Filter Include="Core\Config">
       <UniqueIdentifier>{78b96f16-2074-4d8e-802c-ce826e96fe83}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Memory">
-      <UniqueIdentifier>{3c4c68c1-116d-471f-983d-eb27c2ad19f8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Audio">
       <UniqueIdentifier>{37af25bc-07be-4d7a-90b9-15e1379adb9d}</UniqueIdentifier>
     </Filter>
@@ -230,6 +311,15 @@
     </Filter>
     <Filter Include="Input">
       <UniqueIdentifier>{4df4848a-1e54-4b90-8bad-773e71fa89de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Networking">
+      <UniqueIdentifier>{274cf1b7-0679-4c44-bef9-7e5e861ef39a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Time">
+      <UniqueIdentifier>{263ba415-8b0e-4871-b9e3-6779bb9b8489}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DataStructures">
+      <UniqueIdentifier>{1a6466d1-5cab-4f45-b3c8-992fde0119e4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

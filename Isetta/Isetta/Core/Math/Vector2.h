@@ -2,6 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include <string>
 
 namespace Isetta::Math {
 
@@ -19,20 +20,32 @@ class Vector2 {
 
   // Construct by name
 
+  /**
+   * \brief Create an empty vector
+   */
   Vector2() : x{0}, y{0} {}
+  /**
+   * \brief Create a vector of a specific number
+   * \param value the values of the vector
+   */
   explicit Vector2(float value) : x{value}, y{value} {}
-  Vector2(float inX, float inY) : x{inX}, y{inY} {}
+  /**
+   * \brief Create a vector of specific x and y
+   * \param inX The x of vector
+   * \param inY The y of vector
+   */
+  Vector2(float inX, float inY);
 
   // Copy and move constructions
 
   Vector2(const Vector2& inVector) : x{inVector.x}, y{inVector.y} {}
-  Vector2(Vector2&& inVector) : x{inVector.x}, y{inVector.y} {}
+  Vector2(Vector2&& inVector) noexcept : x{inVector.x}, y{inVector.y} {}
   inline Vector2& operator=(const Vector2& inVector) {
     x = inVector.x;
     y = inVector.y;
     return *this;
   }
-  inline Vector2& operator=(Vector2&& inVector) {
+  inline Vector2& operator=(Vector2&& inVector) noexcept {
     x = inVector.x;
     y = inVector.y;
     return *this;
@@ -41,7 +54,6 @@ class Vector2 {
   // Conversions
 
   explicit Vector2(const class Vector3Int& inIntVector);
-  // Vector3(const Vector2& inVector, float inZ);
 
   ~Vector2() {}
 
@@ -88,34 +100,84 @@ class Vector2 {
 
   // functions
 
-  // Returns the length of the vector
+  /**
+   * \brief Returns the length of the vector
+   */
   float Magnitude() const;
-  // Returns the square of the lenght of the vector
+  /**
+   * \brief Returns the square of the length of the vector
+   */
   float SqrMagnitude() const;
-  // Returns a normalized vector of this vector
+  /**
+   * \brief Returns a normalized vector of this vector
+   */
   Vector2 Normalized() const;
-  // Normalizes current vector
+  /**
+   * \brief Normalizes current vector
+   */
   void Normalize() noexcept;
+  /**
+   * \brief Return the string from the vector2
+   */
+  std::string ToString() const;
 
   // static functions
 
-  // Checks if two vectors are equal (within a tolerence)
+  /**
+   * \brief Checks if two vectors are equal (within a tolerance)
+   * \param lhs The left vector
+   * \param rhs The right vector
+   */
   static bool Equals(const Vector2& lhs, const Vector2& rhs);
-  // Returns the dot product of two vectors
+  /**
+   * \brief Returns the dot product of two vectors
+   * \param lhs The left vector
+   * \param rhs The right vector
+   */
   static float Dot(const Vector2& lhs, const Vector2& rhs);
-  // Returns the cross product of two vectors
+  /**
+   * \brief Returns the cross product of two vectors
+   * \param lhs The left vector
+   * \param rhs The right vector
+   */
   static float Cross(const Vector2& lhs, const Vector2& rhs);
-  // Linearly interpolates between two vectors
+  /**
+   * \brief Linearly interpolates between two vectors
+   * \param start The starting vector
+   * \param end The ending vector
+   * \param time The time t
+   */
   static Vector2 Lerp(const Vector2& start, const Vector2& end, float time);
-  // Returns the distance between two endpoints of the vectors
+  /**
+   * \brief The distance between two endpoints of the two vectors
+   * \param start The starting vector
+   * \param end The ending vector
+   */
   static float Distance(const Vector2& start, const Vector2& end);
-  // Projects a vector onto onNormal vector
+  /**
+   * \brief Projects a vector onto onNormal vector
+   * \param inVector The in vector
+   * \param onNormal The target normal vector
+   */
   static Vector2 Project(const Vector2& inVector, const Vector2& onNormal);
-  // Reflects a vector off the plane defined by a normal
+  /**
+   * \brief Reflects a vector off the plane defined by a normal
+   * \param inVector The input vector
+   * \param inNormal The normal vector pointing into the surface
+   */
   static Vector2 Reflect(const Vector2& inVector, const Vector2& inNormal);
-  // Multiplies two vectors component-wise
+  /**
+   * \brief Multiplies two vectors component-wise
+   * \param inVector The input vector
+   * \param scalar The scalar vector
+   */
   static Vector2 Scale(const Vector2& inVector, const Vector2& scalar);
-  // Spherically interpolates between two vectors
+  /**
+   * \brief Spherically interpolates between two vectors
+   * \param start The starting vector
+   * \param end The ending vector
+   * \param time The time t
+   */
   static Vector2 Slerp(const Vector2& start, const Vector2& end, float time);
 };
 }  // namespace Isetta::Math
