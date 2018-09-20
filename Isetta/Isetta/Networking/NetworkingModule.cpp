@@ -180,17 +180,6 @@ void NetworkingModule::ProcessClientToServerMessages(int clientIdx) {
             reinterpret_cast<HandleMessage*>(message);
         LOG(Debug::Channel::Networking, "Client %d sends handle #%d", clientIdx,
             handleMessage->handle);
-        /*if (handleMessage->handle == 0) {
-          AnimationNode::Play();
-        }
-        if (handleMessage->handle == 1) {
-          AnimationNode::Stop();
-        }
-        if (handleMessage->handle == 2) {
-          static AudioSource* audio = new AudioSource{};
-          audio->SetAudioClip("gunshot.aiff");
-          audio->Play(false, 1.f);
-        }*/
         for (int i = 0; i < server->GetMaxClients(); i++) {
           if (!server->IsClientConnected(i)) {
             continue;
@@ -230,10 +219,11 @@ void NetworkingModule::ProcessServerToClientMessages() {
         LOG(Debug::Channel::Networking, "Server sends handle #%d",
             handleMessage->handle);
         if (handleMessage->handle == 0) {
-          AnimationNode::Play();
+          LOG(Debug::Channel::Networking,
+              "Server says we should play the animation!");
         }
         if (handleMessage->handle == 1) {
-          AnimationNode::Stop();
+          LOG(Debug::Channel::Networking, "Server says we should stop the animation!");
         }
         if (handleMessage->handle == 2) {
           AudioSource audio = AudioSource();
