@@ -25,7 +25,11 @@ using Int64 = int64_t;
 using PtrDiff = std::ptrdiff_t;
 using PtrInt = uintptr_t;
 
-using Action = std::function<void()>;
+template<typename ...T>
+using Action = std::function<void(T...)>;
+
+template<typename result, typename ...T>
+using Func = std::function<result(T...)>;
 
 inline auto operator""_KB(Size const x) { return 1024 * x; }
 

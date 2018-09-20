@@ -156,18 +156,18 @@ Clock& EngineLoop::GetGameClock() {
 }
 
 void RunYidiTest() {
-  const U32 count = 10;
-  std::vector<ObjectHandle<U64>> arr;
-  arr.reserve(count);
-  for (U32 i = 0; i < count; i++) {
-    auto ref = MemoryManager::NewDynamic<U64>();
-    *ref = i;
-    arr.push_back(ref);
-  }
+  // const U32 count = 10;
+  // std::vector<ObjectHandle<U64>> arr;
+  // arr.reserve(count);
+  // for (U32 i = 0; i < count; i++) {
+  // auto ref = MemoryManager::NewDynamic<U64>();
+  // *ref = i;
+  // arr.push_back(ref);
+  // }
 
-  for (U32 i = 0; i < count; i++) {
-    MemoryManager::DeleteDynamic(arr[i]);
-  }
+  // for (U32 i = 0; i < count; i++) {
+  // MemoryManager::DeleteDynamic(arr[i]);
+  // }
 }
 
 }  // namespace Isetta
