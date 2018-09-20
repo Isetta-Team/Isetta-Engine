@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <string>
 #include "Core/Debug/Logger.h"
+#include "Core/Config/Config.h"
 #include "Networking/NetworkManager.h"
 
 // F Windows
@@ -15,6 +16,7 @@
 
 namespace Isetta {
 CustomAdapter NetworkingModule::NetworkAdapter;
+
 void NetworkingModule::StartUp() {
   NetworkManager::networkingModule = this;
 
@@ -24,23 +26,27 @@ void NetworkingModule::StartUp() {
   }
   srand((unsigned int)time(NULL));
 
-  // TODO(Caleb): Add CVar inputs for the config options
+  // TODO(Caleb): Figure out some more robust channel settings
   networkConfig.numChannels = 1;
   networkConfig.channel[0].type = yojimbo::CHANNEL_TYPE_UNRELIABLE_UNORDERED;
   networkConfig.timeout = 20;
 
-  privateKey = new uint8_t[KeyBytes];
+  privateKey = new uint8_t[Config::Instance().networkConfig.keyBytes.GetVal()];
   // TODO(Caleb): Need to do something more insightful with the private key
-  // than / all 0s
-  memset(privateKey, 0, KeyBytes);
+  // than all 0s
+  memset(privateKey, 0, Config::Instance().networkConfig.keyBytes.GetVal());
 
   clientId = 0;
 
-  client = new yojimbo::Client(yojimbo::GetDefaultAllocator(),
-                               yojimbo::Address("0.0.0.0"), networkConfig,
-                               NetworkAdapter, clock.GetElapsedTime());
+  client = new yojimbo::Client(
+      yojimbo::GetDefaultAllocator(),
+      yojimbo::Address(
+          Config::Instance().networkConfig.defaultClientIP.GetVal().c_str(),
+        Config::Instance().networkConfig.clientPort.GetVal()),
+      networkConfig, NetworkAdapter, clock.GetElapsedTime());
 
-  clientSendBuffer = RingBuffer<yojimbo::Message*>(ClientQueueSize);
+  clientSendBuffer = RingBuffer<yojimbo::Message*>(
+      Config::Instance().networkConfig.clientQueueSize.GetVal());
 }
 
 void NetworkingModule::Update(float deltaTime) {
@@ -52,7 +58,8 @@ void NetworkingModule::Update(float deltaTime) {
   // Send out our messages
   SendClientToServerMessages();
   if (server) {
-    for (int i = 0; i < MaxClients; i++) {
+    for (int i = 0; i < Config::Instance().networkConfig.maxClients.GetVal();
+         i++) {
       SendServerToClientMessages(i);
     }
   }
@@ -65,17 +72,21 @@ void NetworkingModule::Update(float deltaTime) {
   }
 
   if (server) {
-    for (int i = 0; i < MaxClients; i++) {
+    for (int i = 0; i < Config::Instance().networkConfig.maxClients.GetVal();
+         i++) {
       ProcessClientToServerMessages(i);
     }
   }
 }
 
 void NetworkingModule::ShutDown() {
-  ShutdownYojimbo();
-
   try {
     Disconnect();
+  } catch (std::exception e) {
+  }
+
+  try {
+    CloseServer();
   } catch (std::exception e) {
   }
 
@@ -83,10 +94,7 @@ void NetworkingModule::ShutDown() {
   delete client;
   delete privateKey;
 
-  try {
-    CloseServer();
-  } catch (std::exception e) {
-  }
+  ShutdownYojimbo();
 }
 
 // NOTE: Deletes the oldest message in the queue if the queue is
@@ -228,31 +236,34 @@ void NetworkingModule::Disconnect() {
 }
 
 void NetworkingModule::CreateServer(const char* address, int port) {
-  if (server) {
+  if (server && server->IsRunning()) {
     throw std::exception(
         "NetworkingModule::CreateServer => Cannot create a server while one is "
         "already running.");
   }
-  serverSendBufferArray = new RingBuffer<yojimbo::Message*>[MaxClients];
-  for (int i = 0; i < MaxClients; i++) {
-    serverSendBufferArray[i] =
-        RingBuffer<yojimbo::Message*>(ServerQueueSizePerClient);
+  serverSendBufferArray = new RingBuffer<
+      yojimbo::Message*>[Config::Instance().networkConfig.maxClients.GetVal()];
+  for (int i = 0; i < Config::Instance().networkConfig.maxClients.GetVal();
+       i++) {
+    serverSendBufferArray[i] = RingBuffer<yojimbo::Message*>(
+        Config::Instance().networkConfig.serverQueueSizePerClient.GetVal());
   }
 
-  serverAddress = yojimbo::Address(address, NetworkingModule::ServerPort);
+  serverAddress = yojimbo::Address(
+      address, port);
   // TODO(Caleb): change out the memory allocation with our own custom allocator
   server = new yojimbo::Server(
       yojimbo::GetDefaultAllocator(), privateKey, serverAddress, networkConfig,
       NetworkingModule::NetworkAdapter, clock.GetElapsedTime());
-  server->Start(MaxClients);
+  server->Start(Config::Instance().networkConfig.maxClients.GetVal());
 
   if (!server->IsRunning()) {
-    return;
+    throw std::exception("NetworkingModule::CreateServer => Unable to run server.");
   }
 }
 
 void NetworkingModule::CloseServer() {
-  if (!server->IsRunning()) {
+  if (!server || !server->IsRunning()) {
     throw std::exception(
         "NetworkingModule::CloseServer() Cannot close the server if it is not "
         "running.");

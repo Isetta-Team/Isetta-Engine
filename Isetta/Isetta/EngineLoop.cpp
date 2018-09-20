@@ -37,8 +37,12 @@ void EngineLoop::StartUp() {
 
   // Networking
   NetworkManager::CreateServer(
-      "127.0.0.1");
-  NetworkManager::ConnectToServer("127.0.0.1", [](bool b) {LOG(Debug::Channel::Networking, "Client connection state: %d", b);});
+      Config::Instance().networkConfig.defaultServerIP.GetVal().c_str());
+  NetworkManager::ConnectToServer(
+      Config::Instance().networkConfig.defaultServerIP.GetVal().c_str(),
+      [](bool b) {
+        LOG(Debug::Channel::Networking, "Client connection state: %d", b);
+      });
 
   // Read scene from scene file
   ModelNode car{"test/Low-Poly-Racing-Car.scene.xml", Math::Vector3{0, -20, 0},

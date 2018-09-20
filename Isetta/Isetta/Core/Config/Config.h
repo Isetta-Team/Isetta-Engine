@@ -13,6 +13,7 @@
 #include "EngineLoop.h"
 #include "Graphics/RenderModule.h"
 #include "Graphics/Window.h"
+#include "Networking/NetworkingModule.h"
 
 namespace Isetta {
 /**
@@ -60,6 +61,8 @@ class Config {
   EngineLoop::LoopConfig loopConfig;
   /// RenderModule configuration CVars
   RenderModule::RenderConfig renderConfig;
+  /// NetworkingModule configuration CVars
+  NetworkingModule::NetworkConfig  networkConfig;
 
   /// Max FPS of the engine
   CVar<int> maxFps = {"max_fps", 16};
