@@ -27,6 +27,10 @@ class NetworkingModule {
     CVarString defaultClientIP{"default_client_ip", "0.0.0.0"};
     /// Default server IP address
     CVarString defaultServerIP{"default_server_ip", "127.0.0.1"};
+    /// Connects the local client to the remote server
+    CVar<int> connectToServer{"connect_to_server", 1};
+    /// Runs a local server
+    CVar<int> runServer{"run_server", 0};
     /// Default port to use when creating a client.
     CVar<U16> clientPort{"client_port", 30000};
     /// Default port to use when creating a server.

@@ -37,13 +37,17 @@ void EngineLoop::StartUp() {
   // Game Init Part
 
   // Networking
-  NetworkManager::CreateServer(
-      Config::Instance().networkConfig.defaultServerIP.GetVal().c_str());
-  NetworkManager::ConnectToServer(
-      Config::Instance().networkConfig.defaultServerIP.GetVal().c_str(),
-      [](bool b) {
-        LOG(Debug::Channel::Networking, "Client connection state: %d", b);
-      });
+  if (Config::Instance().networkConfig.runServer.GetVal()) {
+    NetworkManager::CreateServer(
+        Config::Instance().networkConfig.defaultServerIP.GetVal().c_str());
+  }
+  if (Config::Instance().networkConfig.connectToServer.GetVal()) {
+    NetworkManager::ConnectToServer(
+        Config::Instance().networkConfig.defaultServerIP.GetVal().c_str(),
+        [](bool b) {
+          LOG(Debug::Channel::Networking, "Client connection state: %d", b);
+        });
+  }
 
   // TODO(All) Read scene from scene file
   // ModelNode car{"test/Low-Poly-Racing-Car.scene.xml", Math::Vector3{0, -20,
