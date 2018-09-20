@@ -39,6 +39,7 @@ void NetworkingModule::StartUp() {
   memset(privateKey, 0, Config::Instance().networkConfig.keyBytes.GetVal());
 
   clientId = 0;
+  yojimbo::random_bytes((uint8_t*)&clientId, 8);
 
   client = new yojimbo::Client(
       yojimbo::GetDefaultAllocator(),
