@@ -124,7 +124,7 @@ void InputModule::UnegisterScrollCallback(U64 handle) {
   scrollCallbacks.erase(handle);
 }
 
-U64 InputModule::ExternalRegisterCharCallback(
+U64 InputModule::RegisterCharCallback(
     std::function<void(GLFWwindow*, unsigned int)> callback) {
   U64 handle = totalHandle++;
   charCallbacks.insert(std::make_pair(handle, callback));

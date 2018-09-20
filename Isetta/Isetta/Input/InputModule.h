@@ -107,7 +107,7 @@ class InputModule {
   U64 RegisterScrollCallback(
       std::function<void(GLFWwindow*, double, double)> callback);
   void UnegisterScrollCallback(U64 handle);
-  U64 ExternalRegisterCharCallback(
+  U64 RegisterCharCallback(
       std::function<void(GLFWwindow*, unsigned int)> callback);
   void UnegisterCharCallback(U64 handle);
 
