@@ -34,5 +34,6 @@ class RenderNode {
    */
   void SetTransform(const Math::Vector3& position,
                     const Math::Vector3& rotation, const Math::Vector3& scale);
+
 };
 }  // namespace Isetta
