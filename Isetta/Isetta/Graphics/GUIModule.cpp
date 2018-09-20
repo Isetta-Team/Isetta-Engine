@@ -3,7 +3,7 @@
  */
 #include "Graphics/GUIModule.h"
 
-#include "Input/InputModule.h"
+#include "Input/Input.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
@@ -38,6 +38,11 @@ void GUIModule::StartUp(GLFWwindow* win) {
   // io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f,
   // NULL, io.Fonts->GetGlyphRangesJapanese());
   // IM_ASSERT(font != NULL);
+
+  Input::RegisterMouseButtonCallback(ImGui_ImplGlfw_MouseButtonCallback);
+  Input::RegisterScrollCallback(ImGui_ImplGlfw_ScrollCallback);
+  Input::RegisterKeyCallback(ImGui_ImplGlfw_KeyCallback);
+  Input::RegisterCharCallback(ImGui_ImplGlfw_CharCallback);
 
   show_demo_window = true;
   show_another_window = false;
