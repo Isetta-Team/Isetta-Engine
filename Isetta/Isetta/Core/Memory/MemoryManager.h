@@ -29,9 +29,10 @@ class MemoryManager {
   static ObjectHandle<T>& NewDynamic();
 
   template <typename T>
-  static void DeleteDynamic(ObjectHandle<T>& objToFree);
+  static void DeleteDynamic(const ObjectHandle<T>& objToFree);
 
   static void Test();
+
  private:
   MemoryManager();
   ~MemoryManager() = default;
@@ -65,7 +66,7 @@ ObjectHandle<T>& MemoryManager::NewDynamic() {
 }
 
 template <typename T>
-void MemoryManager::DeleteDynamic(ObjectHandle<T>& objToFree) {
+void MemoryManager::DeleteDynamic(const ObjectHandle<T>& objToFree) {
   instance->dynamicArena.DeleteDynamic(objToFree);
 }
 

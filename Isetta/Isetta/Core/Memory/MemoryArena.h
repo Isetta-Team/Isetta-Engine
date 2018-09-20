@@ -1,13 +1,13 @@
 /*
-* Copyright (c) 2018 Isetta
-*/
+ * Copyright (c) 2018 Isetta
+ */
 #pragma once
 #include <map>
 #include "Core/IsettaAlias.h"
 
 namespace Isetta {
 
-template<typename T>
+template <typename T>
 class ObjectHandle;
 
 class MemoryArena {
@@ -25,7 +25,7 @@ class MemoryArena {
   ObjectHandle<T>& NewDynamic();
 
   template <typename T>
-  void DeleteDynamic(ObjectHandle<T>& objectToFree);
+  void DeleteDynamic(const ObjectHandle<T>& objectToFree);
 
   void* Alloc(SizeInt size, SizeInt& outSize);
   void Defragment();
@@ -35,9 +35,9 @@ class MemoryArena {
   PtrInt GetSize() const;
 
   // can't be put in ObjectHandle because it creates new ones for each type
-  inline static U32 nextUniqueID = 0;
-  const static U32 maxHandleCount = 2048;
-  const static U8 alignment = 16;
+  static const U32 maxHandleCount = 2048;
+  static const U8 alignment = 16;
+  static inline U32 nextUniqueID = 0;
   static class HandleEntry entryArr[];
   // TODO(YIDI): Make a custom container rather than using map
   // O(1) random access, O(log n) insert
@@ -62,14 +62,15 @@ ObjectHandle<T>& MemoryArena::NewDynamic() {
 }
 
 template <typename T>
-void MemoryArena::DeleteDynamic(ObjectHandle<T>& objectToFree) {
+void MemoryArena::DeleteDynamic(const ObjectHandle<T>& objectToFree) {
   auto addressIndexPair = addressIndexMap.find(objectToFree.GetObjAddress());
 
   if (addressIndexPair != addressIndexMap.end()) {
     addressIndexMap.erase(addressIndexPair);
     objectToFree.EraseObject();
   } else {
-    throw std::exception{"MemoryArena::DeleteDynamic => Double deleting handle!"};
+    throw std::exception{
+        "MemoryArena::DeleteDynamic => Double deleting handle!"};
   }
 }
 

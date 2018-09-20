@@ -54,7 +54,8 @@ T& ObjectHandle<T>::operator*() {
 }
 
 template <typename T>
-ObjectHandle<T>::ObjectHandle(void* mem, const U32 uniqueID, const SizeInt size): uniqueID(uniqueID) {
+ObjectHandle<T>::ObjectHandle(void* mem, const U32 uniqueID, const SizeInt size)
+    : uniqueID(uniqueID) {
   HandleEntry* entry = nullptr;
 
   // FUTURE: To optimize the speed of this, remember last index
@@ -67,12 +68,10 @@ ObjectHandle<T>::ObjectHandle(void* mem, const U32 uniqueID, const SizeInt size)
   }
 
   if (entry == nullptr) {
-    throw std::out_of_range{
-      "ObjectHandle => No empty slot in handle table"
-    };
+    throw std::out_of_range{"ObjectHandle => No empty slot in handle table"};
   }
 
-  T* t = new(mem) T{};
+  T* t = new (mem) T{};
   entry->Set(uniqueID, static_cast<void*>(t), false, size);
 }
 

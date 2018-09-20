@@ -2,6 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Core/Memory/MemoryArena.h"
+#include <vector>
 #include "Core/Debug/Logger.h"
 #include "Core/Memory/ObjectHandle.h"
 #include "Input/Input.h"
@@ -49,7 +50,6 @@ void MemoryArena::Defragment() {
     }
     MoveLeft(index);
     LOG_INFO(Debug::Channel::Memory, "Cur size: %I64u", GetSize());
-    
   }
 }
 
@@ -94,7 +94,7 @@ void MemoryArena::MoveLeft(const U32 index) {
 
     std::memmove(newAdd, entry.ptr, entry.size);
     // LOG_INFO(Debug::Channel::Memory, "Moving from %p to %p of size %u",
-             // entry.ptr, lastAvailableAddress, entry.size);
+    // entry.ptr, lastAvailableAddress, entry.size);
     entry.ptr = newAdd;
   }
 }

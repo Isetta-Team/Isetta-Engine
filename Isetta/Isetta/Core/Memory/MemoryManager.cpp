@@ -2,10 +2,11 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Core/Memory/MemoryManager.h"
+#include "Core/Math/Random.h"
 #include "Core/Memory/ObjectHandle.h"
 #include "Input/Input.h"
 #include "Input/InputEnum.h"
-#include "Core/Math/Random.h"
+#include <vector>
 
 namespace Isetta {
 
@@ -73,12 +74,11 @@ void MemoryManager::Test() {
   }
 
   auto map = instance->dynamicArena.addressIndexMap;
-  
+
   for (U32 i = 0; i < count / 2; i++) {
     int index = Math::Random::GetRandomGenerator(0, arr.size() - 1).GetValue();
     DeleteDynamic(arr[index]);
     arr.erase(arr.begin() + index);
   }
 }
-
 }  // namespace Isetta

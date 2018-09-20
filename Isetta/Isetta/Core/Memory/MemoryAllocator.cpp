@@ -1,18 +1,10 @@
 /*
-* Copyright (c) 2018 Isetta
-*/
+ * Copyright (c) 2018 Isetta
+ */
 #include "Core/Memory/MemoryAllocator.h"
 #include "Core/Debug/Assert.h"
-#include <sstream>
 
 namespace Isetta {
-
-std::string HexFromPtr(const PtrInt rawAddress) {
-  std::stringstream str;
-  str << "Allocated Memory Address: " << rawAddress << " = " << std::hex
-      << std::uppercase << rawAddress;
-  return str.str();
-}
 
 void* MemoryAllocator::AllocateDefaultAligned(const SizeInt size) {
   // looks like std::malloc always return 16 byte aligned memory

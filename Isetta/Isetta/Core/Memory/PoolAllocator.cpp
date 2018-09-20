@@ -1,8 +1,8 @@
 /*
-* Copyright (c) 2018 Isetta
-*/
-#include "Core/Debug/Logger.h"
+ * Copyright (c) 2018 Isetta
+ */
 #include "Core/Memory/PoolAllocator.h"
+#include "Core/Debug/Logger.h"
 #include "Core/Memory/MemoryAllocator.h"
 
 namespace Isetta {
@@ -12,8 +12,10 @@ PoolAllocator::PoolAllocator(const SizeInt chunkSize, const SizeInt count) {
 
   if (elementSize > sizeof(Node*)) {
     LOG_ERROR(Debug::Channel::Memory,
-              "Using PoolAllocator for chunkSize %d will incur more overhead memory than the memory actually "
-                  "needed for the elements", elementSize);
+              "Using PoolAllocator for chunkSize %d will incur more overhead "
+              "memory than the memory actually "
+              "needed for the elements",
+              elementSize);
   }
 
   capacity = count;
@@ -52,8 +54,5 @@ void PoolAllocator::Erase() const {
   MemoryAllocator::FreeDefaultAligned(memHead);
 }
 
-PoolAllocator::Node::Node(Node* next) {
-  this->next = next;
-}
-
+PoolAllocator::Node::Node(Node* next) { this->next = next; }
 }  // namespace Isetta

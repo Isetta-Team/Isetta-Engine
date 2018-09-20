@@ -11,7 +11,6 @@
 #include "Graphics/ModelNode.h"
 #include "Input/Input.h"
 #include "Input/InputEnum.h"
-#include "MemTestObj.h"
 
 namespace Isetta {
 
