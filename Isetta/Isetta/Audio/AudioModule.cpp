@@ -6,14 +6,28 @@
 #include "Audio/AudioSource.h"
 #include "Core/Debug/Logger.h"
 #include "SID/sid.h"
+#include <algorithm>
 
 namespace Isetta {
+
+FMOD_RESULT F_CALLBACK LogAudioModule(FMOD_DEBUG_FLAGS flags, const char* file,
+                                      int line, const char* func,
+                                      const char* message) {
+  char msg[1024];
+  strcpy_s(msg, 1024, message);
+  std::remove(std::begin(msg), std::end(msg), '\n');
+  LOG_INFO(Debug::Channel::Sound, msg);
+  return FMOD_OK;
+}
 
 void AudioModule::StartUp() {
   CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
   // FMOD::Memory_Initialize(std::malloc(10_MB), 10_MB, nullptr, nullptr,
   // nullptr);
   fmodSystem = nullptr;
+
+  FMOD::Debug_Initialize(FMOD_DEBUG_LEVEL_LOG, FMOD_DEBUG_MODE_CALLBACK,
+                         LogAudioModule);
   FMOD::System_Create(&fmodSystem);
   fmodSystem->init(512, FMOD_INIT_NORMAL, nullptr);
   // TODO(YIDI): Set this in engine config
