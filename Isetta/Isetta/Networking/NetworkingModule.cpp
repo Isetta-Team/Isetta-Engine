@@ -193,6 +193,7 @@ void NetworkingModule::ProcessClientToServerMessages(int clientIdx) {
         for (int i = 0; i < server->GetMaxClients(); i++) {
           HandleMessage* newMessage = static_cast<HandleMessage*>(
               server->CreateMessage(i, HANDLE_MESSAGE));
+          newMessage->handle = handleMessage->handle;
           AddServerToClientMessage(i, newMessage);
         }
 
