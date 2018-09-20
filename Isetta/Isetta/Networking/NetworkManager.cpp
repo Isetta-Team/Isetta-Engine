@@ -3,6 +3,7 @@
  */
 
 #include "Networking/NetworkManager.h"
+#include "Core/Config/Config.h"
 
 namespace Isetta {
 
@@ -37,7 +38,9 @@ void NetworkManager::SendStringMessageFromServer(int clientIdx, std::string stri
 
 void NetworkManager::ConnectToServer(const char* serverAddress,
                                       std::function<void(bool)> callback) {
-  networkingModule->Connect(serverAddress, networkingModule->ServerPort, callback);
+  networkingModule->Connect(
+      serverAddress, Config::Instance().networkConfig.serverPort.GetVal(),
+      callback);
 }
 
 void NetworkManager::DisconnectFromServer() {
@@ -45,7 +48,8 @@ void NetworkManager::DisconnectFromServer() {
 }
 
 void NetworkManager::CreateServer(const char* address) {
-  networkingModule->CreateServer(address, networkingModule->ServerPort);
+  networkingModule->CreateServer(
+      address, Config::Instance().networkConfig.serverPort.GetVal());
 }
 
 bool NetworkManager::ClientIsConnected() {
@@ -53,7 +57,7 @@ bool NetworkManager::ClientIsConnected() {
 }
 
 bool NetworkManager::ServerIsRunning() {
-  return networkingModule->server->IsRunning();
+  return networkingModule->server && networkingModule->server->IsRunning();
 }
 
 void NetworkManager::CloseServer() {

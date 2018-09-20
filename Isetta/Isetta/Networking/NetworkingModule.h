@@ -4,6 +4,7 @@
 #pragma once
 
 #include <functional>
+#include "Core/Config/CVar.h"
 #include "Core/DataStructures/RingBuffer.h"
 #include "Core/Time/Clock.h"
 #include "Networking/Messages.h"
@@ -16,24 +17,34 @@ namespace Isetta {
  * engine or game is done through this module via the NetworkManager class.
  */
 class NetworkingModule {
+ public:
+  /**
+   * @brief Networking configuration CVar struct
+   *
+   */
+  struct NetworkConfig {
+    /// Default client IP address
+    CVarString defaultClientIP{"default_client_ip", "0.0.0.0"};
+    /// Default server IP address
+    CVarString defaultServerIP{"default_server_ip", "127.0.0.1"};
+    /// Default port to use when creating a client.
+    CVar<U16> clientPort{"client_port", 30000};
+    /// Default port to use when creating a server.
+    CVar<U16> serverPort{"server_port", 40000};
+    /// Number of bytes used for a private key for the server.
+    CVar<int> keyBytes{"key_bytes", 32};
+    /// Maximum number of clients the server will support.
+    CVar<int> maxClients{"max_clients", 4};
+    /// Number of messages the client can have in its send queue before messages
+    /// will be overwritten.
+    CVar<int> clientQueueSize{"client_queue_size", 256};
+    /// Number of messages the server can have in its send queue to an
+    /// individual client before messages will be overwritten.
+    CVar<int> serverQueueSizePerClient{"server_queue_size_per_client", 256};
+  };
+
  private:
   static CustomAdapter NetworkAdapter;
-
-  // TODO(Caleb): Look into making the ports user-definable
-  /// Default port to use when creating a client.
-  const U16 ClientPort = 30000;
-  /// Default port to use when creating a server.
-  const U16 ServerPort = 40000;
-  /// Number of bytes used for a private key for the server.
-  const int KeyBytes = 32;
-  /// Maximum number of clients the server will support.
-  const int MaxClients = 2;
-  /// Number of messages the client can have in its send queue before messages
-  /// will be overwritten.
-  const int ClientQueueSize = 256;
-  /// Number of messages the server can have in its send queue to an individual
-  /// client before messages will be overwritten.
-  const int ServerQueueSizePerClient = 256;
 
   /// Keeps time for the client and server. Mainly used for timeouts.
   Clock clock;
