@@ -192,6 +192,9 @@ void NetworkingModule::ProcessClientToServerMessages(int clientIdx) {
           audio->Play(false, 1.f);
         }*/
         for (int i = 0; i < server->GetMaxClients(); i++) {
+          if (!server->IsClientConnected(i)) {
+            continue;
+          }
           HandleMessage* newMessage = static_cast<HandleMessage*>(
               server->CreateMessage(i, HANDLE_MESSAGE));
           newMessage->handle = handleMessage->handle;
