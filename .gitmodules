@@ -6,6 +6,7 @@
 [submodule "Isetta/External/Horde3D"]
 	path = Isetta/External/Horde3D
 	url = https://github.com/horde3d/Horde3D.git
+    ignore = untracked
 [submodule "Isetta/External/GLFW"]
 	path = Isetta/External/GLFW
 	url = https://github.com/glfw/glfw.git
@@ -13,3 +14,7 @@
 [submodule "Isetta/External/yojimbo"]
 	path = Isetta/External/yojimbo
 	url = https://github.com/Isetta-Team/yojimbo.git
+    ignore = untracked
+[submodule "Isetta/External/imgui"]
+	path = Isetta/External/imgui
+	url = https://github.com/Isetta-Team/imgui.git

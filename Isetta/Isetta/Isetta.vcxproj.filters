@@ -132,6 +132,9 @@
     <ClCompile Include="Graphics\AnimationNode.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\GUIModule.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Math\Matrix3.h">
@@ -277,6 +280,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Utilities.h" />
+    <ClInclude Include="Graphics\GUIModule.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

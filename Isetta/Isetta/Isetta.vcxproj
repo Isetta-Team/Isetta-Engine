@@ -52,14 +52,14 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\FMOD\inc;$(SolutionDir)\Isetta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Isetta;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(SolutionDir)External\imgui\examples\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)External\FMOD\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\$(Configuration)*\*.lib;$(SolutionDir)External\GLFW\Build\src\$(ConfigurationName)\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\$(Configuration)*\*.lib;$(SolutionDir)External\GLFW\Build\src\$(ConfigurationName)\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\imgui\$(Platform)\$(Configuration)\imgui.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>false</OptimizeReferences>
     </Link>
@@ -77,14 +77,14 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(OutDir)"</Command>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Isetta;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\FMOD\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Isetta;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(SolutionDir)External\imgui\examples\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)External\FMOD\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\$(Configuration)*\*.lib;opengl32.lib;$(SolutionDir)External\GLFW\Build\src\$(ConfigurationName)\glfw3.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fmod64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\$(Configuration)*\*.lib;$(SolutionDir)External\GLFW\Build\src\$(ConfigurationName)\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\imgui\$(Platform)\$(Configuration)\imgui.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(ConfigurationName)\Horde3D.dll" "$(TargetDir)"
@@ -106,6 +106,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Time\StopWatch.cpp" />
     <ClCompile Include="EngineLoop.cpp" />
     <ClCompile Include="Graphics\AnimationNode.cpp" />
+    <ClCompile Include="Graphics\GUIModule.cpp" />
     <ClCompile Include="Graphics\LightNode.cpp" />
     <ClCompile Include="Graphics\ModelNode.cpp" />
     <ClCompile Include="Graphics\RenderModule.cpp" />
@@ -173,6 +174,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Time\StopWatch.h" />
     <ClInclude Include="EngineLoop.h" />
     <ClInclude Include="Graphics\AnimationNode.h" />
+    <ClInclude Include="Graphics\GUIModule.h" />
     <ClInclude Include="Graphics\LightNode.h" />
     <ClInclude Include="Graphics\ModelNode.h" />
     <ClInclude Include="Graphics\RenderModule.h" />
