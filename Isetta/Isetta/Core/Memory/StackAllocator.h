@@ -7,10 +7,10 @@
 namespace Isetta {
 class StackAllocator {
  public:
-  typedef SizeInt Marker;
+  typedef Size Marker;
 
   StackAllocator() = default;
-  explicit StackAllocator(SizeInt stackSize);
+  explicit StackAllocator(Size stackSize);
   ~StackAllocator() = default;
 
   /**
@@ -19,8 +19,8 @@ class StackAllocator {
    * sizeInBytes Number of bytes you want \return pointer to the allocated
    * memory
    */
-  void* Alloc(SizeInt size, U8 alignment = 16);
-  void* AllocUnaligned(SizeInt size);
+  void* Alloc(Size size, U8 alignment = 16);
+  void* AllocUnaligned(Size size);
 
   /**
    * \brief If you are using this, you probably need to call the destructor on
@@ -47,7 +47,7 @@ class StackAllocator {
 
  private:
   Marker top;
-  SizeInt length;
+  Size length;
   void* bottom;
   PtrInt bottomAddress;
 };

@@ -126,11 +126,14 @@
     <ClCompile Include="Core\Memory\MemoryArena.cpp">
       <Filter>Core\Memory</Filter>
     </ClCompile>
+    <ClCompile Include="Networking\NetworkManager.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\AnimationNode.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Core\IModule.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Math\Matrix3.h">
       <Filter>Core\Math</Filter>
     </ClInclude>
@@ -191,7 +194,6 @@
     <ClInclude Include="Audio\AudioSource.h">
       <Filter>Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Core\IsettaAlias.h" />
     <ClInclude Include="Core\Memory\StackAllocator.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
@@ -262,6 +264,19 @@
     <ClInclude Include="Core\Memory\MemoryArena.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Config\ICVar.h">
+      <Filter>Core\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="Networking\NetworkManager.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\AnimationNode.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IsettaAlias.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

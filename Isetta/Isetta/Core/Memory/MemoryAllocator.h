@@ -8,7 +8,7 @@ namespace Isetta {
 
 class MemoryAllocator {
  private:
-  static void* AllocateDefaultAligned(SizeInt size);
+  static void* AllocateDefaultAligned(Size size);
   static void FreeDefaultAligned(void*);
 
   /**
@@ -18,7 +18,7 @@ class MemoryAllocator {
    * \param alignment Alignment has to be power of 2
    * \return a raw pointer to the newly allocated memory address
    */
-  static void* AllocateAligned(SizeInt size, U8 alignment);
+  static void* AllocateAligned(Size size, U8 alignment);
   static void FreeAligned(void*);
 
   friend class StackAllocator;

@@ -4,6 +4,7 @@
 #pragma once
 #include "Core/IsettaAlias.h"
 #include "Core/Memory/MemoryArena.h"
+#include "Utilities.h"
 
 namespace Isetta {
 // FUTURE: If we want reference counting (probably not), it can be done here
@@ -14,10 +15,10 @@ class HandleEntry {
   PtrInt GetAddress() const;
 
   // just a help function
-  void Set(U32 uniqueID, void* ptr, bool isEmpty, SizeInt size);
+  void Set(U32 uniqueID, void* ptr, bool isEmpty, Size size);
 
   U32 uniqueID{};
-  SizeInt size{};
+  Size size{};
   mutable void* ptr{};
   bool isEmpty{true};
 
@@ -34,7 +35,7 @@ class ObjectHandle {
   T* operator->() const;
   T& operator*();
 
-  ObjectHandle(void* mem, U32 uniqueID, SizeInt size);
+  ObjectHandle(void* mem, U32 uniqueID, Size size);
 
   T* GetObjectPtr() const;
   void EraseObject() const;
@@ -54,7 +55,7 @@ T& ObjectHandle<T>::operator*() {
 }
 
 template <typename T>
-ObjectHandle<T>::ObjectHandle(void* mem, const U32 uniqueID, const SizeInt size)
+ObjectHandle<T>::ObjectHandle(void* mem, const U32 uniqueID, const Size size)
     : uniqueID(uniqueID) {
   HandleEntry* entry = nullptr;
 
@@ -68,7 +69,8 @@ ObjectHandle<T>::ObjectHandle(void* mem, const U32 uniqueID, const SizeInt size)
   }
 
   if (entry == nullptr) {
-    throw std::out_of_range{"ObjectHandle => No empty slot in handle table"};
+    throw std::out_of_range{
+        "ObjectHandle::ObjectHandle => No empty slot in handle table"};
   }
 
   T* t = new (mem) T{};
@@ -99,14 +101,16 @@ void ObjectHandle<T>::EraseObject() const {
   HandleEntry& entry = MemoryArena::entryArr[index];
 
   if (entry.isEmpty) {
-    throw std::exception{
-        "ObjectHandle::DeleteObject => Double deleting handle!"};
+    throw std::exception{Utilities::Msg(
+        "ObjectHandle::EraseObject => ObjectHandle::DeleteObject => Double "
+        "deleting handle!")};
   }
 
   if (uniqueID != entry.uniqueID) {
-    throw std::exception{
-        "ObjectHandle::DeleteObject => You are trying to delete an "
-        "object you don't own!"};
+    throw std::exception{Utilities::Msg(
+        "ObjectHandle::EraseObject => ObjectHandle::DeleteObject => You are "
+        "trying to delete an "
+        "object you don't own!")};
   }
 
   static_cast<T*>(entry.ptr)->~T();

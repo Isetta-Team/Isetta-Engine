@@ -1,26 +1,9 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include <Windows.h>
-#include <chrono>
-#include <cstdlib>
-#include <string>
-#include "Audio/AudioSource.h"
-#include "Core/Config/Config.h"
-#include "Core/Debug/Logger.h"
-#include "Core/FileSystem.h"
-#include "Core/Math/Random.h"
-#include "Core/Memory/MemoryManager.h"
-#include "Core/Memory/ObjectHandle.h"
-#include "Core/Memory/StackAllocator.h"
-#include "Core/Memory/TemplatePoolAllocator.h"
 #include "EngineLoop.h"
-#include "Input/Input.h"
-#include "yojimbo/shared.h"
 
 using namespace Isetta;
-
-void RunBenchmarks();
 
 /*! \mainpage Isetta Engine
 Game engine development is a very wide field in the industry, but also a very
@@ -41,88 +24,5 @@ int main() {
   EngineLoop loop;
   loop.Run();
 
-  // auto h = FileSystem::Instance().Read(
-  //    "Resources/test/async.in",
-  //    std::function<void(const char *)>(
-  //        [](const char *buf) { printf("%s\n", buf); }));
-  // auto h = FileSystem::Instance().Read("Resources/test/async.in");
-
-  // char* buf = "abcdefghijklmnopqrstuvwxyz\n";
-  // FileSystem::Instance().Write(
-  //    "Resources/test/async.out", buf,
-  //    std::function<void(const char*)>(
-  //        [](const char* buf) { printf("> write done\n"); }),
-  //    false);
-
-  // RunBenchmarks();
-  // RunYidiTest();
-
   return 0;
-}
-
-void RunBenchmarks() {
-  using clock = std::chrono::high_resolution_clock;
-  typedef std::chrono::duration<float> second;
-
-  std::unordered_map<std::string, std::function<void()>> benchmarks;
-
-  benchmarks.insert({"1. new and delete", []() {
-                       const int count = 10000;
-                       AudioSource *audioSources[count];
-                       for (auto &audioSource : audioSources) {
-                         audioSource = new AudioSource();
-                       }
-                       for (auto &audioSource : audioSources) {
-                         delete audioSource;
-                       }
-                     }});
-
-  benchmarks.insert({"2. malloc and free", []() {
-                       const int count = 10000;
-                       AudioSource *audioSources[count];
-                       for (auto &audioSource : audioSources) {
-                         audioSource = new (std::malloc(sizeof(AudioSource)))
-                             AudioSource();
-                       }
-                       for (auto &audioSource : audioSources) {
-                         std::free(audioSource);
-                       }
-                     }});
-
-  benchmarks.insert({"3. Stack Allocator", []() {
-                       const int count = 10000;
-                       AudioSource *audioSources[count];
-                       StackAllocator stackAllocator(
-                           sizeof(AudioSource) * count + 100);
-                       for (auto &audioSource : audioSources) {
-                         audioSource = stackAllocator.New<AudioSource>();
-                       }
-                     }});
-
-  benchmarks.insert({"4. Pool Allocator", []() {
-                       const int count = 10000;
-                       AudioSource *audioSources[count];
-                       TemplatePoolAllocator<AudioSource> poolAllocator(count);
-                       for (auto &audioSource : audioSources) {
-                         audioSource = poolAllocator.Get();
-                       }
-
-                       for (auto &audioSource : audioSources) {
-                         poolAllocator.Free(audioSource);
-                       }
-                     }});
-
-  // Benchmarking
-  const int testIterations = 10;
-  for (auto &test : benchmarks) {
-    float time = 0;
-    for (int a = 0; a < testIterations; a++) {
-      const auto benchmarkStart = clock::now();
-      test.second();
-      const auto benchmarkEnd = clock::now();
-      time += second(benchmarkEnd - benchmarkStart).count();
-    }
-    std::string duration = std::to_string((time / testIterations)) + "s";
-    LOG_INFO(Debug::Channel::Memory, {test.first + ": " + duration});
-  }
 }

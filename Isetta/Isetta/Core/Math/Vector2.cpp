@@ -18,6 +18,8 @@ const Vector2 Vector2::right = Vector2(1.f, 0.f);
 const Vector2 Vector2::down = Vector2(0.f, -1.f);
 const Vector2 Vector2::left = Vector2(-1.f, 0.f);
 
+Vector2::Vector2(float inX, float inY): x{inX}, y{inY} {}
+
 Vector2::Vector2(const Vector3Int& inIntVector)
     : x{static_cast<float>(inIntVector.x)},
       y{static_cast<float>(inIntVector.y)} {}

@@ -3,86 +3,140 @@
  */
 #pragma once
 
+#include <sstream>
 #include <string>
+#include "Core/Config/ICVar.h"
 #include "Core/Math/Vector3.h"
 #include "SID/sid.h"
 
 namespace Isetta {
-
-#define CVAR_INT 1
-#define CVAR_FLOAT 2
-#define CVAR_STRING 3
-#define CVAR_VECTOR3 4
-
-class ICVar {
+/**
+ * @brief Console Variable to be used by Config and console
+ *
+ * @tparam T Template type must be have ostream operator>> and empty constructor
+ */
+template <typename T>
+class CVar : public ICVar {
  public:
-  const std::string name;
-  const StringId sid;
+  /**
+   * @brief Construct a new CVar object
+   *
+   * @param name of the CVar to put into the map, referenced in configuration
+   * and console
+   * @param defaultValue the value set by default (if not found in the config
+   * file)
+   */
+  CVar(const std::string& name, const T& defaultValue)
+      : ICVar(name), value{defaultValue} {
+    CVarRegistry::RegisterVariable(this);
+  }
+  /**
+   * @brief Construct a new CVar object, default value set by default
+   * constructor of templated parameter
+   *
+   * @param name of the CVar to put into the map, referenced in configuration
+   * and console
+   */
+  explicit CVar(const std::string& name) : ICVar(name), value{T()} {
+    CVarRegistry::RegisterVariable(this);
+  }
+  /**
+   * @brief Set the Val object
+   *
+   * @param strVal string value to be converted into value of type T
+   */
+  inline void SetVal(const std::string& strVal) override {
+    std::istringstream iss(strVal);
+    iss >> value;
+  }
+  /**
+   * @brief Get the Val object
+   *
+   * @return T the value set of the object
+   */
+  inline T GetVal() const { return value; }
 
-  virtual void SetVal(std::string strVal) = 0;
-  virtual int GetType() const = 0;
-
- protected:
-  explicit ICVar(std::string name) : name{name}, sid{SID(name.c_str())} {}
-  virtual ~ICVar() {}
+ private:
+  T value;
 };
 
-class CVarInt : public ICVar {
- public:
-  int iVal;
-
-  CVarInt(std::string name, int value);
-  explicit CVarInt(std::string name);
-
-  inline void SetVal(std::string strVal) override { iVal = stoi(strVal); }
-
-  inline int GetVal() const { return iVal; }
-
-  int GetType() const override { return CVAR_INT; }
-};
-
-class CVarFloat : public ICVar {
- public:
-  float fVal;
-
-  CVarFloat(std::string name, float value);
-  explicit CVarFloat(std::string name);
-
-  inline void SetVal(std::string strVal) override { fVal = stof(strVal); }
-
-  inline float GetVal() const { return fVal; }
-
-  inline int GetType() const override { return CVAR_FLOAT; }
-};
-
+/**
+ * @brief Console Variable of type string to be used by Config and console.
+ * Can use CVar<T> however when reading the string from configuration, but with
+ * templated parameter the spaces are removed
+ *
+ */
 class CVarString : public ICVar {
  public:
-  std::string sVal;
-
-  CVarString(std::string name, std::string value);
-  explicit CVarString(std::string name);
-
-  inline void SetVal(std::string strVal) override { sVal = strVal; }
-
+  /**
+   * @brief Construct a new CVarString object
+   *
+   * @param name of the CVar to put into the map, referenced in configuration
+   * and console
+   * @param defaultValue the value set by default (if not found in the config
+   * file)
+   */
+  CVarString(const std::string& name, const std::string& defaultValue);
+  /**
+   * @brief Construct a new CVar object, default value set by default
+   * constructor of string
+   *
+   * @param name of the CVar to put into the map, referenced in configuration
+   * and console
+   */
+  explicit CVarString(const std::string& name);
+  /**
+   * @brief Set the Val object
+   *
+   * @param strVal the string to set the value as
+   */
+  inline void SetVal(const std::string& strVal) override { sVal = strVal; }
+  /**
+   * @brief Get the Val object
+   *
+   * @return std::string the value set of the object
+   */
   inline std::string GetVal() const { return sVal; }
 
-  inline int GetType() const override { return CVAR_STRING; }
+ private:
+  std::string sVal;
 };
 
 class CVarVector3 : public ICVar {
  public:
-  Math::Vector3 v3Val;
-
-  CVarVector3(std::string name, Math::Vector3 value);
-  explicit CVarVector3(std::string name);
-
-  inline void SetVal(std::string strVal) override {
+  /**
+   * @brief Construct a new CVarVector3 object
+   *
+   * @param name of the CVar to put into the map, referenced in configuration
+   * and console
+   * @param defaultValue the value set by default (if not found in the config
+   * file)
+   */
+  CVarVector3(const std::string& name, const Math::Vector3& defaultValue);
+  /**
+   * @brief Construct a new CVar object, default value set by default
+   * constructor of vector3
+   *
+   * @param name of the CVar to put into the map, referenced in configuration
+   * and console
+   */
+  explicit CVarVector3(const std::string& name);
+  /**
+   * @brief Set the Val object
+   *
+   * @param strVal string value to be converted into value of Vector3
+   */
+  inline void SetVal(const std::string& strVal) override {
     v3Val = Math::Vector3::FromString(strVal);
   }
-
+  /**
+   * @brief Get the Val object
+   *
+   * @return Math::Vector3 the value set of the object
+   */
   inline Math::Vector3 GetVal() const { return v3Val; }
 
-  inline int GetType() const override { return CVAR_VECTOR3; }
+ private:
+  Math::Vector3 v3Val;
 };
-
 }  // namespace Isetta

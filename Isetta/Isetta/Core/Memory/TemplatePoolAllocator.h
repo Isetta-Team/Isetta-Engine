@@ -5,6 +5,7 @@
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Memory/MemoryAllocator.h"
+#include "Utilities.h"
 
 namespace Isetta {
 
@@ -12,7 +13,7 @@ template <typename T>
 class TemplatePoolAllocator {
  public:
   TemplatePoolAllocator() = default;
-  explicit TemplatePoolAllocator(SizeInt count);
+  explicit TemplatePoolAllocator(Size count);
   ~TemplatePoolAllocator() = default;
   T* Get();
   void Free(T*);
@@ -25,21 +26,20 @@ class TemplatePoolAllocator {
     Node();
   };
 
-  SizeInt capacity;
-  SizeInt elementSize;
+  Size capacity{};
+  Size elementSize{};
   Node* head;
-  void* memHead;
+  void* memHead{};
 };
 
 template <typename T>
-TemplatePoolAllocator<T>::TemplatePoolAllocator(const SizeInt count) {
+TemplatePoolAllocator<T>::TemplatePoolAllocator(const Size count) {
   if (sizeof(Node*) > sizeof(T)) {
-    LOG_ERROR(Debug::Channel::Memory,
-              "Using TemplatePoolAllocator for type %s will incur more "
-              "overhead memory than the memory actually "
-              "needed for the elements",
-              typeid(T).name());
-    return;
+    throw std::exception{Utilities::Msg(
+        "TemplatePoolAllocator::TemplatePoolAllocator => Using "
+        "TemplatePoolAllocator for type %s will incur more overhead memory "
+        "than the memory actually needed for the elements",
+        typeid(T).name())};
   }
 
   capacity = count;
@@ -49,7 +49,7 @@ TemplatePoolAllocator<T>::TemplatePoolAllocator(const SizeInt count) {
   head = new (memHead) Node();
   Node* cur = head;
 
-  for (SizeInt i = 1; i < count; i++) {
+  for (Size i = 1; i < count; i++) {
     address += elementSize;
     Node* node = new (reinterpret_cast<void*>(address)) Node();
     cur->next = node;
@@ -61,7 +61,7 @@ template <typename T>
 T* TemplatePoolAllocator<T>::Get() {
   if (head == nullptr) {
     throw std::out_of_range(
-        "TemplatePoolAllocator::Get(): Not enough memory in "
+        "TemplatePoolAllocator::Get => Not enough memory in "
         "TemplatePoolAllocator");
   }
 

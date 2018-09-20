@@ -9,6 +9,7 @@
 // TODO(YIDI): do error checking
 // #include "fmod_errors.h"
 #include "Core/ModuleManager.h"
+#include "Core/IsettaAlias.h"
 
 namespace Isetta {
 
@@ -19,7 +20,7 @@ class AudioModule {
 
   void StartUp();
   void LoadAllAudioClips();
-  void Update(float deltaTime);
+  void Update(float deltaTime) const;
   void ShutDown();
 
   FMOD::Sound* FindSound(const char* soundName);
@@ -27,7 +28,7 @@ class AudioModule {
 
   FMOD::System* fmodSystem;
   std::string soundFilesRoot;
-  std::unordered_map<std::uint64_t, FMOD::Sound*> soundMap;
+  std::unordered_map<U64, FMOD::Sound*> soundMap;
 
   friend class AudioSource;
   friend class ModuleManager;

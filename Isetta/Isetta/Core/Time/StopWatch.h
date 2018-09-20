@@ -23,7 +23,7 @@ class StopWatch {
 
   void Start();
   float EvaluateInSecond() const;
-  Int64 EvaluateInMilliseconds() const;
+  I64 EvaluateInMilliseconds() const;
   void Reset();
 };
 }  // namespace Isetta

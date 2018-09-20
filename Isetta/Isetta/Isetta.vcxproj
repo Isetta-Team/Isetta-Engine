@@ -105,6 +105,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Time\Clock.cpp" />
     <ClCompile Include="Core\Time\StopWatch.cpp" />
     <ClCompile Include="EngineLoop.cpp" />
+    <ClCompile Include="Graphics\AnimationNode.cpp" />
     <ClCompile Include="Graphics\LightNode.cpp" />
     <ClCompile Include="Graphics\ModelNode.cpp" />
     <ClCompile Include="Graphics\RenderModule.cpp" />
@@ -132,12 +133,14 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\FileSystem.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Networking\NetworkingModule.cpp" />
+    <ClCompile Include="Networking\NetworkManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioModule.h" />
     <ClInclude Include="Audio\AudioSource.h" />
     <ClInclude Include="Core\Config\Config.h" />
     <ClInclude Include="Core\Color.h" />
+    <ClInclude Include="Core\Config\ICVar.h" />
     <ClInclude Include="Core\DataStructures\RingBuffer.h" />
     <ClInclude Include="Core\Debug\Debug.h" />
     <ClInclude Include="Core\IsettaAlias.h" />
@@ -155,7 +158,6 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Debug\Logger.h" />
     <ClInclude Include="Core\Debug\DebugDraw.h" />
     <ClCompile Include="Core\Debug\Assert.h" />
-    <ClInclude Include="Core\IModule.h" />
     <ClInclude Include="Core\Memory\DoubleBufferedAllocator.h" />
     <ClInclude Include="Core\Memory\MemoryAllocator.h" />
     <ClInclude Include="Core\Memory\MemoryArena.h" />
@@ -170,6 +172,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Time\Clock.h" />
     <ClInclude Include="Core\Time\StopWatch.h" />
     <ClInclude Include="EngineLoop.h" />
+    <ClInclude Include="Graphics\AnimationNode.h" />
     <ClInclude Include="Graphics\LightNode.h" />
     <ClInclude Include="Graphics\ModelNode.h" />
     <ClInclude Include="Graphics\RenderModule.h" />
@@ -181,6 +184,8 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Input\InputEnum.h" />
     <ClInclude Include="Input\InputModule.h" />
     <ClInclude Include="Core\FileSystem.h" />
+    <ClInclude Include="Networking\NetworkManager.h" />
+    <ClInclude Include="Utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Sound\singing.wav" />

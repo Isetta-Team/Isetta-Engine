@@ -10,8 +10,8 @@ namespace Isetta {
 class EngineLoop {
  public:
   struct LoopConfig {
-    CVarInt maxFps = {"max_fps", 16};
-    CVarInt maxSimCount = {"max_simulation_count", 5};
+    CVar<int> maxFps{"max_fps", 16};
+    CVar<int> maxSimCount{"max_simulation_count", 5};
   };
 
  private:
@@ -25,6 +25,8 @@ class EngineLoop {
   void StartUp();
   void Update();
   void ShutDown();
+
+  void StartGameClock() const;
 
  public:
   EngineLoop() = default;

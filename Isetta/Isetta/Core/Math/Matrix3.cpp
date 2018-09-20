@@ -39,7 +39,7 @@ Matrix3::Matrix3(const Matrix3& inMatrix) {
   }
 }
 
-Matrix3::Matrix3(Matrix3&& inMatrix) {
+Matrix3::Matrix3(Matrix3&& inMatrix) noexcept {
   for (int i = 0; i < 9; i++) {
     data[i] = inMatrix.data[i];
   }
@@ -50,7 +50,7 @@ Matrix3& Matrix3::operator=(const Matrix3& inMatrix) {
   }
   return *this;
 }
-Matrix3& Matrix3::operator=(Matrix3&& inMatrix) {
+Matrix3& Matrix3::operator=(Matrix3&& inMatrix) noexcept {
   for (int i = 0; i < 9; i++) {
     data[i] = inMatrix.data[i];
   }

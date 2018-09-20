@@ -40,8 +40,8 @@ void ModuleManager::StartUp() {
 void ModuleManager::SimulationUpdate(float deltaTime) {
   audioModule->Update(deltaTime);
   inputModule->Update(deltaTime);
+  networkingModule->Update(deltaTime);
   memoryManager->Update();
-  //networkingModule->Update(deltaTime);
 }
 
 void ModuleManager::RenderUpdate(float deltaTime) {
@@ -50,11 +50,11 @@ void ModuleManager::RenderUpdate(float deltaTime) {
 }
 
 void ModuleManager::ShutDown() {
+  networkingModule->ShutDown();
   audioModule->ShutDown();
   renderModule->ShutDown();
   inputModule->ShutDown();
   windowModule->ShutDown();
   memoryManager->ShutDown();
-  networkingModule->ShutDown();
 }
 }  // namespace Isetta

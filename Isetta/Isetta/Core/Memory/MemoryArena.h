@@ -16,7 +16,7 @@ class MemoryArena {
 
  private:
   MemoryArena() = default;
-  explicit MemoryArena(SizeInt size);
+  explicit MemoryArena(Size size);
   PtrInt leftAddress{};
   PtrInt rightAddress{};
   void* memHead{};
@@ -27,7 +27,7 @@ class MemoryArena {
   template <typename T>
   void DeleteDynamic(const ObjectHandle<T>& objectToFree);
 
-  void* Alloc(SizeInt size, SizeInt& outSize);
+  void* Alloc(Size size, Size& outSize);
   void Defragment();
   void MoveLeft(U32 index);
   void Erase() const;
@@ -54,7 +54,7 @@ ObjectHandle<T>& MemoryArena::NewDynamic() {
   // TODO(YIDI): I'm not sure this is the right way to implement object handles,
   // the handle itself should not need to be freed. But I think usage-wise this
   // is optimal
-  SizeInt size;
+  Size size;
   void* mem = Alloc(sizeof(T), size);
   auto handle = ObjectHandle<T>{mem, nextUniqueID++, size};
   addressIndexMap.emplace(handle.GetObjAddress(), handle.index);

@@ -6,15 +6,16 @@
 #include "Core/Debug/Logger.h"
 #include "Core/Memory/ObjectHandle.h"
 #include "Input/Input.h"
+#include "Core/Debug/Assert.h"
 
 namespace Isetta {
 
 HandleEntry MemoryArena::entryArr[maxHandleCount];
 
 // TODO(YIDI): This is only allocating from top
-void* MemoryArena::Alloc(const SizeInt size, SizeInt& outSize) {
+void* MemoryArena::Alloc(const Size size, Size& outSize) {
   PtrInt lastAddress;
-  SizeInt lastSize;
+  Size lastSize;
 
   if (addressIndexMap.empty()) {
     lastAddress = leftAddress;
@@ -112,7 +113,7 @@ void MemoryArena::Print() const {
 
 PtrInt MemoryArena::GetSize() const {
   PtrInt lastAddress;
-  SizeInt lastSize;
+  Size lastSize;
 
   if (addressIndexMap.empty()) {
     lastAddress = leftAddress;
@@ -128,7 +129,7 @@ PtrInt MemoryArena::GetSize() const {
   return (lastAddress + lastSize) - leftAddress;
 }
 
-MemoryArena::MemoryArena(const SizeInt size) {
+MemoryArena::MemoryArena(const Size size) {
   memHead = std::malloc(size);
   leftAddress = reinterpret_cast<PtrInt>(memHead);
   rightAddress = leftAddress + size;

@@ -5,14 +5,14 @@
 
 namespace Isetta {
 
-DoubleBufferedAllocator::DoubleBufferedAllocator(const SizeInt size)
+DoubleBufferedAllocator::DoubleBufferedAllocator(const Size size)
     : stacks{StackAllocator{size}, StackAllocator{size}}, curStackIndex(0) {}
 
-void* DoubleBufferedAllocator::AllocUnAligned(const SizeInt size) {
+void* DoubleBufferedAllocator::AllocUnAligned(const Size size) {
   return stacks[curStackIndex].AllocUnaligned(size);
 }
 
-void* DoubleBufferedAllocator::Alloc(const SizeInt size, const U8 alignment) {
+void* DoubleBufferedAllocator::Alloc(const Size size, const U8 alignment) {
   return stacks[curStackIndex].Alloc(size, alignment);
 }
 

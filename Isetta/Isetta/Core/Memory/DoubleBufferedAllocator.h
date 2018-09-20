@@ -13,9 +13,9 @@ class DoubleBufferedAllocator {
 
  private:
   DoubleBufferedAllocator() = default;
-  explicit DoubleBufferedAllocator(SizeInt size);
-  void* AllocUnAligned(SizeInt size);
-  void* Alloc(SizeInt size, U8 alignment = 16);
+  explicit DoubleBufferedAllocator(Size size);
+  void* AllocUnAligned(Size size);
+  void* Alloc(Size size, U8 alignment = 16);
   void SwapBuffer();
   void ClearCurrentBuffer();
   void Erase();

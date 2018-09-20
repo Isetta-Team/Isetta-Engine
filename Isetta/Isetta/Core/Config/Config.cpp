@@ -6,15 +6,15 @@
 #include <string.h>
 #include <functional>
 #include <sstream>
+#include <type_traits>
+#include "Core/Config/ICVar.h"
 #include "Core/FileSystem.h"
 
-void test(const char* t) {}
-
 namespace Isetta {
-void Config::Read(const std::string& filepath) {
-  std::function<void(const char*)> fProcess =
-      std::bind(&Config::ProcessFile, this, std::placeholders::_1);
-  readFile = FileSystem::Instance().Read(filepath, fProcess);
+void Config::Read(const std::string& filePath) {
+  const char* contents = FileSystem::Instance().Read(filePath);
+  ProcessFile(contents);
+  delete contents;
 }
 
 void Config::ProcessFile(const char* contentBuffer) {
@@ -28,29 +28,14 @@ void Config::ProcessFile(const char* contentBuffer) {
       lines = strtok_s(NULL, "\n", &nextToken);
       continue;
     }
-    size_t sepPos = line.find('=');
+    Size sepPos = line.find('=');
     std::string key, value;
     ExtractKey(&key, sepPos, line);
     ExtractValue(&value, sepPos, line);
     StringId keySid = SID(key.c_str());
     ICVar* cvar = cvarsRegistry.Find(keySid);
     if (cvar != nullptr) {
-      switch (cvar->GetType()) {
-        case CVAR_INT:
-          static_cast<CVarInt*>(cvar)->SetVal(value);
-          break;
-        case CVAR_FLOAT:
-          static_cast<CVarFloat*>(cvar)->SetVal(value);
-          break;
-        case CVAR_STRING:
-          static_cast<CVarString*>(cvar)->SetVal(value);
-          break;
-        case CVAR_VECTOR3:
-          static_cast<CVarVector3*>(cvar)->SetVal(value);
-          break;
-        default:
-          throw std::exception("Config::Read Unexpected type");
-      }
+      cvar->SetVal(value);
     }
     lines = strtok_s(NULL, "\n", &nextToken);
   }
@@ -79,7 +64,7 @@ bool Config::ValidLine(const std::string& line) const {
   }
 
   int size = tmp.length();
-  for (size_t i = tmp.find('=') + 1; i < size; i++) {
+  for (Size i = tmp.find('=') + 1; i < size; i++) {
     if (tmp[i] != ' ') {
       return true;
     }
@@ -87,16 +72,16 @@ bool Config::ValidLine(const std::string& line) const {
 
   return false;
 }
-void Config::ExtractKey(std::string* key, const size_t& sepPos,
+void Config::ExtractKey(std::string* key, const Size& sepPos,
                         const std::string line) {
   *key = line.substr(0, sepPos);
-  size_t pos = key->find_first_of("\t ");
+  Size pos = key->find_first_of("\t ");
   if (pos != std::string::npos) {
     key->erase(pos);
   }
 }
 
-void Config::ExtractValue(std::string* value, const size_t& sepPos,
+void Config::ExtractValue(std::string* value, const Size& sepPos,
                           const std::string line) {
   *value = line.substr(sepPos + 1);
   value->erase(0, value->find_first_not_of("\t "));

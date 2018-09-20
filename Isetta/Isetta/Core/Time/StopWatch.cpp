@@ -11,7 +11,7 @@ float StopWatch::EvaluateInSecond() const {
   return (HighResClock::now() - startTime).count() / 1000.f;
 }
 
-Int64 StopWatch::EvaluateInMilliseconds() const {
+I64 StopWatch::EvaluateInMilliseconds() const {
   return (HighResClock::now() - startTime).count();
 }
 

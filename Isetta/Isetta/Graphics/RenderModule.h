@@ -7,22 +7,28 @@
 #include <Horde3D.h>
 #include <string>
 #include "Core/Config/CVar.h"
+#include <list>
 
 namespace Isetta {
 class RenderModule {
  public:
   struct RenderConfig {
-    CVarInt hordeLoadTextures{"horde_load_textures", 1};
-    CVarInt hordeTexCompression{"horde_tex_compression", 0};
-    CVarInt hordeMaxAnisotropy{"horde_max_abusotropy", 4};
-    CVarInt hordeShadowmapSize{"horde_shadowmap_size", 2048};
-    CVarInt hordeFastAnimation{"horde_fast_animation", 1};
-    CVarInt hordeSampleCount{"horde_sample_count", 0};
-    CVarInt hordeDumpFailedShaders{"horde_dump_failed_shaders", 1};
-    CVarFloat fieldOfView{"field_of_view", 45.0};
-    CVarFloat nearClippingPlane{"near_clipping_plane", 0.1};
-    CVarFloat farClippingPlane{"far_clipping_plane", 1000.0};
+    CVar<int> hordeLoadTextures{"horde_load_textures", 1};
+    CVar<int> hordeTexCompression{"horde_tex_compression", 0};
+    CVar<int> hordeMaxAnisotropy{"horde_max_abusotropy", 4};
+    CVar<int> hordeShadowmapSize{"horde_shadowmap_size", 2048};
+    CVar<int> hordeFastAnimation{"horde_fast_animation", 1};
+    CVar<int> hordeSampleCount{"horde_sample_count", 0};
+    CVar<int> hordeDumpFailedShaders{"horde_dump_failed_shaders", 1};
+    CVar<float> fieldOfView{"field_of_view", 45.0};
+    CVar<float> nearClippingPlane{"near_clipping_plane", 0.1};
+    CVar<float> farClippingPlane{"far_clipping_plane", 1000.0};
   };
+
+  /**
+   * \brief The array of animation nodes
+   */
+  std::list<class AnimationNode*> animationNodes;
 
  private:
   RenderModule() = default;
