@@ -51,20 +51,20 @@ Matrix4::Matrix4(const Matrix4& inMatrix) {
 }
 
 Matrix4::Matrix4(Matrix4&& inMatrix) {
-  for (int i = 0; i < 9; i++) {
+  for (int i = 0; i < 16; i++) {
     data[i] = inMatrix.data[i];
   }
 }
 
 Matrix4& Matrix4::operator=(const Matrix4& inMatrix) {
-  for (int i = 0; i < 9; i++) {
+  for (int i = 0; i < 16; i++) {
     data[i] = inMatrix.data[i];
   }
   return *this;
 }
 
 Matrix4& Matrix4::operator=(Matrix4&& inMatrix) {
-  for (int i = 0; i < 9; i++) {
+  for (int i = 0; i < 16; i++) {
     data[i] = inMatrix.data[i];
   }
   return *this;
