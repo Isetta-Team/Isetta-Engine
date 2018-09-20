@@ -58,7 +58,7 @@ void EngineLoop::StartUp() {
 
   // Register Input callback from player script
   U64 handleA, handleB, handleC;
-  handleA = Input::RegisterKeyPressCallback(KeyCode::A, [&handleA]() {
+  handleA = Input::RegisterKeyPressCallback(KeyCode::NUM1, [&handleA]() {
     LOG_INFO(Debug::Channel::General, "A pressed");
     Input::UnregisterKeyPressCallback(KeyCode::A, handleA);
   });

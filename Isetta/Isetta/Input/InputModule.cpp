@@ -181,7 +181,7 @@ int InputModule::KeyCodeToGlfwKey(KeyCode key) const {
     case KeyCode::SEMICOLON:
     case KeyCode::EQUAL:
       glfwKey =
-          GLFW_KEY_A - static_cast<int>(KeyCode::A) + static_cast<int>(key);
+          GLFW_KEY_COMMA - static_cast<int>(KeyCode::COMMA) + static_cast<int>(key);
       break;
     case KeyCode::A:
     case KeyCode::B:
