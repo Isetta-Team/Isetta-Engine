@@ -71,6 +71,7 @@ class NetworkManager {
 
   static bool ClientIsConnected();
   static bool ServerIsRunning();
+  static int GetMaxClients();
 
  private:
   static class NetworkingModule* networkingModule;

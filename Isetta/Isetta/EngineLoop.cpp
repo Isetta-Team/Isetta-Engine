@@ -112,7 +112,9 @@ void EngineLoop::Update() {
     if (!sIsPressed) {
       sIsPressed = true;
       if (NetworkManager::ServerIsRunning()) {
-        NetworkManager::SendStringMessageFromServer(0, "Hi!");
+        for (int i = 0; i < NetworkManager::GetMaxClients(); i++) {
+          NetworkManager::SendStringMessageFromServer(i, "Hi!");
+        }
       }
     }
   } else {

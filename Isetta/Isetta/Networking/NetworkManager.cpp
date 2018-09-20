@@ -23,12 +23,21 @@ void NetworkManager::SendStringMessageFromClient(std::string string) {
 }
 
 void NetworkManager::SendHandleMessageFromServer(int clientIdx, int handle) {
+  if (!networkingModule->server->IsClientConnected(clientIdx)) {
+    return;
+  }
+
   HandleMessage* message = static_cast<HandleMessage*>(
       networkingModule->server->CreateMessage(clientIdx, HANDLE_MESSAGE));
   message->handle = handle;
   networkingModule->AddServerToClientMessage(clientIdx, message);
 }
-void NetworkManager::SendStringMessageFromServer(int clientIdx, std::string string) {
+void NetworkManager::SendStringMessageFromServer(int clientIdx,
+                                                 std::string string) {
+  if (!networkingModule->server->IsClientConnected(clientIdx)) {
+    return;
+  }
+
   StringMessage* message = static_cast<StringMessage*>(
       networkingModule->server->CreateMessage(clientIdx, STRING_MESSAGE));
   message->string = string;
@@ -58,6 +67,10 @@ bool NetworkManager::ClientIsConnected() {
 
 bool NetworkManager::ServerIsRunning() {
   return networkingModule->server && networkingModule->server->IsRunning();
+}
+
+int NetworkManager::GetMaxClients() {
+  return !ServerIsRunning() ? -1 : networkingModule->server->GetMaxClients();
 }
 
 void NetworkManager::CloseServer() {
