@@ -179,7 +179,7 @@ void NetworkingModule::ProcessClientToServerMessages(int clientIdx) {
             reinterpret_cast<HandleMessage*>(message);
         LOG(Debug::Channel::Networking, "Client %d sends handle #%d", clientIdx,
             handleMessage->handle);
-        if (handleMessage->handle == 0) {
+        /*if (handleMessage->handle == 0) {
           AnimationNode::Play();
         }
         if (handleMessage->handle == 1) {
@@ -189,6 +189,11 @@ void NetworkingModule::ProcessClientToServerMessages(int clientIdx) {
           static AudioSource* audio = new AudioSource{};
           audio->SetAudioClip("gunshot.aiff");
           audio->Play(false, 1.f);
+        }*/
+        for (int i = 0; i < server->GetMaxClients(); i++) {
+          HandleMessage* newMessage = static_cast<HandleMessage*>(
+              server->CreateMessage(i, HANDLE_MESSAGE));
+          AddServerToClientMessage(i, newMessage);
         }
 
       } break;
@@ -219,6 +224,17 @@ void NetworkingModule::ProcessServerToClientMessages() {
         HandleMessage* handleMessage = static_cast<HandleMessage*>(message);
         LOG(Debug::Channel::Networking, "Server sends handle #%d",
             handleMessage->handle);
+        if (handleMessage->handle == 0) {
+          AnimationNode::Play();
+        }
+        if (handleMessage->handle == 1) {
+          AnimationNode::Stop();
+        }
+        if (handleMessage->handle == 2) {
+          static AudioSource* audio = new AudioSource{};
+          audio->SetAudioClip("gunshot.aiff");
+          audio->Play(false, 1.f);
+        }
       } break;
       case STRING_MESSAGE: {
         StringMessage* stringMessage = static_cast<StringMessage*>(message);
@@ -242,7 +258,7 @@ void NetworkingModule::Connect(const char* serverAddress, int serverPort,
 }
 
 void NetworkingModule::Disconnect() {
-  if (!client->IsConnected()) {
+  if (!client->IsConnected() && !client->IsConnecting()) {
     throw std::exception(
         "NetworkingModule::Disconnect => Cannot disconnect the client if it is "
         "not already connected.");
