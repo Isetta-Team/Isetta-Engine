@@ -93,6 +93,7 @@ HANDLE FileSystem::AccessFile(const char* filePath, const DWORD access,
       CreateDirectory(folder, NULL);
       folder = next;
     }
+    delete filePathTok;
   }
   return CreateFile(filePath, access, share, NULL, creation, async, NULL);
 }
