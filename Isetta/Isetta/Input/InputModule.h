@@ -97,6 +97,20 @@ class InputModule {
    */
   void UnregisterMouseReleaseCallback(MouseButtonCode mouseButton, U64 handle);
 
+  // TODO(Chaojie + Jacob): Talk about these, should unregister return bool?
+  U64 RegisterMouseButtonCallback(
+      std::function<void(GLFWwindow*, int, int, int)> callback);
+  void UnregisterMouseButtonCallback(U64 handle);
+  U64 RegisterKeyCallback(
+      std::function<void(GLFWwindow*, int, int, int, int)> callback);
+  void UnegisterKeyCallback(U64 handle);
+  U64 RegisterScrollCallback(
+      std::function<void(GLFWwindow*, double, double)> callback);
+  void UnegisterScrollCallback(U64 handle);
+  U64 ExternalRegisterCharCallback(
+      std::function<void(GLFWwindow*, unsigned int)> callback);
+  void UnegisterCharCallback(U64 handle);
+
  private:
   static GLFWwindow* winHandle;
 
@@ -124,8 +138,24 @@ class InputModule {
                                int action, int mods);
   static void MouseEventListener(GLFWwindow* win, int button, int action,
                                  int mods);
+  static void CharEventListener(GLFWwindow*, unsigned int c);
+  static void ScrollEventListener(GLFWwindow*, double xoffset, double yoffset);
+
+  static std::unordered_map<U64,
+                            std::function<void(GLFWwindow*, int, int, int)>>
+      mouseButtonCallbacks;
+  static std::unordered_map<
+      U64, std::function<void(GLFWwindow*, int, int, int, int)>>
+      keyCallbacks;
+  static std::unordered_map<U64,
+                            std::function<void(GLFWwindow*, double, double)>>
+      scrollCallbacks;
+  static std::unordered_map<U64,
+                            std::function<void(GLFWwindow*, unsigned int c)>>
+      charCallbacks;
 
   // TODO(Chaojie) Discuss if one handle for all callbacks is enough
+  // TODO(Jacob) U64 might be overkill? maybe just U16?
   static U64 totalHandle;
 
   friend class ModuleManager;
