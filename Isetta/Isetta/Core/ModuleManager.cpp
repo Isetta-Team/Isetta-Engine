@@ -35,8 +35,8 @@ void ModuleManager::StartUp() {
   audioModule->StartUp();
   windowModule->StartUp();
   renderModule->StartUp(windowModule->winHandle);
-  guiModule->StartUp(windowModule->winHandle);
   inputModule->StartUp(windowModule->winHandle);
+  guiModule->StartUp(windowModule->winHandle);
   networkingModule->StartUp();
   memoryManager->RegisterCallbacks();
 }
@@ -56,8 +56,9 @@ void ModuleManager::RenderUpdate(float deltaTime) {
 
 void ModuleManager::ShutDown() {
   networkingModule->ShutDown();
-  inputModule->ShutDown();
+  audioModule->ShutDown();
   guiModule->ShutDown();
+  inputModule->ShutDown();
   renderModule->ShutDown();
   windowModule->ShutDown();
   audioModule->ShutDown();

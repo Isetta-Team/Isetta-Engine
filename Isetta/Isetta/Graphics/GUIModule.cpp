@@ -3,6 +3,7 @@
  */
 #include "Graphics/GUIModule.h"
 
+#include "Input/InputModule.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
@@ -17,7 +18,7 @@ void GUIModule::StartUp(GLFWwindow* win) {
   (void)io;
 
   // Setup Dear ImGui binding
-  ImGui_ImplGlfw_InitForOpenGL(win, true);
+  ImGui_ImplGlfw_InitForOpenGL(win, false);
   ImGui_ImplOpenGL3_Init();
   // io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard
   // Controls io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;   // Enable
