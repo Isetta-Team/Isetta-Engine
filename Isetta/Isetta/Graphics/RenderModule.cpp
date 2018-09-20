@@ -3,7 +3,6 @@
  */
 #include "Graphics/RenderModule.h"
 
-#include <stdexcept>
 #include "Horde3DUtils.h"
 #include "Core/Config/Config.h"
 #include "Graphics/AnimationNode.h"
@@ -44,6 +43,7 @@ void RenderModule::InitRenderConfig() {
 }
 
 void RenderModule::InitHordeConfig() {
+  h3dSetOption(H3DOptions::MaxLogLevel, 0);
   h3dSetOption(H3DOptions::LoadTextures,
                Config::Instance().renderConfig.hordeLoadTextures.GetVal());
   h3dSetOption(H3DOptions::TexCompression,
