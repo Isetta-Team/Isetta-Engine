@@ -31,7 +31,7 @@ void NetworkingModule::StartUp() {
   networkConfig.channel[0].type = yojimbo::CHANNEL_TYPE_UNRELIABLE_UNORDERED;
   networkConfig.timeout = 20;
 
-  privateKey = new uint8_t[KeyBytes];
+  privateKey = new U8[KeyBytes];
   // TODO(Caleb): Need to do something more insightful with the private key
   // than / all 0s
   memset(privateKey, 0, KeyBytes);

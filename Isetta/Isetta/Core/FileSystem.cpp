@@ -220,7 +220,7 @@ char* FileSystem::Read(const char* fileName) {
 }
 
 HANDLE FileSystem::ReadAsync(const char* fileName,
-                             const std::function<void(const char*)>& callback) {
+                             const Action<const char*>& callback) {
   HANDLE hFile = AccessFile(fileName, GENERIC_READ, NULL, OPEN_EXISTING,
                             FILE_FLAG_OVERLAPPED);
   if (GetFileError()) {
@@ -290,18 +290,18 @@ char* FileSystem::Read(const std::string& fileName) {
   return Read(fileName.c_str());
 }
 HANDLE FileSystem::ReadAsync(const std::string& fileName,
-                             const std::function<void(const char*)>& callback) {
+                             const Action<const char*>& callback) {
   return ReadAsync(fileName.c_str(), callback);
 }
 HANDLE FileSystem::WriteAsync(const std::string& fileName,
                               const char* contentBuffer,
-                              const std::function<void(const char*)>& callback,
+                              const Action<const char*>& callback,
                               const bool appendData) {
   return WriteAsync(fileName.c_str(), contentBuffer, callback, appendData);
 }
 HANDLE FileSystem::WriteAsync(const std::string& fileName,
                               const std::string& contentBuffer,
-                              const std::function<void(const char*)>& callback,
+                              const Action<const char*>& callback,
                               const bool appendData) {
   return WriteAsync(fileName.c_str(), contentBuffer.c_str(), callback,
                     appendData);

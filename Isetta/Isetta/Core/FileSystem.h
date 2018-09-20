@@ -7,6 +7,7 @@
 #include <functional>
 #include <string>
 #include <unordered_map>
+#include "Core/IsettaAlias.h"
 
 #define IOCP_EOF 3
 #define IOCP_WRITE 1
@@ -48,7 +49,7 @@ class FileSystem {
     /// Buffer which is being read into
     char* buffer;
     /// Callback function for completion of asynchronus operation
-    std::function<void(const char*)> callback;
+    Action<const char*> callback;
   } OverlapIOInfo;
 
   /**
@@ -73,7 +74,7 @@ class FileSystem {
    * @return HANDLE a handle to the file which was opened (see Microsoft API)
    */
   HANDLE ReadAsync(const char* fileName,
-                   const std::function<void(const char*)>& callback = nullptr);
+                   const Action<const char*>& callback = nullptr);
   /**
    * @brief Write to the specificed filename (with file path) asynchronusly
    *
@@ -85,7 +86,7 @@ class FileSystem {
    * @return HANDLE a handle to the file which was opened (see Microsoft API)
    */
   HANDLE WriteAsync(const char* fileName, const char* contentBuffer,
-                    const std::function<void(const char*)>& callback = nullptr,
+                    const Action<const char*>& callback = nullptr,
                     const bool appendData = true);
   /**
    * @brief Read the specificed filename (with file path) asynchronusly
@@ -95,7 +96,7 @@ class FileSystem {
    * @return HANDLE a handle to the file which was opened (see Microsoft API)
    */
   HANDLE ReadAsync(const std::string& fileName,
-                   const std::function<void(const char*)>& callback = nullptr);
+                   const Action<const char*>& callback = nullptr);
   /**
    * @brief Write to the specificed filename (with file path) asynchronusly
    *
@@ -107,7 +108,7 @@ class FileSystem {
    * @return HANDLE a handle to the file which was opened (see Microsoft API)
    */
   HANDLE WriteAsync(const std::string& fileName, const char* contentBuffer,
-                    const std::function<void(const char*)>& callback = nullptr,
+                    const Action<const char*>& callback = nullptr,
                     const bool appendData = true);
   /**
    * @brief Write to the specificed filename (with file path) asynchronusly
@@ -121,7 +122,7 @@ class FileSystem {
    */
   HANDLE WriteAsync(const std::string& fileName,
                     const std::string& contentBuffer,
-                    const std::function<void(const char*)>& callback = nullptr,
+                    const Action<const char*>& callback = nullptr,
                     const bool appendData = true);
   /**
    * @brief Cancel any/all operations of the given handle

@@ -17,10 +17,10 @@ using U64 = uint64_t;
 
 constexpr auto U64_MAX = 0xFFFFFFFFFFFFFFFF;
 
-using Int8 = int8_t;
-using Int16 = int16_t;
-using Int32 = int32_t;
-using Int64 = int64_t;
+using I8 = int8_t;
+using I16 = int16_t;
+using I32 = int32_t;
+using I64 = int64_t;
 
 using PtrDiff = std::ptrdiff_t;
 using PtrInt = uintptr_t;

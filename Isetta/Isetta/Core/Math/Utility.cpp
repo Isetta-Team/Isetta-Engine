@@ -9,6 +9,7 @@
 #include <iostream>
 #include <limits>
 #include <stdexcept>
+#include "Core/IsettaAlias.h"
 
 namespace Isetta::Math {
 const float Utility::PI = static_cast<float>(M_PI);
@@ -42,7 +43,7 @@ int Utility::ClosestPowerOfTwo(int number) {
     throw std::out_of_range(
         "Utility::ClosestPowerOfTwo: Negative numbers are not supported.");
   int ceil = number - 1;
-  for (size_t i = 1; i < sizeof(ceil) * CHAR_BIT; i *= 2) {
+  for (Size i = 1; i < sizeof(ceil) * CHAR_BIT; i *= 2) {
     ceil |= ceil >> i;
   }
   ceil++;
@@ -98,7 +99,7 @@ int Utility::NextPowerOfTwo(int number) {
     throw std::out_of_range(
         "Utility::NextPowerOfTwo: Negative numbers are not supported.");
   int ceil = number - 1;
-  for (size_t i = 1; i < sizeof(ceil) * CHAR_BIT; i *= 2) {
+  for (Size i = 1; i < sizeof(ceil) * CHAR_BIT; i *= 2) {
     ceil |= ceil >> i;
   }
   ceil++;

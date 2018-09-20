@@ -191,7 +191,6 @@
     <ClInclude Include="Audio\AudioSource.h">
       <Filter>Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Core\IsettaAlias.h" />
     <ClInclude Include="Core\Memory\StackAllocator.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
@@ -267,6 +266,9 @@
     </ClInclude>
     <ClInclude Include="Graphics\AnimationNode.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IsettaAlias.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
