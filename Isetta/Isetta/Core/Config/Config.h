@@ -62,7 +62,7 @@ class Config {
   /// RenderModule configuration CVars
   RenderModule::RenderConfig renderConfig;
   /// NetworkingModule configuration CVars
-  NetworkingModule::NetworkConfig  networkConfig;
+  NetworkingModule::NetworkConfig networkConfig;
 
   /// Max FPS of the engine
   CVar<int> maxFps = {"max_fps", 16};
@@ -72,16 +72,17 @@ class Config {
   CVarString resourcePath{"resource_path", ""};
 
   /**
-   * @brief Use the FileSystem to read the file, then call ProcessFile to parse the file and
-   * set the configuration variables
-   * 
+   * @brief Use the FileSystem to read the file, then call ProcessFile to parse
+   * the file and set the configuration variables
+   *
    * @param filePath of the configuration file
    */
   void Read(const std::string &filePath);
   /**
-   * @brief Process the content passed in by removing the comments, ignoring whitespace (keeps string
-   * whitespace in values, not keys), check for valid lines, set the CVar values
-   * 
+   * @brief Process the content passed in by removing the comments, ignoring
+   * whitespace (keeps string whitespace in values, not keys), check for valid
+   * lines, set the CVar values
+   *
    * @param contentBuffer what will be processed into the CVars
    */
   void ProcessFile(const char *contentBuffer);
@@ -91,15 +92,16 @@ class Config {
   class CVarRegistry cvarsRegistry;
 
   /**
-   * @brief Removes comments (any characters followed by '#') and carriage returns ('\r')
-   * 
+   * @brief Removes comments (any characters followed by '#') and carriage
+   * returns ('\r')
+   *
    * @param line a mutable string
    */
   void RemoveComments(std::string *line) const;
   /**
    * @brief Checks if the line is only whitespaces or if it has characters,
    * called by ProcessFile
-   * 
+   *
    * @param line should be a single line (only 1 carriage return)
    * @return true if it is only whitespace
    * @return false if it has more than just whitespace
@@ -107,7 +109,7 @@ class Config {
   bool OnlyWhitespace(const std::string &line) const;
   /**
    * @brief Checks if the line is valid, doesn't have multiple equal signs
-   * 
+   *
    * @param line should be a single line (only 1 carriage return)
    * @return true if the line is valid
    * @return false if the line has errors
@@ -115,7 +117,7 @@ class Config {
   bool ValidLine(const std::string &line) const;
   /**
    * @brief Extracts the key from the string (key is before the '=')
-   * 
+   *
    * @param key passed by reference value of the key
    * @param sepPos position of the '=' in the line
    * @param line the string which holds key/value pair
@@ -123,7 +125,7 @@ class Config {
   void ExtractKey(std::string *key, const Size &sepPos, const std::string line);
   /**
    * @brief Extracts the value from the string (value is after the '=')
-   * 
+   *
    * @param value passed by reference value of the value
    * @param sepPos position of the '=' in the line
    * @param line the string which holds key/value pair

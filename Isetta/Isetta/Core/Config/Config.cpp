@@ -14,6 +14,7 @@ namespace Isetta {
 void Config::Read(const std::string& filePath) {
   const char* contents = FileSystem::Instance().Read(filePath);
   ProcessFile(contents);
+  delete contents;
 }
 
 void Config::ProcessFile(const char* contentBuffer) {
