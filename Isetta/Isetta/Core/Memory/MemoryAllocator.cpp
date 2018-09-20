@@ -25,7 +25,7 @@ void* MemoryAllocator::AllocateAligned(const Size size, const U8 alignment) {
   const bool isValid = alignment >= 2 && alignment <= 128 &&
                        (alignment & (alignment - 1)) == 0;  // power of 2
   if (!isValid) {
-    throw std::invalid_argument("Illegal alignment in allocator");
+    throw std::invalid_argument{"Illegal alignment in allocator"};
   }
 
   const Size expandedSize = size + alignment;

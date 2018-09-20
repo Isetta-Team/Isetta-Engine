@@ -183,6 +183,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Input\InputModule.h" />
     <ClInclude Include="Core\FileSystem.h" />
     <ClInclude Include="Networking\NetworkManager.h" />
+    <ClInclude Include="Utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Sound\singing.wav" />

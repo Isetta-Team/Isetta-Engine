@@ -92,7 +92,8 @@ void MemoryManager::DeleteDynamic(ObjectHandle<T>& objToFree) {
     instance->handlePool.Free(instance->handleLoopUp[objToFree.index]);
     instance->handleLoopUp[objToFree.index] = nullptr;
   } else {
-    LOG_ERROR(Debug::Channel::Memory, "Double deleting handle!");
+    throw std::exception{Utilities::Msg(
+        "MemoryManager::DeleteDynamic => Double deleting handle!")};
   }
 }
 

@@ -18,7 +18,7 @@ class PoolAllocator {
  private:
   union Node {
     Node* next;
-    Node(Node* next);
+    explicit Node(Node* next);
   };
 
   Size capacity;

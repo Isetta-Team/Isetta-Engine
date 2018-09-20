@@ -5,6 +5,7 @@
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Memory/MemoryManager.h"
+#include "Utilities.h"
 
 namespace Isetta {
 class HandleEntry {
@@ -62,7 +63,8 @@ ObjectHandle<T>::ObjectHandle() {
   }
 
   if (entry == nullptr) {
-    throw std::out_of_range{"No empty slot in handle table"};
+    throw std::out_of_range{
+        "ObjectHandle::ObjectHandle => No empty slot in handle table"};
   }
 
   T* t = new (MemoryManager::AllocDynamic(sizeof(T))) T{};
@@ -85,7 +87,7 @@ T* ObjectHandle<T>::GetObjectPtr() const {
 
   if (entry.isEmpty) {
     throw std::exception{
-        "ObjectHandle::GetObjectPtr() : Object already deleted"};
+        "ObjectHandle::GetObjectPtr => Object already deleted"};
   }
 
   // prevent the problem of "stale pointer"
@@ -94,7 +96,7 @@ T* ObjectHandle<T>::GetObjectPtr() const {
   }
 
   throw std::exception{
-      "ObjectHandle::GetObjectPtr() : Object you are trying to access was "
+      "ObjectHandle::GetObjectPtr => Object you are trying to access was "
       "replaced by a new object"};
 }
 
@@ -103,17 +105,16 @@ void ObjectHandle<T>::EraseObject() const {
   HandleEntry& entry = MemoryManager::handleEntryTable[index];
 
   if (entry.isEmpty) {
-    // TODO(YIDI): Is this a good use of log_error?
-    LOG_ERROR(Debug::Channel::Memory,
-              "ObjectHandle::DeleteObject() : Double deleting handle!");
-    return;
+    throw std::exception{Utilities::Msg(
+        "ObjectHandle::EraseObject => ObjectHandle::DeleteObject => Double "
+        "deleting handle!")};
   }
 
   if (uniqueID != entry.uniqueID) {
-    LOG_ERROR(Debug::Channel::Memory,
-              "ObjectHandle::DeleteObject() : You are trying to delete an "
-              "object you don't own!");
-    return;
+    throw std::exception{Utilities::Msg(
+        "ObjectHandle::EraseObject => ObjectHandle::DeleteObject => You are "
+        "trying to delete an "
+        "object you don't own!")};
   }
 
   static_cast<T*>(entry.ptr)->~T();

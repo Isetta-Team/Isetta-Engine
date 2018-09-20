@@ -19,7 +19,10 @@ void* StackAllocator::Alloc(const Size size, const U8 alignment) {
   const bool isValid = alignment >= 2 && alignment <= 128 &&
                        (alignment & (alignment - 1)) == 0;  // power of 2
   if (!isValid) {
-    throw std::invalid_argument("Illegal alignment in allocator");
+    throw std::invalid_argument{
+        "StackAllocator::Alloc => Invalid alignment, must satisfy: (alignment "
+        ">= 2 && alignment <= 128 &&"
+        "(alignment & (alignment - 1)) == 0)"};
   }
 
   PtrInt rawAddress = bottomAddress + top;
@@ -33,7 +36,8 @@ void* StackAllocator::Alloc(const Size size, const U8 alignment) {
 
   if (newTop > length) {
     // TODO(YIDI): should I throw an exception here?
-    throw std::overflow_error("Not enough memory in stack allocator");
+    throw std::overflow_error{
+        "StackAllocator::Alloc => Not enough memory"};
   }
 
   top = newTop;
@@ -46,7 +50,8 @@ void* StackAllocator::AllocUnaligned(const Size size) {
 
   if (newTop > length) {
     // TODO(YIDI): should I throw an exception here?
-    throw std::overflow_error("Not enough memory in stack allocator");
+    throw std::overflow_error{
+        "StackAllocator::AllocUnaligned => Not enough memory"};
   }
 
   void* mem = reinterpret_cast<void*>(bottomAddress + top);

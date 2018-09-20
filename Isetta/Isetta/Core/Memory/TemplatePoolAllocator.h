@@ -5,6 +5,7 @@
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Memory/MemoryAllocator.h"
+#include "Utilities.h"
 
 namespace Isetta {
 
@@ -25,21 +26,20 @@ class TemplatePoolAllocator {
     Node();
   };
 
-  Size capacity;
-  Size elementSize;
+  Size capacity{};
+  Size elementSize{};
   Node* head;
-  void* memHead;
+  void* memHead{};
 };
 
 template <typename T>
 TemplatePoolAllocator<T>::TemplatePoolAllocator(const Size count) {
   if (sizeof(Node*) > sizeof(T)) {
-    LOG_ERROR(Debug::Channel::Memory,
-              "Using TemplatePoolAllocator for type %s will incur more "
-              "overhead memory than the memory actually "
-              "needed for the elements",
-              typeid(T).name());
-    return;
+    throw std::exception{Utilities::Msg(
+        "TemplatePoolAllocator::TemplatePoolAllocator => Using "
+        "TemplatePoolAllocator for type %s will incur more overhead memory "
+        "than the memory actually needed for the elements",
+        typeid(T).name())};
   }
 
   capacity = count;
@@ -61,7 +61,7 @@ template <typename T>
 T* TemplatePoolAllocator<T>::Get() {
   if (head == nullptr) {
     throw std::out_of_range(
-        "TemplatePoolAllocator::Get(): Not enough memory in "
+        "TemplatePoolAllocator::Get => Not enough memory in "
         "TemplatePoolAllocator");
   }
 

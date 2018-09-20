@@ -1,9 +1,10 @@
 /*
-* Copyright (c) 2018 Isetta
-*/
-#include "Core/Debug/Logger.h"
+ * Copyright (c) 2018 Isetta
+ */
 #include "Core/Memory/PoolAllocator.h"
+#include "Core/Debug/Logger.h"
 #include "Core/Memory/MemoryAllocator.h"
+#include "Utilities.h"
 
 namespace Isetta {
 
@@ -11,9 +12,11 @@ PoolAllocator::PoolAllocator(const Size chunkSize, const Size count) {
   elementSize = chunkSize;
 
   if (elementSize > sizeof(Node*)) {
-    LOG_ERROR(Debug::Channel::Memory,
-              "Using PoolAllocator for chunkSize %d will incur more overhead memory than the memory actually "
-                  "needed for the elements", elementSize);
+    throw std::exception{Utilities::Msg(
+        "PoolAllocator::PoolAllocator => Using PoolAllocator for chunkSize %d "
+        "will incur more overhead memory than the memory actually "
+        "needed for the elements",
+        elementSize)};
   }
 
   capacity = count;
@@ -33,8 +36,7 @@ PoolAllocator::PoolAllocator(const Size chunkSize, const Size count) {
 
 void* PoolAllocator::Get() {
   if (head == nullptr) {
-    throw std::out_of_range(
-        "PoolAllocator::Get(): Not enough memory in PoolAllocator");
+    throw std::out_of_range{"PoolAllocator::Get => Not enough memory"};
   }
 
   // TODO(YIDI): Should I initialize memory to zero before return?
@@ -52,8 +54,6 @@ void PoolAllocator::Erase() const {
   MemoryAllocator::FreeDefaultAligned(memHead);
 }
 
-PoolAllocator::Node::Node(Node* next) {
-  this->next = next;
-}
+PoolAllocator::Node::Node(Node* next) { this->next = next; }
 
 }  // namespace Isetta
