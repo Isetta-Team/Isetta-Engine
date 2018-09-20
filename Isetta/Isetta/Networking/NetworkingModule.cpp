@@ -236,9 +236,9 @@ void NetworkingModule::ProcessServerToClientMessages() {
           AnimationNode::Stop();
         }
         if (handleMessage->handle == 2) {
-          static AudioSource* audio = new AudioSource{};
-          audio->SetAudioClip("gunshot.aiff");
-          audio->Play(false, 1.f);
+          AudioSource audio = AudioSource();
+          audio.SetAudioClip("gunshot.aiff");
+          audio.Play(false, 1.f);
         }
       } break;
       case STRING_MESSAGE: {
