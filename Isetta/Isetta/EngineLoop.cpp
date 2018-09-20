@@ -50,6 +50,7 @@ void EngineLoop::StartUp() {
                        Math::Vector3{0, 90, 0}, Math::Vector3::one};
   static AnimationNode animation{&car};
   animation.AddAnimation("push/Pushing.anim", 0, "", false);
+  animation.Play();
   LightNode light{"materials/light.material.xml", Math::Vector3{0, 200, 600},
                   Math::Vector3::zero, Math::Vector3::one};
 

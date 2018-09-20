@@ -25,6 +25,9 @@ class RenderModule {
     CVar<float> farClippingPlane{"far_clipping_plane", 1000.0};
   };
 
+  /**
+   * \brief The array of animation nodes
+   */
   std::list<class AnimationNode*> animationNodes;
 
  private:

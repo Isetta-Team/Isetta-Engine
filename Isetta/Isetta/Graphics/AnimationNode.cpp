@@ -10,13 +10,12 @@
 
 namespace Isetta {
 RenderModule* AnimationNode::renderModule{nullptr};
-bool AnimationNode::isPlaying{false};
 
 AnimationNode::AnimationNode(ModelNode* model)
     : previousState{-1},
       currentState{0},
-      animatedModel{model}
-       {
+      animatedModel{model},
+      isPlaying{false} {
   if (renderModule != nullptr) {
     renderModule->animationNodes.push_back(this);
   }

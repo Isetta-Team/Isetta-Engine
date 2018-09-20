@@ -171,25 +171,12 @@ void NetworkingModule::ProcessClientToServerMessages(int clientIdx) {
             reinterpret_cast<HandleMessage*>(message);
         LOG(Debug::Channel::Networking, "Client %d sends handle #%d", clientIdx,
             handleMessage->handle);
-        if (handleMessage->handle == 0) {
-          AnimationNode::Play();
-        }
-        if (handleMessage->handle == 1) {
-          AnimationNode::Stop();
-        }
-        if (handleMessage->handle == 2) {
-          static AudioSource* audio = new AudioSource{};
-          audio->SetAudioClip("gunshot.aiff");
-          audio->Play(false, 1.f);
-        }
-
       } break;
       case STRING_MESSAGE: {
         StringMessage* stringMessage =
             reinterpret_cast<StringMessage*>(message);
         LOG(Debug::Channel::Networking, "Client %d says: %s", clientIdx,
             stringMessage->string.c_str());
-
       } break;
     }
 
