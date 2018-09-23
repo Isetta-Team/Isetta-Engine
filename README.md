@@ -1,16 +1,23 @@
 # Isetta Engine
-Please visit our website [https://isetta.io](https://isetta.io) for full content.
-
-## Post-Clone Initialization
-Before being able to build in Visual Studio:
-1. git submodule update --init
-2. Follow [External README](Isetta/External/README.md) for specific instructions on the 3rd party includes.
+Please visit our website [https://isetta.io](https://isetta.io) for a full documentation of our journey in making this engine.
 
 ## Engine Architecture and Progress
 ![Architecture Diagram](ArchitectureDiagram.png?raw=true "Architecture Diagram")
 
-## Mission Statement
+## Getting started
+First, let's make sure you have the right environment!
+- [ ] 64-bit Windows systems ([How to check?](https://www.howtogeek.com/howto/21726/how-do-i-know-if-im-running-32-bit-or-64-bit-windows-answers/))
+- [ ] [Visual Studio 2017](https://visualstudio.microsoft.com/)
+	- [ ] With VC++ 2017 and Windows 10 SDK (10.0.17134.0). You can install them with *Visual Studio Installer*, just select "Game Development with C++" and the right Windows 10 SDK version.
+- [ ] [CMake](https://cmake.org/download/) 3.10.2 or later
 
+Then, let's make sure you have submodules set up correctly
+1. Pull all submodules by using `git submodule update --init` in a commandline
+2. Follow [External README](Isetta/External/README.md) for specific instructions on the 3rd party includes.
+
+Finally, you can start playting with our (TODO) simplistic demo!
+
+## Mission Statement
 Game engine development is a very wide field in the industry, but also a very inaccessible one. 
 Budding engineers are advised to just jump into development to learn, and it's for this reason 
 that the Isetta Engine project came to be.
