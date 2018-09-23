@@ -47,15 +47,6 @@
     <ClCompile Include="Core\ModuleManager.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\RenderNode.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\LightNode.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\ModelNode.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Config\Config.cpp">
       <Filter>Core\Config</Filter>
     </ClCompile>
@@ -64,9 +55,6 @@
     </ClCompile>
     <ClCompile Include="Core\Debug\Assert.h">
       <Filter>Core\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\RenderModule.cpp">
-      <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Input\InputModule.cpp">
       <Filter>Input</Filter>
@@ -129,11 +117,29 @@
     <ClCompile Include="Networking\NetworkManager.cpp">
       <Filter>Networking</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\AnimationNode.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\GUIModule.cpp">
-      <Filter>Graphics</Filter>
+      <Filter>Graphics\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\AnimationNode.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\LightNode.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\ModelNode.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\RenderModule.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\RenderNode.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GUI.cpp">
+      <Filter>Graphics\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GUIStyle.cpp">
+      <Filter>Graphics\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -212,20 +218,8 @@
     <ClInclude Include="Input\InputModule.h">
       <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\LightNode.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\ModelNode.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\RenderModule.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Networking\NetworkingModule.h">
       <Filter>Networking</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\RenderNode.h">
-      <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Core\FileSystem.h">
       <Filter>Core</Filter>
@@ -273,15 +267,33 @@
     <ClInclude Include="Networking\NetworkManager.h">
       <Filter>Networking</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\AnimationNode.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Core\IsettaAlias.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="Graphics\GUIModule.h">
-      <Filter>Graphics</Filter>
+      <Filter>Graphics\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\AnimationNode.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\LightNode.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ModelNode.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\RenderModule.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\RenderNode.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GUI.h">
+      <Filter>Graphics\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GUIStyle.h">
+      <Filter>Graphics\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -332,6 +344,12 @@
     </Filter>
     <Filter Include="Core\DataStructures">
       <UniqueIdentifier>{1a6466d1-5cab-4f45-b3c8-992fde0119e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\GUI">
+      <UniqueIdentifier>{a35f375f-c200-4cd7-999c-aa84c0633ce0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Render">
+      <UniqueIdentifier>{45da4ca9-ea64-439d-bd6e-e2c9bf740508}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

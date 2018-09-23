@@ -7,16 +7,16 @@
 #include "Core/IsettaAlias.h"
 
 namespace Isetta::Debug {
-  /**
-   * @brief Verbosity of the logger:
-   * Off - no messages will be output (only needed for mask)
-   * Error - most severe messages
-   * Warning - messages to warn the developer
-   * Info - messages to inform developers/users
-   * All - all messages will be output (only needed for mask)
-   */
+/**
+ * @brief Verbosity of the logger:
+ * Off - no messages will be output (only needed for mask)
+ * Error - most severe messages
+ * Warning - messages to warn the developer
+ * Info - messages to inform developers/users
+ * All - all messages will be output (only needed for mask)
+ */
 enum class Verbosity : U8 {
-  Off = 0, 
+  Off = 0,
   Error = (1u << 0),
   Warning = (1u << 1),
   Info = (1u << 2),
@@ -25,7 +25,7 @@ enum class Verbosity : U8 {
 
 /**
  * @brief Converts Verbosity enum to string
- * 
+ *
  */
 static inline const std::string ToString(Verbosity v) {
   switch (v) {
@@ -60,11 +60,12 @@ enum class Channel : U16 {
   Gameplay = (1u << 6),
   Sound = (1u << 7),
   FileIO = (1u << 8),
+  GUI = (1u << 9),
 };
 
 /**
  * @brief Converts Channel enum to string
- * 
+ *
  */
 static inline const std::string ToString(Channel c) {
   switch (c) {
@@ -86,6 +87,8 @@ static inline const std::string ToString(Channel c) {
       return "Sound";
     case Channel::FileIO:
       return "File I/O";
+    case Channel::GUI:
+      return "GUI";
     default:
       return "Unknown-Channel";
   }

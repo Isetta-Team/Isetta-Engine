@@ -8,11 +8,13 @@
 #include "Core/ModuleManager.h"
 #include "Core/Time/Clock.h"
 #include "Graphics/AnimationNode.h"
+#include "Graphics/GUI.h"
 #include "Graphics/LightNode.h"
 #include "Graphics/ModelNode.h"
 #include "Input/Input.h"
 #include "Input/InputEnum.h"
 #include "Networking/NetworkManager.h"
+#include "imgui.h"
 
 namespace Isetta {
 
@@ -93,6 +95,14 @@ void EngineLoop::StartUp() {
   Input::RegisterMousePressCallback(MouseButtonCode::MOUSE_LEFT, []() {
     if (NetworkManager::ClientIsConnected()) {
       NetworkManager::SendHandleMessageFromClient(2);
+    }
+  });
+
+  // GUI Test
+  GUI::OnUpdate([&]() {
+    if (true) {
+      bool show_demo_window = true;
+      ImGui::ShowDemoWindow(&show_demo_window);
     }
   });
 

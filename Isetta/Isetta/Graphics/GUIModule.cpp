@@ -3,13 +3,19 @@
  */
 #include "Graphics/GUIModule.h"
 
+#include "Core/Debug/Logger.h"
+#include "Graphics/GUI.h"
 #include "Input/Input.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
 namespace Isetta {
+U64 GUIModule::handleCount = 0;
+
 void GUIModule::StartUp(GLFWwindow* win) {
+  GUI::guiModule = this;
+
   gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
   IMGUI_CHECKVERSION();
@@ -57,9 +63,7 @@ void GUIModule::Update(float deltaTime) {
   // 1. Show the big demo window (Most of the sample code is in
   // ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear
   // ImGui!).
-  if (show_demo_window) {
-    ImGui::ShowDemoWindow(&show_demo_window);
-  }
+
   // 2. Show a simple window that we create ourselves. We use a Begin/End pair
   // to created a named window.
   {
@@ -105,6 +109,11 @@ void GUIModule::Update(float deltaTime) {
     ImGui::End();
   }
 
+  // TODO (Jacob + Yidi) single frame alloc
+  for (const auto& callback : updateCallbacks) {
+    callback();
+  }
+
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -114,4 +123,9 @@ void GUIModule::ShutDown() {
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
 }
+
+void GUIModule::OnUpdate(const Action<>& callback) {
+  updateCallbacks.push_back(callback);
+}
+
 }  // namespace Isetta

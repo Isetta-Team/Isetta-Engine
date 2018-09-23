@@ -3,9 +3,10 @@
  */
 #include "Graphics/RenderModule.h"
 
-#include "Horde3DUtils.h"
 #include "Core/Config/Config.h"
 #include "Graphics/AnimationNode.h"
+#include "Horde3DUtils.h"
+#include "imgui/imgui.h"
 
 namespace Isetta {
 void RenderModule::StartUp(GLFWwindow* win) {
