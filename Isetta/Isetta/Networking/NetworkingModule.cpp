@@ -11,6 +11,7 @@
 #include "Graphics/AnimationNode.h"
 #include "Networking/NetworkManager.h"
 #include "Audio/AudioSource.h"
+#include "Core/IsettaAlias.h"
 
 // F Windows
 #ifdef SendMessage
@@ -34,13 +35,13 @@ void NetworkingModule::StartUp() {
   networkConfig.channel[0].type = yojimbo::CHANNEL_TYPE_UNRELIABLE_UNORDERED;
   networkConfig.timeout = 20;
 
-  privateKey = new uint8_t[Config::Instance().networkConfig.keyBytes.GetVal()];
+  privateKey = new U8[Config::Instance().networkConfig.keyBytes.GetVal()];
   // TODO(Caleb): Need to do something more insightful with the private key
   // than all 0s
   memset(privateKey, 0, Config::Instance().networkConfig.keyBytes.GetVal());
 
   clientId = 0;
-  yojimbo::random_bytes((uint8_t*)&clientId, 8);
+  yojimbo::random_bytes((U8*)&clientId, 8);
 
   client = new yojimbo::Client(
       yojimbo::GetDefaultAllocator(),
@@ -244,7 +245,7 @@ void NetworkingModule::ProcessServerToClientMessages() {
 }
 
 void NetworkingModule::Connect(const char* serverAddress, int serverPort,
-                               std::function<void(bool)> callback) {
+                               Action<bool> callback) {
   yojimbo::Address address(serverAddress, serverPort);
   if (!address.IsValid()) {
     return;

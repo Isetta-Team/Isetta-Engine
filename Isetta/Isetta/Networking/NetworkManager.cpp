@@ -46,7 +46,7 @@ void NetworkManager::SendStringMessageFromServer(int clientIdx,
 
 
 void NetworkManager::ConnectToServer(const char* serverAddress,
-                                      std::function<void(bool)> callback) {
+                                      Action<bool> callback) {
   networkingModule->Connect(
       serverAddress, Config::Instance().networkConfig.serverPort.GetVal(),
       callback);

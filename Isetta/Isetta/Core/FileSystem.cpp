@@ -249,7 +249,7 @@ HANDLE FileSystem::ReadAsync(const char* fileName,
 }
 
 HANDLE FileSystem::WriteAsync(const char* fileName, const char* contentBuffer,
-                              const std::function<void(const char*)>& callback,
+                              const Action<const char*>& callback,
                               const bool appendData) {
   HANDLE hFile;
   if (appendData) {
