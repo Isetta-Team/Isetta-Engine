@@ -50,6 +50,11 @@ class AudioSource {
   void SetVolume(float) const;
 
   /**
+   * \brief Change speed of music, only supports MOD/S3M/XM/IT/MIDI file formats
+   */
+  void SetSpeed(float) const;
+
+  /**
    * \brief Check if the sound is currently playing
    * \return 
    */
@@ -61,6 +66,7 @@ class AudioSource {
   static AudioModule* audioSystem;
 
   bool isChannelValid() const;
+  bool isSoundValid() const;
   friend class AudioModule;
 };
 

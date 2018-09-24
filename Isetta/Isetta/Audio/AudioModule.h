@@ -3,14 +3,12 @@
  */
 #pragma once
 
+#include <SID/sid.h>
 #include <string>
 #include <unordered_map>
-#include "fmod.hpp"
-// TODO(YIDI): do error checking
-// #include "fmod_errors.h"
 #include "Core/IsettaAlias.h"
 #include "Core/ModuleManager.h"
-#include "SID/sid.h"
+#include "fmod.hpp"
 
 namespace Isetta {
 
@@ -33,7 +31,7 @@ class AudioModule {
 
   /**
    * \brief Update the Audio module by ticking FMOD::System
-   * \param deltaTime 
+   * \param deltaTime
    */
   void Update(float deltaTime) const;
 
@@ -45,18 +43,23 @@ class AudioModule {
   /**
    * \brief Get a handle to the sound
    * \param soundName name of the sound file you want to find
-   * \return 
+   * \return
    */
   FMOD::Sound* FindSound(const char* soundName);
 
   /**
    * \brief Play the FMOD::Sound with the specified properties
-   * \param sound 
-   * \param loop 
-   * \param volume 
-   * \return 
+   * \param sound
+   * \param loop
+   * \param volume
+   * \return
    */
   FMOD::Channel* Play(FMOD::Sound* sound, bool loop, float volume) const;
+
+  /**
+   * \brief Check FMOD_RESULT and throw exception when there's an error
+   */
+  static void CheckStatus(FMOD_RESULT);
 
   FMOD::System* fmodSystem;
   std::string soundFilesRoot;
