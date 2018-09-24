@@ -10,6 +10,7 @@
 // #include "fmod_errors.h"
 #include "Core/IsettaAlias.h"
 #include "Core/ModuleManager.h"
+#include "SID/sid.h"
 
 namespace Isetta {
 
@@ -59,7 +60,7 @@ class AudioModule {
 
   FMOD::System* fmodSystem;
   std::string soundFilesRoot;
-  std::unordered_map<U64, FMOD::Sound*> soundMap;
+  std::unordered_map<StringId, FMOD::Sound*> soundMap;
 
   friend class AudioSource;
   friend class ModuleManager;

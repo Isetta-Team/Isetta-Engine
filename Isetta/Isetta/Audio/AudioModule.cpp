@@ -50,9 +50,9 @@ void AudioModule::ShutDown() {
 }
 
 FMOD::Sound* AudioModule::FindSound(const char* soundName) {
-  const auto hashedValue = SID(soundName).GetValue();
-  if (soundMap.find(hashedValue) != soundMap.end()) {
-    return soundMap[hashedValue];
+  const auto strId = SID(soundName);
+  if (soundMap.find(strId) != soundMap.end()) {
+    return soundMap[strId];
   }
 
   throw std::exception{Util::StrFormat(
@@ -73,18 +73,12 @@ void AudioModule::LoadAllAudioClips() {
   const char* files[]{"singing.wav", "wave.mp3", "gunshot.aiff"};
 
   for (auto file : files) {
-    StringId hashedId = SID(file);
-
     FMOD::Sound* sound = nullptr;
     std::string path = soundFilesRoot + file;
     fmodSystem->createSound(path.c_str(), FMOD_LOWMEM, nullptr, &sound);
 
-    soundMap.insert({hashedId.GetValue(), sound});
+    soundMap.insert({SID(file), sound});
   }
-}
-
-inline float MegaBytesFromBytes(const int byte) {
-  return byte / 1024.f / 1024.f;
 }
 
 void PrintAudioMemoryUsage() {
@@ -93,7 +87,7 @@ void PrintAudioMemoryUsage() {
   FMOD::Memory_GetStats(&currentAllocated, &maxAllocated);
 
   LOG_INFO(Debug::Channel::Sound, "CurMem: %d MB, MaxMem %d MB",
-           MegaBytesFromBytes(currentAllocated),
-           MegaBytesFromBytes(maxAllocated));
+           Util::MegaBytesFromBytes(currentAllocated),
+           Util::MegaBytesFromBytes(maxAllocated));
 }
 }  // namespace Isetta

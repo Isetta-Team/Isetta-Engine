@@ -50,7 +50,7 @@ void MemoryArena::Defragment() {
       curIndex = 0;
     }
     MoveLeft(curIndex);
-    LOG_INFO(Debug::Channel::Memory, "Cur size: %I64u", GetSize());
+    LOG_INFO(Debug::Channel::Memory, "Cur size: %I64u", GetUsedSize());
   }
 }
 
@@ -111,7 +111,7 @@ void MemoryArena::Print() const {
   }
 }
 
-PtrInt MemoryArena::GetSize() const {
+PtrInt MemoryArena::GetUsedSize() const {
   PtrInt lastAddress;
   Size lastSize;
 

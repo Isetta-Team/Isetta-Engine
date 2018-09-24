@@ -64,7 +64,7 @@ void MemoryManager::RegisterCallbacks() {
 }
 
 void MemoryManager::Test() {
-  const U32 count = 2048;
+  const U32 count = 1024;
   std::vector<ObjectHandle<U64>> arr;
 
   for (U32 i = 0; i < count; i++) {

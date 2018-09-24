@@ -8,18 +8,51 @@
 
 namespace Isetta {
 // FUTURE: If we want reference counting (probably not), it can be done here
+/**
+ * \brief Individual entries in the global handle table. Stores some information
+ * about the object pointed to
+ */
 class HandleEntry {
  private:
+  /**
+   * \brief Default constructor that does nothing
+   */
   HandleEntry() = default;
+
+  /**
+   * \brief Default destructor that does nothing
+   */
   ~HandleEntry() = default;
+
+  /**
+   * \brief A helper function that returns the address of pointed object
+   * \return Address in type PtrInt
+   */
   PtrInt GetAddress() const;
 
-  // just a help function
+  /**
+   * \brief Just a help function for setting individual fields of the handle
+   * entry
+   *
+   * \param uniqueID
+   * \param ptr
+   * \param isEmpty
+   * \param size
+   */
   void Set(U32 uniqueID, void* ptr, bool isEmpty, Size size);
 
+  /// unique ID. Always compare this with the uniqueID of ObjectHandle used to
+  /// manipulate this entry
   U32 uniqueID{};
+
+  /// Size of the object pointed to by this entry
   Size size{};
+
+  /// Pointer to the actual object's address. Marked as mutable because its
+  /// moved in the defragmentation process
   mutable void* ptr{};
+
+  /// Is this entry empty and can be used for a new object?
   bool isEmpty{true};
 
   template <typename T>
@@ -30,15 +63,52 @@ class HandleEntry {
 template <typename T>
 class ObjectHandle {
  public:
+  /**
+   * \brief Default constructor that does nothing. Exists to support having an
+   * array of ObjectHandles.
+   */
   ObjectHandle() = default;
-  ~ObjectHandle() = default;
-  T* operator->() const;
-  T& operator*();
 
+  /**
+   * \brief Default destructor that does nothing (cause there is nothing to do).
+   */
+  ~ObjectHandle() = default;
+
+  /**
+   * \brief The actual constructor that the MemoryArena uses to create new
+   * ObjectHandles \param mem Pointer to the memory \param uniqueID uniqueID for
+   * this handle \param size Size of the object in bytes
+   */
   ObjectHandle(void* mem, U32 uniqueID, Size size);
 
+  /**
+   * \brief Returns a pointer to the actual object
+   * \return A pointer to the actual object
+   */
+  T* operator->() const;
+
+  /**
+   * \brief Returned the dereferenced object
+   * \return A reference to the object
+   */
+  T& operator*();
+
+  /**
+   * \brief Helper function for finding the pointer the actual object
+   * \return
+   */
   T* GetObjectPtr() const;
+
+  /**
+   * \brief Erase the object. This frees the memory, frees the corresponding
+   * handle entry, and calls destructor on the object
+   */
   void EraseObject() const;
+
+  /**
+   * \brief A helper function used to get memory address of the object pointed to by this handle
+   * \return Memory address of the object pointed to by this handle
+   */
   PtrInt GetObjAddress() const;
   U32 uniqueID;
   U32 index;
