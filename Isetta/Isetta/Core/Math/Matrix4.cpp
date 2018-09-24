@@ -45,26 +45,26 @@ Matrix4::Matrix4(float m11, float m12, float m13, float m14, float m21,
 }
 
 Matrix4::Matrix4(const Matrix4& inMatrix) {
-  for (int i = 0; i < 16; i++) {
+  for (int i = 0; i < elementCount; i++) {
     data[i] = inMatrix.data[i];
   }
 }
 
-Matrix4::Matrix4(Matrix4&& inMatrix) {
-  for (int i = 0; i < 9; i++) {
+Matrix4::Matrix4(Matrix4&& inMatrix) noexcept {
+  for (int i = 0; i < elementCount; i++) {
     data[i] = inMatrix.data[i];
   }
 }
 
 Matrix4& Matrix4::operator=(const Matrix4& inMatrix) {
-  for (int i = 0; i < 9; i++) {
+  for (int i = 0; i < elementCount; i++) {
     data[i] = inMatrix.data[i];
   }
   return *this;
 }
 
-Matrix4& Matrix4::operator=(Matrix4&& inMatrix) {
-  for (int i = 0; i < 9; i++) {
+Matrix4& Matrix4::operator=(Matrix4&& inMatrix) noexcept {
+  for (int i = 0; i < elementCount; i++) {
     data[i] = inMatrix.data[i];
   }
   return *this;
@@ -90,7 +90,7 @@ Matrix4::Matrix4(const Vector4& aVector, const Vector4& bVector) {
 }
 
 bool Matrix4::operator==(const Matrix4& rhs) const {
-  for (int i = 0; i < 16; i++) {
+  for (int i = 0; i < elementCount; i++) {
     if (data[i] != rhs.data[i]) {
       return false;
     }
@@ -99,7 +99,7 @@ bool Matrix4::operator==(const Matrix4& rhs) const {
 }
 
 bool Matrix4::operator!=(const Matrix4& rhs) const {
-  for (int i = 0; i < 16; i++) {
+  for (int i = 0; i < elementCount; i++) {
     if (data[i] != rhs.data[i]) {
       return true;
     }
@@ -109,14 +109,14 @@ bool Matrix4::operator!=(const Matrix4& rhs) const {
 
 Matrix4 Matrix4::operator+(const Matrix4& rhs) const {
   Matrix4 ret{};
-  for (int i = 0; i < 16; i++) {
+  for (int i = 0; i < elementCount; i++) {
     ret.data[i] += rhs.data[i];
   }
   return ret;
 }
 
 Matrix4& Matrix4::operator+=(const Matrix4& rhs) {
-  for (int i = 0; i < 16; i++) {
+  for (int i = 0; i < elementCount; i++) {
     data[i] += rhs.data[i];
   }
   return *this;
@@ -124,14 +124,14 @@ Matrix4& Matrix4::operator+=(const Matrix4& rhs) {
 
 Matrix4 Matrix4::operator-(const Matrix4& rhs) const {
   Matrix4 ret{};
-  for (int i = 0; i < 16; i++) {
+  for (int i = 0; i < elementCount; i++) {
     ret.data[i] -= rhs.data[i];
   }
   return ret;
 }
 
 Matrix4 Matrix4::operator-=(const Matrix4& rhs) {
-  for (int i = 0; i < 16; i++) {
+  for (int i = 0; i < elementCount; i++) {
     data[i] += rhs.data[i];
   }
   return *this;
@@ -139,9 +139,9 @@ Matrix4 Matrix4::operator-=(const Matrix4& rhs) {
 
 Matrix4 Matrix4::operator*(const Matrix4& rhs) const {
   Matrix4 ret{};
-  for (int i = 0; i < 4; i++) {
-    for (int j = 0; j < 4; j++) {
-      for (int k = 0; k < 4; k++) {
+  for (int i = 0; i < rowCount; i++) {
+    for (int j = 0; j < rowCount; j++) {
+      for (int k = 0; k < rowCount; k++) {
         ret.data[(i << 2) + j] += data[(i << 2) + k] * rhs.data[(k << 2) + j];
       }
     }
@@ -150,15 +150,15 @@ Matrix4 Matrix4::operator*(const Matrix4& rhs) const {
 }
 
 Matrix4 Matrix4::operator*=(const Matrix4& rhs) {
-  float newData[16];
-  for (int i = 0; i < 4; i++) {
-    for (int j = 0; j < 4; j++) {
-      for (int k = 0; k < 4; k++) {
+  float newData[elementCount];
+  for (int i = 0; i < rowCount; i++) {
+    for (int j = 0; j < rowCount; j++) {
+      for (int k = 0; k < rowCount; k++) {
         newData[(i << 2) + j] += data[(i << 2) + k] * rhs.data[(k << 2) + j];
       }
     }
   }
-  for (int i = 0; i < 16; i++) {
+  for (int i = 0; i < elementCount; i++) {
     data[i] = newData[i];
   }
   return *this;
@@ -166,14 +166,14 @@ Matrix4 Matrix4::operator*=(const Matrix4& rhs) {
 
 Matrix4 Matrix4::operator*(float scalar) const {
   Matrix4 ret{};
-  for (int i = 0; i < 16; i++) {
+  for (int i = 0; i < elementCount; i++) {
     ret.data[i] = data[i] * scalar;
   }
   return ret;
 }
 
 Matrix4 Matrix4::operator*=(float scalar) {
-  for (int i = 0; i < 16; i++) {
+  for (int i = 0; i < elementCount; i++) {
     data[i] *= scalar;
   }
   return *this;
@@ -292,8 +292,8 @@ Matrix4 Matrix4::Transpose() const {
 }
 
 bool Matrix4::IsIdentity() const {
-  for (int i = 0; i < 4; i++) {
-    for (int j = 0; j < 4; j++) {
+  for (int i = 0; i < rowCount; i++) {
+    for (int j = 0; j < rowCount; j++) {
       if (data[(i << 2) + j] != static_cast<float>(i == j) ||
           data[(j << 2) + i] != static_cast<float>(i == j)) {
         return false;
@@ -304,7 +304,7 @@ bool Matrix4::IsIdentity() const {
 }
 
 bool Matrix4::IsZero() const {
-  for (int i = 0; i < 16; i++) {
+  for (int i = 0; i < elementCount; i++) {
     if (data[i] != 0) return false;
   }
   return true;
@@ -329,16 +329,17 @@ void Matrix4::SetRow(int row, Vector4 rowData) {
 Vector4 Matrix4::GetCol(int col) const {
   if (col < 0 || col > 3)
     throw std::out_of_range{"Matrix4:GetCol => Column index out of range."};
-  return Vector4(data[col], data[4 + col], data[8 + col], data[12 + col]);
+  return Vector4(data[col], data[rowCount + col], data[rowCount * 2 + col],
+                 data[rowCount * 3 + col]);
 }
 
 void Matrix4::SetCol(int col, Vector4 colData) {
   if (col < 0 || col > 3)
     throw std::out_of_range{"Matrix4:SetCol => Column index out of range."};
   data[col] = colData.x;
-  data[4 + col] = colData.y;
-  data[8 + col] = colData.z;
-  data[12 + col] = colData.w;
+  data[rowCount + col] = colData.y;
+  data[rowCount * 2 + col] = colData.z;
+  data[rowCount * 3 + col] = colData.w;
 }
 
 Matrix4 Matrix4::Translate(const Vector3& translation) {
@@ -349,5 +350,14 @@ Matrix4 Matrix4::Translate(const Vector3& translation) {
 Matrix4 Matrix4::Scale(const Vector3 scale) {
   return Matrix4{scale.x, 0, 0,       0, 0, scale.y, 0, 0,
                  0,       0, scale.z, 0, 0, 0,       0, 1};
+}
+
+bool Matrix4::FuzzyEqual(const Matrix4& lhs, const Matrix4& rhs) {
+  for (int i = 0; i < elementCount; i++) {
+    if (abs(lhs.data[i] - rhs.data[i]) > FLT_EPSILON) {
+      return false;
+    }
+  }
+  return true;
 }
 }  // namespace Isetta::Math

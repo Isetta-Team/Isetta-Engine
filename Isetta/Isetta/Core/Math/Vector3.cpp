@@ -63,7 +63,7 @@ std::string Vector3::ToString() const {
   return oss.str();
 }
 
-bool Vector3::Equals(const Vector3& lhs, const Vector3& rhs) {
+bool Vector3::FuzzyEqual(const Vector3& lhs, const Vector3& rhs) {
   return abs(lhs.x - rhs.x) < FLT_EPSILON && abs(lhs.y - rhs.y) < FLT_EPSILON &&
          abs(lhs.z - rhs.z) < FLT_EPSILON;
 }

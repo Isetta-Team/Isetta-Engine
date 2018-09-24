@@ -110,5 +110,6 @@ class Rect {
                                          const class Vector2& normalizedCoord);
   static class Vector2 PointToNormalized(const Rect& rect,
                                          const class Vector2& point);
+  static bool FuzzyEqual(const Rect& lhs, const Rect& rhs);
 };
 }  // namespace Isetta::Math

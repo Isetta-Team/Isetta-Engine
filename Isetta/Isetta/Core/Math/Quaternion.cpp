@@ -7,7 +7,7 @@
 #include "Vector3.h"
 
 namespace Isetta::Math {
-Quaternion::Quaternion(): w{0.f}, x{0.f}, y{0.f}, z{0.f} {}
+Quaternion::Quaternion() : w{0.f}, x{0.f}, y{0.f}, z{0.f} {}
 
 Quaternion::Quaternion(float eulerX, float eulerY, float eulerZ) {
   Quaternion roll(Utility::Sin(eulerX * 0.5f), 0, 0,
@@ -22,21 +22,21 @@ Quaternion::Quaternion(float eulerX, float eulerY, float eulerZ) {
 }
 
 Quaternion::Quaternion(Vector3 vector, float scalar)
-  : w{scalar}, x{vector.x}, y{vector.y}, z{vector.z} {
+    : w{scalar}, x{vector.x}, y{vector.y}, z{vector.z} {
   *this = Normalize(*this);
 }
 
 Quaternion::Quaternion(const Quaternion& inQuaternion)
-  : w{inQuaternion.w},
-    x{inQuaternion.x},
-    y{inQuaternion.y},
-    z{inQuaternion.z} {}
+    : w{inQuaternion.w},
+      x{inQuaternion.x},
+      y{inQuaternion.y},
+      z{inQuaternion.z} {}
 
 Quaternion::Quaternion(Quaternion&& inQuaternion) noexcept
-  : w{inQuaternion.w},
-    x{inQuaternion.x},
-    y{inQuaternion.y},
-    z{inQuaternion.z} {}
+    : w{inQuaternion.w},
+      x{inQuaternion.x},
+      y{inQuaternion.y},
+      z{inQuaternion.z} {}
 
 Quaternion& Quaternion::operator=(const Quaternion& inQuaternion) {
   w = inQuaternion.w;
@@ -116,7 +116,7 @@ Vector3 Quaternion::GetEulerAngles() const {
   float pitch;
   if (Utility::Abs(sinp) >= 1)
     pitch = Utility::PI / 2 *
-      Utility::Sign(sinp); // use 90 degrees if out of range
+            Utility::Sign(sinp);  // use 90 degrees if out of range
   else
     pitch = Utility::Asin(sinp);
 
@@ -132,7 +132,7 @@ void Quaternion::SetFromToRotation(const Vector3& fromDirection,
                                    const Vector3& toDirection) {
   float dot = Vector3::Dot(fromDirection, toDirection);
   float k =
-    Utility::Sqrt(fromDirection.SqrMagnitude() * toDirection.SqrMagnitude());
+      Utility::Sqrt(fromDirection.SqrMagnitude() * toDirection.SqrMagnitude());
   if (Utility::Abs(dot / k + 1) < Utility::EPSILON) {
     Vector3 ortho;
     if (fromDirection.z < fromDirection.x) {
@@ -146,15 +146,14 @@ void Quaternion::SetFromToRotation(const Vector3& fromDirection,
   *this = Normalize(Quaternion(cross, dot + k));
 }
 
-void Quaternion::SetLookRotation(
-  const Vector3& forwardDirection,
-  const Vector3& upDirection) {
+void Quaternion::SetLookRotation(const Vector3& forwardDirection,
+                                 const Vector3& upDirection) {
   // Normalize inputs
   Vector3 forward = forwardDirection.Normalized();
   Vector3 upwards = upDirection.Normalized();
   // Don't allow zero vectors
-  if (Vector3::Equals(forward, Vector3::zero) ||
-    Vector3::Equals(upwards, Vector3::zero)) {
+  if (Vector3::FuzzyEqual(forward, Vector3::zero) ||
+      Vector3::FuzzyEqual(upwards, Vector3::zero)) {
     x = 0.f;
     y = 0.f;
     z = 0.f;
@@ -205,12 +204,12 @@ float Quaternion::Angle(const Quaternion& aQuaternion,
 float Quaternion::Dot(const Quaternion& aQuaternion,
                       const Quaternion& bQuaternion) {
   return aQuaternion.x * bQuaternion.x + aQuaternion.y * bQuaternion.y +
-    aQuaternion.z * bQuaternion.z + aQuaternion.w * bQuaternion.w;
+         aQuaternion.z * bQuaternion.z + aQuaternion.w * bQuaternion.w;
 }
 
 Quaternion Quaternion::Inverse(const Quaternion& quaternion) {
   float length = quaternion.x * quaternion.x + quaternion.y * quaternion.y +
-    quaternion.z * quaternion.z + quaternion.w * quaternion.w;
+                 quaternion.z * quaternion.z + quaternion.w * quaternion.w;
   return Quaternion(quaternion.x / -length, quaternion.y / -length,
                     quaternion.z / -length, quaternion.w / -length);
 }
@@ -239,6 +238,11 @@ Quaternion Quaternion::Slerp(const Quaternion& aQuaternion,
   return aQuaternion * wp + bQuaternion * wq;
 }
 
+bool Quaternion::FuzzyEqual(const Quaternion& lhs, const Quaternion& rhs) {
+  return abs(lhs.x - rhs.x) < FLT_EPSILON && abs(lhs.y - rhs.y) < FLT_EPSILON &&
+         abs(lhs.z - rhs.z) < FLT_EPSILON && abs(lhs.w - rhs.w) < FLT_EPSILON;
+}
+
 Quaternion operator""_i(long double inX) {
   return Quaternion{static_cast<float>(inX), 0.f, 0.f, 0.f};
 }
@@ -255,4 +259,4 @@ Quaternion operator""_w(long double inW) {
   return Quaternion{0.f, 0.f, 0.f, static_cast<float>(inW)};
 }
 
-} // namespace Isetta::Math
+}  // namespace Isetta::Math

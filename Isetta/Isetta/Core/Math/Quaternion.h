@@ -30,7 +30,7 @@ class Quaternion {
    */
   Quaternion(float eulerX, float eulerY, float eulerZ);
   /**
-   * \brief Create a quaterion from an axis and an angle
+   * \brief Create a quaternion from an axis and an angle
    * \param vector The axis
    * \param scalar The angle
    */
@@ -112,6 +112,12 @@ class Quaternion {
    */
   static Quaternion Slerp(const Quaternion& aQuaternion,
                           const Quaternion& bQuaternion, float t);
+  /**
+   * \brief Checks if two quaternions are equal (within a tolerance)
+   * \param lhs Quaternions A to be compared
+   * \param rhs Quaternions B to be compared
+   */
+  static bool FuzzyEqual(const Quaternion& lhs, const Quaternion& rhs);
 };
 
 Quaternion operator"" _i(long double inX);

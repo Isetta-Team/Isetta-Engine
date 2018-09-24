@@ -8,6 +8,9 @@ class Matrix4 {
  private:
   float data[16];
 
+  static const int elementCount = 16;
+  static const int rowCount = 4;
+
  public:
   static const Matrix4 zero;
   static const Matrix4 identity;
@@ -26,9 +29,9 @@ class Matrix4 {
           float m41, float m42, float m43, float m44);
 
   Matrix4(const Matrix4& inMatrix);
-  Matrix4(Matrix4&& inMatrix);
+  Matrix4(Matrix4&& inMatrix) noexcept;
   Matrix4& operator=(const Matrix4& inMatrix);
-  Matrix4& operator=(Matrix4&& inMatrix);
+  Matrix4& operator=(Matrix4&& inMatrix) noexcept;
 
   Matrix4(const class Vector4& aVector, const class Vector4& bVector);
 
@@ -112,5 +115,11 @@ class Matrix4 {
    * \param scale The scale vector
    */
   static Matrix4 Scale(const class Vector3 scale);
+  /**
+   * \brief Checks if two matrix4 are equal (within a tolerance)
+   * \param lhs Matrix A to be compared
+   * \param rhs Matrix B to be compared
+   */
+  static bool FuzzyEqual(const Matrix4& lhs, const Matrix4& rhs);
 };
 }  // namespace Isetta::Math
