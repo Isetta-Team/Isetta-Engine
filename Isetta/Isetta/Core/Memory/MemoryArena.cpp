@@ -45,11 +45,11 @@ void MemoryArena::Defragment() {
   if (addressIndexMap.empty()) return;
 
   for (int i = 0; i < 6; i++) {
-    index++;
-    if (index >= addressIndexMap.size()) {
-      index = 0;
+    curIndex++;
+    if (curIndex >= addressIndexMap.size()) {
+      curIndex = 0;
     }
-    MoveLeft(index);
+    MoveLeft(curIndex);
     LOG_INFO(Debug::Channel::Memory, "Cur size: %I64u", GetSize());
   }
 }
@@ -123,7 +123,6 @@ PtrInt MemoryArena::GetSize() const {
     lastAddress = lastPair->first;
     lastSize = entryArr[lastPair->second].size;
   }
-  auto& arr = entryArr;
   auto lastPair = --addressIndexMap.end();
 
   return (lastAddress + lastSize) - leftAddress;

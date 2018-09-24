@@ -22,7 +22,7 @@ class MemoryArena {
   void* memHead{};
 
   template <typename T>
-  ObjectHandle<T>& NewDynamic();
+  ObjectHandle<T> NewDynamic();
 
   template <typename T>
   void DeleteDynamic(const ObjectHandle<T>& objectToFree);
@@ -42,7 +42,7 @@ class MemoryArena {
   // TODO(YIDI): Make a custom container rather than using map
   // O(1) random access, O(log n) insert
   std::map<PtrInt, int> addressIndexMap;
-  U32 index = 0;
+  U32 curIndex = 0;
 
   template <typename T>
   friend class ObjectHandle;
@@ -50,7 +50,7 @@ class MemoryArena {
 };
 
 template <typename T>
-ObjectHandle<T>& MemoryArena::NewDynamic() {
+ObjectHandle<T> MemoryArena::NewDynamic() {
   // TODO(YIDI): I'm not sure this is the right way to implement object handles,
   // the handle itself should not need to be freed. But I think usage-wise this
   // is optimal
