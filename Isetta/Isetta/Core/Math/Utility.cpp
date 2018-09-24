@@ -40,8 +40,8 @@ float Utility::Clamp01(float number) {
 }
 int Utility::ClosestPowerOfTwo(int number) {
   if (number < 0)
-    throw std::out_of_range(
-        "Utility::ClosestPowerOfTwo: Negative numbers are not supported.");
+    throw std::out_of_range{
+        "Utility::ClosestPowerOfTwo => Negative numbers are not supported."};
   int ceil = number - 1;
   for (Size i = 1; i < sizeof(ceil) * CHAR_BIT; i *= 2) {
     ceil |= ceil >> i;
@@ -65,8 +65,8 @@ float Utility::InverseLerp(float start, float end, float number) {
 }
 bool Utility::IsPowerOfTwo(int number) {
   if (number < 0)
-    throw std::out_of_range(
-        "Utility::IsPowerOfTwo: Negative numbers are not supported.");
+    throw std::out_of_range{
+        "Utility::IsPowerOfTwo => Negative numbers are not supported."};
   return !(number == 0) && !(number & (number - 1));
 }
 float Utility::Lerp(float start, float end, float time) {
@@ -96,8 +96,8 @@ float Utility::MoveTowards(float current, float target, float maxDelta) {
 
 int Utility::NextPowerOfTwo(int number) {
   if (number < 0)
-    throw std::out_of_range(
-        "Utility::NextPowerOfTwo: Negative numbers are not supported.");
+    throw std::out_of_range{
+        "Utility::NextPowerOfTwo => Negative numbers are not supported."};
   int ceil = number - 1;
   for (Size i = 1; i < sizeof(ceil) * CHAR_BIT; i *= 2) {
     ceil |= ceil >> i;

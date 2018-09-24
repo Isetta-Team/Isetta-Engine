@@ -40,7 +40,7 @@ float Vector3::operator[](int i) const {
     case 2:
       return z;
     default:
-      throw std::out_of_range("Vector3::[] Index access out of range.");
+      throw std::out_of_range{"Vector3::[] => Index access out of range."};
   }
 }
 

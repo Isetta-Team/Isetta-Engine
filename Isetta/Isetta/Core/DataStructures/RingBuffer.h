@@ -63,8 +63,9 @@ RingBuffer<T>::RingBuffer() {
 template <typename T>
 RingBuffer<T>::RingBuffer(int n) : size{n + 1} {
   if (size <= 0) {
-    throw std::length_error(
-        "RingBuffer::RingBuffer() Cannot create RingBuffer of size 0 or less.");
+    throw std::length_error{
+        "RingBuffer::RingBuffer => Cannot create RingBuffer of size 0 or "
+        "less."};
   }
 
   // TODO(Caleb): Change out with custom mem alloc
@@ -75,8 +76,9 @@ template <typename T>
 RingBuffer<T>::RingBuffer(std::initializer_list<T> il)
     : size{static_cast<int>(il.size()) + 1} {
   if (size <= 0) {
-    throw std::length_error(
-        "RingBuffer::RingBuffer() Cannot create RingBuffer of size 0 or less.");
+    throw std::length_error{
+        "RingBuffer::RingBuffer => Cannot create RingBuffer of size 0 or "
+        "less."};
   }
 
   // TODO(Caleb): Change out with custom mem alloc
@@ -89,12 +91,13 @@ RingBuffer<T>::RingBuffer(std::initializer_list<T> il)
 template <typename T>
 RingBuffer<T>::RingBuffer(std::initializer_list<T> il, int n) : size{n + 1} {
   if (size <= 0) {
-    throw std::length_error(
-        "RingBuffer::RingBuffer() Cannot create RingBuffer of size 0 or less.");
+    throw std::length_error{
+        "RingBuffer::RingBuffer => Cannot create RingBuffer of size 0 or "
+        "less."};
   } else if (size < il.size()) {
-    throw std::length_error(
-        "RingBuffer::RingBuffer() Cannot create RingBuffer of size less than "
-        "the passed in list.");
+    throw std::length_error{
+        "RingBuffer::RingBuffer => Cannot create RingBuffer of size less than "
+        "the passed in list."};
   }
 
   // TODO(Caleb): Change out with custom mem alloc
@@ -152,7 +155,7 @@ RingBuffer<T>::RingBuffer(RingBuffer<T>&& rb) : size{rb.GetCapacity()} {
 template <typename T>
 T RingBuffer<T>::Get() {
   if (IsEmpty()) {
-    throw std::out_of_range("RingBuffer::get() Buffer is empty.");
+    throw std::out_of_range{"RingBuffer::get => Buffer is empty."};
   }
 
   int idx = head;
@@ -164,7 +167,7 @@ T RingBuffer<T>::Get() {
 template <typename T>
 void RingBuffer<T>::Put(T o) {
   if (IsFull()) {
-    throw std::range_error("RingBuffer::put() Buffer is full.");
+    throw std::range_error{"RingBuffer::put => Buffer is full."};
   }
 
   buffer[tail] = o;
@@ -174,7 +177,7 @@ void RingBuffer<T>::Put(T o) {
 template <typename T>
 T RingBuffer<T>::GetBack() {
   if (IsEmpty()) {
-    throw std::out_of_range("RingBuffer::getBack() Buffer is empty.");
+    throw std::out_of_range{"RingBuffer::getBack => Buffer is empty."};
   }
 
   int idx = tail;
@@ -186,7 +189,7 @@ T RingBuffer<T>::GetBack() {
 template <typename T>
 void RingBuffer<T>::PutFront(T o) {
   if (IsFull()) {
-    throw std::out_of_range("RingBuffer::putBack() Buffer is full.");
+    throw std::out_of_range{"RingBuffer::putBack => Buffer is full."};
   }
 
   head = ((head - 1) % size + size) % size;

@@ -206,14 +206,14 @@ float Matrix4::Determinant() const {
 
 float Matrix4::Get(int x, int y) const {
   if (x > 3 || x < 0 || y > 3 || y < 0) {
-    throw std::out_of_range("Matrix4::Get: Matrix index out of range.");
+    throw std::out_of_range{"Matrix4::Get => Matrix index out of range."};
   }
   return data[(x << 2) + y];
 }
 
 void Matrix4::Set(int x, int y, float number) {
   if (x > 3 || x < 0 || y > 3 || y < 0) {
-    throw std::out_of_range("Matrix4::Set: Matrix index out of range.");
+    throw std::out_of_range{"Matrix4::Set => Matrix index out of range."};
   }
   data[(x << 2) + y] = number;
 }
@@ -271,8 +271,8 @@ Matrix4 Matrix4::Inverse() const {
   float det = data[0] * m11 + data[1] * m21 + data[2] * m31 + data[3] * m41;
 
   if (det == 0) {
-    throw std::out_of_range(
-        "Matrix4::Inverse: Cannot do inverse when the determinant is zero.");
+    throw std::out_of_range{
+        "Matrix4::Inverse => Cannot do inverse when the determinant is zero."};
   }
 
   Matrix4 ret{m11, m12, m13, m14, m21, m22, m23, m24,
@@ -312,14 +312,14 @@ bool Matrix4::IsZero() const {
 
 Vector4 Matrix4::GetRow(int row) const {
   if (row < 0 || row > 3)
-    throw std::out_of_range("Matrix4::GetRow: Row index out of range.");
+    throw std::out_of_range{"Matrix4::GetRow => Row index out of range."};
   return Vector4(data[row << 2], data[(row << 2) + 1], data[(row << 2) + 2],
                  data[(row << 2) + 3]);
 }
 
 void Matrix4::SetRow(int row, Vector4 rowData) {
   if (row < 0 || row > 2)
-    throw std::out_of_range("Matrix4::SetRow: Row index out of range.");
+    throw std::out_of_range{"Matrix4::SetRow => Row index out of range."};
   data[row << 2] = rowData.x;
   data[(row << 2) + 1] = rowData.y;
   data[(row << 2) + 2] = rowData.z;
@@ -328,13 +328,13 @@ void Matrix4::SetRow(int row, Vector4 rowData) {
 
 Vector4 Matrix4::GetCol(int col) const {
   if (col < 0 || col > 3)
-    throw std::out_of_range("Matrix4:GetCol: Column index out of range.");
+    throw std::out_of_range{"Matrix4:GetCol => Column index out of range."};
   return Vector4(data[col], data[4 + col], data[8 + col], data[12 + col]);
 }
 
 void Matrix4::SetCol(int col, Vector4 colData) {
   if (col < 0 || col > 3)
-    throw std::out_of_range("Matrix4:SetCol: Column index out of range.");
+    throw std::out_of_range{"Matrix4:SetCol => Column index out of range."};
   data[col] = colData.x;
   data[4 + col] = colData.y;
   data[8 + col] = colData.z;

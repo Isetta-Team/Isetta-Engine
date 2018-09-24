@@ -4,7 +4,7 @@
 #include "Core/Memory/PoolAllocator.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Memory/MemoryAllocator.h"
-#include "Utilities.h"
+#include "Util.h"
 
 namespace Isetta {
 
@@ -12,7 +12,7 @@ PoolAllocator::PoolAllocator(const Size chunkSize, const Size count) {
   elementSize = chunkSize;
 
   if (elementSize > sizeof(Node*)) {
-    throw std::exception{Utilities::Msg(
+    throw std::exception{Util::StrFormat(
         "PoolAllocator::PoolAllocator => Using PoolAllocator for chunkSize %d "
         "will incur more overhead memory than the memory actually "
         "needed for the elements",

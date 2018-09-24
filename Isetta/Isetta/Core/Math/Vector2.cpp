@@ -31,7 +31,7 @@ float Vector2::operator[](int i) const {
     case 1:
       return y;
     default:
-      throw std::out_of_range("Vector2::[] Index Access out of range.");
+      throw std::out_of_range{"Vector2::[] => Index Access out of range."};
   }
 }
 

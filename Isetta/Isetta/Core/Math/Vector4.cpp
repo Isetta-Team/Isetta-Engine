@@ -24,7 +24,7 @@ float Vector4::operator[](int i) const {
     case 3:
       return w;
     default:
-      throw std::out_of_range("Vector4::[] Index access out of range.");
+      throw std::out_of_range{"Vector4::[] => Index access out of range."};
   }
 }
 

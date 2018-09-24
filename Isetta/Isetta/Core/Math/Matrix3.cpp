@@ -167,21 +167,21 @@ float Matrix3::Determinant() const {
 }
 float Matrix3::Get(int x, int y) const {
   if (x > 2 || x < 0 || y > 2 || y < 0) {
-    throw std::out_of_range("Matrix3::Get: Matrix index out of range.");
+    throw std::out_of_range{"Matrix3::Get => Matrix index out of range."};
   }
   return data[x * 3 + y];
 }
 void Matrix3::Set(int x, int y, float number) {
   if (x > 2 || x < 0 || y > 2 || y < 0) {
-    throw std::out_of_range("Matrix3::Set: Matrix index out of range.");
+    throw std::out_of_range{"Matrix3::Set => Matrix index out of range."};
   }
   data[x * 3 + y] = number;
 }
 Matrix3 Matrix3::Inverse() const {
   float det = Determinant();
   if (det == 0) {
-    throw std::logic_error(
-        "Matrix3::Inverse: Cannot do inverse when the determinant is zero.");
+    throw std::logic_error{
+        "Matrix3::Inverse => Cannot do inverse when the determinant is zero."};
   }
   Matrix3 ret{};
   Matrix3 t{Transpose()};
@@ -225,13 +225,13 @@ bool Matrix3::IsZero() const {
 
 Vector3 Matrix3::GetRow(int row) const {
   if (row < 0 || row > 2)
-    throw std::out_of_range("Matrix3::GetRow: Row index out of range.");
+    throw std::out_of_range{"Matrix3::GetRow => Row index out of range."};
   return Vector3(data[row * 3], data[row * 3 + 1], data[row * 3 + 2]);
 }
 
 void Matrix3::SetRow(int row, Vector3 rowData) {
   if (row < 0 || row > 2)
-    throw std::out_of_range("Matrix3::SetRow: Row index out of range.");
+    throw std::out_of_range{"Matrix3::SetRow => Row index out of range."};
   data[row * 3] = rowData.x;
   data[row * 3 + 1] = rowData.y;
   data[row * 3 + 2] = rowData.z;
@@ -239,13 +239,13 @@ void Matrix3::SetRow(int row, Vector3 rowData) {
 
 Vector3 Matrix3::GetCol(int col) const {
   if (col < 0 || col > 2)
-    throw std::out_of_range("Matrix3::GetCol: Column index out of range.");
+    throw std::out_of_range{"Matrix3::GetCol => Column index out of range."};
   return Vector3(data[col], data[3 + col], data[6 + col]);
 }
 
 void Matrix3::SetCol(int col, Vector3 colData) {
   if (col < 0 || col > 2)
-    throw std::out_of_range("Matrix3::SetCol: Column index out of range.");
+    throw std::out_of_range{"Matrix3::SetCol => Column index out of range."};
   data[col] = colData.x;
   data[3 + col] = colData.y;
   data[6 + col] = colData.z;

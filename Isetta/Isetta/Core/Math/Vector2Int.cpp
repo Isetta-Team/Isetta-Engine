@@ -26,7 +26,7 @@ int Vector2Int::operator[](int i) const {
     case 1:
       return y;
     default:
-      throw std::out_of_range("Vector2Int::[]: Index access out of range.");
+      throw std::out_of_range{"Vector2Int::[] => Index access out of range."};
   }
 }
 

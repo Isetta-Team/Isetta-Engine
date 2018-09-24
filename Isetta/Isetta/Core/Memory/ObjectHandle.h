@@ -4,7 +4,7 @@
 #pragma once
 #include "Core/IsettaAlias.h"
 #include "Core/Memory/MemoryArena.h"
-#include "Utilities.h"
+#include "Util.h"
 
 namespace Isetta {
 // FUTURE: If we want reference counting (probably not), it can be done here
@@ -101,16 +101,15 @@ void ObjectHandle<T>::EraseObject() const {
   HandleEntry& entry = MemoryArena::entryArr[index];
 
   if (entry.isEmpty) {
-    throw std::exception{Utilities::Msg(
+    throw std::exception{
         "ObjectHandle::EraseObject => ObjectHandle::DeleteObject => Double "
-        "deleting handle!")};
+        "deleting handle!"};
   }
 
   if (uniqueID != entry.uniqueID) {
-    throw std::exception{Utilities::Msg(
+    throw std::exception{
         "ObjectHandle::EraseObject => ObjectHandle::DeleteObject => You are "
-        "trying to delete an "
-        "object you don't own!")};
+        "trying to delete an object you don't own!"};
   }
 
   static_cast<T*>(entry.ptr)->~T();

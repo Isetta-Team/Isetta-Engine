@@ -3,10 +3,11 @@
  */
 #include "Audio/AudioModule.h"
 #include <combaseapi.h>
+#include <algorithm>
 #include "Audio/AudioSource.h"
 #include "Core/Debug/Logger.h"
 #include "SID/sid.h"
-#include <algorithm>
+#include "Util.h"
 
 namespace Isetta {
 
@@ -54,9 +55,8 @@ FMOD::Sound* AudioModule::FindSound(const char* soundName) {
     return soundMap[hashedValue];
   }
 
-  throw std::exception{std::string("AudioModule::FindSound => Sound file " +
-                                   std::string(soundName) + " found!")
-                           .c_str()};
+  throw std::exception{Util::StrFormat(
+      "AudioModule::FindSound => Sound file %s not found!", soundName)};
 }
 
 FMOD::Channel* AudioModule::Play(FMOD::Sound* sound, const bool loop,

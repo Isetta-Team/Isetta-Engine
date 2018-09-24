@@ -276,7 +276,7 @@
     <ClInclude Include="Core\IsettaAlias.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Utilities.h" />
+    <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
