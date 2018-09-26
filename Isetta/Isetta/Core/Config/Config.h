@@ -15,6 +15,7 @@
 #include "Graphics/Window.h"
 #include "Networking/NetworkingModule.h"
 #include "Core/Memory/MemoryManager.h"
+#include "Audio/AudioModule.h"
 
 namespace Isetta {
 /**
@@ -66,6 +67,8 @@ class Config {
   NetworkingModule::NetworkConfig networkConfig;
   /// MemoryManager configuration CVars
   MemoryManager::MemoryConfig memoryConfig;
+  /// AudioModule configuration CVars
+  AudioModule::AudioConfig audioConfig;
 
   /// Max FPS of the engine
   CVar<int> maxFps = {"max_fps", 16};

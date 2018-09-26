@@ -2,13 +2,14 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Audio/AudioModule.h"
+#include <SID/sid.h>
 #include <combaseapi.h>
+#include <fmod_errors.h>
 #include <algorithm>
 #include "Audio/AudioSource.h"
+#include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
-#include <SID/sid.h>
 #include "Util.h"
-#include <fmod_errors.h>
 
 namespace Isetta {
 
@@ -33,7 +34,9 @@ void AudioModule::StartUp() {
   FMOD::System_Create(&fmodSystem);
   CheckStatus(fmodSystem->init(512, FMOD_INIT_NORMAL, nullptr));
   // TODO(YIDI): Set this in engine config
-  soundFilesRoot = R"(Resources\Sound\)";
+  auto& config = Config::Instance();
+  soundFilesRoot = config.resourcePath.GetVal() + R"(\)" +
+                   config.audioConfig.pathUnderResource.GetVal() + R"(\)";
   LoadAllAudioClips();
   AudioSource::audioSystem = this;
 }
@@ -76,7 +79,8 @@ void AudioModule::LoadAllAudioClips() {
   for (auto file : files) {
     FMOD::Sound* sound = nullptr;
     std::string path = soundFilesRoot + file;
-    CheckStatus(fmodSystem->createSound(path.c_str(), FMOD_LOWMEM, nullptr, &sound));
+    CheckStatus(
+        fmodSystem->createSound(path.c_str(), FMOD_LOWMEM, nullptr, &sound));
 
     soundMap.insert({SID(file), sound});
   }

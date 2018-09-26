@@ -9,10 +9,17 @@
 #include "Core/IsettaAlias.h"
 #include "Core/ModuleManager.h"
 #include "fmod.hpp"
+#include "Core/Config/CVar.h"
 
 namespace Isetta {
 
 class AudioModule {
+public:
+  struct AudioConfig {
+    CVarString pathUnderResource{"audio_file_path", "Sound"};
+    CVar<Size> memorySize{"audio_memory_size", 10485760};
+  };
+
  private:
   AudioModule() = default;
   ~AudioModule() = default;
