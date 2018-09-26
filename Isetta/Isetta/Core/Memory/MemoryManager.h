@@ -6,6 +6,7 @@
 #include "Core/Memory/DoubleBufferedAllocator.h"
 #include "Core/Memory/ObjectHandle.h"
 #include "Core/Memory/StackAllocator.h"
+#include "Core/Config/CVar.h"
 
 namespace Isetta {
 
@@ -13,6 +14,12 @@ namespace Isetta {
 // TODO(YIDI): Implement de-fragmentation
 class MemoryManager {
  public:
+  struct MemoryConfig {
+    CVar<Size> singleFrameAllocatorSize{"single_frame_allocator_size", 10_MB};
+    CVar<Size> doubleBufferedAllocatorSize{"double_buffered_allocator_size", 10_MB};
+    CVar<Size> dynamicArenaSize{"dynamic_arena_size", 10_MB};
+  };
+
   /**
    * \brief Create a new object whose memory is going to be cleared at the end
    * of this frame. You need to manually call destructor on that object if

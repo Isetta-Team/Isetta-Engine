@@ -7,6 +7,7 @@
 #include "Input/Input.h"
 #include "Input/InputEnum.h"
 #include <vector>
+#include "Core/Config/Config.h"
 
 namespace Isetta {
 
@@ -39,9 +40,10 @@ MemoryManager::MemoryManager() {
 
 void MemoryManager::StartUp() {
   // TODO(YIDI): Get size from the config file
-  singleFrameAllocator = StackAllocator(10_MB);
-  doubleBufferedAllocator = DoubleBufferedAllocator(10_MB);
-  dynamicArena = MemoryArena(10_MB);
+  MemoryConfig configs = Config::Instance().memoryConfig;
+  singleFrameAllocator = StackAllocator(configs.singleFrameAllocatorSize.GetVal());
+  doubleBufferedAllocator = DoubleBufferedAllocator(configs.doubleBufferedAllocatorSize.GetVal());
+  dynamicArena = MemoryArena(configs.dynamicArenaSize.GetVal());
 }
 
 // Memory Manager's update needs to be called after everything that need memory

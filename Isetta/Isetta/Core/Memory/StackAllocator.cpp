@@ -13,6 +13,8 @@ StackAllocator::StackAllocator(const Size stackSize)
     : top(0), length(stackSize) {
   bottom = MemoryAllocator::AllocateDefaultAligned(stackSize);
   bottomAddress = reinterpret_cast<PtrInt>(bottom);
+  LOG_INFO(Debug::Channel::Memory,
+           "A new stack allocator is created with size: %I64u", stackSize);
 }
 
 void* StackAllocator::Alloc(const Size size, const U8 alignment) {
@@ -36,8 +38,7 @@ void* StackAllocator::Alloc(const Size size, const U8 alignment) {
 
   if (newTop > length) {
     // TODO(YIDI): should I throw an exception here?
-    throw std::overflow_error{
-        "StackAllocator::Alloc => Not enough memory"};
+    throw std::overflow_error{"StackAllocator::Alloc => Not enough memory"};
   }
 
   top = newTop;
