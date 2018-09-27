@@ -2,8 +2,7 @@
 #include <cstdarg>
 #include <cstdio>
 
-namespace Isetta {
-namespace Utilities {
+namespace Isetta::Utilities {
 
 inline const char* Msg(const char* format, ...) {
   static char charBuffer[1024];
@@ -16,5 +15,4 @@ inline const char* Msg(const char* format, ...) {
   return charBuffer;
 }
 
-}  // namespace Utilities
-}  // namespace Isetta
+}  // namespace Isetta::Utilities

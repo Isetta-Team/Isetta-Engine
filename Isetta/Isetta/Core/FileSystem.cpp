@@ -7,6 +7,7 @@
 #include <tchar.h>
 #include <iostream>
 #include <stdexcept>
+
 #include "Core/Debug/Logger.h"
 
 DWORD WINAPI SaveFileWorkerThread(LPVOID empty) {
@@ -249,7 +250,7 @@ HANDLE FileSystem::ReadAsync(const char* fileName,
 }
 
 HANDLE FileSystem::WriteAsync(const char* fileName, const char* contentBuffer,
-                              const std::function<void(const char*)>& callback,
+                              const Action<const char*>& callback,
                               const bool appendData) {
   HANDLE hFile;
   if (appendData) {
@@ -332,5 +333,26 @@ void FileSystem::Touch(const char* fileName) {
   CloseHandle(hFile);
 }
 void FileSystem::Touch(const std::string& fileName) { Touch(fileName.c_str()); }
+
+int FileSystem::GetFileLength(const std::string& fileName) {
+  HANDLE hFile =
+      AccessFile(fileName.c_str(), FILE_READ_DATA, NULL, OPEN_EXISTING, NULL);
+  if (GetFileError()) {
+    return NULL;
+  }
+
+  DWORD dwFileSize = GetFileSize(hFile, NULL);
+  CloseHandle(hFile);
+  return dwFileSize;
+}
+
+void FileSystem::Concat(const std::initializer_list<std::string>& path,
+                        std::string* file) {
+  std::string folder = "";
+  for (auto p : path) {
+    folder += p + PathSeparator();
+  }
+  *file = folder + *file;
+}
 
 }  // namespace Isetta
