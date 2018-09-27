@@ -2,21 +2,21 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include "Core/Config/CVar.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Memory/DoubleBufferedAllocator.h"
 #include "Core/Memory/ObjectHandle.h"
 #include "Core/Memory/StackAllocator.h"
-#include "Core/Config/CVar.h"
 
 namespace Isetta {
 
-// TODO(YIDI): Add LSR
-// TODO(YIDI): Implement de-fragmentation
 class MemoryManager {
  public:
   struct MemoryConfig {
+    CVar<Size> lsrAndLevelAllocatorSize{"LSR_and_level_allocator_size", 10_MB};
     CVar<Size> singleFrameAllocatorSize{"single_frame_allocator_size", 10_MB};
-    CVar<Size> doubleBufferedAllocatorSize{"double_buffered_allocator_size", 10_MB};
+    CVar<Size> doubleBufferedAllocatorSize{"double_buffered_allocator_size",
+                                           10_MB};
     CVar<Size> dynamicArenaSize{"dynamic_arena_size", 10_MB};
   };
 
@@ -25,19 +25,11 @@ class MemoryManager {
    * of this frame. You need to manually call destructor on that object if
    * needed
    *
-   * \tparam T type of object to create \return
-   */
-  template <typename T>
-  T* NewSingleFrame();
-
-  /**
-   * \brief Grab some free memory to use. The memory will be freed at the end of
-   * this frame
-   *
-   * \param size Size in bytes
+   * \tparam T type of object to create
    * \return
    */
-  void* AllocSingleFrameUnAligned(Size size);
+  template <typename T>
+  static T* NewOnSingleFrame();
 
   /**
    * \brief Grab some properly aligned free memory to use. The memory will be
@@ -49,7 +41,7 @@ class MemoryManager {
    *
    * \return
    */
-  void* AllocSingleFrame(Size size, U8 alignment = 16);
+  static void* AllocOnSingleFrame(Size size, U8 alignment = 16);
 
   /**
    * \brief Create a new object whose memory is going to be cleared at the end
@@ -59,16 +51,7 @@ class MemoryManager {
    * \tparam T type of object to create \return
    */
   template <typename T>
-  static T* NewDoubleBuffered();
-
-  /**
-   * \brief Grab some free memory to use. The memory will be freed at the end of
-   * the next frame
-   *
-   * \param size Size in bytes
-   * \return
-   */
-  void* AllocDoubleBufferedUnAligned(Size size);
+  static T* NewOnDoubleBuffered();
 
   /**
    * \brief Grab some properly aligned free memory to use. The memory will be
@@ -80,7 +63,12 @@ class MemoryManager {
    *
    * \return
    */
-  void* AllocDoubleBuffered(Size size, U8 alignment = 16);
+  static void* AllocOnDoubleBuffered(Size size, U8 alignment = 16);
+
+  // the memory will either from LSR - when starting up the engine
+  // or LevelData - after engine startup
+  // make sure you don't put data in wrong places
+  static void* AllocOnStack(Size size, U8 alignment = 16);
 
   /**
    * \brief Create an object that will sit on the dynamic memory area. You need
@@ -103,9 +91,6 @@ class MemoryManager {
    */
   template <typename T>
   static void DeleteDynamic(const ObjectHandle<T>& objToDelete);
-
-  /// only for internal test
-  static void Test();
 
  private:
   MemoryManager();
@@ -131,10 +116,19 @@ class MemoryManager {
    */
   void ShutDown();
 
+  // set the marker to clear to when finishing a level
+  void FinishEngineStartupListener();
+  void ClearLevelMemory();
+
+  static MemoryManager* GetInstance();
   /// only for internal test
-  void RegisterCallbacks();
+  void RegisterTests();
+  /// only for internal test
+  static void DefragmentTest();
 
   static MemoryManager* instance;
+  StackAllocator lsrAndLevelAllocator{};
+  Size lvlMemStartMarker{};
   StackAllocator singleFrameAllocator{};
   DoubleBufferedAllocator doubleBufferedAllocator{};
   MemoryArena dynamicArena{};
@@ -143,12 +137,12 @@ class MemoryManager {
 };
 
 template <typename T>
-T* MemoryManager::NewSingleFrame() {
+T* MemoryManager::NewOnSingleFrame() {
   return singleFrameAllocator.New<T>();
 }
 
 template <typename T>
-T* MemoryManager::NewDoubleBuffered() {
+T* MemoryManager::NewOnDoubleBuffered() {
   return doubleBufferedAllocator.New<T>();
 }
 

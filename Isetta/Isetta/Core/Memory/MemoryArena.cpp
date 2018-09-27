@@ -10,6 +10,7 @@
 
 namespace Isetta {
 
+// TODO(YIDI): find a way to allow specifying from config
 HandleEntry MemoryArena::entryArr[maxHandleCount];
 
 // TODO(YIDI): This is only allocating from top
@@ -34,7 +35,7 @@ void* MemoryArena::Alloc(const Size size, Size& outSize) {
 
   if (alignedAddress + size > rightAddress) {
     throw std::exception{
-        "MemoryArena::Alloc => Not enough memory in the arena left!"};
+        "MemoryArena::Alloc => Not enough memory in the arena!"};
   }
 
   outSize = size + adjustment;

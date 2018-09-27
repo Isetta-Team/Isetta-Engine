@@ -164,7 +164,7 @@ Clock& EngineLoop::GetGameClock() {
 }
 
 void RunYidiTest() {
-  Input::RegisterKeyPressCallback(KeyCode::T, []() { MemoryManager::Test(); });
+  
 }
 
 }  // namespace Isetta

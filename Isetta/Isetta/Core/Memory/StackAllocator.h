@@ -26,13 +26,6 @@ class StackAllocator {
   void* Alloc(Size size, U8 alignment = 16);
 
   /**
-   * \brief Grab unaligned memory from the stack allocator.
-   * \param size Size in byte
-   * \return Pointer to allocated memory
-   */
-  void* AllocUnaligned(Size size);
-
-  /**
    * \brief Create a new object on the stack allocator. The constructor is
    * automatically called. The memory is 16 aligned by default. If you are using
    * this, you probably need to call the destructor on your own.

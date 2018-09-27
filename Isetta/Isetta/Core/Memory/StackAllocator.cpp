@@ -37,27 +37,12 @@ void* StackAllocator::Alloc(const Size size, const U8 alignment) {
   Marker newTop = top + size + adjustment;
 
   if (newTop > length) {
-    // TODO(YIDI): should I throw an exception here?
     throw std::overflow_error{"StackAllocator::Alloc => Not enough memory"};
   }
 
   top = newTop;
 
   return reinterpret_cast<void*>(alignedAddress);
-}
-
-void* StackAllocator::AllocUnaligned(const Size size) {
-  Marker newTop = top + size;
-
-  if (newTop > length) {
-    // TODO(YIDI): should I throw an exception here?
-    throw std::overflow_error{
-        "StackAllocator::AllocUnaligned => Not enough memory"};
-  }
-
-  void* mem = reinterpret_cast<void*>(bottomAddress + top);
-  top = newTop;
-  return mem;
 }
 
 void StackAllocator::Erase() {
