@@ -123,6 +123,9 @@
       <Filter>Core\Memory</Filter>
     </ClCompile>
     <ClCompile Include="EngineLoop.cpp" />
+    <ClCompile Include="Core\Memory\MemoryArena.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
     <ClCompile Include="Networking\NetworkManager.cpp">
       <Filter>Networking</Filter>
     </ClCompile>
@@ -257,6 +260,9 @@
     </ClInclude>
     <ClInclude Include="Networking\Messages.h">
       <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\MemoryArena.h">
+      <Filter>Core\Memory</Filter>
     </ClInclude>
     <ClInclude Include="Core\Config\ICVar.h">
       <Filter>Core\Config</Filter>

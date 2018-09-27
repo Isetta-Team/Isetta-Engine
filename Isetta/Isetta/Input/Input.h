@@ -3,6 +3,7 @@
  */
 #pragma once
 
+#include <GLFW/glfw3.h>
 #include <functional>
 #include "Core/IsettaAlias.h"
 #include "Core/Math/Vector2.h"
@@ -15,8 +16,7 @@ class Input {
    * \brief Register a callback function to window close event
    * \param callback The callback function
    */
-  static void RegisterWindowCloseCallback(
-      const std::function<void()>& callback);
+  static void RegisterWindowCloseCallback(const Action<>& callback);
   /**
    * \brief Check if the key is pressed
    * \param key The keycode to detect
@@ -28,8 +28,7 @@ class Input {
    * \param key The keycode to detect
    * \param callback The callback function
    */
-  static U64 RegisterKeyPressCallback(KeyCode key,
-                                      const std::function<void()>& callback);
+  static U64 RegisterKeyPressCallback(KeyCode key, const Action<>& callback);
   /**
    * \brief Unregister a callback by the key and handle
    * \param key The key to detect
@@ -42,8 +41,7 @@ class Input {
    * \param key The keycode to detect
    * \param callback The callback function
    */
-  static U64 RegisterKeyReleaseCallback(KeyCode key,
-                                        const std::function<void()>& callback);
+  static U64 RegisterKeyReleaseCallback(KeyCode key, const Action<>& callback);
   /**
    * \brief Unregister a callback by the key and handle
    * \param key The key to detect
@@ -66,7 +64,7 @@ class Input {
    * \param callback The callback function
    */
   static U64 RegisterMousePressCallback(MouseButtonCode mouseButton,
-                                        const std::function<void()>& callback);
+                                        const Action<>& callback);
   /**
    * \brief Unregister a callback by the mouse button and handle
    * \param mouseButton The mouse button to detect
@@ -80,8 +78,8 @@ class Input {
    * \param mouseButton The mouse button to detect
    * \param callback The callback function
    */
-  static U64 RegisterMouseReleaseCallback(
-      MouseButtonCode mouseButton, const std::function<void()>& callback);
+  static U64 RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
+                                          const Action<>& callback);
   /**
    * \brief Unregister a callback by the mouse button and handle
    * \param mouseButton The mouse button to detect
@@ -89,6 +87,19 @@ class Input {
    */
   static void UnregisterMouseReleaseCallback(MouseButtonCode mouseButton,
                                              U64 handle);
+
+  static U64 RegisterMouseButtonCallback(
+      const Action<GLFWwindow*, int, int, int>& callback);
+  static void UnregisterMouseButtonCallback(U64 handle);
+  static U64 RegisterKeyCallback(
+      const Action<GLFWwindow*, int, int, int, int>& callback);
+  static void UnegisterKeyCallback(U64 handle);
+  static U64 RegisterScrollCallback(
+      const Action<GLFWwindow*, double, double>& callback);
+  static void UnegisterScrollCallback(U64 handle);
+  static U64 RegisterCharCallback(
+      const Action<GLFWwindow*, unsigned int>& callback);
+  static void UnegisterCharCallback(U64 handle);
 
  private:
   static class InputModule* inputModule;

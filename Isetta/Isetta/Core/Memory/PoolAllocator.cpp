@@ -55,5 +55,4 @@ void PoolAllocator::Erase() const {
 }
 
 PoolAllocator::Node::Node(Node* next) { this->next = next; }
-
 }  // namespace Isetta

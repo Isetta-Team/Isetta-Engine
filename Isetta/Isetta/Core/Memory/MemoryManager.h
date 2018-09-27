@@ -2,17 +2,12 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Memory/DoubleBufferedAllocator.h"
 #include "Core/Memory/ObjectHandle.h"
-#include "Core/Memory/PoolAllocator.h"
 #include "Core/Memory/StackAllocator.h"
 
 namespace Isetta {
-
-template <typename T>
-class ObjectHandle;
 
 // TODO(YIDI): Add LSR
 // TODO(YIDI): Implement de-fragmentation
@@ -34,7 +29,9 @@ class MemoryManager {
   static ObjectHandle<T>& NewDynamic();
 
   template <typename T>
-  static void DeleteDynamic(ObjectHandle<T>& objToFree);
+  static void DeleteDynamic(const ObjectHandle<T>& objToFree);
+
+  static void Test();
 
  private:
   MemoryManager();
@@ -43,25 +40,13 @@ class MemoryManager {
   void StartUp();
   void Update();
   void ShutDown();
-  void Defragment();
-
-  static void* AllocDynamic(Size size, U8 alignment = 16);
-  static void FreeDynamic(void* ptrToFree);
+  void RegisterCallbacks();
 
   static MemoryManager* instance;
   StackAllocator singleFrameAllocator{};
-  StackAllocator dynamicArena{};
   DoubleBufferedAllocator doubleBufferedAllocator{};
-  PoolAllocator handlePool;
+  MemoryArena dynamicArena{};
 
-  // can't be put in ObjectHandle because it creates new ones for each type
-  inline static U32 nextUniqueID = 0;
-  const static U32 maxTableSize = 2048;
-  static class HandleEntry handleEntryTable[];
-  inline static void* handleLoopUp[maxTableSize] = {nullptr};
-
-  template <typename T>
-  friend class ObjectHandle;
   friend class ModuleManager;
 };
 
@@ -77,24 +62,12 @@ T* MemoryManager::NewDoubleBuffered() {
 
 template <typename T>
 ObjectHandle<T>& MemoryManager::NewDynamic() {
-  // TODO(YIDI): I'm not sure this is the right way to implement object handles,
-  // the handle itself should not need to be freed. But I think usage-wise this
-  // is optimal
-  auto hand = new (instance->handlePool.Get()) ObjectHandle<T>{};
-  instance->handleLoopUp[hand->index] = hand;
-  return *(hand);
+  return instance->dynamicArena.NewDynamic<T>();
 }
 
 template <typename T>
-void MemoryManager::DeleteDynamic(ObjectHandle<T>& objToFree) {
-  if (instance->handleLoopUp[objToFree.index] != nullptr) {
-    objToFree.EraseObject();
-    instance->handlePool.Free(instance->handleLoopUp[objToFree.index]);
-    instance->handleLoopUp[objToFree.index] = nullptr;
-  } else {
-    throw std::exception{Utilities::Msg(
-        "MemoryManager::DeleteDynamic => Double deleting handle!")};
-  }
+void MemoryManager::DeleteDynamic(const ObjectHandle<T>& objToFree) {
+  instance->dynamicArena.DeleteDynamic(objToFree);
 }
 
 }  // namespace Isetta

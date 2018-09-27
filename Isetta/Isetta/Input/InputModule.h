@@ -17,15 +17,14 @@ class Vector2;
 
 namespace Isetta {
 class InputModule {
-  using CBMap =
-      std::unordered_map<int, std::list<std::pair<U64, std::function<void()>>>>;
+  using CBMap = std::unordered_map<int, std::list<std::pair<U64, Action<>>>>;
 
  public:
   /**
    * \brief Register a callback function to window close event
    * \param callback The callback function
    */
-  void RegisterWindowCloseCallback(std::function<void()> callback);
+  void RegisterWindowCloseCallback(const Action<>& callback);
   /**
    * \brief Check if the key is pressed
    * \param key The keycode to detect
@@ -37,8 +36,7 @@ class InputModule {
    * \param key The keycode to detect
    * \param callback The callback function
    */
-  U64 RegisterKeyPressCallback(KeyCode key,
-                               const std::function<void()>& callback);
+  U64 RegisterKeyPressCallback(KeyCode key, const Action<>& callback);
   /**
    * \brief Unregister a callback by the key and handle
    * \param key The key to detect
@@ -51,8 +49,7 @@ class InputModule {
    * \param key The keycode to detect
    * \param callback The callback function
    */
-  U64 RegisterKeyReleaseCallback(KeyCode key,
-                                 const std::function<void()>& callback);
+  U64 RegisterKeyReleaseCallback(KeyCode key, const Action<>& callback);
   /**
    * \brief Unregister a callback by the key and handle
    * \param key The key to detect
@@ -75,7 +72,7 @@ class InputModule {
    * \param callback The callback function
    */
   U64 RegisterMousePressCallback(MouseButtonCode mouseButton,
-                                 const std::function<void()>& callback);
+                                 const Action<>& callback);
   /**
    * \brief Unregister a callback by the mouse button and handle
    * \param mouseButton The mouse button to detect
@@ -89,13 +86,26 @@ class InputModule {
    * \param callback The callback function
    */
   U64 RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
-                                   const std::function<void()>& callback);
+                                   const Action<>& callback);
   /**
    * \brief Unregister a callback by the mouse button and handle
    * \param mouseButton The mouse button to detect
    * \param handle The handle to unregister
    */
   void UnregisterMouseReleaseCallback(MouseButtonCode mouseButton, U64 handle);
+
+  // TODO(Chaojie + Jacob): Talk about these, should unregister return bool?
+  U64 RegisterMouseButtonCallback(
+      const Action<GLFWwindow*, int, int, int>& callback);
+  void UnregisterMouseButtonCallback(U64 handle);
+  U64 RegisterKeyCallback(
+      const Action<GLFWwindow*, int, int, int, int>& callback);
+  void UnegisterKeyCallback(U64 handle);
+  U64 RegisterScrollCallback(
+      const Action<GLFWwindow*, double, double>& callback);
+  void UnegisterScrollCallback(U64 handle);
+  U64 RegisterCharCallback(const Action<GLFWwindow*, unsigned int>& callback);
+  void UnegisterCharCallback(U64 handle);
 
  private:
   static GLFWwindow* winHandle;
@@ -107,13 +117,12 @@ class InputModule {
   void Update(float deltaTime);
   void ShutDown();
 
-  U64 RegisterCallback(int key, const std::function<void()>& callback,
-                       CBMap* callbackMap);
+  U64 RegisterCallback(int key, const Action<>& callback, CBMap* callbackMap);
   void UnregisterCallback(int key, U64 handle, CBMap* callbackMap);
   int KeyCodeToGlfwKey(KeyCode key) const;
   int MouseButtonToGlfwKey(MouseButtonCode mouseButton) const;
 
-  static std::list<std::function<void()>> windowCloseCallbacks;
+  static std::list<Action<>> windowCloseCallbacks;
   static void WindowCloseListener(GLFWwindow* win);
 
   static CBMap keyPressCallbacks;
@@ -124,8 +133,20 @@ class InputModule {
                                int action, int mods);
   static void MouseEventListener(GLFWwindow* win, int button, int action,
                                  int mods);
+  static void CharEventListener(GLFWwindow*, unsigned int c);
+  static void ScrollEventListener(GLFWwindow*, double xoffset, double yoffset);
+
+  static std::unordered_map<U64, Action<GLFWwindow*, int, int, int>>
+      mouseButtonCallbacks;
+  static std::unordered_map<U64, Action<GLFWwindow*, int, int, int, int>>
+      keyCallbacks;
+  static std::unordered_map<U64, Action<GLFWwindow*, double, double>>
+      scrollCallbacks;
+  static std::unordered_map<U64, Action<GLFWwindow*, unsigned int>>
+      charCallbacks;
 
   // TODO(Chaojie) Discuss if one handle for all callbacks is enough
+  // TODO(Jacob) U64 might be overkill? maybe just U16?
   static U64 totalHandle;
 
   friend class ModuleManager;

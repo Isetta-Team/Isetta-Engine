@@ -1,6 +1,6 @@
 /*
-* Copyright (c) 2018 Isetta
-*/
+ * Copyright (c) 2018 Isetta
+ */
 #pragma once
 #include "Core/IsettaAlias.h"
 

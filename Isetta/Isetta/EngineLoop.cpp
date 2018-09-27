@@ -4,7 +4,7 @@
 #include "EngineLoop.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
-#include "Core/Memory/ObjectHandle.h"
+#include "Core/Memory/MemoryManager.h"
 #include "Core/ModuleManager.h"
 #include "Core/Time/Clock.h"
 #include "Graphics/AnimationNode.h"
@@ -12,7 +12,6 @@
 #include "Graphics/ModelNode.h"
 #include "Input/Input.h"
 #include "Input/InputEnum.h"
-#include "Networking/Messages.h"
 #include "Networking/NetworkManager.h"
 
 namespace Isetta {
@@ -165,18 +164,7 @@ Clock& EngineLoop::GetGameClock() {
 }
 
 void RunYidiTest() {
-  // const U32 count = 10;
-  // std::vector<ObjectHandle<U64>> arr;
-  // arr.reserve(count);
-  // for (U32 i = 0; i < count; i++) {
-  // auto ref = MemoryManager::NewDynamic<U64>();
-  // *ref = i;
-  // arr.push_back(ref);
-  // }
-
-  // for (U32 i = 0; i < count; i++) {
-  // MemoryManager::DeleteDynamic(arr[i]);
-  // }
+  Input::RegisterKeyPressCallback(KeyCode::T, []() { MemoryManager::Test(); });
 }
 
 }  // namespace Isetta
