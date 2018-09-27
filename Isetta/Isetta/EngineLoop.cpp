@@ -96,7 +96,7 @@ void EngineLoop::StartUp() {
     }
   });
 
-  // RunYidiTest();
+  RunYidiTest();
 }
 
 void EngineLoop::Update() {
@@ -164,7 +164,7 @@ Clock& EngineLoop::GetGameClock() {
 }
 
 void RunYidiTest() {
-  
+
 }
 
 }  // namespace Isetta

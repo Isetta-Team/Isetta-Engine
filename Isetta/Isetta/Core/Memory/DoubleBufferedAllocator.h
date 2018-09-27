@@ -36,15 +36,6 @@ class DoubleBufferedAllocator {
   explicit DoubleBufferedAllocator(Size size);
 
   /**
-   * \brief Grab unaligned raw memory from the double buffered allocator. The
-   * memory will be automatically cleared at the end of next frame
-   *
-   * \param size Size in bytes
-   * \return Raw memory pointer, use with caution!
-   */
-  void* AllocUnAligned(Size size);
-
-  /**
    * \brief Grab properly aligned raw memory from the double buffered allocator.
    * The memory will be automatically cleared at the end of next frame
    *
@@ -72,20 +63,24 @@ class DoubleBufferedAllocator {
   /**
    * \brief Creates a new object on the active stack allocator, which will
    * become invalid at the end of next frame. You need to manually call
-   * destructor on the object if needed. \tparam T \return
+   * destructor on the object if needed. 
+   * 
+   * \tparam T Type of object
+   * \tparam args Arguments for the constructor
+   * \return Pointer to new object
    */
-  template <typename T>
-  T* New();
+  template <typename T, typename ...args>
+  T* New(args...);
 
   StackAllocator stacks[2];
   U8 curStackIndex;
   friend class MemoryManager;
 };
 
-template <typename T>
-T* DoubleBufferedAllocator::New() {
+template <typename T, typename ...args>
+T* DoubleBufferedAllocator::New(args... argList) {
   void* mem = Alloc(sizeof(T));
-  return new (mem) T();
+  return new (mem) T(argList...);
 }
 
 }  // namespace Isetta

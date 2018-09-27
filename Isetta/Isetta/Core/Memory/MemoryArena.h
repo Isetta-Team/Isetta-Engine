@@ -38,8 +38,8 @@ class MemoryArena {
    * \tparam T Type of the object you want to create
    * \return
    */
-  template <typename T>
-  ObjectHandle<T> NewDynamic();
+  template <typename T, typename ...args>
+  ObjectHandle<T> NewDynamic(args...);
 
   /**
    * \brief Delete an object that was created with `NewDynamic`. The memory will
@@ -105,14 +105,14 @@ class MemoryArena {
   friend class MemoryManager;
 };
 
-template <typename T>
-ObjectHandle<T> MemoryArena::NewDynamic() {
+template <typename T, typename ...args>
+ObjectHandle<T> MemoryArena::NewDynamic(args... argList) {
   // TODO(YIDI): I'm not sure this is the right way to implement object handles,
   // the handle itself should not need to be freed. But I think usage-wise this
   // is optimal
   Size size;
   void* mem = Alloc(sizeof(T), size);
-  auto handle = ObjectHandle<T>{mem, nextUniqueID++, size};
+  auto handle = ObjectHandle<T>{mem, nextUniqueID++, size, argList...};
   addressIndexMap.emplace(handle.GetObjAddress(), handle.index);
   return handle;
 }

@@ -3,6 +3,7 @@
  */
 #pragma once
 #include "Core/IsettaAlias.h"
+#include <cstdarg>
 
 namespace Isetta {
 class StackAllocator {
@@ -29,22 +30,12 @@ class StackAllocator {
    * \brief Create a new object on the stack allocator. The constructor is
    * automatically called. The memory is 16 aligned by default. If you are using
    * this, you probably need to call the destructor on your own.
-   *
    * \tparam T type of object you want to create
+   * \tparam args Arguments for the constructor
    * \return Pointer to new object
    */
-  template <typename T>
-  T* New();
-
-  /**
-   * \brief Similar to `New<T>()`, but you have to manually pass in a reference
-   * to a marker, and that marker's value will be changed in this method
-   *
-   * \tparam T type of object you want to create
-   * \return Pointer to new object
-   */
-  template <typename T>
-  T* New(Marker& outMarker);
+  template<typename T, typename ...args>
+  T* New(args...);
 
   /**
    * \brief Free the stack allocator to a specific marker
@@ -77,15 +68,9 @@ class StackAllocator {
   PtrInt bottomAddress;
 };
 
-template <typename T>
-T* StackAllocator::New() {
+template <typename T, typename ... args>
+T* StackAllocator::New(args... argList) {
   void* mem = Alloc(sizeof(T));
-  return new (mem) T();
-}
-
-template <typename T>
-T* StackAllocator::New(Marker& outMarker) {
-  outMarker = top;
-  return New<T>();
+  return new (mem) T(argList...);
 }
 }  // namespace Isetta

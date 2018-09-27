@@ -20,4 +20,4 @@ inline float MegaBytesFromBytes(const int byte) {
   return byte / 1024.f / 1024.f;
 }
 
-}  // namespace Isetta::Util
+} // namespace Isetta::Util

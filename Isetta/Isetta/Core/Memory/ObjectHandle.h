@@ -79,7 +79,8 @@ class ObjectHandle {
    * ObjectHandles \param mem Pointer to the memory \param uniqueID uniqueID for
    * this handle \param size Size of the object in bytes
    */
-  ObjectHandle(void* mem, U32 uniqueID, Size size);
+  template <typename... args>
+  ObjectHandle(void* mem, U32 uniqueID, Size size, args...);
 
   /**
    * \brief Returns a pointer to the actual object
@@ -106,8 +107,9 @@ class ObjectHandle {
   void EraseObject() const;
 
   /**
-   * \brief A helper function used to get memory address of the object pointed to by this handle
-   * \return Memory address of the object pointed to by this handle
+   * \brief A helper function used to get memory address of the object pointed
+   * to by this handle \return Memory address of the object pointed to by this
+   * handle
    */
   PtrInt GetObjAddress() const;
   U32 uniqueID;
@@ -125,7 +127,8 @@ T& ObjectHandle<T>::operator*() {
 }
 
 template <typename T>
-ObjectHandle<T>::ObjectHandle(void* mem, const U32 uniqueID, const Size size)
+template <typename... args>
+ObjectHandle<T>::ObjectHandle(void* mem, const U32 uniqueID, const Size size, args... argList)
     : uniqueID(uniqueID) {
   HandleEntry* entry = nullptr;
 
@@ -143,7 +146,7 @@ ObjectHandle<T>::ObjectHandle(void* mem, const U32 uniqueID, const Size size)
         "ObjectHandle::ObjectHandle => No empty slot in handle table"};
   }
 
-  T* t = new (mem) T{};
+  T* t = new (mem) T{argList...};
   entry->Set(uniqueID, static_cast<void*>(t), false, size);
 }
 

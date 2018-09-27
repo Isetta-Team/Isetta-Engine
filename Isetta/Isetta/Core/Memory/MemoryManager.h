@@ -28,8 +28,8 @@ class MemoryManager {
    * \tparam T type of object to create
    * \return
    */
-  template <typename T>
-  static T* NewOnSingleFrame();
+  template <typename T, typename ...args>
+  static T* NewOnSingleFrame(args...);
 
   /**
    * \brief Grab some properly aligned free memory to use. The memory will be
@@ -50,8 +50,8 @@ class MemoryManager {
    *
    * \tparam T type of object to create \return
    */
-  template <typename T>
-  static T* NewOnDoubleBuffered();
+  template <typename T, typename ...args>
+  static T* NewOnDoubleBuffered(args...);
 
   /**
    * \brief Grab some properly aligned free memory to use. The memory will be
@@ -79,8 +79,8 @@ class MemoryManager {
    * \tparam T Type of the object you want to create
    * \return
    */
-  template <typename T>
-  static ObjectHandle<T>& NewDynamic();
+  template <typename T, typename ...args>
+  static ObjectHandle<T>& NewDynamic(args...);
 
   /**
    * \brief Delete an object that was created with `NewDynamic`. The memory will
@@ -136,19 +136,19 @@ class MemoryManager {
   friend class ModuleManager;
 };
 
-template <typename T>
-T* MemoryManager::NewOnSingleFrame() {
-  return singleFrameAllocator.New<T>();
+template <typename T, typename ...args>
+T* MemoryManager::NewOnSingleFrame(args... argList) {
+  return singleFrameAllocator.New<T>(argList...);
 }
 
-template <typename T>
-T* MemoryManager::NewOnDoubleBuffered() {
-  return doubleBufferedAllocator.New<T>();
+template <typename T, typename ...args>
+T* MemoryManager::NewOnDoubleBuffered(args... argList) {
+  return doubleBufferedAllocator.New<T>(argList...);
 }
 
-template <typename T>
-ObjectHandle<T>& MemoryManager::NewDynamic() {
-  return instance->dynamicArena.NewDynamic<T>();
+template <typename T, typename ...args>
+ObjectHandle<T>& MemoryManager::NewDynamic(args... argList) {
+  return instance->dynamicArena.NewDynamic<T>(argList...);
 }
 
 template <typename T>
