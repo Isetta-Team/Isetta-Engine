@@ -20,6 +20,7 @@ class RenderModule {
     CVar<int> hordeFastAnimation{"horde_fast_animation", 1};
     CVar<int> hordeSampleCount{"horde_sample_count", 0};
     CVar<int> hordeDumpFailedShaders{"horde_dump_failed_shaders", 1};
+    CVarString hordePipeline{"horde_pipeline", "pipelines/forward.pipeline.xml"};
     CVar<float> fieldOfView{"field_of_view", 45.0};
     CVar<float> nearClippingPlane{"near_clipping_plane", 0.1};
     CVar<float> farClippingPlane{"far_clipping_plane", 1000.0};
@@ -52,11 +53,13 @@ class RenderModule {
 
   // Engine objects
   int curPipeline;
-  H3DRes pipelineRes[3];
+  H3DRes pipelineRes;
   H3DRes fontMatRes, panelMatRes, logoMatRes;
   H3DNode cam;
 
   GLFWwindow* winHandle;
+
+  static void LoadResourceAsync(H3DRes resource, const char* databuf, int size, std::string errorMessage);
 
   friend class ModuleManager;
 };

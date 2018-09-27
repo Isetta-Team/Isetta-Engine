@@ -6,6 +6,9 @@
 #include "Horde3DUtils.h"
 #include "Core/Config/Config.h"
 #include "Graphics/AnimationNode.h"
+#include "Core/FileSystem.h"
+#include <filesystem>
+#include <exception>
 
 namespace Isetta {
 void RenderModule::StartUp(GLFWwindow* win) {
@@ -68,12 +71,8 @@ void RenderModule::InitH3D() {
 }
 
 void RenderModule::InitResources() {  // 1. Add resources
-  pipelineRes[0] = h3dAddResource(H3DResTypes::Pipeline,
-                                  "pipelines/forward.pipeline.xml", 0);
-  pipelineRes[1] = h3dAddResource(H3DResTypes::Pipeline,
-                                  "pipelines/deferred.pipeline.xml", 0);
-  pipelineRes[2] =
-      h3dAddResource(H3DResTypes::Pipeline, "pipelines/hdr.pipeline.xml", 0);
+  pipelineRes = h3dAddResource(H3DResTypes::Pipeline,
+                                  Config::Instance().renderConfig.hordePipeline.GetVal().c_str(), 0);
 
   if (!h3dutLoadResourcesFromDisk(resourcePath.c_str())) {
     h3dutDumpMessages();
@@ -82,7 +81,7 @@ void RenderModule::InitResources() {  // 1. Add resources
   }
 
   // Probably later
-  cam = h3dAddCameraNode(H3DRootNode, "Camera", pipelineRes[curPipeline]);
+  cam = h3dAddCameraNode(H3DRootNode, "Camera", pipelineRes);
   h3dSetNodeParamI(cam, H3DCamera::OccCullingI, 1);
   h3dSetNodeTransform(cam, 0, 50, 600, 0, 0, 0, 1, 1, 1);
 
@@ -107,8 +106,13 @@ void RenderModule::ResizeViewport() {
   // Set virtual camera parameters
   h3dSetupCameraView(cam, fov, static_cast<float>(width) / height, nearPlane,
                      farPlane);
-  h3dResizePipelineBuffers(pipelineRes[0], width, height);
-  h3dResizePipelineBuffers(pipelineRes[1], width, height);
-  h3dResizePipelineBuffers(pipelineRes[2], width, height);
+  h3dResizePipelineBuffers(pipelineRes, width, height);
+}
+
+void RenderModule::LoadResourceAsync(H3DRes resource, const char* databuf, int size, std::string errorMessage) {
+  // TODO(Chaojie): integrate
+  //auto delim = std::filesystem::path::preferred_separator;
+  //std::string 
+  //FileSystem::Instance().ReadAsync()
 }
 }  // namespace Isetta
