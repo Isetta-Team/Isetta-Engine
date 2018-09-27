@@ -2,8 +2,7 @@
 #include <cstdarg>
 #include <cstdio>
 
-namespace Isetta {
-namespace Util {
+namespace Isetta::Util {
 
 inline const char* StrFormat(const char* format, ...) {
   const int charLength = 1024;
@@ -21,5 +20,4 @@ inline float MegaBytesFromBytes(const int byte) {
   return byte / 1024.f / 1024.f;
 }
 
-}  // namespace Util
-}  // namespace Isetta
+}  // namespace Isetta::Util
