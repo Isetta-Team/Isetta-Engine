@@ -5,9 +5,9 @@
 
 #include <GLFW/glfw3.h>
 #include <Horde3D.h>
+#include <list>
 #include <string>
 #include "Core/Config/CVar.h"
-#include <list>
 
 namespace Isetta {
 class RenderModule {
@@ -20,11 +20,14 @@ class RenderModule {
     CVar<int> hordeFastAnimation{"horde_fast_animation", 1};
     CVar<int> hordeSampleCount{"horde_sample_count", 0};
     CVar<int> hordeDumpFailedShaders{"horde_dump_failed_shaders", 1};
-    CVarString hordePipeline{"horde_pipeline", "pipelines/forward.pipeline.xml"};
+    CVarString hordePipeline{"horde_pipeline",
+                             "pipelines/forward.pipeline.xml"};
     CVar<float> fieldOfView{"field_of_view", 45.0};
     CVar<float> nearClippingPlane{"near_clipping_plane", 0.1};
     CVar<float> farClippingPlane{"far_clipping_plane", 1000.0};
   };
+
+  static void LoadResourceFromDisk(H3DRes resource, std::string errorMessage);
 
   /**
    * \brief The array of animation nodes
@@ -40,7 +43,7 @@ class RenderModule {
   void ShutDown();
 
   int renderInterface;
-  std::string resourcePath;
+  static std::string resourcePath;
   float fov;
   float nearPlane;
   float farPlane;
@@ -58,8 +61,6 @@ class RenderModule {
   H3DNode cam;
 
   GLFWwindow* winHandle;
-
-  static void LoadResourceAsync(H3DRes resource, const char* databuf, int size, std::string errorMessage);
 
   friend class ModuleManager;
 };

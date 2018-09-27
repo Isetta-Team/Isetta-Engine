@@ -3,14 +3,19 @@
  */
 #include "Graphics/RenderModule.h"
 
-#include "Horde3DUtils.h"
-#include "Core/Config/Config.h"
-#include "Graphics/AnimationNode.h"
-#include "Core/FileSystem.h"
-#include <filesystem>
 #include <exception>
+#include <filesystem>
+#include <fstream>
+#include "Core/Config/Config.h"
+#include "Core/FileSystem.h"
+#include "Core/Time/StopWatch.h"
+#include "Graphics/AnimationNode.h"
+#include "Horde3DUtils.h"
 
 namespace Isetta {
+
+std::string RenderModule::resourcePath{};
+
 void RenderModule::StartUp(GLFWwindow* win) {
   winHandle = win;
   InitRenderConfig();
@@ -71,14 +76,13 @@ void RenderModule::InitH3D() {
 }
 
 void RenderModule::InitResources() {  // 1. Add resources
-  pipelineRes = h3dAddResource(H3DResTypes::Pipeline,
-                                  Config::Instance().renderConfig.hordePipeline.GetVal().c_str(), 0);
+  pipelineRes = h3dAddResource(
+      H3DResTypes::Pipeline,
+      Config::Instance().renderConfig.hordePipeline.GetVal().c_str(), 0);
 
-  if (!h3dutLoadResourcesFromDisk(resourcePath.c_str())) {
-    h3dutDumpMessages();
-    throw std::exception(
-        "Render::InitPipeline: Error in loading pipeline resources");
-  }
+  LoadResourceFromDisk(
+      pipelineRes,
+      "Render::InitPipeline => Error in loading pipeline resources");
 
   // Probably later
   cam = h3dAddCameraNode(H3DRootNode, "Camera", pipelineRes);
@@ -109,10 +113,24 @@ void RenderModule::ResizeViewport() {
   h3dResizePipelineBuffers(pipelineRes, width, height);
 }
 
-void RenderModule::LoadResourceAsync(H3DRes resource, const char* databuf, int size, std::string errorMessage) {
-  // TODO(Chaojie): integrate
-  //auto delim = std::filesystem::path::preferred_separator;
-  //std::string 
-  //FileSystem::Instance().ReadAsync()
+void RenderModule::LoadResourceFromDisk(H3DRes resource,
+                                        std::string errorMessage) {
+  // horde3d loading won't load all resource files, it only load current
+  // resource and ad nested resources into the resource list as unloaded
+  // resources. So here, I need to iteratively load all unloaded resources.
+  // Assumption: the resource handle is always increasing
+  while (resource != 0 && !h3dIsResLoaded(resource)) {
+    std::string filepath{h3dGetResName(resource)};
+    FileSystem::Concat({resourcePath}, &filepath);
+    int fileSize = FileSystem::Instance().GetFileLength(filepath);
+    auto data = FileSystem::Instance().Read(filepath.c_str());
+    if (!h3dLoadResource(resource, data, fileSize)) {
+      throw std::exception{errorMessage.c_str()};
+    }
+
+    delete[] data;
+    // Use undefined to return all kinds of resources
+    resource = h3dGetNextResource(H3DResTypes::Undefined, resource);
+  }
 }
 }  // namespace Isetta

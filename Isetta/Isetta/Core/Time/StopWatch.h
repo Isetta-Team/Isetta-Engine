@@ -7,7 +7,6 @@
 
 namespace Isetta {
 class StopWatch {
-  using Milliseconds = std::chrono::milliseconds;
   using HighResClock = std::chrono::high_resolution_clock;
   using TimePoint = std::chrono::time_point<HighResClock>;
 
@@ -23,7 +22,7 @@ class StopWatch {
 
   void Start();
   float EvaluateInSecond() const;
-  I64 EvaluateInMilliseconds() const;
+  I64 EvaluateInNanoseconds() const;
   void Reset();
 };
 }  // namespace Isetta
