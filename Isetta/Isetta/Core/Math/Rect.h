@@ -28,7 +28,7 @@ class Rect {
   Rect(const Rect& inRect)
       : x{inRect.x}, y{inRect.y}, width{inRect.width}, height{inRect.height} {}
   Rect(Rect&& inRect) noexcept
-    : x{inRect.x}, y{inRect.y}, width{inRect.width}, height{inRect.height} {}
+      : x{inRect.x}, y{inRect.y}, width{inRect.width}, height{inRect.height} {}
   inline Rect& operator=(const Rect& inRect) {
     x = inRect.x;
     y = inRect.y;
@@ -85,7 +85,11 @@ class Rect {
   /**
    * \brief Get the size of the rectangle
    */
-  inline float Size() const;
+  class Vector2 Size() const;
+  /**
+   * \brief Get the size of the rectangle
+   */
+  inline float Area() const;
   /**
    * \brief Get the minimum x of the rectangle
    */

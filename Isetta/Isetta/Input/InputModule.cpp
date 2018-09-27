@@ -2,7 +2,9 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Input/InputModule.h"
+
 #include <GLFW/glfw3.h>
+#include "Core/Debug/Logger.h"
 #include "Core/Math/Vector2.h"
 #include "Input/Input.h"
 
@@ -203,7 +205,7 @@ void InputModule::MouseEventListener(GLFWwindow* win, int button, int action,
       handleCallback.second();
     }
   } else if (action == GLFW_RELEASE) {
-    for (const auto& handleCallback : keyReleaseCallbacks[button]) {
+    for (const auto& handleCallback : mousePressCallbacks[button]) {
       // currCallbacks.push_back(callback.second);
       handleCallback.second();
     }

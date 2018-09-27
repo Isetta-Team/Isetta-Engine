@@ -2,12 +2,16 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include "Core/Color.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Math/Vector2.h"
 #include "Core/Math/Vector4.h"
 
+class ImGuiStyle;
+
 namespace Isetta {
-enum class GUIWindowFlags : U32 {
+// TODO(Jacob) Unify naming convention
+enum class GUIWindowFlags {
   None = 0,
   NoTitleBar = 1 << 0,   // Disable title-bar
   NoResize = 1 << 1,     // Disable user resizing with the lower-right grip
@@ -60,7 +64,12 @@ enum class GUIWindowFlags : U32 {
   ChildMenu = 1 << 28      // Don't use! For internal use by BeginMenu()
 };
 
-enum class TreeNodeFlags : U16 {
+inline GUIWindowFlags operator|(GUIWindowFlags lhs, GUIWindowFlags rhs) {
+  return (GUIWindowFlags)(static_cast<GUIWindowFlags>(lhs) |
+                          static_cast<GUIWindowFlags>(rhs));
+}
+
+enum class GUITreeNodeFlags {
   None = 0,
   Selected = 1 << 0,  // Draw as selected
   Framed = 1 << 1,    // Full colored frame (e.g. for CollapsingHeader)
@@ -94,6 +103,11 @@ enum class TreeNodeFlags : U16 {
               // of its child (items submitted between TreeNode and TreePop)
   CollapsingHeader = Framed | NoTreePushOnOpen | NoAutoOpenOnLog
 };
+
+inline GUITreeNodeFlags operator|(GUITreeNodeFlags lhs, GUITreeNodeFlags rhs) {
+  return (GUITreeNodeFlags)(static_cast<GUITreeNodeFlags>(lhs) |
+                            static_cast<GUITreeNodeFlags>(rhs));
+}
 
 enum class GUIColorStyles {
   Text,
@@ -145,7 +159,7 @@ enum class GUIColorStyles {
   COUNT
 };
 
-enum class InputTextFlags : U32 {
+enum class GUIInputTextFlags : U32 {
   None = 0,
   CharsDecimal = 1 << 0,      // Allow 0123456789.+-*/
   CharsHexadecimal = 1 << 1,  // Allow 0123456789ABCDEFabcdef
@@ -188,7 +202,13 @@ enum class InputTextFlags : U32 {
   Multiline = 1 << 20  // For internal use by InputTextMultiline()
 };
 
-enum class ColorEditFlags : U32 {
+inline GUIInputTextFlags operator|(GUIInputTextFlags lhs,
+                                   GUIInputTextFlags rhs) {
+  return (GUIInputTextFlags)(static_cast<GUIInputTextFlags>(lhs) |
+                             static_cast<GUIInputTextFlags>(rhs));
+}
+
+enum class GUIColorEditFlags {
   None = 0,
   NoAlpha = 1 << 1,   //              // ColorEdit, ColorPicker, ColorButton:
                       //              ignore Alpha component (read 3 components
@@ -260,7 +280,13 @@ enum class ColorEditFlags : U32 {
       PickerHueBar  // Change application default using SetColorEditOptions()
 };
 
-enum class GUIStyleParameter {
+inline GUIColorEditFlags operator|(GUIColorEditFlags lhs,
+                                   GUIColorEditFlags rhs) {
+  return (GUIColorEditFlags)(static_cast<GUIColorEditFlags>(lhs) |
+                             static_cast<GUIColorEditFlags>(rhs));
+}
+
+enum class GUIStyleVar {
   Alpha,              // float     Alpha
   WindowPadding,      // ImVec2    WindowPadding
   WindowRounding,     // float     WindowRounding
@@ -285,7 +311,7 @@ enum class GUIStyleParameter {
   COUNT
 };
 
-enum class DrawCornerFlags : U8 {
+enum class GUIDrawCornerFlags {
   TopLeft = 1 << 0,             // 0x1
   TopRight = 1 << 1,            // 0x2
   BotLeft = 1 << 2,             // 0x4
@@ -297,44 +323,148 @@ enum class DrawCornerFlags : U8 {
   All = 0xF
 };
 
+inline GUIDrawCornerFlags operator|(GUIDrawCornerFlags lhs,
+                                    GUIDrawCornerFlags rhs) {
+  return (GUIDrawCornerFlags)(static_cast<GUIDrawCornerFlags>(lhs) |
+                              static_cast<GUIDrawCornerFlags>(rhs));
+}
+
+enum class GUISelectableFlags {
+  None = 0,
+  DontClosePopups = 1 << 0,  // Clicking this don't close parent popup window
+  SpanAllColumns = 1 << 1,   // Selectable frame can span all columns (text will
+                             // still fit in current column)
+  AllowDoubleClick = 1 << 2,  // Generate press events on double clicks too
+  Disabled = 1 << 3           // Cannot be selected, display greyed out text
+};
+
+inline GUISelectableFlags operator|(GUISelectableFlags lhs,
+                                    GUISelectableFlags rhs) {
+  return (GUISelectableFlags)(static_cast<GUISelectableFlags>(lhs) |
+                              static_cast<GUISelectableFlags>(rhs));
+}
+
+enum class GUIHoveredFlags {
+  None = 0,  // Return true if directly over the item/window, not obstructed by
+             // another window, not obstructed by an active popup or modal
+             // blocking inputs under them.
+  ChildWindows = 1 << 0,  // IsWindowHovered() only: Return true if any children
+                          // of the window is hovered
+  RootWindow = 1 << 1,    // IsWindowHovered() only: Test from root window (top
+                          // most parent of the current hierarchy)
+  AnyWindow =
+      1 << 2,  // IsWindowHovered() only: Return true if any window is hovered
+  AllowWhenBlockedByPopup =
+      1 << 3,  // Return true even if a popup window is normally blocking access
+               // to this item/window
+  // AllowWhenBlockedByModal     = 1 << 4,   // Return true
+  // even if a modal popup window is normally blocking access to this
+  // item/window. FIXME-TODO: Unavailable yet.
+  AllowWhenBlockedByActiveItem =
+      1 << 5,  // Return true even if an active item is blocking access to this
+               // item/window. Useful for Drag and Drop patterns.
+  AllowWhenOverlapped =
+      1
+      << 6,  // Return true even if the position is overlapped by another window
+  AllowWhenDisabled = 1 << 7,  // Return true even if the item is disabled
+  RectOnly = AllowWhenBlockedByPopup | AllowWhenBlockedByActiveItem |
+             AllowWhenOverlapped,
+  RootAndChildWindows = RootWindow | ChildWindows
+};
+
+inline GUIHoveredFlags operator|(GUIHoveredFlags lhs, GUIHoveredFlags rhs) {
+  return (GUIHoveredFlags)(static_cast<GUIHoveredFlags>(lhs) |
+                           static_cast<GUIHoveredFlags>(rhs));
+}
+
+enum class GUIFocusedFlags {
+  None = 0,
+  ChildWindows = 1 << 0,  // IsWindowFocused(): Return true if any children of
+                          // the window is focused
+  RootWindow = 1 << 1,    // IsWindowFocused(): Test from root window (top most
+                          // parent of the current hierarchy)
+  AnyWindow =
+      1 << 2,  // IsWindowFocused(): Return true if any window is focused
+  RootAndChildWindows = RootWindow | ChildWindows
+};
+
+inline GUIFocusedFlags operator|(GUIFocusedFlags lhs, GUIFocusedFlags rhs) {
+  return (GUIFocusedFlags)(static_cast<GUIFocusedFlags>(lhs) |
+                           static_cast<GUIFocusedFlags>(rhs));
+}
+
+enum class GUIMouseCursor {
+  None = -1,
+  Arrow = 0,
+  TextInput,   // When hovering over InputText, etc.
+  ResizeAll,   // (Unused by imgui functions)
+  ResizeNS,    // When hovering over an horizontal border
+  ResizeEW,    // When hovering over a vertical border or a
+               // column
+  ResizeNESW,  // When hovering over the bottom-left corner of
+               // a window // TODO(Jacob) doesn't work
+  ResizeNWSE,  // When hovering over the bottom-right corner of
+               // a window // TODO(Jacob) doesn't work
+  Hand,        // (Unused by imgui functions. Use for e.g.
+               // hyperlinks)
+  COUNT
+};
+
+enum class GUICond {
+  Always = 1 << 0,        // Set the variable
+  Once = 1 << 1,          // Set the variable once per runtime session (only
+                          // the first call with succeed)
+  FirstUseEver = 1 << 2,  // Set the variable if the object/window has no
+                          // persistently saved data (no entry in .ini file)
+  Appearing = 1 << 3      // Set the variable if the object/window is appearing
+                          // after being hidden/inactive (or the first time)
+};
+
+inline GUICond operator|(GUICond lhs, GUICond rhs) {
+  return (GUICond)(static_cast<GUICond>(lhs) | static_cast<GUICond>(rhs));
+}
+
+// TODO(Jacob)
+// enum class Dir {};
+
 // TODO(Jacob) fix styling into class probably
 struct GUIStyle {
   float Alpha;                  // Global alpha applies to everything in ImGui.
   Math::Vector2 WindowPadding;  // Padding within a window.
-  float WindowRounding;    // Radius of window corners rounding. Set to 0.0f to
-                           // have rectangular windows.
-  float WindowBorderSize;  // Thickness of border around windows. Generally set
-                           // to 0.0f or 1.0f. (Other values are not well tested
-                           // and more CPU/GPU costly).
+  float WindowRounding;    // Radius of window corners rounding. Set to 0.0f
+                           // to have rectangular windows.
+  float WindowBorderSize;  // Thickness of border around windows. Generally
+                           // set to 0.0f or 1.0f. (Other values are not
+                           // well tested and more CPU/GPU costly).
   Math::Vector2 WindowMinSize;  // Minimum window size. This is a global
                                 // setting. If
   // you want to constraint individual windows, use
   // SetNextWindowSizeConstraints().
-  Math::Vector2
-      WindowTitleAlign;  // Alignment for title bar text. Defaults to
-                         // (0.0f,0.5f) for left-aligned,vertically centered.
-  float ChildRounding;   // Radius of child window corners rounding. Set to 0.0f
-                         // to have rectangular windows.
-  float ChildBorderSize;  // Thickness of border around child windows. Generally
-                          // set to 0.0f or 1.0f. (Other values are not well
-                          // tested and more CPU/GPU costly).
-  float PopupRounding;    // Radius of popup window corners rounding. (Note that
-                          // tooltip windows use WindowRounding)
+  Math::Vector2 WindowTitleAlign;  // Alignment for title bar text. Defaults
+                                   // to (0.0f,0.5f) for
+                                   // left-aligned,vertically centered.
+  float ChildRounding;    // Radius of child window corners rounding. Set to
+                          // 0.0f to have rectangular windows.
+  float ChildBorderSize;  // Thickness of border around child windows.
+                          // Generally set to 0.0f or 1.0f. (Other values
+                          // are not well tested and more CPU/GPU costly).
+  float PopupRounding;    // Radius of popup window corners rounding. (Note
+                          // that tooltip windows use WindowRounding)
   float PopupBorderSize;  // Thickness of border around popup/tooltip windows.
                           // Generally set to 0.0f or 1.0f. (Other values are
                           // not well tested and more CPU/GPU costly).
   Math::Vector2 FramePadding;  // Padding within a framed rectangle (used by
                                // most
                                // widgets).
-  float FrameRounding;  // Radius of frame corners rounding. Set to 0.0f to have
-                        // rectangular frame (used by most widgets).
-  float FrameBorderSize;  // Thickness of border around frames. Generally set to
-                          // 0.0f or 1.0f. (Other values are not well tested and
-                          // more CPU/GPU costly).
-  Math::Vector2
-      ItemSpacing;  // Horizontal and vertical spacing between widgets/lines.
-  Math::Vector2 ItemInnerSpacing;  // Horizontal and vertical spacing between
-                                   // within
+  float FrameRounding;    // Radius of frame corners rounding. Set to 0.0f to
+                          // have rectangular frame (used by most widgets).
+  float FrameBorderSize;  // Thickness of border around frames. Generally
+                          // set to 0.0f or 1.0f. (Other values are not well
+                          // tested and more CPU/GPU costly).
+  Math::Vector2 ItemSpacing;       // Horizontal and vertical spacing between
+                                   // widgets/lines.
+  Math::Vector2 ItemInnerSpacing;  // Horizontal and vertical spacing
+                                   // between within
   // elements of a composed widget (e.g. a slider and
   // its label).
   Math::Vector2
@@ -349,10 +479,10 @@ struct GUIStyle {
   float ScrollbarSize;      // Width of the vertical scrollbar, Height of the
                             // horizontal scrollbar.
   float ScrollbarRounding;  // Radius of grab corners for scrollbar.
-  float
-      GrabMinSize;  // Minimum width/height of a grab box for slider/scrollbar.
-  float GrabRounding;  // Radius of grabs corners rounding. Set to 0.0f to have
-                       // rectangular slider grabs.
+  float GrabMinSize;        // Minimum width/height of a grab box for
+                            // slider/scrollbar.
+  float GrabRounding;       // Radius of grabs corners rounding. Set to 0.0f to
+                            // have rectangular slider grabs.
   Math::Vector2 ButtonTextAlign;  // Alignment of button text when button is
                                   // larger
                                   // than text. Defaults to (0.5f,0.5f) for
@@ -370,19 +500,19 @@ struct GUIStyle {
   float MouseCursorScale;      // Scale software rendered mouse cursor (when
                                // io.MouseDrawCursor is enabled). May be removed
                                // later.
-  bool AntiAliasedLines;  // Enable anti-aliasing on lines/borders. Disable if
-                          // you are really tight on CPU/GPU.
-  bool AntiAliasedFill;   // Enable anti-aliasing on filled shapes (rounded
-                          // rectangles, circles, etc.)
+  bool AntiAliasedLines;       // Enable anti-aliasing on lines/borders. Disable
+                               // if you are really tight on CPU/GPU.
+  bool AntiAliasedFill;        // Enable anti-aliasing on filled shapes (rounded
+                               // rectangles, circles, etc.)
   float CurveTessellationTol;  // Tessellation tolerance when using
-                               // PathBezierCurveTo() without a specific number
-                               // of segments. Decrease for highly tessellated
-                               // curves (higher quality, more polygons),
-                               // increase to reduce quality.
-  Math::Vector4
-      ColorStyle[static_cast<int>(GUIColorStyles::COUNT)];  // TODO(JACOB)
+                               // PathBezierCurveTo() without a specific
+                               // number of segments. Decrease for highly
+                               // tessellated curves (higher quality, more
+                               // polygons), increase to reduce quality.
+  Color Colors[static_cast<int>(GUIColorStyles::COUNT)];  // TODO(JACOB)
 
-  GUIStyle();                              // TODO(JACOB)
-  void ScaleAllSizes(float scale_factor);  // TODO(JACOB)
+  GUIStyle() = delete;
+
+  explicit GUIStyle(const ImGuiStyle& style);
 };
 }  // namespace Isetta

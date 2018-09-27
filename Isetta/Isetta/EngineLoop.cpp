@@ -14,8 +14,14 @@
 #include "Input/Input.h"
 #include "Input/InputEnum.h"
 #include "Networking/NetworkManager.h"
+
+#include "Core/Color.h"
+#include "Core/Math/Rect.h"
+#include "Graphics/GUIStyle.h"
 #include "imgui.h"
 
+// TODO(Jacob) remove
+bool checkbox = false;
 namespace Isetta {
 
 void RunYidiTest();
@@ -100,10 +106,37 @@ void EngineLoop::StartUp() {
 
   // GUI Test
   GUI::OnUpdate([&]() {
-    if (true) {
-      bool show_demo_window = true;
-      ImGui::ShowDemoWindow(&show_demo_window);
-    }
+    GUI::Button(Math::Rect(0, 0, 80, 20), "btn",
+                []() { LOG_INFO(Debug::Channel::GUI, "btn"); },
+                GUI::ButtonStyle{Color::red, Color::blue, Color::yellow});
+    GUI::ButtonImage(Math::Rect(100, 10, 80, 20), "btn-id", NULL,
+                     []() { LOG_INFO(Debug::Channel::GUI, "btn image"); },
+                     GUI::ButtonStyle{Color::grey, Color::green, Color::cyan},
+                     true, Math::Vector2(0, 0), Math::Vector2(1, 1), 2,
+                     Color::blue, Color::white);
+    GUI::Toggle(Math::Rect(10, 100, 40, 40), "toggle me", &checkbox,
+                GUI::ButtonStyle{Color::red, Color::blue, Color::yellow});
+    GUI::Text(Math::Rect(100, 100, 40, 40),
+              GUI::TextStyle{false, false, Color::grey},
+              "I am Jake and I am %d", 10);
+    GUI::Label(Math::Rect(100, 200, 40, 40), "labelthing", Color::white,
+               "text");
+
+    static char buffer[1024];
+    struct TestCallback {
+      static int Callback(GUIInputTextCallbackData* data) {
+        LOG_INFO(Debug::Channel::GUI, data->Buf);
+        return 0;
+      }
+    };
+    GUI::InputText(Math::Rect(100, 150, 40, 40), "inputtxt", buffer, 1024,
+                   GUIInputTextFlags::CallbackCompletion |
+                       GUIInputTextFlags::EnterReturnsTrue,
+                   TestCallback::Callback);
+    // GUI::InputInt(
+    // GUI::InputFloat(
+    // GUI::Window(
+    //
   });
 
   // RunYidiTest();

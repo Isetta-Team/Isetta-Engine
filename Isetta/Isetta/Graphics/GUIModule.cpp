@@ -50,9 +50,9 @@ void GUIModule::StartUp(GLFWwindow* win) {
   Input::RegisterKeyCallback(ImGui_ImplGlfw_KeyCallback);
   Input::RegisterCharCallback(ImGui_ImplGlfw_CharCallback);
 
-  show_demo_window = true;
-  show_another_window = false;
-  clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+  // show_demo_window = true;
+  // show_another_window = false;
+  // clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 }
 
 void GUIModule::Update(float deltaTime) {
@@ -60,9 +60,12 @@ void GUIModule::Update(float deltaTime) {
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
 
+  /*
   // 1. Show the big demo window (Most of the sample code is in
   // ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear
   // ImGui!).
+  bool show_demo_window = true;
+  ImGui::ShowDemoWindow(&show_demo_window);
 
   // 2. Show a simple window that we create ourselves. We use a Begin/End pair
   // to created a named window.
@@ -108,12 +111,29 @@ void GUIModule::Update(float deltaTime) {
     if (ImGui::Button("Close Me")) show_another_window = false;
     ImGui::End();
   }
+  */
 
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2());
+  ImGui::SetNextWindowBgAlpha(0.0f);
+  ImGui::SetNextWindowPos(ImVec2());
+  ImGui::Begin(
+      "MainWindow", NULL,
+      ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+          ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar |
+          ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse |
+          ImGuiWindowFlags_NoSavedSettings |
+          ImGuiWindowFlags_NoFocusOnAppearing |
+          ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus);
+  ImGui::PopStyleVar(2);
+
+  // ImGui::Text("TEST");
   // TODO (Jacob + Yidi) single frame alloc
   for (const auto& callback : updateCallbacks) {
     callback();
   }
 
+  ImGui::End();
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

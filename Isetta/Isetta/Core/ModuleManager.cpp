@@ -35,7 +35,6 @@ void ModuleManager::StartUp() {
   audioModule->StartUp();
   windowModule->StartUp();
   renderModule->StartUp(windowModule->winHandle);
-  guiModule->StartUp(windowModule->winHandle);
   inputModule->StartUp(windowModule->winHandle);
   guiModule->StartUp(windowModule->winHandle);
   networkingModule->StartUp();

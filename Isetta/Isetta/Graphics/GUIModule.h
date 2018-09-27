@@ -31,6 +31,8 @@ class GUIModule {
   void Update(float deltaTime);
   void ShutDown();
 
+  // TODO(Jacob) ImGui::SetAllocatorFunctions line 1383
+
   GLFWwindow* winHandle;
 
   std::list<Action<>> updateCallbacks{};
@@ -39,8 +41,9 @@ class GUIModule {
 
   friend class ModuleManager;
 
+  // TODO(Jacob) remove
   // Test variables
-  bool show_demo_window, show_another_window;
-  ImVec4 clear_color;
+  // bool show_demo_window, show_another_window;
+  // ImVec4 clear_color;
 };
 }  // namespace Isetta

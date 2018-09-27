@@ -13,6 +13,8 @@ namespace Isetta::Math {
 const Vector4 Vector4::zero = Vector4();
 const Vector4 Vector4::one = Vector4(1.f);
 
+Vector4::Vector4(const Color& c) : x{c.r}, y{c.g}, z{c.b}, w{c.a} {}
+
 float Vector4::operator[](int i) const {
   switch (i) {
     case 0:
@@ -28,7 +30,7 @@ float Vector4::operator[](int i) const {
   }
 }
 
-Vector4::Vector4(const Isetta::Color& c) : x{c.r}, y{c.g}, z{c.b}, w{c.a} {}
+Vector4::operator Color() { return Color(x, y, z, w); }
 
 float Vector4::Magnitude() const { return sqrtf(SqrMagnitude()); }
 float Vector4::SqrMagnitude() const { return x * x + y * y + z * z + w * w; }
