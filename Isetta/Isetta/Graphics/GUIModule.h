@@ -10,11 +10,16 @@
 #include <list>
 #include <string>
 #include <unordered_map>
+
 #include "Core/Config/CVar.h"
 #include "Core/IsettaAlias.h"
+
 #include "imgui/imgui.h"
 
 class ImVec4;
+namespace Isetta::Math {
+class Vector2;
+}
 
 namespace Isetta {
 class GUIModule {
@@ -22,6 +27,9 @@ class GUIModule {
   struct GUIModuleConfig {};
 
   void OnUpdate(const Action<>&);
+  inline Math::Vector2 GetWindowSize() const {
+    return Math::Vector2(winWidth, winHeight);
+  }
 
  private:
   GUIModule() = default;
@@ -31,13 +39,13 @@ class GUIModule {
   void Update(float deltaTime);
   void ShutDown();
 
-  // TODO(Jacob) ImGui::SetAllocatorFunctions line 1383
+  // TODO(Jacob)
+  // ImGui::SetAllocatorFunctions line 1383
 
   GLFWwindow* winHandle;
+  int winWidth, winHeight;
 
   std::list<Action<>> updateCallbacks{};
-  // TODO(Jacob) too much?
-  static U64 handleCount;
 
   friend class ModuleManager;
 

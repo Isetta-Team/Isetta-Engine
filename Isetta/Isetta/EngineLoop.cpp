@@ -106,20 +106,20 @@ void EngineLoop::StartUp() {
 
   // GUI Test
   GUI::OnUpdate([&]() {
-    GUI::Button(Math::Rect(0, 0, 80, 20), "btn",
+    GUI::Button(Math::Rect(0, 30, 80, 20), "btn",
                 []() { LOG_INFO(Debug::Channel::GUI, "btn"); },
-                GUI::ButtonStyle{Color::red, Color::blue, Color::yellow});
-    GUI::ButtonImage(Math::Rect(100, 10, 80, 20), "btn-id", NULL,
-                     []() { LOG_INFO(Debug::Channel::GUI, "btn image"); },
-                     GUI::ButtonStyle{Color::grey, Color::green, Color::cyan},
-                     true, Math::Vector2(0, 0), Math::Vector2(1, 1), 2,
-                     Color::blue, Color::white);
-    GUI::Toggle(Math::Rect(10, 100, 40, 40), "toggle me", &checkbox,
-                GUI::ButtonStyle{Color::red, Color::blue, Color::yellow});
-    GUI::Text(Math::Rect(100, 100, 40, 40),
-              GUI::TextStyle{false, false, Color::grey},
+                GUIStyle::ButtonStyle{Color::red, Color::blue, Color::yellow});
+    GUI::ButtonImage(
+        Math::Rect(100, 40, 80, 20), "btn-id", NULL,
+        []() { LOG_INFO(Debug::Channel::GUI, "btn image"); },
+        GUIStyle::ButtonStyle{Color::grey, Color::green, Color::cyan},
+        GUIStyle::ImageStyle{Color::blue, Color::white}, true, 2);
+    GUI::Toggle(Math::Rect(10, 130, 40, 40), "toggle me", &checkbox,
+                GUIStyle::ButtonStyle{Color::red, Color::blue, Color::yellow});
+    GUI::Text(Math::Rect(100, 130, 40, 40),
+              GUIStyle::TextStyle{false, false, Color::grey},
               "I am Jake and I am %d", 10);
-    GUI::Label(Math::Rect(100, 200, 40, 40), "labelthing", Color::white,
+    GUI::Label(Math::Rect(100, 230, 40, 40), "labelthing", Color::white,
                "text");
 
     static char buffer[1024];
@@ -129,18 +129,98 @@ void EngineLoop::StartUp() {
         return 0;
       }
     };
-    GUI::InputText(Math::Rect(100, 150, 40, 40), "inputtxt", buffer, 1024,
+    GUI::InputText(Math::Rect(100, 150, 80, 40), "inputText", buffer, 1024,
+                   GUIStyle::InputStyle{},
                    GUIInputTextFlags::CallbackCompletion |
                        GUIInputTextFlags::EnterReturnsTrue,
                    TestCallback::Callback);
-    // GUI::InputInt(
-    // GUI::InputFloat(
-    // GUI::Window(
-    //
+    static int val = 0;
+    GUI::InputInt(Math::Rect(1000, 150, 100, 40), "inputInt", &val);
+    static bool open = false;
+    open = open || GUI::Button(Math::Rect(100, 700, 80, 20), "window btn");
+    if (open) {
+      GUI::Window(Math::Rect(200, 700, 400, 400), "window name",
+                  []() {
+                    GUI::MenuBar([]() {
+                      // ImGui::Text("words in menu");
+                      GUI::Menu("menu2", []() {
+                        GUI::MenuItem("item2", "Ctrl+99", []() {
+                          LOG_INFO(Debug::Channel::GUI, "menu selected");
+                        });
+                      });
+                      GUI::Menu("menu disabled",
+                                []() { GUI::MenuItem("item3", "Ctrl+99"); },
+                                false);
+                    });
+                    ImGui::Text("words in window");
+                  },
+                  &open, GUIStyle::BackgroundStyle{}, GUIWindowFlags::MenuBar);
+    }
+    GUI::MenuBar(
+        []() {
+          GUI::Menu("menu1", []() { GUI::MenuItem("item1", "Ctrl+99"); });
+        },
+        true);
+
+    GUI::Modal("modal", []() {
+      if (ImGui::Button("close", (ImVec2)Math::Vector2(40, 40))) {
+        GUI::CloseCurrentPopup();
+      }
+    });
+    if (GUI::Button(Math::Rect(100, 800, 80, 20), "modal btn")) {
+      GUI::OpenPopup("modal");
+    }
+
+    GUI::Draw::Rect(Math::Rect(300, 300, 100, 100), Color::blue, 0.1f,
+                    GUIDrawCornerFlags::BotRight, 2.0f);
+    GUI::Draw::RectFilled(Math::Rect(300, 300, 10, 150), Color::red);
+
+    GUI::Draw::Quad(Math::Vector2(600, 30), Math::Vector2(630, 60),
+                    Math::Vector2(630, 90), Math::Vector2(610, 70),
+                    Color::white, 1.5f);
+    GUI::Draw::QuadFilled(Math::Vector2(600, 130), Math::Vector2(630, 160),
+                          Math::Vector2(630, 190), Math::Vector2(610, 170),
+                          Color::grey);
+
+    GUI::Draw::Triangle(Math::Vector2(400, 400), Math::Vector2(440, 440),
+                        Math::Vector2(400, 480), Color::green, 3.0f);
+    GUI::Draw::TriangleFilled(Math::Vector2(480, 400), Math::Vector2(440, 440),
+                              Math::Vector2(480, 480), Color::cyan);
+
+    GUI::Draw::Circle(Math::Vector2(530, 530), 10, Color::yellow, 6, .1f);
+
+    GUI::Draw::CircleFilled(Math::Vector2(530, 80), 30, Color::blue, 14);
+    GUI::Draw::CircleFilled(Math::Vector2(530, 80), 10, Color::black);
+
+    // GUI::Image(const Math::Rect& position, const TextureID& textureId,
+    // const Math::Vector2& size,
+    // const Math::Vector2& offset = Math::Vector2::zero,
+    // const Math::Vector2& tiling =
+    //    Math::Vector2::one,  // TODO(Jacob) what is uv used for?
+    // const Color& tint = Color::black,
+    // const Color& border = Color::clear);
+    static float progress = 0.0f, progress_dir = 1.0f;
+    if (true) {
+      progress += progress_dir * 0.4f * GetGameClock().GetDeltaTime();
+      if (progress >= +1.1f) {
+        progress = +1.1f;
+        progress_dir *= -1.0f;
+      }
+      if (progress <= -0.1f) {
+        progress = -0.1f;
+        progress_dir *= -1.0f;
+      }
+    }
+    GUI::ProgressBar(Math::Rect(700, 700, 100, 30), progress);
+    float progress_saturated =
+        (progress < 0.0f) ? 0.0f : (progress > 1.0f) ? 1.0f : progress;
+    GUI::ProgressBar(
+        Math::Rect(700, 740, 100, 100), progress,
+        Utilities::Msg("%d/%d", (int)(312 * progress_saturated), 312));
   });
 
   // RunYidiTest();
-}
+}  // namespace Isetta
 
 void EngineLoop::Update() {
   GetGameClock().UpdateTime();
@@ -175,6 +255,8 @@ void EngineLoop::Update() {
   }
 
   // end Networking update
+  // LOG_INFO(Debug::Channel::General,
+  // "//////////////UpdateStart//////////////");
 
   // Client part
   accumulateTime += GetGameClock().GetDeltaTime();
@@ -187,7 +269,11 @@ void EngineLoop::Update() {
   }
 
   // TODO(Chaojie) after scenegraph, save previous state for prediction
+  // LOG_INFO(Debug::Channel::General,
+  // "//////////////Render//////////////");
   moduleManager.RenderUpdate(0);
+  // LOG_INFO(Debug::Channel::General,
+  // "//////////////UpdateEnd//////////////");
 }
 
 void EngineLoop::ShutDown() { moduleManager.ShutDown(); }

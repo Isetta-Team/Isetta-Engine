@@ -5,13 +5,10 @@
 #include "Core/Color.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Math/Vector2.h"
-#include "Core/Math/Vector4.h"
-
-class ImGuiStyle;
 
 namespace Isetta {
 // TODO(Jacob) Unify naming convention
-enum class GUIWindowFlags {
+enum class GUIWindowFlags : U32 {
   None = 0,
   NoTitleBar = 1 << 0,   // Disable title-bar
   NoResize = 1 << 1,     // Disable user resizing with the lower-right grip
@@ -65,11 +62,12 @@ enum class GUIWindowFlags {
 };
 
 inline GUIWindowFlags operator|(GUIWindowFlags lhs, GUIWindowFlags rhs) {
-  return (GUIWindowFlags)(static_cast<GUIWindowFlags>(lhs) |
-                          static_cast<GUIWindowFlags>(rhs));
+  return (GUIWindowFlags)(
+      static_cast<std::underlying_type<GUIWindowFlags>::type>(lhs) |
+      static_cast<std::underlying_type<GUIWindowFlags>::type>(rhs));
 }
 
-enum class GUITreeNodeFlags {
+enum class GUITreeNodeFlags : U16 {
   None = 0,
   Selected = 1 << 0,  // Draw as selected
   Framed = 1 << 1,    // Full colored frame (e.g. for CollapsingHeader)
@@ -105,8 +103,9 @@ enum class GUITreeNodeFlags {
 };
 
 inline GUITreeNodeFlags operator|(GUITreeNodeFlags lhs, GUITreeNodeFlags rhs) {
-  return (GUITreeNodeFlags)(static_cast<GUITreeNodeFlags>(lhs) |
-                            static_cast<GUITreeNodeFlags>(rhs));
+  return (GUITreeNodeFlags)(
+      static_cast<std::underlying_type<GUITreeNodeFlags>::type>(lhs) |
+      static_cast<std::underlying_type<GUITreeNodeFlags>::type>(rhs));
 }
 
 enum class GUIColorStyles {
@@ -204,11 +203,12 @@ enum class GUIInputTextFlags : U32 {
 
 inline GUIInputTextFlags operator|(GUIInputTextFlags lhs,
                                    GUIInputTextFlags rhs) {
-  return (GUIInputTextFlags)(static_cast<GUIInputTextFlags>(lhs) |
-                             static_cast<GUIInputTextFlags>(rhs));
+  return (GUIInputTextFlags)(
+      static_cast<std::underlying_type<GUIInputTextFlags>::type>(lhs) |
+      static_cast<std::underlying_type<GUIInputTextFlags>::type>(rhs));
 }
 
-enum class GUIColorEditFlags {
+enum class GUIColorEditFlags : U32 {
   None = 0,
   NoAlpha = 1 << 1,   //              // ColorEdit, ColorPicker, ColorButton:
                       //              ignore Alpha component (read 3 components
@@ -282,8 +282,9 @@ enum class GUIColorEditFlags {
 
 inline GUIColorEditFlags operator|(GUIColorEditFlags lhs,
                                    GUIColorEditFlags rhs) {
-  return (GUIColorEditFlags)(static_cast<GUIColorEditFlags>(lhs) |
-                             static_cast<GUIColorEditFlags>(rhs));
+  return (GUIColorEditFlags)(
+      static_cast<std::underlying_type<GUIColorEditFlags>::type>(lhs) |
+      static_cast<std::underlying_type<GUIColorEditFlags>::type>(rhs));
 }
 
 enum class GUIStyleVar {
@@ -311,7 +312,7 @@ enum class GUIStyleVar {
   COUNT
 };
 
-enum class GUIDrawCornerFlags {
+enum class GUIDrawCornerFlags : U8 {
   TopLeft = 1 << 0,             // 0x1
   TopRight = 1 << 1,            // 0x2
   BotLeft = 1 << 2,             // 0x4
@@ -325,8 +326,9 @@ enum class GUIDrawCornerFlags {
 
 inline GUIDrawCornerFlags operator|(GUIDrawCornerFlags lhs,
                                     GUIDrawCornerFlags rhs) {
-  return (GUIDrawCornerFlags)(static_cast<GUIDrawCornerFlags>(lhs) |
-                              static_cast<GUIDrawCornerFlags>(rhs));
+  return (GUIDrawCornerFlags)(
+      static_cast<std::underlying_type<GUIDrawCornerFlags>::type>(lhs) |
+      static_cast<std::underlying_type<GUIDrawCornerFlags>::type>(rhs));
 }
 
 enum class GUISelectableFlags {
@@ -340,11 +342,12 @@ enum class GUISelectableFlags {
 
 inline GUISelectableFlags operator|(GUISelectableFlags lhs,
                                     GUISelectableFlags rhs) {
-  return (GUISelectableFlags)(static_cast<GUISelectableFlags>(lhs) |
-                              static_cast<GUISelectableFlags>(rhs));
+  return (GUISelectableFlags)(
+      static_cast<std::underlying_type<GUIColorEditFlags>::type>(lhs) |
+      static_cast<std::underlying_type<GUIColorEditFlags>::type>(rhs));
 }
 
-enum class GUIHoveredFlags {
+enum class GUIHoveredFlags : U8 {
   None = 0,  // Return true if directly over the item/window, not obstructed by
              // another window, not obstructed by an active popup or modal
              // blocking inputs under them.
@@ -373,11 +376,12 @@ enum class GUIHoveredFlags {
 };
 
 inline GUIHoveredFlags operator|(GUIHoveredFlags lhs, GUIHoveredFlags rhs) {
-  return (GUIHoveredFlags)(static_cast<GUIHoveredFlags>(lhs) |
-                           static_cast<GUIHoveredFlags>(rhs));
+  return (GUIHoveredFlags)(
+      static_cast<std::underlying_type<GUIHoveredFlags>::type>(lhs) |
+      static_cast<std::underlying_type<GUIHoveredFlags>::type>(rhs));
 }
 
-enum class GUIFocusedFlags {
+enum class GUIFocusedFlags : U8 {
   None = 0,
   ChildWindows = 1 << 0,  // IsWindowFocused(): Return true if any children of
                           // the window is focused
@@ -389,8 +393,9 @@ enum class GUIFocusedFlags {
 };
 
 inline GUIFocusedFlags operator|(GUIFocusedFlags lhs, GUIFocusedFlags rhs) {
-  return (GUIFocusedFlags)(static_cast<GUIFocusedFlags>(lhs) |
-                           static_cast<GUIFocusedFlags>(rhs));
+  return (GUIFocusedFlags)(
+      static_cast<std::underlying_type<GUIFocusedFlags>::type>(lhs) |
+      static_cast<std::underlying_type<GUIFocusedFlags>::type>(rhs));
 }
 
 enum class GUIMouseCursor {
@@ -410,7 +415,7 @@ enum class GUIMouseCursor {
   COUNT
 };
 
-enum class GUICond {
+enum class GUICond : U8 {
   Always = 1 << 0,        // Set the variable
   Once = 1 << 1,          // Set the variable once per runtime session (only
                           // the first call with succeed)
@@ -421,13 +426,13 @@ enum class GUICond {
 };
 
 inline GUICond operator|(GUICond lhs, GUICond rhs) {
-  return (GUICond)(static_cast<GUICond>(lhs) | static_cast<GUICond>(rhs));
+  return (GUICond)(static_cast<std::underlying_type<GUICond>::type>(lhs) |
+                   static_cast<std::underlying_type<GUICond>::type>(rhs));
 }
 
 // TODO(Jacob)
 // enum class Dir {};
 
-// TODO(Jacob) fix styling into class probably
 struct GUIStyle {
   float Alpha;                  // Global alpha applies to everything in ImGui.
   Math::Vector2 WindowPadding;  // Padding within a window.
@@ -511,8 +516,78 @@ struct GUIStyle {
                                // polygons), increase to reduce quality.
   Color Colors[static_cast<int>(GUIColorStyles::COUNT)];  // TODO(JACOB)
 
-  GUIStyle() = delete;
+  explicit GUIStyle(bool imGuiStyle = true);
 
-  explicit GUIStyle(const ImGuiStyle& style);
+  struct BackgroundStyle {
+    bool enabled = false;
+    Color background;
+    BackgroundStyle() = default;
+  };
+  struct ButtonStyle {
+    Color background;
+    Color hover;
+    Color active;
+    ButtonStyle();
+    ButtonStyle(Color background, Color hover, Color active)
+        : background{background}, hover{hover}, active{active} {}
+  };
+  struct ImageStyle {
+    Color tint = Color::white;
+    Color frame = Color::clear;
+    Math::Vector2 offset = Math::Vector2::zero;
+    Math::Vector2 tiling = Math::Vector2::one;
+    ImageStyle() = default;
+    ImageStyle(const Color& tint, const Color& frame)
+        : tint{tint}, frame{frame} {}
+    ImageStyle(const Math::Vector2& offset, const Math::Vector2& tiling)
+        : offset{offset}, tiling{tiling} {}
+    ImageStyle(const Color& tint, const Color& frame,
+               const Math::Vector2& offset, const Math::Vector2& tiling)
+        : tint{tint}, frame{frame}, offset{offset}, tiling{tiling} {}
+  };
+  struct InputStyle {
+    Color background;
+    Color hovered;
+    Color active;
+    Color text;
+    InputStyle();
+    InputStyle(const Color& background, const Color& hovered,
+               const Color& active, const Color& text)
+        : background{background},
+          hovered{hovered},
+          active{active},
+          text{text} {}
+  };
+  struct ProgressBarStyle {
+    Color background;
+    Color bar;
+    Color overlayText;
+    bool hoverChange;
+    Color hover;
+    ProgressBarStyle();
+    ProgressBarStyle(const Color& background, const Color& bar,
+                     const Color& overlayText);
+    ProgressBarStyle(const Color& background, const Color& bar,
+                     const Color& overlayText, bool hoverChange,
+                     const Color& hover)
+        : background{background},
+          bar{bar},
+          overlayText{overlayText},
+          hoverChange{hoverChange},
+          hover{hover} {}
+  };
+  // TODO(Jacob) refactor
+  struct TextStyle {
+    bool isWrapped;
+    bool isDisabled;
+    // TODO(Jacob) Not worth implementing now
+    // bool isBulleted;
+    Color text;
+    TextStyle();
+    TextStyle(bool wrapped, bool disabled, Color text)
+        : isWrapped{wrapped},
+          isDisabled{disabled},
+          /*isBulleted{b},*/ text{text} {}
+  };
 };
 }  // namespace Isetta

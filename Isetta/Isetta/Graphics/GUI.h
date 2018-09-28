@@ -4,7 +4,8 @@
 #pragma once
 
 #include <string>
-//#include "Core/Color.h"
+#include "SID/sid.h"
+
 #include "Core/IsettaAlias.h"
 #include "Graphics/GUIStyle.h"
 
@@ -21,6 +22,8 @@ class Vector4;
 }  // namespace Isetta::Math
 
 typedef void* TextureID;
+class ImFont;
+using Font = ImFont;
 class ImGuiInputTextCallbackData;
 using GUIInputTextCallbackData = ImGuiInputTextCallbackData;
 using GUIInputTextCallback = int (*)(GUIInputTextCallbackData*);
@@ -32,37 +35,23 @@ class GUI {
   static void OnUpdate(const Action<>&);
 
   // BUTTONS
-  struct ButtonStyle {
-    Color color;
-    Color hover;
-    Color active;
-    ButtonStyle() {}
-    ButtonStyle(Color color, Color hover, Color active)
-        : color{color}, hover{hover}, active{active} {}
-  };
   static bool Button(const Math::Rect& position, const std::string& label,
-                     const ButtonStyle& style = ButtonStyle{},
+                     const GUIStyle::ButtonStyle& style = {},
                      bool repeating = false);
   static void Button(const Math::Rect& position, const std::string& label,
                      const Action<>& callback,
-                     const ButtonStyle& style = ButtonStyle{},
+                     const GUIStyle::ButtonStyle& style = {},
                      bool repeating = false);
-  static bool ButtonImage(
-      const Math::Rect& position, const std::string& id,
-      const TextureID& textureId, const ButtonStyle& style = ButtonStyle{},
-      bool repeating = false,
-      const Math::Vector2& offset = Math::Vector2(0.0f, 0.0f),
-      const Math::Vector2& tiling = Math::Vector2(1.0f, 1.0f),
-      int framePadding = -1, const Color& frameColor = Color::clear,
-      const Color& tint = Color::white);
-  static void ButtonImage(
-      const Math::Rect& position, const std::string& id,
-      const TextureID& textureId, const Action<>& callback,
-      const ButtonStyle& style = ButtonStyle{}, bool repeating = false,
-      const Math::Vector2& offset = Math::Vector2(0.0f, 0.0f),
-      const Math::Vector2& tiling = Math::Vector2(1.0f, 1.0f),
-      int framePadding = -1, const Color& frameColor = Color::clear,
-      const Color& tint = Color::white);
+  static bool ButtonImage(const Math::Rect& position, const std::string& id,
+                          const TextureID& textureId,
+                          const GUIStyle::ButtonStyle& style = {},
+                          const GUIStyle::ImageStyle& imgStyle = {},
+                          bool repeating = false, int framePadding = -1);
+  static void ButtonImage(const Math::Rect& position, const std::string& id,
+                          const TextureID& textureId, const Action<>& callback,
+                          const GUIStyle::ButtonStyle& btnStyle = {},
+                          const GUIStyle::ImageStyle& imgStyle = {},
+                          bool repeating = false, int framePadding = -1);
   ////////////////////////////////////////
   // TODO(Jacob) NOT PART OF GAME NEEDS //
   ////////////////////////////////////////
@@ -91,11 +80,14 @@ class GUI {
   */
   // TODO(Jacob) Toggle or Checkbox?
   // TODO(Jacob) Styling
-  static bool Toggle(const Math::Rect& position, const std::string& label,
-                     bool* value, const ButtonStyle& style = ButtonStyle{});
-  static void Toggle(const Math::Rect& position, const std::string& label,
-                     bool* value, const Action<>& callback,
-                     const ButtonStyle& style = ButtonStyle{});
+  static bool Toggle(
+      const Math::Rect& position, const std::string& label, bool* value,
+      const GUIStyle::ButtonStyle& style = {},
+      const Color& check = GUIStyle{}.Colors[(int)GUIColorStyles::CheckMark]);
+  static void Toggle(
+      const Math::Rect& position, const std::string& label, bool* value,
+      const Action<>& callback, const GUIStyle::ButtonStyle& style = {},
+      const Color& check = GUIStyle{}.Colors[(int)GUIColorStyles::CheckMark]);
   ////////////////////////////////////////
   // TODO(Jacob) NOT PART OF GAME NEEDS //
   ////////////////////////////////////////
@@ -108,18 +100,7 @@ class GUI {
   */
 
   // TEXT
-  // TODO(Jacob) refactor
-  struct TextStyle {
-    bool isWrapped;
-    bool isDisabled;
-    // TODO(Jacob) Not worth implementing now
-    // bool isBulleted;
-    Color color = Color::black;
-    TextStyle() {}
-    TextStyle(bool w, bool d, Color c)
-        : isWrapped{w}, isDisabled{d}, /*isBulleted{b},*/ color{c} {}
-  };
-  static void Text(const Math::Rect& position, const TextStyle& style,
+  static void Text(const Math::Rect& position, const GUIStyle::TextStyle& style,
                    const std::string format, ...);
   ////////////////////////////////////////
   // TODO(Jacob) NOT PART OF GAME NEEDS //
@@ -127,6 +108,7 @@ class GUI {
   /*
   static void Bullet();
   */
+  // TODO(Jacob) styling
   static void Label(const Math::Rect& position, const std::string& label,
                     const Color& color, const std::string format, ...);
   ////////////////////////////////////////
@@ -167,10 +149,12 @@ class GUI {
   //};
   static void InputText(const Math::Rect& position, const std::string& label,
                         char* buffer, int bufferSize,
+                        const GUIStyle::InputStyle& style = {},
                         GUIInputTextFlags flags = GUIInputTextFlags::None,
                         const GUIInputTextCallback& callback = NULL);
   static void InputInt(const Math::Rect& position, const std::string& label,
-                       int* value, int step = 1, int stepFast = 100,
+                       int* value, const GUIStyle::InputStyle& style = {},
+                       int step = 1, int stepFast = 100,
                        GUIInputTextFlags flags = GUIInputTextFlags::None);
   ////////////////////////////////////////
   // TODO(Jacob) NOT PART OF GAME NEEDS //
@@ -292,19 +276,11 @@ class GUI {
 
   // WINDOWS
   static bool Window(const Math::Rect& position, const std::string& name,
-                     bool* isOpen, const Action<>& ui,
+                     const Action<>& ui, bool* isOpen = NULL,
+                     const GUIStyle::BackgroundStyle& style = {},
                      const GUIWindowFlags flags = GUIWindowFlags::None);
-  // TODO(Jacob) Merge
-  // static void SetNextWindowContentSize(const Math::Vector2& size);
-  // static void SetNextWindowPos(const Math::Vector2& pos,
-  //                             GUICond cond = GUICond::Always,
-  //                             const Math::Vector2& pivot = Math::Vector2(0,
-  //                             0));
-  // static void SetNextWindowSize(const Math::Vector2& size,
-  //                              GUICond cond = GUICond::Always);
-  // static void SetNextWindowBgAlpha(float alpha);
-
-  static bool MenuBar(const Action<>& ui, bool main = false);
+  static bool MenuBar(const Action<>& ui, bool main = false,
+                      const GUIStyle::BackgroundStyle& style = {});
   static bool Menu(const std::string& label, const Action<>& ui,
                    bool enabled = true);
   static bool MenuItem(const std::string& label, const std::string& shortcut,
@@ -313,7 +289,9 @@ class GUI {
                        const Action<>& callback, bool enabled = true);
   static bool Modal(const std::string& name, const Action<>& ui,
                     bool* isOpen = NULL,
+                    const GUIStyle::BackgroundStyle& style = {},
                     GUIWindowFlags flags = GUIWindowFlags::None);
+  static void OpenPopup(const std::string& id);
   static void CloseCurrentPopup();
   ////////////////////////////////////////
   // TODO(Jacob) NOT PART OF GAME NEEDS //
@@ -375,17 +353,14 @@ class GUI {
                              Color color, int segments = 12);
     // TODO(Jacob) Do we allow DrawLine? 3017
   };
+
   static void Image(const Math::Rect& position, const TextureID& textureId,
                     const Math::Vector2& size,
-                    const Math::Vector2& offset = Math::Vector2::zero,
-                    const Math::Vector2& tiling =
-                        Math::Vector2::one,  // TODO(Jacob) what is uv used for?
-                    const Color& tint = Color::black,
-                    const Color& border = Color::clear);
-  static void ProgressBar(
-      const Math::Rect& position, float fraction,
-      const Math::Vector2& size = Math::Vector2(-1, 0),
-      const std::string& overlay = NULL);  // TODO(Jacob) color
+                    const GUIStyle::ImageStyle& style = {});
+
+  static void ProgressBar(const Math::Rect& position, float fraction,
+                          const std::string& overlay = "",
+                          const GUIStyle::ProgressBarStyle& style = {});
   // TODO(Jacob) filter search 2845
 
   // CHECKERS
@@ -442,17 +417,20 @@ class GUI {
   static void SetMouseCursor(MouseCursor type);
   // TODO(Jacob) Classic/Dark/Light sytling?
   */
+  // TODO(Jacob) Load/SaveIniSettings?
   // TODO(Jacob) Fonts
   // static Font* GetFont();
-  // static Font* AddFont
-  static GUIStyle GetStyle();  // TODO(Jacob) Style
-                               // TODO(Jacob) Load/SaveIniSettings?
-                               /**/
+
+  // TODO(Jacob) have font map?
+  static Font* AddFontFromFile(const std::string& filename, int fontSize);
+  static Font* AddFontFromMemory(void* fontBuffer, int fontSize, float pixels);
+  static GUIStyle GetStyle();
+
  private:
   static class GUIModule* guiModule;
   friend class GUIModule;
 
   static bool Button(Func<bool> button, const Math::Rect& position,
-                     const ButtonStyle& style, bool repeating);
+                     const GUIStyle::ButtonStyle& style, bool repeating);
 };
 }  // namespace Isetta

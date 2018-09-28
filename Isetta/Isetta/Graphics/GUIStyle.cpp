@@ -3,48 +3,73 @@
  */
 #include "Graphics/GUIStyle.h"
 
-#include "imgui.h"
+#include "GUI.h"
 
 namespace Isetta {
-GUIStyle::GUIStyle(const ImGuiStyle& style) {
+GUIStyle::GUIStyle(bool imGuiStyle) {
+  if (!imGuiStyle) return;
+  GUIStyle style = GUI::GetStyle();
   Alpha = style.Alpha;
-  WindowPadding =
-      Isetta::Math::Vector2(style.WindowPadding.x, style.WindowPadding.y);
+  WindowPadding = style.WindowPadding;
   WindowRounding = style.WindowRounding;
   WindowBorderSize = style.WindowBorderSize;
-  WindowMinSize =
-      Isetta::Math::Vector2(style.WindowMinSize.x, style.WindowMinSize.y);
-  WindowTitleAlign =
-      Isetta::Math::Vector2(style.WindowTitleAlign.x, style.WindowTitleAlign.y);
+  WindowMinSize = style.WindowMinSize;
+  WindowTitleAlign = style.WindowTitleAlign;
   ChildRounding = style.ChildRounding;
   ChildBorderSize = style.ChildBorderSize;
   PopupRounding = style.PopupRounding;
   PopupBorderSize = style.PopupBorderSize;
-  FramePadding = Isetta::Math::Vector2(style.FramePadding.x, FramePadding.y);
+  FramePadding = style.FramePadding;
   FrameRounding = style.FrameRounding;
   FrameBorderSize = style.FrameBorderSize;
-  ItemSpacing = Isetta::Math::Vector2(style.ItemSpacing.x, style.ItemSpacing.y);
-  ItemInnerSpacing =
-      Isetta::Math::Vector2(style.ItemInnerSpacing.x, style.ItemInnerSpacing.y);
-  TouchExtraPadding = Isetta::Math::Vector2(style.TouchExtraPadding.x,
-                                            style.TouchExtraPadding.y);
+  ItemSpacing = style.ItemSpacing;
+  ItemInnerSpacing = style.ItemInnerSpacing;
+  TouchExtraPadding = style.TouchExtraPadding;
   IndentSpacing = style.IndentSpacing;
   ColumnsMinSpacing = style.ColumnsMinSpacing;
   ScrollbarSize = style.ScrollbarSize;
   ScrollbarRounding = style.ScrollbarRounding;
   GrabMinSize = style.GrabMinSize;
   GrabRounding = style.GrabRounding;
-  ButtonTextAlign =
-      Isetta::Math::Vector2(style.ButtonTextAlign.x, style.ButtonTextAlign.y);
-  DisplayWindowPadding = Isetta::Math::Vector2(style.DisplayWindowPadding.x,
-                                               style.DisplayWindowPadding.y);
-  DisplaySafeAreaPadding = Isetta::Math::Vector2(
-      style.DisplaySafeAreaPadding.x, style.DisplaySafeAreaPadding.y);
+  ButtonTextAlign = style.ButtonTextAlign;
+  DisplayWindowPadding = style.DisplayWindowPadding;
+  DisplaySafeAreaPadding = style.DisplaySafeAreaPadding;
   MouseCursorScale = style.MouseCursorScale;
   AntiAliasedFill = style.AntiAliasedFill;
   CurveTessellationTol = style.CurveTessellationTol;
-  for (int i = 0; i < ImGuiCol_COUNT; i++) {
-    Colors[i] = Color(style.Colors[i]);
+  for (int i = 0; i < static_cast<int>(GUIColorStyles::COUNT); i++) {
+    Colors[i] = style.Colors[i];
   }
-}  // namespace Isetta
+}
+
+GUIStyle::ButtonStyle::ButtonStyle() {
+  background = GUI::GetStyle().Colors[(int)GUIColorStyles::Button];
+  hover = GUI::GetStyle().Colors[(int)GUIColorStyles::ButtonHovered];
+  active = GUI::GetStyle().Colors[(int)GUIColorStyles::ButtonActive];
+}
+
+GUIStyle::InputStyle::InputStyle() {
+  background = GUI::GetStyle().Colors[(int)GUIColorStyles::FrameBg];
+  hovered = GUI::GetStyle().Colors[(int)GUIColorStyles::FrameBgHovered];
+  active = GUI::GetStyle().Colors[(int)GUIColorStyles::FrameBgActive];
+  text = GUI::GetStyle().Colors[(int)GUIColorStyles::Text];
+}
+GUIStyle::ProgressBarStyle::ProgressBarStyle() {
+  background = GUI::GetStyle().Colors[(int)GUIColorStyles::FrameBg];
+  bar = GUI::GetStyle().Colors[(int)GUIColorStyles::PlotHistogram];
+  overlayText = GUI::GetStyle().Colors[(int)GUIColorStyles::Text];
+  hoverChange = false;
+  hover = GUI::GetStyle().Colors[(int)GUIColorStyles::PlotHistogramHovered];
+}
+GUIStyle::ProgressBarStyle::ProgressBarStyle(const Color& background,
+                                             const Color& bar,
+                                             const Color& overlayText)
+    : background{background}, bar{bar}, overlayText{overlayText} {
+  hoverChange = false;
+  hover = GUI::GetStyle().Colors[(int)GUIColorStyles::PlotHistogramHovered];
+}
+GUIStyle::TextStyle::TextStyle() {
+  text = GUI::GetStyle().Colors[(int)GUIColorStyles::Text];
+}
+
 }  // namespace Isetta
