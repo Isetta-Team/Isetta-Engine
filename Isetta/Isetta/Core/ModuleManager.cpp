@@ -61,7 +61,6 @@ void ModuleManager::ShutDown() {
   inputModule->ShutDown();
   renderModule->ShutDown();
   windowModule->ShutDown();
-  audioModule->ShutDown();
   memoryManager->ShutDown();
 }
 }  // namespace Isetta
