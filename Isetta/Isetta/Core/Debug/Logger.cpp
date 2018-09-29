@@ -41,7 +41,7 @@ int Logger::VDebugPrintF(const Debug::Channel channel,
   int charsWritten =
       vsnprintf(sBuffer, MAX_CHARS, stream.str().c_str(), argList);
 
-  sBuffer[MAX_CHARS] = '\0';
+  sBuffer[charsWritten] = '\0';
 
   if (CheckChannelMask(channel)) {
     if (CheckVerbosity(verbosity)) {
@@ -121,13 +121,11 @@ void LogObject::operator()(const Debug::Channel channel,
 void LogObject::operator()(
     const Debug::Channel channel, const Debug::Verbosity verbosity,
     const std::initializer_list<std::string>& inFormat) const {
-  std::ostringstream stream;
-  stream << file << "(" << line << ") ";
+  std::string stream;
   for (auto& elem : inFormat) {
-    stream << elem;
+    stream += elem;
   }
-  Logger::DebugPrintF(file, line, channel, verbosity, stream.str().c_str(),
-                      NULL);
+  Logger::DebugPrintF(file, line, channel, verbosity, stream.c_str(), NULL);
 }
 
 void LogObject::operator()(const Debug::Channel channel, const char* inFormat,
@@ -148,12 +146,10 @@ void LogObject::operator()(const Debug::Channel channel,
 void LogObject::operator()(
     const Debug::Channel channel,
     const std::initializer_list<std::string>& inFormat) const {
-  std::ostringstream stream;
-  stream << file << "(" << line << ") ";
+  std::string stream;
   for (auto& elem : inFormat) {
-    stream << elem;
+    stream += elem;
   }
-  Logger::DebugPrintF(file, line, channel, verbosity, stream.str().c_str(),
-                      NULL);
+  Logger::DebugPrintF(file, line, channel, verbosity, stream.c_str(), NULL);
 }
 }  // namespace Isetta

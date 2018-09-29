@@ -5,7 +5,7 @@
 #include <initializer_list>
 
 namespace Isetta::Math {
-class Utility {
+class Util {
  public:
   static const float PI;
   static const float EPSILON;

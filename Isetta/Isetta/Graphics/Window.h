@@ -8,6 +8,10 @@
 #include "Core/Config/CVar.h"
 #include "Core/ModuleManager.h"
 
+namespace Isetta::Math {
+class Vector2;
+}
+
 namespace Isetta {
 class WindowModule {
  public:

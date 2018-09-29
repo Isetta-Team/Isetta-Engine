@@ -12,13 +12,12 @@ const Color Color::black = Color(0, 0, 0, 1);
 const Color Color::blue = Color(0, 0, 1, 1);
 const Color Color::clear = Color(0, 0, 0, 0);
 const Color Color::cyan = Color(0, 1, 1, 1);
+const Color Color::green = Color(0, 1, 0, 1);
 const Color Color::grey = Color(0.5f, 0.5f, 0.5f, 1);
 const Color Color::magenta = Color(1, 0, 1, 1);
 const Color Color::red = Color(1, 0, 0, 1);
 const Color Color::white = Color(1, 1, 1, 1);
 const Color Color::yellow = Color(1, 0.92f, 0.016f, 1);
-
-Color::Color(const Math::Vector4& v) : r{v.x}, g{v.y}, b{v.z}, a{v.w} {}
 
 float Color::operator[](int i) const {
   switch (i) {
@@ -35,9 +34,13 @@ float Color::operator[](int i) const {
   }
 }
 
+Color::Color(const Math::Vector4& v) : r{v.x}, g{v.y}, b{v.z}, a{v.w} {}
+
+Color::operator Math::Vector4() { return Math::Vector4(r, g, b, a); }
+
 float Color::GreyScale() const { return (r + g + b) / 3.0f; }
 
-float Color::MaxColorComponent() const { return Math::Utility::Max({r, g, b}); }
+float Color::MaxColorComponent() const { return Math::Util::Max({r, g, b}); }
 
 std::string Color::ToString() const {
   char buffer[26];

@@ -3,19 +3,16 @@
  */
 #include "Core/Math/Quaternion.h"
 
-#include "Utility.h"
-#include "Vector3.h"
+#include "Core/Math/Util.h"
+#include "Core/Math/Vector3.h"
 
 namespace Isetta::Math {
 Quaternion::Quaternion() : w{0.f}, x{0.f}, y{0.f}, z{0.f} {}
 
 Quaternion::Quaternion(float eulerX, float eulerY, float eulerZ) {
-  Quaternion roll(Utility::Sin(eulerX * 0.5f), 0, 0,
-                  Utility::Cos(eulerX * 0.5f));
-  Quaternion pitch(0, Utility::Sin(eulerY * 0.5f), 0,
-                   Utility::Cos(eulerY * 0.5f));
-  Quaternion yaw(0, 0, Utility::Sin(eulerZ * 0.5f),
-                 Utility::Cos(eulerZ * 0.5f));
+  Quaternion roll(Util::Sin(eulerX * 0.5f), 0, 0, Util::Cos(eulerX * 0.5f));
+  Quaternion pitch(0, Util::Sin(eulerY * 0.5f), 0, Util::Cos(eulerY * 0.5f));
+  Quaternion yaw(0, 0, Util::Sin(eulerZ * 0.5f), Util::Cos(eulerZ * 0.5f));
 
   // Order: y * x * z
   *this = Normalize(pitch * roll * yaw);
@@ -109,21 +106,20 @@ Vector3 Quaternion::GetEulerAngles() const {
   // roll (x-axis rotation)
   float sinr = 2.f * (q.w * q.x + q.y * q.z);
   float cosr = 1.f - 2.f * (q.x * q.x + q.y * q.y);
-  float roll = Utility::Atan2(sinr, cosr);
+  float roll = Util::Atan2(sinr, cosr);
 
   // pitch (y-axis rotation)
   float sinp = 2.f * (q.w * q.y - q.z * q.x);
   float pitch;
-  if (Utility::Abs(sinp) >= 1)
-    pitch = Utility::PI / 2 *
-            Utility::Sign(sinp);  // use 90 degrees if out of range
+  if (Util::Abs(sinp) >= 1)
+    pitch = Util::PI / 2 * Util::Sign(sinp);  // use 90 degrees if out of range
   else
-    pitch = Utility::Asin(sinp);
+    pitch = Util::Asin(sinp);
 
   // yaw (z-axis rotation)
   float siny = 2.f * (q.w * q.z + q.x * q.y);
   float cosy = 1.f - 2.f * (q.y * q.y + q.z * q.z);
-  float yaw = Utility::Atan2(siny, cosy);
+  float yaw = Util::Atan2(siny, cosy);
 
   return Vector3{roll, pitch, yaw};
 }
@@ -132,8 +128,8 @@ void Quaternion::SetFromToRotation(const Vector3& fromDirection,
                                    const Vector3& toDirection) {
   float dot = Vector3::Dot(fromDirection, toDirection);
   float k =
-      Utility::Sqrt(fromDirection.SqrMagnitude() * toDirection.SqrMagnitude());
-  if (Utility::Abs(dot / k + 1) < Utility::EPSILON) {
+      Util::Sqrt(fromDirection.SqrMagnitude() * toDirection.SqrMagnitude());
+  if (Util::Abs(dot / k + 1) < Util::EPSILON) {
     Vector3 ortho;
     if (fromDirection.z < fromDirection.x) {
       ortho = Vector3{fromDirection.y, -fromDirection.x, 0.f};
@@ -160,7 +156,7 @@ void Quaternion::SetLookRotation(const Vector3& forwardDirection,
     w = 0.f;
   }
   // Handle alignment with up direction
-  if (1 - Utility::Abs(Vector3::Dot(forward, upwards)) < Utility::EPSILON)
+  if (1 - Util::Abs(Vector3::Dot(forward, upwards)) < Util::EPSILON)
     SetFromToRotation(Vector3::forward, forward);
   // Get orthogonal vectors
   Vector3 right = Vector3::Cross(upwards, forward).Normalized();
@@ -168,25 +164,25 @@ void Quaternion::SetLookRotation(const Vector3& forwardDirection,
   // Calculate rotation
   float radicand = right.x + upwards.y + forward.z;
   if (radicand > 0.f) {
-    w = Utility::Sqrt(1.f + radicand) * 0.5f;
+    w = Util::Sqrt(1.f + radicand) * 0.5f;
     float recip = 1.f / (4.f * w);
     x = (upwards.z - forward.y) * recip;
     y = (forward.x - right.z) * recip;
     z = (right.y - upwards.x) * recip;
   } else if (right.x >= upwards.y && right.x >= forward.z) {
-    x = Utility::Sqrt(1.f + right.x - upwards.y - forward.z) * 0.5f;
+    x = Util::Sqrt(1.f + right.x - upwards.y - forward.z) * 0.5f;
     float recip = 1.f / (4.f * x);
     w = (upwards.z - forward.y) * recip;
     z = (forward.x + right.z) * recip;
     y = (right.y + upwards.x) * recip;
   } else if (upwards.y > forward.z) {
-    y = Utility::Sqrt(1.f - right.x + upwards.y - forward.z) * 0.5f;
+    y = Util::Sqrt(1.f - right.x + upwards.y - forward.z) * 0.5f;
     float recip = 1.f / (4.f * y);
     z = (upwards.z + forward.y) * recip;
     w = (forward.x - right.z) * recip;
     x = (right.y + upwards.x) * recip;
   } else {
-    z = Utility::Sqrt(1.f - right.x - upwards.y + forward.z) * 0.5f;
+    z = Util::Sqrt(1.f - right.x - upwards.y + forward.z) * 0.5f;
     float recip = 1.f / (4.f * z);
     y = (upwards.z + forward.y) * recip;
     x = (forward.x + right.z) * recip;
@@ -198,7 +194,7 @@ void Quaternion::SetLookRotation(const Vector3& forwardDirection,
 float Quaternion::Angle(const Quaternion& aQuaternion,
                         const Quaternion& bQuaternion) {
   float dot = Dot(aQuaternion, bQuaternion);
-  return Utility::Acos(Utility::Min({Utility::Abs(dot), 1.f})) * 2.f;
+  return Util::Acos(Util::Min({Util::Abs(dot), 1.f})) * 2.f;
 }
 
 float Quaternion::Dot(const Quaternion& aQuaternion,
@@ -232,9 +228,9 @@ Quaternion Quaternion::Normalize(const Quaternion& quaternion) {
 
 Quaternion Quaternion::Slerp(const Quaternion& aQuaternion,
                              const Quaternion& bQuaternion, float t) {
-  float theta{Utility::Acos(Dot(aQuaternion, bQuaternion))};
-  float wp = Utility::Sin(1 - t) * theta / Utility::Sin(theta);
-  float wq = Utility::Sin(t) * theta / Utility::Sin(theta);
+  float theta{Util::Acos(Dot(aQuaternion, bQuaternion))};
+  float wp = Util::Sin(1 - t) * theta / Util::Sin(theta);
+  float wq = Util::Sin(t) * theta / Util::Sin(theta);
   return aQuaternion * wp + bQuaternion * wq;
 }
 
