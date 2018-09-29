@@ -37,39 +37,42 @@ GUIStyle::GUIStyle(bool imGuiStyle) {
   MouseCursorScale = style.MouseCursorScale;
   AntiAliasedFill = style.AntiAliasedFill;
   CurveTessellationTol = style.CurveTessellationTol;
-  for (int i = 0; i < static_cast<int>(GUIColorStyles::COUNT); i++) {
+  for (int i = 0; i < static_cast<int>(GUI::ColorStyles::COUNT); i++) {
     Colors[i] = style.Colors[i];
   }
 }
 
-GUIStyle::ButtonStyle::ButtonStyle() {
-  background = GUI::GetStyle().Colors[(int)GUIColorStyles::Button];
-  hover = GUI::GetStyle().Colors[(int)GUIColorStyles::ButtonHovered];
-  active = GUI::GetStyle().Colors[(int)GUIColorStyles::ButtonActive];
+GUI::ButtonStyle::ButtonStyle() {
+  background = GetStyle().Colors[(int)ColorStyles::Button];
+  hover = GetStyle().Colors[(int)ColorStyles::ButtonHovered];
+  active = GetStyle().Colors[(int)ColorStyles::ButtonActive];
 }
-
-GUIStyle::InputStyle::InputStyle() {
-  background = GUI::GetStyle().Colors[(int)GUIColorStyles::FrameBg];
-  hovered = GUI::GetStyle().Colors[(int)GUIColorStyles::FrameBgHovered];
-  active = GUI::GetStyle().Colors[(int)GUIColorStyles::FrameBgActive];
-  text = GUI::GetStyle().Colors[(int)GUIColorStyles::Text];
+GUI::InputStyle::InputStyle() {
+  background = GetStyle().Colors[(int)ColorStyles::FrameBg];
+  hovered = GetStyle().Colors[(int)ColorStyles::FrameBgHovered];
+  active = GetStyle().Colors[(int)ColorStyles::FrameBgActive];
+  text = GetStyle().Colors[(int)ColorStyles::Text];
 }
-GUIStyle::ProgressBarStyle::ProgressBarStyle() {
-  background = GUI::GetStyle().Colors[(int)GUIColorStyles::FrameBg];
-  bar = GUI::GetStyle().Colors[(int)GUIColorStyles::PlotHistogram];
-  overlayText = GUI::GetStyle().Colors[(int)GUIColorStyles::Text];
+GUI::LabelStyle::LabelStyle() {
+  text = GetStyle().Colors[(int)ColorStyles::Text];
+  background = GetStyle().Colors[(int)ColorStyles::FrameBg];
+}
+GUI::ProgressBarStyle::ProgressBarStyle() {
+  background = GetStyle().Colors[(int)ColorStyles::FrameBg];
+  bar = GetStyle().Colors[(int)ColorStyles::PlotHistogram];
+  overlayText = GetStyle().Colors[(int)ColorStyles::Text];
   hoverChange = false;
-  hover = GUI::GetStyle().Colors[(int)GUIColorStyles::PlotHistogramHovered];
+  hover = GetStyle().Colors[(int)ColorStyles::PlotHistogramHovered];
 }
-GUIStyle::ProgressBarStyle::ProgressBarStyle(const Color& background,
-                                             const Color& bar,
-                                             const Color& overlayText)
+GUI::ProgressBarStyle::ProgressBarStyle(const Color& background,
+                                        const Color& bar,
+                                        const Color& overlayText)
     : background{background}, bar{bar}, overlayText{overlayText} {
   hoverChange = false;
-  hover = GUI::GetStyle().Colors[(int)GUIColorStyles::PlotHistogramHovered];
+  hover = GetStyle().Colors[(int)ColorStyles::PlotHistogramHovered];
 }
-GUIStyle::TextStyle::TextStyle() {
-  text = GUI::GetStyle().Colors[(int)GUIColorStyles::Text];
+GUI::TextStyle::TextStyle() {
+  text = GetStyle().Colors[(int)ColorStyles::Text];
 }
 
 }  // namespace Isetta

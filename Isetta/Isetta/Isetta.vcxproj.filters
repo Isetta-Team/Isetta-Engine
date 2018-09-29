@@ -295,6 +295,9 @@
     <ClInclude Include="Graphics\GUIStyle.h">
       <Filter>Graphics\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\RectTransform.h">
+      <Filter>Graphics\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
