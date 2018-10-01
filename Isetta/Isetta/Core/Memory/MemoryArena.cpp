@@ -10,6 +10,7 @@
 
 namespace Isetta {
 
+// TODO(YIDI): find a way to allow specifying from config
 HandleEntry MemoryArena::entryArr[maxHandleCount];
 
 // TODO(YIDI): This is only allocating from top
@@ -34,7 +35,7 @@ void* MemoryArena::Alloc(const Size size, Size& outSize) {
 
   if (alignedAddress + size > rightAddress) {
     throw std::exception{
-        "MemoryArena::Alloc => Not enough memory in the arena left!"};
+        "MemoryArena::Alloc => Not enough memory in the arena!"};
   }
 
   outSize = size + adjustment;
@@ -45,12 +46,12 @@ void MemoryArena::Defragment() {
   if (addressIndexMap.empty()) return;
 
   for (int i = 0; i < 6; i++) {
-    index++;
-    if (index >= addressIndexMap.size()) {
-      index = 0;
+    curIndex++;
+    if (curIndex >= addressIndexMap.size()) {
+      curIndex = 0;
     }
-    MoveLeft(index);
-    LOG_INFO(Debug::Channel::Memory, "Cur size: %I64u", GetSize());
+    MoveLeft(curIndex);
+    LOG_INFO(Debug::Channel::Memory, "Cur size: %I64u", GetUsedSize());
   }
 }
 
@@ -111,7 +112,7 @@ void MemoryArena::Print() const {
   }
 }
 
-PtrInt MemoryArena::GetSize() const {
+PtrInt MemoryArena::GetUsedSize() const {
   PtrInt lastAddress;
   Size lastSize;
 
@@ -123,7 +124,6 @@ PtrInt MemoryArena::GetSize() const {
     lastAddress = lastPair->first;
     lastSize = entryArr[lastPair->second].size;
   }
-  auto& arr = entryArr;
   auto lastPair = --addressIndexMap.end();
 
   return (lastAddress + lastSize) - leftAddress;

@@ -129,6 +129,9 @@ class Vector3 {
    * \brief Normalizes current vector
    */
   void Normalize() noexcept;
+  /**
+   * \brief Convert the vector to a string
+   */
   std::string ToString() const;
 
   // static functions
@@ -138,7 +141,7 @@ class Vector3 {
    * \param lhs The left vector
    * \param rhs The right vector
    */
-  static bool Equals(const Vector3& lhs, const Vector3& rhs);
+  static bool FuzzyEqual(const Vector3& lhs, const Vector3& rhs);
   /**
    * \brief Returns the dot product of two vectors
    * \param lhs The left vector

@@ -31,7 +31,7 @@ float Vector2::operator[](int i) const {
     case 1:
       return y;
     default:
-      throw std::out_of_range("Vector2::[] Index Access out of range.");
+      throw std::out_of_range{"Vector2::[] => Index Access out of range."};
   }
 }
 
@@ -84,5 +84,9 @@ Vector2 Vector2::Slerp(const Vector2& start, const Vector2& end, float time) {
   float theta = acosf(dot) * time;
   Vector2 relativeVector = end - start * dot;
   return start * cosf(theta) + relativeVector * sinf(theta);
+}
+
+bool Vector2::FuzzyEqual(const Vector2& lhs, const Vector2& rhs) {
+  return abs(lhs.x - rhs.x) < FLT_EPSILON && abs(lhs.y - rhs.y) < FLT_EPSILON;
 }
 }  // namespace Isetta::Math

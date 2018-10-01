@@ -33,4 +33,9 @@ Vector2 Rect::PointToNormalized(const Rect& rect, const Vector2& point) {
                  (point.y - rect.y) / rect.height};
 }
 
+bool Rect::FuzzyEqual(const Rect& lhs, const Rect& rhs) {
+  return abs(lhs.x - rhs.x) < FLT_EPSILON && abs(lhs.y - rhs.y) < FLT_EPSILON &&
+         abs(lhs.width - rhs.width) < FLT_EPSILON && abs(lhs.height - rhs.height) < FLT_EPSILON;
+}
+
 }  // namespace Isetta::Math

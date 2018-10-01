@@ -2,11 +2,14 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Audio/AudioModule.h"
+#include <SID/sid.h>
 #include <combaseapi.h>
-#include "Audio/AudioSource.h"
-#include "Core/Debug/Logger.h"
-#include "SID/sid.h"
+#include <fmod_errors.h>
 #include <algorithm>
+#include "Audio/AudioSource.h"
+#include "Core/Config/Config.h"
+#include "Core/Debug/Logger.h"
+#include "Util.h"
 
 namespace Isetta {
 
@@ -29,9 +32,11 @@ void AudioModule::StartUp() {
   FMOD::Debug_Initialize(FMOD_DEBUG_LEVEL_LOG, FMOD_DEBUG_MODE_CALLBACK,
                          LogAudioModule);
   FMOD::System_Create(&fmodSystem);
-  fmodSystem->init(512, FMOD_INIT_NORMAL, nullptr);
+  CheckStatus(fmodSystem->init(512, FMOD_INIT_NORMAL, nullptr));
   // TODO(YIDI): Set this in engine config
-  soundFilesRoot = R"(Resources\Sound\)";
+  auto& config = Config::Instance();
+  soundFilesRoot = config.resourcePath.GetVal() + R"(\)" +
+                   config.audioConfig.pathUnderResource.GetVal() + R"(\)";
   LoadAllAudioClips();
   AudioSource::audioSystem = this;
 }
@@ -40,31 +45,30 @@ void AudioModule::Update(float deltaTime) const { fmodSystem->update(); }
 
 void AudioModule::ShutDown() {
   for (auto it : soundMap) {
-    it.second->release();
+    CheckStatus(it.second->release());
   }
 
   soundMap.clear();
-  fmodSystem->release();
+  CheckStatus(fmodSystem->release());
   CoUninitialize();
 }
 
 FMOD::Sound* AudioModule::FindSound(const char* soundName) {
-  const auto hashedValue = SID(soundName).GetValue();
-  if (soundMap.find(hashedValue) != soundMap.end()) {
-    return soundMap[hashedValue];
+  const auto strId = SID(soundName);
+  if (soundMap.find(strId) != soundMap.end()) {
+    return soundMap[strId];
   }
 
-  throw std::exception{std::string("AudioModule::FindSound => Sound file " +
-                                   std::string(soundName) + " found!")
-                           .c_str()};
+  throw std::exception{Util::StrFormat(
+      "AudioModule::FindSound => Sound file %s not found!", soundName)};
 }
 
 FMOD::Channel* AudioModule::Play(FMOD::Sound* sound, const bool loop,
                                  const float volume) const {
   FMOD::Channel* channel = nullptr;
   sound->setMode(loop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF);
-  fmodSystem->playSound(sound, nullptr, false, &channel);
-  channel->setVolume(volume);
+  CheckStatus(fmodSystem->playSound(sound, nullptr, false, &channel));
+  CheckStatus(channel->setVolume(volume));
   return channel;
 }
 
@@ -73,18 +77,13 @@ void AudioModule::LoadAllAudioClips() {
   const char* files[]{"singing.wav", "wave.mp3", "gunshot.aiff"};
 
   for (auto file : files) {
-    StringId hashedId = SID(file);
-
     FMOD::Sound* sound = nullptr;
     std::string path = soundFilesRoot + file;
-    fmodSystem->createSound(path.c_str(), FMOD_LOWMEM, nullptr, &sound);
+    CheckStatus(
+        fmodSystem->createSound(path.c_str(), FMOD_LOWMEM, nullptr, &sound));
 
-    soundMap.insert({hashedId.GetValue(), sound});
+    soundMap.insert({SID(file), sound});
   }
-}
-
-inline float MegaBytesFromBytes(const int byte) {
-  return byte / 1024.f / 1024.f;
 }
 
 void PrintAudioMemoryUsage() {
@@ -93,7 +92,15 @@ void PrintAudioMemoryUsage() {
   FMOD::Memory_GetStats(&currentAllocated, &maxAllocated);
 
   LOG_INFO(Debug::Channel::Sound, "CurMem: %d MB, MaxMem %d MB",
-           MegaBytesFromBytes(currentAllocated),
-           MegaBytesFromBytes(maxAllocated));
+           Util::MegaBytesFromBytes(currentAllocated),
+           Util::MegaBytesFromBytes(maxAllocated));
+}
+
+void AudioModule::CheckStatus(const FMOD_RESULT status) {
+  if (status != FMOD_OK) {
+    LOG_ERROR(Debug::Channel::Sound, FMOD_ErrorString(status));
+    throw std::exception{Util::StrFormat("AudioSource::CheckStatus => %s",
+                                         FMOD_ErrorString(status))};
+  }
 }
 }  // namespace Isetta

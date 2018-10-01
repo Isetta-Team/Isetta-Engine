@@ -50,7 +50,7 @@ class NetworkManager {
    * connection.
    */
   static void ConnectToServer(const char* serverAddress,
-                              std::function<void(bool)> callback = nullptr);
+                              Action<bool> callback = nullptr);
   /**
    * @brief Disconnects the local Client from the server it is connected to.
    *

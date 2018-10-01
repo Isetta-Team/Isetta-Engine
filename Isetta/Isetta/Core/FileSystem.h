@@ -53,21 +53,21 @@ class FileSystem {
   } OverlapIOInfo;
 
   /**
-   * @brief Read the specificed filename (with file path) synchronusly
+   * @brief Read the specificed filename (with file path) synchronously
    *
    * @param fileName
    * @return char* the contents of the read file
    */
   char* Read(const char* fileName);
   /**
-   * @brief Read the specificed filename (with file path) synchronusly
+   * @brief Read the specificed filename (with file path) synchronously
    *
    * @param fileName
    * @return char* the contents of the read file
    */
   char* Read(const std::string& fileName);
   /**
-   * @brief Read the specificed filename (with file path) asynchronusly
+   * @brief Read the specificed filename (with file path) asynchronously
    *
    * @param fileName
    * @param callback called on status completion
@@ -76,7 +76,7 @@ class FileSystem {
   HANDLE ReadAsync(const char* fileName,
                    const Action<const char*>& callback = nullptr);
   /**
-   * @brief Write to the specificed filename (with file path) asynchronusly
+   * @brief Write to the specificed filename (with file path) asynchronously
    *
    * @param fileName
    * @param contentBuffer is the content to write
@@ -89,7 +89,7 @@ class FileSystem {
                     const Action<const char*>& callback = nullptr,
                     const bool appendData = true);
   /**
-   * @brief Read the specificed filename (with file path) asynchronusly
+   * @brief Read the specificed filename (with file path) asynchronously
    *
    * @param fileName
    * @param callback the callback used on status completion
@@ -98,7 +98,7 @@ class FileSystem {
   HANDLE ReadAsync(const std::string& fileName,
                    const Action<const char*>& callback = nullptr);
   /**
-   * @brief Write to the specificed filename (with file path) asynchronusly
+   * @brief Write to the specificed filename (with file path) asynchronously
    *
    * @param fileName
    * @param contentBuffer is the content to write
@@ -111,7 +111,7 @@ class FileSystem {
                     const Action<const char*>& callback = nullptr,
                     const bool appendData = true);
   /**
-   * @brief Write to the specificed filename (with file path) asynchronusly
+   * @brief Write to the specificed filename (with file path) asynchronously
    *
    * @param fileName
    * @param contentBuffer is the content to write
@@ -146,6 +146,30 @@ class FileSystem {
    * @param fileName
    */
   void Touch(const std::string& fileName);
+
+  /**
+   * @brief GetFileSize returns the size of the file in characters
+   *
+   * @param fileName
+   */
+  int GetFileLength(const std::string& fileName);
+  /**
+   * @brief
+   *
+   * @param fileName
+   */
+  static void Concat(const std::initializer_list<std::string>& path,
+                     std::string* file);
+  /**
+   * @brief
+   */
+  static inline const char PathSeparator() {
+#ifdef _WIN32
+    return '\\';
+#else
+    return '/';
+#endif
+  }
 
   /**
    * @brief Get the I/O completion port

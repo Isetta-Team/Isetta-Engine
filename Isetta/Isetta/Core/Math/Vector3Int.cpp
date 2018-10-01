@@ -36,7 +36,7 @@ int Vector3Int::operator[](int i) const {
     case 2:
       return z;
     default:
-      throw std::out_of_range("Vector3Int::[] Index access out of range.");
+      throw std::out_of_range{"Vector3Int::[] => Index access out of range."};
   }
 }
 

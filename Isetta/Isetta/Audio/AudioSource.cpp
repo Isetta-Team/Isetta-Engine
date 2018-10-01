@@ -3,6 +3,7 @@
  */
 #include "Audio/AudioSource.h"
 #include "Audio/AudioModule.h"
+#include "Core/Debug/Logger.h"
 
 namespace Isetta {
 
@@ -13,35 +14,38 @@ void AudioSource::SetAudioClip(const char* soundName) {
 }
 
 void AudioSource::Play(const bool loop, const float volume) {
-  if (fmodSound != nullptr) {
+  if (isSoundValid()) {
     fmodChannel = audioSystem->Play(fmodSound, loop, volume);
-  } else {
-    throw std::exception{
-        "AudioSource::Play => Sound clip for this audio source is not found!"};
   }
 }
 
 void AudioSource::Pause() const {
   if (isChannelValid() && IsPlaying()) {
-    fmodChannel->setPaused(true);
+    AudioModule::CheckStatus(fmodChannel->setPaused(true));
   }
 }
 
 void AudioSource::Continue() const {
   if (isChannelValid()) {
-    fmodChannel->setPaused(false);
+    AudioModule::CheckStatus(fmodChannel->setPaused(false));
   }
 }
 
 void AudioSource::Stop() const {
   if (isChannelValid() && IsPlaying()) {
-    fmodChannel->stop();
+    AudioModule::CheckStatus(fmodChannel->stop());
   }
 }
 
 void AudioSource::SetVolume(const float volume) const {
   if (isChannelValid()) {
-    fmodChannel->setVolume(volume);
+    AudioModule::CheckStatus(fmodChannel->setVolume(volume));
+  }
+}
+
+void AudioSource::SetSpeed(const float speed) const {
+  if (isSoundValid()) {
+    AudioModule::CheckStatus(fmodSound->setMusicSpeed(speed));
   }
 }
 
@@ -60,4 +64,15 @@ bool AudioSource::isChannelValid() const {
 
   return true;
 }
+
+bool AudioSource::isSoundValid() const {
+  if (fmodSound == nullptr) {
+    throw std::exception{
+        "AudioSource::isSoundValid => Sound clip for this audio source is not "
+        "found!"};
+  }
+
+  return true;
+}
+
 }  // namespace Isetta

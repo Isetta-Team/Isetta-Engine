@@ -2,33 +2,28 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Core/Memory/MemoryManager.h"
+#include <vector>
+#include "Core/Config/Config.h"
 #include "Core/Math/Random.h"
 #include "Core/Memory/ObjectHandle.h"
 #include "Input/Input.h"
 #include "Input/InputEnum.h"
-#include <vector>
 
 namespace Isetta {
 
-// TODO(YIDI): Use config for max table size
-
 MemoryManager* MemoryManager::instance;
 
-void* MemoryManager::AllocSingleFrameUnAligned(const Size size) {
-  return singleFrameAllocator.AllocUnaligned(size);
+void* MemoryManager::AllocOnSingleFrame(const Size size, const U8 alignment) {
+  return GetInstance()->singleFrameAllocator.Alloc(size, alignment);
 }
 
-void* MemoryManager::AllocSingleFrame(const Size size, const U8 alignment) {
-  return singleFrameAllocator.Alloc(size, alignment);
+void* MemoryManager::AllocOnDoubleBuffered(const Size size,
+                                           const U8 alignment) {
+  return GetInstance()->doubleBufferedAllocator.Alloc(size, alignment);
 }
 
-void* MemoryManager::AllocDoubleBufferedUnAligned(const Size size) {
-  return doubleBufferedAllocator.AllocUnAligned(size);
-}
-
-void* MemoryManager::AllocDoubleBuffered(const Size size,
-                                         const U8 alignment) {
-  return doubleBufferedAllocator.Alloc(size, alignment);
+void* MemoryManager::AllocOnStack(const Size size, const U8 alignment) {
+  return GetInstance()->lsrAndLevelAllocator.Alloc(size, alignment);
 }
 
 MemoryManager::MemoryManager() {
@@ -39,9 +34,14 @@ MemoryManager::MemoryManager() {
 
 void MemoryManager::StartUp() {
   // TODO(YIDI): Get size from the config file
-  singleFrameAllocator = StackAllocator(10_MB);
-  doubleBufferedAllocator = DoubleBufferedAllocator(10_MB);
-  dynamicArena = MemoryArena(10_MB);
+  MemoryConfig configs = Config::Instance().memoryConfig;
+  lsrAndLevelAllocator =
+      StackAllocator(configs.lsrAndLevelAllocatorSize.GetVal());
+  singleFrameAllocator =
+      StackAllocator(configs.singleFrameAllocatorSize.GetVal());
+  doubleBufferedAllocator =
+      DoubleBufferedAllocator(configs.doubleBufferedAllocatorSize.GetVal());
+  dynamicArena = MemoryArena(configs.dynamicArenaSize.GetVal());
 }
 
 // Memory Manager's update needs to be called after everything that need memory
@@ -57,14 +57,33 @@ void MemoryManager::ShutDown() {
   singleFrameAllocator.Erase();
   doubleBufferedAllocator.Erase();
   dynamicArena.Erase();
+  lsrAndLevelAllocator.Erase();
 }
 
-void MemoryManager::RegisterCallbacks() {
+void MemoryManager::FinishEngineStartupListener() {
+  lvlMemStartMarker = lsrAndLevelAllocator.GetMarker();
+}
+
+void MemoryManager::ClearLevelMemory() {
+  lsrAndLevelAllocator.FreeToMarker(lvlMemStartMarker);
+}
+
+void MemoryManager::RegisterTests() {
   Input::RegisterKeyPressCallback(KeyCode::P, [&]() { dynamicArena.Print(); });
+  Input::RegisterKeyPressCallback(KeyCode::T, []() { DefragmentTest(); });
 }
 
-void MemoryManager::Test() {
-  const U32 count = 2048;
+MemoryManager* MemoryManager::GetInstance() {
+  if (instance == nullptr) {
+    throw std::exception{Util::StrFormat(
+        "MemoryManager::GetInstance => instance doesn't exist, make sure you "
+        "access memory manager after its initialization")};
+  }
+  return instance;
+}
+
+void MemoryManager::DefragmentTest() {
+  const U32 count = 1024;
   std::vector<ObjectHandle<U64>> arr;
 
   for (U32 i = 0; i < count; i++) {

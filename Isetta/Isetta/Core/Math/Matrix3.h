@@ -7,6 +7,8 @@ namespace Isetta::Math {
 class Matrix3 {
  private:
   float data[9];
+  static const int elementCount = 9;
+  static const int rowCount = 3;
 
  public:
   static const Matrix3 zero;
@@ -103,5 +105,11 @@ class Matrix3 {
    * \param colData The values of this column
    */
   void SetCol(int col, class Vector3 colData);
+  /**
+   * \brief Checks if two matrix3 are equal (within a tolerance)
+   * \param lhs Matrix A to be compared
+   * \param rhs Matrix B to be compared
+   */
+  static bool FuzzyEqual(const Matrix3& lhs, const Matrix3& rhs);
 };
 }  // namespace Isetta::Math

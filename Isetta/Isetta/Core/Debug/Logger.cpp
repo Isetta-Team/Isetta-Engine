@@ -17,9 +17,9 @@ std::ostringstream Logger::engineStream;
 std::ostringstream Logger::channelStream;
 
 void Logger::NewSession() {
-  std::string folder;
+  std::string folder = "";
   if (!Config::Instance().logger.logFolder.GetVal().empty()) {
-    folder = Config::Instance().logger.logFolder.GetVal() + "\\";
+    FileSystem::Concat({Config::Instance().logger.logFolder.GetVal()}, &folder);
   }
   std::string timestamp = std::to_string(Clock::GetTimestamp());
   engineFileName = folder + "isetta-log_" + timestamp + ".log";

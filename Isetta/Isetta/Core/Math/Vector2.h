@@ -179,5 +179,11 @@ class Vector2 {
    * \param time The time t
    */
   static Vector2 Slerp(const Vector2& start, const Vector2& end, float time);
+  /**
+   * \brief Checks if two vectors are equal (within a tolerance)
+   * \param lhs The left vector
+   * \param rhs The right vector
+   */
+  static bool FuzzyEqual(const Vector2& lhs, const Vector2& rhs);
 };
 }  // namespace Isetta::Math

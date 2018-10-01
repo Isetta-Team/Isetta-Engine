@@ -5,7 +5,7 @@
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Memory/MemoryAllocator.h"
-#include "Utilities.h"
+#include "Util.h"
 
 namespace Isetta {
 
@@ -35,7 +35,7 @@ class TemplatePoolAllocator {
 template <typename T>
 TemplatePoolAllocator<T>::TemplatePoolAllocator(const Size count) {
   if (sizeof(Node*) > sizeof(T)) {
-    throw std::exception{Utilities::Msg(
+    throw std::exception{Util::StrFormat(
         "TemplatePoolAllocator::TemplatePoolAllocator => Using "
         "TemplatePoolAllocator for type %s will incur more overhead memory "
         "than the memory actually needed for the elements",

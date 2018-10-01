@@ -24,7 +24,7 @@ float Vector4::operator[](int i) const {
     case 3:
       return w;
     default:
-      throw std::out_of_range("Vector4::[] Index access out of range.");
+      throw std::out_of_range{"Vector4::[] => Index access out of range."};
   }
 }
 
@@ -43,7 +43,7 @@ void Vector4::Normalize() noexcept {
   z /= length;
   w /= length;
 }
-bool Vector4::Equals(const Vector4& lhs, const Vector4& rhs) {
+bool Vector4::FuzzyEqual(const Vector4& lhs, const Vector4& rhs) {
   return abs(lhs.x - rhs.x) < FLT_EPSILON && abs(lhs.y - rhs.y) < FLT_EPSILON &&
          abs(lhs.z - rhs.z) < FLT_EPSILON && abs(lhs.w - rhs.w) < FLT_EPSILON;
 }
