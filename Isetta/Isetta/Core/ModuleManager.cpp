@@ -19,12 +19,12 @@ ModuleManager::ModuleManager() {
   networkingModule = new NetworkingModule{};
 }
 ModuleManager::~ModuleManager() {
+  delete networkingModule;
   delete windowModule;
   delete audioModule;
   delete renderModule;
   delete inputModule;
   delete memoryManager;
-  delete networkingModule;
 }
 
 void ModuleManager::StartUp() {

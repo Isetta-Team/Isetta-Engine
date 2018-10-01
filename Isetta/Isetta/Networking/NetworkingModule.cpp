@@ -43,8 +43,21 @@ void NetworkingModule::StartUp() {
   clientId = 0;
   yojimbo::random_bytes((U8*)&clientId, 8);
 
-  client = new yojimbo::Client(
-      yojimbo::GetDefaultAllocator(),
+  void* memPointer = MemoryManager::AllocOnStack(10 * 1024 * 1024);
+  clientAllocator = new (MemoryManager::AllocOnStack(sizeof(IsettaAllocator))) IsettaAllocator(memPointer, (Size)10 * 1024 * 1024);
+    
+  if (Config::Instance().networkConfig.runServer.GetVal()) {
+    Size serverMemorySize =
+        10 * 1024 * 1024 *
+        (Config::Instance().networkConfig.maxClients.GetVal() + 1);
+
+    memPointer = MemoryManager::AllocOnStack(serverMemorySize);
+    serverAllocator = new (MemoryManager::AllocOnStack(sizeof(IsettaAllocator)))
+        IsettaAllocator(memPointer, serverMemorySize);
+  }
+
+  client = new (MemoryManager::AllocOnStack(sizeof(yojimbo::Client))) yojimbo::Client(
+      *clientAllocator,
       yojimbo::Address(
           Config::Instance().networkConfig.defaultClientIP.GetVal().c_str(),
         Config::Instance().networkConfig.clientPort.GetVal()),
@@ -62,7 +75,7 @@ void NetworkingModule::Update(float deltaTime) {
 
   // Send out our messages
   SendClientToServerMessages();
-  if (server) {
+  if (server.GetObjectPtr()) {
     for (int i = 0; i < Config::Instance().networkConfig.maxClients.GetVal();
          i++) {
       SendServerToClientMessages(i);
@@ -76,7 +89,7 @@ void NetworkingModule::Update(float deltaTime) {
     ProcessServerToClientMessages();
   }
 
-  if (server) {
+  if (server.GetObjectPtr()) {
     for (int i = 0; i < Config::Instance().networkConfig.maxClients.GetVal();
          i++) {
       ProcessClientToServerMessages(i);
@@ -98,6 +111,7 @@ void NetworkingModule::ShutDown() {
   // TODO(Caleb): Change the mem dealloc with our new manager
   delete client;
   delete privateKey;
+  delete clientAllocator;
 
   ShutdownYojimbo();
 }
@@ -118,27 +132,28 @@ void NetworkingModule::AddClientToServerMessage(yojimbo::Message* message) {
 // be able to guarantee the memory is reused
 void NetworkingModule::AddServerToClientMessage(int clientIdx,
                                                 yojimbo::Message* message) {
-  if (serverSendBufferArray[clientIdx].IsFull()) {
+  if (serverSendBufferArray.GetObjectPtr()[clientIdx].IsFull()) {
     server->ReleaseMessage(
         clientIdx,
-        serverSendBufferArray[clientIdx].Get());  // This may be horribly wrong
+                           serverSendBufferArray.GetObjectPtr()[clientIdx]
+                               .Get());  // This may be horribly wrong
   }
-  serverSendBufferArray[clientIdx].Put(message);
+  serverSendBufferArray.GetObjectPtr()[clientIdx].Put(message);
 }
 
 void NetworkingModule::PumpClientServerUpdate(double time) {
   client->SendPackets();
-  if (server) {
+  if (server.GetObjectPtr()) {
     server->SendPackets();
   }
 
   client->ReceivePackets();
-  if (server) {
+  if (server.GetObjectPtr()) {
     server->ReceivePackets();
   }
 
   client->AdvanceTime(time);
-  if (server) {
+  if (server.GetObjectPtr()) {
     server->AdvanceTime(time);
   }
 }
@@ -157,12 +172,13 @@ void NetworkingModule::SendClientToServerMessages() {
 
 void NetworkingModule::SendServerToClientMessages(int clientIdx) {
   const int channelIdx = 0;  // TODO(Caleb): Upgrade the channel indexing
-  while (!serverSendBufferArray[clientIdx].IsEmpty()) {
+  while (!serverSendBufferArray.GetObjectPtr()[clientIdx].IsEmpty()) {
     if (!server->CanSendMessage(clientIdx, channelIdx)) {
       break;
     }
 
-    yojimbo::Message* message = serverSendBufferArray[clientIdx].Get();
+    yojimbo::Message* message =
+        serverSendBufferArray.GetObjectPtr()[clientIdx].Get();
     server->SendMessage(clientIdx, channelIdx, message);  // bugged out
   }
 }
@@ -264,24 +280,24 @@ void NetworkingModule::Disconnect() {
 }
 
 void NetworkingModule::CreateServer(const char* address, int port) {
-  if (server && server->IsRunning()) {
+  /*if (server && server->IsRunning()) {
     throw std::exception(
         "NetworkingModule::CreateServer => Cannot create a server while one is "
         "already running.");
-  }
-  serverSendBufferArray = new RingBuffer<
-      yojimbo::Message*>[Config::Instance().networkConfig.maxClients.GetVal()];
+  }*/
+  // TODO(Caleb): Swap out RingBuffer allocation with our own allocators
+  serverSendBufferArray = MemoryManager::NewDynamic<RingBuffer<yojimbo::Message*>>(Config::Instance().networkConfig.maxClients.GetVal());
   for (int i = 0; i < Config::Instance().networkConfig.maxClients.GetVal();
        i++) {
-    serverSendBufferArray[i] = RingBuffer<yojimbo::Message*>(
+    serverSendBufferArray.GetObjectPtr()[i] = RingBuffer<yojimbo::Message*>(
         Config::Instance().networkConfig.serverQueueSizePerClient.GetVal());
   }
 
   serverAddress = yojimbo::Address(
       address, port);
   // TODO(Caleb): change out the memory allocation with our own custom allocator
-  server = new yojimbo::Server(
-      yojimbo::GetDefaultAllocator(), privateKey, serverAddress, networkConfig,
+  server = MemoryManager::NewDynamic<yojimbo::Server>(
+      *serverAllocator, privateKey, serverAddress, networkConfig,
       NetworkingModule::NetworkAdapter, clock.GetElapsedTime());
   server->Start(Config::Instance().networkConfig.maxClients.GetVal());
 
@@ -291,13 +307,14 @@ void NetworkingModule::CreateServer(const char* address, int port) {
 }
 
 void NetworkingModule::CloseServer() {
-  if (!server || !server->IsRunning()) {
+  if (!server.GetObjectPtr() || !server->IsRunning()) {
     throw std::exception(
         "NetworkingModule::CloseServer() Cannot close the server if it is not "
         "running.");
   }
   server->Stop();
-  delete server;
-  delete[] serverSendBufferArray;
+  MemoryManager::DeleteDynamic(server);
+  MemoryManager::DeleteDynamic(serverSendBufferArray);
+  //delete serverAllocator;
 }
 }  // namespace Isetta

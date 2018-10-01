@@ -9,6 +9,7 @@
 #include "Core/Time/Clock.h"
 #include "Networking/Messages.h"
 #include "yojimbo/yojimbo.h"
+#include "Core/Memory/ObjectHandle.h"
 
 namespace Isetta {
 /**
@@ -60,10 +61,13 @@ class NetworkingModule {
   /// Local server's current address and port.
   yojimbo::Address serverAddress;
   /// Local server.
-  yojimbo::Server* server;
+  ObjectHandle<yojimbo::Server> server;
   /// Configuration data for both the network and the client. This should
   /// probably stay the same among connected clients and servers.
   yojimbo::ClientServerConfig networkConfig;
+  /// TODO(Caleb): Figure out how to allocate server at runtime instead of at startup
+  IsettaAllocator* clientAllocator;
+  IsettaAllocator* serverAllocator;
 
   /// Key used to join the server.
   U8* privateKey;
@@ -75,7 +79,7 @@ class NetworkingModule {
   RingBuffer<yojimbo::Message*> clientSendBuffer;
   /// Queue of messages to be sent from the local server in the next network
   /// update.
-  RingBuffer<yojimbo::Message*>* serverSendBufferArray;
+  ObjectHandle<RingBuffer<yojimbo::Message*>> serverSendBufferArray;
 
   // Constructors
 

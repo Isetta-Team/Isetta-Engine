@@ -66,7 +66,7 @@ bool NetworkManager::ClientIsConnected() {
 }
 
 bool NetworkManager::ServerIsRunning() {
-  return networkingModule->server && networkingModule->server->IsRunning();
+  return networkingModule->server.GetObjectPtr() && networkingModule->server->IsRunning();
 }
 
 int NetworkManager::GetMaxClients() {

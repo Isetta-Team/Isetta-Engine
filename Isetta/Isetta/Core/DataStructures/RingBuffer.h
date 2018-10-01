@@ -5,6 +5,7 @@
 #include <cmath>
 #include <initializer_list>
 #include <stdexcept>
+#include "Core/Memory/ObjectHandle.h"
 
 namespace Isetta {
 template <typename T>
@@ -17,7 +18,7 @@ class RingBuffer {
   explicit RingBuffer(int n);
   explicit RingBuffer(std::initializer_list<T> il);
   explicit RingBuffer(std::initializer_list<T> il, int n);
-  ~RingBuffer() { delete buffer; }
+  ~RingBuffer() { MemoryManager::DeleteDynamic(buffer); }
 
   // Copy and move constructors
 
@@ -42,7 +43,7 @@ class RingBuffer {
   int GetLength() const;
 
  private:
-  T* buffer;
+  ObjectHandle<T> buffer;
   int head = 0;
   int tail = 0;
   int size = 64;  // The buffer allows usage of size - 1 slots so that we
@@ -57,7 +58,7 @@ class RingBuffer {
 template <typename T>
 RingBuffer<T>::RingBuffer() {
   // TODO(Caleb): Change out with custom mem alloc
-  buffer = new T[size];
+  buffer = MemoryManager::NewDynamic<T>(size);
 }
 
 template <typename T>
@@ -69,7 +70,7 @@ RingBuffer<T>::RingBuffer(int n) : size{n + 1} {
   }
 
   // TODO(Caleb): Change out with custom mem alloc
-  buffer = new T[size];
+  buffer = MemoryManager::NewDynamic<T>(size);
 }
 
 template <typename T>
@@ -82,7 +83,7 @@ RingBuffer<T>::RingBuffer(std::initializer_list<T> il)
   }
 
   // TODO(Caleb): Change out with custom mem alloc
-  buffer = new T[size];
+  buffer = MemoryManager::NewDynamic<T>(size);
   for (auto i : il) {
     Put(i);
   }
@@ -101,7 +102,7 @@ RingBuffer<T>::RingBuffer(std::initializer_list<T> il, int n) : size{n + 1} {
   }
 
   // TODO(Caleb): Change out with custom mem alloc
-  buffer = new T[size];
+  buffer = MemoryManager::NewDynamic<T>(size);
   for (auto i : il) {
     Put(i);
   }
@@ -110,8 +111,10 @@ RingBuffer<T>::RingBuffer(std::initializer_list<T> il, int n) : size{n + 1} {
 template <typename T>
 RingBuffer<T>::RingBuffer(const RingBuffer<T>& rb) : size{rb.GetCapacity()} {
   // TODO(Caleb): Change out with custom mem alloc
-  delete[] buffer;
-  buffer = new T[size];
+  /*if (buffer) {
+    MemoryManager::DeleteDynamic(buffer);
+  }*/
+  buffer = MemoryManager::NewDynamic<T>(size);
 
   T* copyList = rb.ToList();
   for (int i = 0; i < rb.GetLength(); i++) {
@@ -129,8 +132,10 @@ RingBuffer<T>& RingBuffer<T>::operator=(const RingBuffer<T>& rb) {
   size = rb.GetCapacity();
 
   // TODO(Caleb): Change out with custom mem alloc
-  delete[] buffer;
-  buffer = new T[size];
+  /*if (buffer) {
+    MemoryManager::DeleteDynamic(buffer);
+  }*/
+  buffer = MemoryManager::NewDynamic<T>(size);
 
   T* copyList = rb.ToList();
   for (int i = 0; i < rb.GetLength(); i++) {
@@ -144,8 +149,10 @@ RingBuffer<T>& RingBuffer<T>::operator=(const RingBuffer<T>& rb) {
 template <typename T>
 RingBuffer<T>::RingBuffer(RingBuffer<T>&& rb) : size{rb.GetCapacity()} {
   // TODO(Caleb): Change out with custom mem alloc
-  delete[] buffer;
-  buffer = new T[size];
+  /*if (buffer) {
+    MemoryManager::DeleteDynamic(buffer);
+  }*/
+  buffer = MemoryManager::NewDynamic<T>(size);
 
   while (!rb.IsEmpty()) {
     Put(rb.Get());
@@ -161,7 +168,7 @@ T RingBuffer<T>::Get() {
   int idx = head;
   head = (head + 1) % size;
 
-  return buffer[idx];
+  return buffer.GetObjectPtr()[idx];
 }
 
 template <typename T>
@@ -170,7 +177,7 @@ void RingBuffer<T>::Put(T o) {
     throw std::range_error{"RingBuffer::put => Buffer is full."};
   }
 
-  buffer[tail] = o;
+  buffer.GetObjectPtr()[tail] = o;
   tail = (tail + 1) % size;
 }
 
@@ -183,7 +190,7 @@ T RingBuffer<T>::GetBack() {
   int idx = tail;
   tail = std::abs(static_cast<int>((tail - 1) % size));
 
-  return buffer[tail];
+  return buffer.GetObjectPtr()[tail];
 }
 
 template <typename T>
@@ -193,7 +200,7 @@ void RingBuffer<T>::PutFront(T o) {
   }
 
   head = ((head - 1) % size + size) % size;
-  buffer[head] = o;
+  buffer.GetObjectPtr()[head] = o;
 }
 
 template <typename T>
@@ -207,7 +214,7 @@ T* RingBuffer<T>::ToList() const {
   int count = 0;
   int idx = head;
   while (idx != tail) {
-    list[count] = buffer[idx];
+    list[count] = buffer.GetObjectPtr()[idx];
     idx = (idx + 1) % size;
     count++;
   }
