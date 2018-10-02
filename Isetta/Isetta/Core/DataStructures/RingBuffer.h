@@ -74,7 +74,7 @@ RingBuffer<T>::RingBuffer(int n) : size{n + 1} {
 
 template <typename T>
 RingBuffer<T>::RingBuffer(std::initializer_list<T> il)
-    : size{static_cast<int>(il.size()) + 1} {
+    : size{static_cast<int>(il.memSize()) + 1} {
   if (size <= 0) {
     throw std::length_error{
         "RingBuffer::RingBuffer => Cannot create RingBuffer of size 0 or "
@@ -94,7 +94,7 @@ RingBuffer<T>::RingBuffer(std::initializer_list<T> il, int n) : size{n + 1} {
     throw std::length_error{
         "RingBuffer::RingBuffer => Cannot create RingBuffer of size 0 or "
         "less."};
-  } else if (size < il.size()) {
+  } else if (size < il.memSize()) {
     throw std::length_error{
         "RingBuffer::RingBuffer => Cannot create RingBuffer of size less than "
         "the passed in list."};

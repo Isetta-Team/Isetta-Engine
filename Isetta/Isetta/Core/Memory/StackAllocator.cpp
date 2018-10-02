@@ -11,21 +11,14 @@
 namespace Isetta {
 StackAllocator::StackAllocator(const Size stackSize)
     : top(0), length(stackSize) {
-  bottom = MemoryAllocator::AllocateDefaultAligned(stackSize);
+  bottom = std::malloc(stackSize);
   bottomAddress = reinterpret_cast<PtrInt>(bottom);
   LOG_INFO(Debug::Channel::Memory,
            "A new stack allocator is created with size: %I64u", stackSize);
 }
 
 void* StackAllocator::Alloc(const Size size, const U8 alignment) {
-  const bool isValid = alignment >= 2 && alignment <= 128 &&
-                       (alignment & (alignment - 1)) == 0;  // power of 2
-  if (!isValid) {
-    throw std::invalid_argument{
-        "StackAllocator::Alloc => Invalid alignment, must satisfy: (alignment "
-        ">= 2 && alignment <= 128 &&"
-        "(alignment & (alignment - 1)) == 0)"};
-  }
+  MemoryAllocator::CheckAlignment(alignment);
 
   PtrInt rawAddress = bottomAddress + top;
   PtrInt misAlignment = rawAddress & (alignment - 1);

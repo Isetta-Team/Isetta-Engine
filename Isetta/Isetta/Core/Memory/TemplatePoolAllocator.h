@@ -44,7 +44,7 @@ TemplatePoolAllocator<T>::TemplatePoolAllocator(const Size count) {
 
   capacity = count;
   elementSize = sizeof(T);
-  memHead = MemoryAllocator::AllocateDefaultAligned(elementSize * capacity);
+  memHead = MemoryAllocator::AllocDefaultAligned(elementSize * capacity);
   PtrInt address = reinterpret_cast<PtrInt>(memHead);
   head = new (memHead) Node();
   Node* cur = head;

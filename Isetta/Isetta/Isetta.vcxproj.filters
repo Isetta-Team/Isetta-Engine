@@ -141,6 +141,9 @@
     <ClCompile Include="Core\Math\Util.cpp">
       <Filter>Core\Math</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Memory\FreeListAllocator.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Math\Matrix3.h">
@@ -297,6 +300,9 @@
     </ClInclude>
     <ClInclude Include="Core\Math\Util.h">
       <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\FreeListAllocator.h">
+      <Filter>Core\Memory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

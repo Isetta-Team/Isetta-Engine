@@ -33,7 +33,6 @@ MemoryManager::MemoryManager() {
 }
 
 void MemoryManager::StartUp() {
-  // TODO(YIDI): Get size from the config file
   MemoryConfig configs = Config::Instance().memoryConfig;
   lsrAndLevelAllocator =
       StackAllocator(configs.lsrAndLevelAllocatorSize.GetVal());

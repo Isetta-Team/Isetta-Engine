@@ -17,6 +17,7 @@
 
 #include "Core/Color.h"
 #include "Core/Math/Rect.h"
+#include "Core/Memory/FreeListAllocator.h"
 #include "Graphics/GUIStyle.h"
 #include "Graphics/RectTransform.h"
 #include "imgui.h"
@@ -298,6 +299,37 @@ Clock& EngineLoop::GetGameClock() {
   return gameTime;
 }
 
-void RunYidiTest() {}
+struct TestObject {
+  static const Size size = 123;
+  U64 arr[size];
+
+  TestObject() {
+    for (Size i = 0; i < size; i++) {
+      arr[i] = 10;
+    }
+  }
+  void Print() {
+    for (int i = 0; i < size; i++) {
+      LOG_INFO(Debug::Channel::General, "%d, %I64u", i, arr[i]);
+    }
+  }
+};
+
+void RunYidiTest() {
+  // FreeListAllocator allocator(1024);
+
+  // for (int i = 0; i < 100; i++) {
+    // auto* t8 = new (allocator.Alloc(sizeof(U64))) U64();
+    // auto* t2 = new (allocator.Alloc(sizeof(U16))) U16();
+    // auto* t4 = new (allocator.Alloc(sizeof(U32))) U32();
+    // auto* t1 = new (allocator.Alloc(sizeof(U8))) U8();
+    //
+    // allocator.Free(t8);
+    // allocator.Free(t1);
+    // allocator.Free(t2);
+    // allocator.Free(t4);
+  // }
+
+}
 
 }  // namespace Isetta
