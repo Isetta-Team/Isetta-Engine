@@ -99,6 +99,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Color.cpp" />
     <ClCompile Include="Core\Config\CVar.cpp" />
     <ClCompile Include="Core\Memory\DoubleBufferedAllocator.cpp" />
+    <ClCompile Include="Core\Memory\FreeListAllocator.cpp" />
     <ClCompile Include="Core\Memory\MemoryArena.cpp" />
     <ClCompile Include="Core\Memory\MemoryManager.cpp" />
     <ClCompile Include="Core\Memory\ObjectHandle.cpp" />
@@ -162,6 +163,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Debug\DebugDraw.h" />
     <ClCompile Include="Core\Debug\Assert.h" />
     <ClInclude Include="Core\Memory\DoubleBufferedAllocator.h" />
+    <ClInclude Include="Core\Memory\FreeListAllocator.h" />
     <ClInclude Include="Core\Memory\MemoryAllocator.h" />
     <ClInclude Include="Core\Memory\MemoryArena.h" />
     <ClInclude Include="Core\Memory\MemoryManager.h" />

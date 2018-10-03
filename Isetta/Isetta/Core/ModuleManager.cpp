@@ -20,6 +20,7 @@ ModuleManager::ModuleManager() {
   guiModule = new GUIModule{};
   networkingModule = new NetworkingModule{};
 }
+
 ModuleManager::~ModuleManager() {
   delete windowModule;
   delete audioModule;

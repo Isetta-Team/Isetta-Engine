@@ -28,6 +28,7 @@ void* MemoryArena::Alloc(const Size size, Size& outSize) {
   }
 
   PtrInt rawAddress = lastAddress + lastSize;
+  U8 alignment = MemUtil::ALIGNMENT;
   PtrInt misAlignment = rawAddress & (alignment - 1);
   // should not align when misAlignment is 0
   PtrDiff adjustment = (alignment - misAlignment) & (alignment - 1);
@@ -85,7 +86,7 @@ void MemoryArena::MoveLeft(const U32 index) {
     lastAvailableAddress = lastEntry.GetAddress() + lastEntry.size;
   }
 
-  lastAvailableAddress = NextMultiplyOfBase(lastAvailableAddress, alignment);
+  lastAvailableAddress = NextMultiplyOfBase(lastAvailableAddress, MemUtil::ALIGNMENT);
 
   if (lastAvailableAddress < entry.GetAddress()) {
     void* newAdd = reinterpret_cast<void*>(lastAvailableAddress);

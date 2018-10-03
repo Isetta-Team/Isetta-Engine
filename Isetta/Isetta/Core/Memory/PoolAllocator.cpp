@@ -3,7 +3,6 @@
  */
 #include "Core/Memory/PoolAllocator.h"
 #include "Core/Debug/Logger.h"
-#include "Core/Memory/MemoryAllocator.h"
 #include "Util.h"
 
 namespace Isetta {
@@ -20,7 +19,7 @@ PoolAllocator::PoolAllocator(const Size chunkSize, const Size count) {
   }
 
   capacity = count;
-  memHead = MemoryAllocator::AllocateDefaultAligned(elementSize * capacity);
+  memHead = std::malloc(elementSize * capacity);
   head = new (memHead) Node{nullptr};
   Node* cur = head;
 
@@ -51,7 +50,7 @@ void PoolAllocator::Free(void* mem) {
 }
 
 void PoolAllocator::Erase() const {
-  MemoryAllocator::FreeDefaultAligned(memHead);
+  std::free(memHead);
 }
 
 PoolAllocator::Node::Node(Node* next) { this->next = next; }

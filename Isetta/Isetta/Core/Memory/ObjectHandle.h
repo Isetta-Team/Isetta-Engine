@@ -94,6 +94,9 @@ class ObjectHandle {
    */
   T& operator*();
 
+  explicit operator bool() const;
+
+ private:
   /**
    * \brief Helper function for finding the pointer the actual object
    * \return
@@ -108,12 +111,16 @@ class ObjectHandle {
 
   /**
    * \brief A helper function used to get memory address of the object pointed
-   * to by this handle \return Memory address of the object pointed to by this
+   * to by this handle
+   *
+   * \return Memory address of the object pointed to by this
    * handle
    */
   PtrInt GetObjAddress() const;
-  U32 uniqueID;
-  U32 index;
+  U32 uniqueID{U32_MAX};
+  U32 index{U32_MAX};
+
+  friend class MemoryArena;
 };
 
 template <typename T>
@@ -127,8 +134,20 @@ T& ObjectHandle<T>::operator*() {
 }
 
 template <typename T>
+ObjectHandle<T>::operator bool() const {
+  if (index > MemoryArena::maxHandleCount) {
+    return false;
+  }
+
+  HandleEntry& entry = MemoryArena::entryArr[index];
+
+  return !entry.isEmpty && uniqueID == entry.uniqueID;
+}
+
+template <typename T>
 template <typename... args>
-ObjectHandle<T>::ObjectHandle(void* mem, const U32 uniqueID, const Size size, args... argList)
+ObjectHandle<T>::ObjectHandle(void* mem, const U32 uniqueID, const Size size,
+                              args... argList)
     : uniqueID(uniqueID) {
   HandleEntry* entry = nullptr;
 
