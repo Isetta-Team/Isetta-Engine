@@ -4,7 +4,7 @@
 #pragma once
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
-#include "Core/Memory/MemoryAllocator.h"
+#include "Core/Memory/MemUtil.h"
 #include "Util.h"
 
 namespace Isetta {
@@ -44,7 +44,7 @@ TemplatePoolAllocator<T>::TemplatePoolAllocator(const Size count) {
 
   capacity = count;
   elementSize = sizeof(T);
-  memHead = MemoryAllocator::AllocDefaultAligned(elementSize * capacity);
+  memHead = MemUtil::AllocDefaultAligned(elementSize * capacity);
   PtrInt address = reinterpret_cast<PtrInt>(memHead);
   head = new (memHead) Node();
   Node* cur = head;
@@ -83,7 +83,7 @@ void TemplatePoolAllocator<T>::Free(T* t) {
 
 template <typename T>
 void TemplatePoolAllocator<T>::Erase() const {
-  MemoryAllocator::FreeDefaultAligned(memHead);
+  MemUtil::FreeDefaultAligned(memHead);
 }
 
 template <typename T>

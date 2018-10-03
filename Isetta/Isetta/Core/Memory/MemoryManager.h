@@ -8,6 +8,7 @@
 #include "Core/Memory/ObjectHandle.h"
 #include "Core/Memory/StackAllocator.h"
 #include "Core/Memory/FreeListAllocator.h"
+#include "Core/Memory/MemUtil.h"
 
 namespace Isetta {
 
@@ -21,8 +22,6 @@ class MemoryManager {
     CVar<Size> dynamicArenaSize{"dynamic_arena_size", 10_MB};
     CVar<Size> freeListAllocatorSize{"free_list_allocator_size", 10_MB};
   };
-
-  static const U8 ALIGNMENT = 16;
 
   /**
    * \brief Create a new object whose memory is going to be cleared at the end
@@ -45,7 +44,7 @@ class MemoryManager {
    *
    * \return
    */
-  static void* AllocOnSingleFrame(Size size, U8 alignment = ALIGNMENT);
+  static void* AllocOnSingleFrame(Size size, U8 alignment = MemUtil::ALIGNMENT);
 
   /**
    * \brief Create a new object whose memory is going to be cleared at the end
@@ -67,14 +66,14 @@ class MemoryManager {
    *
    * \return
    */
-  static void* AllocOnDoubleBuffered(Size size, U8 alignment = ALIGNMENT);
+  static void* AllocOnDoubleBuffered(Size size, U8 alignment = MemUtil::ALIGNMENT);
 
   // the memory will either from LSR - when starting up the engine
   // or LevelData - after engine startup
   // make sure you don't put data in wrong places
-  static void* AllocOnStack(Size size, U8 alignment = ALIGNMENT);
+  static void* AllocOnStack(Size size, U8 alignment = MemUtil::ALIGNMENT);
 
-  static void* AllocOnFreeList(Size size, U8 alignment = ALIGNMENT);
+  static void* AllocOnFreeList(Size size, U8 alignment = MemUtil::ALIGNMENT);
 
   static void FreeOnFreeList(void* memPtr);
 
@@ -82,7 +81,7 @@ class MemoryManager {
   static T* NewOnFreeList(args... argList);
 
   template<typename T>
-  static T* NewArrOnFreeList(Size length, U8 alignment = ALIGNMENT);
+  static T* NewArrOnFreeList(Size length, U8 alignment = MemUtil::ALIGNMENT);
 
   /**
    * \brief Create an object that will sit on the dynamic memory area. You need

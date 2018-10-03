@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Core/Memory/MemoryAllocator.h"
+#include "Core/Memory/MemUtil.h"
 #include "Core/Debug/Assert.h"
 
 namespace Isetta {
 
-void* MemoryAllocator::Alloc(const Size size, const U8 alignment) {
+void* MemUtil::Alloc(const Size size, const U8 alignment) {
   CheckAlignment(alignment);
 
   const Size expandedSize = size + alignment;
@@ -24,7 +24,7 @@ void* MemoryAllocator::Alloc(const Size size, const U8 alignment) {
   return static_cast<void*>(alignedMemory);
 }
 
-void MemoryAllocator::Free(void* memoryPtr) {
+void MemUtil::Free(void* memoryPtr) {
   const U8* alignedMemory = reinterpret_cast<U8*>(memoryPtr);
   const PtrDiff adjustment = static_cast<PtrDiff>(alignedMemory[-1]);
   const PtrInt alignedAddress = reinterpret_cast<PtrInt>(memoryPtr);
@@ -33,7 +33,7 @@ void MemoryAllocator::Free(void* memoryPtr) {
   std::free(rawMem);
 }
 
-void MemoryAllocator::CheckAlignment(const U8 alignment) {
+void MemUtil::CheckAlignment(const U8 alignment) {
   const bool isValid = alignment >= 8 && alignment <= 128 &&
                        (alignment & (alignment - 1)) == 0;  // power of 2
   if (!isValid) {

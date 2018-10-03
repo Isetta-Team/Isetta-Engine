@@ -3,6 +3,7 @@
  */
 #pragma once
 #include "Core/IsettaAlias.h"
+#include "MemUtil.h"
 
 namespace Isetta {
 /*
@@ -68,7 +69,7 @@ class FreeListAllocator {
 
 template <typename T, typename... args>
 T* FreeListAllocator::New(args... argList) {
-  return new (Alloc(sizeof(T), 16)) T(argList...);
+  return new (Alloc(sizeof(T), MemUtil::ALIGNMENT)) T(argList...);
 }
 
 template <typename T>

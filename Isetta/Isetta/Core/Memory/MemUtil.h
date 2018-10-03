@@ -11,8 +11,9 @@ namespace Isetta {
  * freeing memory. This is only intended to be used by the programmer
  * responsible for maintaining memory management systems of this engine.
  */
-class MemoryAllocator {
+class MemUtil {
  public:
+  static const U8 ALIGNMENT = 16;
   static void CheckAlignment(U8 alignment);
 
   /**

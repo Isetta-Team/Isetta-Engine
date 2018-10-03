@@ -2,7 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Core/Memory/FreeListAllocator.h"
-#include "Core/Memory/MemoryAllocator.h"
+#include "Core/Memory/MemUtil.h"
 #include "Util.h"
 
 namespace Isetta {
@@ -24,7 +24,7 @@ void* FreeListAllocator::Alloc(const Size size, const U8 alignment) {
         Util::StrFormat("FreeListAllocator::Alloc => No space left")};
   }
 
-  MemoryAllocator::CheckAlignment(alignment);
+  MemUtil::CheckAlignment(alignment);
 
   Size need = headerSize + alignment + size;
   Node* cur = head;

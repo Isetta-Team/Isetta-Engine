@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
-#include "Core/Memory/MemoryAllocator.h"
+#include "Core/Memory/MemUtil.h"
 
 namespace Isetta {
 StackAllocator::StackAllocator(const Size stackSize)
@@ -18,7 +18,7 @@ StackAllocator::StackAllocator(const Size stackSize)
 }
 
 void* StackAllocator::Alloc(const Size size, const U8 alignment) {
-  MemoryAllocator::CheckAlignment(alignment);
+  MemUtil::CheckAlignment(alignment);
 
   PtrInt rawAddress = bottomAddress + top;
   PtrInt misAlignment = rawAddress & (alignment - 1);

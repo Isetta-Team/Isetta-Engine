@@ -3,6 +3,7 @@
  */
 #pragma once
 #include "Core/IsettaAlias.h"
+#include "MemUtil.h"
 
 namespace Isetta {
 class StackAllocator {
@@ -23,7 +24,7 @@ class StackAllocator {
    * and less than 128 \return pointer to the allocated memory
    * \return Pointer to allocated memory
    */
-  void* Alloc(Size size, U8 alignment = 16);
+  void* Alloc(Size size, U8 alignment);
 
   /**
    * \brief Create a new object on the stack allocator. The constructor is
@@ -69,7 +70,7 @@ class StackAllocator {
 
 template <typename T, typename ... args>
 T* StackAllocator::New(args... argList) {
-  void* mem = Alloc(sizeof(T));
+  void* mem = Alloc(sizeof(T), MemUtil::ALIGNMENT);
   return new (mem) T(argList...);
 }
 }  // namespace Isetta
