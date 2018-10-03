@@ -326,7 +326,7 @@ HANDLE FileSystem::WriteAsync(const std::string& fileName,
 //}
 
 void FileSystem::Touch(const char* fileName) {
-  HANDLE hFile = AccessFile(fileName, NULL, NULL, CREATE_NEW, NULL);
+  HANDLE hFile = AccessFile(fileName, NULL, NULL, CREATE_ALWAYS, NULL);
   if (GetFileError()) {
     return;
   }

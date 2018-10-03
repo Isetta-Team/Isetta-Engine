@@ -2,12 +2,13 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
+# Engine files
+/Isetta/Isetta/user.cfg
+
 /cpplint.py
 /Isetta/Isetta/Horde3D_log.html
 /Isetta/Isetta/Horde3D_Log.html
 /Isetta/Isetta/Resources/test/
-/Isetta/Documentation
-/Isetta/External/yojimbo
 /Isetta/Isetta/imgui.ini
 
 ## Ignore Visual Studio temporary files, build results, and

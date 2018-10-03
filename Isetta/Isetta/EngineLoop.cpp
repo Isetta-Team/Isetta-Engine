@@ -4,6 +4,7 @@
 #include "EngineLoop.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
+#include "Core/FileSystem.h"
 #include "Core/Memory/MemoryManager.h"
 #include "Core/ModuleManager.h"
 #include "Core/Time/Clock.h"
@@ -30,6 +31,9 @@ void RunYidiTest();
 void EngineLoop::StartUp() {
   Logger::NewSession();
   Config::Instance().Read("config.cfg");
+  if (FileSystem::Instance().FileExists("user.cfg")) {
+    Config::Instance().Read("user.cfg");
+  }
 
   intervalTime = 1.0 / Config::Instance().loopConfig.maxFps.GetVal();
   maxSimulationCount = Config::Instance().loopConfig.maxSimCount.GetVal();

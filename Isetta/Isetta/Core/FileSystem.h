@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include <Windows.h>
+#include <fileapi.h>
 #include <functional>
 #include <string>
 #include <unordered_map>
@@ -146,7 +146,14 @@ class FileSystem {
    * @param fileName
    */
   void Touch(const std::string& fileName);
-
+  /**
+   * @brief Check if the file exists in the directory (cannot determine if the
+   * file doesn't exist or simply the folder structure doesn't)
+   *
+   * @param file
+   * @return BOOL true if the file exists, false otherwise
+   */
+  BOOL FileExists(const char* file);
   /**
    * @brief GetFileSize returns the size of the file in characters
    *
@@ -217,14 +224,6 @@ class FileSystem {
    */
   HANDLE AccessFile(const char* fileName, const DWORD access, const DWORD share,
                     const DWORD creation, DWORD async);
-  /**
-   * @brief Check if the file exists in the directory (cannot determine if the
-   * file doesn't exist or simply the folder structure doesn't)
-   *
-   * @param file
-   * @return BOOL true if the file exists, false otherwise
-   */
-  BOOL FileExists(const char* file);
 
   /**
    * @brief Format generic, uncaught Microsoft error messages

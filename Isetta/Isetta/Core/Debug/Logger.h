@@ -6,7 +6,7 @@
 #define __FILENAME__ \
   (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
 
-#include <Windows.h>
+#include <debugapi.h>
 #include <cstdint>
 #include <initializer_list>
 #include <string>
