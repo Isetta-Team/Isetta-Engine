@@ -84,6 +84,9 @@ class Vector2 {
   inline Vector2 operator*(float scalar) const {
     return Vector2(x * scalar, y * scalar);
   }
+  inline friend Vector2 operator*(float scalar, const Vector2& in) {
+    return in * scalar;
+  }
   inline Vector2& operator*=(float scalar) {
     x *= scalar;
     y *= scalar;
