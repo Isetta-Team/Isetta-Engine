@@ -16,6 +16,7 @@
 #include "Input/InputEnum.h"
 #include "Networking/NetworkManager.h"
 
+// TODO(Jacob) Remove, used only for GUIDemo
 #include "Core/Color.h"
 #include "Core/Math/Rect.h"
 #include "Core/Memory/FreeListAllocator.h"
@@ -23,11 +24,13 @@
 #include "Graphics/RectTransform.h"
 #include "imgui.h"
 
-// TODO(Jacob) remove
-bool checkbox = false;
 namespace Isetta {
 
 void RunYidiTest();
+void InputDemo();
+void NetworkingDemo();
+void GraphicsDemo();
+void GUIDemo();
 
 void EngineLoop::StartUp() {
   Logger::NewSession();
@@ -49,34 +52,103 @@ void EngineLoop::StartUp() {
 
   // Game Init Part
 
-  // Networking
-  if (Config::Instance().networkConfig.runServer.GetVal()) {
-    NetworkManager::CreateServer(
-        Config::Instance().networkConfig.defaultServerIP.GetVal().c_str());
+  NetworkingDemo();
+  InputDemo();
+  GraphicsDemo();
+  GUIDemo();
+  RunYidiTest();
+}
+
+void EngineLoop::Update() {
+  GetGameClock().UpdateTime();
+
+  // TODO(All) Add networking update
+
+  static bool sIsPressed = false;
+  static bool cIsPressed = false;
+
+  // Networking update
+  if (Input::IsKeyPressed(KeyCode::S)) {
+    if (!sIsPressed) {
+      sIsPressed = true;
+      if (NetworkManager::ServerIsRunning()) {
+        for (int i = 0; i < NetworkManager::GetMaxClients(); i++) {
+          NetworkManager::SendStringMessageFromServer(i, "Hi!");
+        }
+      }
+    }
+  } else {
+    sIsPressed = false;
   }
-  if (Config::Instance().networkConfig.connectToServer.GetVal()) {
-    NetworkManager::ConnectToServer(
-        Config::Instance().networkConfig.defaultServerIP.GetVal().c_str(),
-        [](bool b) {
-          LOG(Debug::Channel::Networking, "Client connection state: %d", b);
-        });
+  if (Input::IsKeyPressed(KeyCode::C)) {
+    if (!cIsPressed) {
+      cIsPressed = true;
+      if (NetworkManager::ClientIsConnected()) {
+        NetworkManager::SendStringMessageFromClient("Hi!");
+      }
+    }
+  } else {
+    cIsPressed = false;
   }
 
-  // TODO(All) Read scene from scene file
-  // ModelNode car{"test/Low-Poly-Racing-Car.scene.xml", Math::Vector3{0, -20,
-  // 0},
-  //              Math::Vector3::zero, Math::Vector3::one};
-  static ModelNode car{"push/Pushing.scene.xml", Math::Vector3{-200, -100, 0},
-                       Math::Vector3{0, 90, 0}, Math::Vector3::one};
-  // ModelNode car{"models/sphere/sphere.scene.xml", Math::Vector3{-200, -100,
-  // 0},
-  //                     Math::Vector3{0, 90, 0}, Math::Vector3::one};
-  static AnimationNode animation{&car};
-  animation.AddAnimation("push/Pushing.anim", 0, "", false);
-  animation.Play();
-  LightNode light{"materials/light.material.xml", Math::Vector3{0, 200, 600},
-                  Math::Vector3::zero, Math::Vector3::one};
+  // end Networking update
+  // LOG_INFO(Debug::Channel::General,
+  // "//////////////UpdateStart//////////////");
 
+  // Client part
+  accumulateTime += GetGameClock().GetDeltaTime();
+
+  for (int i = 0; i < maxSimulationCount && accumulateTime > intervalTime;
+       i++) {
+    moduleManager.SimulationUpdate(intervalTime);
+    // LOG_INFO(Debug::Channel::General,
+    // std::to_string(accumulateTime));
+    accumulateTime -= intervalTime;
+  }
+
+  // TODO(Chaojie) after scenegraph, save previous state for
+  // prediction LOG_INFO(Debug::Channel::General,
+  // "//////////////Render//////////////");
+  moduleManager.RenderUpdate(0);
+  // LOG_INFO(Debug::Channel::General,
+  // "//////////////UpdateEnd//////////////");
+}
+
+void EngineLoop::ShutDown() { moduleManager.ShutDown(); }
+void EngineLoop::StartGameClock() const { GetGameClock(); }
+
+void EngineLoop::Run() {
+  StartUp();
+  while (isGameRunning) {
+    Update();
+  }
+  ShutDown();
+}
+
+Clock& EngineLoop::GetGameClock() {
+  static Clock gameTime{};
+  return gameTime;
+}
+
+struct TestObject {
+  static const Size size = 123;
+  U64 arr[size];
+
+  TestObject(U64 ini) {
+    for (Size i = 0; i < size; i++) {
+      arr[i] = 10;
+    }
+  }
+  void Print() {
+    for (int i = 0; i < size; i++) {
+      LOG_INFO(Debug::Channel::General, "%d, %I64u", i, arr[i]);
+    }
+  }
+};
+
+void RunYidiTest() {}
+
+void InputDemo() {
   // TODO(Chaojie) remove later into game logic
 
   // Register Input callback from player script
@@ -96,6 +168,20 @@ void EngineLoop::StartUp() {
         Input::UnregisterMousePressCallback(MouseButtonCode::MOUSE_LEFT,
                                             handleC);
       });
+}
+void NetworkingDemo() {
+  // Networking
+  if (Config::Instance().networkConfig.runServer.GetVal()) {
+    NetworkManager::CreateServer(
+        Config::Instance().networkConfig.defaultServerIP.GetVal().c_str());
+  }
+  if (Config::Instance().networkConfig.connectToServer.GetVal()) {
+    NetworkManager::ConnectToServer(
+        Config::Instance().networkConfig.defaultServerIP.GetVal().c_str(),
+        [](bool b) {
+          LOG(Debug::Channel::Networking, "Client connection state: %d", b);
+        });
+  }
 
   Input::RegisterKeyPressCallback(KeyCode::P, []() {
     if (NetworkManager::ClientIsConnected()) {
@@ -112,9 +198,26 @@ void EngineLoop::StartUp() {
       NetworkManager::SendHandleMessageFromClient(2);
     }
   });
-
-  RunYidiTest();
-
+}
+void GraphicsDemo() {
+  // TODO(All) Read scene from scene file
+  // ModelNode car{"test/Low-Poly-Racing-Car.scene.xml", Math::Vector3{0, -20,
+  // 0},
+  //              Math::Vector3::zero, Math::Vector3::one};
+  static ModelNode car{"push/Pushing.scene.xml", Math::Vector3{-200, -100, 0},
+                       Math::Vector3{0, 90, 0}, Math::Vector3::one};
+  // ModelNode car{"models/sphere/sphere.scene.xml", Math::Vector3{-200, -100,
+  // 0},
+  //                     Math::Vector3{0, 90, 0}, Math::Vector3::one};
+  static AnimationNode animation{&car};
+  animation.AddAnimation("push/Pushing.anim", 0, "", false);
+  animation.Play();
+  LightNode light{"materials/light.material.xml", Math::Vector3{0, 200, 600},
+                  Math::Vector3::zero, Math::Vector3::one};
+}
+// TODO(Jacob) remove
+bool checkbox = false;
+void GUIDemo() {
   // GUI Test
   GUI::OnUpdate([&]() {
     GUI::Button(RectTransform{Math::Rect{0, 0, 80, 20}, GUI::Pivot::Bot,
@@ -214,7 +317,12 @@ void EngineLoop::StartUp() {
     // const Color& border = Color::clear);
     static float progress = 0.0f, progress_dir = 1.0f;
     if (true) {
+<<<<<<< Updated upstream
       progress += progress_dir * 0.4f * GetGameClock().GetDeltaTime();
+=======
+      progress +=
+          progressDir * 0.4f * EngineLoop::GetGameClock().GetDeltaTime();
+>>>>>>> Stashed changes
       if (progress >= +1.1f) {
         progress = +1.1f;
         progress_dir *= -1.0f;
@@ -233,6 +341,7 @@ void EngineLoop::StartUp() {
   });
 }
 
+<<<<<<< Updated upstream
 void EngineLoop::Update() {
   GetGameClock().UpdateTime();
 
@@ -323,4 +432,6 @@ void RunYidiTest() {
 
 }
 
+=======
+>>>>>>> Stashed changes
 }  // namespace Isetta
