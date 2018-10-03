@@ -15,6 +15,7 @@ namespace Isetta {
  * insertion
  * 3. Satisfy alignment requirement
  */
+// TODO(YIDI): Add expansion functionality
 class FreeListAllocator {
  public:
   // This class is using RAII

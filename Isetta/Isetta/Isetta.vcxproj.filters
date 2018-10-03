@@ -83,9 +83,6 @@
     <ClCompile Include="Core\Time\StopWatch.cpp">
       <Filter>Core\Time</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Memory\MemoryAllocator.cpp">
-      <Filter>Core\Memory</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Memory\MemoryManager.cpp">
       <Filter>Core\Memory</Filter>
     </ClCompile>
@@ -142,6 +139,9 @@
       <Filter>Core\Math</Filter>
     </ClCompile>
     <ClCompile Include="Core\Memory\FreeListAllocator.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\MemUtil.cpp">
       <Filter>Core\Memory</Filter>
     </ClCompile>
   </ItemGroup>
@@ -230,9 +230,6 @@
     <ClInclude Include="Core\Time\StopWatch.h">
       <Filter>Core\Time</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Memory\MemoryAllocator.h">
-      <Filter>Core\Memory</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Memory\MemoryManager.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
@@ -302,6 +299,9 @@
       <Filter>Core\Math</Filter>
     </ClInclude>
     <ClInclude Include="Core\Memory\FreeListAllocator.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\MemUtil.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
   </ItemGroup>

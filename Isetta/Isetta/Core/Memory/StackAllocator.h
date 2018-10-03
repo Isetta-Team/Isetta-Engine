@@ -37,6 +37,9 @@ class StackAllocator {
   template<typename T, typename ...args>
   T* New(args...);
 
+  template<typename T>
+  T* NewArr(Size length, U8 alignment);
+
   /**
    * \brief Free the stack allocator to a specific marker
    * \param marker Marker to free to
@@ -63,7 +66,7 @@ class StackAllocator {
 
  private:
   Marker top;
-  Size length;
+  Size totalSize;
   void* bottom;
   PtrInt bottomAddress;
 };
@@ -72,5 +75,11 @@ template <typename T, typename ... args>
 T* StackAllocator::New(args... argList) {
   void* mem = Alloc(sizeof(T), MemUtil::ALIGNMENT);
   return new (mem) T(argList...);
+}
+
+template <typename T>
+T* StackAllocator::NewArr(Size length, const U8 alignment) {
+  void* mem = Alloc(sizeof(T) * length, alignment);
+  return new (mem) T[length];
 }
 }  // namespace Isetta

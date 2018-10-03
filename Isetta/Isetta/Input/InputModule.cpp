@@ -205,7 +205,7 @@ void InputModule::MouseEventListener(GLFWwindow* win, int button, int action,
       handleCallback.second();
     }
   } else if (action == GLFW_RELEASE) {
-    for (const auto& handleCallback : mousePressCallbacks[button]) {
+    for (const auto& handleCallback : mouseReleaseCallbacks[button]) {
       // currCallbacks.push_back(callback.second);
       handleCallback.second();
     }
