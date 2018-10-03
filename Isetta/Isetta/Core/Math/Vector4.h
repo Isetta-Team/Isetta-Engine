@@ -37,6 +37,7 @@ class Vector4 {
    */
   Vector4(float inX, float inY, float inZ, float inW)
       : x{inX}, y{inY}, z{inZ}, w{inW} {}
+  explicit Vector4(const Color& c);
 
   // Copy and move constructions
 
@@ -111,9 +112,7 @@ class Vector4 {
   }
 
   // Conversions
-
-  // TODO(JACOB): Fix
-  explicit Vector4(const Color& c);
+  explicit operator Color();
 
   // Functions
 

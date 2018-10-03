@@ -13,7 +13,8 @@ Vector2 Math::Rect::Position() const { return Vector2{x, y}; }
 Vector2 Rect::Center() const { return Vector2{x + width / 2, y + height / 2}; }
 Vector2 Rect::Min() const { return Vector2{x, y}; }
 Vector2 Rect::Max() const { return Vector2{x + width, y + height}; }
-float Rect::Size() const { return height * width; }
+Vector2 Rect::Size() const { return Vector2{width, height}; }
+float Rect::Area() const { return height * width; }
 
 bool Rect::Contains(const Vector2& point) const {
   return point.x > x && point.y > y && point.x < x + width &&

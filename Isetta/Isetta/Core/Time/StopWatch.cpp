@@ -8,10 +8,10 @@ namespace Isetta {
 void StopWatch::Start() { startTime = HighResClock::now(); }
 
 float StopWatch::EvaluateInSecond() const {
-  return (HighResClock::now() - startTime).count() / 1000.f;
+  return (HighResClock::now() - startTime).count() / 1000.f / 1000.f;
 }
 
-I64 StopWatch::EvaluateInMilliseconds() const {
+I64 StopWatch::EvaluateInNanoseconds() const {
   return (HighResClock::now() - startTime).count();
 }
 

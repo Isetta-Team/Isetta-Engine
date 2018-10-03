@@ -48,9 +48,6 @@
     <ClInclude Include="..\Isetta\Core\Math\Rect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Math\Utility.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Isetta\Core\Math\Vector2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -75,15 +72,15 @@
     <ClInclude Include="..\Isetta\Core\DataStructures\RingBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\Isetta\Core\Math\Util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Core\Math\Matrix3Test.cpp">
-      <Filter>Core\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Math\UtilityTest.cpp">
       <Filter>Core\Math</Filter>
     </ClCompile>
     <ClCompile Include="Core\Math\Vector2IntTest.cpp">
@@ -122,9 +119,6 @@
     <ClCompile Include="..\Isetta\Core\Math\Rect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Math\Utility.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Isetta\Core\Math\Vector2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -142,6 +136,12 @@
     </ClCompile>
     <ClCompile Include="Core\DataStructures\RingBufferTest.cpp">
       <Filter>Core\DataStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Isetta\Core\Math\Util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Math\UtilTest.cpp">
+      <Filter>Core\Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

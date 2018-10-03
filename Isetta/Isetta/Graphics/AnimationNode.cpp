@@ -41,6 +41,7 @@ void AnimationNode::UpdateAnimation(float deltaTime) {
   if (isPlaying) {
     h3dSetModelAnimParams(animatedModel->renderNode, currentState,
                           EngineLoop::GetGameClock().GetElapsedTime() * 30, 1);
+
     h3dUpdateModel(
         animatedModel->renderNode,
         H3DModelUpdateFlags::Animation | H3DModelUpdateFlags::Geometry);
@@ -52,15 +53,7 @@ void AnimationNode::Stop() { isPlaying = false; }
 
 H3DRes AnimationNode::LoadResourceFromFile(std::string resourceName) {
   H3DRes res = h3dAddResource(H3DResTypes::Animation, resourceName.c_str(), 0);
-  if (!h3dutLoadResourcesFromDisk(
-          Config::Instance().resourcePath.GetVal().c_str())) {
-    h3dutDumpMessages();
-    throw std::exception(
-        std::string(
-            "LightNode::LoadResourceFromFile: Cannot load the resource from " +
-            resourceName)
-            .c_str());
-  }
+  RenderModule::LoadResourceFromDisk(res, Util::StrFormat("AnimationNode::LoadResourceFromFile => Cannot load the resource from %s", resourceName.c_str()));
   return res;
 }
 }  // namespace Isetta

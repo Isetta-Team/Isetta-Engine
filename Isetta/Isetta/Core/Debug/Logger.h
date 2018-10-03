@@ -15,10 +15,13 @@
 #include "Core/IsettaAlias.h"
 
 namespace Isetta {
-#define LOG LogObject(__FILENAME__, __LINE__)
-#define LOG_INFO LogObject(__FILENAME__, __LINE__, Debug::Verbosity::Info)
-#define LOG_WARNING LogObject(__FILENAME__, __LINE__, Debug::Verbosity::Warning)
-#define LOG_ERROR LogObject(__FILENAME__, __LINE__, Debug::Verbosity::Error)
+#define LOG Isetta::LogObject(__FILENAME__, __LINE__)
+#define LOG_INFO \
+  Isetta::LogObject(__FILENAME__, __LINE__, Isetta::Debug::Verbosity::Info)
+#define LOG_WARNING \
+  Isetta::LogObject(__FILENAME__, __LINE__, Isetta::Debug::Verbosity::Warning)
+#define LOG_ERROR \
+  Isetta::LogObject(__FILENAME__, __LINE__, Isetta::Debug::Verbosity::Error)
 
 /**
  * @brief static class for outputing to the Visual Studio Output window in Debug

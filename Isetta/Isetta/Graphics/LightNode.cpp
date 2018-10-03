@@ -25,17 +25,13 @@ LightNode::LightNode(std::string resourceName, const Math::Vector3& position,
 
 H3DRes LightNode::LoadResourceFromFile(std::string resourceName) {
   H3DRes lightMatRes =
-      h3dAddResource(H3DResTypes::Material, "materials/light.material.xml", 0);
-  // TODO(Chaojie) read the resource path from game config
-  if (!h3dutLoadResourcesFromDisk(
-          Config::Instance().resourcePath.GetVal().c_str())) {
-    h3dutDumpMessages();
-    throw std::exception(
-        std::string(
-            "LightNode::LoadResourceFromFile: Cannot load the resource from " +
-            resourceName)
-            .c_str());
-  }
+      h3dAddResource(H3DResTypes::Material, resourceName.c_str(), 0);
+
+  RenderModule::LoadResourceFromDisk(
+      lightMatRes, Util::StrFormat("LightNode::LoadResourceFromFile => "
+                                   "Cannot load the resource from %s",
+                                   resourceName.c_str()));
+
   return lightMatRes;
 }
 

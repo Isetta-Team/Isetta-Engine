@@ -4,6 +4,7 @@
 #include "Core/ModuleManager.h"
 #include "Audio/AudioModule.h"
 #include "Core/Memory/MemoryManager.h"
+#include "Graphics/GUIModule.h"
 #include "Graphics/RenderModule.h"
 #include "Graphics/Window.h"
 #include "Input/InputModule.h"
@@ -16,14 +17,17 @@ ModuleManager::ModuleManager() {
   windowModule = new WindowModule{};
   renderModule = new RenderModule{};
   inputModule = new InputModule{};
+  guiModule = new GUIModule{};
   networkingModule = new NetworkingModule{};
 }
+
 ModuleManager::~ModuleManager() {
   delete networkingModule;
   delete windowModule;
   delete audioModule;
   delete renderModule;
   delete inputModule;
+  delete guiModule;
   delete memoryManager;
 }
 
@@ -33,6 +37,7 @@ void ModuleManager::StartUp() {
   windowModule->StartUp();
   renderModule->StartUp(windowModule->winHandle);
   inputModule->StartUp(windowModule->winHandle);
+  guiModule->StartUp(windowModule->winHandle);
   networkingModule->StartUp();
   memoryManager->RegisterTests();
 }
@@ -46,14 +51,16 @@ void ModuleManager::SimulationUpdate(float deltaTime) {
 
 void ModuleManager::RenderUpdate(float deltaTime) {
   renderModule->Update(deltaTime);
+  guiModule->Update(deltaTime);
   windowModule->Update(deltaTime);
 }
 
 void ModuleManager::ShutDown() {
   networkingModule->ShutDown();
   audioModule->ShutDown();
-  renderModule->ShutDown();
+  guiModule->ShutDown();
   inputModule->ShutDown();
+  renderModule->ShutDown();
   windowModule->ShutDown();
   memoryManager->ShutDown();
 }

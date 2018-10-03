@@ -44,7 +44,7 @@ void AudioModule::StartUp() {
 void AudioModule::Update(float deltaTime) const { fmodSystem->update(); }
 
 void AudioModule::ShutDown() {
-  for (auto it : soundMap) {
+  for (const auto& it : soundMap) {
     CheckStatus(it.second->release());
   }
 
@@ -98,7 +98,7 @@ void PrintAudioMemoryUsage() {
 
 void AudioModule::CheckStatus(const FMOD_RESULT status) {
   if (status != FMOD_OK) {
-    LOG_ERROR(Debug::Channel::Sound, FMOD_ErrorString(status));
+    LOG_INFO(Debug::Channel::Sound, FMOD_ErrorString(status));
     throw std::exception{Util::StrFormat("AudioSource::CheckStatus => %s",
                                          FMOD_ErrorString(status))};
   }

@@ -162,7 +162,7 @@
     <ClInclude Include="..\Isetta\Core\Math\Quaternion.h" />
     <ClInclude Include="..\Isetta\Core\Math\Random.h" />
     <ClInclude Include="..\Isetta\Core\Math\Rect.h" />
-    <ClInclude Include="..\Isetta\Core\Math\Utility.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Util.h" />
     <ClInclude Include="..\Isetta\Core\Math\Vector2.h" />
     <ClInclude Include="..\Isetta\Core\Math\Vector2Int.h" />
     <ClInclude Include="..\Isetta\Core\Math\Vector3.h" />
@@ -179,7 +179,7 @@
     <ClCompile Include="..\Isetta\Core\Math\Quaternion.cpp" />
     <ClCompile Include="..\Isetta\Core\Math\Random.cpp" />
     <ClCompile Include="..\Isetta\Core\Math\Rect.cpp" />
-    <ClCompile Include="..\Isetta\Core\Math\Utility.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Util.cpp" />
     <ClCompile Include="..\Isetta\Core\Math\Vector2.cpp" />
     <ClCompile Include="..\Isetta\Core\Math\Vector2Int.cpp" />
     <ClCompile Include="..\Isetta\Core\Math\Vector3.cpp" />
@@ -188,7 +188,7 @@
     <ClCompile Include="Core\ColorTest.cpp" />
     <ClCompile Include="Core\DataStructures\RingBufferTest.cpp" />
     <ClCompile Include="Core\Math\Matrix3Test.cpp" />
-    <ClCompile Include="Core\Math\UtilityTest.cpp" />
+    <ClCompile Include="Core\Math\UtilTest.cpp" />
     <ClCompile Include="Core\Math\Vector2IntTest.cpp" />
     <ClCompile Include="Core\Math\Vector2Test.cpp" />
     <ClCompile Include="Core\Math\Vector3IntTest.cpp" />

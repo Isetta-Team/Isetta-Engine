@@ -7,6 +7,8 @@
 #include "Core/Memory/DoubleBufferedAllocator.h"
 #include "Core/Memory/ObjectHandle.h"
 #include "Core/Memory/StackAllocator.h"
+#include "Core/Memory/FreeListAllocator.h"
+#include "Core/Memory/MemUtil.h"
 
 namespace Isetta {
 
@@ -18,6 +20,7 @@ class MemoryManager {
     CVar<Size> doubleBufferedAllocatorSize{"double_buffered_allocator_size",
                                            10_MB};
     CVar<Size> dynamicArenaSize{"dynamic_arena_size", 10_MB};
+    CVar<Size> freeListAllocatorSize{"free_list_allocator_size", 10_MB};
   };
 
   /**
@@ -28,7 +31,7 @@ class MemoryManager {
    * \tparam T type of object to create
    * \return
    */
-  template <typename T, typename ...args>
+  template <typename T, typename... args>
   static T* NewOnSingleFrame(args...);
 
   /**
@@ -41,7 +44,7 @@ class MemoryManager {
    *
    * \return
    */
-  static void* AllocOnSingleFrame(Size size, U8 alignment = 16);
+  static void* AllocOnSingleFrame(Size size, U8 alignment = MemUtil::ALIGNMENT);
 
   /**
    * \brief Create a new object whose memory is going to be cleared at the end
@@ -50,7 +53,7 @@ class MemoryManager {
    *
    * \tparam T type of object to create \return
    */
-  template <typename T, typename ...args>
+  template <typename T, typename... args>
   static T* NewOnDoubleBuffered(args...);
 
   /**
@@ -63,12 +66,22 @@ class MemoryManager {
    *
    * \return
    */
-  static void* AllocOnDoubleBuffered(Size size, U8 alignment = 16);
+  static void* AllocOnDoubleBuffered(Size size, U8 alignment = MemUtil::ALIGNMENT);
 
   // the memory will either from LSR - when starting up the engine
   // or LevelData - after engine startup
   // make sure you don't put data in wrong places
-  static void* AllocOnStack(Size size, U8 alignment = 16);
+  static void* AllocOnStack(Size size, U8 alignment = MemUtil::ALIGNMENT);
+
+  static void* AllocOnFreeList(Size size, U8 alignment = MemUtil::ALIGNMENT);
+
+  static void FreeOnFreeList(void* memPtr);
+
+  template <typename T, typename... args>
+  static T* NewOnFreeList(args... argList);
+
+  template<typename T>
+  static T* NewArrOnFreeList(Size length, U8 alignment = MemUtil::ALIGNMENT);
 
   /**
    * \brief Create an object that will sit on the dynamic memory area. You need
@@ -79,7 +92,7 @@ class MemoryManager {
    * \tparam T Type of the object you want to create
    * \return
    */
-  template <typename T, typename ...args>
+  template <typename T, typename... args>
   static ObjectHandle<T>& NewDynamic(args...);
 
   /**
@@ -117,7 +130,9 @@ class MemoryManager {
   void ShutDown();
 
   // set the marker to clear to when finishing a level
+  // TODO(YIDI): Someone please call this
   void FinishEngineStartupListener();
+  // TODO(YIDI): Someone please call this
   void ClearLevelMemory();
 
   static MemoryManager* GetInstance();
@@ -132,28 +147,39 @@ class MemoryManager {
   StackAllocator singleFrameAllocator{};
   DoubleBufferedAllocator doubleBufferedAllocator{};
   MemoryArena dynamicArena{};
+  FreeListAllocator freeListAllocator{};
 
   friend class ModuleManager;
 };
 
-template <typename T, typename ...args>
+template <typename T, typename... args>
 T* MemoryManager::NewOnSingleFrame(args... argList) {
-  return singleFrameAllocator.New<T>(argList...);
+  return GetInstance()->singleFrameAllocator.New<T>(argList...);
 }
 
-template <typename T, typename ...args>
+template <typename T, typename... args>
 T* MemoryManager::NewOnDoubleBuffered(args... argList) {
-  return doubleBufferedAllocator.New<T>(argList...);
+  return GetInstance()->doubleBufferedAllocator.New<T>(argList...);
 }
 
-template <typename T, typename ...args>
+template <typename T, typename ... args>
+T* MemoryManager::NewOnFreeList(args... argList) {
+  return GetInstance()->freeListAllocator.New<T>(argList...);
+}
+
+template <typename T>
+T* MemoryManager::NewArrOnFreeList(const Size length, const U8 alignment) {
+  return GetInstance()->freeListAllocator.NewArr<T>(length, alignment);
+}
+
+template <typename T, typename... args>
 ObjectHandle<T>& MemoryManager::NewDynamic(args... argList) {
-  return instance->dynamicArena.NewDynamic<T>(argList...);
+  return GetInstance()->dynamicArena.NewDynamic<T>(argList...);
 }
 
 template <typename T>
 void MemoryManager::DeleteDynamic(const ObjectHandle<T>& objToDelete) {
-  instance->dynamicArena.DeleteDynamic(objToDelete);
+  GetInstance()->dynamicArena.DeleteDynamic(objToDelete);
 }
 
 }  // namespace Isetta

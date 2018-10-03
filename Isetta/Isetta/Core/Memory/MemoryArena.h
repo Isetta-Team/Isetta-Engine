@@ -4,6 +4,7 @@
 #pragma once
 #include <map>
 #include "Core/IsettaAlias.h"
+#include "MemUtil.h"
 
 namespace Isetta {
 
@@ -88,7 +89,6 @@ class MemoryArena {
 
   // can't be put in ObjectHandle because it creates new ones for each type
   static const U32 maxHandleCount = 2048;
-  static const U8 alignment = 16;
   static inline U32 nextUniqueID = 0;
   static class HandleEntry entryArr[];
 
