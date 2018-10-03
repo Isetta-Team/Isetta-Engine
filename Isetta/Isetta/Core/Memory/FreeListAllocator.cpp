@@ -12,14 +12,11 @@ FreeListAllocator::FreeListAllocator(const Size size) {
   head = new (memHead) Node(size);
 }
 
-FreeListAllocator::~FreeListAllocator() {
-  std::free(memHead);
+FreeListAllocator::FreeListAllocator(void* headPtr, const Size size,
+                                     Action<void*> freeCallback)
+    : memHead(headPtr), freeCallback(std::move(freeCallback)) {
+  head = new (memHead) Node(size);
 }
-
-// FreeListAllocator::FreeListAllocator(void* headPtr, const Size size)
-// : memHead(headPtr) {
-// head = new (memHead) Node(size);
-// }
 
 void* FreeListAllocator::Alloc(const Size size, const U8 alignment) {
   if (head == nullptr) {
@@ -104,6 +101,18 @@ void FreeListAllocator::Free(void* memPtr) {
     newNode->next = cur;
     TryMergeWithNext(newNode);
     TryMergeWithNext(last);
+  }
+}
+
+void FreeListAllocator::Erase() const {
+  if (memHead == nullptr) {
+    return;
+  }
+
+  if (freeCallback == nullptr) {
+    std::free(memHead);  
+  } else {
+    freeCallback(memHead);
   }
 }
 
