@@ -11,11 +11,42 @@ First, let's make sure you have the right environment!
 	- [ ] With VC++ 2017 and Windows 10 SDK (10.0.17134.0). You can install them with *Visual Studio Installer*, just select "Game Development with C++" and the right Windows 10 SDK version.
 - [ ] [CMake](https://cmake.org/download/) 3.10.2 or later
 
-Then, let's make sure you have submodules set up correctly
-1. Pull all submodules by using `git submodule update --init` in a commandline
-2. Follow [External README](Isetta/External/README.md) for specific instructions on the 3rd party includes.
+**Before you build** you must pull and build the submodules:
+- [ ] Pull all submodules by using `git submodule update --init` in a commandline
+- [ ] Now you build the submodules
 
-Finally, you can start playting with our (TODO) simplistic demo!
+### Building GLFW
+We are using CMake GUI tool for building GLFW (v3.10.2 tested).
+
+Instruction:
+- Open a CMake Window
+- Set the source path to `REPO/Isetta/External/GLFW`
+- Set the binary path to `REPO/Isetta/External/GLFW/Build`
+- Configure (select Visual Studio 15 2017 Win64 compiler), generate and then open the project
+- Build under both Debug mode and Release mode
+
+### Building Horde3D
+Horde3D should be built **AFTER** GLFW built.
+
+Instruction:
+- Open a CMake Window
+- Set the source path to `REPO/Isetta/External/Horde3D`
+- Set the binary path to `REPO/Isetta/External/Horde3D/Build`
+- Configure (select Visual Studio 15 2017 Win64 compiler)
+- Set the `GLFW_INCLUDE_DIR` to `REPO/Isetta/External/GLFW/include`
+- Set the `GLFW_LIBRARY_PATH` to `REPO/Isetta/External/GLFW/Build/src/Release/glfw3.lib`
+- Uncheck `HORDE_BUILD_EXAMPLES`
+- Generate and open the project
+- Build under both Debug mode and Release mode
+
+### Building ImGui
+Instruction:
+- Open the Isetta.sln
+- In the solution explorer expand the folders: `Solution 'Isetta' > External > imgui`
+- Right-click lib_glfw_opengl3, select `Build`
+
+### Setup Done (for now...)
+You can start playting with our (TODO) simplistic demo!
 
 ## Mission Statement
 Game engine development is a very wide field in the industry, but also a very inaccessible one. 
