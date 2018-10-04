@@ -48,6 +48,9 @@ Instruction:
 ### Setup Done (for now...)
 You can start playting with our (TODO) simplistic demo!
 
+## Going Through Time
+Assuming you have checked out master, you are looking at our latest work. If you would like to view the engine from the start you can use the tags feature to see the code week to week. If you are interested in a specific feature, there are branches for each of the major systems of development for you to `checkout` (the majority of development happened on those branches, we slipped up sometimes and made changes on staging).
+
 ## Mission Statement
 Game engine development is a very wide field in the industry, but also a very inaccessible one. 
 Budding engineers are advised to just jump into development to learn, and it's for this reason 
