@@ -3,6 +3,15 @@
  */
 #include "EngineLoop.h"
 
+#include "Audio/AudioModule.h"
+#include "Core/Memory/MemoryManager.h"
+#include "Core/ModuleManager.h"
+#include "Graphics/GUIModule.h"
+#include "Graphics/RenderModule.h"
+#include "Graphics/Window.h"
+#include "Input/InputModule.h"
+#include "Networking/NetworkingModule.h"
+
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
 #include "Core/FileSystem.h"
@@ -33,6 +42,25 @@ void NetworkingDemo();
 void GraphicsDemo();
 void GUIDemo();
 
+EngineLoop::EngineLoop() {
+  memoryManager = new MemoryManager{};
+  audioModule = new AudioModule{};
+  windowModule = new WindowModule{};
+  renderModule = new RenderModule{};
+  inputModule = new InputModule{};
+  guiModule = new GUIModule{};
+  networkingModule = new NetworkingModule{};
+}
+EngineLoop::~EngineLoop() {
+  delete windowModule;
+  delete audioModule;
+  delete renderModule;
+  delete inputModule;
+  delete guiModule;
+  delete memoryManager;
+  delete networkingModule;
+}
+
 void EngineLoop::StartUp() {
   Logger::NewSession();
   Config::Instance().Read("config.cfg");
@@ -43,7 +71,16 @@ void EngineLoop::StartUp() {
   intervalTime = 1.0 / Config::Instance().loopConfig.maxFps.GetVal();
   maxSimulationCount = Config::Instance().loopConfig.maxSimCount.GetVal();
 
-  moduleManager.StartUp();
+  memoryManager->StartUp();
+  audioModule->StartUp();
+  windowModule->StartUp();
+  renderModule->StartUp(windowModule->winHandle);
+  inputModule->StartUp(windowModule->winHandle);
+  guiModule->StartUp(windowModule->winHandle);
+  networkingModule->StartUp();
+
+  // TODO(Yidi) remove
+  memoryManager->RegisterTests();
 
   StartGameClock();
   isGameRunning = true;
@@ -56,7 +93,6 @@ void EngineLoop::StartUp() {
   NetworkingDemo();
   InputDemo();
   GraphicsDemo();
-  GUIDemo();
   RunYidiTest();
 }
 
@@ -101,7 +137,7 @@ void EngineLoop::Update() {
 
   for (int i = 0; i < maxSimulationCount && accumulateTime > intervalTime;
        i++) {
-    moduleManager.SimulationUpdate(intervalTime);
+    VariableUpdate(intervalTime);
     // LOG_INFO(Debug::Channel::General,
     // std::to_string(accumulateTime));
     accumulateTime -= intervalTime;
@@ -110,12 +146,36 @@ void EngineLoop::Update() {
   // TODO(Chaojie) after scenegraph, save previous state for
   // prediction LOG_INFO(Debug::Channel::General,
   // "//////////////Render//////////////");
-  moduleManager.RenderUpdate(0);
+  VariableUpdate(0);
   // LOG_INFO(Debug::Channel::General,
   // "//////////////UpdateEnd//////////////");
 }
 
-void EngineLoop::ShutDown() { moduleManager.ShutDown(); }
+void EngineLoop::FixedUpdate(float deltaTime) {
+  networkingModule->Update(deltaTime);
+  // TODO(all) Physics->Update(deltaTime);
+}
+void EngineLoop::VariableUpdate(float deltaTime) {
+  inputModule->Update(deltaTime);
+  // TODO(Chaojie) SceneGraph->Update(deltaTime);
+  // TODO(Chaojie) SceneGraph->LateUpdate(deltaTime);
+  audioModule->Update(deltaTime);
+  renderModule->Update(deltaTime);
+  guiModule->Update(deltaTime, GUIDemo);
+  windowModule->Update(deltaTime);
+  memoryManager->Update();
+}
+
+void EngineLoop::ShutDown() {
+  networkingModule->ShutDown();
+  audioModule->ShutDown();
+  guiModule->ShutDown();
+  inputModule->ShutDown();
+  renderModule->ShutDown();
+  windowModule->ShutDown();
+  memoryManager->ShutDown();
+}
+
 void EngineLoop::StartGameClock() const { GetGameClock(); }
 
 void EngineLoop::Run() {

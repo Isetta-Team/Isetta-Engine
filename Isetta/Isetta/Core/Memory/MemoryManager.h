@@ -46,7 +46,7 @@ class MemoryManager {
   template <typename T, typename... args>
   static T* NewOnSingleFrame(args...);
 
-  template<typename T>
+  template <typename T>
   static T* NewArrOnSingleFrame(Size length, U8 alignment = MemUtil::ALIGNMENT);
 
   /**
@@ -72,8 +72,9 @@ class MemoryManager {
   template <typename T, typename... args>
   static T* NewOnDoubleBuffered(args...);
 
-  template<typename T>
-  static T* NewArrOnDoubleBuffered(Size length, U8 alignment = MemUtil::ALIGNMENT);
+  template <typename T>
+  static T* NewArrOnDoubleBuffered(Size length,
+                                   U8 alignment = MemUtil::ALIGNMENT);
 
   // the memory will either from LSR - when starting up the engine
   // or LevelData - after engine startup
@@ -163,7 +164,7 @@ class MemoryManager {
   MemoryArena dynamicArena{};
   FreeListAllocator freeListAllocator{};
 
-  friend class ModuleManager;
+  friend class EngineLoop;
 };
 
 template <typename T, typename... args>
@@ -182,7 +183,8 @@ T* MemoryManager::NewOnDoubleBuffered(args... argList) {
 }
 
 template <typename T>
-T* MemoryManager::NewArrOnDoubleBuffered(const Size length, const U8 alignment) {
+T* MemoryManager::NewArrOnDoubleBuffered(const Size length,
+                                         const U8 alignment) {
   return GetInstance()->doubleBufferedAllocator.NewArr<T>(length, alignment);
 }
 

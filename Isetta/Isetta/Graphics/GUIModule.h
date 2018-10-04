@@ -91,7 +91,7 @@ class GUIModule {
 
   std::list<Action<>> updateCallbacks{};
 
-  friend class ModuleManager;
+  friend class EngineLoop;
 
   // TODO(Jacob) remove
   // Test variables

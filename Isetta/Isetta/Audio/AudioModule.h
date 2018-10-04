@@ -6,15 +6,14 @@
 #include <SID/sid.h>
 #include <string>
 #include <unordered_map>
-#include "Core/IsettaAlias.h"
-#include "Core/ModuleManager.h"
-#include "fmod.hpp"
 #include "Core/Config/CVar.h"
+#include "Core/IsettaAlias.h"
+#include "fmod.hpp"
 
 namespace Isetta {
 
 class AudioModule {
-public:
+ public:
   struct AudioConfig {
     CVarString pathUnderResource{"audio_file_path", "Sound"};
     CVar<Size> memorySize{"audio_memory_size", 10485760};
@@ -73,7 +72,7 @@ public:
   std::unordered_map<StringId, FMOD::Sound*> soundMap;
 
   friend class AudioSource;
-  friend class ModuleManager;
+  friend class EngineLoop;
 };
 
 }  // namespace Isetta

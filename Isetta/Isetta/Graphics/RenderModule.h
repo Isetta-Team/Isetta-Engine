@@ -62,6 +62,6 @@ class RenderModule {
 
   GLFWwindow* winHandle;
 
-  friend class ModuleManager;
+  friend class EngineLoop;
 };
 }  // namespace Isetta

@@ -194,6 +194,6 @@ class NetworkingModule {
   // Other
 
   friend class NetworkManager;
-  friend class ModuleManager;
+  friend class EngineLoop;
 };
 }  // namespace Isetta
