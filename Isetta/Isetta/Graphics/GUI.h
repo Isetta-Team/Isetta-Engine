@@ -8,28 +8,21 @@
 #include "Core/Color.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Math/Vector2.h"
-//#include "Graphics/GUIStyle.h"
-//#include "Graphics/RectTransform.h"
+
+typedef void* TextureID;
+class ImGuiInputTextCallbackData;
+class ImFont;
 
 namespace Isetta {
 class RectTransform;
 class GUIStyle;
-// class Color;
-namespace Math {
-class Rect;
-// class Vector2;
-class Vector2Int;
-class Vector3;
-class Vector4;
-}  // namespace Math
-}  // namespace Isetta
-
-typedef void* TextureID;
-class ImFont;
 using Font = ImFont;
-class ImGuiInputTextCallbackData;
 using GUIInputTextCallbackData = ImGuiInputTextCallbackData;
 using GUIInputTextCallback = int (*)(GUIInputTextCallbackData*);
+namespace Math {
+class Rect;
+}
+}  // namespace Isetta
 
 namespace Isetta {
 class GUI {
@@ -452,34 +445,47 @@ class GUI {
     Color frame = Color::clear;
     Math::Vector2 offset = Math::Vector2::zero;
     Math::Vector2 tiling = Math::Vector2::one;
+    int framePadding = -1;
     ImageStyle() = default;
-    ImageStyle(const Color& tint, const Color& frame)
-        : tint{tint}, frame{frame} {}
+    ImageStyle(const Color& tint, const Color& frame, int framePadding)
+        : tint{tint}, frame{frame}, framePadding{framePadding} {}
     ImageStyle(const Math::Vector2& offset, const Math::Vector2& tiling)
         : offset{offset}, tiling{tiling} {}
-    ImageStyle(const Color& tint, const Color& frame,
+    ImageStyle(const Color& tint, const Color& frame, int framePadding,
                const Math::Vector2& offset, const Math::Vector2& tiling)
-        : tint{tint}, frame{frame}, offset{offset}, tiling{tiling} {}
+        : tint{tint},
+          frame{frame},
+          framePadding{framePadding},
+          offset{offset},
+          tiling{tiling} {}
   };
   struct InputStyle {
     Color background;
     Color hovered;
     Color active;
     Color text;
+    Font* font;
     InputStyle();
+    InputStyle(Font* const font);
     InputStyle(const Color& background, const Color& hovered,
-               const Color& active, const Color& text)
+               const Color& active, const Color& text);
+    InputStyle(const Color& background, const Color& hovered,
+               const Color& active, const Color& text, Font* const font)
         : background{background},
           hovered{hovered},
           active{active},
-          text{text} {}
+          text{text},
+          font{font} {}
   };
   struct LabelStyle {
     Color text;
     Color background;
+    Font* font;
     LabelStyle();
-    LabelStyle(const Color& text, const Color& background)
-        : text{text}, background{background} {}
+    LabelStyle(Font* const font);
+    LabelStyle(const Color& text, const Color& background);
+    LabelStyle(const Color& text, const Color& background, Font* const font)
+        : text{text}, background{background}, font{font} {}
   };
   struct ProgressBarStyle {
     Color background;
@@ -499,6 +505,13 @@ class GUI {
           hoverChange{hoverChange},
           hover{hover} {}
   };
+  struct ModalStyle {
+    Color window;
+    Color background;
+    ModalStyle();
+    ModalStyle(const Color& window, const Color& background)
+        : window{window}, background{background} {}
+  };
   // TODO(Jacob) refactor
   struct TextStyle {
     bool isWrapped;
@@ -507,7 +520,8 @@ class GUI {
     // bool isBulleted;
     Color text;
     TextStyle();
-    TextStyle(bool wrapped, bool disabled, Color text)
+    TextStyle(const Color& text) : text{text} {}
+    TextStyle(bool wrapped, bool disabled, const Color& text)
         : isWrapped{wrapped},
           isDisabled{disabled},
           /*isBulleted{b},*/ text{text} {}
@@ -519,15 +533,15 @@ class GUI {
   // BUTTONS
   static bool Button(const RectTransform& transform, const std::string& label,
                      const ButtonStyle& style = {}, bool repeating = false);
-  static void Button(const RectTransform& transform, const std::string& label,
+  static bool Button(const RectTransform& transform, const std::string& label,
                      const Action<>& callback, const ButtonStyle& style = {},
                      bool repeating = false);
   static bool ButtonImage(const RectTransform& transform, const std::string& id,
                           const TextureID& textureId,
                           const ButtonStyle& style = {},
                           const ImageStyle& imgStyle = {},
-                          bool repeating = false, int framePadding = -1);
-  static void ButtonImage(const RectTransform& transform, const std::string& id,
+                          bool repeating = false);
+  static bool ButtonImage(const RectTransform& transform, const std::string& id,
                           const TextureID& textureId, const Action<>& callback,
                           const ButtonStyle& btnStyle = {},
                           const ImageStyle& imgStyle = {},
@@ -559,7 +573,7 @@ class GUI {
                               0, 0));  // TODO(Jacob) merge with other button
   */
   // TODO(Jacob) Toggle or Checkbox?
-  static bool Toggle(
+  static void Toggle(
       const RectTransform& transform, const std::string& label, bool* value,
       const ButtonStyle& style = {},
       const Color& check = Color::
@@ -580,8 +594,8 @@ class GUI {
   */
 
   // TEXT
-  static void Text(const RectTransform& transform, const TextStyle& style,
-                   const std::string format, ...);
+  static void Text(const RectTransform& transform, const std::string format,
+                   const TextStyle& style = {});
   ////////////////////////////////////////
   // TODO(Jacob) NOT PART OF GAME NEEDS //
   ////////////////////////////////////////
@@ -590,7 +604,7 @@ class GUI {
   */
   // TODO(Jacob) styling
   static void Label(const RectTransform& transform, const std::string& label,
-                    const LabelStyle& style, const std::string format, ...);
+                    const std::string format, const LabelStyle& style);
   ////////////////////////////////////////
   // TODO(Jacob) NOT PART OF GAME NEEDS //
   ////////////////////////////////////////
@@ -758,8 +772,9 @@ class GUI {
                        bool* selected = false, bool enabled = true);
   static void MenuItem(const std::string& label, const std::string& shortcut,
                        const Action<>& callback, bool enabled = true);
-  static bool Modal(const std::string& name, const Action<>& ui,
-                    bool* isOpen = NULL, const BackgroundStyle& style = {},
+  static bool Modal(const RectTransform& transform, const std::string& name,
+                    const Action<>& ui, bool* isOpen = NULL,
+                    const ModalStyle& style = {},
                     WindowFlags flags = WindowFlags::None);
   static void OpenPopup(const std::string& id);
   static void CloseCurrentPopup();
@@ -808,20 +823,22 @@ class GUI {
                            DrawCornerFlags flags = DrawCornerFlags::All);
     static void Quad(const RectTransform& transform, const Math::Vector2&,
                      const Math::Vector2&, const Math::Vector2&,
-                     const Math::Vector2&, Color color, float thickness = 1.0f);
+                     const Math::Vector2&, const Color& color,
+                     float thickness = 1.0f);
     static void QuadFilled(const RectTransform& transform, const Math::Vector2&,
                            const Math::Vector2&, const Math::Vector2&,
-                           const Math::Vector2&, Color color);
+                           const Math::Vector2&, const Color& color);
     static void Triangle(const RectTransform& transform, const Math::Vector2&,
                          const Math::Vector2&, const Math::Vector2&,
-                         Color color, float thickness = 1.0f);
+                         const Color& color, float thickness = 1.0f);
     static void TriangleFilled(const RectTransform& transform,
                                const Math::Vector2&, const Math::Vector2&,
-                               const Math::Vector2&, Color color);
+                               const Math::Vector2&, const Color& color);
     static void Circle(const RectTransform& transform, float radius,
-                       Color color, int segments = 12, float thickness = 1.0f);
+                       const Color& color, int segments = 12,
+                       float thickness = 1.0f);
     static void CircleFilled(const RectTransform& transform, float radius,
-                             Color color, int segments = 12);
+                             const Color& color, int segments = 12);
     // TODO(Jacob) Do we allow DrawLine? 3017
   };
 
@@ -892,8 +909,16 @@ class GUI {
   // static Font* GetFont();
 
   // TODO(Jacob) have font map?
+  static Font* GetDefaultFont();
   static Font* AddFontFromFile(const std::string& filename, int fontSize);
   static Font* AddFontFromMemory(void* fontBuffer, int fontSize, float pixels);
+  static void PushFont(const Font*& font);
+  static void PopFont();
+  static void PushStyleVar(StyleVar var, float val);
+  static void PushStyleVar(StyleVar var, const Math::Vector2& val);
+  static void PopStyleVar(int pops = 1);
+  static void PushStyleColor(ColorStyles var, const Color& color);
+  static void PopStyleColor(int pops = 1);
   static GUIStyle GetStyle();
 
  private:

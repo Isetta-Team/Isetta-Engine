@@ -52,10 +52,31 @@ GUI::InputStyle::InputStyle() {
   hovered = GetStyle().Colors[(int)ColorStyles::FrameBgHovered];
   active = GetStyle().Colors[(int)ColorStyles::FrameBgActive];
   text = GetStyle().Colors[(int)ColorStyles::Text];
+  font = GetDefaultFont();
+}
+GUI::InputStyle::InputStyle(Font* const font) : font(font) {
+  background = GetStyle().Colors[(int)ColorStyles::FrameBg];
+  hovered = GetStyle().Colors[(int)ColorStyles::FrameBgHovered];
+  active = GetStyle().Colors[(int)ColorStyles::FrameBgActive];
+  text = GetStyle().Colors[(int)ColorStyles::Text];
+}
+GUI::InputStyle::InputStyle(const Color& background, const Color& hovered,
+                            const Color& active, const Color& text)
+    : background{background}, hovered{hovered}, active{active}, text{text} {
+  font = GetDefaultFont();
 }
 GUI::LabelStyle::LabelStyle() {
   text = GetStyle().Colors[(int)ColorStyles::Text];
   background = GetStyle().Colors[(int)ColorStyles::FrameBg];
+  font = GetDefaultFont();
+}
+GUI::LabelStyle::LabelStyle(Font* const font) : font{font} {
+  text = GetStyle().Colors[(int)ColorStyles::Text];
+  background = GetStyle().Colors[(int)ColorStyles::FrameBg];
+}
+GUI::LabelStyle::LabelStyle(const Color& text, const Color& background)
+    : text{text}, background{background} {
+  font = GetDefaultFont();
 }
 GUI::ProgressBarStyle::ProgressBarStyle() {
   background = GetStyle().Colors[(int)ColorStyles::FrameBg];
@@ -70,6 +91,10 @@ GUI::ProgressBarStyle::ProgressBarStyle(const Color& background,
     : background{background}, bar{bar}, overlayText{overlayText} {
   hoverChange = false;
   hover = GetStyle().Colors[(int)ColorStyles::PlotHistogramHovered];
+}
+GUI::ModalStyle::ModalStyle() {
+  window = GetStyle().Colors[(int)ColorStyles::WindowBg];
+  background = GetStyle().Colors[(int)ColorStyles::ModalWindowDimBg];
 }
 GUI::TextStyle::TextStyle() {
   text = GetStyle().Colors[(int)ColorStyles::Text];

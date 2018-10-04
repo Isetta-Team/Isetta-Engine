@@ -102,6 +102,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Memory\FreeListAllocator.cpp" />
     <ClCompile Include="Core\Memory\MemoryArena.cpp" />
     <ClCompile Include="Core\Memory\MemoryManager.cpp" />
+    <ClCompile Include="Core\Memory\MemUtil.cpp" />
     <ClCompile Include="Core\Memory\ObjectHandle.cpp" />
     <ClCompile Include="Core\Time\Clock.cpp" />
     <ClCompile Include="Core\Time\StopWatch.cpp" />
@@ -167,6 +168,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Memory\MemUtil.h" />
     <ClInclude Include="Core\Memory\MemoryArena.h" />
     <ClInclude Include="Core\Memory\MemoryManager.h" />
+    <ClInclude Include="Core\Memory\MemUtil.h" />
     <ClInclude Include="Core\Memory\ObjectHandle.h" />
     <ClInclude Include="Core\Memory\PoolAllocator.h" />
     <ClInclude Include="Core\Memory\TemplatePoolAllocator.h" />

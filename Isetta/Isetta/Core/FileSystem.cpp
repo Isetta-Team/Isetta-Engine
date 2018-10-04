@@ -335,8 +335,8 @@ void FileSystem::Touch(const char* fileName) {
 void FileSystem::Touch(const std::string& fileName) { Touch(fileName.c_str()); }
 
 int FileSystem::GetFileLength(const std::string& fileName) {
-  HANDLE hFile =
-      AccessFile(fileName.c_str(), FILE_READ_DATA, NULL, OPEN_EXISTING, NULL);
+  HANDLE hFile = AccessFile(fileName.c_str(), FILE_READ_DATA, FILE_SHARE_READ,
+                            OPEN_EXISTING, NULL);
   if (GetFileError()) {
     return NULL;
   }
