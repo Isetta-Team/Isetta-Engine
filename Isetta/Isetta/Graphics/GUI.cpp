@@ -21,8 +21,6 @@
 namespace Isetta {
 GUIModule* GUI::guiModule{nullptr};
 
-void GUI::OnUpdate(const Action<>& callback) { guiModule->OnUpdate(callback); }
-
 // BUTTON
 bool GUI::Button(Func<bool> button, const RectTransform& transform,
                  const ButtonStyle& style, bool repeating) {

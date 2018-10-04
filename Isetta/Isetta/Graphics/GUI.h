@@ -527,9 +527,6 @@ class GUI {
           /*isBulleted{b},*/ text{text} {}
   };
 
-  // TODO(Jacob) Remove from public
-  static void OnUpdate(const Action<>&);
-
   // BUTTONS
   static bool Button(const RectTransform& transform, const std::string& label,
                      const ButtonStyle& style = {}, bool repeating = false);

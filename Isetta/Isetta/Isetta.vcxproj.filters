@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-   <ClCompile Include="main.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Core\Math\Matrix3.cpp">
       <Filter>Core\Math</Filter>
     </ClCompile>
@@ -40,9 +40,6 @@
     </ClCompile>
     <ClCompile Include="Core\Debug\DebugDraw.cpp">
       <Filter>Core\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\ModuleManager.cpp">
-      <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Core\Config\Config.cpp">
       <Filter>Core\Config</Filter>
@@ -90,9 +87,6 @@
       <Filter>Core\Memory</Filter>
     </ClCompile>
     <ClCompile Include="Core\Memory\PoolAllocator.cpp">
-      <Filter>Core\Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Memory\MemoryAllocator.cpp">
       <Filter>Core\Memory</Filter>
     </ClCompile>
     <ClCompile Include="Core\Memory\MemoryManager.cpp">
@@ -201,7 +195,6 @@
       <UniqueIdentifier>{45da4ca9-ea64-439d-bd6e-e2c9bf740508}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
-  
   <ItemGroup>
     <ClInclude Include="Core\Math\Matrix3.h">
       <Filter>Core\Math</Filter>
@@ -241,9 +234,6 @@
     </ClInclude>
     <ClInclude Include="Core\Debug\DebugDraw.h">
       <Filter>Core\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\ModuleManager.h">
-      <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Core\Config\Config.h">
       <Filter>Core\Config</Filter>

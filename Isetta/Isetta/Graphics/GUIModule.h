@@ -70,7 +70,6 @@ class GUIModule {
     CVar<Color> ModalWindowDimBg{"modal_window_dim_bg_style", Color{}};
   };
 
-  void OnUpdate(const Action<>&);
   inline Math::Vector2 GetWindowSize() const {
     return Math::Vector2(winWidth, winHeight);
   }

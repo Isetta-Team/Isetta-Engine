@@ -79,8 +79,7 @@ void GUIModule::StartUp(GLFWwindow* win) {
 
 void GUIModule::Update(float deltaTime, const Action<>& OnGUI) {
   if (!OnGUI) {
-    // TODO(Jacob)
-    // return;
+    return;
   }
   // LOG_INFO(Isetta::Debug::Channel::GUI,
   //         "-------------GUI UPDATE 1-------------");
@@ -107,11 +106,7 @@ void GUIModule::Update(float deltaTime, const Action<>& OnGUI) {
           ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus);
   ImGui::PopStyleVar(2);
 
-  // TODO(Jacob) remove callbacks
-  for (const auto& callback : updateCallbacks) {
-    callback();
-  }
-  // OnGUI();
+  OnGUI();
 
   ImGui::End();
   ImGui::Render();
@@ -122,11 +117,6 @@ void GUIModule::ShutDown() {
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
-}
-
-// TODO(Jacob) remove
-void GUIModule::OnUpdate(const Action<>& callback) {
-  updateCallbacks.push_back(callback);
 }
 
 }  // namespace Isetta

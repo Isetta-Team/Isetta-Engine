@@ -3,7 +3,6 @@
  */
 #pragma once
 #include "Core/Config/CVar.h"
-#include "Core/ModuleManager.h"
 
 namespace Isetta {
 
