@@ -130,7 +130,6 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Math\Matrix3.cpp" />
     <ClCompile Include="Core\Debug\Logger.cpp" />
     <ClCompile Include="Core\Debug\DebugDraw.cpp" />
-    <ClCompile Include="Core\Memory\MemUtil.cpp" />
     <ClCompile Include="Core\Memory\StackAllocator.cpp" />
     <ClCompile Include="Core\Memory\PoolAllocator.cpp" />
     <ClCompile Include="Core\ModuleManager.cpp" />
@@ -168,7 +167,6 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Memory\MemUtil.h" />
     <ClInclude Include="Core\Memory\MemoryArena.h" />
     <ClInclude Include="Core\Memory\MemoryManager.h" />
-    <ClInclude Include="Core\Memory\MemUtil.h" />
     <ClInclude Include="Core\Memory\ObjectHandle.h" />
     <ClInclude Include="Core\Memory\PoolAllocator.h" />
     <ClInclude Include="Core\Memory\TemplatePoolAllocator.h" />
