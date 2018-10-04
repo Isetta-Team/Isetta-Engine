@@ -41,5 +41,6 @@ class EngineLoop {
   void ShutDown();
 
   void StartGameClock() const;
+  std::vector<class Entity*> entities;
 };
 }  // namespace Isetta

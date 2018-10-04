@@ -33,6 +33,7 @@ class RenderModule {
    * \brief The array of animation nodes
    */
   std::list<class AnimationNode*> animationNodes;
+  std::list<class MeshComponent*> meshComponents;
 
  private:
   RenderModule() = default;

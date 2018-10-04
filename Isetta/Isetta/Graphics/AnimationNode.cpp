@@ -11,7 +11,7 @@
 namespace Isetta {
 RenderModule* AnimationNode::renderModule{nullptr};
 
-AnimationNode::AnimationNode(ModelNode* model)
+AnimationNode::AnimationNode(MeshComponent* model)
     : previousState{-1},
       currentState{0},
       animatedModel{model},

@@ -112,7 +112,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Graphics\GUIModule.cpp" />
     <ClCompile Include="Graphics\GUIStyle.cpp" />
     <ClCompile Include="Graphics\LightNode.cpp" />
-    <ClCompile Include="Graphics\ModelNode.cpp" />
+    <ClCompile Include="Graphics\MeshComponent.cpp" />
     <ClCompile Include="Graphics\RenderModule.cpp" />
     <ClCompile Include="Graphics\RenderNode.cpp" />
     <ClCompile Include="Input\InputModule.cpp" />
@@ -137,6 +137,9 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Networking\NetworkingModule.cpp" />
     <ClCompile Include="Networking\NetworkManager.cpp" />
+    <ClCompile Include="Scene\Component.cpp" />
+    <ClCompile Include="Scene\Entity.cpp" />
+    <ClCompile Include="Scene\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio\AudioModule.h" />
@@ -180,7 +183,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Graphics\GUIModule.h" />
     <ClInclude Include="Graphics\GUIStyle.h" />
     <ClInclude Include="Graphics\LightNode.h" />
-    <ClInclude Include="Graphics\ModelNode.h" />
+    <ClInclude Include="Graphics\MeshComponent.h" />
     <ClInclude Include="Graphics\RectTransform.h" />
     <ClInclude Include="Graphics\RenderModule.h" />
     <ClInclude Include="Graphics\RenderNode.h" />
@@ -192,6 +195,9 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Input\InputModule.h" />
     <ClInclude Include="Core\FileSystem.h" />
     <ClInclude Include="Networking\NetworkManager.h" />
+    <ClInclude Include="Scene\Component.h" />
+    <ClInclude Include="Scene\Entity.h" />
+    <ClInclude Include="Scene\Transform.h" />
     <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>

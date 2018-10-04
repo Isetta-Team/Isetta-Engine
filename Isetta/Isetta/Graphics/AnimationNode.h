@@ -2,13 +2,13 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Graphics/ModelNode.h"
+#include "Graphics/MeshComponent.h"
 #include "Graphics/RenderNode.h"
 
 namespace Isetta {
 class AnimationNode : RenderNode {
  public:
-  explicit AnimationNode(ModelNode* model);
+  explicit AnimationNode(MeshComponent* model);
   int AddAnimation(std::string animationFilename, int layer,
                    std::string startNode, bool additive);
   int AddAnimation(std::string animationFilename, int layer,
@@ -34,7 +34,7 @@ class AnimationNode : RenderNode {
   int previousState;
   int currentState;
   int totalStates;
-  ModelNode* animatedModel;
+  MeshComponent* animatedModel;
   bool isPlaying;
 
   static class RenderModule* renderModule;

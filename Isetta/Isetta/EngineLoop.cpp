@@ -19,7 +19,7 @@
 #include "Graphics/AnimationNode.h"
 #include "Graphics/GUI.h"
 #include "Graphics/LightNode.h"
-#include "Graphics/ModelNode.h"
+#include "Graphics/MeshComponent.h"
 #include "Input/Input.h"
 #include "Input/InputEnum.h"
 #include "Networking/NetworkManager.h"
@@ -29,6 +29,7 @@
 #include "Core/Math/Rect.h"
 #include "Graphics/GUIStyle.h"
 #include "Graphics/RectTransform.h"
+#include "Scene/Entity.h"
 #include "imgui/imgui.h"
 
 namespace Isetta {
@@ -86,6 +87,13 @@ void EngineLoop::StartUp() {
                                   [&]() { isGameRunning = false; });
 
   // Game Init Part
+
+  Entity* push = new Entity();
+  entities.push_back(push);
+  MeshComponent* pushMesh = push->AddComponent<MeshComponent>();
+  pushMesh->LoadResource("push/Pushing.scene.xml");
+  push->SetTransform(Math::Vector3{-200, -100, 0}, Math::Vector3{0, 90, 0},
+                     Math::Vector3::one);
 
   NetworkingDemo();
   InputDemo();
@@ -271,22 +279,7 @@ void NetworkingDemo() {
     }
   });
 }
-void GraphicsDemo() {
-  // TODO(All) Read scene from scene file
-  // ModelNode car{"test/Low-Poly-Racing-Car.scene.xml", Math::Vector3{0, -20,
-  // 0},
-  //              Math::Vector3::zero, Math::Vector3::one};
-  static ModelNode car{"push/Pushing.scene.xml", Math::Vector3{-200, -100, 0},
-                       Math::Vector3{0, 90, 0}, Math::Vector3::one};
-  // ModelNode car{"models/sphere/sphere.scene.xml", Math::Vector3{-200, -100,
-  // 0},
-  //                     Math::Vector3{0, 90, 0}, Math::Vector3::one};
-  static AnimationNode animation{&car};
-  animation.AddAnimation("push/Pushing.anim", 0, "", false);
-  animation.Play();
-  LightNode light{"materials/light.material.xml", Math::Vector3{0, 200, 600},
-                  Math::Vector3::zero, Math::Vector3::one};
-}
+void GraphicsDemo() {}
 // TODO(Jacob) remove
 bool checkbox = false;
 void GUIDemo() {

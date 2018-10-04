@@ -5,13 +5,10 @@
 
 #include <exception>
 #include <filesystem>
-#include <fstream>
-
 #include "Core/Config/Config.h"
 #include "Core/FileSystem.h"
-#include "Core/Time/StopWatch.h"
 #include "Graphics/AnimationNode.h"
-#include "Horde3DUtils.h"
+#include "Scene/Entity.h"
 
 namespace Isetta {
 
@@ -24,10 +21,17 @@ void RenderModule::StartUp(GLFWwindow* win) {
   InitHordeConfig();
   InitResources();
   AnimationNode::renderModule = this;
+  MeshComponent::renderModule = this;
 }
 
 void RenderModule::Update(float deltaTime) {
   if (!cam) return;
+  for (const auto& mesh : meshComponents) {
+    if (mesh->owner->GetAttribute(
+            Entity::EntityAttributes::IS_TRANSFORM_DIRTY)) {
+      mesh->UpdateTransform();
+    }
+  }
   for (const auto& anim : animationNodes) {
     anim->UpdateAnimation(deltaTime);
   }
@@ -71,7 +75,6 @@ void RenderModule::InitHordeConfig() {
 
 void RenderModule::InitH3D() {
   if (!h3dInit(static_cast<H3DRenderDevice::List>(renderInterface))) {
-    h3dutDumpMessages();
     throw std::exception("Render::InitH3D: Unable to initalize Horde3D");
   }
 }
