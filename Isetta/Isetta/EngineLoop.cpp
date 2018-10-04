@@ -134,7 +134,7 @@ void EngineLoop::Update() {
 
   for (int i = 0; i < maxSimulationCount && accumulateTime > intervalTime;
        i++) {
-    VariableUpdate(intervalTime);
+    FixedUpdate(intervalTime);
     // LOG_INFO(Debug::Channel::General,
     // std::to_string(accumulateTime));
     accumulateTime -= intervalTime;

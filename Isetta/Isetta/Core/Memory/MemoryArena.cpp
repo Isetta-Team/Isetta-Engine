@@ -52,7 +52,7 @@ void MemoryArena::Defragment() {
       curIndex = 0;
     }
     MoveLeft(curIndex);
-    LOG_INFO(Debug::Channel::Memory, "Cur size: %I64u", GetUsedSize());
+    //LOG_INFO(Debug::Channel::Memory, "Cur size: %I64u", GetUsedSize());
   }
 }
 
