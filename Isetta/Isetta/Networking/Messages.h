@@ -4,8 +4,9 @@
 #pragma once
 
 #include <string>
-#include "yojimbo/yojimbo.h"
+#include "Core/Debug/Assert.h"
 #include "Core/Memory/MemoryManager.h"
+#include "yojimbo/yojimbo.h"
 
 namespace Isetta {
 /**
@@ -68,13 +69,13 @@ class IsettaAllocator : public yojimbo::Allocator {
  public:
   // Network allocation is currently assumed to be LSR
   IsettaAllocator(void* memory, Size size) {
-    yojimbo_assert(size > 0);
+    ASSERT(size > 0);
 
-    SetErrorLevel(yojimbo::ALLOCATOR_ERROR_NONE);
+    // SetErrorLevel(yojimbo::ALLOCATOR_ERROR_NONE);
 
     memPointer = memory;
-    *(Size*)memPointer = (Size)memPointer + size - 16;  // Assuming 16 for alignment
-    nextAvailable = memPointer;
+    nextAvailable = reinterpret_cast<Size>(memPointer);
+    endAddress = size + nextAvailable;
   }
 
   // TODO(Caleb): Clean up this hacky copy constructor
@@ -82,25 +83,20 @@ class IsettaAllocator : public yojimbo::Allocator {
     memPointer = a.memPointer;
     nextAvailable = a.nextAvailable;
   }
-  
-  ~IsettaAllocator() {
-    // We don't need to do anything here, LSR memory will be deallocated automatically
-  }
 
-  void *Allocate(Size size, const char *file, int line) {
-    void *p = (void*)((Size)nextAvailable);
+  void* Allocate(Size size, const char* file, int line) {
+    void* p = reinterpret_cast<void*>(nextAvailable);
 
-    if (!p) {
-      SetErrorLevel(yojimbo::ALLOCATOR_ERROR_OUT_OF_MEMORY);
-      return NULL;
+    if (nextAvailable + size > endAddress) {
+      // SetErrorLevel(yojimbo::ALLOCATOR_ERROR_OUT_OF_MEMORY);
+      throw std::exception("Bad memory!");  // TODO(Caleb) better exception
     }
 
-    TrackAlloc(p, size, file, line);
+    //TrackAlloc(p, size, file, line);  // This causes a 64 byte memory leak
 
-    nextAvailable = (void*)((Size)nextAvailable + size);
-    *(Size*)nextAvailable = *(Size*)p;
+    nextAvailable += size;
 
-    return (void*)((Size)p);
+    return p;
   }
 
   void Free(void* p, const char* file, int line) {
@@ -108,14 +104,15 @@ class IsettaAllocator : public yojimbo::Allocator {
       return;
     }
 
-    TrackFree(p, file, line);
+    //TrackFree(p, file, line);  // This causes a 64 byte memory leak
 
     // Do nothing I guess? This is only supposed to be an LSR allocator
   }
 
  private:
   void* memPointer;
-  void* nextAvailable;
+  Size nextAvailable;
+  Size endAddress;
 };
 
 /**
