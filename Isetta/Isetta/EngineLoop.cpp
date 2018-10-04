@@ -321,8 +321,7 @@ void GUIDemo() {
     // const Color& border = Color::clear);
     static float progress = 0.0f, progressDir = 1.0f;
     if (true) {
-      progress +=
-          progressDir * 0.4f * EngineLoop::GetGameClock().GetDeltaTime();
+      progress += progressDir * 0.4f * GetGameClock().GetDeltaTime();
       if (progress >= +1.1f) {
         progress = +1.1f;
         progressDir *= -1.0f;
