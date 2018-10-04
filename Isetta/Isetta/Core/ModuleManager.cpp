@@ -51,7 +51,7 @@ void ModuleManager::SimulationUpdate(float deltaTime) {
 
 void ModuleManager::RenderUpdate(float deltaTime) {
   renderModule->Update(deltaTime);
-  guiModule->Update(deltaTime);
+  guiModule->Update(deltaTime, nullptr);
   windowModule->Update(deltaTime);
 }
 

@@ -80,7 +80,7 @@ class GUIModule {
   ~GUIModule() = default;
 
   void StartUp(GLFWwindow* win);
-  void Update(float deltaTime);
+  void Update(float deltaTime, const Action<>& OnGUI);
   void ShutDown();
 
   // TODO(Jacob)
