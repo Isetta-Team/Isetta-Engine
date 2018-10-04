@@ -93,7 +93,7 @@ class MemoryManager {
    * \return
    */
   template <typename T, typename... args>
-  static ObjectHandle<T>& NewDynamic(args...);
+  static ObjectHandle<T> NewDynamic(args...);
 
   /**
    * \brief Delete an object that was created with `NewDynamic`. The memory will
@@ -173,7 +173,7 @@ T* MemoryManager::NewArrOnFreeList(const Size length, const U8 alignment) {
 }
 
 template <typename T, typename... args>
-ObjectHandle<T>& MemoryManager::NewDynamic(args... argList) {
+ObjectHandle<T> MemoryManager::NewDynamic(args... argList) {
   return GetInstance()->dynamicArena.NewDynamic<T>(argList...);
 }
 

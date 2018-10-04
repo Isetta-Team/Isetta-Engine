@@ -45,9 +45,7 @@ int Logger::VDebugPrintF(const Debug::Channel channel,
 
   if (CheckChannelMask(channel)) {
     if (CheckVerbosity(verbosity)) {
-#ifdef _DEBUG
       OutputDebugString(sBuffer);
-#endif
       BufferWrite(channelFileName, &channelStream, sBuffer);
     }
   }

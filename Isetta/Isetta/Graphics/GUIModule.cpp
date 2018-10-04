@@ -33,7 +33,7 @@ void GUIModule::StartUp(GLFWwindow* win) {
   winHandle = win;
   gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
-  ImGui::SetAllocatorFunctions(MemAlloc, FreeAlloc, "GUI");
+  ImGui::SetAllocatorFunctions(MemAlloc, FreeAlloc);
 
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
