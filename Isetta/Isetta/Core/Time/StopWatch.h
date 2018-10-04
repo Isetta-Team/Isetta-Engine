@@ -3,12 +3,14 @@
  */
 #pragma once
 #include <chrono>
-#include "core/IsettaAlias.h"
+#include "Core/IsettaAlias.h"
 
 namespace Isetta {
 class StopWatch {
   using HighResClock = std::chrono::high_resolution_clock;
   using TimePoint = std::chrono::time_point<HighResClock>;
+  using Seconds = std::chrono::duration<double>;
+  using Nanoseconds = std::chrono::duration<double, std::nano>;
 
   TimePoint startTime;
 
