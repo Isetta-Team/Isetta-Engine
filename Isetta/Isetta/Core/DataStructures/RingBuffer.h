@@ -5,6 +5,7 @@
 #include <cmath>
 #include <initializer_list>
 #include <stdexcept>
+#include "Core/Memory/MemoryManager.h"
 
 namespace Isetta {
 template <typename T>
@@ -17,7 +18,7 @@ class RingBuffer {
   explicit RingBuffer(int n);
   explicit RingBuffer(std::initializer_list<T> il);
   explicit RingBuffer(std::initializer_list<T> il, int n);
-  ~RingBuffer() { delete buffer; }
+  ~RingBuffer() { MemoryManager::FreeOnFreeList(buffer); }
 
   // Copy and move constructors
 
@@ -56,8 +57,7 @@ class RingBuffer {
 
 template <typename T>
 RingBuffer<T>::RingBuffer() {
-  // TODO(Caleb): Change out with custom mem alloc
-  buffer = new T[size];
+  buffer = MemoryManager::NewArrOnFreeList<T>(size);
 }
 
 template <typename T>
@@ -68,8 +68,7 @@ RingBuffer<T>::RingBuffer(int n) : size{n + 1} {
         "less."};
   }
 
-  // TODO(Caleb): Change out with custom mem alloc
-  buffer = new T[size];
+  buffer = MemoryManager::NewArrOnFreeList<T>(size);
 }
 
 template <typename T>
@@ -81,8 +80,7 @@ RingBuffer<T>::RingBuffer(std::initializer_list<T> il)
         "less."};
   }
 
-  // TODO(Caleb): Change out with custom mem alloc
-  buffer = new T[size];
+  buffer = MemoryManager::NewArrOnFreeList<T>(size);
   for (auto i : il) {
     Put(i);
   }
@@ -100,8 +98,7 @@ RingBuffer<T>::RingBuffer(std::initializer_list<T> il, int n) : size{n + 1} {
         "the passed in list."};
   }
 
-  // TODO(Caleb): Change out with custom mem alloc
-  buffer = new T[size];
+  buffer = MemoryManager::NewArrOnFreeList<T>(size);
   for (auto i : il) {
     Put(i);
   }
@@ -109,9 +106,10 @@ RingBuffer<T>::RingBuffer(std::initializer_list<T> il, int n) : size{n + 1} {
 
 template <typename T>
 RingBuffer<T>::RingBuffer(const RingBuffer<T>& rb) : size{rb.GetCapacity()} {
-  // TODO(Caleb): Change out with custom mem alloc
-  delete[] buffer;
-  buffer = new T[size];
+  if (buffer) {
+    MemoryManager::FreeOnFreeList(buffer);
+  }
+  buffer = MemoryManager::NewArrOnFreeList<T>(size);
 
   T* copyList = rb.ToList();
   for (int i = 0; i < rb.GetLength(); i++) {
@@ -128,9 +126,10 @@ RingBuffer<T>& RingBuffer<T>::operator=(const RingBuffer<T>& rb) {
 
   size = rb.GetCapacity();
 
-  // TODO(Caleb): Change out with custom mem alloc
-  delete[] buffer;
-  buffer = new T[size];
+  if (buffer) {
+    MemoryManager::FreeOnFreeList(buffer);
+  }
+  buffer = MemoryManager::NewArrOnFreeList<T>(size);
 
   T* copyList = rb.ToList();
   for (int i = 0; i < rb.GetLength(); i++) {
@@ -143,9 +142,10 @@ RingBuffer<T>& RingBuffer<T>::operator=(const RingBuffer<T>& rb) {
 
 template <typename T>
 RingBuffer<T>::RingBuffer(RingBuffer<T>&& rb) : size{rb.GetCapacity()} {
-  // TODO(Caleb): Change out with custom mem alloc
-  delete[] buffer;
-  buffer = new T[size];
+  if (buffer) {
+    MemoryManager::FreeOnFreeList(buffer);
+  }
+  buffer = MemoryManager::NewArrOnFreeList<T>(size);
 
   while (!rb.IsEmpty()) {
     Put(rb.Get());
@@ -203,6 +203,7 @@ void RingBuffer<T>::Clear() {
 
 template <typename T>
 T* RingBuffer<T>::ToList() const {
+  //T* list = MemoryManager::NewArrOnFreeList<T>(GetLength());
   T* list = new T[GetLength()];
   int count = 0;
   int idx = head;
