@@ -6,9 +6,9 @@
 #include "Graphics/RenderNode.h"
 
 namespace Isetta {
-class AnimationNode : RenderNode {
+class AnimationComponent : public Component {
  public:
-  explicit AnimationNode(MeshComponent* model);
+  explicit AnimationComponent(MeshComponent* model);
   int AddAnimation(std::string animationFilename, int layer,
                    std::string startNode, bool additive);
   int AddAnimation(std::string animationFilename, int layer,
@@ -27,8 +27,11 @@ class AnimationNode : RenderNode {
    */
   void Stop();
 
+  void OnEnable() override;
+  void OnDisable() override;
+
  protected:
-  H3DRes LoadResourceFromFile(std::string resourceName) override;
+  H3DRes LoadResourceFromFile(std::string resourceName);
 
  private:
   int previousState;
@@ -36,6 +39,8 @@ class AnimationNode : RenderNode {
   int totalStates;
   MeshComponent* animatedModel;
   bool isPlaying;
+  // TODO(Chaojie): SubClock?
+  float animationTime;
 
   static class RenderModule* renderModule;
   friend class RenderModule;

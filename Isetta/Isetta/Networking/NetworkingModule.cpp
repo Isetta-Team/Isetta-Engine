@@ -9,7 +9,7 @@
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
-#include "Graphics/AnimationNode.h"
+#include "Graphics/AnimationComponent.h"
 #include "Networking/NetworkManager.h"
 
 // F Windows

@@ -14,23 +14,20 @@
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
 #include "Core/FileSystem.h"
-#include "Core/Memory/FreeListAllocator.h"
 #include "Core/Time/Clock.h"
-#include "Graphics/AnimationNode.h"
 #include "Graphics/GUI.h"
-#include "Graphics/LightNode.h"
-#include "Graphics/MeshComponent.h"
 #include "Input/Input.h"
 #include "Input/InputEnum.h"
 #include "Networking/NetworkManager.h"
+#include "Scene/Level.h"
 
 // TODO(Jacob) Remove, used only for GUIDemo
 #include "Core/Color.h"
 #include "Core/Math/Rect.h"
-#include "Graphics/GUIStyle.h"
 #include "Graphics/RectTransform.h"
 #include "Scene/Entity.h"
 #include "imgui/imgui.h"
+#include "Scene/LevelManager.h"
 
 namespace Isetta {
 
@@ -77,6 +74,8 @@ void EngineLoop::StartUp() {
   guiModule->StartUp(windowModule->winHandle);
   networkingModule->StartUp();
 
+  LevelManager::Instance().LoadLevel();
+
   // TODO(Yidi) remove
   memoryManager->RegisterTests();
 
@@ -85,15 +84,6 @@ void EngineLoop::StartUp() {
 
   Input::RegisterKeyPressCallback(KeyCode::ESCAPE,
                                   [&]() { isGameRunning = false; });
-
-  // Game Init Part
-
-  Entity* push = new Entity();
-  entities.push_back(push);
-  MeshComponent* pushMesh = push->AddComponent<MeshComponent>();
-  pushMesh->LoadResource("push/Pushing.scene.xml");
-  push->SetTransform(Math::Vector3{-200, -100, 0}, Math::Vector3{0, 90, 0},
-                     Math::Vector3::one);
 
   NetworkingDemo();
   InputDemo();
@@ -148,10 +138,7 @@ void EngineLoop::Update() {
     accumulateTime -= intervalTime;
   }
 
-  // TODO(Chaojie) after scenegraph, save previous state for
-  // prediction LOG_INFO(Debug::Channel::General,
-  // "//////////////Render//////////////");
-  VariableUpdate(0);
+  VariableUpdate(GetGameClock().GetDeltaTime());
   // LOG_INFO(Debug::Channel::General,
   // "//////////////UpdateEnd//////////////");
 }
@@ -162,8 +149,8 @@ void EngineLoop::FixedUpdate(float deltaTime) {
 }
 void EngineLoop::VariableUpdate(float deltaTime) {
   inputModule->Update(deltaTime);
-  // TODO(Chaojie) SceneGraph->Update(deltaTime);
-  // TODO(Chaojie) SceneGraph->LateUpdate(deltaTime);
+  LevelManager::Instance().currentLevel->Update();
+  LevelManager::Instance().currentLevel->LateUpdate();
   audioModule->Update(deltaTime);
   renderModule->Update(deltaTime);
   guiModule->Update(deltaTime, GUIDemo);
@@ -172,6 +159,7 @@ void EngineLoop::VariableUpdate(float deltaTime) {
 }
 
 void EngineLoop::ShutDown() {
+  LevelManager::Instance().currentLevel->UnloadLevel();
   networkingModule->ShutDown();
   audioModule->ShutDown();
   guiModule->ShutDown();

@@ -108,12 +108,6 @@
     <ClCompile Include="Graphics\GUIModule.cpp">
       <Filter>Graphics\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\AnimationNode.cpp">
-      <Filter>Graphics\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\LightNode.cpp">
-      <Filter>Graphics\Render</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\RenderModule.cpp">
       <Filter>Graphics\Render</Filter>
     </ClCompile>
@@ -146,6 +140,27 @@
     </ClCompile>
     <ClCompile Include="Graphics\MeshComponent.cpp">
       <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\AnimationComponent.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\LightComponent.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\CameraComponent.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Level.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\LevelManager.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\ExampleLevel.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\ExampleComponent.cpp">
+      <Filter>Custom</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -202,6 +217,9 @@
     </Filter>
     <Filter Include="Graphics\Render">
       <UniqueIdentifier>{45da4ca9-ea64-439d-bd6e-e2c9bf740508}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom">
+      <UniqueIdentifier>{795c60e4-6516-48a5-bfc1-c446a905bb3d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -327,12 +345,6 @@
     <ClInclude Include="Graphics\GUIModule.h">
       <Filter>Graphics\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\AnimationNode.h">
-      <Filter>Graphics\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\LightNode.h">
-      <Filter>Graphics\Render</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\RenderModule.h">
       <Filter>Graphics\Render</Filter>
     </ClInclude>
@@ -368,6 +380,27 @@
     </ClInclude>
     <ClInclude Include="Graphics\MeshComponent.h">
       <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\AnimationComponent.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\LightComponent.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\CameraComponent.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Level.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\LevelManager.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\ExampleLevel.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\ExampleComponent.h">
+      <Filter>Custom</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -36,6 +36,7 @@ void Entity::GuiUpdate() {
 }
 
 void Entity::Update() {
+  CheckStart();
   for (auto comp : components) {
     if (comp->GetActive() &&
         comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
@@ -44,14 +45,14 @@ void Entity::Update() {
   }
 }
 
-void Entity::PostUpdate() {
+void Entity::LastUpdate() {
   for (auto comp : components) {
     if (comp->GetActive() &&
         comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
       comp->PostUpdate();
     }
   }
-  SetAttribute(EntityAttributes::IS_TRANSFORM_DIRTY, false);
+  // SetAttribute(EntityAttributes::IS_TRANSFORM_DIRTY, false);
   CheckDestroy();
 }
 
@@ -62,7 +63,7 @@ void Entity::CheckDestroy() {
       comp->OnDestroy();
     }
     for (auto comp : components) {
-      delete comp;
+      MemoryManager::FreeOnFreeList(comp);
     }
     // TODO(Chaojie): delete child
   } else {
@@ -73,7 +74,7 @@ void Entity::CheckDestroy() {
       Component* comp = *compIter;
       if (comp->GetAttribute(Component::ComponentAttributes::NEED_DESTROY)) {
         comp->OnDestroy();
-        delete comp;
+        MemoryManager::FreeOnFreeList(comp);
         components.erase(compIter);
         componentTypes.erase(typeIter);
       } else {
@@ -99,7 +100,10 @@ bool Entity::GetAttribute(EntityAttributes attr) const {
   return attributes.test(static_cast<int>(attr));
 }
 
-Entity::Entity() : attributes{0b10} { OnEnable(); }
+Entity::Entity(std::string name)
+    : attributes{0b101}, entityID{SID(name.c_str())} {
+  OnEnable();
+}
 
 Entity::~Entity() {
   OnDisable();
@@ -135,7 +139,5 @@ void Entity::SetTransform(const Math::Vector3& inPosition,
   PropagateTransform();
 }
 
-const Transform& Entity::GetTransform() const {
-  return transform;
-}
+const Transform& Entity::GetTransform() const { return transform; }
 }  // namespace Isetta

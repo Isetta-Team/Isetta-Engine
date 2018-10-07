@@ -5,7 +5,7 @@
 
 namespace Isetta {
 
-Component::Component() : owner{nullptr}, attributes{0b1001} {}
+Component::Component() : attributes{0b1001}, owner{nullptr} {}
 
 void Component::SetAttribute(ComponentAttributes attr, bool value) {
   attributes.set(static_cast<int>(attr), value);

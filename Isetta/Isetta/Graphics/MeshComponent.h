@@ -2,27 +2,31 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include <Horde3D.h>
 #include <string>
 #include "Scene/Component.h"
-#include <Horde3D.h>
 
 namespace Isetta {
 class MeshComponent : public Component {
   H3DNode renderNode;
+  H3DRes renderResource;
 
-  MeshComponent();
+  explicit MeshComponent(std::string resourceName);
   ~MeshComponent();
 
   void UpdateTransform();
 
  public:
-  void LoadResource(std::string resourceName);
 
  protected:
   H3DRes LoadResourceFromFile(std::string resourceName) const;
 
-  friend class AnimationNode;
+  void OnEnable() override;
+  void OnDisable() override;
+
+  friend class AnimationComponent;
   friend class Entity;
+  friend class MemoryManager;
   friend class RenderModule;
 
   static class RenderModule* renderModule;

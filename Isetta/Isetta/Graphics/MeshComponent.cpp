@@ -9,10 +9,11 @@
 namespace Isetta {
 RenderModule* MeshComponent::renderModule{nullptr};
 
-MeshComponent::MeshComponent() : Component() {
+MeshComponent::MeshComponent(std::string resourceName) : Component() {
   SetAttribute(ComponentAttributes::NEED_UPDATE, false);
   ASSERT(renderModule != nullptr);
   renderModule->meshComponents.push_back(this);
+  renderResource = LoadResourceFromFile(resourceName);
 }
 
 MeshComponent::~MeshComponent() {
@@ -28,12 +29,6 @@ void MeshComponent::UpdateTransform() {
                       transform.scale.x, transform.scale.y, transform.scale.z);
 }
 
-void MeshComponent::LoadResource(std::string resourceName) {
-  H3DRes renderResource = LoadResourceFromFile(resourceName);
-  // TODO(Chaojie) Scene graph and hierarchy
-  renderNode = h3dAddNodes(H3DRootNode, renderResource);
-}
-
 H3DRes MeshComponent::LoadResourceFromFile(std::string resourceName) const {
   H3DRes renderResource =
       h3dAddResource(H3DResTypes::SceneGraph, resourceName.c_str(), 0);
@@ -44,5 +39,14 @@ H3DRes MeshComponent::LoadResourceFromFile(std::string resourceName) const {
                                       resourceName.c_str()));
 
   return renderResource;
+}
+
+void MeshComponent::OnEnable() {
+  renderNode = h3dAddNodes(H3DRootNode, renderResource);
+}
+
+void MeshComponent::OnDisable() {
+  // Disabling a mesh is also disabling its animation, need to fix it later
+  h3dRemoveNode(renderNode);
 }
 }  // namespace Isetta
