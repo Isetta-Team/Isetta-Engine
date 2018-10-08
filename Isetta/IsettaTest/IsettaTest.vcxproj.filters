@@ -102,9 +102,6 @@
     <ClInclude Include="..\Isetta\Audio\AudioSource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Graphics\AnimationNode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Isetta\Graphics\GUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -112,12 +109,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Isetta\Graphics\GUIStyle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Isetta\Graphics\LightNode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Isetta\Graphics\ModelNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Isetta\Graphics\RectTransform.h">
@@ -166,6 +157,39 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Isetta\Networking\NetworkManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Isetta\Graphics\AnimationComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Isetta\Graphics\LightComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Isetta\Graphics\MeshComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Isetta\Graphics\CameraComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Isetta\Scene\Component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Isetta\Scene\Entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Isetta\Scene\Level.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Isetta\Scene\LevelManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Isetta\Scene\Transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Isetta\Custom\ExampleComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Isetta\Custom\ExampleLevel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -290,9 +314,6 @@
     <ClCompile Include="..\Isetta\Audio\AudioSource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Graphics\AnimationNode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Isetta\Graphics\GUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -300,12 +321,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Isetta\Graphics\GUIStyle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Isetta\Graphics\LightNode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Isetta\Graphics\ModelNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Isetta\Graphics\RenderModule.cpp">
@@ -330,6 +345,39 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Isetta\Networking\NetworkManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Isetta\Graphics\AnimationComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Isetta\Graphics\CameraComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Isetta\Graphics\LightComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Isetta\Graphics\MeshComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Isetta\Scene\Component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Isetta\Scene\Entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Isetta\Scene\Level.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Isetta\Scene\LevelManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Isetta\Scene\Transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Isetta\Custom\ExampleComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Isetta\Custom\ExampleLevel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
