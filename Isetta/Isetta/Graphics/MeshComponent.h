@@ -27,6 +27,7 @@ class MeshComponent : public Component {
   friend class AnimationComponent;
   friend class Entity;
   friend class MemoryManager;
+  friend class FreeListAllocator;
   friend class RenderModule;
 
   static class RenderModule* renderModule;
