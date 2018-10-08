@@ -2,10 +2,12 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include "Core/Memory/MemoryManager.h"
 #include "Scene/Level.h"
+#include "Scene/LevelManager.h"
 
 namespace Isetta {
-class ExampleLevel : public Level {
+CREATE_LEVEL(ExampleLevel)
   void LoadLevel() override;
 };
-}
+}  // namespace Isetta

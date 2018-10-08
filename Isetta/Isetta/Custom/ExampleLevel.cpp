@@ -13,6 +13,7 @@
 #include "Scene/Entity.h"
 
 namespace Isetta {
+
 void ExampleLevel::LoadLevel() {
   Entity* pushEntity{AddEntity("PushAnim")};
   MeshComponent* pushMesh =

@@ -22,6 +22,8 @@ MeshComponent::~MeshComponent() {
 }
 
 void MeshComponent::UpdateTransform() {
+  LOG_INFO(Debug::Channel::Horde3D, Util::StrFormat("Render node: %d", renderNode));
+
   Transform transform = owner->GetTransform();
   h3dSetNodeTransform(renderNode, transform.position.x, transform.position.y,
                       transform.position.z, transform.rotation.x,

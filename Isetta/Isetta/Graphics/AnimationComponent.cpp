@@ -11,6 +11,7 @@ RenderModule* AnimationComponent::renderModule{nullptr};
 AnimationComponent::AnimationComponent(MeshComponent* model)
     : previousState{-1},
       currentState{0},
+      totalStates{0},
       animatedModel{model},
       isPlaying{false} {
   ASSERT(renderModule != nullptr);
@@ -54,10 +55,7 @@ void AnimationComponent::OnEnable() {
   animationTime = 0;
   isPlaying = true;
 }
-void AnimationComponent::OnDisable() {
-  isPlaying = false;
-}
-
+void AnimationComponent::OnDisable() { isPlaying = false; }
 
 H3DRes AnimationComponent::LoadResourceFromFile(std::string resourceName) {
   H3DRes res = h3dAddResource(H3DResTypes::Animation, resourceName.c_str(), 0);
