@@ -33,6 +33,15 @@ float Color::operator[](int i) const {
       throw std::out_of_range("Color::[] access out of range");
   }
 }
+std::istream& operator>>(std::istream& in, Color& color) {
+  char c;
+  in >> std::skipws;
+  for (int i = 0; i < 4; i++) {
+    in >> c >> color;
+  }
+  in >> c;
+  return in;
+}
 
 Color::Color(const Math::Vector4& v) : r{v.x}, g{v.y}, b{v.z}, a{v.w} {}
 

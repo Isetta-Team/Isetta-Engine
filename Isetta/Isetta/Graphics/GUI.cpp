@@ -21,8 +21,6 @@
 namespace Isetta {
 GUIModule* GUI::guiModule{nullptr};
 
-void GUI::OnUpdate(const Action<>& callback) { guiModule->OnUpdate(callback); }
-
 // BUTTON
 bool GUI::Button(Func<bool> button, const RectTransform& transform,
                  const ButtonStyle& style, bool repeating) {
@@ -43,34 +41,35 @@ bool GUI::Button(const RectTransform& transform, const std::string& label,
   btn = std::bind(ImGui::Button, label.c_str(), (ImVec2)transform.rect.Size());
   return Button(btn, transform, style, repeating);
 }
-void GUI::Button(const RectTransform& transform, const std::string& label,
+bool GUI::Button(const RectTransform& transform, const std::string& label,
                  const Action<>& callback, const ButtonStyle& style,
                  bool repeating) {
-  bool pressed = Button(transform, label, style, repeating);
-  if (pressed) {
+  if (Button(transform, label, style, repeating)) {
     callback();
+    return true;
   }
+  return false;
 }
 bool GUI::ButtonImage(const RectTransform& transform, const std::string& id,
                       const TextureID& textureId, const ButtonStyle& btnStyle,
-                      const ImageStyle& imgStyle, bool repeating,
-                      int framePadding) {
+                      const ImageStyle& imgStyle, bool repeating) {
   ButtonStyle style =
       ButtonStyle{imgStyle.frame, btnStyle.hover, btnStyle.active};
-  Func<bool> btn =
-      std::bind(ImGui::ImageButton, textureId, (ImVec2)transform.rect.Size(),
-                (ImVec2)imgStyle.offset, (ImVec2)imgStyle.tiling, framePadding,
-                (ImVec4)btnStyle.background, (ImVec4)imgStyle.tint);
+  Func<bool> btn = std::bind(
+      ImGui::ImageButton, textureId, (ImVec2)transform.rect.Size(),
+      (ImVec2)imgStyle.offset, (ImVec2)imgStyle.tiling, imgStyle.framePadding,
+      (ImVec4)btnStyle.background, (ImVec4)imgStyle.tint);
   return Button(btn, transform, style, repeating);
 }
-void GUI::ButtonImage(const RectTransform& transform, const std::string& id,
+bool GUI::ButtonImage(const RectTransform& transform, const std::string& id,
                       const TextureID& textureId, const Action<>& callback,
                       const ButtonStyle& btnStyle, const ImageStyle& imgStyle,
                       bool repeating, int framePadding) {
-  if (ButtonImage(transform, id, textureId, btnStyle, imgStyle, repeating,
-                  framePadding)) {
+  if (ButtonImage(transform, id, textureId, btnStyle, imgStyle, repeating)) {
     callback();
+    return true;
   }
+  return false;
 }
 ////////////////////////////////////////
 // TODO(Jacob) NOT PART OF GAME NEEDS //
@@ -106,7 +105,7 @@ void GUI::ButtonInline(const RectTransform& transform, const std::string& label,
   }
 }
 */
-bool GUI::Toggle(const RectTransform& transform, const std::string& label,
+void GUI::Toggle(const RectTransform& transform, const std::string& label,
                  bool* value, const ButtonStyle& style, const Color& check) {
   ImGui::SetCursorPos((ImVec2)SetPosition(transform));
   ImGui::PushItemWidth(transform.rect.width);
@@ -118,19 +117,20 @@ bool GUI::Toggle(const RectTransform& transform, const std::string& label,
   bool pressed = ImGui::Checkbox(label.c_str(), value);
   ImGui::PopItemWidth();
   ImGui::PopStyleColor(4);
-  return pressed;
 }
 void GUI::Toggle(const RectTransform& transform, const std::string& label,
                  bool* value, const Action<>& callback,
                  const ButtonStyle& style, const Color& check) {
-  if (Toggle(transform, label, value, style, check)) {
+  bool lastFrame = value;
+  Toggle(transform, label, value, style, check);
+  if (*value != lastFrame) {
     callback();
   }
 }
 
 // TEXT
-void GUI::Text(const RectTransform& transform, const TextStyle& style,
-               const std::string format, ...) {
+void GUI::Text(const RectTransform& transform, const std::string format,
+               const TextStyle& style) {
   ImGui::SetCursorPos((ImVec2)SetPosition(transform));
   ImGui::PushItemWidth(transform.rect.width);
 
@@ -142,10 +142,7 @@ void GUI::Text(const RectTransform& transform, const TextStyle& style,
   bool need_wrap = style.isWrapped &&
                    (context->CurrentWindow->DC.TextWrapPos <
                     0.0f);  // Keep existing wrap position is one ia already set
-  va_list args;
-  va_start(args, format);
-  ImGui::TextV(format.c_str(), args);
-  va_end(args);
+  ImGui::Text(format.c_str());
   if (need_wrap) {
     ImGui::PushTextWrapPos(0.0f);
   }
@@ -153,16 +150,13 @@ void GUI::Text(const RectTransform& transform, const TextStyle& style,
   ImGui::PopItemWidth();
 }
 void GUI::Label(const RectTransform& transform, const std::string& label,
-                const LabelStyle& style, const std::string format, ...) {
+                const std::string format, const LabelStyle& style) {
   ImGui::SetCursorPos((ImVec2)SetPosition(transform));
   ImGui::PushItemWidth(transform.rect.width);
 
   ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)style.text);
   ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)style.background);
-  va_list args;
-  va_start(args, format);
-  ImGui::LabelTextV(label.c_str(), format.c_str(), args);
-  va_end(args);
+  ImGui::LabelText(label.c_str(), format.c_str());
   ImGui::PopStyleColor(2);
   ImGui::PopItemWidth();
 }
@@ -209,10 +203,12 @@ bool GUI::Window(const RectTransform& transform, const std::string& name,
     ImGui::SetNextWindowBgAlpha(style.background.a);
   }
   ImGui::SetNextWindowPos((ImVec2)SetPosition(transform));
-  ImGui::SetNextWindowSize((ImVec2)transform.rect.Size());
-  if ((flags & WindowFlags::NoResize) == WindowFlags::NoResize) {
-    ImGui::SetNextWindowSizeConstraints((ImVec2)transform.rect.Size(),
-                                        (ImVec2)transform.rect.Size());
+  if (transform.rect.x != 0 || transform.rect.y != 0) {
+    ImGui::SetNextWindowSize((ImVec2)transform.rect.Size());
+    if ((flags & WindowFlags::NoResize) == WindowFlags::NoResize) {
+      ImGui::SetNextWindowSizeConstraints((ImVec2)transform.rect.Size(),
+                                          (ImVec2)transform.rect.Size());
+    }
   }
   bool collapsed = ImGui::Begin(name.c_str(), isOpen, ImGuiWindowFlags(flags));
   if (collapsed) {
@@ -262,22 +258,26 @@ void GUI::MenuItem(const std::string& label, const std::string& shortcut,
     callback();
   }
 }
-bool GUI::Modal(const std::string& name, const Action<>& ui, bool* isOpen,
-                const BackgroundStyle& style, WindowFlags flags) {
+bool GUI::Modal(const RectTransform& transform, const std::string& name,
+                const Action<>& ui, bool* isOpen, const ModalStyle& style,
+                WindowFlags flags) {
   const char* nameC = name.c_str();
-  bool opened = false;
-  if (style.enabled) {
-    ImGui::PushStyleColor(ImGuiCol_PopupBg, (ImVec4)style.background);
+  ImGui::SetNextWindowPos((ImVec2)SetPosition(transform));
+  if (transform.rect.x != 0 || transform.rect.y != 0) {
+    ImGui::SetNextWindowSize((ImVec2)transform.rect.Size());
+    if ((flags & WindowFlags::NoResize) == WindowFlags::NoResize) {
+      ImGui::SetNextWindowSizeConstraints((ImVec2)transform.rect.Size(),
+                                          (ImVec2)transform.rect.Size());
+    }
   }
+  ImGui::PushStyleColor(ImGuiCol_PopupBg, (ImVec4)style.window);
+  ImGui::PushStyleColor(ImGuiCol_ModalWindowDimBg, (ImVec4)style.background);
   if (ImGui::BeginPopupModal(nameC, isOpen, ImGuiWindowFlags(flags))) {
     ui();
     ImGui::EndPopup();
-    opened = true;
   }
-  if (style.enabled) {
-    ImGui::PopStyleColor();
-  }
-  return opened;
+  ImGui::PopStyleColor(2);
+  return isOpen;
 }
 void GUI::OpenPopup(const std::string& id) { ImGui::OpenPopup(id.c_str()); }
 void GUI::CloseCurrentPopup() { ImGui::CloseCurrentPopup(); }
@@ -302,7 +302,8 @@ void GUI::Draw::RectFilled(const RectTransform& transform, const Color& color,
 }
 void GUI::Draw::Quad(const RectTransform& transform, const Math::Vector2& a,
                      const Math::Vector2& b, const Math::Vector2& c,
-                     const Math::Vector2& d, Color color, float thickness) {
+                     const Math::Vector2& d, const Color& color,
+                     float thickness) {
   Math::Vector2 position = SetPosition(transform);
   ImGui::GetWindowDrawList()->AddQuad(
       (ImVec2)(position + a), (ImVec2)(position + b), (ImVec2)(position + c),
@@ -311,7 +312,7 @@ void GUI::Draw::Quad(const RectTransform& transform, const Math::Vector2& a,
 void GUI::Draw::QuadFilled(const RectTransform& transform,
                            const Math::Vector2& a, const Math::Vector2& b,
                            const Math::Vector2& c, const Math::Vector2& d,
-                           Color color) {
+                           const Color& color) {
   Math::Vector2 position = SetPosition(transform);
   ImGui::GetWindowDrawList()->AddQuadFilled(
       (ImVec2)(position + a), (ImVec2)(position + b), (ImVec2)(position + c),
@@ -319,7 +320,7 @@ void GUI::Draw::QuadFilled(const RectTransform& transform,
 }
 void GUI::Draw::Triangle(const RectTransform& transform, const Math::Vector2& a,
                          const Math::Vector2& b, const Math::Vector2& c,
-                         Color color, float thickness) {
+                         const Color& color, float thickness) {
   Math::Vector2 position = SetPosition(transform);
   ImGui::GetWindowDrawList()->AddTriangle(
       (ImVec2)(position + a), (ImVec2)(position + b), (ImVec2)(position + c),
@@ -327,21 +328,21 @@ void GUI::Draw::Triangle(const RectTransform& transform, const Math::Vector2& a,
 }
 void GUI::Draw::TriangleFilled(const RectTransform& transform,
                                const Math::Vector2& a, const Math::Vector2& b,
-                               const Math::Vector2& c, Color color) {
+                               const Math::Vector2& c, const Color& color) {
   Math::Vector2 position = SetPosition(transform);
   ImGui::GetWindowDrawList()->AddTriangleFilled(
       (ImVec2)(position + a), (ImVec2)(position + b), (ImVec2)(position + c),
       ImGui::GetColorU32(ImVec4(color)));
 }
 void GUI::Draw::Circle(const RectTransform& transform, float radius,
-                       Color color, int segments, float thickness) {
+                       const Color& color, int segments, float thickness) {
   Math::Vector2 position = SetPosition(transform);
   ImGui::GetWindowDrawList()->AddCircle((ImVec2)position, radius,
                                         ImGui::GetColorU32((ImVec4)color),
                                         segments, thickness);
 }
 void GUI::Draw::CircleFilled(const RectTransform& transform, float radius,
-                             Color color, int segments) {
+                             const Color& color, int segments) {
   Math::Vector2 position = SetPosition(transform);
   ImGui::GetWindowDrawList()->AddCircleFilled(
       (ImVec2)position, radius, ImGui::GetColorU32((ImVec4)color), segments);
@@ -349,6 +350,14 @@ void GUI::Draw::CircleFilled(const RectTransform& transform, float radius,
 void GUI::Image(const RectTransform& transform, const TextureID& textureId,
                 const ImageStyle& style) {
   ImGui::SetCursorPos((ImVec2)SetPosition(transform));
+  if (style.framePadding > 0) {
+    Draw::RectFilled(
+        RectTransform{Math::Rect{transform.rect.Position(),
+                                 transform.rect.Size() +
+                                     style.framePadding * Math::Vector2::one},
+                      transform.anchor, transform.pivot},
+        style.frame);
+  }
   ImGui::Image(textureId, (ImVec2)transform.rect.Size(), (ImVec2)style.offset,
                (ImVec2)style.tiling, (ImVec4)style.tint, (ImVec4)style.frame);
 }
@@ -370,6 +379,7 @@ void GUI::ProgressBar(const RectTransform& transform, float fraction,
   }
 }
 
+Font* GUI::GetDefaultFont() { return (Font*)ImGui::GetDefaultFont(); }
 Font* GUI::AddFontFromFile(const std::string& filename, int fontSize) {
   return ImGui::GetIO().Fonts->AddFontFromFileTTF(filename.c_str(), fontSize);
 }
@@ -377,27 +387,40 @@ Font* GUI::AddFontFromMemory(void* fontBuffer, int fontSize, float pixels) {
   return ImGui::GetIO().Fonts->AddFontFromMemoryTTF(fontBuffer, fontSize,
                                                     pixels);
 }
+void GUI::PushFont(const Font*& font) { ImGui::PushFont((ImFont*)font); }
+void GUI::PopFont() { ImGui::PopFont(); }
 
+void GUI::PushStyleVar(StyleVar var, float val) {
+  ImGui::PushStyleVar((ImGuiStyleVar)var, val);
+}
+void GUI::PushStyleVar(StyleVar var, const Math::Vector2& val) {
+  ImGui::PushStyleVar((ImGuiStyleVar)var, (ImVec2)val);
+}
+void GUI::PopStyleVar(int pops) { ImGui::PopStyleVar(pops); }
+void GUI::PushStyleColor(ColorStyles var, const Color& color) {
+  ImGui::PushStyleColor((ImGuiCol)var, (ImVec4)color);
+}
+void GUI::PopStyleColor(int pop) { ImGui::PopStyleColor(pop); }
 GUIStyle GUI::GetStyle() { return (GUIStyle)ImGui::GetStyle(); }
 
 Math::Vector2 GUI::SetPosition(const RectTransform& transform) {
   Math::Vector2 pivot = PivotPosition(
       Math::Rect{Math::Vector2::zero, transform.rect.Size()}, transform.pivot);
-  Math::Vector2 offset = {};
-  if ((transform.anchor | Pivot::Top) == Pivot::Top)
-    offset.y += ImGui::GetFrameHeight();
-  Math::Vector2 anchor =
-      PivotPosition(Math::Rect{transform.rect.Position() + offset,
-                               // TODO(Jacob + Chaojie) Is there a get viewport
-                               // function that I could call?
-                               guiModule->GetWindowSize() - offset},
-                    transform.anchor);
+  Math::Vector2 titleBar =
+      ImGui::GetCurrentWindow()->TitleBarHeight() * Math::Vector2::up;
+  Math::Vector2 anchor = PivotPosition(
+      Math::Rect{transform.rect.Position() +
+                     (Math::Vector2)ImGui::GetWindowPos() + titleBar,
+                 // TODO(Jacob + Chaojie) Is there a get viewport
+                 // function that I could call?
+                 (Math::Vector2)ImGui::GetWindowSize() - titleBar},
+      transform.anchor);
   return anchor - pivot;
 }
 
 Math::Vector2 GUI::PivotPosition(Math::Rect rect, GUI::Pivot point) {
   Math::Vector2 position = Math::Vector2{};
-  int bitsSet = Util::CountSetBits((int)point);
+  int bitsSet = Util::CountSetBits(static_cast<int>(point));
   if ((point & Pivot::TopLeft) == Pivot::TopLeft) {
     position.x += rect.Position().x;
     position.y += rect.Position().y;

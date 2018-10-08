@@ -208,6 +208,7 @@ class Color {
     return Color(Math::Util::Clamp01(r / rhs), Math::Util::Clamp01(g / rhs),
                  Math::Util::Clamp01(b / rhs), Math::Util::Clamp01(a / rhs));
   }
+  friend std::istream& operator>>(std::istream& in, Color& color);
 
   // Conversions
   /**

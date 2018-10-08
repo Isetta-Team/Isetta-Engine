@@ -18,11 +18,12 @@ void* MemAlloc(size_t size, void* user_data) {
     // LOG_INFO(Isetta::Debug::Channel::GUI, {(char*)user_data, "alloc"});
   }
   return malloc(size);
-  // return Isetta::MemoryManager::AllocSingleFrame(size);
+  // return Isetta::MemoryManager::AllocOnStack(size);
 }
 void FreeAlloc(void* ptr, void* user_data) {
   if (user_data) {
     // LOG_INFO(Isetta::Debug::Channel::GUI, {(char*)user_data, "free"});
+    return;
   }
   free(ptr);
 }
@@ -33,6 +34,14 @@ void GUIModule::StartUp(GLFWwindow* win) {
   winHandle = win;
   gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
+  // TODO(Jacob)
+  // ImGui::SetAllocatorFunctions(
+  //    [](size_t size, void* user_data) {
+  //      return Isetta::MemoryManager::AllocOnFreeList(size);
+  //    },
+  //    [](void* ptr, void* user_data) {
+  //      Isetta::MemoryManager::FreeOnFreeList(ptr);
+  //    });
   ImGui::SetAllocatorFunctions(MemAlloc, FreeAlloc);
 
   IMGUI_CHECKVERSION();
@@ -66,25 +75,17 @@ void GUIModule::StartUp(GLFWwindow* win) {
   Input::RegisterScrollCallback(ImGui_ImplGlfw_ScrollCallback);
   Input::RegisterKeyCallback(ImGui_ImplGlfw_KeyCallback);
   Input::RegisterCharCallback(ImGui_ImplGlfw_CharCallback);
-
-  ImGui_ImplOpenGL3_NewFrame();
-  ImGui_ImplGlfw_NewFrame();
-  ImGui::NewFrame();
-  ImGui::Render();
-  // TODO(Jacob)
-  // ImGui::SetAllocatorFunctions(MemAlloc, FreeAlloc, "GUI");
-
-  // LOG_INFO(Isetta::Debug::Channel::GUI,
-  // "-------------GUI START-------------");
 }
 
-void GUIModule::Update(float deltaTime) {
+void GUIModule::Update(float deltaTime, const Action<>& OnGUI) {
+  if (!OnGUI) {
+    return;
+  }
   // LOG_INFO(Isetta::Debug::Channel::GUI,
   //         "-------------GUI UPDATE 1-------------");
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
-
   // LOG_INFO(Isetta::Debug::Channel::GUI,
   //         "-------------GUI UPDATE 2-------------");
   glfwGetWindowSize(winHandle, &winWidth, &winHeight);
@@ -92,21 +93,20 @@ void GUIModule::Update(float deltaTime) {
   ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2());
   ImGui::SetNextWindowBgAlpha(0.0f);
-  ImGui::SetNextWindowPos(ImVec2());
+  ImGui::SetNextWindowPos(ImVec2{});
+  ImGui::SetNextWindowSize(
+      ImVec2{static_cast<float>(winWidth), static_cast<float>(winHeight)});
   ImGui::Begin(
       "MainWindow", NULL,
       ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
-          ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoMove |
-          ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse |
-          ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings |
+          ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar |
+          ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse |
+          ImGuiWindowFlags_NoSavedSettings |
           ImGuiWindowFlags_NoFocusOnAppearing |
           ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus);
   ImGui::PopStyleVar(2);
 
-  for (const auto& callback : updateCallbacks) {
-    callback();
-  }
-  // TODO (Jacob) clear callbacks after each frame
+  OnGUI();
 
   ImGui::End();
   ImGui::Render();
@@ -117,10 +117,6 @@ void GUIModule::ShutDown() {
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
-}
-
-void GUIModule::OnUpdate(const Action<>& callback) {
-  updateCallbacks.push_back(callback);
 }
 
 }  // namespace Isetta

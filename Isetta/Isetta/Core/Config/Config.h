@@ -5,19 +5,20 @@
 
 #include <Windows.h>
 #include <string>
+#include "Audio/AudioModule.h"
 #include "Core/Config/CVar.h"
 #include "Core/Config/CVarRegistry.h"
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Math/Vector3.h"
+#include "Core/Memory/MemoryManager.h"
 #include "EngineLoop.h"
 #include "Graphics/RenderModule.h"
 #include "Graphics/Window.h"
 #include "Networking/NetworkingModule.h"
-#include "Core/Memory/MemoryManager.h"
-#include "Audio/AudioModule.h"
 
 namespace Isetta {
+#define CONFIG_VAL(expr) Isetta::Config::Instance().expr.GetVal();
 /**
  * @brief Test module to demonstrate CVar config struct.
  *

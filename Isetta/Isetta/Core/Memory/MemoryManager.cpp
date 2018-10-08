@@ -41,7 +41,8 @@ MemoryManager::MemoryManager() {
 }
 
 void MemoryManager::StartUp() {
-  MemoryConfig configs = Config::Instance().memoryConfig;
+  MemoryConfig& configs = Config::Instance().memoryConfig;
+  // CONFIG_VAL(memoryConfig.lsrAndLevelAllocatorSize)
   lsrAndLevelAllocator =
       StackAllocator(configs.lsrAndLevelAllocatorSize.GetVal());
   singleFrameAllocator =

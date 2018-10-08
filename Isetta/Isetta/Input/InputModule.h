@@ -149,6 +149,6 @@ class InputModule {
   // TODO(Jacob) U64 might be overkill? maybe just U16?
   static U64 totalHandle;
 
-  friend class ModuleManager;
+  friend class EngineLoop;
 };
 }  // namespace Isetta

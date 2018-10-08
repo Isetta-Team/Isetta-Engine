@@ -72,6 +72,9 @@ class DoubleBufferedAllocator {
   template <typename T, typename ...args>
   T* New(args...);
 
+  template<typename T>
+  T* NewArr(Size length, U8 alignment);
+
   StackAllocator stacks[2];
   U8 curStackIndex;
   friend class MemoryManager;
@@ -79,8 +82,12 @@ class DoubleBufferedAllocator {
 
 template <typename T, typename ...args>
 T* DoubleBufferedAllocator::New(args... argList) {
-  void* mem = Alloc(sizeof(T));
-  return new (mem) T(argList...);
+  return stacks[curStackIndex].New<T>(argList...);
+}
+
+template <typename T>
+T* DoubleBufferedAllocator::NewArr(const Size length, const U8 alignment) {
+  return stacks[curStackIndex].NewArr<T>(length, alignment);
 }
 
 }  // namespace Isetta

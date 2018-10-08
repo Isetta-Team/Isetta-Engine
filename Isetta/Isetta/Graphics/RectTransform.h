@@ -17,7 +17,7 @@ struct RectTransform {
   GUI::Pivot anchor = GUI::Pivot::TopLeft;
   GUI::Pivot pivot = GUI::Pivot::TopLeft;
   RectTransform() = default;
-  RectTransform(const Math::Rect& rect) : rect{rect} {}
+  explicit RectTransform(const Math::Rect& rect) : rect{rect} {}
   RectTransform(const Math::Rect& rect, GUI::Pivot anchor)
       : rect{rect}, anchor{anchor} {}
   RectTransform(const Math::Rect& rect, GUI::Pivot anchor, GUI::Pivot pivot)

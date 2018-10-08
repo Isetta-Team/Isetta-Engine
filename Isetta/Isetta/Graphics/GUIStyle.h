@@ -89,7 +89,7 @@ struct GUIStyle {
                                // number of segments. Decrease for highly
                                // tessellated curves (higher quality, more
                                // polygons), increase to reduce quality.
-  Color Colors[(int)GUI::ColorStyles::COUNT];  // TODO(JACOB)
+  Color Colors[static_cast<int>(GUI::ColorStyles::COUNT)];  // TODO(JACOB)
 
   explicit GUIStyle(bool imGuiStyle = true);
 };

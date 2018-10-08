@@ -10,7 +10,7 @@
 
 namespace Isetta {
 StackAllocator::StackAllocator(const Size stackSize)
-    : top(0), length(stackSize) {
+    : top(0), totalSize(stackSize) {
   bottom = std::malloc(stackSize);
   bottomAddress = reinterpret_cast<PtrInt>(bottom);
   LOG_INFO(Debug::Channel::Memory,
@@ -29,7 +29,7 @@ void* StackAllocator::Alloc(const Size size, const U8 alignment) {
   PtrInt alignedAddress = rawAddress + adjustment;
   Marker newTop = top + size + adjustment;
 
-  if (newTop > length) {
+  if (newTop > totalSize) {
     throw std::overflow_error{"StackAllocator::Alloc => Not enough memory"};
   }
 
