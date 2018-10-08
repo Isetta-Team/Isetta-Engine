@@ -271,7 +271,9 @@ void NetworkingModule::Connect(const char* serverAddress, int serverPort,
 }
 
 void NetworkingModule::Disconnect() {
-  if (!client->IsConnected() && !client->IsConnecting()) {
+  if (!client->IsConnecting()) {
+    return;
+  } else if (!client->IsConnected()) {
     throw std::exception(
         "NetworkingModule::Disconnect => Cannot disconnect the client if it is "
         "not already connected.");
