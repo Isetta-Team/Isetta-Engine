@@ -25,7 +25,7 @@ TestInitialization::TestInitialization(){};
 EngineLoop TestInitialization::engineLoop;
 
 TEST_MODULE_INITIALIZE(ModuleInitialize) {
-  std::cout << "Started" << std::endl;
+  TestInitialization::TestClassInitialize();
 }
 
 TEST_MODULE_CLEANUP(ModuleCleanup) {
