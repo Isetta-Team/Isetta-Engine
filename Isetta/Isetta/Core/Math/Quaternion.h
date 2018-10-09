@@ -2,6 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include <string>
 
 namespace Isetta::Math {
 class Quaternion {
@@ -29,12 +30,18 @@ class Quaternion {
    * \param eulerZ Euler angle in degree around Z axis
    */
   Quaternion(float eulerX, float eulerY, float eulerZ);
+  static Quaternion FromEulerAngles(const class Vector3& eulerAngles);
+  static Quaternion FromEulerAngles(float eulerX, float eulerY, float eulerZ);
+
   /**
    * \brief Create a quaternion from an axis and an angle
    * \param vector The axis
    * \param scalar The angle
    */
   Quaternion(class Vector3 vector, float scalar);
+  static Quaternion FromAngleAxis(const class Vector3& axis, float angle);
+  static Quaternion FromLookRotation(const class Vector3& forwardDirection,
+                                     const class Vector3& upDirection);
 
   Quaternion(const Quaternion& inQuaternion);
   Quaternion(Quaternion&& inQuaternion) noexcept;
@@ -52,6 +59,7 @@ class Quaternion {
   Quaternion operator*(const Quaternion& rhs) const;
   Quaternion& operator*=(const Quaternion& rhs);
   Quaternion operator*(float scalar) const;
+  Vector3 operator*(const Vector3& rhs) const;
 
   /**
    * \brief Get the euler angles of the quaternion
@@ -77,6 +85,9 @@ class Quaternion {
   Quaternion Normalized() const;
 
   void Normalize();
+  std::string ToString() const;
+  class Matrix3 GetMatrix3() const;
+  Quaternion GetInverse() const;
 
   /**
    * \brief Return the angle between two quaternions

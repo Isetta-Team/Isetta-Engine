@@ -3,8 +3,10 @@
  */
 #include "Core/Math/Quaternion.h"
 
+#include <sstream>
 #include "Core/Math/Util.h"
 #include "Core/Math/Vector3.h"
+#include "Matrix3.h"
 
 namespace Isetta::Math {
 Quaternion::Quaternion() : w{0.f}, x{0.f}, y{0.f}, z{0.f} {}
@@ -18,9 +20,29 @@ Quaternion::Quaternion(float eulerX, float eulerY, float eulerZ) {
   *this = (pitch * roll * yaw).Normalized();
 }
 
-Quaternion::Quaternion(Vector3 vector, float scalar)
+Quaternion Quaternion::FromEulerAngles(const Vector3& eulerAngles) {
+  return Quaternion{eulerAngles.x, eulerAngles.y, eulerAngles.z};
+}
+
+Quaternion Quaternion::FromEulerAngles(const float eulerX, const float eulerY,
+                                       const float eulerZ) {
+  return Quaternion{eulerX, eulerY, eulerZ};
+}
+
+Quaternion::Quaternion(const Vector3 vector, const float scalar)
     : w{scalar}, x{vector.x}, y{vector.y}, z{vector.z} {
   Normalize();
+}
+
+Quaternion Quaternion::FromAngleAxis(const Vector3& axis, const float angle) {
+  return Quaternion{axis, angle};
+}
+
+Quaternion Quaternion::FromLookRotation(const Vector3& forwardDirection,
+                                        const Vector3& upDirection) {
+  Quaternion ret{};
+  ret.SetLookRotation(forwardDirection, upDirection);
+  return ret;
 }
 
 Quaternion::Quaternion(const Quaternion& inQuaternion)
@@ -98,6 +120,12 @@ Quaternion& Quaternion::operator*=(const Quaternion& rhs) {
 
 Quaternion Quaternion::operator*(float scalar) const {
   return Quaternion{x * scalar, y * scalar, z * scalar, w * scalar};
+}
+
+// TODO(YIDI): test this
+Vector3 Quaternion::operator*(const Vector3& rhs) const {
+  Quaternion quat = *this * Quaternion{rhs.x, rhs.y, rhs.z, 0} * Inverse(*this);
+  return Vector3{quat.x, quat.y, quat.z};
 }
 
 Vector3 Quaternion::GetEulerAngles() const {
@@ -208,6 +236,23 @@ void Quaternion::Normalize() {
   z /= length;
   w /= length;
 }
+
+std::string Quaternion::ToString() const {
+  std::ostringstream oss;
+  oss << "(" << x << ", " << y << ", " << z << ", " << w << ")";
+  return oss.str();
+}
+
+// reference: Game Engine Architecture 2nd edition page 205
+Matrix3 Quaternion::GetMatrix3() const {
+  return Matrix3{1 - 2 * y * y - 2 * z * z, 2 * x * y - 2 * z * w,
+                 2 * x * z + 2 * y * w,     2 * x * y + 2 * z * w,
+                 1 - 2 * x * x - 2 * z * z, 2 * y * z - 2 * x * w,
+                 2 * x * z - 2 * y * w,     2 * y * z + 2 * x * w,
+                 1 - 2 * x * x - 2 * y * y};
+}
+
+Quaternion Quaternion::GetInverse() const { return Inverse(*this); }
 
 float Quaternion::Angle(const Quaternion& aQuaternion,
                         const Quaternion& bQuaternion) {
