@@ -9,10 +9,10 @@
 #include "SID/sid.h"
 
 namespace Isetta {
-  /**
-   * @brief Base class of console variables
-   * 
-   */
+/**
+ * @brief Base class of console variables
+ *
+ */
 class ICVar {
  public:
   /// Key name of CVar
@@ -22,7 +22,7 @@ class ICVar {
 
   /**
    * @brief Set the Val object, abstract
-   * 
+   *
    * @param strVal convert from this string
    */
   virtual void SetVal(const std::string& strVal) = 0;
@@ -32,13 +32,13 @@ class ICVar {
   // const StringId typeID;
   /**
    * @brief Construct a new ICVar object, cannot publicly create ICVar
-   * 
-   * @param name 
+   *
+   * @param name
    */
   explicit ICVar(std::string name) : name{name}, nameID{SID(name.c_str())} {}
   /**
    * @brief Destroy the ICVar object, cannot instance ICVar
-   * 
+   *
    */
   virtual ~ICVar() {}
 };

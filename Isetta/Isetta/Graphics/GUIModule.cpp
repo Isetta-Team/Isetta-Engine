@@ -29,7 +29,7 @@ void FreeAlloc(void* ptr, void* user_data) {
 }
 
 namespace Isetta {
-void GUIModule::StartUp(GLFWwindow* win) {
+void GUIModule::StartUp(const GLFWwindow* win) {
   GUI::guiModule = this;
   winHandle = win;
   gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
@@ -50,7 +50,7 @@ void GUIModule::StartUp(GLFWwindow* win) {
   (void)io;
 
   // Setup Dear ImGui binding
-  ImGui_ImplGlfw_InitForOpenGL(winHandle, false);
+  ImGui_ImplGlfw_InitForOpenGL(const_cast<GLFWwindow*>(winHandle), false);
   ImGui_ImplOpenGL3_Init();
   // io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard
   // Controls io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;   // Enable
@@ -88,7 +88,7 @@ void GUIModule::Update(float deltaTime, const Action<>& OnGUI) {
   ImGui::NewFrame();
   // LOG_INFO(Isetta::Debug::Channel::GUI,
   //         "-------------GUI UPDATE 2-------------");
-  glfwGetWindowSize(winHandle, &winWidth, &winHeight);
+  glfwGetWindowSize(const_cast<GLFWwindow*>(winHandle), &winWidth, &winHeight);
 
   ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2());

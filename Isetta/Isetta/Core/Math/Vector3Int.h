@@ -16,8 +16,14 @@ class Vector3Int {
   static const Vector3Int down;
   static const Vector3Int left;
   static const Vector3Int back;
+  static const int ELEMENT_COUNT = 3;
 
-  int x, y, z;
+  union {
+    struct {
+      int x, y, z;
+    };
+    int xyz[ELEMENT_COUNT];
+  };
 
   // Construct by name
 
@@ -37,6 +43,7 @@ class Vector3Int {
    * \param inZ The z of vector
    */
   Vector3Int(int inX, int inY, int inZ) : x{inX}, y{inY}, z{inZ} {}
+  Vector3Int(const class Vector2Int& inVector, float inZ);
 
   // Copy and move constructions
 
@@ -61,6 +68,8 @@ class Vector3Int {
 
   explicit Vector3Int(const class Vector3& inIntVector);
   Vector3Int(const class Vector2Int& inVector, int inZ);
+
+  explicit operator class Vector2Int();
 
   ~Vector3Int() {}
 
@@ -94,6 +103,9 @@ class Vector3Int {
   }
   inline Vector3Int operator*(int scalar) const {
     return Vector3Int(x * scalar, y * scalar, z * scalar);
+  }
+  inline friend Vector3Int operator*(float scalar, Vector3Int v) {
+    return v * scalar;
   }
   inline Vector3Int& operator*=(int scalar) {
     x *= scalar;

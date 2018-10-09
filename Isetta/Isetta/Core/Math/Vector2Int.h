@@ -14,8 +14,14 @@ class Vector2Int {
   static const Vector2Int right;
   static const Vector2Int down;
   static const Vector2Int left;
+  static const int ELEMENT_COUNT = 2;
 
-  int x, y;
+  union {
+    struct {
+      int x, y;
+    };
+    int xy[ELEMENT_COUNT];
+  };
 
   // Construct by name
 
@@ -85,6 +91,9 @@ class Vector2Int {
   }
   inline Vector2Int operator*(int scalar) const {
     return Vector2Int(x * scalar, y * scalar);
+  }
+  inline friend Vector2Int operator*(float scalar, Vector2Int v) {
+    return v * scalar;
   }
   inline Vector2Int& operator*=(int scalar) {
     x *= scalar;

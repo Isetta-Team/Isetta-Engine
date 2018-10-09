@@ -94,7 +94,11 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
+<<<<<<< 17866fe453d12df0ea806b03a5bdf69f1a0a3c74
       <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;$(SolutionDir)Isetta;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(SolutionDir)External\imgui\examples\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+=======
+      <AdditionalIncludeDirectories>$(SolutionDir)Isetta;$(VCInstallDir)UnitTest\include;$(SolutionDir)Isetta;$(SolutionDir)External;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+>>>>>>> Debug drawing w/ OpenGL completed (well except for spheres)
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -149,7 +153,11 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+<<<<<<< 17866fe453d12df0ea806b03a5bdf69f1a0a3c74
       <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;$(SolutionDir)Isetta;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(SolutionDir)External\imgui\examples\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+=======
+      <AdditionalIncludeDirectories>$(SolutionDir)Isetta;$(VCInstallDir)UnitTest\include;$(SolutionDir)Isetta;$(SolutionDir)External;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+>>>>>>> Debug drawing w/ OpenGL completed (well except for spheres)
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
       <LanguageStandard>stdcpp17</LanguageStandard>

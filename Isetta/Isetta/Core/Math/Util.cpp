@@ -13,6 +13,7 @@
 
 namespace Isetta::Math {
 const float Util::PI = static_cast<float>(M_PI);
+const float Util::PI_HALF = 0.5f * PI;
 const float Util::EPSILON = FLT_EPSILON;
 const float Util::DEG2RAD = Util::PI / 180.f;
 const float Util::RAD2DEG = 180.f * static_cast<float>(M_1_PI);

@@ -15,8 +15,14 @@ class Vector2 {
   static const Vector2 right;
   static const Vector2 down;
   static const Vector2 left;
+  static const int ELEMENT_COUNT = 2;
 
-  float x, y;
+  union {
+    struct {
+      float x, y;
+    };
+    float xy[ELEMENT_COUNT];
+  };
 
   // Construct by name
 
@@ -188,5 +194,5 @@ class Vector2 {
    * \param rhs The right vector
    */
   static bool FuzzyEqual(const Vector2& lhs, const Vector2& rhs);
-};
+};  // namespace Isetta::Math
 }  // namespace Isetta::Math

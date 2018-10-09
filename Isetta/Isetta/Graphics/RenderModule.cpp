@@ -11,10 +11,19 @@
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
 #include "Scene/Entity.h"
+#include "Core/Math/Vector3.h"
+#include "Core/Time/StopWatch.h"
+#include "Graphics/AnimationNode.h"
+#include "Horde3DUtils.h"
 
 namespace Isetta {
-
+// TODO(Chaojie) remove
+Math::Matrix4 RenderModule::viewMat, RenderModule::projMat;
 std::string RenderModule::resourcePath{};
+
+const float RenderModule::GetFarPlane() {
+  return CONFIG_VAL(renderConfig.farClippingPlane);
+}
 
 void RenderModule::StartUp(GLFWwindow* win) {
   winHandle = win;
@@ -53,6 +62,7 @@ void RenderModule::Update(float deltaTime) {
     cam->UpdateTransform();
   }
   ASSERT(cameraComponents.size() > 0);
+  CameraComponent::_main = cameraComponents.front();
   h3dRender(cameraComponents.front()->renderNode);
 
   h3dFinalizeFrame();

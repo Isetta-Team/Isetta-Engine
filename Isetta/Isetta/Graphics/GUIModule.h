@@ -78,14 +78,14 @@ class GUIModule {
   GUIModule() = default;
   ~GUIModule() = default;
 
-  void StartUp(GLFWwindow* win);
+  void StartUp(const GLFWwindow* win);
   void Update(float deltaTime, const Action<>& OnGUI);
   void ShutDown();
 
   // TODO(Jacob)
   // ImGui::SetAllocatorFunctions line 1383
 
-  GLFWwindow* winHandle;
+  const GLFWwindow* winHandle;
   int winWidth, winHeight;
 
   std::list<Action<>> updateCallbacks{};

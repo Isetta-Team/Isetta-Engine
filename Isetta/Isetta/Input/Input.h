@@ -17,6 +17,8 @@ class Input {
    * \param callback The callback function
    */
   static void RegisterWindowCloseCallback(const Action<>& callback);
+  static U64 RegisterWinSizeCallback(const Action<int, int>& callback);
+  static void UnegisterWindowSizeCallback(U64 handle);
   /**
    * \brief Check if the key is pressed
    * \param key The keycode to detect

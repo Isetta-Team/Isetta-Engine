@@ -6,9 +6,10 @@
 #include <cstring>
 #include <stdexcept>
 #include <utility>
-#include "Matrix3.h"
-#include "Vector3.h"
-#include "Vector4.h"
+#include "Core/Math/Matrix3.h"
+#include "Core/Math/Util.h"
+#include "Core/Math/Vector3.h"
+#include "Core/Math/Vector4.h"
 
 namespace Isetta::Math {
 const Matrix4 Matrix4::zero = Matrix4{};
@@ -20,6 +21,12 @@ Matrix4::Matrix4() { memset(data, 0, sizeof(data)); }
 Matrix4::Matrix4(float value) {
   for (float& item : data) {
     item = value;
+  }
+}
+
+Matrix4::Matrix4(const float* inMat) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
+    data[i] = inMat[i];
   }
 }
 
@@ -46,26 +53,26 @@ Matrix4::Matrix4(float m11, float m12, float m13, float m14, float m21,
 }
 
 Matrix4::Matrix4(const Matrix4& inMatrix) {
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     data[i] = inMatrix.data[i];
   }
 }
 
 Matrix4::Matrix4(Matrix4&& inMatrix) noexcept {
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     data[i] = inMatrix.data[i];
   }
 }
 
 Matrix4& Matrix4::operator=(const Matrix4& inMatrix) {
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     data[i] = inMatrix.data[i];
   }
   return *this;
 }
 
 Matrix4& Matrix4::operator=(Matrix4&& inMatrix) noexcept {
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     data[i] = inMatrix.data[i];
   }
   return *this;
@@ -90,8 +97,13 @@ Matrix4::Matrix4(const Vector4& aVector, const Vector4& bVector) {
   data[15] = aVector.w * bVector.w;
 }
 
+float Matrix4::operator[](int i) const {
+  if (i < 0 || i > ELEMENT_COUNT - 1)
+    throw std::out_of_range{"Matrix4::[] => Index access out of range."};
+  return data[i];
+}
 bool Matrix4::operator==(const Matrix4& rhs) const {
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     if (data[i] != rhs.data[i]) {
       return false;
     }
@@ -100,7 +112,7 @@ bool Matrix4::operator==(const Matrix4& rhs) const {
 }
 
 bool Matrix4::operator!=(const Matrix4& rhs) const {
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     if (data[i] != rhs.data[i]) {
       return true;
     }
@@ -110,14 +122,14 @@ bool Matrix4::operator!=(const Matrix4& rhs) const {
 
 Matrix4 Matrix4::operator+(const Matrix4& rhs) const {
   Matrix4 ret{};
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     ret.data[i] += rhs.data[i];
   }
   return ret;
 }
 
 Matrix4& Matrix4::operator+=(const Matrix4& rhs) {
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     data[i] += rhs.data[i];
   }
   return *this;
@@ -125,14 +137,14 @@ Matrix4& Matrix4::operator+=(const Matrix4& rhs) {
 
 Matrix4 Matrix4::operator-(const Matrix4& rhs) const {
   Matrix4 ret{};
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     ret.data[i] -= rhs.data[i];
   }
   return ret;
 }
 
 Matrix4 Matrix4::operator-=(const Matrix4& rhs) {
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     data[i] += rhs.data[i];
   }
   return *this;
@@ -140,9 +152,9 @@ Matrix4 Matrix4::operator-=(const Matrix4& rhs) {
 
 Matrix4 Matrix4::operator*(const Matrix4& rhs) const {
   Matrix4 ret{};
-  for (int i = 0; i < rowCount; i++) {
-    for (int j = 0; j < rowCount; j++) {
-      for (int k = 0; k < rowCount; k++) {
+  for (int i = 0; i < ROW_COUNT; i++) {
+    for (int j = 0; j < ROW_COUNT; j++) {
+      for (int k = 0; k < ROW_COUNT; k++) {
         ret.data[(i << 2) + j] += data[(i << 2) + k] * rhs.data[(k << 2) + j];
       }
     }
@@ -151,15 +163,15 @@ Matrix4 Matrix4::operator*(const Matrix4& rhs) const {
 }
 
 Matrix4 Matrix4::operator*=(const Matrix4& rhs) {
-  float newData[elementCount];
-  for (int i = 0; i < rowCount; i++) {
-    for (int j = 0; j < rowCount; j++) {
-      for (int k = 0; k < rowCount; k++) {
+  float newData[ELEMENT_COUNT];
+  for (int i = 0; i < ROW_COUNT; i++) {
+    for (int j = 0; j < ROW_COUNT; j++) {
+      for (int k = 0; k < ROW_COUNT; k++) {
         newData[(i << 2) + j] += data[(i << 2) + k] * rhs.data[(k << 2) + j];
       }
     }
   }
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     data[i] = newData[i];
   }
   return *this;
@@ -167,14 +179,14 @@ Matrix4 Matrix4::operator*=(const Matrix4& rhs) {
 
 Matrix4 Matrix4::operator*(const float scalar) const {
   Matrix4 ret{};
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     ret.data[i] = data[i] * scalar;
   }
   return ret;
 }
 
 Matrix4 Matrix4::operator*=(const float scalar) {
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     data[i] *= scalar;
   }
   return *this;
@@ -206,17 +218,17 @@ float Matrix4::Determinant() const {
 }
 
 float Matrix4::Get(int x, int y) const {
-  if (x > rowCount - 1 || x < 0 || y > rowCount - 1 || y < 0) {
+  if (x > ELEMENT_COUNT - 1 || x < 0 || y > ELEMENT_COUNT - 1 || y < 0) {
     throw std::out_of_range{"Matrix4::Get => Matrix index out of range."};
   }
-  return data[(x << 2) + y];
+  return row_col[x][y];
 }
 
 void Matrix4::Set(int x, int y, float number) {
-  if (x > rowCount - 1 || x < 0 || y > rowCount - 1 || y < 0) {
+  if (x > ELEMENT_COUNT - 1 || x < 0 || y > ELEMENT_COUNT - 1 || y < 0) {
     throw std::out_of_range{"Matrix4::Set => Matrix index out of range."};
   }
-  data[(x << 2) + y] = number;
+  row_col[x][y] = number;
 }
 
 Matrix4 Matrix4::Inverse() const {
@@ -293,8 +305,8 @@ Matrix4 Matrix4::Transpose() const {
 }
 
 bool Matrix4::IsIdentity() const {
-  for (int i = 0; i < rowCount; i++) {
-    for (int j = 0; j < rowCount; j++) {
+  for (int i = 0; i < ROW_COUNT; i++) {
+    for (int j = 0; j < ROW_COUNT; j++) {
       if (data[(i << 2) + j] != static_cast<float>(i == j) ||
           data[(j << 2) + i] != static_cast<float>(i == j)) {
         return false;
@@ -305,81 +317,113 @@ bool Matrix4::IsIdentity() const {
 }
 
 bool Matrix4::IsZero() const {
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     if (data[i] != 0) return false;
   }
   return true;
 }
 
 Vector4 Matrix4::GetRow(const int row) const {
-  if (row < 0 || row > rowCount - 1)
+  if (row < 0 || row > ROW_COUNT - 1)
     throw std::out_of_range{"Matrix4::GetRow => Row index out of range."};
   return Vector4(data[row << 2], data[(row << 2) + 1], data[(row << 2) + 2],
                  data[(row << 2) + 3]);
 }
 
 void Matrix4::SetRow(const int row, const Vector4& rowData) {
-  if (row < 0 || row > rowCount - 1)
+  if (row < 0 || row > ROW_COUNT)
     throw std::out_of_range{"Matrix4::SetRow => Row index out of range."};
-  data[row << 2] = rowData.x;
-  data[(row << 2) + 1] = rowData.y;
-  data[(row << 2) + 2] = rowData.z;
-  data[(row << 2) + 3] = rowData.w;
+  for (int i = 0; i < ROW_COUNT; i++)
+    row_col[row][i] = rowData[i];
 }
 
-void Matrix4::SetRow(const int row, const Vector3& rowData, const float lastCol) {
-  if (row < 0 || row > rowCount - 1)
+void Matrix4::SetRow(const int row, const Vector3& rowData, const float rowVal) {
+  if (row < 0 || row > ROW_COUNT - 1)
     throw std::out_of_range{"Matrix4::SetRow => Row index out of range."};
-  data[row << 2] = rowData.x;
-  data[(row << 2) + 1] = rowData.y;
-  data[(row << 2) + 2] = rowData.z;
-  data[(row << 2) + 3] = lastCol;
+  for (int i = 0; i < Vector3::ELEMENT_COUNT; i++)
+    row_col[row][i] = rowData[i];
+  row_col[row][ROW_COUNT - 1] = rowVal;
 }
 
 Vector4 Matrix4::GetCol(const int col) const {
-  if (col < 0 || col > rowCount - 1)
+  if (col < 0 || col > ROW_COUNT - 1)
     throw std::out_of_range{"Matrix4:GetCol => Column index out of range."};
-  return Vector4(data[col], data[rowCount + col], data[rowCount * 2 + col],
-                 data[rowCount * 3 + col]);
+  return Vector4(data[col], data[ROW_COUNT + col], data[ROW_COUNT * 2 + col],
+                 data[ROW_COUNT * 3 + col]);
 }
 
 void Matrix4::SetCol(const int col, const Vector4& colData) {
-  if (col < 0 || col > rowCount - 1)
+  if (col < 0 || col > ROW_COUNT)
     throw std::out_of_range{"Matrix4:SetCol => Column index out of range."};
-  data[col] = colData.x;
-  data[rowCount + col] = colData.y;
-  data[rowCount * 2 + col] = colData.z;
-  data[rowCount * 3 + col] = colData.w;
+  for (int i = 0; i < ROW_COUNT; i++)
+    row_col[i][col] = colData[i];
 }
 
 void Matrix4::SetCol(const int col, const Vector3& colData,
-                     const float lastRow) {
-  if (col < 0 || col > rowCount - 1)
+                     const float colVal) {
+  if (col < 0 || col > ROW_COUNT - 1)
     throw std::out_of_range{"Matrix4:SetCol => Column index out of range."};
-  data[col] = colData.x;
-  data[rowCount + col] = colData.y;
-  data[rowCount * 2 + col] = colData.z;
-  data[rowCount * 3 + col] = lastRow;
+  for (int i = 0; i < Vector3::ELEMENT_COUNT; i++)
+    row_col[i][col] = colData[i];
+  row_col[ROW_COUNT - 1][col] = colVal;
 }
 
 void Matrix4::SetTopLeftMatrix3(const Matrix3& matrix3) {
-  SetCol(0, matrix3.GetCol(0), Get(3, 0));
-  SetCol(1, matrix3.GetCol(1), Get(3, 1));
-  SetCol(2, matrix3.GetCol(2), Get(3, 2));
+  for (int i = 0; i < Vector3::ELEMENT_COUNT; i++) {
+    SetCol(i, matrix3.GetCol(i), Get(3, i));
+  }
 }
 
 Matrix4 Matrix4::Translate(const Vector3& translation) {
-  return Matrix4{1, 0, 0, translation.x, 0, 1, 0, translation.y,
-                 0, 0, 1, translation.z, 0, 0, 0, 1};
+  return Matrix4{1, 0, 0, translation.x, //
+                 0, 1, 0, translation.y, //
+                 0, 0, 1, translation.z, //
+                 0, 0, 0, 1};
 }
 
-Matrix4 Matrix4::Scale(const Vector3 scale) {
-  return Matrix4{scale.x, 0, 0,       0, 0, scale.y, 0, 0,
-                 0,       0, scale.z, 0, 0, 0,       0, 1};
+Matrix4 Matrix4::Scale(const Vector3& scale) {
+  return Matrix4{scale.x, 0, 0, 0,//
+   0, scale.y, 0, 0, //
+                 0,       0, scale.z, 0, //
+                 0, 0,       0, 1};
+}
+
+Matrix4 Matrix4::RotateX(float radians) {
+  float cos = Util::Cos(radians);
+  float sin = Util::Sin(radians);
+  return Matrix4{1, 0,    0,   0,  //
+                 0, cos,  sin, 0,  //
+                 0, -sin, cos, 0,  //
+                 0, 0,    0,   1};
+}
+Matrix4 Matrix4::RotateY(float radians) {
+  float cos = Util::Cos(radians);
+  float sin = Util::Sin(radians);
+  return Matrix4{cos, 0, -sin, 0,  //
+                 0,   1, 0,    0,  //
+                 sin, 0, cos,  0,  //
+                 0,   0, 0,    1};
+}
+Matrix4 Matrix4::RotateZ(float radians) {
+  float cos = Util::Cos(radians);
+  float sin = Util::Sin(radians);
+  return Matrix4{cos,  sin, 0, 0,  //
+                 -sin, cos, 0, 0,  //
+                 0,    0,   1, 0,  //
+                 0,    0,   0, 1};
+}
+
+Matrix4 Matrix4::Rotate(const Vector3& rotation) {
+  return RotateX(rotation.x) * RotateY(rotation.y) * RotateZ(rotation.z);
+}
+
+Matrix4 Matrix4::Transform(const Vector3& translation, const Vector3& rotation,
+                           const Vector3& scale) {
+  return Translate(translation) * Rotate(rotation) * Scale(scale);
 }
 
 bool Matrix4::FuzzyEqual(const Matrix4& lhs, const Matrix4& rhs) {
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     if (abs(lhs.data[i] - rhs.data[i]) > FLT_EPSILON) {
       return false;
     }

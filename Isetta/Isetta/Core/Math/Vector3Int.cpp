@@ -5,8 +5,8 @@
 
 #include <cmath>
 #include <stdexcept>
-#include "Vector2Int.h"
-#include "Vector3.h"
+#include "Core/Math/Vector2Int.h"
+#include "Core/Math/Vector3.h"
 
 namespace Isetta::Math {
 
@@ -19,25 +19,20 @@ const Vector3Int Vector3Int::down = Vector3Int(0, -1, 0);
 const Vector3Int Vector3Int::left = Vector3Int(-1, 0, 0);
 const Vector3Int Vector3Int::back = Vector3Int(0, 0, -1);
 
+Vector3Int::Vector3Int(const Vector2Int& inVector, int inZ)
+    : x{inVector.x}, y{inVector.y}, z{inZ} {}
+
 Vector3Int::Vector3Int(const Vector3& inIntVector)
     : x{static_cast<int>(inIntVector.x)},
       y{static_cast<int>(inIntVector.y)},
       z{static_cast<int>(inIntVector.z)} {}
 
-Vector3Int::Vector3Int(const Vector2Int& inVector, int inZ)
-    : x{inVector.x}, y{inVector.y}, z{inZ} {}
+Vector3Int::operator class Vector2Int() { return Vector2Int(x, y); }
 
 int Vector3Int::operator[](int i) const {
-  switch (i) {
-    case 0:
-      return x;
-    case 1:
-      return y;
-    case 2:
-      return z;
-    default:
-      throw std::out_of_range{"Vector3Int::[] => Index access out of range."};
-  }
+  if (i < 0 || i > ELEMENT_COUNT - 1)
+    throw std::out_of_range{"Vector3Int::[] => Index access out of range."};
+  return xyz[i];
 }
 
 float Vector3Int::Magnitude() const {

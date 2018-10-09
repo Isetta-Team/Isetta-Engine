@@ -25,6 +25,8 @@ class InputModule {
    * \param callback The callback function
    */
   void RegisterWindowCloseCallback(const Action<>& callback);
+  U64 RegisterWindowSizeCallback(const Action<int, int>& callback);
+  void UnegisterWindowSizeCallback(U64 handle);
   /**
    * \brief Check if the key is pressed
    * \param key The keycode to detect
@@ -135,6 +137,7 @@ class InputModule {
                                  int mods);
   static void CharEventListener(GLFWwindow*, unsigned int c);
   static void ScrollEventListener(GLFWwindow*, double xoffset, double yoffset);
+  static void WinSizeListener(GLFWwindow* win, int width, int height);
 
   static std::unordered_map<U64, Action<GLFWwindow*, int, int, int>>
       mouseButtonCallbacks;
@@ -144,6 +147,7 @@ class InputModule {
       scrollCallbacks;
   static std::unordered_map<U64, Action<GLFWwindow*, unsigned int>>
       charCallbacks;
+  static std::unordered_map<U64, Action<int, int>> winSizeCallbacks;
 
   // TODO(Chaojie) Discuss if one handle for all callbacks is enough
   // TODO(Jacob) U64 might be overkill? maybe just U16?

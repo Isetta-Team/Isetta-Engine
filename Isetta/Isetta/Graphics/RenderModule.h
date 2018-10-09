@@ -9,6 +9,12 @@
 #include <string>
 #include "Core/Config/CVar.h"
 
+// TODO(Chaojie) remove
+#include "Core/Math/Matrix4.h"
+namespace Isetta::Math {
+class Vector3;
+}
+
 namespace Isetta {
 class RenderModule {
  public:
@@ -36,7 +42,7 @@ class RenderModule {
   std::list<class MeshComponent*> meshComponents;
   std::list<class LightComponent*> lightComponents;
   std::list<class CameraComponent*> cameraComponents;
-
+  CameraComponent* MainCamera() const;
 
  private:
   RenderModule() = default;

@@ -29,6 +29,9 @@
 #include "imgui/imgui.h"
 #include "Scene/LevelManager.h"
 
+#include "Core/Debug/DebugDraw.h"
+#include "Graphics/GLTest.h"
+
 namespace Isetta {
 
 void RunYidiTest();
@@ -36,6 +39,7 @@ void InputDemo();
 void NetworkingDemo();
 void GraphicsDemo();
 void GUIDemo();
+void DebugDemo();
 
 EngineLoop::EngineLoop() {
   memoryManager = new MemoryManager{};
@@ -78,6 +82,7 @@ void EngineLoop::StartUp() {
 
   // TODO(Yidi) remove
   memoryManager->RegisterTests();
+  DebugDraw::StartUp();
 
   StartGameClock();
   isGameRunning = true;
@@ -87,8 +92,9 @@ void EngineLoop::StartUp() {
 
   NetworkingDemo();
   InputDemo();
-  GraphicsDemo();
+  // GraphicsDemo();
   RunYidiTest();
+  DebugDemo();
 }
 
 void EngineLoop::Update() {
@@ -153,7 +159,11 @@ void EngineLoop::VariableUpdate(float deltaTime) {
   LevelManager::Instance().currentLevel->LateUpdate();
   audioModule->Update(deltaTime);
   renderModule->Update(deltaTime);
-  guiModule->Update(deltaTime, GUIDemo);
+
+  DebugDemo();
+  DebugDraw::Update();
+  guiModule->Update(deltaTime, nullptr);
+  // guiModule->Update(deltaTime, GUIDemo);
   windowModule->Update(deltaTime);
   memoryManager->Update();
 }
@@ -164,6 +174,7 @@ void EngineLoop::ShutDown() {
   audioModule->ShutDown();
   guiModule->ShutDown();
   inputModule->ShutDown();
+  DebugDraw::ShutDown();
   renderModule->ShutDown();
   windowModule->ShutDown();
   memoryManager->ShutDown();
@@ -386,4 +397,30 @@ void GUIDemo() {
       Util::StrFormat("%d/%d", static_cast<int>((312 * progressSaturated)),
                       312));
 }
+void DebugDemo() {
+  DebugDraw::Point(2 * Math::Vector3::left, Color::magenta, 20);
+  // DebugDraw::Line(Math::Vector3::zero, v);
+  if (Input::IsKeyPressed(KeyCode::A)) {
+    static float angle = 0.0f;
+    angle += 0.4f * EngineLoop::GetGameClock().GetDeltaTime();
+    if (angle >= 2 * Math::Util::PI) {
+      angle = 0;
+    }
+    DebugDraw::Ray(
+        Math::Vector3::zero,
+        Math::Vector3{Math::Util::Cos(angle), 0, Math::Util::Sin(angle)},
+        Color::cyan, 2);
+  }
+  if (Input::IsKeyPressed(KeyCode::B)) {
+    DebugDraw::Plane(Math::Matrix4::identity, Color::blue, 2);
+  }
+  // DebugDraw::WirePlane(Math::Matrix4::identity);
+  // DebugDraw::Cube(Math::Matrix4::identity, Color::white);
+  // DebugDraw::WireCube(Math::Matrix4::Translate(Math::Vectr3{0, 0, -2}));
+  // DebugDraw::WireSphere(Math::Vector3::up, 1, Color::red);
+  DebugDraw::AxisSphere(Math::Vector3::up, 1);
+  DebugDraw::Grid();
+  DebugDraw::Axis();
+}
+
 }  // namespace Isetta

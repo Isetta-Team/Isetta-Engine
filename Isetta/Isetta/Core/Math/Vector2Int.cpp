@@ -20,14 +20,9 @@ Vector2Int::Vector2Int(const Vector2& inIntVector)
     : x{static_cast<int>(inIntVector.x)}, y{static_cast<int>(inIntVector.y)} {}
 
 int Vector2Int::operator[](int i) const {
-  switch (i) {
-    case 0:
-      return x;
-    case 1:
-      return y;
-    default:
-      throw std::out_of_range{"Vector2Int::[] => Index access out of range."};
-  }
+  if (i < 0 || i > ELEMENT_COUNT - 1)
+    throw std::out_of_range{"Vector2Int::[] => Index access out of range."};
+  return xy[i];
 }
 
 float Vector2Int::Magnitude() const {

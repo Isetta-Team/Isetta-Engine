@@ -25,6 +25,7 @@ class Color {
   static const Color green;
   /// RGB color grey (0.5,0.5,0.5,1)
   static const Color grey;
+  static const Color lightGrey;
   /// RGB color magenta (1,0,1,1)
   static const Color magenta;
   /// RGB color red (1,0,0,1)
@@ -34,14 +35,19 @@ class Color {
   /// RGB color yellow (1,0.92,0.016,1)
   static const Color yellow;
 
-  /// red
-  float r;
-  /// green
-  float g;
-  /// blue
-  float b;
-  /// alpha
-  float a;
+  union {
+    struct {
+      /// red
+      float r;
+      /// green
+      float g;
+      /// blue
+      float b;
+      /// alpha
+      float a;
+    };
+    float rgba[4];
+  };
 
   // Constructors
   /**
