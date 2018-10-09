@@ -15,12 +15,12 @@ Quaternion::Quaternion(float eulerX, float eulerY, float eulerZ) {
   Quaternion yaw(0, 0, Util::Sin(eulerZ * 0.5f), Util::Cos(eulerZ * 0.5f));
 
   // Order: y * x * z
-  *this = Normalize(pitch * roll * yaw);
+  *this = (pitch * roll * yaw).Normalized();
 }
 
 Quaternion::Quaternion(Vector3 vector, float scalar)
     : w{scalar}, x{vector.x}, y{vector.y}, z{vector.z} {
-  *this = Normalize(*this);
+  Normalize();
 }
 
 Quaternion::Quaternion(const Quaternion& inQuaternion)
@@ -101,7 +101,7 @@ Quaternion Quaternion::operator*(float scalar) const {
 }
 
 Vector3 Quaternion::GetEulerAngles() const {
-  Quaternion q = Normalize(*this);
+  Quaternion q = (*this).Normalized();
 
   // roll (x-axis rotation)
   float sinr = 2.f * (q.w * q.x + q.y * q.z);
@@ -139,7 +139,7 @@ void Quaternion::SetFromToRotation(const Vector3& fromDirection,
     *this = Quaternion(ortho.Normalized(), 0.f);
   }
   Vector3 cross = Vector3::Cross(fromDirection, toDirection);
-  *this = Normalize(Quaternion(cross, dot + k));
+  *this = Quaternion(cross, dot + k).Normalized();
 }
 
 void Quaternion::SetLookRotation(const Vector3& forwardDirection,
@@ -188,7 +188,25 @@ void Quaternion::SetLookRotation(const Vector3& forwardDirection,
     x = (forward.x + right.z) * recip;
     w = (right.y - upwards.x) * recip;
   }
-  *this = Normalize(*this);
+  Normalize();
+}
+
+Quaternion Quaternion::Normalized() const {
+  Quaternion ret{x, y, z, w};
+  float length = ret.x * ret.x + ret.y * ret.y + ret.z * ret.z + ret.w * ret.w;
+  ret.x /= length;
+  ret.y /= length;
+  ret.z /= length;
+  ret.w /= length;
+  return ret;
+}
+
+void Quaternion::Normalize() {
+  float length = x * x + y * y + z * z + w * w;
+  x /= length;
+  y /= length;
+  z /= length;
+  w /= length;
 }
 
 float Quaternion::Angle(const Quaternion& aQuaternion,
@@ -207,23 +225,12 @@ Quaternion Quaternion::Inverse(const Quaternion& quaternion) {
   float length = quaternion.x * quaternion.x + quaternion.y * quaternion.y +
                  quaternion.z * quaternion.z + quaternion.w * quaternion.w;
   return Quaternion(quaternion.x / -length, quaternion.y / -length,
-                    quaternion.z / -length, quaternion.w / -length);
+                    quaternion.z / -length, quaternion.w / length);
 }
 
 Quaternion Quaternion::Lerp(const Quaternion& aQuaternion,
-                            const Quaternion& bQuaternion, float t) {
-  Quaternion ret{aQuaternion * (1.f - t) + bQuaternion * t};
-  return Normalize(ret);
-}
-
-Quaternion Quaternion::Normalize(const Quaternion& quaternion) {
-  Quaternion ret{quaternion};
-  float length = ret.x * ret.x + ret.y * ret.y + ret.z * ret.z + ret.w * ret.w;
-  ret.x /= length;
-  ret.y /= length;
-  ret.z /= length;
-  ret.w /= length;
-  return ret;
+                            const Quaternion& bQuaternion, const float t) {
+  return Quaternion{aQuaternion * (1.f - t) + bQuaternion * t}.Normalized();
 }
 
 Quaternion Quaternion::Slerp(const Quaternion& aQuaternion,

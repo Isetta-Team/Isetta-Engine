@@ -20,7 +20,7 @@ class Quaternion {
    * \param inZ Z value of the quaternion
    * \param inW W value of the quaternion
    */
-  Quaternion(float inX, float inY, float inZ, float inW)
+  Quaternion(const float inX, const float inY, const float inZ, const float inW)
       : w{inW}, x{inX}, y{inY}, z{inZ} {}
   /**
    * \brief Create a quaternion from euler angles
@@ -41,7 +41,7 @@ class Quaternion {
   Quaternion& operator=(const Quaternion& inQuaternion);
   Quaternion& operator=(Quaternion&& inQuaternion) noexcept;
 
-  ~Quaternion() {}
+  ~Quaternion() = default;
 
   bool operator==(const Quaternion& rhs) const;
   bool operator!=(const Quaternion& rhs) const;
@@ -71,6 +71,12 @@ class Quaternion {
    */
   void SetLookRotation(const class Vector3& forwardDirection,
                        const class Vector3& upDirection);
+  /**
+   * \brief Return normalized quaternion
+   */
+  Quaternion Normalized() const;
+
+  void Normalize();
 
   /**
    * \brief Return the angle between two quaternions
@@ -99,11 +105,6 @@ class Quaternion {
    */
   static Quaternion Lerp(const Quaternion& aQuaternion,
                          const Quaternion& bQuaternion, float t);
-  /**
-   * \brief Normalize the quaternion
-   * \param quaternion The quaternion
-   */
-  static Quaternion Normalize(const Quaternion& quaternion);
   /**
    * \brief Sphere lerp between two quaternions by t
    * \param aQuaternion The starting quaternion
