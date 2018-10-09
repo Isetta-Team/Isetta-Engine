@@ -116,6 +116,12 @@ class Vector4 {
 
   // Functions
 
+  void SetValues(const class Vector3& firstV3, float last);
+  
+  /**
+   * \brief Will abandon component w
+   */
+  Vector3 GetVector3() const;
   /**
    * \brief Returns the length of the vector
    */

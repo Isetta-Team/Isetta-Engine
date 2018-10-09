@@ -7,6 +7,7 @@
 #include <cmath>
 #include <stdexcept>
 #include "Core/Color.h"
+#include "Core/Math/Vector3.h"
 
 namespace Isetta::Math {
 
@@ -31,6 +32,17 @@ float Vector4::operator[](int i) const {
 }
 
 Vector4::operator Color() { return Color(x, y, z, w); }
+
+void Vector4::SetValues(const Vector3& firstV3, const float last) {
+  x = firstV3.x;
+  y = firstV3.y;
+  z = firstV3.z;
+  w = last;
+}
+
+Vector3 Vector4::GetVector3() const {
+  return Vector3{x, y, z};
+}
 
 float Vector4::Magnitude() const { return sqrtf(SqrMagnitude()); }
 float Vector4::SqrMagnitude() const { return x * x + y * y + z * z + w * w; }
