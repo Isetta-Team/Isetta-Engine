@@ -246,6 +246,16 @@ void Matrix3::SetCol(int col, Vector3 colData) {
   data[rowCount * 2 + col] = colData.z;
 }
 
+void Matrix3::SetDiagonal(const Vector3& diagonal) {
+  SetDiagonal(diagonal.x, diagonal.y, diagonal.z);
+}
+
+void Matrix3::SetDiagonal(const float r0c0, const float r1c1, const float r2c2) {
+  Set(0, 0, r0c0);
+  Set(1, 1, r1c1);
+  Set(2, 2, r2c2);
+}
+
 bool Matrix3::FuzzyEqual(const Matrix3& lhs, const Matrix3& rhs) {
   for (int i = 0; i < elementCount; i++) {
     if (abs(lhs.data[i] - rhs.data[i]) > FLT_EPSILON) {

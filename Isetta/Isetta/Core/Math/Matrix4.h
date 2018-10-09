@@ -92,7 +92,8 @@ class Matrix4 {
    * \param row Row data
    * \param rowData The new values of this row
    */
-  void SetRow(int row, class Vector4 rowData);
+  void SetRow(int row, const class Vector4& rowData);
+  void SetRow(int row, const class Vector3& rowData, float lastCol);
   /**
    * \brief Get the values of a specific column
    * \param col Column Index
@@ -103,8 +104,9 @@ class Matrix4 {
    * \param col Column index
    * \param colData The values of this column
    */
-  void SetCol(int col, class Vector4 colData);
-
+  void SetCol(int col, const class Vector4& colData);
+  void SetCol(int col, const class Vector3& colData, float lastRow);
+  void SetTopLeftMatrix3(const class Matrix3& matrix3);
   /**
    * \brief Get the translate matrix of the vector
    * \param translation The translation vector

@@ -105,6 +105,8 @@ class Matrix3 {
    * \param colData The values of this column
    */
   void SetCol(int col, class Vector3 colData);
+  void SetDiagonal(const Vector3& diagonal);
+  void SetDiagonal(float r0c0, float r1c1, float r2c2);
   /**
    * \brief Checks if two matrix3 are equal (within a tolerance)
    * \param lhs Matrix A to be compared

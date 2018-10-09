@@ -6,6 +6,7 @@
 #include <cstring>
 #include <stdexcept>
 #include <utility>
+#include "Matrix3.h"
 #include "Vector3.h"
 #include "Vector4.h"
 
@@ -164,7 +165,7 @@ Matrix4 Matrix4::operator*=(const Matrix4& rhs) {
   return *this;
 }
 
-Matrix4 Matrix4::operator*(float scalar) const {
+Matrix4 Matrix4::operator*(const float scalar) const {
   Matrix4 ret{};
   for (int i = 0; i < elementCount; i++) {
     ret.data[i] = data[i] * scalar;
@@ -172,7 +173,7 @@ Matrix4 Matrix4::operator*(float scalar) const {
   return ret;
 }
 
-Matrix4 Matrix4::operator*=(float scalar) {
+Matrix4 Matrix4::operator*=(const float scalar) {
   for (int i = 0; i < elementCount; i++) {
     data[i] *= scalar;
   }
@@ -205,14 +206,14 @@ float Matrix4::Determinant() const {
 }
 
 float Matrix4::Get(int x, int y) const {
-  if (x > 3 || x < 0 || y > 3 || y < 0) {
+  if (x > rowCount - 1 || x < 0 || y > rowCount - 1 || y < 0) {
     throw std::out_of_range{"Matrix4::Get => Matrix index out of range."};
   }
   return data[(x << 2) + y];
 }
 
 void Matrix4::Set(int x, int y, float number) {
-  if (x > 3 || x < 0 || y > 3 || y < 0) {
+  if (x > rowCount - 1 || x < 0 || y > rowCount - 1 || y < 0) {
     throw std::out_of_range{"Matrix4::Set => Matrix index out of range."};
   }
   data[(x << 2) + y] = number;
@@ -310,15 +311,15 @@ bool Matrix4::IsZero() const {
   return true;
 }
 
-Vector4 Matrix4::GetRow(int row) const {
-  if (row < 0 || row > 3)
+Vector4 Matrix4::GetRow(const int row) const {
+  if (row < 0 || row > rowCount - 1)
     throw std::out_of_range{"Matrix4::GetRow => Row index out of range."};
   return Vector4(data[row << 2], data[(row << 2) + 1], data[(row << 2) + 2],
                  data[(row << 2) + 3]);
 }
 
-void Matrix4::SetRow(int row, Vector4 rowData) {
-  if (row < 0 || row > 2)
+void Matrix4::SetRow(const int row, const Vector4& rowData) {
+  if (row < 0 || row > rowCount - 1)
     throw std::out_of_range{"Matrix4::SetRow => Row index out of range."};
   data[row << 2] = rowData.x;
   data[(row << 2) + 1] = rowData.y;
@@ -326,20 +327,45 @@ void Matrix4::SetRow(int row, Vector4 rowData) {
   data[(row << 2) + 3] = rowData.w;
 }
 
-Vector4 Matrix4::GetCol(int col) const {
-  if (col < 0 || col > 3)
+void Matrix4::SetRow(const int row, const Vector3& rowData, const float lastCol) {
+  if (row < 0 || row > rowCount - 1)
+    throw std::out_of_range{"Matrix4::SetRow => Row index out of range."};
+  data[row << 2] = rowData.x;
+  data[(row << 2) + 1] = rowData.y;
+  data[(row << 2) + 2] = rowData.z;
+  data[(row << 2) + 3] = lastCol;
+}
+
+Vector4 Matrix4::GetCol(const int col) const {
+  if (col < 0 || col > rowCount - 1)
     throw std::out_of_range{"Matrix4:GetCol => Column index out of range."};
   return Vector4(data[col], data[rowCount + col], data[rowCount * 2 + col],
                  data[rowCount * 3 + col]);
 }
 
-void Matrix4::SetCol(int col, Vector4 colData) {
-  if (col < 0 || col > 3)
+void Matrix4::SetCol(const int col, const Vector4& colData) {
+  if (col < 0 || col > rowCount - 1)
     throw std::out_of_range{"Matrix4:SetCol => Column index out of range."};
   data[col] = colData.x;
   data[rowCount + col] = colData.y;
   data[rowCount * 2 + col] = colData.z;
   data[rowCount * 3 + col] = colData.w;
+}
+
+void Matrix4::SetCol(const int col, const Vector3& colData,
+                     const float lastRow) {
+  if (col < 0 || col > rowCount - 1)
+    throw std::out_of_range{"Matrix4:SetCol => Column index out of range."};
+  data[col] = colData.x;
+  data[rowCount + col] = colData.y;
+  data[rowCount * 2 + col] = colData.z;
+  data[rowCount * 3 + col] = lastRow;
+}
+
+void Matrix4::SetTopLeftMatrix3(const Matrix3& matrix3) {
+  SetCol(0, matrix3.GetCol(0), Get(3, 0));
+  SetCol(1, matrix3.GetCol(1), Get(3, 1));
+  SetCol(2, matrix3.GetCol(2), Get(3, 2));
 }
 
 Matrix4 Matrix4::Translate(const Vector3& translation) {
