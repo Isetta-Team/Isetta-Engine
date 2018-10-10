@@ -26,8 +26,8 @@
 #include "Core/Math/Rect.h"
 #include "Graphics/RectTransform.h"
 #include "Scene/Entity.h"
-#include "imgui/imgui.h"
 #include "Scene/LevelManager.h"
+#include "imgui/imgui.h"
 
 namespace Isetta {
 
@@ -153,7 +153,7 @@ void EngineLoop::VariableUpdate(float deltaTime) {
   LevelManager::Instance().currentLevel->LateUpdate();
   audioModule->Update(deltaTime);
   renderModule->Update(deltaTime);
-  guiModule->Update(deltaTime, GUIDemo);
+  guiModule->Update(deltaTime);
   windowModule->Update(deltaTime);
   memoryManager->Update();
 }
