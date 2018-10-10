@@ -165,6 +165,12 @@
     <ClCompile Include="Custom\FlyController.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
+    <ClCompile Include="Custom\AxisDrawer.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\PlayerController.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -406,6 +412,12 @@
       <Filter>Custom</Filter>
     </ClInclude>
     <ClInclude Include="Custom\FlyController.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\AxisDrawer.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\PlayerController.h">
       <Filter>Custom</Filter>
     </ClInclude>
   </ItemGroup>

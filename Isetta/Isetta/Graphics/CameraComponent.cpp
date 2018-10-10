@@ -15,6 +15,9 @@ CameraComponent::CameraComponent(std::string cameraName)
     : renderNode(0), renderResource(0), name{cameraName} {
   ASSERT(renderModule != nullptr);
   renderModule->cameraComponents.push_back(this);
+  if (!_main) {
+    _main = this;
+  }
 }
 
 void CameraComponent::OnEnable() {
