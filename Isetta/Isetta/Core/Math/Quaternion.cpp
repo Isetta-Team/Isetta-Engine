@@ -9,9 +9,15 @@
 #include "Matrix3.h"
 
 namespace Isetta::Math {
+
+const Quaternion Quaternion::identity = Quaternion{0, 0, 0, 1};
+
 Quaternion::Quaternion() : w{0.f}, x{0.f}, y{0.f}, z{0.f} {}
 
 Quaternion::Quaternion(float eulerX, float eulerY, float eulerZ) {
+  eulerX *= Util::DEG2RAD;
+  eulerY *= Util::DEG2RAD;
+  eulerZ *= Util::DEG2RAD;
   Quaternion roll(Util::Sin(eulerX * 0.5f), 0, 0, Util::Cos(eulerX * 0.5f));
   Quaternion pitch(0, Util::Sin(eulerY * 0.5f), 0, Util::Cos(eulerY * 0.5f));
   Quaternion yaw(0, 0, Util::Sin(eulerZ * 0.5f), Util::Cos(eulerZ * 0.5f));
@@ -149,7 +155,8 @@ Vector3 Quaternion::GetEulerAngles() const {
   float cosy = 1.f - 2.f * (q.y * q.y + q.z * q.z);
   float yaw = Util::Atan2(siny, cosy);
 
-  return Vector3{roll, pitch, yaw};
+  Vector3 angleInRad = Vector3{roll, pitch, yaw};
+  return angleInRad * Util::RAD2DEG;
 }
 
 void Quaternion::SetFromToRotation(const Vector3& fromDirection,
@@ -254,10 +261,15 @@ Matrix3 Quaternion::GetMatrix3() const {
 
 Quaternion Quaternion::GetInverse() const { return Inverse(*this); }
 
-float Quaternion::Angle(const Quaternion& aQuaternion,
+float Quaternion::AngleRad(const Quaternion& aQuaternion,
                         const Quaternion& bQuaternion) {
   float dot = Dot(aQuaternion, bQuaternion);
   return Util::Acos(Util::Min({Util::Abs(dot), 1.f})) * 2.f;
+}
+
+float Quaternion::AngleDeg(const Quaternion& aQuaternion,
+  const Quaternion& bQuaternion) {
+  return AngleDeg(aQuaternion, bQuaternion) * Util::RAD2DEG;
 }
 
 float Quaternion::Dot(const Quaternion& aQuaternion,

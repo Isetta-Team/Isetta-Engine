@@ -7,6 +7,8 @@
 namespace Isetta::Math {
 class Quaternion {
  public:
+  static const Quaternion identity;
+
   float w, x, y, z;
 
   /**
@@ -94,8 +96,10 @@ class Quaternion {
    * \param aQuaternion Quaternion a
    * \param bQuaternion Quaternion b
    */
-  static float Angle(const Quaternion& aQuaternion,
-                     const Quaternion& bQuaternion);
+  static float AngleRad(const Quaternion& aQuaternion,
+                        const Quaternion& bQuaternion);
+  static float AngleDeg(const Quaternion& aQuaternion,
+                        const Quaternion& bQuaternion);
   /**
    * \brief Return the dot product of two quaternion
    * \param aQuaternion Quaternion a
