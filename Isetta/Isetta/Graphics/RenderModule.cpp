@@ -7,23 +7,17 @@
 #include <filesystem>
 #include "Core/Config/Config.h"
 #include "Core/FileSystem.h"
+#include "Core/Math/Vector3.h"
+#include "Core/Time/StopWatch.h"
 #include "Graphics/AnimationComponent.h"
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
-#include "Scene/Entity.h"
-#include "Core/Math/Vector3.h"
-#include "Core/Time/StopWatch.h"
-#include "Graphics/AnimationNode.h"
 #include "Horde3DUtils.h"
+#include "Scene/Entity.h"
 
 namespace Isetta {
 // TODO(Chaojie) remove
-Math::Matrix4 RenderModule::viewMat, RenderModule::projMat;
 std::string RenderModule::resourcePath{};
-
-const float RenderModule::GetFarPlane() {
-  return CONFIG_VAL(renderConfig.farClippingPlane);
-}
 
 void RenderModule::StartUp(GLFWwindow* win) {
   winHandle = win;

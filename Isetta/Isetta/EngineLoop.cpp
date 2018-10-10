@@ -26,11 +26,10 @@
 #include "Core/Math/Rect.h"
 #include "Graphics/RectTransform.h"
 #include "Scene/Entity.h"
-#include "imgui/imgui.h"
 #include "Scene/LevelManager.h"
+#include "imgui/imgui.h"
 
 #include "Core/Debug/DebugDraw.h"
-#include "Graphics/GLTest.h"
 
 namespace Isetta {
 
@@ -92,9 +91,7 @@ void EngineLoop::StartUp() {
 
   NetworkingDemo();
   InputDemo();
-  // GraphicsDemo();
   RunYidiTest();
-  DebugDemo();
 }
 
 void EngineLoop::Update() {
@@ -416,7 +413,7 @@ void DebugDemo() {
   }
   // DebugDraw::WirePlane(Math::Matrix4::identity);
   // DebugDraw::Cube(Math::Matrix4::identity, Color::white);
-  // DebugDraw::WireCube(Math::Matrix4::Translate(Math::Vectr3{0, 0, -2}));
+  // DebugDraw::WireCube(Math::Matrix4::Translate(Math::Vector3{0, 0, -2}));
   // DebugDraw::WireSphere(Math::Vector3::up, 1, Color::red);
   DebugDraw::AxisSphere(Math::Vector3::up, 1);
   DebugDraw::Grid();

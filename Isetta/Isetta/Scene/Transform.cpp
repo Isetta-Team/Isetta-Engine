@@ -28,7 +28,7 @@ void Transform::SetWorldPos(const Math::Vector3& newWorldPos) {
   if (parent == nullptr) {
     localPos = newWorldPos;
   } else {
-    sharedV4.SetValues(newWorldPos, 1);
+    sharedV4.Set(newWorldPos, 1);
     localPos =
         (parent->GetLocalToWorldMatrix().Inverse() * sharedV4).GetVector3();
   }
@@ -192,24 +192,24 @@ Transform* Transform::GetChild(const U16 childIndex) {
 std::string Transform::GetName() const { return entity->GetName(); }
 
 Math::Vector3 Transform::WorldPosFromLocalPos(const Math::Vector3& localPoint) {
-  sharedV4.SetValues(localPoint, 1);
+  sharedV4.Set(localPoint, 1);
   return (GetLocalToWorldMatrix() * sharedV4).GetVector3();
 }
 
 Math::Vector3 Transform::LocalPosFromWorldPos(const Math::Vector3& worldPoint) {
-  sharedV4.SetValues(worldPoint, 1);
+  sharedV4.Set(worldPoint, 1);
   return (GetLocalToWorldMatrix().Inverse() * sharedV4).GetVector3();
 }
 
 Math::Vector3 Transform::WorldDirFromLocalDir(
     const Math::Vector3& localDirection) {
-  sharedV4.SetValues(localDirection, 0);
+  sharedV4.Set(localDirection, 0);
   return (GetLocalToWorldMatrix() * sharedV4).GetVector3();
 }
 
 Math::Vector3 Transform::LocalDirFromWorldDir(
     const Math::Vector3& worldDirection) {
-  sharedV4.SetValues(worldDirection, 0);
+  sharedV4.Set(worldDirection, 0);
   return (GetLocalToWorldMatrix().Inverse() * sharedV4).GetVector3();
 }
 

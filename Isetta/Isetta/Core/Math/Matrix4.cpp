@@ -24,7 +24,13 @@ Matrix4::Matrix4(float value) {
   }
 }
 
-Matrix4::Matrix4(const float* inMat) {
+// Matrix4::Matrix4(const float* inMat) {
+//  for (int i = 0; i < ELEMENT_COUNT; i++) {
+//    data[i] = inMat[i];
+//  }
+//}
+
+Matrix4::Matrix4(const float inMat[]) {
   for (int i = 0; i < ELEMENT_COUNT; i++) {
     data[i] = inMat[i];
   }
@@ -333,15 +339,14 @@ Vector4 Matrix4::GetRow(const int row) const {
 void Matrix4::SetRow(const int row, const Vector4& rowData) {
   if (row < 0 || row > ROW_COUNT)
     throw std::out_of_range{"Matrix4::SetRow => Row index out of range."};
-  for (int i = 0; i < ROW_COUNT; i++)
-    row_col[row][i] = rowData[i];
+  for (int i = 0; i < ROW_COUNT; i++) row_col[row][i] = rowData[i];
 }
 
-void Matrix4::SetRow(const int row, const Vector3& rowData, const float rowVal) {
+void Matrix4::SetRow(const int row, const Vector3& rowData,
+                     const float rowVal) {
   if (row < 0 || row > ROW_COUNT - 1)
     throw std::out_of_range{"Matrix4::SetRow => Row index out of range."};
-  for (int i = 0; i < Vector3::ELEMENT_COUNT; i++)
-    row_col[row][i] = rowData[i];
+  for (int i = 0; i < Vector3::ELEMENT_COUNT; i++) row_col[row][i] = rowData[i];
   row_col[row][ROW_COUNT - 1] = rowVal;
 }
 
@@ -355,16 +360,14 @@ Vector4 Matrix4::GetCol(const int col) const {
 void Matrix4::SetCol(const int col, const Vector4& colData) {
   if (col < 0 || col > ROW_COUNT)
     throw std::out_of_range{"Matrix4:SetCol => Column index out of range."};
-  for (int i = 0; i < ROW_COUNT; i++)
-    row_col[i][col] = colData[i];
+  for (int i = 0; i < ROW_COUNT; i++) row_col[i][col] = colData[i];
 }
 
 void Matrix4::SetCol(const int col, const Vector3& colData,
                      const float colVal) {
   if (col < 0 || col > ROW_COUNT - 1)
     throw std::out_of_range{"Matrix4:SetCol => Column index out of range."};
-  for (int i = 0; i < Vector3::ELEMENT_COUNT; i++)
-    row_col[i][col] = colData[i];
+  for (int i = 0; i < Vector3::ELEMENT_COUNT; i++) row_col[i][col] = colData[i];
   row_col[ROW_COUNT - 1][col] = colVal;
 }
 
@@ -375,17 +378,17 @@ void Matrix4::SetTopLeftMatrix3(const Matrix3& matrix3) {
 }
 
 Matrix4 Matrix4::Translate(const Vector3& translation) {
-  return Matrix4{1, 0, 0, translation.x, //
-                 0, 1, 0, translation.y, //
-                 0, 0, 1, translation.z, //
+  return Matrix4{1, 0, 0, translation.x,  //
+                 0, 1, 0, translation.y,  //
+                 0, 0, 1, translation.z,  //
                  0, 0, 0, 1};
 }
 
 Matrix4 Matrix4::Scale(const Vector3& scale) {
-  return Matrix4{scale.x, 0, 0, 0,//
-   0, scale.y, 0, 0, //
-                 0,       0, scale.z, 0, //
-                 0, 0,       0, 1};
+  return Matrix4{scale.x, 0,       0,       0,  //
+                 0,       scale.y, 0,       0,  //
+                 0,       0,       scale.z, 0,  //
+                 0,       0,       0,       1};
 }
 
 Matrix4 Matrix4::RotateX(float radians) {

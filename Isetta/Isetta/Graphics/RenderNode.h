@@ -7,7 +7,8 @@
 
 namespace Isetta::Math {
 class Vector3;
-}
+class Matrix4;
+}  // namespace Isetta::Math
 
 namespace Isetta {
 class RenderNode {
@@ -32,8 +33,8 @@ class RenderNode {
    * \param rotation The rotation in degree of the node
    * \param scale The scale of the node
    */
-  void SetTransform(const Math::Vector3& position,
-                    const Math::Vector3& rotation, const Math::Vector3& scale);
-
+  void SetHordeTransform(const Math::Vector3& position,
+                         const Math::Vector3& rotation,
+                         const Math::Vector3& scale);
 };
 }  // namespace Isetta

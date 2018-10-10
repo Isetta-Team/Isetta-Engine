@@ -1,7 +1,5 @@
 // "Copyright [2018] Isetta"
 #pragma once
-#ifndef ISETTA_ISETTA_MATH_VECTOR4_H_
-#define ISETTA_ISETTA_MATH_VECTOR4_H_
 
 namespace Isetta {
 class Color;
@@ -199,5 +197,3 @@ class Vector4 {
   static Vector4 Slerp(const Vector4& start, const Vector4& end, float time);
 };
 }  // namespace Isetta::Math
-
-#endif  // ISETTA_ISETTA_MATH_Vector4_H_

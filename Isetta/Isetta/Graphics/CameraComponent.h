@@ -29,6 +29,12 @@ class CameraComponent : public Component {
 
   inline static const CameraComponent* Main() { return _main; }
 
+  Math::Matrix4 GetHordeTransform() const {
+    const float* transformPtr;
+    h3dGetNodeTransMats(renderNode, NULL, &transformPtr);
+    return Math::Matrix4(transformPtr);
+  }
+
  private:
   void UpdateTransform();
   void ResizeViewport();
@@ -41,9 +47,8 @@ class CameraComponent : public Component {
 
   float fov;
   float nearPlane;
-  float farlane;
+  float farPlane;
   Math::Matrix4 projMat;
-  bool isDirty;
 
   std::string name;
   H3DNode renderNode;
@@ -52,7 +57,6 @@ class CameraComponent : public Component {
 
 template <CameraComponent::Property Attr, typename T>
 void CameraComponent::SetProperty(T value) {
-  isDirty = true;
   if constexpr (Attr == Property::PROJECTION) {
     projMat = value;
     h3dSetCameraProjMat(renderNode, projMat.data);
@@ -61,7 +65,7 @@ void CameraComponent::SetProperty(T value) {
   if constexpr (Attr == Property::FOV) {
     fov = value;
   } else if constexpr (Attr == Property::FAR_PLANE) {
-    FAR_PLANEPlane = value;
+    farPlane = value;
   } else if constexpr (Attr == Property::NEAR_PLANE) {
     nearPlane = value;
   }
@@ -77,12 +81,9 @@ T CameraComponent::GetProperty() const {
   } else if constexpr (Attr == Property::NEAR_PLANE) {
     return nearPlane;
   } else if constexpr (Attr == Property::PROJECTION) {
-    if (isDirty) {
-      float projArr[16];
-      h3dGetCameraProjMat(renderNode, projArr);
-      projMat = Math::Matrix4(projArr);
-    }
-    return projMat;
+    float projArr[16];
+    h3dGetCameraProjMat(renderNode, projArr);
+    return Math::Matrix4(projArr);
   } else {
     return {};
   }

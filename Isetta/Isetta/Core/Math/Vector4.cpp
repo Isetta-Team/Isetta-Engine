@@ -31,8 +31,6 @@ float Vector4::operator[](int i) const {
   return xyzw[i];
 }
 
-Vector4::operator Color() { return Color(x, y, z, w); }
-
 void Vector4::Set(const Vector3& inXYZ, const float inW) {
   x = inXYZ.x;
   y = inXYZ.y;
@@ -40,9 +38,7 @@ void Vector4::Set(const Vector3& inXYZ, const float inW) {
   w = inW;
 }
 
-Vector3 Vector4::GetVector3() const {
-  return Vector3{x, y, z};
-}
+Vector3 Vector4::GetVector3() const { return Vector3{x, y, z}; }
 
 float Vector4::Magnitude() const { return sqrtf(SqrMagnitude()); }
 float Vector4::SqrMagnitude() const { return x * x + y * y + z * z + w * w; }

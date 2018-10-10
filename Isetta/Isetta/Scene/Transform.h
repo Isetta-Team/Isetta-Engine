@@ -6,8 +6,8 @@
 #include "Core/Math/Matrix4.h"
 #include "Core/Math/Quaternion.h"
 #include "Core/Math/Vector3.h"
-#include "Graphics/RenderNode.h"
 #include "Core/Math/Vector4.h"
+#include "Graphics/RenderNode.h"
 
 namespace Isetta {
 class Transform {
@@ -56,7 +56,8 @@ class Transform {
   Math::Vector3 GetRight();
 
   // other
-  void LookAt(const Math::Vector3& target, const Math::Vector3& worldUp = Math::Vector3::up);
+  void LookAt(const Math::Vector3& target,
+              const Math::Vector3& worldUp = Math::Vector3::up);
   inline class Entity* GetEntity() const;
   inline Size GetChildCount() const;
   inline Transform* GetChild(U16 childIndex);
@@ -79,13 +80,12 @@ class Transform {
   // TODO(YIDI): Decide if they should stay here
   static void SetH3DNodeTransform(H3DNode node, Transform& transform);
 
-  #if _DEBUG
+#if _DEBUG
   void Print();
-  #endif
+#endif
+  const Math::Matrix4& GetLocalToWorldMatrix();
 
  private:
-  // to be used by children
-  const Math::Matrix4& GetLocalToWorldMatrix();
   void RecalculateLocalToWorldMatrix();
   // const Math::Matrix4& GetWorldToLocalMatrix();
 
@@ -93,12 +93,13 @@ class Transform {
   void AddChild(Transform* transform);
   void RemoveChild(Transform* transform);
 
-  Math::Quaternion worldRot; // only for query
+  Math::Quaternion worldRot;  // only for query
 
   Math::Matrix4 localToWorldMatrix{};
-  Math::Vector3 localPos{Math::Vector3::zero}; // part of local storage
-  Math::Quaternion localRot{Math::Quaternion::identity}; // part of local storage
-  Math::Vector3 localScale{Math::Vector3::one}; // part of local storage
+  Math::Vector3 localPos{Math::Vector3::zero};  // part of local storage
+  Math::Quaternion localRot{
+      Math::Quaternion::identity};               // part of local storage
+  Math::Vector3 localScale{Math::Vector3::one};  // part of local storage
 
   // marked when anything local changed
   // cleared when matrix recalculated
@@ -111,4 +112,4 @@ class Transform {
 
   static Math::Vector4 sharedV4;
 };
-} // namespace Isetta
+}  // namespace Isetta

@@ -16,6 +16,7 @@
 #include "EngineLoop.h"
 #include "Graphics/CameraComponent.h"
 #include "Graphics/RenderModule.h"
+#include "Scene/Transform.h"
 
 namespace Isetta {
 #define PLANE 1
@@ -29,7 +30,7 @@ namespace Isetta {
 #define CIRCLE CUBE + CUBE_VERTICIES
 #define CIRCLE_INDICIES 25
 #define CIRCLE_VERTICIES 25
-#define SPHERE_SEGMENTS 3
+#define SPHERE_SEGMENTS 4
 
 #define RIGHT CIRCLE
 #define UP CIRCLE + 6
@@ -261,8 +262,15 @@ void DebugDraw::Point(const Math::Vector3 point, const Color& color, float size,
           ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
           .data);
   // glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
-  // RenderModule::GetViewMatrix().data);
-  glUniformMatrix4fv(viewLoc, 1, GL_FALSE, Math::Matrix4::identity.data);
+  //                   CameraComponent::Main()
+  //                       ->GetTransform()
+  //                       .GetLocalToWorldMatrix()
+  //                       //.Transpose()
+  //                       .Inverse()
+  //                       .data);
+  glUniformMatrix4fv(
+      viewLoc, 1, GL_FALSE,
+      CameraComponent::Main()->GetHordeTransform().Inverse().data);
   glUniformMatrix4fv(modelLoc, 1, GL_FALSE, Math::Matrix4::identity.data);
   glUniform4fv(colorLoc, 1, color.rgba);
   GLError();
@@ -309,8 +317,15 @@ void DebugDraw::Line(const Math::Vector3& start, const Math::Vector3& end,
           ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
           .data);
   // glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
-  // RenderModule::GetViewMatrix().data);
-  glUniformMatrix4fv(viewLoc, 1, GL_FALSE, Math::Matrix4::identity.data);
+  //                   CameraComponent::Main()
+  //                       ->GetTransform()
+  //                       .GetLocalToWorldMatrix()
+  //                       //.Transpose()
+  //                       .Inverse()
+  //                       .data);
+  glUniformMatrix4fv(
+      viewLoc, 1, GL_FALSE,
+      CameraComponent::Main()->GetHordeTransform().Inverse().data);
   glUniformMatrix4fv(modelLoc, 1, GL_FALSE, Math::Matrix4::identity.data);
   glUniform4fv(colorLoc, 1, color.rgba);
   GLError();
@@ -438,8 +453,8 @@ void DebugDraw::WireSphere(const Math::Matrix4& transformation,
   const float rzSq = rz * rz;
   Math::Matrix4 yzPlane = Math::Matrix4::RotateY(Math::Util::PI_HALF);
   Math::Matrix4 xzPlane = Math::Matrix4::RotateX(Math::Util::PI_HALF);
-  float increment = 1.0f / 4.0f;  // TODO(Jacob) Sphere const
-  for (int i = 1; i < 4; i++) {
+  float increment = 1.0f / SPHERE_SEGMENTS;
+  for (int i = 1; i < SPHERE_SEGMENTS; i++) {
     float dist = i * increment;
     float distSq = dist * dist;
     rx = Math::Util::Sqrt(rxSq - distSq);
@@ -528,9 +543,16 @@ void DebugDraw::Grid(const Math::Matrix4& transformation, const Color& color,
       CameraComponent::Main()
           ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
           .data);
-  Math::Matrix4 viewMat = Math::Matrix4::identity;
-  glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
-                     viewMat.data);  // TODO(Jacob)
+  Math::Matrix4 viewMat =
+      CameraComponent::Main()->GetHordeTransform().Inverse();
+  // glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
+  //                   CameraComponent::Main()
+  //                       ->GetTransform()
+  //                       .GetLocalToWorldMatrix()
+  //                       //.Transpose()
+  //                       .Inverse()
+  //                       .data);
+  glUniformMatrix4fv(viewLoc, 1, GL_FALSE, viewMat.data);
   Math::Matrix4 model = transformation;
   if (model.IsZero()) {
     model = Math::Matrix4::identity;
@@ -645,8 +667,15 @@ void DebugDraw::OpenGLDraw(const Math::Matrix4& transformation,
           ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
           .data);
   // glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
-  // RenderModule::GetViewMatrix().data);
-  glUniformMatrix4fv(viewLoc, 1, GL_FALSE, Math::Matrix4::identity.data);
+  //                   CameraComponent::Main()
+  //                       ->GetTransform()
+  //                       .GetLocalToWorldMatrix()
+  //                       //.Transpose()
+  //                       .Inverse()
+  //                       .data);
+  glUniformMatrix4fv(
+      viewLoc, 1, GL_FALSE,
+      CameraComponent::Main()->GetHordeTransform().Inverse().data);
   glUniformMatrix4fv(modelLoc, 1, GL_FALSE, transformation.Transpose().data);
   glUniform4fv(colorLoc, 1, color.rgba);
   GLError();

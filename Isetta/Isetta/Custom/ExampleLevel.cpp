@@ -21,8 +21,8 @@ void ExampleLevel::LoadLevel() {
   Entity* pushEntity{AddEntity("PushAnim")};
   MeshComponent* pushMesh =
       pushEntity->AddComponent<MeshComponent>(true, "push/Pushing.scene.xml");
-  pushEntity->SetTransform(Math::Vector3{-200, -100, 0},
-                           Math::Vector3{0, 90, 0}, Math::Vector3::one);
+  pushEntity->SetTransform(Math::Vector3{0, 0, 0}, Math::Vector3{0, 90, 0},
+                           Math::Vector3::one);
   AnimationComponent* ani =
       pushEntity->AddComponent<AnimationComponent>(true, pushMesh);
   ani->AddAnimation("push/Pushing.anim", 0, "", false);
@@ -42,7 +42,7 @@ void ExampleLevel::LoadLevel() {
   Entity* cameraEntity{AddEntity("Camera")};
   CameraComponent* camComp =
       cameraEntity->AddComponent<CameraComponent>(true, "Camera");
-  cameraEntity->SetTransform(Math::Vector3{0, 50, 600}, Math::Vector3::zero,
+  cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
   camComp->SetProperty<CameraProperty::FOV>(
       Config::Instance().renderConfig.fieldOfView.GetVal());
