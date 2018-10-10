@@ -41,5 +41,8 @@ class EngineLoop {
   void ShutDown();
 
   void StartGameClock() const;
+
+  class TestInitalization;
+  friend class TestInitialization;
 };
 }  // namespace Isetta

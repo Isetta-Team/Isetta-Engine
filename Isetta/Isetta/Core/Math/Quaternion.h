@@ -2,10 +2,13 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include <string>
 
 namespace Isetta::Math {
 class Quaternion {
  public:
+  static const Quaternion identity;
+
   float w, x, y, z;
 
   /**
@@ -20,7 +23,7 @@ class Quaternion {
    * \param inZ Z value of the quaternion
    * \param inW W value of the quaternion
    */
-  Quaternion(float inX, float inY, float inZ, float inW)
+  Quaternion(const float inX, const float inY, const float inZ, const float inW)
       : w{inW}, x{inX}, y{inY}, z{inZ} {}
   /**
    * \brief Create a quaternion from euler angles
@@ -29,19 +32,25 @@ class Quaternion {
    * \param eulerZ Euler angle in degree around Z axis
    */
   Quaternion(float eulerX, float eulerY, float eulerZ);
+  static Quaternion FromEulerAngles(const class Vector3& eulerAngles);
+  static Quaternion FromEulerAngles(float eulerX, float eulerY, float eulerZ);
+
   /**
    * \brief Create a quaternion from an axis and an angle
    * \param vector The axis
    * \param scalar The angle
    */
   Quaternion(class Vector3 vector, float scalar);
+  static Quaternion FromAngleAxis(const class Vector3& axis, float angle);
+  static Quaternion FromLookRotation(const class Vector3& forwardDirection,
+                                     const class Vector3& upDirection);
 
   Quaternion(const Quaternion& inQuaternion);
   Quaternion(Quaternion&& inQuaternion) noexcept;
   Quaternion& operator=(const Quaternion& inQuaternion);
   Quaternion& operator=(Quaternion&& inQuaternion) noexcept;
 
-  ~Quaternion() {}
+  ~Quaternion() = default;
 
   bool operator==(const Quaternion& rhs) const;
   bool operator!=(const Quaternion& rhs) const;
@@ -52,6 +61,7 @@ class Quaternion {
   Quaternion operator*(const Quaternion& rhs) const;
   Quaternion& operator*=(const Quaternion& rhs);
   Quaternion operator*(float scalar) const;
+  Vector3 operator*(const Vector3& rhs) const;
 
   /**
    * \brief Get the euler angles of the quaternion
@@ -71,14 +81,25 @@ class Quaternion {
    */
   void SetLookRotation(const class Vector3& forwardDirection,
                        const class Vector3& upDirection);
+  /**
+   * \brief Return normalized quaternion
+   */
+  Quaternion Normalized() const;
+
+  void Normalize();
+  std::string ToString() const;
+  class Matrix3 GetMatrix3() const;
+  Quaternion GetInverse() const;
 
   /**
    * \brief Return the angle between two quaternions
    * \param aQuaternion Quaternion a
    * \param bQuaternion Quaternion b
    */
-  static float Angle(const Quaternion& aQuaternion,
-                     const Quaternion& bQuaternion);
+  static float AngleRad(const Quaternion& aQuaternion,
+                        const Quaternion& bQuaternion);
+  static float AngleDeg(const Quaternion& aQuaternion,
+                        const Quaternion& bQuaternion);
   /**
    * \brief Return the dot product of two quaternion
    * \param aQuaternion Quaternion a
@@ -99,11 +120,6 @@ class Quaternion {
    */
   static Quaternion Lerp(const Quaternion& aQuaternion,
                          const Quaternion& bQuaternion, float t);
-  /**
-   * \brief Normalize the quaternion
-   * \param quaternion The quaternion
-   */
-  static Quaternion Normalize(const Quaternion& quaternion);
   /**
    * \brief Sphere lerp between two quaternions by t
    * \param aQuaternion The starting quaternion

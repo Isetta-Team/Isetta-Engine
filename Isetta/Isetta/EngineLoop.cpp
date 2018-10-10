@@ -14,30 +14,30 @@
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
 #include "Core/FileSystem.h"
-#include "Core/Memory/FreeListAllocator.h"
 #include "Core/Time/Clock.h"
-#include "Graphics/AnimationNode.h"
 #include "Graphics/GUI.h"
-#include "Graphics/LightNode.h"
-#include "Graphics/ModelNode.h"
 #include "Input/Input.h"
 #include "Input/InputEnum.h"
 #include "Networking/NetworkManager.h"
+#include "Scene/Level.h"
 
 // TODO(Jacob) Remove, used only for GUIDemo
 #include "Core/Color.h"
 #include "Core/Math/Rect.h"
-#include "Graphics/GUIStyle.h"
 #include "Graphics/RectTransform.h"
+#include "Scene/Entity.h"
+#include "Scene/LevelManager.h"
 #include "imgui/imgui.h"
+
+#include "Core/Debug/DebugDraw.h"
 
 namespace Isetta {
 
-void RunYidiTest();
 void InputDemo();
 void NetworkingDemo();
 void GraphicsDemo();
 void GUIDemo();
+void DebugDemo();
 
 EngineLoop::EngineLoop() {
   memoryManager = new MemoryManager{};
@@ -76,8 +76,11 @@ void EngineLoop::StartUp() {
   guiModule->StartUp(windowModule->winHandle);
   networkingModule->StartUp();
 
+  LevelManager::Instance().LoadLevel();
+
   // TODO(Yidi) remove
   memoryManager->RegisterTests();
+  DebugDraw::StartUp();
 
   StartGameClock();
   isGameRunning = true;
@@ -85,12 +88,10 @@ void EngineLoop::StartUp() {
   Input::RegisterKeyPressCallback(KeyCode::ESCAPE,
                                   [&]() { isGameRunning = false; });
 
-  // Game Init Part
-
   NetworkingDemo();
-  InputDemo();
-  GraphicsDemo();
-  RunYidiTest();
+  // InputDemo();
+  // RunYidiTest();
+  // GraphicsDemo();
 }
 
 void EngineLoop::Update() {
@@ -140,10 +141,7 @@ void EngineLoop::Update() {
     accumulateTime -= intervalTime;
   }
 
-  // TODO(Chaojie) after scenegraph, save previous state for
-  // prediction LOG_INFO(Debug::Channel::General,
-  // "//////////////Render//////////////");
-  VariableUpdate(0);
+  VariableUpdate(GetGameClock().GetDeltaTime());
   // LOG_INFO(Debug::Channel::General,
   // "//////////////UpdateEnd//////////////");
 }
@@ -154,20 +152,25 @@ void EngineLoop::FixedUpdate(float deltaTime) {
 }
 void EngineLoop::VariableUpdate(float deltaTime) {
   inputModule->Update(deltaTime);
-  // TODO(Chaojie) SceneGraph->Update(deltaTime);
-  // TODO(Chaojie) SceneGraph->LateUpdate(deltaTime);
+  LevelManager::Instance().currentLevel->Update();
+  LevelManager::Instance().currentLevel->LateUpdate();
   audioModule->Update(deltaTime);
   renderModule->Update(deltaTime);
-  guiModule->Update(deltaTime, GUIDemo);
+
+  DebugDemo();
+  DebugDraw::Update();
+  guiModule->Update(deltaTime);
   windowModule->Update(deltaTime);
   memoryManager->Update();
 }
 
 void EngineLoop::ShutDown() {
+  LevelManager::Instance().currentLevel->UnloadLevel();
   networkingModule->ShutDown();
   audioModule->ShutDown();
   guiModule->ShutDown();
   inputModule->ShutDown();
+  DebugDraw::ShutDown();
   renderModule->ShutDown();
   windowModule->ShutDown();
   memoryManager->ShutDown();
@@ -203,8 +206,6 @@ struct TestObject {
     }
   }
 };
-
-void RunYidiTest() {}
 
 void InputDemo() {
   // TODO(Chaojie) remove later into game logic
@@ -257,22 +258,7 @@ void NetworkingDemo() {
     }
   });
 }
-void GraphicsDemo() {
-  // TODO(All) Read scene from scene file
-  // ModelNode car{"test/Low-Poly-Racing-Car.scene.xml", Math::Vector3{0, -20,
-  // 0},
-  //              Math::Vector3::zero, Math::Vector3::one};
-  static ModelNode car{"push/Pushing.scene.xml", Math::Vector3{-200, -100, 0},
-                       Math::Vector3{0, 90, 0}, Math::Vector3::one};
-  // ModelNode car{"models/sphere/sphere.scene.xml", Math::Vector3{-200, -100,
-  // 0},
-  //                     Math::Vector3{0, 90, 0}, Math::Vector3::one};
-  static AnimationNode animation{&car};
-  animation.AddAnimation("push/Pushing.anim", 0, "", false);
-  animation.Play();
-  LightNode light{"materials/light.material.xml", Math::Vector3{0, 200, 600},
-                  Math::Vector3::zero, Math::Vector3::one};
-}
+void GraphicsDemo() {}
 // TODO(Jacob) remove
 bool checkbox = false;
 void GUIDemo() {
@@ -391,4 +377,30 @@ void GUIDemo() {
       Util::StrFormat("%d/%d", static_cast<int>((312 * progressSaturated)),
                       312));
 }
+void DebugDemo() {
+  DebugDraw::Point(2 * Math::Vector3::left, Color::magenta, 20);
+  // DebugDraw::Line(Math::Vector3::zero, v);
+  if (Input::IsKeyPressed(KeyCode::A)) {
+    static float angle = 0.0f;
+    angle += 0.4f * EngineLoop::GetGameClock().GetDeltaTime();
+    if (angle >= 2 * Math::Util::PI) {
+      angle = 0;
+    }
+    DebugDraw::Ray(
+        Math::Vector3::zero,
+        Math::Vector3{Math::Util::Cos(angle), 0, Math::Util::Sin(angle)},
+        Color::cyan, 2);
+  }
+  if (Input::IsKeyPressed(KeyCode::B)) {
+    DebugDraw::Plane(Math::Matrix4::identity, Color::blue, 2);
+  }
+  // DebugDraw::WirePlane(Math::Matrix4::identity);
+  DebugDraw::Cube(Math::Matrix4::identity, Color::white);
+  // DebugDraw::WireCube(Math::Matrix4::Translate(Math::Vector3{0, 0, -2}));
+  // DebugDraw::WireSphere(Math::Vector3::up, 1, Color::red);
+  DebugDraw::AxisSphere(Math::Vector3::up, 1);
+  DebugDraw::Grid();
+  DebugDraw::Axis();
+}
+
 }  // namespace Isetta

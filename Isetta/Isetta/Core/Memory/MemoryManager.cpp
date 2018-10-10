@@ -8,6 +8,7 @@
 #include "Core/Memory/ObjectHandle.h"
 #include "Input/Input.h"
 #include "Input/InputEnum.h"
+#include "Util.h"
 
 namespace Isetta {
 
@@ -79,8 +80,8 @@ void MemoryManager::ClearLevelMemory() {
 }
 
 void MemoryManager::RegisterTests() {
-  Input::RegisterKeyPressCallback(KeyCode::P, [&]() { dynamicArena.Print(); });
-  Input::RegisterKeyPressCallback(KeyCode::T, []() { DefragmentTest(); });
+  // Input::RegisterKeyPressCallback(KeyCode::P, [&]() { dynamicArena.Print(); });
+  // Input::RegisterKeyPressCallback(KeyCode::T, []() { DefragmentTest(); });
 }
 
 MemoryManager* MemoryManager::GetInstance() {

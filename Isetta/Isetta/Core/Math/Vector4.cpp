@@ -7,30 +7,38 @@
 #include <cmath>
 #include <stdexcept>
 #include "Core/Color.h"
+#include "Core/Math/Vector3.h"
 
 namespace Isetta::Math {
 
 const Vector4 Vector4::zero = Vector4();
 const Vector4 Vector4::one = Vector4(1.f);
+const Vector4 Vector4::right = Vector4{1.0f, 0, 0, 0};
+const Vector4 Vector4::up = Vector4{0, 1.0f, 0, 0};
+const Vector4 Vector4::forward = Vector4{0, 0, 1.0f, 0};
+
+Vector4::Vector4(const Vector3& inVector, float inW)
+    : x{inVector.x}, y{inVector.y}, z{inVector.z}, w{inW} {}
 
 Vector4::Vector4(const Color& c) : x{c.r}, y{c.g}, z{c.b}, w{c.a} {}
+Vector4::operator Color() { return Color(x, y, z, w); }
+
+Vector4::operator class Vector3() { return Vector3(x, y, z); }
 
 float Vector4::operator[](int i) const {
-  switch (i) {
-    case 0:
-      return x;
-    case 1:
-      return y;
-    case 2:
-      return z;
-    case 3:
-      return w;
-    default:
-      throw std::out_of_range{"Vector4::[] => Index access out of range."};
-  }
+  if (i < 0 || i > ELEMENT_COUNT - 1)
+    throw std::out_of_range{"Vector4::[] => Index access out of range."};
+  return xyzw[i];
 }
 
-Vector4::operator Color() { return Color(x, y, z, w); }
+void Vector4::Set(const Vector3& inXYZ, const float inW) {
+  x = inXYZ.x;
+  y = inXYZ.y;
+  z = inXYZ.z;
+  w = inW;
+}
+
+Vector3 Vector4::GetVector3() const { return Vector3{x, y, z}; }
 
 float Vector4::Magnitude() const { return sqrtf(SqrMagnitude()); }
 float Vector4::SqrMagnitude() const { return x * x + y * y + z * z + w * w; }

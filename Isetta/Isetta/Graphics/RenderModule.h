@@ -9,6 +9,12 @@
 #include <string>
 #include "Core/Config/CVar.h"
 
+// TODO(Chaojie) remove
+#include "Core/Math/Matrix4.h"
+namespace Isetta::Math {
+class Vector3;
+}
+
 namespace Isetta {
 class RenderModule {
  public:
@@ -32,7 +38,11 @@ class RenderModule {
   /**
    * \brief The array of animation nodes
    */
-  std::list<class AnimationNode*> animationNodes;
+  std::list<class AnimationComponent*> animationComponents;
+  std::list<class MeshComponent*> meshComponents;
+  std::list<class LightComponent*> lightComponents;
+  std::list<class CameraComponent*> cameraComponents;
+  CameraComponent* MainCamera() const;
 
  private:
   RenderModule() = default;
@@ -44,24 +54,19 @@ class RenderModule {
 
   int renderInterface;
   static std::string resourcePath;
-  float fov;
-  float nearPlane;
-  float farPlane;
 
   void InitRenderConfig();
   void InitHordeConfig();
   void InitH3D();
   void InitResources();
-  void ResizeViewport();
 
   // Engine objects
   int curPipeline;
-  H3DRes pipelineRes;
-  H3DRes fontMatRes, panelMatRes, logoMatRes;
-  H3DNode cam;
 
+  H3DRes pipelineRes;
   GLFWwindow* winHandle;
 
+  friend class CameraComponent;
   friend class EngineLoop;
 };
 }  // namespace Isetta

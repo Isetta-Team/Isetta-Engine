@@ -8,6 +8,7 @@ namespace Isetta::Math {
 class Util {
  public:
   static const float PI;
+  static const float PI_HALF;
   static const float EPSILON;
   static const float DEG2RAD;
   static const float RAD2DEG;

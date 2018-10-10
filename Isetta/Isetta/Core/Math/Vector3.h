@@ -6,7 +6,6 @@
 #include <string>
 
 namespace Isetta::Math {
-
 class Vector3 {
  public:
   // Constants
@@ -18,8 +17,14 @@ class Vector3 {
   static const Vector3 down;
   static const Vector3 left;
   static const Vector3 back;
+  static const int ELEMENT_COUNT = 3;
 
-  float x, y, z;
+  union {
+    struct {
+      float x, y, z;
+    };
+    float xyz[ELEMENT_COUNT];
+  };
 
   // Construction
 
@@ -39,6 +44,8 @@ class Vector3 {
    * \param inZ The z of vector
    */
   Vector3(float inX, float inY, float inZ) : x{inX}, y{inY}, z{inZ} {}
+  Vector3(const class Vector2& inVector, float inZ);
+  explicit Vector3(const class Vector3Int& inIntVector);
 
   // Copy and move constructions
 
@@ -61,8 +68,7 @@ class Vector3 {
 
   // Conversions
 
-  explicit Vector3(const class Vector3Int& inIntVector);
-  Vector3(const class Vector2& inVector, float inZ);
+  explicit operator class Vector2();
 
   ~Vector3() {}
 
@@ -86,6 +92,7 @@ class Vector3 {
   inline Vector3 operator-(const Vector3& rhs) const {
     return Vector3(x - rhs.x, y - rhs.y, z - rhs.z);
   }
+  inline Vector3 operator-() const { return Vector3(-x, -y, -z); }
   inline Vector3& operator-=(const Vector3& rhs) {
     x -= rhs.x;
     y -= rhs.y;
@@ -94,6 +101,9 @@ class Vector3 {
   }
   inline Vector3 operator*(float scalar) const {
     return Vector3(x * scalar, y * scalar, z * scalar);
+  }
+  inline friend Vector3 operator*(float scalar, Vector3 v) {
+    return v * scalar;
   }
   inline Vector3& operator*=(float scalar) {
     x *= scalar;
@@ -197,5 +207,7 @@ class Vector3 {
    * \param str Reference string
    */
   static Vector3 FromString(const std::string& str);
+  static float AngleDeg(const Vector3& a, const Vector3& b);
+  static float AngleRad(const Vector3& a, const Vector3& b);
 };
 }  // namespace Isetta::Math

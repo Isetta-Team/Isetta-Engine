@@ -9,7 +9,7 @@
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
-#include "Graphics/AnimationNode.h"
+#include "Graphics/AnimationComponent.h"
 #include "Networking/NetworkManager.h"
 
 // F Windows
@@ -271,7 +271,9 @@ void NetworkingModule::Connect(const char* serverAddress, int serverPort,
 }
 
 void NetworkingModule::Disconnect() {
-  if (!client->IsConnected() && !client->IsConnecting()) {
+  if (!client->IsConnecting()) {
+    return;
+  } else if (!client->IsConnected()) {
     throw std::exception(
         "NetworkingModule::Disconnect => Cannot disconnect the client if it is "
         "not already connected.");

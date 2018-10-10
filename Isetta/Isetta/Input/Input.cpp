@@ -13,6 +13,12 @@ InputModule* Input::inputModule{nullptr};
 void Input::RegisterWindowCloseCallback(const Action<>& callback) {
   inputModule->RegisterWindowCloseCallback(callback);
 }
+U64 Input::RegisterWinSizeCallback(const Action<int, int>& callback) {
+  return inputModule->RegisterWindowSizeCallback(callback);
+}
+void Input::UnegisterWindowSizeCallback(U64 handle) {
+  inputModule->UnegisterWindowSizeCallback(handle);
+}
 bool Input::IsKeyPressed(KeyCode key) { return inputModule->IsKeyPressed(key); }
 U64 Input::RegisterKeyPressCallback(KeyCode key, const Action<>& callback) {
   return inputModule->RegisterKeyPressCallback(key, callback);

@@ -18,21 +18,16 @@ const Vector2 Vector2::right = Vector2(1.f, 0.f);
 const Vector2 Vector2::down = Vector2(0.f, -1.f);
 const Vector2 Vector2::left = Vector2(-1.f, 0.f);
 
-Vector2::Vector2(float inX, float inY): x{inX}, y{inY} {}
+Vector2::Vector2(float inX, float inY) : x{inX}, y{inY} {}
 
 Vector2::Vector2(const Vector3Int& inIntVector)
     : x{static_cast<float>(inIntVector.x)},
       y{static_cast<float>(inIntVector.y)} {}
 
 float Vector2::operator[](int i) const {
-  switch (i) {
-    case 0:
-      return x;
-    case 1:
-      return y;
-    default:
-      throw std::out_of_range{"Vector2::[] => Index Access out of range."};
-  }
+  if (i < 0 || i > ELEMENT_COUNT - 1)
+    throw std::out_of_range{"Vector2::[] => Index Access out of range."};
+  return xy[i];
 }
 
 float Vector2::Magnitude() const { return sqrtf(SqrMagnitude()); }

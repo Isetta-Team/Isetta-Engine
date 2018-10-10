@@ -5,15 +5,16 @@
 
 namespace Isetta::Math {
 class Matrix4 {
- private:
-  float data[16];
-
-  static const int elementCount = 16;
-  static const int rowCount = 4;
-
  public:
   static const Matrix4 zero;
   static const Matrix4 identity;
+  static const int ELEMENT_COUNT = 16;
+  static const int ROW_COUNT = 4;
+
+  union {
+    float data[ELEMENT_COUNT];
+    float row_col[ROW_COUNT][ROW_COUNT];
+  };
 
   /**
    * \brief Default the constructor to create a zero matrix
@@ -24,6 +25,8 @@ class Matrix4 {
    * \param value value of the matrix elements
    */
   explicit Matrix4(float value);
+  // explicit Matrix4(const float* inMat);
+  explicit Matrix4(const float inMat[]);
   Matrix4(float m11, float m12, float m13, float m14, float m21, float m22,
           float m23, float m24, float m31, float m32, float m33, float m34,
           float m41, float m42, float m43, float m44);
@@ -37,6 +40,7 @@ class Matrix4 {
 
   ~Matrix4() {}
 
+  float operator[](int i) const;
   bool operator==(const Matrix4& rhs) const;
   bool operator!=(const Matrix4& rhs) const;
   Matrix4 operator+(const Matrix4& rhs) const;
@@ -92,7 +96,8 @@ class Matrix4 {
    * \param row Row data
    * \param rowData The new values of this row
    */
-  void SetRow(int row, class Vector4 rowData);
+  void SetRow(int row, const class Vector4& rowData);
+  void SetRow(int row, const class Vector3& rowData, float rowVal);
   /**
    * \brief Get the values of a specific column
    * \param col Column Index
@@ -103,8 +108,11 @@ class Matrix4 {
    * \param col Column index
    * \param colData The values of this column
    */
-  void SetCol(int col, class Vector4 colData);
-
+  void SetCol(int col, const class Vector4& colData);
+  void SetCol(int col, const class Vector3& colData, float colVal);
+  void SetTopLeftMatrix3(const class Matrix3& matrix3);
+  void SetDiagonal(const class Vector4& diagonal);
+  void SetDiagonal(float r0c0, float r1c1, float r2c2, float r3c3);
   /**
    * \brief Get the translate matrix of the vector
    * \param translation The translation vector
@@ -114,7 +122,14 @@ class Matrix4 {
    * \brief Get the scale matrix of the vector
    * \param scale The scale vector
    */
-  static Matrix4 Scale(const class Vector3 scale);
+  static Matrix4 Scale(const class Vector3& scale);
+  static Matrix4 RotateX(float radians);
+  static Matrix4 RotateY(float radians);
+  static Matrix4 RotateZ(float radians);
+  static Matrix4 Rotate(const class Vector3& rotation);
+  static Matrix4 Transform(const class Vector3& translation,
+                           const class Vector3& rotation,
+                           const class Vector3& scale);
   /**
    * \brief Checks if two matrix4 are equal (within a tolerance)
    * \param lhs Matrix A to be compared

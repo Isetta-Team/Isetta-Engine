@@ -5,14 +5,16 @@
 
 namespace Isetta::Math {
 class Matrix3 {
- private:
-  float data[9];
-  static const int elementCount = 9;
-  static const int rowCount = 3;
-
  public:
   static const Matrix3 zero;
   static const Matrix3 identity;
+  static const int ELEMENT_COUNT = 9;
+  static const int ROW_COUNT = 3;
+
+  union {
+    float data[ELEMENT_COUNT];
+    float row_col[ROW_COUNT][ROW_COUNT];
+  };
 
   /**
    * \brief Default constructor to create a zero matrix
@@ -38,6 +40,7 @@ class Matrix3 {
 
   ~Matrix3() {}
 
+  float operator[](int i) const;
   bool operator==(const Matrix3& rhs) const;
   bool operator!=(const Matrix3& rhs) const;
   Matrix3 operator+(const Matrix3& rhs) const;
@@ -105,6 +108,8 @@ class Matrix3 {
    * \param colData The values of this column
    */
   void SetCol(int col, class Vector3 colData);
+  void SetDiagonal(const Vector3& diagonal);
+  void SetDiagonal(float r0c0, float r1c1, float r2c2);
   /**
    * \brief Checks if two matrix3 are equal (within a tolerance)
    * \param lhs Matrix A to be compared

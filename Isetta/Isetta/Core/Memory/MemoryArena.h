@@ -4,7 +4,6 @@
 #pragma once
 #include <map>
 #include "Core/IsettaAlias.h"
-#include "MemUtil.h"
 
 namespace Isetta {
 

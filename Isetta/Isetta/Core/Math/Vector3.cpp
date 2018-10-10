@@ -9,8 +9,9 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
-#include "Vector2.h"
-#include "Vector3Int.h"
+#include "Core/Math/Util.h"
+#include "Core/Math/Vector2.h"
+#include "Core/Math/Vector3Int.h"
 
 namespace Isetta::Math {
 
@@ -32,17 +33,12 @@ Vector3::Vector3(const Vector2& inVector, float inZ)
     : x{inVector.x}, y{inVector.y}, z{inZ} {}
 
 float Vector3::operator[](int i) const {
-  switch (i) {
-    case 0:
-      return x;
-    case 1:
-      return y;
-    case 2:
-      return z;
-    default:
-      throw std::out_of_range{"Vector3::[] => Index access out of range."};
-  }
+  if (i < 0 || i > ELEMENT_COUNT - 1)
+    throw std::out_of_range{"Vector3::[] => Index access out of range."};
+  return xyz[i];
 }
+
+Vector3::operator Vector2() { return Vector2(x, y); }
 
 float Vector3::Magnitude() const { return sqrtf(SqrMagnitude()); }
 float Vector3::SqrMagnitude() const { return x * x + y * y + z * z; }
@@ -105,5 +101,13 @@ Vector3 Vector3::FromString(const std::string& str) {
   (is >> std::skipws) >> c >> vec.x >> c >> vec.y >> c >> vec.z;
 
   return vec;
+}
+
+float Vector3::AngleDeg(const Vector3& a, const Vector3& b) {
+  return AngleRad(a, b) * Util::RAD2DEG;
+}
+
+float Vector3::AngleRad(const Vector3& a, const Vector3& b) {
+  return Util::Acos(Dot(a, b) / (a.Magnitude() * b.Magnitude()));
 }
 }  // namespace Isetta::Math

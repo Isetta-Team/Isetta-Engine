@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdarg>
 #include <cstdio>
+#include "Core/Time/StopWatch.h"
+#include "Core/Debug/Logger.h"
 
 namespace Isetta::Util {
 
@@ -15,6 +17,13 @@ inline const char* StrFormat(const char* format, ...) {
   va_end(argList);
 
   return charBuffer;
+}
+
+inline void Benchmark(const char* name, const Action<>& benchmark) {
+  StopWatch stopWatch;
+  stopWatch.Start();
+  benchmark();
+  LOG_INFO(Debug::Channel::General, "[Benchmark] %s took %fs", name, stopWatch.EvaluateInSecond());
 }
 
 inline float MegaBytesFromBytes(const int byte) {

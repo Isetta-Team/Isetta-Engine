@@ -5,16 +5,18 @@
 
 #include <exception>
 #include <filesystem>
-#include <fstream>
-
 #include "Core/Config/Config.h"
 #include "Core/FileSystem.h"
+#include "Core/Math/Vector3.h"
 #include "Core/Time/StopWatch.h"
-#include "Graphics/AnimationNode.h"
+#include "Graphics/AnimationComponent.h"
+#include "Graphics/CameraComponent.h"
+#include "Graphics/LightComponent.h"
 #include "Horde3DUtils.h"
+#include "Scene/Entity.h"
 
 namespace Isetta {
-
+// TODO(Chaojie) remove
 std::string RenderModule::resourcePath{};
 
 void RenderModule::StartUp(GLFWwindow* win) {
@@ -23,16 +25,39 @@ void RenderModule::StartUp(GLFWwindow* win) {
   InitH3D();
   InitHordeConfig();
   InitResources();
-  AnimationNode::renderModule = this;
+  AnimationComponent::renderModule = this;
+  MeshComponent::renderModule = this;
+  LightComponent::renderModule = this;
+  CameraComponent::renderModule = this;
 }
 
 void RenderModule::Update(float deltaTime) {
-  if (!cam) return;
-  for (const auto& anim : animationNodes) {
+  for (const auto& mesh : meshComponents) {
+    bool isTransformDirty =
+        mesh->owner->GetAttribute(Entity::EntityAttributes::IS_TRANSFORM_DIRTY);
+    // TODO(YIDI): Remove this when finish debugging
+#if _DEBUG
+    isTransformDirty = true;
+#endif
+    if (isTransformDirty) {
+      mesh->UpdateTransform();
+    }
+  }
+  for (const auto& light : lightComponents) {
+    if (light->owner->GetAttribute(
+            Entity::EntityAttributes::IS_TRANSFORM_DIRTY)) {
+      light->UpdateTransform();
+    }
+  }
+  for (const auto& anim : animationComponents) {
     anim->UpdateAnimation(deltaTime);
   }
-
-  h3dRender(cam);
+  for (const auto& cam : cameraComponents) {
+    cam->UpdateTransform();
+  }
+  ASSERT(cameraComponents.size() > 0);
+  CameraComponent::_main = cameraComponents.front();
+  h3dRender(cameraComponents.front()->renderNode);
 
   h3dFinalizeFrame();
 }
@@ -45,9 +70,6 @@ void RenderModule::ShutDown() {
 
 void RenderModule::InitRenderConfig() {
   renderInterface = H3DRenderDevice::OpenGL4;
-  fov = Config::Instance().renderConfig.fieldOfView.GetVal();
-  nearPlane = Config::Instance().renderConfig.nearClippingPlane.GetVal();
-  farPlane = Config::Instance().renderConfig.farClippingPlane.GetVal();
   resourcePath = Config::Instance().resourcePath.GetVal();
 }
 
@@ -71,7 +93,6 @@ void RenderModule::InitHordeConfig() {
 
 void RenderModule::InitH3D() {
   if (!h3dInit(static_cast<H3DRenderDevice::List>(renderInterface))) {
-    h3dutDumpMessages();
     throw std::exception("Render::InitH3D: Unable to initalize Horde3D");
   }
 }
@@ -84,34 +105,6 @@ void RenderModule::InitResources() {  // 1. Add resources
   LoadResourceFromDisk(
       pipelineRes,
       "Render::InitPipeline => Error in loading pipeline resources");
-
-  // Probably later
-  cam = h3dAddCameraNode(H3DRootNode, "Camera", pipelineRes);
-  h3dSetNodeParamI(cam, H3DCamera::OccCullingI, 1);
-  h3dSetNodeTransform(cam, 0, 50, 600, 0, 0, 0, 1, 1, 1);
-
-  ResizeViewport();
-}
-
-void RenderModule::ResizeViewport() {
-  int width, height;
-  if (winHandle) {
-    glfwGetWindowSize(winHandle, &width, &height);
-  } else {
-    width = -1;
-    height = -1;
-  }
-
-  // Resize viewport
-  h3dSetNodeParamI(cam, H3DCamera::ViewportXI, 0);
-  h3dSetNodeParamI(cam, H3DCamera::ViewportYI, 0);
-  h3dSetNodeParamI(cam, H3DCamera::ViewportWidthI, width);
-  h3dSetNodeParamI(cam, H3DCamera::ViewportHeightI, height);
-
-  // Set virtual camera parameters
-  h3dSetupCameraView(cam, fov, static_cast<float>(width) / height, nearPlane,
-                     farPlane);
-  h3dResizePipelineBuffers(pipelineRes, width, height);
 }
 
 void RenderModule::LoadResourceFromDisk(H3DRes resource,

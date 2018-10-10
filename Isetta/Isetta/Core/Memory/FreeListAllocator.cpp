@@ -54,6 +54,8 @@ void* FreeListAllocator::Alloc(const Size size, const U8 alignment) {
   PtrInt headerAddress = alignedAddress - headerSize;
 
   // new headers will be reclaimed during "free" process
+  // TODO(YIDI): This step maybe buggy, see "Image Creator" page 16, Make sure
+  // the node on the left's next is aligned properly
   if (node->size >= occupiedSize + nodeSize) {
     // enough space to put a node here
     auto* header = new (reinterpret_cast<void*>(headerAddress))
@@ -110,7 +112,7 @@ void FreeListAllocator::Erase() const {
   }
 
   if (freeCallback == nullptr) {
-    std::free(memHead);  
+    std::free(memHead);
   } else {
     freeCallback(memHead);
   }

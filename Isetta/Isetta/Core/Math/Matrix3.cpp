@@ -34,24 +34,30 @@ Matrix3::Matrix3(float m11, float m12, float m13, float m21, float m22,
 }
 
 Matrix3::Matrix3(const Matrix3& inMatrix) {
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     data[i] = inMatrix.data[i];
   }
 }
 
 Matrix3::Matrix3(Matrix3&& inMatrix) noexcept {
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     data[i] = inMatrix.data[i];
   }
 }
+
+float Matrix3::operator[](int i) const {
+  if (i < 0 || i > ELEMENT_COUNT - 1)
+    throw std::out_of_range{"Matrix3::[] => Index access out of range."};
+  return data[i];
+}
 Matrix3& Matrix3::operator=(const Matrix3& inMatrix) {
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     data[i] = inMatrix.data[i];
   }
   return *this;
 }
 Matrix3& Matrix3::operator=(Matrix3&& inMatrix) noexcept {
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     data[i] = inMatrix.data[i];
   }
   return *this;
@@ -69,83 +75,74 @@ Matrix3::Matrix3(const Vector3& aVector, const Vector3& bVector) {
 }
 
 bool Matrix3::operator==(const Matrix3& rhs) const {
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     if (data[i] != rhs.data[i]) {
       return false;
     }
   }
   return true;
 }
-
-bool Matrix3::operator!=(const Matrix3& rhs) const {
-  return !(*this == rhs);
-}
-
+bool Matrix3::operator!=(const Matrix3& rhs) const { return !(*this == rhs); }
 Matrix3 Matrix3::operator+(const Matrix3& rhs) const {
   Matrix3 ret{};
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     ret.data[i] += rhs.data[i];
   }
   return ret;
 }
-
 Matrix3& Matrix3::operator+=(const Matrix3& rhs) {
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     data[i] += rhs.data[i];
   }
   return *this;
 }
-
 Matrix3 Matrix3::operator-(const Matrix3& rhs) const {
   Matrix3 ret{};
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     ret.data[i] -= rhs.data[i];
   }
   return ret;
 }
-
 Matrix3 Matrix3::operator-=(const Matrix3& rhs) {
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     data[i] += rhs.data[i];
   }
   return *this;
 }
-
 Matrix3 Matrix3::operator*(const Matrix3& rhs) const {
   Matrix3 ret{};
-  for (int i = 0; i < rowCount; i++) {
-    for (int j = 0; j < rowCount; j++) {
-      for (int k = 0; k < rowCount; k++) {
+  for (int i = 0; i < ROW_COUNT; i++) {
+    for (int j = 0; j < ROW_COUNT; j++) {
+      for (int k = 0; k < ROW_COUNT; k++) {
         ret.data[i * 3 + j] += data[i * 3 + k] * rhs.data[k * 3 + j];
       }
     }
   }
   return ret;
 }
-
 Matrix3 Matrix3::operator*=(const Matrix3& rhs) {
   float newData[9];
-  for (int i = 0; i < rowCount; i++) {
-    for (int j = 0; j < rowCount; j++) {
-      for (int k = 0; k < rowCount; k++) {
+  for (int i = 0; i < ROW_COUNT; i++) {
+    for (int j = 0; j < ROW_COUNT; j++) {
+      for (int k = 0; k < ROW_COUNT; k++) {
         newData[i * 3 + j] += data[i * 3 + k] * rhs.data[k * 3 + j];
       }
     }
   }
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     data[i] = newData[i];
   }
   return *this;
 }
 Matrix3 Matrix3::operator*(float scalar) const {
   Matrix3 ret{};
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     ret.data[i] = data[i] * scalar;
   }
   return ret;
 }
 Matrix3 Matrix3::operator*=(float scalar) {
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     data[i] *= scalar;
   }
   return *this;
@@ -161,16 +158,16 @@ float Matrix3::Determinant() const {
          data[2] * (data[3] * data[7] - data[6] * data[4]);
 }
 float Matrix3::Get(int x, int y) const {
-  if (x > 2 || x < 0 || y > 2 || y < 0) {
+  if (x > ELEMENT_COUNT - 1 || x < 0 || y > ELEMENT_COUNT - 1 || y < 0) {
     throw std::out_of_range{"Matrix3::Get => Matrix index out of range."};
   }
-  return data[x * rowCount + y];
+  return row_col[x][y];
 }
 void Matrix3::Set(int x, int y, float number) {
-  if (x > 2 || x < 0 || y > 2 || y < 0) {
+  if (x > ELEMENT_COUNT - 1 || x < 0 || y > ELEMENT_COUNT - 1 || y < 0) {
     throw std::out_of_range{"Matrix3::Set => Matrix index out of range."};
   }
-  data[x * rowCount + y] = number;
+  row_col[x][y] = number;
 }
 Matrix3 Matrix3::Inverse() const {
   float det = Determinant();
@@ -200,10 +197,10 @@ Matrix3 Matrix3::Transpose() const {
 }
 
 bool Matrix3::IsIdentity() const {
-  for (int i = 0; i < rowCount; i++) {
-    for (int j = 0; j < rowCount; j++) {
-      if (data[i * rowCount + j] != static_cast<float>(i == j) ||
-          data[j * rowCount + i] != static_cast<float>(i == j)) {
+  for (int i = 0; i < ROW_COUNT; i++) {
+    for (int j = 0; j < ROW_COUNT; j++) {
+      if (data[i * ROW_COUNT + j] != static_cast<float>(i == j) ||
+          data[j * ROW_COUNT + i] != static_cast<float>(i == j)) {
         return false;
       }
     }
@@ -212,42 +209,53 @@ bool Matrix3::IsIdentity() const {
 }
 
 bool Matrix3::IsZero() const {
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     if (data[i] != 0) return false;
   }
   return true;
 }
 
 Vector3 Matrix3::GetRow(int row) const {
-  if (row < 0 || row > 2)
+  if (row < 0 || row > ELEMENT_COUNT - 1)
     throw std::out_of_range{"Matrix3::GetRow => Row index out of range."};
-  return Vector3(data[row * rowCount], data[row * rowCount + 1], data[row * rowCount + 2]);
+  return Vector3(data[row * ROW_COUNT], data[row * ROW_COUNT + 1],
+                 data[row * ROW_COUNT + 2]);
 }
 
 void Matrix3::SetRow(int row, Vector3 rowData) {
-  if (row < 0 || row > 2)
+  if (row < 0 || row > ELEMENT_COUNT - 1)
     throw std::out_of_range{"Matrix3::SetRow => Row index out of range."};
-  data[row * rowCount] = rowData.x;
-  data[row * rowCount + 1] = rowData.y;
-  data[row * rowCount + 2] = rowData.z;
+  data[row * ROW_COUNT] = rowData.x;
+  data[row * ROW_COUNT + 1] = rowData.y;
+  data[row * ROW_COUNT + 2] = rowData.z;
 }
 
 Vector3 Matrix3::GetCol(int col) const {
-  if (col < 0 || col > 2)
+  if (col < 0 || col > ELEMENT_COUNT - 1)
     throw std::out_of_range{"Matrix3::GetCol => Column index out of range."};
-  return Vector3(data[col], data[rowCount + col], data[rowCount * 2 + col]);
+  return Vector3(data[col], data[ROW_COUNT + col], data[ROW_COUNT * 2 + col]);
 }
 
 void Matrix3::SetCol(int col, Vector3 colData) {
-  if (col < 0 || col > 2)
+  if (col < 0 || col > ELEMENT_COUNT - 1)
     throw std::out_of_range{"Matrix3::SetCol => Column index out of range."};
   data[col] = colData.x;
-  data[rowCount + col] = colData.y;
-  data[rowCount * 2 + col] = colData.z;
+  data[ROW_COUNT + col] = colData.y;
+  data[ROW_COUNT * 2 + col] = colData.z;
+}
+
+void Matrix3::SetDiagonal(const Vector3& diagonal) {
+  SetDiagonal(diagonal.x, diagonal.y, diagonal.z);
+}
+
+void Matrix3::SetDiagonal(const float r0c0, const float r1c1, const float r2c2) {
+  Set(0, 0, r0c0);
+  Set(1, 1, r1c1);
+  Set(2, 2, r2c2);
 }
 
 bool Matrix3::FuzzyEqual(const Matrix3& lhs, const Matrix3& rhs) {
-  for (int i = 0; i < elementCount; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; i++) {
     if (abs(lhs.data[i] - rhs.data[i]) > FLT_EPSILON) {
       return false;
     }

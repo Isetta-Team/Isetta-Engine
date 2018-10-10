@@ -1,21 +1,27 @@
 // "Copyright [2018] Isetta"
 #pragma once
-#ifndef ISETTA_ISETTA_MATH_VECTOR4_H_
-#define ISETTA_ISETTA_MATH_VECTOR4_H_
 
 namespace Isetta {
 class Color;
 }
 
 namespace Isetta::Math {
-
 class Vector4 {
  public:
   // Constants
   static const Vector4 zero;
   static const Vector4 one;
+  static const Vector4 right;
+  static const Vector4 up;
+  static const Vector4 forward;
+  static const int ELEMENT_COUNT = 4;
 
-  float x, y, z, w;
+  union {
+    struct {
+      float x, y, z, w;
+    };
+    float xyzw[ELEMENT_COUNT];
+  };
 
   // Construct by name
 
@@ -37,6 +43,7 @@ class Vector4 {
    */
   Vector4(float inX, float inY, float inZ, float inW)
       : x{inX}, y{inY}, z{inZ}, w{inW} {}
+  Vector4(const class Vector3& inVector, float inW);
   explicit Vector4(const Color& c);
 
   // Copy and move constructions
@@ -93,6 +100,9 @@ class Vector4 {
   inline Vector4 operator*(float scalar) const {
     return Vector4(x * scalar, y * scalar, z * scalar, w * scalar);
   }
+  inline friend Vector4 operator*(float scalar, Vector4 v) {
+    return v * scalar;
+  }
   inline Vector4& operator*=(float scalar) {
     x *= scalar;
     y *= scalar;
@@ -113,9 +123,15 @@ class Vector4 {
 
   // Conversions
   explicit operator Color();
+  explicit operator class Vector3();
 
   // Functions
 
+  void Set(const class Vector3& inXYZ, float inW);
+  /**
+   * \brief Will abandon component w
+   */
+  Vector3 GetVector3() const;
   /**
    * \brief Returns the length of the vector
    */
@@ -181,5 +197,3 @@ class Vector4 {
   static Vector4 Slerp(const Vector4& start, const Vector4& end, float time);
 };
 }  // namespace Isetta::Math
-
-#endif  // ISETTA_ISETTA_MATH_Vector4_H_

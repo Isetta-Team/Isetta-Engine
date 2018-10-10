@@ -25,6 +25,7 @@ std::unordered_map<U64, Action<GLFWwindow*, double, double>>
     InputModule::scrollCallbacks;
 std::unordered_map<U64, Action<GLFWwindow*, unsigned int>>
     InputModule::charCallbacks;
+std::unordered_map<U64, Action<int, int>> InputModule::winSizeCallbacks;
 
 U64 InputModule::totalHandle{};
 
@@ -32,6 +33,14 @@ GLFWwindow* InputModule::winHandle{nullptr};
 
 void InputModule::RegisterWindowCloseCallback(const Action<>& callback) {
   windowCloseCallbacks.push_back(callback);
+}
+U64 InputModule::RegisterWindowSizeCallback(const Action<int, int>& callback) {
+  U64 handle = totalHandle++;
+  winSizeCallbacks.insert(std::make_pair(handle, callback));
+  return handle;
+}
+void InputModule::UnegisterWindowSizeCallback(U64 handle) {
+  winSizeCallbacks.erase(handle);
 }
 bool InputModule::IsKeyPressed(KeyCode key) const {
   int glfwKey = KeyCodeToGlfwKey(key);
@@ -146,6 +155,7 @@ void InputModule::StartUp(GLFWwindow* win) {
   glfwSetMouseButtonCallback(winHandle, MouseEventListener);
   glfwSetCharCallback(winHandle, CharEventListener);
   glfwSetScrollCallback(winHandle, ScrollEventListener);
+  glfwSetWindowSizeCallback(winHandle, WinSizeListener);
 }
 
 void InputModule::Update(float deltaTime) { glfwPollEvents(); }
@@ -232,6 +242,12 @@ void InputModule::ScrollEventListener(GLFWwindow* win, double xoffset,
   }
 }
 
+void InputModule::WinSizeListener(GLFWwindow* win, int width, int height) {
+  for (const auto& handleCallback : winSizeCallbacks) {
+    handleCallback.second(width, height);
+  }
+}
+
 int InputModule::KeyCodeToGlfwKey(KeyCode key) const {
   int glfwKey;
   switch (key) {
@@ -312,11 +328,18 @@ int InputModule::KeyCodeToGlfwKey(KeyCode key) const {
     case KeyCode::PAGE_DOWN:
     case KeyCode::HOME:
     case KeyCode::END:
+      glfwKey = GLFW_KEY_ESCAPE - static_cast<int>(KeyCode::ESCAPE) +
+                static_cast<int>(key);
+      break;
     case KeyCode::CAPS_LOCK:
     case KeyCode::SCROLL_LOCK:
     case KeyCode::NUM_LOCK:
     case KeyCode::PRINT_SCREEN:
     case KeyCode::PAUSE:
+      glfwKey = GLFW_KEY_CAPS_LOCK - static_cast<int>(KeyCode::CAPS_LOCK) +
+                static_cast<int>(key);
+      break;
+
     case KeyCode::F1:
     case KeyCode::F2:
     case KeyCode::F3:
@@ -342,6 +365,9 @@ int InputModule::KeyCodeToGlfwKey(KeyCode key) const {
     case KeyCode::F23:
     case KeyCode::F24:
     case KeyCode::F25:
+      glfwKey =
+          GLFW_KEY_F1 - static_cast<int>(KeyCode::F1) + static_cast<int>(key);
+      break;
     case KeyCode::KP_0:
     case KeyCode::KP_1:
     case KeyCode::KP_2:
@@ -368,7 +394,7 @@ int InputModule::KeyCodeToGlfwKey(KeyCode key) const {
     case KeyCode::RIGHT_ALT:
     case KeyCode::RIGHT_SUPER:
     case KeyCode::MENU:
-      glfwKey = GLFW_KEY_ESCAPE - static_cast<int>(KeyCode::ESCAPE) +
+      glfwKey = GLFW_KEY_KP_0 - static_cast<int>(KeyCode::KP_0) +
                 static_cast<int>(key);
       break;
     default:
