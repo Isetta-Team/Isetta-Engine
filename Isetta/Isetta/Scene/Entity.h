@@ -64,13 +64,6 @@ class Entity {
 
 template <typename T, typename... Args>
 T* Entity::AddComponent(bool isActive, Args&&... args) {
-  // if (!std::is_base_of<class Component, T>::value) {
-  //   throw std::logic_error(Util::StrFormat("%s is not a derived class from
-  //   Component class",
-  //                                          typeid(T).name));
-  // }
-  // static_assert(std::is_base_of<class Component, T>::value, "T must be
-  // derived from Component class.");
   if constexpr (!std::is_base_of<class Component, T>::value) {
     throw std::logic_error(Util::StrFormat(
         "%s is not a derived class from Component class", typeid(T).name));
@@ -90,8 +83,6 @@ T* Entity::AddComponent(bool isActive, Args&&... args) {
 template <typename T>
 T* Entity::GetComponent() {
   for (int i = 0; i < componentTypes.size(); i++) {
-    // might not work since `==` operator has problems with shared libraries on
-    // some platform if so, use SID(type_info.name)) instead
     if (std::type_index(typeid(T)) == componentTypes[i]) {
       return static_cast<T*>(components[i]);
     }

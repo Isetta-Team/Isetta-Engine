@@ -50,20 +50,4 @@ void CameraComponent::SetupCameraViewport() {
   h3dSetupCameraView(renderNode, fov, static_cast<float>(width) / height,
                      nearPlane, farPlane);
 }
-
-void CameraComponent::SetCameraProperties(CameraProperties attr, float value) {
-  switch (attr) {
-    case CameraProperties::FIELD_OF_VIEW:
-      fov = value;
-      break;
-    case CameraProperties::FAR_CLIPPING_PLANE:
-      farPlane = value;
-      break;
-    case CameraProperties::NEAR_CLIPPING_PLANE:
-      nearPlane = value;
-      break;
-  }
-  SetupCameraViewport();
-}
-
 }  // namespace Isetta

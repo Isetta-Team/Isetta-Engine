@@ -13,6 +13,10 @@
 #include "Scene/Entity.h"
 
 namespace Isetta {
+
+using LightProperties = LightComponent::LightProperties;
+using CameraProperties = CameraComponent::CameraProperties;
+
 void ExampleLevel::LoadLevel() {
   Entity* pushEntity{AddEntity("PushAnim")};
   MeshComponent* pushMesh =
@@ -28,35 +32,23 @@ void ExampleLevel::LoadLevel() {
       true, "materials/light.material.xml", "LIGHT_1");
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
-  lightComp->SetLightProperties<LightComponent::LightProperties::LIGHT_RADIUS>(
-      0, 2500);
-  lightComp->SetLightProperties<LightComponent::LightProperties::FIELD_OF_VIEW>(
-      0, 180);
-  lightComp->SetLightProperties<LightComponent::LightProperties::COLOR>(
-      Color::white);
-  lightComp
-      ->SetLightProperties<LightComponent::LightProperties::COLOR_MULTIPLIER>(
-          0, 1.0f);
-  lightComp
-      ->SetLightProperties<LightComponent::LightProperties::SHADOW_MAP_COUNT>(
-          1);
-  lightComp
-      ->SetLightProperties<LightComponent::LightProperties::SHADOW_MAP_BIAS>(
-          0, 0.01f);
+  lightComp->SetProperties<LightProperties::LIGHT_RADIUS>(2500);
+  lightComp->SetProperties<LightProperties::FIELD_OF_VIEW>(180);
+  lightComp->SetProperties<LightProperties::COLOR>(Color::white);
+  lightComp->SetProperties<LightProperties::COLOR_MULTIPLIER>(1.0f);
+  lightComp->SetProperties<LightProperties::SHADOW_MAP_COUNT>(1);
+  lightComp->SetProperties<LightProperties::SHADOW_MAP_BIAS>(0.01f);
 
   Entity* cameraEntity{AddEntity("Camera")};
   CameraComponent* camComp =
       cameraEntity->AddComponent<CameraComponent>(true, "Camera");
   cameraEntity->SetTransform(Math::Vector3{0, 50, 600}, Math::Vector3::zero,
                              Math::Vector3::one);
-  camComp
-      ->SetCameraProperties<CameraComponent::CameraProperties::FIELD_OF_VIEW>(
-          Config::Instance().renderConfig.fieldOfView.GetVal());
-  camComp->SetCameraProperties<
-      CameraComponent::CameraProperties::NEAR_CLIPPING_PLANE>(
+  camComp->SetProperties<CameraProperties::FIELD_OF_VIEW>(
+      Config::Instance().renderConfig.fieldOfView.GetVal());
+  camComp->SetProperties<CameraProperties::NEAR_CLIPPING_PLANE>(
       Config::Instance().renderConfig.nearClippingPlane.GetVal());
-  camComp->SetCameraProperties<
-      CameraComponent::CameraProperties::FAR_CLIPPING_PLANE>(
+  camComp->SetProperties<CameraProperties::FAR_CLIPPING_PLANE>(
       Config::Instance().renderConfig.farClippingPlane.GetVal());
 
   Entity* customEntity{AddEntity("custom")};

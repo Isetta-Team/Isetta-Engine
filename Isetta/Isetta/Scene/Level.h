@@ -4,6 +4,15 @@
 #pragma once
 #include <list>
 
+#define CREATE_LEVEL(NAME) class NAME : public Level, public LevelRegistry<NAME> {\
+ public:\
+  bool IsRegisteredInLevelManager() const { return registered; }\
+  static inline Func<NAME*> CreateMethod = []() {\
+    return MemoryManager::NewOnStack<NAME>();\
+  };\
+  static std::string GetLevelName() { return #NAME; }\
+ private:
+
 namespace Isetta {
 class Level {
 protected:

@@ -35,7 +35,7 @@ void ExampleComponent::Update() {
 
   if (entity == nullptr) return;
   if (Input::IsKeyPressed(KeyCode::N)) {
-    entity->GetComponent<AnimationComponent>()->Stop();
+    entity->GetComponent<MeshComponent>()->SetActive(false);
   }
   if (Input::IsKeyPressed(KeyCode::M)) {
     entity->GetComponent<AnimationComponent>()->Play();
