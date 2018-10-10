@@ -29,6 +29,7 @@ public:
   class Entity* AddEntity(std::string name);
 
   void Update();
+  void GUIUpdate();
   void LateUpdate();
 };
 }  // namespace Isetta

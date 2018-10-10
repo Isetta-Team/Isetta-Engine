@@ -261,16 +261,14 @@ void DebugDraw::Point(const Math::Vector3 point, const Color& color, float size,
       CameraComponent::Main()
           ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
           .data);
-  // glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
-  //                   CameraComponent::Main()
-  //                       ->GetTransform()
-  //                       .GetLocalToWorldMatrix()
-  //                       //.Transpose()
-  //                       .Inverse()
-  //                       .data);
-  glUniformMatrix4fv(
-      viewLoc, 1, GL_FALSE,
-      CameraComponent::Main()->GetHordeTransform().Inverse().data);
+  // TODO(Jacob) replace with world to local call
+  glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
+                     CameraComponent::Main()
+                         ->GetTransform()
+                         .GetLocalToWorldMatrix()
+                         .Inverse()
+                         .Transpose()
+                         .data);
   glUniformMatrix4fv(modelLoc, 1, GL_FALSE, Math::Matrix4::identity.data);
   glUniform4fv(colorLoc, 1, color.rgba);
   GLError();
@@ -316,16 +314,14 @@ void DebugDraw::Line(const Math::Vector3& start, const Math::Vector3& end,
       CameraComponent::Main()
           ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
           .data);
-  // glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
-  //                   CameraComponent::Main()
-  //                       ->GetTransform()
-  //                       .GetLocalToWorldMatrix()
-  //                       //.Transpose()
-  //                       .Inverse()
-  //                       .data);
-  glUniformMatrix4fv(
-      viewLoc, 1, GL_FALSE,
-      CameraComponent::Main()->GetHordeTransform().Inverse().data);
+  // TODO(Jacob) replace with world to local call
+  glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
+                     CameraComponent::Main()
+                         ->GetTransform()
+                         .GetLocalToWorldMatrix()
+                         .Inverse()
+                         .Transpose()
+                         .data);
   glUniformMatrix4fv(modelLoc, 1, GL_FALSE, Math::Matrix4::identity.data);
   glUniform4fv(colorLoc, 1, color.rgba);
   GLError();
@@ -544,15 +540,9 @@ void DebugDraw::Grid(const Math::Matrix4& transformation, const Color& color,
           ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
           .data);
   Math::Matrix4 viewMat =
-      CameraComponent::Main()->GetHordeTransform().Inverse();
-  // glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
-  //                   CameraComponent::Main()
-  //                       ->GetTransform()
-  //                       .GetLocalToWorldMatrix()
-  //                       //.Transpose()
-  //                       .Inverse()
-  //                       .data);
-  glUniformMatrix4fv(viewLoc, 1, GL_FALSE, viewMat.data);
+      CameraComponent::Main()->GetTransform().GetLocalToWorldMatrix();
+  // TODO(Jacob) replace with world to local call
+  glUniformMatrix4fv(viewLoc, 1, GL_FALSE, viewMat.Inverse().Transpose().data);
   Math::Matrix4 model = transformation;
   if (model.IsZero()) {
     model = Math::Matrix4::identity;
@@ -666,16 +656,14 @@ void DebugDraw::OpenGLDraw(const Math::Matrix4& transformation,
       CameraComponent::Main()
           ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
           .data);
-  // glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
-  //                   CameraComponent::Main()
-  //                       ->GetTransform()
-  //                       .GetLocalToWorldMatrix()
-  //                       //.Transpose()
-  //                       .Inverse()
-  //                       .data);
-  glUniformMatrix4fv(
-      viewLoc, 1, GL_FALSE,
-      CameraComponent::Main()->GetHordeTransform().Inverse().data);
+  // TODO(Jacob) replace with world to local call
+  glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
+                     CameraComponent::Main()
+                         ->GetTransform()
+                         .GetLocalToWorldMatrix()
+                         .Inverse()
+                         .Transpose()
+                         .data);
   glUniformMatrix4fv(modelLoc, 1, GL_FALSE, transformation.Transpose().data);
   glUniform4fv(colorLoc, 1, color.rgba);
   GLError();

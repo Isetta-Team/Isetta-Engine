@@ -46,6 +46,12 @@ void Level::Update() {
   }
 }
 
+void Level::GUIUpdate() {
+  for (const auto& entity : entities) {
+    entity->GuiUpdate();
+  }
+}
+
 void Level::LateUpdate() {
   for (const auto& entity : entities) {
     entity->LastUpdate();

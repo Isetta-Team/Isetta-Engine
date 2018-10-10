@@ -58,9 +58,9 @@ class Transform {
   // other
   void LookAt(const Math::Vector3& target,
               const Math::Vector3& worldUp = Math::Vector3::up);
-  inline class Entity* GetEntity() const;
-  inline Size GetChildCount() const;
-  inline Transform* GetChild(U16 childIndex);
+  class Entity* GetEntity() const { return entity; }
+  Size GetChildCount() const { return children.size(); }
+  Transform* GetChild(U16 childIndex);
   inline std::string GetName() const;
 
   // utilities
@@ -69,8 +69,9 @@ class Transform {
   Math::Vector3 WorldDirFromLocalDir(const Math::Vector3& localDirection);
   Math::Vector3 LocalDirFromWorldDir(const Math::Vector3& worldDirection);
 
-  void ForEachChild(Action<Transform*>& action);
-  void ForEachChildRecursive(Action<Transform*>& action);
+  void ForChildren(Action<Transform*> action);
+  void ForDescendents(Action<Transform*> action);
+  void ForSelfAndDescendents(Action<Transform*> action);
 
   void SetWorldTransform(const Math::Vector3& inPosition,
                          const Math::Vector3& inEulerAngles,
@@ -87,7 +88,6 @@ class Transform {
 
  private:
   void RecalculateLocalToWorldMatrix();
-  // const Math::Matrix4& GetWorldToLocalMatrix();
 
   // both called by SetParent
   void AddChild(Transform* transform);
@@ -103,7 +103,8 @@ class Transform {
 
   // marked when anything local changed
   // cleared when matrix recalculated
-  bool isMatrixDirty{false};
+  void SetDirty();
+  bool isMatrixDirty{true};
 
   class Entity* entity{nullptr};
   Transform* root{nullptr};

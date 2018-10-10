@@ -4,7 +4,7 @@
 #pragma once
 #include <unordered_map>
 #include "SID/sid.h"
-#include "imgui_impl_opengl3.h"
+#include "Core/IsettaAlias.h"
 
 namespace Isetta {
 template <typename T>

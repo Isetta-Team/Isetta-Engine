@@ -377,6 +377,17 @@ void Matrix4::SetTopLeftMatrix3(const Matrix3& matrix3) {
   }
 }
 
+void Matrix4::SetDiagonal(const Vector4& diagonal) {
+  SetDiagonal(diagonal.x, diagonal.y, diagonal.z, diagonal.w);
+}
+
+void Matrix4::SetDiagonal(float r0c0, float r1c1, float r2c2, float r3c3) {
+  row_col[0][0] = r0c0;
+  row_col[1][1] = r1c1;
+  row_col[2][2] = r2c2;
+  row_col[3][3] = r3c3;
+}
+
 Matrix4 Matrix4::Translate(const Vector3& translation) {
   return Matrix4{1, 0, 0, translation.x,  //
                  0, 1, 0, translation.y,  //

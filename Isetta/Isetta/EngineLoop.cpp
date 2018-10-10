@@ -33,7 +33,6 @@
 
 namespace Isetta {
 
-void RunYidiTest();
 void InputDemo();
 void NetworkingDemo();
 void GraphicsDemo();
@@ -90,8 +89,9 @@ void EngineLoop::StartUp() {
                                   [&]() { isGameRunning = false; });
 
   NetworkingDemo();
-  InputDemo();
-  RunYidiTest();
+  // InputDemo();
+  // RunYidiTest();
+  // GraphicsDemo();
 }
 
 void EngineLoop::Update() {
@@ -159,8 +159,7 @@ void EngineLoop::VariableUpdate(float deltaTime) {
 
   DebugDemo();
   DebugDraw::Update();
-  guiModule->Update(deltaTime, nullptr);
-  // guiModule->Update(deltaTime, GUIDemo);
+  guiModule->Update(deltaTime);
   windowModule->Update(deltaTime);
   memoryManager->Update();
 }
@@ -207,22 +206,6 @@ struct TestObject {
     }
   }
 };
-
-void RunYidiTest() {
-  // Util::Benchmark("New and delete", []() {
-  //   for (int i = 0; i < 100000; i++) {
-  //     auto hi = new TestObject(70u);
-  //     delete hi;
-  //   }
-  // });
-  //
-  // Util::Benchmark("Freelist", []() {
-  //   for (int i = 0; i < 100000; i++) {
-  //     auto hi = MemoryManager::NewOnFreeList<U64>(70u);
-  //     MemoryManager::FreeOnFreeList(hi);
-  //   }
-  // });
-}
 
 void InputDemo() {
   // TODO(Chaojie) remove later into game logic
@@ -412,7 +395,7 @@ void DebugDemo() {
     DebugDraw::Plane(Math::Matrix4::identity, Color::blue, 2);
   }
   // DebugDraw::WirePlane(Math::Matrix4::identity);
-  // DebugDraw::Cube(Math::Matrix4::identity, Color::white);
+  DebugDraw::Cube(Math::Matrix4::identity, Color::white);
   // DebugDraw::WireCube(Math::Matrix4::Translate(Math::Vector3{0, 0, -2}));
   // DebugDraw::WireSphere(Math::Vector3::up, 1, Color::red);
   DebugDraw::AxisSphere(Math::Vector3::up, 1);

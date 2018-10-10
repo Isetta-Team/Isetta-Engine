@@ -111,6 +111,8 @@ class Matrix4 {
   void SetCol(int col, const class Vector4& colData);
   void SetCol(int col, const class Vector3& colData, float colVal);
   void SetTopLeftMatrix3(const class Matrix3& matrix3);
+  void SetDiagonal(const class Vector4& diagonal);
+  void SetDiagonal(float r0c0, float r1c1, float r2c2, float r3c3);
   /**
    * \brief Get the translate matrix of the vector
    * \param translation The translation vector
