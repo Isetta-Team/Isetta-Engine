@@ -68,20 +68,20 @@ class DebugDraw {
                          bool depthTest = true);
   static void Grid(const Math::Matrix4& transformation = Math::Matrix4::zero,
                    const Color& color = Color::lightGrey,
-                   float thickness = 1.0f);
+                   float thickness = 1.0f, float duration = 0);
   static void Axis(
       const Math::Matrix4& transformation = Math::Matrix4::identity,
-      const Color& xColor = Color::red, const Color& yColor = Color::yellow,
+      const Color& xColor = Color::red, const Color& yColor = Color::green,
       const Color& zColor = Color::blue, float thickness = 2.0,
       float duration = 0, bool depthTest = true);
   static void AxisSphere(
       const Math::Matrix4& transformation = Math::Matrix4::identity,
-      const Color& xColor = Color::red, const Color& yColor = Color::yellow,
+      const Color& xColor = Color::red, const Color& yColor = Color::green,
       const Color& zColor = Color::blue, float thickness = 2.0,
       float duration = 0, bool depthTest = true);
   static void AxisSphere(const Math::Vector3& position, float radius,
                          const Color& xColor = Color::red,
-                         const Color& yColor = Color::yellow,
+                         const Color& yColor = Color::green,
                          const Color& zColor = Color::blue,
                          float thickness = 1.0, float duration = 0,
                          bool depthTest = true);
@@ -103,5 +103,22 @@ class DebugDraw {
   static void GLError();
 
   static std::list<std::pair<float, Action<>>> durationDraw;
+
+  static void DebugDraw::DrawPoint(const Math::Vector3 point,
+                                   const Color& color, float size,
+                                   bool depthTest);
+  static void DrawLine(const Math::Vector3& start, const Math::Vector3& end,
+                       const Color& color, float thickness, bool depthTest);
+  static void DrawSphere(const Math::Matrix4& transformation,
+                         const Color& color, bool depthTest);
+  static void DrawWireSphere(const Math::Matrix4& transformation,
+                             const Color& color, float thickness,
+                             bool depthTest);
+  static void DrawGrid(const Math::Matrix4& transformation, const Color& color,
+                       float thickness);
+  static void DrawAxisSphere(const Math::Matrix4& transformation,
+                             const Color& xColor, const Color& yColor,
+                             const Color& zColor, float thickness,
+                             bool depthTest);
 };
 }  // namespace Isetta

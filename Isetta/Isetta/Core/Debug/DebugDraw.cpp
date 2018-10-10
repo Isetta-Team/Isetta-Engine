@@ -236,10 +236,10 @@ void DebugDraw::StartUp() {
 void DebugDraw::Update() {
   auto it = durationDraw.begin();
   while (it != durationDraw.end()) {
-    it->first -= EngineLoop::GetGameClock().GetDeltaTime();
     if (it->first < 0) {
       it = durationDraw.erase(it);
     } else {
+      it->first -= EngineLoop::GetGameClock().GetDeltaTime();
       it->second();
       it++;
     }
@@ -254,110 +254,15 @@ void DebugDraw::ShutDown() {
 
 void DebugDraw::Point(const Math::Vector3 point, const Color& color, float size,
                       float duration, bool depthTest) {
-  glUseProgram(shaderProgram);
-
-  glUniformMatrix4fv(
-      projectionLoc, 1, GL_FALSE,
-      CameraComponent::Main()
-          ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
-          .data);
-  // TODO(Jacob) replace with world to local call
-  glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
-                     CameraComponent::Main()
-                         ->GetTransform()
-                         .GetLocalToWorldMatrix()
-                         .Inverse()
-                         .Transpose()
-                         .data);
-  glUniformMatrix4fv(modelLoc, 1, GL_FALSE, Math::Matrix4::identity.data);
-  glUniform4fv(colorLoc, 1, color.rgba);
-  GLError();
-
-  if (depthTest) {
-    glEnable(GL_DEPTH_TEST);
-    glDepthMask(GL_TRUE);
-    glDepthFunc(GL_LEQUAL);
-    glDepthRange(0.0f, 1.0f);
-  } else {
-    glDisable(GL_DEPTH_TEST);
-    glDepthMask(GL_FALSE);
-  }
-
-  glPointSize(size);
-  glBindVertexArray(sVAO);
-
-  lineVerticies[0] = point.x;
-  lineVerticies[1] = point.y;
-  lineVerticies[2] = point.z;
-  glBindBuffer(GL_ARRAY_BUFFER, sVBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(lineVerticies), lineVerticies,
-               GL_DYNAMIC_DRAW);
-
-  glDrawArrays(GL_POINTS, 0, 1);
-
-  glBindVertexArray(0);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3, 0, GL_DYNAMIC_DRAW);
-
-  if (duration > 0) {
-    durationDraw.push_back(std::pair(
-        duration, std::bind(Point, point, color, size, 0, depthTest)));
-  }
+  durationDraw.push_back(
+      std::pair(duration, std::bind(DrawPoint, point, color, size, depthTest)));
 }
 
 void DebugDraw::Line(const Math::Vector3& start, const Math::Vector3& end,
                      const Color& color, float thickness, float duration,
                      bool depthTest) {
-  glUseProgram(shaderProgram);
-
-  glUniformMatrix4fv(
-      projectionLoc, 1, GL_FALSE,
-      CameraComponent::Main()
-          ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
-          .data);
-  // TODO(Jacob) replace with world to local call
-  glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
-                     CameraComponent::Main()
-                         ->GetTransform()
-                         .GetLocalToWorldMatrix()
-                         .Inverse()
-                         .Transpose()
-                         .data);
-  glUniformMatrix4fv(modelLoc, 1, GL_FALSE, Math::Matrix4::identity.data);
-  glUniform4fv(colorLoc, 1, color.rgba);
-  GLError();
-
-  if (depthTest) {
-    glEnable(GL_DEPTH_TEST);
-    glDepthMask(GL_TRUE);
-    glDepthFunc(GL_LEQUAL);
-    glDepthRange(0.0f, 1.0f);
-  } else {
-    glDisable(GL_DEPTH_TEST);
-    glDepthMask(GL_FALSE);
-  }
-
-  glLineWidth(thickness);
-  glBindVertexArray(sVAO);
-
-  lineVerticies[0] = start.x;
-  lineVerticies[1] = start.y;
-  lineVerticies[2] = start.z;
-  lineVerticies[3] = end.x;
-  lineVerticies[4] = end.y;
-  lineVerticies[5] = end.z;
-  glBindBuffer(GL_ARRAY_BUFFER, sVBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(lineVerticies), lineVerticies,
-               GL_DYNAMIC_DRAW);
-
-  glDrawArrays(GL_LINES, 0, 2);
-
-  glBindVertexArray(0);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(lineVerticies), 0, GL_DYNAMIC_DRAW);
-
-  if (duration > 0) {
-    durationDraw.push_back(std::pair(
-        duration, std::bind(Line, start, end, color, thickness, 0, depthTest)));
-  }
+  durationDraw.push_back(std::pair(
+      duration, std::bind(DrawLine, start, end, color, thickness, depthTest)));
 }
 void DebugDraw::Ray(const Math::Vector3& start, const Math::Vector3& dir,
                     const Color& color, float thickness, float duration,
@@ -372,65 +277,45 @@ void DebugDraw::Ray(const Math::Vector3& start, const Math::Vector3& dir,
 }
 void DebugDraw::Plane(const Math::Matrix4& transformation, const Color& color,
                       float duration, bool depthTest) {
-  OpenGLDraw(transformation, color, 0, depthTest, []() {
-    glDrawElements(GL_TRIANGLES, PLANE_INDICIES, GL_UNSIGNED_INT, (void*)0);
-  });
-
-  if (duration > 0) {
-    durationDraw.push_back(std::pair<float, Action<>>(
-        duration, std::bind(Plane, transformation, color, 0, depthTest)));
-  }
+  durationDraw.push_back(std::pair(
+      duration,
+      std::bind(OpenGLDraw, transformation, color, 0, depthTest, []() {
+        glDrawElements(GL_TRIANGLES, PLANE_INDICIES, GL_UNSIGNED_INT, (void*)0);
+      })));
 }
 void DebugDraw::WirePlane(const Math::Matrix4& transformation,
                           const Color& color, float thickness, float duration,
                           bool depthTest) {
-  OpenGLDraw(transformation, color, thickness, depthTest,
-             []() { glDrawArrays(GL_LINE_LOOP, PLANE, PLANE_VERTICIES); });
-
-  if (duration > 0) {
-    durationDraw.push_back(std::pair(
-        duration,
-        std::bind(WirePlane, transformation, color, thickness, 0, depthTest)));
-  }
+  durationDraw.push_back(std::pair(
+      duration,
+      std::bind(OpenGLDraw, transformation, color, thickness, depthTest,
+                []() { glDrawArrays(GL_LINE_LOOP, PLANE, PLANE_VERTICIES); })));
 }
 void DebugDraw::Cube(const Math::Matrix4& transformation, const Color& color,
                      float duration, bool depthTest) {
-  OpenGLDraw(transformation, color, 0, depthTest, []() {
-    glDrawElements(GL_TRIANGLES, CUBE_INDICIES, GL_UNSIGNED_INT,
-                   (void*)(sizeof(int) * (PLANE_INDICIES)));
-  });
-
-  if (duration > 0) {
-    durationDraw.push_back(std::pair(
-        duration, std::bind(Cube, transformation, color, 0, depthTest)));
-  }
+  durationDraw.push_back(std::pair(
+      duration,
+      std::bind(OpenGLDraw, transformation, color, 0, depthTest, []() {
+        glDrawElements(GL_TRIANGLES, CUBE_INDICIES, GL_UNSIGNED_INT,
+                       (void*)(sizeof(int) * (PLANE_INDICIES)));
+      })));
 }
 void DebugDraw::WireCube(const Math::Matrix4& transformation,
                          const Color& color, float thickness, float duration,
                          bool depthTest) {
-  OpenGLDraw(transformation, color, thickness, depthTest, []() {
-    glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT,
-                   (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES)));
-  });
-
-  if (duration > 0) {
-    durationDraw.push_back(std::pair(
-        duration,
-        std::bind(WireCube, transformation, color, thickness, 0, depthTest)));
-  }
+  durationDraw.push_back(std::pair(
+      duration,
+      std::bind(OpenGLDraw, transformation, color, thickness, depthTest, []() {
+        glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT,
+                       (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES)));
+      })));
 }
 void DebugDraw::Sphere(const Math::Matrix4& transformation, const Color& color,
                        float duration, bool depthTest) {
   throw std::exception("DebugDraw::Sphere => NOT IMPLEMENTED");
-  OpenGLDraw(transformation, color, 0, depthTest, []() { /* TODO */ });
 
-  if (duration > 0) {
-    durationDraw.push_back(std::pair(
-        duration,
-        std::bind(static_cast<void (*)(const Math::Matrix4&, const Color&,
-                                       float, bool)>(&DebugDraw::Sphere),
-                  transformation, color, 0, depthTest)));
-  }
+  durationDraw.push_back(std::pair(
+      duration, std::bind(DrawSphere, transformation, color, depthTest)));
 }
 void DebugDraw::Sphere(const Math::Vector3& position, float radius,
                        const Color& color, float duration, bool depthTest) {
@@ -442,86 +327,9 @@ void DebugDraw::Sphere(const Math::Vector3& position, float radius,
 void DebugDraw::WireSphere(const Math::Matrix4& transformation,
                            const Color& color, float thickness, float duration,
                            bool depthTest) {
-  float rx = transformation.Get(0, 0), ry = transformation.Get(1, 1),
-        rz = transformation.Get(2, 2);
-  const float rxSq = rx * rx;
-  const float rySq = ry * ry;
-  const float rzSq = rz * rz;
-  Math::Matrix4 yzPlane = Math::Matrix4::RotateY(Math::Util::PI_HALF);
-  Math::Matrix4 xzPlane = Math::Matrix4::RotateX(Math::Util::PI_HALF);
-  float increment = 1.0f / SPHERE_SEGMENTS;
-  for (int i = 1; i < SPHERE_SEGMENTS; i++) {
-    float dist = i * increment;
-    float distSq = dist * dist;
-    rx = Math::Util::Sqrt(rxSq - distSq);
-    ry = Math::Util::Sqrt(rySq - distSq);
-    rz = Math::Util::Sqrt(rzSq - distSq);
-
-    Math::Matrix4 xyScale = Math::Matrix4::Scale(Math::Vector3{rx, ry, 0}),
-                  xzScale = Math::Matrix4::Scale(Math::Vector3{rx, 0, rz});
-
-    Math::Matrix4 xzMat = xzScale * xzPlane;
-    Math::Matrix4 xyTransF =
-                      transformation *
-                      Math::Matrix4::Translate(dist * Math::Vector3::forward) *
-                      xyScale,
-                  xyTransB =
-                      transformation *
-                      Math::Matrix4::Translate(dist * Math::Vector3::back) *
-                      xyScale,
-                  xzTransU =
-                      transformation *
-                      Math::Matrix4::Translate(dist * Math::Vector3::up) *
-                      xzMat,
-                  xzTransD =
-                      transformation *
-                      Math::Matrix4::Translate(dist * Math::Vector3::down) *
-                      xzMat;
-    OpenGLDraw(xyTransF, color, thickness, depthTest, []() {
-      glDrawElements(GL_LINE_LOOP, CIRCLE_INDICIES, GL_UNSIGNED_INT,
-                     (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
-                                            CUBE_WIRE_INDICIES)));
-    });
-    OpenGLDraw(xyTransB, color, thickness, depthTest, []() {
-      glDrawElements(GL_LINE_LOOP, CIRCLE_INDICIES, GL_UNSIGNED_INT,
-                     (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
-                                            CUBE_WIRE_INDICIES)));
-    });
-    OpenGLDraw(xzTransU, color, thickness, depthTest, []() {
-      glDrawElements(GL_LINE_LOOP, CIRCLE_INDICIES, GL_UNSIGNED_INT,
-                     (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
-                                            CUBE_WIRE_INDICIES)));
-    });
-    OpenGLDraw(xzTransD, color, thickness, depthTest, []() {
-      glDrawElements(GL_LINE_LOOP, CIRCLE_INDICIES, GL_UNSIGNED_INT,
-                     (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
-                                            CUBE_WIRE_INDICIES)));
-    });
-  }
-  OpenGLDraw(transformation, color, thickness, depthTest, []() {
-    glDrawElements(GL_LINE_LOOP, CIRCLE_INDICIES, GL_UNSIGNED_INT,
-                   (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
-                                          CUBE_WIRE_INDICIES)));
-  });
-  OpenGLDraw(transformation * xzPlane, color, thickness, depthTest, []() {
-    glDrawElements(GL_LINE_LOOP, CIRCLE_INDICIES, GL_UNSIGNED_INT,
-                   (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
-                                          CUBE_WIRE_INDICIES)));
-  });
-  // OpenGLDraw(transformation * yzPlane, color, thickness, depthTest, []() {
-  //  glDrawElements(GL_LINE_LOOP, CIRCLE_INDICIES, GL_UNSIGNED_INT,
-  //                 (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
-  //                                        CUBE_WIRE_INDICIES)));
-  //});
-
-  if (duration > 0) {
-    durationDraw.push_back(std::pair(
-        duration,
-        std::bind(
-            static_cast<void (*)(const Math::Matrix4&, const Color&, float,
-                                 float, bool)>(&DebugDraw::WireSphere),
-            transformation, color, thickness, duration, depthTest)));
-  }
+  durationDraw.push_back(std::pair(
+      duration,
+      std::bind(DrawWireSphere, transformation, color, thickness, depthTest)));
 }
 void DebugDraw::WireSphere(const Math::Vector3& position, float radius,
                            const Color& color, float thickness, float duration,
@@ -531,65 +339,9 @@ void DebugDraw::WireSphere(const Math::Vector3& position, float radius,
              color, thickness, duration, depthTest);
 }
 void DebugDraw::Grid(const Math::Matrix4& transformation, const Color& color,
-                     float thickness) {
-  glUseProgram(shaderProgram);
-
-  glUniformMatrix4fv(
-      projectionLoc, 1, GL_FALSE,
-      CameraComponent::Main()
-          ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
-          .data);
-  Math::Matrix4 viewMat =
-      CameraComponent::Main()->GetTransform().GetLocalToWorldMatrix();
-  // TODO(Jacob) replace with world to local call
-  glUniformMatrix4fv(viewLoc, 1, GL_FALSE, viewMat.Inverse().Transpose().data);
-  Math::Matrix4 model = transformation;
-  if (model.IsZero()) {
-    model = Math::Matrix4::identity;
-    model.SetRow(3, viewMat.GetRow(3));  // horde row-col
-    model.Set(3, 1, 0);
-  }
-  glUniformMatrix4fv(modelLoc, 1, GL_FALSE, model.data);
-  glUniform4fv(colorLoc, 1, color.rgba);
-  GLError();
-
-  glEnable(GL_DEPTH_TEST);
-  glDepthMask(GL_TRUE);
-  glDepthFunc(GL_LEQUAL);
-  glDepthRange(0.0f, 1.0f);
-
-  glLineWidth(thickness);
-  glBindVertexArray(sVAO);
-
-  for (int i = -30; i <= 30; i++) {
-    lineVerticies[0] = -30;
-    lineVerticies[1] = 0;
-    lineVerticies[2] = i;
-    lineVerticies[3] = 30;
-    lineVerticies[4] = 0;
-    lineVerticies[5] = i;
-    glBindBuffer(GL_ARRAY_BUFFER, sVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(lineVerticies), lineVerticies,
-                 GL_DYNAMIC_DRAW);
-
-    glDrawArrays(GL_LINES, 0, 2);
-  }
-
-  for (int i = -30; i <= 30; i++) {
-    lineVerticies[0] = i;
-    lineVerticies[1] = 0;
-    lineVerticies[2] = -30;
-    lineVerticies[3] = i;
-    lineVerticies[4] = 0;
-    lineVerticies[5] = 30;
-    glBindBuffer(GL_ARRAY_BUFFER, sVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(lineVerticies), lineVerticies,
-                 GL_DYNAMIC_DRAW);
-
-    glDrawArrays(GL_LINES, 0, 2);
-  }
-
-  glBindVertexArray(0);
+                     float thickness, float duration) {
+  durationDraw.push_back(std::pair(
+      duration, std::bind(DrawGrid, transformation, color, thickness)));
 }
 void DebugDraw::Axis(const Math::Matrix4& transformation, const Color& xColor,
                      const Color& yColor, const Color& zColor, float thickness,
@@ -604,39 +356,15 @@ void DebugDraw::Axis(const Math::Matrix4& transformation, const Color& xColor,
       static_cast<Math::Vector3>(transformation * Math::Vector4::forward);
   Line(start, right, xColor, thickness, duration, depthTest);
   Line(start, up, yColor, thickness, duration, depthTest);
-  Line(start, -forward, zColor, thickness, duration, depthTest);
+  Line(start, forward, zColor, thickness, duration, depthTest);
 }
 void DebugDraw::AxisSphere(const Math::Matrix4& transformation,
                            const Color& xColor, const Color& yColor,
                            const Color& zColor, float thickness, float duration,
                            bool depthTest) {
-  Math::Matrix4 yzPlane = Math::Matrix4::RotateY(Math::Util::PI_HALF);
-  Math::Matrix4 xzPlane = Math::Matrix4::RotateX(Math::Util::PI_HALF);
-  OpenGLDraw(transformation, zColor, thickness, depthTest, []() {
-    glDrawElements(GL_LINE_LOOP, CIRCLE_INDICIES, GL_UNSIGNED_INT,
-                   (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
-                                          CUBE_WIRE_INDICIES)));
-  });
-  OpenGLDraw(transformation * xzPlane, yColor, thickness, depthTest, []() {
-    glDrawElements(GL_LINE_LOOP, CIRCLE_INDICIES, GL_UNSIGNED_INT,
-                   (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
-                                          CUBE_WIRE_INDICIES)));
-  });
-  OpenGLDraw(transformation * yzPlane, xColor, thickness, depthTest, []() {
-    glDrawElements(GL_LINE_LOOP, CIRCLE_INDICIES, GL_UNSIGNED_INT,
-                   (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
-                                          CUBE_WIRE_INDICIES)));
-  });
-
-  if (duration > 0) {
-    durationDraw.push_back(std::pair(
-        duration,
-        std::bind(static_cast<void (*)(const Math::Matrix4&, const Color&,
-                                       const Color&, const Color&, float, float,
-                                       bool)>(&DebugDraw::AxisSphere),
-                  transformation, xColor, yColor, zColor, thickness, duration,
-                  depthTest)));
-  }
+  durationDraw.push_back(
+      std::pair(duration, std::bind(DrawAxisSphere, transformation, xColor,
+                                    yColor, zColor, thickness, depthTest)));
 }
 void DebugDraw::AxisSphere(const Math::Vector3& position, float radius,
                            const Color& xColor, const Color& yColor,
@@ -713,6 +441,258 @@ void DebugDraw::GLError() {
   if (error == GL_OUT_OF_MEMORY) {
     LOG_ERROR(Debug::Channel::Graphics, "GL_OUT_OF_MEMORY");
   }
+}
+
+void DebugDraw::DrawPoint(const Math::Vector3 point, const Color& color,
+                          float size, bool depthTest) {
+  glUseProgram(shaderProgram);
+
+  glUniformMatrix4fv(
+      projectionLoc, 1, GL_FALSE,
+      CameraComponent::Main()
+          ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
+          .data);
+  // TODO(Jacob) replace with world to local call
+  glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
+                     CameraComponent::Main()
+                         ->GetTransform()
+                         .GetLocalToWorldMatrix()
+                         .Inverse()
+                         .Transpose()
+                         .data);
+  glUniformMatrix4fv(modelLoc, 1, GL_FALSE, Math::Matrix4::identity.data);
+  glUniform4fv(colorLoc, 1, color.rgba);
+  GLError();
+
+  if (depthTest) {
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LEQUAL);
+    glDepthRange(0.0f, 1.0f);
+  } else {
+    glDisable(GL_DEPTH_TEST);
+    glDepthMask(GL_FALSE);
+  }
+
+  glPointSize(size);
+  glBindVertexArray(sVAO);
+
+  lineVerticies[0] = point.x;
+  lineVerticies[1] = point.y;
+  lineVerticies[2] = point.z;
+  glBindBuffer(GL_ARRAY_BUFFER, sVBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(lineVerticies), lineVerticies,
+               GL_DYNAMIC_DRAW);
+
+  glDrawArrays(GL_POINTS, 0, 1);
+
+  glBindVertexArray(0);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3, 0, GL_DYNAMIC_DRAW);
+}
+void DebugDraw::DrawLine(const Math::Vector3& start, const Math::Vector3& end,
+                         const Color& color, float thickness, bool depthTest) {
+  glUseProgram(shaderProgram);
+
+  glUniformMatrix4fv(
+      projectionLoc, 1, GL_FALSE,
+      CameraComponent::Main()
+          ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
+          .data);
+  // TODO(Jacob) replace with world to local call
+  glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
+                     CameraComponent::Main()
+                         ->GetTransform()
+                         .GetLocalToWorldMatrix()
+                         .Inverse()
+                         .Transpose()
+                         .data);
+  glUniformMatrix4fv(modelLoc, 1, GL_FALSE, Math::Matrix4::identity.data);
+  glUniform4fv(colorLoc, 1, color.rgba);
+  GLError();
+
+  if (depthTest) {
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LEQUAL);
+    glDepthRange(0.0f, 1.0f);
+  } else {
+    glDisable(GL_DEPTH_TEST);
+    glDepthMask(GL_FALSE);
+  }
+
+  glLineWidth(thickness);
+  glBindVertexArray(sVAO);
+
+  lineVerticies[0] = start.x;
+  lineVerticies[1] = start.y;
+  lineVerticies[2] = start.z;
+  lineVerticies[3] = end.x;
+  lineVerticies[4] = end.y;
+  lineVerticies[5] = end.z;
+  glBindBuffer(GL_ARRAY_BUFFER, sVBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(lineVerticies), lineVerticies,
+               GL_DYNAMIC_DRAW);
+
+  glDrawArrays(GL_LINES, 0, 2);
+
+  glBindVertexArray(0);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(lineVerticies), 0, GL_DYNAMIC_DRAW);
+}
+void DebugDraw::DrawSphere(const Math::Matrix4& transformation,
+                           const Color& color, bool depthTest) {
+  OpenGLDraw(transformation, color, 0, depthTest, []() { /* TODO(Jacob) */ });
+}
+void DebugDraw::DrawWireSphere(const Math::Matrix4& transformation,
+                               const Color& color, float thickness,
+                               bool depthTest) {
+  float rx = transformation.Get(0, 0), ry = transformation.Get(1, 1),
+        rz = transformation.Get(2, 2);
+  const float rxSq = rx * rx;
+  const float rySq = ry * ry;
+  const float rzSq = rz * rz;
+  Math::Matrix4 xzPlane = Math::Matrix4::RotateX(Math::Util::PI_HALF);
+  float increment = 1.0f / SPHERE_SEGMENTS;
+  for (int i = 1; i < SPHERE_SEGMENTS; i++) {
+    float dist = i * increment;
+    float distSq = dist * dist;
+    rx = Math::Util::Sqrt(rxSq - distSq);
+    ry = Math::Util::Sqrt(rySq - distSq);
+    rz = Math::Util::Sqrt(rzSq - distSq);
+
+    Math::Matrix4 xyScale = Math::Matrix4::Scale(Math::Vector3{rx, ry, 0}),
+                  xzScale = Math::Matrix4::Scale(Math::Vector3{rx, 0, rz});
+
+    Math::Matrix4 xzMat = xzScale * xzPlane;
+    Math::Matrix4 xyTransF =
+                      transformation *
+                      Math::Matrix4::Translate(dist * Math::Vector3::forward) *
+                      xyScale,
+                  xyTransB =
+                      transformation *
+                      Math::Matrix4::Translate(dist * Math::Vector3::back) *
+                      xyScale,
+                  xzTransU =
+                      transformation *
+                      Math::Matrix4::Translate(dist * Math::Vector3::up) *
+                      xzMat,
+                  xzTransD =
+                      transformation *
+                      Math::Matrix4::Translate(dist * Math::Vector3::down) *
+                      xzMat;
+    OpenGLDraw(xyTransF, color, thickness, depthTest, []() {
+      glDrawElements(GL_LINE_LOOP, CIRCLE_INDICIES, GL_UNSIGNED_INT,
+                     (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
+                                            CUBE_WIRE_INDICIES)));
+    });
+    OpenGLDraw(xyTransB, color, thickness, depthTest, []() {
+      glDrawElements(GL_LINE_LOOP, CIRCLE_INDICIES, GL_UNSIGNED_INT,
+                     (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
+                                            CUBE_WIRE_INDICIES)));
+    });
+    OpenGLDraw(xzTransU, color, thickness, depthTest, []() {
+      glDrawElements(GL_LINE_LOOP, CIRCLE_INDICIES, GL_UNSIGNED_INT,
+                     (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
+                                            CUBE_WIRE_INDICIES)));
+    });
+    OpenGLDraw(xzTransD, color, thickness, depthTest, []() {
+      glDrawElements(GL_LINE_LOOP, CIRCLE_INDICIES, GL_UNSIGNED_INT,
+                     (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
+                                            CUBE_WIRE_INDICIES)));
+    });
+  }
+  OpenGLDraw(transformation, color, thickness, depthTest, []() {
+    glDrawElements(GL_LINE_LOOP, CIRCLE_INDICIES, GL_UNSIGNED_INT,
+                   (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
+                                          CUBE_WIRE_INDICIES)));
+  });
+  OpenGLDraw(transformation * xzPlane, color, thickness, depthTest, []() {
+    glDrawElements(GL_LINE_LOOP, CIRCLE_INDICIES, GL_UNSIGNED_INT,
+                   (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
+                                          CUBE_WIRE_INDICIES)));
+  });
+}
+void DebugDraw::DrawGrid(const Math::Matrix4& transformation,
+                         const Color& color, float thickness) {
+  glUseProgram(shaderProgram);
+
+  glUniformMatrix4fv(
+      projectionLoc, 1, GL_FALSE,
+      CameraComponent::Main()
+          ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
+          .data);
+  Math::Matrix4 viewMat =
+      CameraComponent::Main()->GetTransform().GetLocalToWorldMatrix();
+  // TODO(Jacob) replace with world to local call
+  glUniformMatrix4fv(viewLoc, 1, GL_FALSE, viewMat.Inverse().Transpose().data);
+  Math::Matrix4 model = transformation;
+  if (model.IsZero()) {
+    model = Math::Matrix4::identity;
+    model.SetRow(3, viewMat.GetRow(3));  // horde row-col
+    model.Set(3, 1, 0);
+  }
+  glUniformMatrix4fv(modelLoc, 1, GL_FALSE, model.data);
+  glUniform4fv(colorLoc, 1, color.rgba);
+  GLError();
+
+  glEnable(GL_DEPTH_TEST);
+  glDepthMask(GL_TRUE);
+  glDepthFunc(GL_LEQUAL);
+  glDepthRange(0.0f, 1.0f);
+
+  glLineWidth(thickness);
+  glBindVertexArray(sVAO);
+
+  for (int i = -30; i <= 30; i++) {
+    lineVerticies[0] = -30;
+    lineVerticies[1] = 0;
+    lineVerticies[2] = i;
+    lineVerticies[3] = 30;
+    lineVerticies[4] = 0;
+    lineVerticies[5] = i;
+    glBindBuffer(GL_ARRAY_BUFFER, sVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(lineVerticies), lineVerticies,
+                 GL_DYNAMIC_DRAW);
+
+    glDrawArrays(GL_LINES, 0, 2);
+  }
+
+  for (int i = -30; i <= 30; i++) {
+    lineVerticies[0] = i;
+    lineVerticies[1] = 0;
+    lineVerticies[2] = -30;
+    lineVerticies[3] = i;
+    lineVerticies[4] = 0;
+    lineVerticies[5] = 30;
+    glBindBuffer(GL_ARRAY_BUFFER, sVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(lineVerticies), lineVerticies,
+                 GL_DYNAMIC_DRAW);
+
+    glDrawArrays(GL_LINES, 0, 2);
+  }
+
+  glBindVertexArray(0);
+}
+void DebugDraw::DrawAxisSphere(const Math::Matrix4& transformation,
+                               const Color& xColor, const Color& yColor,
+                               const Color& zColor, float thickness,
+                               bool depthTest) {
+  Math::Matrix4 yzPlane = Math::Matrix4::RotateY(Math::Util::PI_HALF);
+  Math::Matrix4 xzPlane = Math::Matrix4::RotateX(Math::Util::PI_HALF);
+  OpenGLDraw(transformation, zColor, thickness, depthTest, []() {
+    glDrawElements(GL_LINE_LOOP, CIRCLE_INDICIES, GL_UNSIGNED_INT,
+                   (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
+                                          CUBE_WIRE_INDICIES)));
+  });
+  OpenGLDraw(transformation * xzPlane, yColor, thickness, depthTest, []() {
+    glDrawElements(GL_LINE_LOOP, CIRCLE_INDICIES, GL_UNSIGNED_INT,
+                   (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
+                                          CUBE_WIRE_INDICIES)));
+  });
+  OpenGLDraw(transformation * yzPlane, xColor, thickness, depthTest, []() {
+    glDrawElements(GL_LINE_LOOP, CIRCLE_INDICIES, GL_UNSIGNED_INT,
+                   (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
+                                          CUBE_WIRE_INDICIES)));
+  });
 }
 
 #undef PLANE
