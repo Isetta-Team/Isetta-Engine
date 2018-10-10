@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2018 Isetta
+ */
+#pragma once
+#include <unordered_map>
+#include "SID/sid.h"
+#include "Core/IsettaAlias.h"
+
+namespace Isetta {
+template <typename T>
+class LevelRegistry {
+ protected:
+  static bool registered;
+};
+
+class LevelManager {
+ private:
+  std::unordered_map<StringId, Func<class Level*>> levels;
+
+ public:
+  std::string currentLevelName;
+  class Level* currentLevel;
+
+  static LevelManager& Instance();
+
+  bool Register(std::string, Func<class Level*>);
+
+  LevelManager();
+  void LoadLevel();
+  void UnloadLevel() const;
+  ~LevelManager();
+};
+
+template <typename T>
+bool LevelRegistry<T>::registered =
+    LevelManager::Instance().Register(T::GetLevelName(), T::CreateMethod);
+}  // namespace Isetta
