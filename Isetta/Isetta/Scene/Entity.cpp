@@ -49,7 +49,7 @@ void Entity::LastUpdate() {
   for (auto comp : components) {
     if (comp->GetActive() &&
         comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
-      comp->PostUpdate();
+      comp->LateUpdate();
     }
   }
   // SetAttribute(EntityAttributes::IS_TRANSFORM_DIRTY, false);
@@ -70,7 +70,7 @@ void Entity::CheckDestroy() {
     // Destroy components
     auto typeIter = componentTypes.begin();
     auto compIter = components.begin();
-    for (; typeIter != componentTypes.end() && compIter != components.end();) {
+    while (typeIter != componentTypes.end() && compIter != components.end()) {
       Component* comp = *compIter;
       if (comp->GetAttribute(Component::ComponentAttributes::NEED_DESTROY)) {
         comp->OnDestroy();

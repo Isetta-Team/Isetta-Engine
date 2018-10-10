@@ -35,7 +35,7 @@ class Component {
   virtual void Start() {}
   virtual void GuiUpdate() {}
   virtual void Update() {}
-  virtual void PostUpdate() {}
+  virtual void LateUpdate() {}
   virtual void OnDestroy() {}
   virtual void OnDisable() {}
 };

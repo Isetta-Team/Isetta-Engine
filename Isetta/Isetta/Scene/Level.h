@@ -4,7 +4,7 @@
 #pragma once
 #include <list>
 
-#define CREATE_LEVEL(NAME) class NAME : public Level, public LevelRegisterator<NAME> {\
+#define CREATE_LEVEL(NAME) class NAME : public Level, public LevelRegistry<NAME> {\
  public:\
   bool IsRegisteredInLevelManager() const { return registered; }\
   static inline Func<NAME*> CreateMethod = []() {\

@@ -8,7 +8,7 @@
 
 namespace Isetta {
 template <typename T>
-class LevelRegisterator {
+class LevelRegistry {
  protected:
   static bool registered;
 };
@@ -32,6 +32,6 @@ class LevelManager {
 };
 
 template <typename T>
-bool LevelRegisterator<T>::registered =
+bool LevelRegistry<T>::registered =
     LevelManager::Instance().Register(T::GetLevelName(), T::CreateMethod);
 }  // namespace Isetta
