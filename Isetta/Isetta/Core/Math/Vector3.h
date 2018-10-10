@@ -197,5 +197,7 @@ class Vector3 {
    * \param str Reference string
    */
   static Vector3 FromString(const std::string& str);
+  static float AngleDeg(const Vector3& a, const Vector3& b);
+  static float AngleRad(const Vector3& a, const Vector3& b);
 };
 }  // namespace Isetta::Math

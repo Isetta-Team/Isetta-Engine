@@ -9,6 +9,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include "Util.h"
 #include "Vector2.h"
 #include "Vector3Int.h"
 
@@ -105,5 +106,13 @@ Vector3 Vector3::FromString(const std::string& str) {
   (is >> std::skipws) >> c >> vec.x >> c >> vec.y >> c >> vec.z;
 
   return vec;
+}
+
+float Vector3::AngleDeg(const Vector3& a, const Vector3& b) {
+  return AngleRad(a, b) * Util::RAD2DEG;
+}
+
+float Vector3::AngleRad(const Vector3& a, const Vector3& b) {
+  return Util::Acos(Dot(a, b) / (a.Magnitude() * b.Magnitude()));
 }
 }  // namespace Isetta::Math
