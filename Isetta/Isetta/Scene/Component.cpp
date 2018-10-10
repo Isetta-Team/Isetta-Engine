@@ -2,6 +2,8 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Scene/Component.h"
+#include "Scene/Entity.h"
+#include "Scene/Transform.h"
 
 namespace Isetta {
 
@@ -27,6 +29,10 @@ void Component::SetActive(bool value) {
 
 bool Component::GetActive() const {
   return GetAttribute(ComponentAttributes::IS_ACTIVE);
+}
+
+Transform& Component::GetTransform() const {
+  return owner->GetTransform();
 }
 
 }  // namespace Isetta

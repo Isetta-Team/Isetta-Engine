@@ -30,6 +30,7 @@ class Component {
   virtual ~Component() = default;
   void SetActive(bool value);
   bool GetActive() const;
+  class Transform& GetTransform() const;
 
   virtual void OnEnable() {}
   virtual void Start() {}
