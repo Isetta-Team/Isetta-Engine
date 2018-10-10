@@ -12,6 +12,8 @@
 #include "Graphics/LightComponent.h"
 #include "Graphics/MeshComponent.h"
 #include "Scene/Entity.h"
+#include "AxisDrawer.h"
+#include "PlayerController.h"
 
 namespace Isetta {
 
@@ -19,13 +21,15 @@ using LightProperty = LightComponent::Property;
 using CameraProperty = CameraComponent::Property;
 
 void ExampleLevel::LoadLevel() {
-  Entity* pushEntity{AddEntity("PushAnim")};
+  Entity* man{AddEntity("PushAnim")};
+  man->SetTransform(Math::Vector3{0, 0, 0}, Math::Vector3{0, 0, 0});
+  man->AddComponent<AxisDrawer>();
+  man->AddComponent<PlayerController>();
   MeshComponent* pushMesh =
-      pushEntity->AddComponent<MeshComponent>(true, "push/Pushing.scene.xml");
-  pushEntity->SetTransform(Math::Vector3{0, 0, 0}, Math::Vector3{0, 90, 0},
-                           Math::Vector3::one);
+      man->AddComponent<MeshComponent>(true, "push/Pushing.scene.xml");
+
   AnimationComponent* ani =
-      pushEntity->AddComponent<AnimationComponent>(true, pushMesh);
+      man->AddComponent<AnimationComponent>(true, pushMesh);
   ani->AddAnimation("push/Pushing.anim", 0, "", false);
 
   Entity* lightEntity{AddEntity("Light")};
@@ -45,7 +49,7 @@ void ExampleLevel::LoadLevel() {
       cameraEntity->AddComponent<CameraComponent>(true, "Camera");
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
-  cameraEntity->AddComponent<FlyController>(true);
+  cameraEntity->AddComponent<FlyController>();
   camComp->SetProperty<CameraProperty::FOV>(
       CONFIG_VAL(renderConfig.fieldOfView));
   camComp->SetProperty<CameraProperty::NEAR_PLANE>(
@@ -54,7 +58,7 @@ void ExampleLevel::LoadLevel() {
       CONFIG_VAL(renderConfig.farClippingPlane));
 
   Entity* customEntity{AddEntity("custom")};
-  ExampleComponent* customComponent =
-      customEntity->AddComponent<ExampleComponent>(true);
+  customEntity->AddComponent<ExampleComponent>();
+  customEntity->AddComponent<AxisDrawer>();
 }
 }  // namespace Isetta
