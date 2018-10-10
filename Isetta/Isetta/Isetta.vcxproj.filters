@@ -162,6 +162,9 @@
     <ClCompile Include="Custom\ExampleComponent.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
+    <ClCompile Include="Custom\FlyController.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -400,6 +403,9 @@
       <Filter>Custom</Filter>
     </ClInclude>
     <ClInclude Include="Custom\ExampleComponent.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\FlyController.h">
       <Filter>Custom</Filter>
     </ClInclude>
   </ItemGroup>

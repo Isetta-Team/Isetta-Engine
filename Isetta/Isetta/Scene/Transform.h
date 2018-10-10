@@ -6,8 +6,8 @@
 #include "Core/Math/Matrix4.h"
 #include "Core/Math/Quaternion.h"
 #include "Core/Math/Vector3.h"
-#include "Graphics/RenderNode.h"
 #include "Core/Math/Vector4.h"
+#include "Graphics/RenderNode.h"
 
 namespace Isetta {
 class Transform {
@@ -56,10 +56,11 @@ class Transform {
   Math::Vector3 GetRight();
 
   // other
-  void LookAt(const Math::Vector3& target, const Math::Vector3& worldUp = Math::Vector3::up);
-  inline class Entity* GetEntity() const;
-  inline Size GetChildCount() const;
-  inline Transform* GetChild(U16 childIndex);
+  void LookAt(const Math::Vector3& target,
+              const Math::Vector3& worldUp = Math::Vector3::up);
+  class Entity* GetEntity() const { return entity; }
+  Size GetChildCount() const { return children.size(); }
+  Transform* GetChild(U16 childIndex);
   inline std::string GetName() const;
 
   // utilities
@@ -68,8 +69,9 @@ class Transform {
   Math::Vector3 WorldDirFromLocalDir(const Math::Vector3& localDirection);
   Math::Vector3 LocalDirFromWorldDir(const Math::Vector3& worldDirection);
 
-  void ForEachChild(Action<Transform*>& action);
-  void ForEachChildRecursive(Action<Transform*>& action);
+  void ForChildren(Action<Transform*> action);
+  void ForDescendents(Action<Transform*> action);
+  void ForSelfAndDescendents(Action<Transform*> action);
 
   void SetWorldTransform(const Math::Vector3& inPosition,
                          const Math::Vector3& inEulerAngles,
@@ -79,9 +81,9 @@ class Transform {
   // TODO(YIDI): Decide if they should stay here
   static void SetH3DNodeTransform(H3DNode node, Transform& transform);
 
-  #if _DEBUG
+#if _DEBUG
   void Print();
-  #endif
+#endif
 
  private:
   // to be used by children
@@ -93,16 +95,18 @@ class Transform {
   void AddChild(Transform* transform);
   void RemoveChild(Transform* transform);
 
-  Math::Quaternion worldRot; // only for query
+  Math::Quaternion worldRot;  // only for query
 
   Math::Matrix4 localToWorldMatrix{};
-  Math::Vector3 localPos{Math::Vector3::zero}; // part of local storage
-  Math::Quaternion localRot{Math::Quaternion::identity}; // part of local storage
-  Math::Vector3 localScale{Math::Vector3::one}; // part of local storage
+  Math::Vector3 localPos{Math::Vector3::zero};  // part of local storage
+  Math::Quaternion localRot{
+      Math::Quaternion::identity};               // part of local storage
+  Math::Vector3 localScale{Math::Vector3::one};  // part of local storage
 
   // marked when anything local changed
   // cleared when matrix recalculated
-  bool isMatrixDirty{false};
+  void SetDirty();
+  bool isMatrixDirty{true};
 
   class Entity* entity{nullptr};
   Transform* root{nullptr};
@@ -111,4 +115,4 @@ class Transform {
 
   static Math::Vector4 sharedV4;
 };
-} // namespace Isetta
+}  // namespace Isetta

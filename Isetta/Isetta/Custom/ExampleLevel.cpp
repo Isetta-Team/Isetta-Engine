@@ -11,6 +11,7 @@
 #include "Graphics/LightComponent.h"
 #include "Graphics/MeshComponent.h"
 #include "Scene/Entity.h"
+#include "FlyController.h"
 
 namespace Isetta {
 
@@ -44,6 +45,7 @@ void ExampleLevel::LoadLevel() {
       cameraEntity->AddComponent<CameraComponent>(true, "Camera");
   cameraEntity->SetTransform(Math::Vector3{0, 50, 600}, Math::Vector3::zero,
                              Math::Vector3::one);
+  cameraEntity->AddComponent<FlyController>(true);
   camComp->SetProperties<CameraProperties::FIELD_OF_VIEW>(
       Config::Instance().renderConfig.fieldOfView.GetVal());
   camComp->SetProperties<CameraProperties::NEAR_CLIPPING_PLANE>(

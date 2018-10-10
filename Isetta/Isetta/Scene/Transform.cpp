@@ -23,7 +23,7 @@ Math::Vector3 Transform::GetLocalPos() const { return localPos; }
 
 // TODO(YIDI): test this
 void Transform::SetWorldPos(const Math::Vector3& newWorldPos) {
-  isMatrixDirty = true;
+  SetDirty();
 
   if (parent == nullptr) {
     localPos = newWorldPos;
@@ -37,7 +37,7 @@ void Transform::SetWorldPos(const Math::Vector3& newWorldPos) {
 // TODO(YIDI): test this
 void Transform::SetLocalPos(const Math::Vector3& newLocalPos) {
   localPos = newLocalPos;
-  isMatrixDirty = true;
+  SetDirty();
 }
 
 // TODO(YIDI): test this
@@ -76,7 +76,7 @@ Math::Vector3 Transform::GetLocalEulerAngles() const {
 
 void Transform::SetWorldRot(const Math::Quaternion& newWorldRot) {
   worldRot = newWorldRot;
-  isMatrixDirty = true;
+  SetDirty();
 
   if (parent == nullptr) {
     localRot = worldRot;
@@ -91,7 +91,7 @@ void Transform::SetWorldRot(const Math::Vector3& worldEulers) {
 
 void Transform::SetLocalRot(const Math::Quaternion& newLocalRot) {
   localRot = newLocalRot;
-  isMatrixDirty = true;
+  SetDirty();
 }
 
 void Transform::SetLocalRot(const Math::Vector3& localEulers) {
@@ -123,7 +123,7 @@ Math::Vector3 Transform::GetLocalScale() const { return localScale; }
 
 void Transform::SetLocalScale(const Math::Vector3& newScale) {
   localScale = newScale;
-  isMatrixDirty = true;
+  SetDirty();
 }
 
 // TODO(YIDI): Test this
@@ -143,7 +143,7 @@ void Transform::SetParent(Transform* transform) {
     transform->AddChild(this);
   }
   parent = transform;
-  isMatrixDirty = true;
+  SetDirty();
 }
 
 // TODO(YIDI): test this
@@ -172,12 +172,6 @@ void Transform::LookAt(const Math::Vector3& target,
 }
 
 // TODO(YIDI): Test this
-Entity* Transform::GetEntity() const { return entity; }
-
-// TODO(YIDI): Test this
-Size Transform::GetChildCount() const { return children.size(); }
-
-// TODO(YIDI): Test this
 Transform* Transform::GetChild(const U16 childIndex) {
   if (childIndex >= GetChildCount()) {
     throw std::exception{
@@ -188,7 +182,6 @@ Transform* Transform::GetChild(const U16 childIndex) {
   return children[childIndex];
 }
 
-// TODO(YIDI): test this
 std::string Transform::GetName() const { return entity->GetName(); }
 
 Math::Vector3 Transform::WorldPosFromLocalPos(const Math::Vector3& localPoint) {
@@ -214,18 +207,23 @@ Math::Vector3 Transform::LocalDirFromWorldDir(
 }
 
 // TODO(YIDI): Test this
-void Transform::ForEachChild(Action<Transform*>& action) {
+void Transform::ForChildren(Action<Transform*> action) {
   for (auto& child : children) {
     action(child);
   }
 }
 
 // TODO(YIDI): test this
-void Transform::ForEachChildRecursive(Action<Transform*>& action) {
+void Transform::ForDescendents(Action<Transform*> action) {
   for (auto& child : children) {
     action(child);
-    child->ForEachChildRecursive(action);
+    child->ForDescendents(action);
   }
+}
+
+void Transform::ForSelfAndDescendents(Action<Transform*> action) {
+  action(this);
+  ForDescendents(action);
 }
 
 // TODO(YIDI): test this
@@ -275,10 +273,13 @@ const Math::Matrix4& Transform::GetLocalToWorldMatrix() {
 }
 
 void Transform::RecalculateLocalToWorldMatrix() {
-  static Math::Matrix4 localToParentMatrix{};
+  Math::Matrix4 localToParentMatrix{};
   localToParentMatrix.SetCol(3, localPos, 1);                    // translation
   localToParentMatrix.SetTopLeftMatrix3(localRot.GetMatrix3());  // rotation
-  localToParentMatrix.SetRow(3, localScale, 1);                  // scale
+
+  Math::Matrix4 temp;
+  temp.SetDiagonal(localScale.x, localScale.y, localScale.z, 1);
+  localToParentMatrix = temp * localToParentMatrix;  // scale
 
   if (parent != nullptr) {
     localToWorldMatrix = parent->GetLocalToWorldMatrix() * localToParentMatrix;
@@ -305,6 +306,10 @@ void Transform::RemoveChild(Transform* transform) {
   throw std::exception{
       Util::StrFormat("Transform::RemoveChild => child (%s) doesn't exist!",
                       transform->GetName().c_str())};
+}
+
+void Transform::SetDirty() {
+  ForSelfAndDescendents([](Transform* trans) { trans->isMatrixDirty = true; });
 }
 
 #if _DEBUG

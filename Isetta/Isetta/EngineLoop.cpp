@@ -31,7 +31,6 @@
 
 namespace Isetta {
 
-void RunYidiTest();
 void InputDemo();
 void NetworkingDemo();
 void GraphicsDemo();
@@ -86,9 +85,8 @@ void EngineLoop::StartUp() {
                                   [&]() { isGameRunning = false; });
 
   NetworkingDemo();
-  InputDemo();
+  // InputDemo();
   GraphicsDemo();
-  RunYidiTest();
 }
 
 void EngineLoop::Update() {
@@ -199,22 +197,6 @@ struct TestObject {
     }
   }
 };
-
-void RunYidiTest() {
-  // Util::Benchmark("New and delete", []() {
-  //   for (int i = 0; i < 100000; i++) {
-  //     auto hi = new TestObject(70u);
-  //     delete hi;
-  //   }
-  // });
-  //
-  // Util::Benchmark("Freelist", []() {
-  //   for (int i = 0; i < 100000; i++) {
-  //     auto hi = MemoryManager::NewOnFreeList<U64>(70u);
-  //     MemoryManager::FreeOnFreeList(hi);
-  //   }
-  // });
-}
 
 void InputDemo() {
   // TODO(Chaojie) remove later into game logic

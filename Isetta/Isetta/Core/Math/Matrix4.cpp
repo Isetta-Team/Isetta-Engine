@@ -327,7 +327,8 @@ void Matrix4::SetRow(const int row, const Vector4& rowData) {
   data[(row << 2) + 3] = rowData.w;
 }
 
-void Matrix4::SetRow(const int row, const Vector3& rowData, const float lastCol) {
+void Matrix4::SetRow(const int row, const Vector3& rowData,
+                     const float lastCol) {
   if (row < 0 || row > rowCount - 1)
     throw std::out_of_range{"Matrix4::SetRow => Row index out of range."};
   data[row << 2] = rowData.x;
@@ -366,6 +367,17 @@ void Matrix4::SetTopLeftMatrix3(const Matrix3& matrix3) {
   SetCol(0, matrix3.GetCol(0), Get(3, 0));
   SetCol(1, matrix3.GetCol(1), Get(3, 1));
   SetCol(2, matrix3.GetCol(2), Get(3, 2));
+}
+
+void Matrix4::SetDiagonal(const Vector4& diagonal) {
+  SetDiagonal(diagonal.x, diagonal.y, diagonal.z, diagonal.w);
+}
+
+void Matrix4::SetDiagonal(float r0c0, float r1c1, float r2c2, float r3c3) {
+  Set(0, 0, r0c0);
+  Set(1, 1, r1c1);
+  Set(2, 2, r2c2);
+  Set(3, 3, r3c3);
 }
 
 Matrix4 Matrix4::Translate(const Vector3& translation) {
