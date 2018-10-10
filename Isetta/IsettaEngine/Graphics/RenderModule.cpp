@@ -6,6 +6,7 @@
 #include <exception>
 #include <filesystem>
 #include "Core/Config/Config.h"
+<<<<<<< HEAD:Isetta/IsettaEngine/Graphics/RenderModule.cpp
 #include "Core/Filesystem.h"
 #include "Core/Math/Vector3.h"
 #include "Core/Time/StopWatch.h"
@@ -13,6 +14,12 @@
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
 #include "Horde3DUtils.h"
+=======
+#include "Core/FileSystem.h"
+#include "Graphics/AnimationComponent.h"
+#include "Graphics/CameraComponent.h"
+#include "Graphics/LightComponent.h"
+>>>>>>> Merged from develop:Isetta/Isetta/Graphics/RenderModule.cpp
 #include "Scene/Entity.h"
 
 namespace Isetta {
@@ -33,6 +40,7 @@ void RenderModule::StartUp(GLFWwindow* win) {
 
 void RenderModule::Update(float deltaTime) {
   for (const auto& mesh : meshComponents) {
+<<<<<<< HEAD:Isetta/IsettaEngine/Graphics/RenderModule.cpp
     bool isTransformDirty =
         mesh->owner->GetAttribute(Entity::EntityAttributes::IS_TRANSFORM_DIRTY);
     // TODO(YIDI): Remove this when finish debugging
@@ -40,6 +48,10 @@ void RenderModule::Update(float deltaTime) {
     isTransformDirty = true;
 #endif
     if (isTransformDirty) {
+=======
+    if (mesh->owner->GetAttribute(
+            Entity::EntityAttributes::IS_TRANSFORM_DIRTY)) {
+>>>>>>> Merged from develop:Isetta/Isetta/Graphics/RenderModule.cpp
       mesh->UpdateTransform();
     }
   }
@@ -55,8 +67,12 @@ void RenderModule::Update(float deltaTime) {
   for (const auto& cam : cameraComponents) {
     cam->UpdateTransform();
   }
+<<<<<<< HEAD:Isetta/IsettaEngine/Graphics/RenderModule.cpp
   ASSERT(!cameraComponents.empty());
   CameraComponent::_main = cameraComponents.front();
+=======
+  ASSERT(cameraComponents.size() > 0);
+>>>>>>> Merged from develop:Isetta/Isetta/Graphics/RenderModule.cpp
   h3dRender(cameraComponents.front()->renderNode);
 
   h3dFinalizeFrame();

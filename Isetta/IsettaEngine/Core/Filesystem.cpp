@@ -325,7 +325,11 @@ HANDLE Filesystem::WriteAsync(const std::string& fileName,
 //  return completionStatus;
 //}
 
+<<<<<<< HEAD:Isetta/IsettaEngine/Core/Filesystem.cpp
 void Filesystem::Touch(const char* fileName) {
+=======
+void FileSystem::Touch(const char* fileName) {
+>>>>>>> Merged from develop:Isetta/Isetta/Core/FileSystem.cpp
   HANDLE hFile = AccessFile(fileName, NULL, NULL, CREATE_ALWAYS, NULL);
   if (GetFileError()) {
     return;
@@ -334,7 +338,11 @@ void Filesystem::Touch(const char* fileName) {
 }
 void Filesystem::Touch(const std::string& fileName) { Touch(fileName.c_str()); }
 
+<<<<<<< HEAD:Isetta/IsettaEngine/Core/Filesystem.cpp
 int Filesystem::GetFileLength(const std::string& fileName) {
+=======
+int FileSystem::GetFileLength(const std::string& fileName) {
+>>>>>>> Merged from develop:Isetta/Isetta/Core/FileSystem.cpp
   HANDLE hFile = AccessFile(fileName.c_str(), FILE_READ_DATA, FILE_SHARE_READ,
                             OPEN_EXISTING, NULL);
   if (GetFileError()) {

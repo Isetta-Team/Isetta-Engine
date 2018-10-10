@@ -159,6 +159,7 @@
     <ClCompile Include="Custom\ExampleComponent.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
+<<<<<<< HEAD:Isetta/IsettaEngine/IsettaEngine.vcxproj.filters
     <ClCompile Include="Custom\FlyController.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
@@ -171,6 +172,8 @@
     <ClCompile Include="Custom\PlayerController.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
+=======
+>>>>>>> Merged from develop:Isetta/Isetta/Isetta.vcxproj.filters
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -408,6 +411,7 @@
     <ClInclude Include="Custom\ExampleComponent.h">
       <Filter>Custom</Filter>
     </ClInclude>
+<<<<<<< HEAD:Isetta/IsettaEngine/IsettaEngine.vcxproj.filters
     <ClInclude Include="Custom\FlyController.h">
       <Filter>Custom</Filter>
     </ClInclude>
@@ -420,6 +424,8 @@
     <ClInclude Include="Custom\PlayerController.h">
       <Filter>Custom</Filter>
     </ClInclude>
+=======
+>>>>>>> Merged from develop:Isetta/Isetta/Isetta.vcxproj.filters
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

@@ -156,11 +156,16 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Memory\ObjectHandle.cpp" />
     <ClCompile Include="Core\Time\Clock.cpp" />
     <ClCompile Include="Core\Time\StopWatch.cpp" />
+<<<<<<< HEAD:Isetta/IsettaEngine/IsettaEngine.vcxproj
     <ClCompile Include="Custom\AxisDrawer.cpp" />
     <ClCompile Include="Custom\ExampleComponent.cpp" />
     <ClCompile Include="Custom\ExampleLevel.cpp" />
     <ClCompile Include="Custom\FlyController.cpp" />
     <ClCompile Include="Custom\PlayerController.cpp" />
+=======
+    <ClCompile Include="Custom\ExampleComponent.cpp" />
+    <ClCompile Include="Custom\ExampleLevel.cpp" />
+>>>>>>> Merged from develop:Isetta/Isetta/Isetta.vcxproj
     <ClCompile Include="EngineLoop.cpp" />
     <ClCompile Include="Graphics\AnimationComponent.cpp" />
     <ClCompile Include="Graphics\CameraComponent.cpp" />
@@ -235,11 +240,16 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Config\CVarRegistry.h" />
     <ClInclude Include="Core\Time\Clock.h" />
     <ClInclude Include="Core\Time\StopWatch.h" />
+<<<<<<< HEAD:Isetta/IsettaEngine/IsettaEngine.vcxproj
     <ClInclude Include="Custom\AxisDrawer.h" />
     <ClInclude Include="Custom\ExampleComponent.h" />
     <ClInclude Include="Custom\ExampleLevel.h" />
     <ClInclude Include="Custom\FlyController.h" />
     <ClInclude Include="Custom\PlayerController.h" />
+=======
+    <ClInclude Include="Custom\ExampleComponent.h" />
+    <ClInclude Include="Custom\ExampleLevel.h" />
+>>>>>>> Merged from develop:Isetta/Isetta/Isetta.vcxproj
     <ClInclude Include="EngineLoop.h" />
     <ClInclude Include="Graphics\AnimationComponent.h" />
     <ClInclude Include="Graphics\CameraComponent.h" />

@@ -18,7 +18,11 @@
 #include "Networking/NetworkingModule.h"
 
 namespace Isetta {
+<<<<<<< HEAD:Isetta/IsettaEngine/Core/Config/Config.h
 #define CONFIG_VAL(expr) Isetta::Config::Instance().expr.GetVal()
+=======
+#define CONFIG_VAL(expr) Isetta::Config::Instance().expr.GetVal();
+>>>>>>> Merged from develop:Isetta/Isetta/Core/Config/Config.h
 /**
  * @brief Test module to demonstrate CVar config struct.
  *

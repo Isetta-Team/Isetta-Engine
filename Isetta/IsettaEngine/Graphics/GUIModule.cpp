@@ -79,7 +79,10 @@ void GUIModule::StartUp(const GLFWwindow* win) {
   Input::RegisterCharCallback(ImGui_ImplGlfw_CharCallback);
 }
 
-void GUIModule::Update(float deltaTime) {
+void GUIModule::Update(float deltaTime, const Action<>& OnGUI) {
+  if (!OnGUI) {
+    return;
+  }
   // LOG_INFO(Isetta::Debug::Channel::GUI,
   //         "-------------GUI UPDATE 1-------------");
   ImGui_ImplOpenGL3_NewFrame();
@@ -105,7 +108,11 @@ void GUIModule::Update(float deltaTime) {
           ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus);
   ImGui::PopStyleVar(2);
 
+<<<<<<< HEAD:Isetta/IsettaEngine/Graphics/GUIModule.cpp
   LevelManager::Instance().currentLevel->GUIUpdate();
+=======
+  OnGUI();
+>>>>>>> Merged from develop:Isetta/Isetta/Graphics/GUIModule.cpp
 
   ImGui::End();
   ImGui::Render();

@@ -79,9 +79,12 @@
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
+<<<<<<< HEAD
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)</TargetName>
     <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\intermediate</IntDir>
+=======
+>>>>>>> Merged from develop
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -170,6 +173,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\External\SID\sid.h" />
+<<<<<<< HEAD
     <ClInclude Include="..\IsettaEngine\Audio\AudioModule.h" />
     <ClInclude Include="..\IsettaEngine\Audio\AudioSource.h" />
     <ClInclude Include="..\IsettaEngine\Core\Color.h" />
@@ -223,10 +227,66 @@
     <ClInclude Include="..\IsettaEngine\Scene\Level.h" />
     <ClInclude Include="..\IsettaEngine\Scene\LevelManager.h" />
     <ClInclude Include="..\IsettaEngine\Scene\Transform.h" />
+=======
+    <ClInclude Include="..\Isetta\Audio\AudioModule.h" />
+    <ClInclude Include="..\Isetta\Audio\AudioSource.h" />
+    <ClInclude Include="..\Isetta\Core\Color.h" />
+    <ClInclude Include="..\Isetta\Core\Config\CVarRegistry.h" />
+    <ClInclude Include="..\Isetta\Core\Config\ICVar.h" />
+    <ClInclude Include="..\Isetta\Core\DataStructures\RingBuffer.h" />
+    <ClInclude Include="..\Isetta\Core\Debug\Assert.h" />
+    <ClInclude Include="..\Isetta\Core\Debug\Debug.h" />
+    <ClInclude Include="..\Isetta\Core\Debug\DebugDraw.h" />
+    <ClInclude Include="..\Isetta\Core\Debug\Logger.h" />
+    <ClInclude Include="..\Isetta\Core\FileSystem.h" />
+    <ClInclude Include="..\Isetta\Core\IsettaAlias.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Math.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Matrix3.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Matrix4.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Quaternion.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Random.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Rect.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Util.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Vector2.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Vector2Int.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Vector3.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Vector3Int.h" />
+    <ClInclude Include="..\Isetta\Core\Math\Vector4.h" />
+    <ClInclude Include="..\Isetta\Core\Memory\Memory.h" />
+    <ClInclude Include="..\Isetta\Core\Memory\TemplatePoolAllocator.h" />
+    <ClInclude Include="..\Isetta\Core\Time\Clock.h" />
+    <ClInclude Include="..\Isetta\Core\Time\StopWatch.h" />
+    <ClInclude Include="..\Isetta\Custom\ExampleComponent.h" />
+    <ClInclude Include="..\Isetta\Custom\ExampleLevel.h" />
+    <ClInclude Include="..\Isetta\EngineLoop.h" />
+    <ClInclude Include="..\Isetta\Graphics\AnimationComponent.h" />
+    <ClInclude Include="..\Isetta\Graphics\CameraComponent.h" />
+    <ClInclude Include="..\Isetta\Graphics\GUI.h" />
+    <ClInclude Include="..\Isetta\Graphics\GUIModule.h" />
+    <ClInclude Include="..\Isetta\Graphics\GUIStyle.h" />
+    <ClInclude Include="..\Isetta\Graphics\LightComponent.h" />
+    <ClInclude Include="..\Isetta\Graphics\MeshComponent.h" />
+    <ClInclude Include="..\Isetta\Graphics\RectTransform.h" />
+    <ClInclude Include="..\Isetta\Graphics\RenderModule.h" />
+    <ClInclude Include="..\Isetta\Graphics\RenderNode.h" />
+    <ClInclude Include="..\Isetta\Graphics\Window.h" />
+    <ClInclude Include="..\Isetta\Input\Input.h" />
+    <ClInclude Include="..\Isetta\Input\InputEnum.h" />
+    <ClInclude Include="..\Isetta\Input\InputModule.h" />
+    <ClInclude Include="..\Isetta\Networking\Messages.h" />
+    <ClInclude Include="..\Isetta\Networking\NetworkingModule.h" />
+    <ClInclude Include="..\Isetta\Networking\NetworkManager.h" />
+    <ClInclude Include="..\Isetta\Scene\Component.h" />
+    <ClInclude Include="..\Isetta\Scene\Entity.h" />
+    <ClInclude Include="..\Isetta\Scene\Level.h" />
+    <ClInclude Include="..\Isetta\Scene\LevelManager.h" />
+    <ClInclude Include="..\Isetta\Scene\Transform.h" />
+>>>>>>> Merged from develop
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <ClCompile Include="..\IsettaEngine\Audio\AudioModule.cpp" />
     <ClCompile Include="..\IsettaEngine\Audio\AudioSource.cpp" />
     <ClCompile Include="..\IsettaEngine\Core\Color.cpp" />
@@ -278,6 +338,59 @@
     <ClCompile Include="..\IsettaEngine\Scene\Level.cpp" />
     <ClCompile Include="..\IsettaEngine\Scene\LevelManager.cpp" />
     <ClCompile Include="..\IsettaEngine\Scene\Transform.cpp" />
+=======
+    <ClCompile Include="..\Isetta\Audio\AudioModule.cpp" />
+    <ClCompile Include="..\Isetta\Audio\AudioSource.cpp" />
+    <ClCompile Include="..\Isetta\Core\Color.cpp" />
+    <ClCompile Include="..\Isetta\Core\Config\Config.cpp" />
+    <ClCompile Include="..\Isetta\Core\Config\CVar.cpp" />
+    <ClCompile Include="..\Isetta\Core\Debug\DebugDraw.cpp" />
+    <ClCompile Include="..\Isetta\Core\Debug\Logger.cpp" />
+    <ClCompile Include="..\Isetta\Core\FileSystem.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Matrix3.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Matrix4.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Quaternion.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Random.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Rect.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Util.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Vector2.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Vector2Int.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Vector3.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Vector3Int.cpp" />
+    <ClCompile Include="..\Isetta\Core\Math\Vector4.cpp" />
+    <ClCompile Include="..\Isetta\Core\Memory\DoubleBufferedAllocator.cpp" />
+    <ClCompile Include="..\Isetta\Core\Memory\FreeListAllocator.cpp" />
+    <ClCompile Include="..\Isetta\Core\Memory\MemoryArena.cpp" />
+    <ClCompile Include="..\Isetta\Core\Memory\MemoryManager.cpp" />
+    <ClCompile Include="..\Isetta\Core\Memory\MemUtil.cpp" />
+    <ClCompile Include="..\Isetta\Core\Memory\ObjectHandle.cpp" />
+    <ClCompile Include="..\Isetta\Core\Memory\PoolAllocator.cpp" />
+    <ClCompile Include="..\Isetta\Core\Memory\StackAllocator.cpp" />
+    <ClCompile Include="..\Isetta\Core\Time\Clock.cpp" />
+    <ClCompile Include="..\Isetta\Core\Time\StopWatch.cpp" />
+    <ClCompile Include="..\Isetta\Custom\ExampleComponent.cpp" />
+    <ClCompile Include="..\Isetta\Custom\ExampleLevel.cpp" />
+    <ClCompile Include="..\Isetta\EngineLoop.cpp" />
+    <ClCompile Include="..\Isetta\Graphics\AnimationComponent.cpp" />
+    <ClCompile Include="..\Isetta\Graphics\CameraComponent.cpp" />
+    <ClCompile Include="..\Isetta\Graphics\GUI.cpp" />
+    <ClCompile Include="..\Isetta\Graphics\GUIModule.cpp" />
+    <ClCompile Include="..\Isetta\Graphics\GUIStyle.cpp" />
+    <ClCompile Include="..\Isetta\Graphics\LightComponent.cpp" />
+    <ClCompile Include="..\Isetta\Graphics\MeshComponent.cpp" />
+    <ClCompile Include="..\Isetta\Graphics\RenderModule.cpp" />
+    <ClCompile Include="..\Isetta\Graphics\RenderNode.cpp" />
+    <ClCompile Include="..\Isetta\Graphics\Window.cpp" />
+    <ClCompile Include="..\Isetta\Input\Input.cpp" />
+    <ClCompile Include="..\Isetta\Input\InputModule.cpp" />
+    <ClCompile Include="..\Isetta\Networking\NetworkingModule.cpp" />
+    <ClCompile Include="..\Isetta\Networking\NetworkManager.cpp" />
+    <ClCompile Include="..\Isetta\Scene\Component.cpp" />
+    <ClCompile Include="..\Isetta\Scene\Entity.cpp" />
+    <ClCompile Include="..\Isetta\Scene\Level.cpp" />
+    <ClCompile Include="..\Isetta\Scene\LevelManager.cpp" />
+    <ClCompile Include="..\Isetta\Scene\Transform.cpp" />
+>>>>>>> Merged from develop
     <ClCompile Include="Core\ColorTest.cpp" />
     <ClCompile Include="Core\DataStructures\RingBufferTest.cpp" />
     <ClCompile Include="Core\Math\Matrix3Test.cpp" />

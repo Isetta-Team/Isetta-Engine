@@ -42,7 +42,11 @@ class RenderModule {
   std::list<class MeshComponent*> meshComponents;
   std::list<class LightComponent*> lightComponents;
   std::list<class CameraComponent*> cameraComponents;
+<<<<<<< HEAD:Isetta/IsettaEngine/Graphics/RenderModule.h
   CameraComponent* MainCamera() const;
+=======
+
+>>>>>>> Merged from develop:Isetta/Isetta/Graphics/RenderModule.h
 
  private:
   RenderModule() = default;

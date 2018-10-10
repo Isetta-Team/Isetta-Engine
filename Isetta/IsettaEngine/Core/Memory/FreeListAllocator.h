@@ -16,7 +16,10 @@ namespace Isetta {
  * 3. Satisfy alignment requirement
  */
 // TODO(YIDI): Add expansion functionality
+<<<<<<< HEAD:Isetta/IsettaEngine/Core/Memory/FreeListAllocator.h
 // TODO(YIDI): Optimize to use a tree as underlying structure to reduce time complexity
+=======
+>>>>>>> Merged from develop:Isetta/Isetta/Core/Memory/FreeListAllocator.h
 class FreeListAllocator {
  public:
   // This class is using RAII

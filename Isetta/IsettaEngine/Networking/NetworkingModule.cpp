@@ -32,7 +32,7 @@ void NetworkingModule::StartUp() {
   // TODO(Caleb): Figure out some more robust channel settings
   networkConfig.numChannels = 1;
   networkConfig.channel[0].type = yojimbo::CHANNEL_TYPE_UNRELIABLE_UNORDERED;
-  networkConfig.timeout = 1000000;
+  networkConfig.timeout = 20;
 
   privateKey = new (MemoryManager::AllocOnStack(
       sizeof(U8) * Config::Instance().networkConfig.keyBytes.GetVal()))

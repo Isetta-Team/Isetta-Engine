@@ -80,8 +80,13 @@ void MemoryManager::ClearLevelMemory() {
 }
 
 void MemoryManager::RegisterTests() {
+<<<<<<< HEAD:Isetta/IsettaEngine/Core/Memory/MemoryManager.cpp
   // Input::RegisterKeyPressCallback(KeyCode::P, [&]() { dynamicArena.Print(); });
   // Input::RegisterKeyPressCallback(KeyCode::T, []() { DefragmentTest(); });
+=======
+  //Input::RegisterKeyPressCallback(KeyCode::P, [&]() { dynamicArena.Print(); });
+  //Input::RegisterKeyPressCallback(KeyCode::T, []() { DefragmentTest(); });
+>>>>>>> Merged from develop:Isetta/Isetta/Core/Memory/MemoryManager.cpp
 }
 
 MemoryManager* MemoryManager::GetInstance() {
