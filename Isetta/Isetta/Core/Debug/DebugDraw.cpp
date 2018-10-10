@@ -596,15 +596,15 @@ void DebugDraw::Axis(const Math::Matrix4& transformation, const Color& xColor,
                      float duration, bool depthTest) {
   Math::Vector3 start =
       static_cast<Math::Vector3>(transformation * Math::Vector4::zero);
-  Math::Vector3 right =
-      static_cast<Math::Vector3>(transformation * Math::Vector4::right);
+  Math::Vector3 left =
+      static_cast<Math::Vector3>(transformation * Math::Vector4::left);
   Math::Vector3 up =
       static_cast<Math::Vector3>(transformation * Math::Vector4::up);
   Math::Vector3 forward =
       static_cast<Math::Vector3>(transformation * Math::Vector4::forward);
-  Line(start, right, xColor, thickness, duration, depthTest);
+  Line(start, left, xColor, thickness, duration, depthTest);
   Line(start, up, yColor, thickness, duration, depthTest);
-  Line(start, -forward, zColor, thickness, duration, depthTest);
+  Line(start, forward, zColor, thickness, duration, depthTest);
 }
 void DebugDraw::AxisSphere(const Math::Matrix4& transformation,
                            const Color& xColor, const Color& yColor,
