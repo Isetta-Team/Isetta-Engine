@@ -16,6 +16,7 @@ namespace Isetta {
  * 3. Satisfy alignment requirement
  */
 // TODO(YIDI): Add expansion functionality
+// TODO(YIDI): Optimize to use a tree as underlying structure to reduce time complexity
 class FreeListAllocator {
  public:
   // This class is using RAII

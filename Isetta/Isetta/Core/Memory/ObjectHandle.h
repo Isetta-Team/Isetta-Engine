@@ -4,7 +4,6 @@
 #pragma once
 #include "Core/IsettaAlias.h"
 #include "Core/Memory/MemoryArena.h"
-#include "Util.h"
 
 namespace Isetta {
 // FUTURE: If we want reference counting (probably not), it can be done here

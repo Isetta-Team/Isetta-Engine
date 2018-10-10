@@ -7,6 +7,7 @@
 #include "Core/Memory/ObjectHandle.h"
 #include "Input/Input.h"
 #include "Core/Debug/Assert.h"
+#include "Core/Memory/MemUtil.h"
 
 namespace Isetta {
 

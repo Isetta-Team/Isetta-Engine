@@ -3,7 +3,7 @@
  */
 #pragma once
 #include "Core/IsettaAlias.h"
-#include "MemUtil.h"
+#include "Core/Memory/MemUtil.h"
 
 namespace Isetta {
 class StackAllocator {
