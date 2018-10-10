@@ -53,7 +53,7 @@ class Transform {
   // helper
   Math::Vector3 GetForward();
   Math::Vector3 GetUp();
-  Math::Vector3 GetRight();
+  Math::Vector3 GetLeft();
 
   // other
   void LookAt(const Math::Vector3& target,

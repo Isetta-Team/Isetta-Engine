@@ -146,26 +146,23 @@ void Transform::SetParent(Transform* transform) {
   SetDirty();
 }
 
-// TODO(YIDI): test this
 Math::Vector3 Transform::GetForward() {
-  return GetLocalToWorldMatrix().GetCol(2).GetVector3();
+  return GetLocalToWorldMatrix().GetCol(2).GetVector3().Normalized();
 }
 
-// TODO(YIDI): test this
 Math::Vector3 Transform::GetUp() {
-  return GetLocalToWorldMatrix().GetCol(1).GetVector3();
+  return GetLocalToWorldMatrix().GetCol(1).GetVector3().Normalized();
 }
 
-// TODO(YIDI): test this
-Math::Vector3 Transform::GetRight() {
-  return GetLocalToWorldMatrix().GetCol(0).GetVector3();
+Math::Vector3 Transform::GetLeft() {
+  return GetLocalToWorldMatrix().GetCol(0).GetVector3().Normalized();
 }
 
 void Transform::LookAt(const Math::Vector3& target,
                        const Math::Vector3& worldUp) {
   Math::Vector3 forwardDir = target - GetLocalPos();
   Math::Vector3 rightDir =
-      Math::Vector3::Cross(forwardDir, worldUp).Normalized() * -1;
+      Math::Vector3::Cross(forwardDir, worldUp).Normalized();
   Math::Vector3 upDir = Math::Vector3::Cross(forwardDir, rightDir);
 
   SetLocalRot(Math::Quaternion::FromLookRotation(forwardDir, upDir));
