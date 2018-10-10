@@ -115,7 +115,7 @@ RingBuffer<T>::RingBuffer(const RingBuffer<T>& rb) : size{rb.GetCapacity()} {
   for (int i = 0; i < rb.GetLength(); i++) {
     Put(copyList[i]);
   }
-  delete[] copyList;
+  MemoryManager::FreeOnFreeList(copyList);
 }
 
 template <typename T>
@@ -135,7 +135,7 @@ RingBuffer<T>& RingBuffer<T>::operator=(const RingBuffer<T>& rb) {
   for (int i = 0; i < rb.GetLength(); i++) {
     Put(copyList[i]);
   }
-  delete[] copyList;
+  MemoryManager::FreeOnFreeList(copyList);
 
   return *this;
 }
@@ -203,8 +203,7 @@ void RingBuffer<T>::Clear() {
 
 template <typename T>
 T* RingBuffer<T>::ToList() const {
-  //T* list = MemoryManager::NewArrOnFreeList<T>(GetLength());
-  T* list = new T[GetLength()];
+  T* list = MemoryManager::NewArrOnFreeList<T>(GetLength());
   int count = 0;
   int idx = head;
   while (idx != tail) {
