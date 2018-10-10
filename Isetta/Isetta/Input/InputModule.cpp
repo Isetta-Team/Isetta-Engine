@@ -312,11 +312,18 @@ int InputModule::KeyCodeToGlfwKey(KeyCode key) const {
     case KeyCode::PAGE_DOWN:
     case KeyCode::HOME:
     case KeyCode::END:
+      glfwKey = GLFW_KEY_ESCAPE - static_cast<int>(KeyCode::ESCAPE) +
+                static_cast<int>(key);
+      break;
     case KeyCode::CAPS_LOCK:
     case KeyCode::SCROLL_LOCK:
     case KeyCode::NUM_LOCK:
     case KeyCode::PRINT_SCREEN:
     case KeyCode::PAUSE:
+      glfwKey = GLFW_KEY_CAPS_LOCK - static_cast<int>(KeyCode::CAPS_LOCK) +
+                static_cast<int>(key);
+      break;
+
     case KeyCode::F1:
     case KeyCode::F2:
     case KeyCode::F3:
@@ -342,6 +349,9 @@ int InputModule::KeyCodeToGlfwKey(KeyCode key) const {
     case KeyCode::F23:
     case KeyCode::F24:
     case KeyCode::F25:
+      glfwKey =
+          GLFW_KEY_F1 - static_cast<int>(KeyCode::F1) + static_cast<int>(key);
+      break;
     case KeyCode::KP_0:
     case KeyCode::KP_1:
     case KeyCode::KP_2:
@@ -368,7 +378,7 @@ int InputModule::KeyCodeToGlfwKey(KeyCode key) const {
     case KeyCode::RIGHT_ALT:
     case KeyCode::RIGHT_SUPER:
     case KeyCode::MENU:
-      glfwKey = GLFW_KEY_ESCAPE - static_cast<int>(KeyCode::ESCAPE) +
+      glfwKey = GLFW_KEY_KP_0 - static_cast<int>(KeyCode::KP_0) +
                 static_cast<int>(key);
       break;
     default:
