@@ -380,7 +380,7 @@ void GUIDemo() {
 void DebugDemo() {
   DebugDraw::Point(2 * Math::Vector3::left, Color::magenta, 20);
   // DebugDraw::Line(Math::Vector3::zero, v);
-  if (Input::IsKeyPressed(KeyCode::A)) {
+  if (Input::IsKeyPressed(KeyCode::V)) {
     static float angle = 0.0f;
     angle += 0.4f * EngineLoop::GetGameClock().GetDeltaTime();
     if (angle >= 2 * Math::Util::PI) {
