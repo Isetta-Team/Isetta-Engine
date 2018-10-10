@@ -55,7 +55,7 @@ void RenderModule::Update(float deltaTime) {
   for (const auto& cam : cameraComponents) {
     cam->UpdateTransform();
   }
-  ASSERT(cameraComponents.size() > 0);
+  ASSERT(!cameraComponents.empty());
   CameraComponent::_main = cameraComponents.front();
   h3dRender(cameraComponents.front()->renderNode);
 

@@ -128,12 +128,12 @@ bool Entity::GetActive() const {
   return GetAttribute(EntityAttributes::IS_ACTIVE);
 }
 
-void Entity::SetTransform(const Math::Vector3& inPosition,
-                          const Math::Vector3& inRotation,
-                          const Math::Vector3& inScale) {
+void Entity::SetTransform(const Math::Vector3& worldPos,
+                          const Math::Vector3& worldEulerAngles,
+                          const Math::Vector3& localScale) {
   SetAttribute(EntityAttributes::IS_TRANSFORM_DIRTY, true);
   // TODO(YIDI): Test this
-  transform.SetWorldTransform(inPosition, inRotation, inScale);
+  transform.SetWorldTransform(worldPos, worldEulerAngles, localScale);
 }
 
 Transform& Entity::GetTransform() { return transform; }

@@ -50,15 +50,15 @@ class Entity {
   bool GetActive() const;
 
   template <typename T, typename... Args>
-  T* AddComponent(bool isActive, Args&&... args);
+  T* AddComponent(bool isActive = true, Args&&... args);
   template <typename T>
   T* GetComponent();
   template <typename T>
   std::vector<T*> GetComponents();
 
-  void SetTransform(const Math::Vector3& inPosition,
-                    const Math::Vector3& inRotation,
-                    const Math::Vector3& inScale);
+  void SetTransform(const Math::Vector3& worldPos = Math::Vector3::zero,
+                    const Math::Vector3& worldEulerAngles = Math::Vector3::zero,
+                    const Math::Vector3& localScale = Math::Vector3::one);
   Transform& GetTransform();
 };
 

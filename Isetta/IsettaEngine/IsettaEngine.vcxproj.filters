@@ -164,6 +164,11 @@
     </ClCompile>
     <ClCompile Include="Core\Filesystem.cpp">
       <Filter>Core</Filter>
+    <ClCompile Include="Custom\AxisDrawer.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\PlayerController.cpp">
+      <Filter>Custom</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -407,6 +412,11 @@
     </ClInclude>
     <ClInclude Include="Core\Filesystem.h">
       <Filter>Core</Filter>
+    <ClInclude Include="Custom\AxisDrawer.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\PlayerController.h">
+      <Filter>Custom</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
