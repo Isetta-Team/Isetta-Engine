@@ -27,10 +27,7 @@ void CameraComponent::OnEnable() {
 void CameraComponent::OnDisable() { h3dRemoveNode(renderNode); }
 void CameraComponent::UpdateTransform() {
   Transform transform = owner->GetTransform();
-  h3dSetNodeTransform(renderNode, transform.position.x, transform.position.y,
-                      transform.position.z, transform.rotation.x,
-                      transform.rotation.y, transform.rotation.z,
-                      transform.scale.x, transform.scale.y, transform.scale.z);
+  Transform::SetH3DNodeTransform(renderNode, transform);
 }
 
 void CameraComponent::ResizeViewport() {

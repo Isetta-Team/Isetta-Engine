@@ -4,6 +4,7 @@
 #include "Graphics/AnimationComponent.h"
 #include <Horde3D.h>
 #include "Core/Config/Config.h"
+#include "Util.h"
 
 namespace Isetta {
 RenderModule* AnimationComponent::renderModule{nullptr};

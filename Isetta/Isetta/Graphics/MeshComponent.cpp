@@ -4,13 +4,16 @@
 #include "Graphics/MeshComponent.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Assert.h"
+#include "Input/Input.h"
 #include "Scene/Entity.h"
+#include "Scene/Transform.h"
+#include "Util.h"
 
 namespace Isetta {
 RenderModule* MeshComponent::renderModule{nullptr};
 
 MeshComponent::MeshComponent(std::string resourceName) : Component() {
-  SetAttribute(ComponentAttributes::NEED_UPDATE, false);
+  // SetAttribute(ComponentAttributes::NEED_UPDATE, false);
   ASSERT(renderModule != nullptr);
   renderModule->meshComponents.push_back(this);
   renderResource = LoadResourceFromFile(resourceName);
@@ -22,11 +25,7 @@ MeshComponent::~MeshComponent() {
 }
 
 void MeshComponent::UpdateTransform() {
-  Transform transform = owner->GetTransform();
-  h3dSetNodeTransform(renderNode, transform.position.x, transform.position.y,
-                      transform.position.z, transform.rotation.x,
-                      transform.rotation.y, transform.rotation.z,
-                      transform.scale.x, transform.scale.y, transform.scale.z);
+  Transform::SetH3DNodeTransform(renderNode, GetTransform());
 }
 
 H3DRes MeshComponent::LoadResourceFromFile(std::string resourceName) const {
@@ -49,4 +48,5 @@ void MeshComponent::OnDisable() {
   // Disabling a mesh is also disabling its animation, need to fix it later
   h3dRemoveNode(renderNode);
 }
+
 }  // namespace Isetta

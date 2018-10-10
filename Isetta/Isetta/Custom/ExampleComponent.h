@@ -7,6 +7,7 @@
 namespace Isetta {
 class ExampleComponent : public Component {
  public:
+  void OnEnable() override;
   void Update() override;
 };
 }  // namespace Isetta

@@ -6,10 +6,6 @@
 
 namespace Isetta {
 
-void Entity::PropagateTransform() {
-  // TODO(Yidi): Transform hierachily
-}
-
 void Entity::OnEnable() {
   for (auto comp : components) {
     comp->OnEnable();
@@ -100,8 +96,11 @@ bool Entity::GetAttribute(EntityAttributes attr) const {
   return attributes.test(static_cast<int>(attr));
 }
 
-Entity::Entity(std::string name)
-    : attributes{0b101}, entityID{SID(name.c_str())} {
+Entity::Entity(const std::string& name)
+    : transform(this),
+      attributes{0b101},
+      entityID{SID(name.c_str())},
+      entityName{name} {
   OnEnable();
 }
 
@@ -133,11 +132,9 @@ void Entity::SetTransform(const Math::Vector3& inPosition,
                           const Math::Vector3& inRotation,
                           const Math::Vector3& inScale) {
   SetAttribute(EntityAttributes::IS_TRANSFORM_DIRTY, true);
-  transform.position = inPosition;
-  transform.rotation = inRotation;
-  transform.scale = inScale;
-  PropagateTransform();
+  // TODO(YIDI): Test this
+  transform.SetWorldTransform(inPosition, inRotation, inScale);
 }
 
-const Transform& Entity::GetTransform() const { return transform; }
+Transform& Entity::GetTransform() { return transform; }
 }  // namespace Isetta

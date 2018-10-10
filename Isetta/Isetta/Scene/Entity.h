@@ -6,9 +6,9 @@
 #include <typeindex>
 #include <typeinfo>
 #include <vector>
+#include "Core/Memory/MemoryManager.h"
 #include "Scene/Transform.h"
 #include "Util.h"
-#include "Core/Memory/MemoryManager.h"
 
 namespace Isetta {
 class Entity {
@@ -22,8 +22,6 @@ class Entity {
   Transform transform;
   std::vector<Entity*> children;
 
-  void PropagateTransform();
-
   void OnEnable();
   void CheckStart();
   void GuiUpdate();
@@ -36,14 +34,16 @@ class Entity {
   std::bitset<3> attributes;
 
   StringId entityID;
+  std::string entityName;
 
   void SetAttribute(EntityAttributes attr, bool value);
   bool GetAttribute(EntityAttributes attr) const;
 
  public:
-  Entity(std::string name);
+  Entity(const std::string& name);
   ~Entity();
 
+  std::string GetName() const { return entityName; }
   static void Destroy(Entity* entity);
 
   void SetActive(bool inActive);
@@ -59,7 +59,7 @@ class Entity {
   void SetTransform(const Math::Vector3& inPosition,
                     const Math::Vector3& inRotation,
                     const Math::Vector3& inScale);
-  const Transform& GetTransform() const;
+  Transform& GetTransform();
 };
 
 template <typename T, typename... Args>
