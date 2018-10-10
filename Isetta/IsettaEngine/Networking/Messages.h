@@ -9,47 +9,105 @@
 #include "yojimbo/yojimbo.h"
 
 namespace Isetta {
+
+class RPCRegistry {
+ private:
+  static void RegisterMessageType(const int size,
+                                  Func<yojimbo::Message*, void*> f) {
+    sizes[count] = size;
+    factories[count] = f;
+    ++count;
+  }
+
+  static int count;
+  static std::unordered_map<int, int> sizes;
+  static std::unordered_map<int, Func<yojimbo::Message*, void*>> factories;
+
+  RPCRegistry() = default;
+
+  friend class RPCRegistryHelper;
+  friend class RPCMessageFactory;
+};
+
+class RPCRegistryHelper {
+ public:
+  RPCRegistryHelper(const int size, Func<yojimbo::Message*, void*> f) {
+    RPCRegistry::RegisterMessageType(size, f);
+  }
+};
+
+class RPCMessageFactory : public yojimbo::MessageFactory {
+ public:
+  RPCMessageFactory(yojimbo::Allocator& allocator, int num_message_types)
+      : MessageFactory(allocator, num_message_types){};
+
+  yojimbo::Message* CreateMessageInternal(int type) {
+    yojimbo::Message* message;
+    yojimbo::Allocator& allocator = GetAllocator();
+    message = RPCRegistry::factories[type](
+        allocator.Allocate(RPCRegistry::sizes[type], __FILE__, __LINE__));
+    if (!message) return NULL;
+    SetMessageType(message, type);
+    return message;
+  }
+};
+
+#define RPC_START(MessageClass)                  \
+  class MessageClass : public yojimbo::Message { \
+   private:                                      \
+    static MessageClass* Create(void* memory) {  \
+      return new (memory) MessageClass();        \
+    }                                            \
+    class RPCMessageFactory;                     \
+    friend class RPCMessageFactory;              \
+    static RPCRegistryHelper MessageClass##_RPCRegistryHelper;
+
+#define RPC_FINISH(MessageClass)         \
+ public:                                 \
+  YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS(); \
+  }                                      \
+  ;
+
 /**
  * @brief Code-generated struct to be used for sending integer values across the
  * network.
  *
  */
-struct HandleMessage : public yojimbo::Message {
-  int handle;
+RPC_START(HandleMessage)
+HandleMessage() { handle = 0; }
 
-  HandleMessage() { handle = 0; }
+// TODO(Caleb): choose a more reasonable range for the int serialization
+template <typename Stream>
+bool Serialize(Stream& stream) {
+  serialize_int(stream, handle, 0, 64);
 
-  // TODO(Caleb): choose a more reasonable range for the int serialization
-  template <typename Stream>
-  bool Serialize(Stream& stream) {
-    serialize_int(stream, handle, 0, 64);
+  return true;
+}
 
-    return true;
-  }
-
-  YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS();
-};
+public:
+int handle;
+RPC_FINISH(HandleMessage)
 
 /**
  * @brief Code-generated struct to be used for sending string messages across
  * the network.
  *
  */
-struct StringMessage : public yojimbo::Message {
+RPC_START(StringMessage)
+
+StringMessage() { string = ""; }
+
+// TODO(Caleb): choose a more reasonable range for the int serialization
+template <typename Stream>
+bool Serialize(Stream& stream) {
+  serialize_string(stream, const_cast<char*>(string.c_str()), 512);
+
+  return true;
+}
+
+ public:
   std::string string;
-
-  StringMessage() { string = ""; }
-
-  // TODO(Caleb): choose a more reasonable range for the int serialization
-  template <typename Stream>
-  bool Serialize(Stream& stream) {
-    serialize_string(stream, const_cast<char*>(string.c_str()), 512);
-
-    return true;
-  }
-
-  YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS();
-};
+RPC_FINISH(StringMessage)
 
 /**
  * @brief Enumeration of the message types that can be created by the
@@ -60,15 +118,15 @@ enum IsettaMessageType { HANDLE_MESSAGE, STRING_MESSAGE, NUM_MESSAGE_TYPES };
 
 /// Code-generate the IsettaMessageFactory class, which creates Message objects
 /// upon request that can be sent over the network.
-YOJIMBO_MESSAGE_FACTORY_START(IsettaMessageFactory, NUM_MESSAGE_TYPES);
-YOJIMBO_DECLARE_MESSAGE_TYPE(HANDLE_MESSAGE, HandleMessage);
-YOJIMBO_DECLARE_MESSAGE_TYPE(STRING_MESSAGE, StringMessage);
-YOJIMBO_MESSAGE_FACTORY_FINISH();
+// YOJIMBO_MESSAGE_FACTORY_START(IsettaMessageFactory, NUM_MESSAGE_TYPES);
+// YOJIMBO_DECLARE_MESSAGE_TYPE(HANDLE_MESSAGE, HandleMessage);
+// YOJIMBO_DECLARE_MESSAGE_TYPE(STRING_MESSAGE, StringMessage);
+// YOJIMBO_MESSAGE_FACTORY_FINISH();
 
-class IsettaAllocator : public yojimbo::Allocator {
+class NetworkAllocator : public yojimbo::Allocator {
  public:
   // Network allocation is currently assumed to be LSR
-  IsettaAllocator(void* memory, Size size) {
+  NetworkAllocator(void* memory, Size size) {
     ASSERT(size > 0);
 
     // SetErrorLevel(yojimbo::ALLOCATOR_ERROR_NONE);
@@ -79,7 +137,7 @@ class IsettaAllocator : public yojimbo::Allocator {
   }
 
   // TODO(Caleb): Clean up this hacky copy constructor
-  IsettaAllocator(const IsettaAllocator& a) {
+  NetworkAllocator(const NetworkAllocator& a) {
     memPointer = a.memPointer;
     nextAvailable = a.nextAvailable;
   }
@@ -92,7 +150,7 @@ class IsettaAllocator : public yojimbo::Allocator {
       throw std::exception("Bad memory!");  // TODO(Caleb) better exception
     }
 
-    //TrackAlloc(p, size, file, line);  // This causes a 64 byte memory leak
+    // TrackAlloc(p, size, file, line);  // This causes a 64 byte memory leak
 
     nextAvailable += size;
 
@@ -104,7 +162,7 @@ class IsettaAllocator : public yojimbo::Allocator {
       return;
     }
 
-    //TrackFree(p, file, line);  // This causes a 64 byte memory leak
+    // TrackFree(p, file, line);  // This causes a 64 byte memory leak
 
     // Do nothing I guess? This is only supposed to be an LSR allocator
   }
@@ -135,7 +193,9 @@ class CustomAdapter : public yojimbo::Adapter {
    * @return yojimbo::MessageFactory*
    */
   yojimbo::MessageFactory* CreateMessageFactory(yojimbo::Allocator* allocator) {
-    return YOJIMBO_NEW(*allocator, IsettaMessageFactory, *allocator);
+    // return YOJIMBO_NEW(*allocator, IsettaMessageFactory, *allocator);
+    return new (allocator->Allocate(sizeof(RPCMessageFactory), __FILE__,
+                                    __LINE__)) RPCMessageFactory(*allocator, 2);
   }
 };
 }  // namespace Isetta

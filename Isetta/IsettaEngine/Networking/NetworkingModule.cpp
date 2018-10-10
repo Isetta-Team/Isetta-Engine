@@ -20,6 +20,15 @@
 namespace Isetta {
 CustomAdapter NetworkingModule::NetworkAdapter;
 
+int RPCRegistry::count;
+std::unordered_map<int, int> RPCRegistry::sizes;
+std::unordered_map<int, Func<yojimbo::Message*, void*>> RPCRegistry::factories;
+
+RPCRegistryHelper HandleMessage::HandleMessage_RPCRegistryHelper(
+    sizeof(HandleMessage), HandleMessage::Create);
+RPCRegistryHelper StringMessage::StringMessage_RPCRegistryHelper(
+    sizeof(StringMessage), StringMessage::Create);
+
 void NetworkingModule::StartUp() {
   NetworkManager::networkingModule = this;
 
@@ -46,8 +55,8 @@ void NetworkingModule::StartUp() {
 
   void* memPointer =
       MemoryManager::AllocOnStack(networkConfig.clientMemory + 1_MB);
-  clientAllocator = new (MemoryManager::AllocOnStack(sizeof(IsettaAllocator)))
-      IsettaAllocator(memPointer, (Size)networkConfig.clientMemory + 1_MB);
+  clientAllocator = new (MemoryManager::AllocOnStack(sizeof(NetworkAllocator)))
+      NetworkAllocator(memPointer, (Size)networkConfig.clientMemory + 1_MB);
 
   if (Config::Instance().networkConfig.runServer.GetVal()) {
     Size serverMemorySize =
@@ -56,8 +65,8 @@ void NetworkingModule::StartUp() {
         (Config::Instance().networkConfig.maxClients.GetVal() + 1);
 
     memPointer = MemoryManager::AllocOnStack(serverMemorySize);
-    serverAllocator = new (MemoryManager::AllocOnStack(sizeof(IsettaAllocator)))
-        IsettaAllocator(memPointer, serverMemorySize);
+    serverAllocator = new (MemoryManager::AllocOnStack(sizeof(NetworkAllocator)))
+        NetworkAllocator(memPointer, serverMemorySize);
   }
 
   client = new (MemoryManager::AllocOnStack(sizeof(yojimbo::Client)))
