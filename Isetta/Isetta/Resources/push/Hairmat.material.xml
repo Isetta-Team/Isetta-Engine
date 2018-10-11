@@ -1,7 +1,0 @@
-<Material>
-	<Shader source="shaders/model.shader" />
-	<ShaderFlag name="_F01_Skinning" />
-
-	<Sampler name="albedoMap" map="push/Malcom_Hair_Diffuse.png" />
-	<Sampler name="normalMap" map="push/Malcom_Hair_Normal.png" allowCompression="false" />
-</Material>
