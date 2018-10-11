@@ -168,9 +168,6 @@
     <ClCompile Include="Custom\PlayerController.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
-    <ClCompile Include="Networking\ExampleMessages.cpp">
-      <Filter>Networking</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

@@ -12,7 +12,7 @@ class AudioModule;
 /**
  * \brief AudioSource is the class used to play specific sound clips
  */
-class ISETTA_API AudioSource {
+class ISETTA_API_DECLARE AudioSource {
  public:
   AudioSource() = default;
   ~AudioSource() = default;

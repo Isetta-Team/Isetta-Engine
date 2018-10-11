@@ -30,7 +30,7 @@ namespace Isetta {
  * mask messages)
  *
  */
-class ISETTA_API Logger {
+class ISETTA_API_DECLARE Logger {
  public:
   /**
    * @brief Logger configuration CVar struct

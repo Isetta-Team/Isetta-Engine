@@ -21,7 +21,7 @@ TEST_METHOD(SqrMagnitude) {
 
 TEST_METHOD(Normalized) {
   Math::Vector3Int vec{5, 0, 0};
-  Assert::IsTrue(Math::Vector3::right == vec.Normalized());
+  Assert::IsTrue(Math::Vector3::left == vec.Normalized());
 }
 
 TEST_METHOD(Dot) {

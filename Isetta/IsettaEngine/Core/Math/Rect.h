@@ -3,7 +3,7 @@
 #include "ISETTA_API.h"
 
 namespace Isetta::Math {
-class ISETTA_API Rect {
+class ISETTA_API_DECLARE Rect {
  public:
   float x, y, width, height;
 

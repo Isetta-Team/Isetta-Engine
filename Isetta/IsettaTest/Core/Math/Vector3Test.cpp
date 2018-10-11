@@ -21,13 +21,13 @@ TEST_METHOD(SqrMagnitude) {
 
 TEST_METHOD(Normalized) {
   Math::Vector3 vec{5.f, 0.f, 0.f};
-  Assert::IsTrue(Math::Vector3::right == vec.Normalized());
+  Assert::IsTrue(Math::Vector3::left == vec.Normalized());
 }
 
 TEST_METHOD(Normalize) {
   Math::Vector3 vec{5.f, 0.f, 0.f};
   vec.Normalize();
-  Assert::IsTrue(Math::Vector3::right == vec);
+  Assert::IsTrue(Math::Vector3::left == vec);
 }
 
 TEST_METHOD(Equals) {
