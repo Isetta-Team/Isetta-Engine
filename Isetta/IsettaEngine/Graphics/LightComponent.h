@@ -9,7 +9,7 @@
 #include "Scene/Entity.h"
 
 namespace Isetta {
-ISETTA_API class LightComponent : public Component {
+class ISETTA_API LightComponent : public Component {
  public:
   enum class Property {
     RADIUS,

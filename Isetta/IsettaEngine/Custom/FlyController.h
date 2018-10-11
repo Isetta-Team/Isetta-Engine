@@ -6,7 +6,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-ISETTA_API class FlyController : public Component {
+class ISETTA_API FlyController : public Component {
  public:
   void OnEnable() override;
   void Update() override;

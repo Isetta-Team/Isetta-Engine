@@ -7,7 +7,7 @@ class Color;
 }
 
 namespace Isetta::Math {
-ISETTA_API class Vector4 {
+class ISETTA_API Vector4 {
  public:
   // Constants
   static const Vector4 zero;

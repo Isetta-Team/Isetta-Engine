@@ -6,13 +6,13 @@
 #include "fmod.hpp"
 
 namespace Isetta {
-ISETTA_API class AudioModule;
+class AudioModule;
 
 // TODO(YIDI): add 3d support
 /**
  * \brief AudioSource is the class used to play specific sound clips
  */
-class AudioSource {
+class ISETTA_API AudioSource {
  public:
   AudioSource() = default;
   ~AudioSource() = default;

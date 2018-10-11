@@ -7,7 +7,7 @@
 
 namespace Isetta::Math {
 
-ISETTA_API class Vector2 {
+class ISETTA_API Vector2 {
  public:
   // Constants
   static const Vector2 zero;

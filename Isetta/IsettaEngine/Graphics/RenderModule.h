@@ -11,7 +11,7 @@
 #include "Core/Config/CVar.h"
 
 namespace Isetta {
-ISETTA_API class RenderModule {
+class ISETTA_API RenderModule {
  public:
   struct RenderConfig {
     CVar<int> hordeLoadTextures{"horde_load_textures", 1};

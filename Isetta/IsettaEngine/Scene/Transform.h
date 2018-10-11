@@ -10,7 +10,7 @@
 #include "Horde3D.h"
 
 namespace Isetta {
-ISETTA_API class Transform {
+class ISETTA_API Transform {
  public:
   // constructors
   Transform() = delete;

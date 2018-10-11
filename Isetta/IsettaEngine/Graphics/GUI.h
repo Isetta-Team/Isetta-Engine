@@ -24,7 +24,7 @@ class Rect;
 }  // namespace Isetta
 
 namespace Isetta {
-ISETTA_API class GUI {
+class ISETTA_API GUI {
  public:
   enum class WindowFlags : U32 {
     None = 0,
