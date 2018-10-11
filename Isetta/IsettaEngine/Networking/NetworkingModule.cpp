@@ -11,6 +11,7 @@
 #include "Core/IsettaAlias.h"
 #include "Graphics/AnimationComponent.h"
 #include "Networking/NetworkManager.h"
+#include "Networking/ExampleMessages.h"
 
 // F Windows
 #ifdef SendMessage
@@ -30,95 +31,12 @@ std::unordered_map<int, Action<yojimbo::Client*, yojimbo::Message*>>
     NetworkRegistry::clientFuncs;
 std::unordered_map<int, Action<int, yojimbo::Server*, yojimbo::Message*>>
     NetworkRegistry::serverFuncs;
-std::unordered_map<const char*, int> tags;
-
-/**
- * @brief Code-generated struct to be used for sending integer values across the
- * network.
- *
- */
-RPC_MESSAGE_DEFINE(HandleMessage)
-HandleMessage() { handle = 0; }
-
-// TODO(Caleb): choose a more reasonable range for the int serialization
-template <typename Stream>
-bool Serialize(Stream& stream) {
-  serialize_int(stream, handle, 0, 64);
-
-  return true;
-}
-
-public:
-int handle;
-
-RPC_CLIENT_FUNC {
-  HandleMessage* handleMessage = static_cast<HandleMessage*>(message);
-  LOG(Debug::Channel::Networking, "Server sends handle #%d",
-      handleMessage->handle);
-  if (handleMessage->handle == 0) {
-    LOG(Debug::Channel::Networking,
-        "Server says we should play the animation!");
-  }
-  if (handleMessage->handle == 1) {
-    LOG(Debug::Channel::Networking,
-        "Server says we should stop the animation!");
-  }
-  if (handleMessage->handle == 2) {
-    AudioSource audio = AudioSource();
-    audio.SetAudioClip("gunshot.aiff");
-    audio.Play(false, 1.f);
-  }
-}
-
-RPC_SERVER_FUNC {
-  HandleMessage* handleMessage = reinterpret_cast<HandleMessage*>(message);
-  LOG(Debug::Channel::Networking, "Client %d sends handle #%d", clientIdx,
-      handleMessage->handle);
-  for (int i = 0; i < server->GetMaxClients(); i++) {
-    if (!server->IsClientConnected(i)) {
-      continue;
-    }
-    NetworkManager::SendHandleMessageFromServer(i, handleMessage->handle);
-  }
-}
-RPC_MESSAGE_FINISH(HandleMessage, "HNDL")
-
-/**
- * @brief Code-generated struct to be used for sending string messages across
- * the network.
- *
- */
-RPC_MESSAGE_DEFINE(StringMessage)
-
-StringMessage() { string = ""; }
-
-// TODO(Caleb): choose a more reasonable range for the int serialization
-template <typename Stream>
-bool Serialize(Stream& stream) {
-  serialize_string(stream, const_cast<char*>(string.c_str()), 512);
-
-  return true;
-}
-
-public:
-std::string string;
-
-RPC_CLIENT_FUNC {
-  StringMessage* stringMessage = static_cast<StringMessage*>(message);
-  LOG(Debug::Channel::Networking, "Server says: %s",
-      stringMessage->string.c_str());
-}
-
-RPC_SERVER_FUNC {
-  StringMessage* stringMessage = reinterpret_cast<StringMessage*>(message);
-  LOG(Debug::Channel::Networking, "Client %d says: %s", clientIdx,
-      stringMessage->string.c_str());
-}
-
-RPC_MESSAGE_FINISH(StringMessage, "STRN")
+std::unordered_map<const char*, int> NetworkRegistry::tags;
 
 void NetworkingModule::StartUp() {
   NetworkManager::networkingModule = this;
+
+  InitExampleMessages();
 
   if (!InitializeYojimbo()) {
     throw std::exception(

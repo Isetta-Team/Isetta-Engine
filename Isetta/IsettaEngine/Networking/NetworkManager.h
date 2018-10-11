@@ -13,33 +13,11 @@ namespace Isetta {
  */
 class NetworkManager {
  public:
-  /**
-   * @brief Sends a HandleMessage from the local Client to its connected server.
-   *
-   * @param handle Integer value to be sent.
-   */
-  static void SendHandleMessageFromClient(int handle);
-  /**
-   * @brief Sends a StringMessage from the local Client to its connected server.
-   *
-   * @param string String value to be sent. Currently limited to 511 characters.
-   */
-  static void SendStringMessageFromClient(std::string string);
-
-  /**
-   * @brief Sends a HandleMessage from the local Server to the given client.
-   *
-   * @param clientIdx Index of the client to send the message to.
-   * @param handle Integer value to be sent.
-   */
-  static void SendHandleMessageFromServer(int clientIdx, int handle);
-  /**
-   * @brief Sends a StringMessage from the local Server to the given client.
-   *
-   * @param clientIdx Index of the client to send the message to.
-   * @param string String value to be sent. Currently limited to 511 characters.
-   */
-  static void SendStringMessageFromServer(int clientIdx, std::string string);
+  static yojimbo::Message* GenerateMessageFromClient(const char* messageString);
+  static yojimbo::Message* GenerateMessageFromServer(int clientIdx, const char* messageString);
+  // TODO(Caleb) Consider merging the generate and send functions
+  static void SendMessageFromClient(yojimbo::Message* message);
+  static void SendMessageFromServer(int clientIdx, yojimbo::Message* message);
 
   /**
    * @brief Connects the local Client to a server at the given address.

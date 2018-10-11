@@ -160,6 +160,7 @@
       <Filter>Custom</Filter>
     </ClCompile>
 <<<<<<< HEAD:Isetta/IsettaEngine/IsettaEngine.vcxproj.filters
+<<<<<<< HEAD:Isetta/IsettaEngine/IsettaEngine.vcxproj.filters
     <ClCompile Include="Custom\FlyController.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
@@ -174,6 +175,11 @@
     </ClCompile>
 =======
 >>>>>>> Merged from develop:Isetta/Isetta/Isetta.vcxproj.filters
+=======
+    <ClCompile Include="Networking\ExampleMessages.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+>>>>>>> Basic RPC message system finished!:Isetta/Isetta/Isetta.vcxproj.filters
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -412,6 +418,7 @@
       <Filter>Custom</Filter>
     </ClInclude>
 <<<<<<< HEAD:Isetta/IsettaEngine/IsettaEngine.vcxproj.filters
+<<<<<<< HEAD:Isetta/IsettaEngine/IsettaEngine.vcxproj.filters
     <ClInclude Include="Custom\FlyController.h">
       <Filter>Custom</Filter>
     </ClInclude>
@@ -426,6 +433,11 @@
     </ClInclude>
 =======
 >>>>>>> Merged from develop:Isetta/Isetta/Isetta.vcxproj.filters
+=======
+    <ClInclude Include="Networking\ExampleMessages.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+>>>>>>> Basic RPC message system finished!:Isetta/Isetta/Isetta.vcxproj.filters
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

@@ -3,7 +3,6 @@
  */
 #pragma once
 
-#include <string>
 #include "Core/Debug/Assert.h"
 #include "Core/Memory/MemoryManager.h"
 #include "yojimbo/yojimbo.h"
@@ -13,15 +12,6 @@ namespace Isetta {
 class NetworkRegistry {
  public:
   static int GetCount() { return count; }
-  static int GetId(const char tag[5]) { return tags[tag]; }
-  static Action<int, yojimbo::Server*, yojimbo::Message*> ServerFunc(int type) {
-    return serverFuncs[type];
-  }
-  static Action<yojimbo::Client*, yojimbo::Message*> ClientFunc(int type) {
-    return clientFuncs[type];
-  }
-
- private:
   static void RegisterMessageType(
       unsigned long long size, Func<yojimbo::Message*, void*> factory,
       const char tag[5], Action<yojimbo::Client*, yojimbo::Message*> clientFunc,
@@ -33,6 +23,15 @@ class NetworkRegistry {
     ++count;
   }
 
+ private:
+  static int GetId(const char tag[5]) { return tags[tag]; }
+  static Action<int, yojimbo::Server*, yojimbo::Message*> ServerFunc(int type) {
+    return serverFuncs[type];
+  }
+  static Action<yojimbo::Client*, yojimbo::Message*> ClientFunc(int type) {
+    return clientFuncs[type];
+  }
+  
   static int count;
   static std::unordered_map<
       int, std::pair<unsigned long long, Func<yojimbo::Message*, void*>>>
@@ -46,19 +45,9 @@ class NetworkRegistry {
 
   NetworkRegistry() = default;
 
-  friend class NetworkRegistryHelper;
+  friend class NetworkingModule;
+  friend class NetworkManager;
   friend class NetworkMessageFactory;
-};
-
-class NetworkRegistryHelper {
- public:
-  NetworkRegistryHelper(
-      unsigned long long size, Func<yojimbo::Message*, void*> factory,
-      const char tag[5], Action<yojimbo::Client*, yojimbo::Message*> clientFunc,
-      Action<int, yojimbo::Server*, yojimbo::Message*> serverFunc) {
-    NetworkRegistry::RegisterMessageType(size, factory, tag, clientFunc,
-                                         serverFunc);
-  }
 };
 
 class NetworkMessageFactory : public yojimbo::MessageFactory {
@@ -79,13 +68,10 @@ class NetworkMessageFactory : public yojimbo::MessageFactory {
 
 #define RPC_MESSAGE_DEFINE(MessageClass)         \
   class MessageClass : public yojimbo::Message { \
-   private:                                      \
+   public:                                       \
     static MessageClass* Create(void* memory) {  \
       return new (memory) MessageClass();        \
-    }                                            \
-    class NetworkMessageFactory;                 \
-    friend class NetworkMessageFactory;          \
-    static NetworkRegistryHelper MessageClass##_NetworkRegistryHelper;
+    }
 
 #define RPC_CLIENT_FUNC \
  public:                \
@@ -94,13 +80,15 @@ class NetworkMessageFactory : public yojimbo::MessageFactory {
  public:                                                        \
   static void RpcServer(int clientIdx, yojimbo::Server* server, \
                         yojimbo::Message* message)
-#define RPC_MESSAGE_FINISH(MessageClass, Tag)                               \
- public:                                                                    \
-  YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS();                                    \
-  }                                                                         \
-  ;                                                                         \
-  NetworkRegistryHelper MessageClass::MessageClass##_NetworkRegistryHelper( \
-      sizeof(MessageClass), MessageClass::Create, Tag,                      \
+#define RPC_MESSAGE_FINISH               \
+ public:                                 \
+  YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS(); \
+  }                                      \
+  ;
+
+#define RPC_MESSAGE_INIT(MessageClass, Tag)            \
+  NetworkRegistry::RegisterMessageType(                \
+      sizeof(MessageClass), MessageClass::Create, Tag, \
       MessageClass::RpcClient, MessageClass::RpcServer);
 
 class NetworkAllocator : public yojimbo::Allocator {
