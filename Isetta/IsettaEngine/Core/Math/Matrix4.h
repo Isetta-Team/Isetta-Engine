@@ -8,6 +8,9 @@ class Matrix4 {
  public:
   static const Matrix4 zero;
   static const Matrix4 identity;
+  static const Matrix4 xRot45, xRot90;
+  static const Matrix4 yRot45, yRot90;
+  static const Matrix4 zRot45, zRot90;
   static const int ELEMENT_COUNT = 16;
   static const int ROW_COUNT = 4;
 
