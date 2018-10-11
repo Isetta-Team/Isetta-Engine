@@ -19,6 +19,7 @@
 #include "Input/Input.h"
 #include "Input/InputEnum.h"
 #include "Networking/NetworkManager.h"
+#include "Networking/ExampleMessages.h"
 #include "Scene/Level.h"
 
 // TODO(Jacob) Remove, used only for GUIDemo
@@ -98,33 +99,6 @@ void EngineLoop::Update() {
   GetGameClock().UpdateTime();
 
   // TODO(All) Add networking update
-
-  static bool sIsPressed = false;
-  static bool cIsPressed = false;
-
-  // Networking update
-  if (Input::IsKeyPressed(KeyCode::S)) {
-    if (!sIsPressed) {
-      sIsPressed = true;
-      if (NetworkManager::ServerIsRunning()) {
-        for (int i = 0; i < NetworkManager::GetMaxClients(); i++) {
-          NetworkManager::SendStringMessageFromServer(i, "Hi!");
-        }
-      }
-    }
-  } else {
-    sIsPressed = false;
-  }
-  if (Input::IsKeyPressed(KeyCode::C)) {
-    if (!cIsPressed) {
-      cIsPressed = true;
-      if (NetworkManager::ClientIsConnected()) {
-        NetworkManager::SendStringMessageFromClient("Hi!");
-      }
-    }
-  } else {
-    cIsPressed = false;
-  }
 
   // end Networking update
   // LOG_INFO(Debug::Channel::General,
@@ -243,17 +217,26 @@ void NetworkingDemo() {
 
   Input::RegisterKeyPressCallback(KeyCode::P, []() {
     if (NetworkManager::ClientIsConnected()) {
-      NetworkManager::SendHandleMessageFromClient(0);
+      HandleMessage* handleMessage = reinterpret_cast<HandleMessage*>(
+          NetworkManager::GenerateMessageFromClient("HNDL"));
+      handleMessage->handle = 0;
+      NetworkManager::SendMessageFromClient(handleMessage);
     }
   });
   Input::RegisterKeyPressCallback(KeyCode::O, []() {
     if (NetworkManager::ClientIsConnected()) {
-      NetworkManager::SendHandleMessageFromClient(1);
+      HandleMessage* handleMessage = reinterpret_cast<HandleMessage*>(
+          NetworkManager::GenerateMessageFromClient("HNDL"));
+      handleMessage->handle = 1;
+      NetworkManager::SendMessageFromClient(handleMessage);
     }
   });
   Input::RegisterMousePressCallback(MouseButtonCode::MOUSE_LEFT, []() {
     if (NetworkManager::ClientIsConnected()) {
-      NetworkManager::SendHandleMessageFromClient(2);
+      HandleMessage* handleMessage = reinterpret_cast<HandleMessage*>(
+          NetworkManager::GenerateMessageFromClient("HNDL"));
+      handleMessage->handle = 2;
+      NetworkManager::SendMessageFromClient(handleMessage);
     }
   });
 }

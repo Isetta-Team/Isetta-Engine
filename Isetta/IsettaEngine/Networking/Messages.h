@@ -3,72 +3,98 @@
  */
 #pragma once
 
-#include <string>
 #include "Core/Debug/Assert.h"
 #include "Core/Memory/MemoryManager.h"
 #include "yojimbo/yojimbo.h"
 
 namespace Isetta {
-/**
- * @brief Code-generated struct to be used for sending integer values across the
- * network.
- *
- */
-struct HandleMessage : public yojimbo::Message {
-  int handle;
 
-  HandleMessage() { handle = 0; }
-
-  // TODO(Caleb): choose a more reasonable range for the int serialization
-  template <typename Stream>
-  bool Serialize(Stream& stream) {
-    serialize_int(stream, handle, 0, 64);
-
-    return true;
+class NetworkRegistry {
+ public:
+  static int GetCount() { return count; }
+  static void RegisterMessageType(
+      unsigned long long size, Func<yojimbo::Message*, void*> factory,
+      const char tag[5], Action<yojimbo::Client*, yojimbo::Message*> clientFunc,
+      Action<int, yojimbo::Server*, yojimbo::Message*> serverFunc) {
+    factories[count] = std::pair(size, factory);
+    tags[tag] = count;
+    clientFuncs[count] = clientFunc;
+    serverFuncs[count] = serverFunc;
+    ++count;
   }
 
-  YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS();
-};
-
-/**
- * @brief Code-generated struct to be used for sending string messages across
- * the network.
- *
- */
-struct StringMessage : public yojimbo::Message {
-  std::string string;
-
-  StringMessage() { string = ""; }
-
-  // TODO(Caleb): choose a more reasonable range for the int serialization
-  template <typename Stream>
-  bool Serialize(Stream& stream) {
-    serialize_string(stream, const_cast<char*>(string.c_str()), 512);
-
-    return true;
+ private:
+  static int GetId(const char tag[5]) { return tags[tag]; }
+  static Action<int, yojimbo::Server*, yojimbo::Message*> ServerFunc(int type) {
+    return serverFuncs[type];
   }
+  static Action<yojimbo::Client*, yojimbo::Message*> ClientFunc(int type) {
+    return clientFuncs[type];
+  }
+  
+  static int count;
+  static std::unordered_map<
+      int, std::pair<unsigned long long, Func<yojimbo::Message*, void*>>>
+      factories;
+  static std::unordered_map<const char*, int> tags;
+  static std::unordered_map<int, Action<yojimbo::Client*, yojimbo::Message*>>
+      clientFuncs;
+  static std::unordered_map<int,
+                            Action<int, yojimbo::Server*, yojimbo::Message*>>
+      serverFuncs;
 
-  YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS();
+  NetworkRegistry() = default;
+
+  friend class NetworkingModule;
+  friend class NetworkManager;
+  friend class NetworkMessageFactory;
 };
 
-/**
- * @brief Enumeration of the message types that can be created by the
- * IsettaMessageFactory class.
- *
- */
-enum IsettaMessageType { HANDLE_MESSAGE, STRING_MESSAGE, NUM_MESSAGE_TYPES };
+class NetworkMessageFactory : public yojimbo::MessageFactory {
+ public:
+  NetworkMessageFactory(yojimbo::Allocator& allocator, int num_message_types)
+      : MessageFactory(allocator, num_message_types){};
 
-/// Code-generate the IsettaMessageFactory class, which creates Message objects
-/// upon request that can be sent over the network.
-YOJIMBO_MESSAGE_FACTORY_START(IsettaMessageFactory, NUM_MESSAGE_TYPES);
-YOJIMBO_DECLARE_MESSAGE_TYPE(HANDLE_MESSAGE, HandleMessage);
-YOJIMBO_DECLARE_MESSAGE_TYPE(STRING_MESSAGE, StringMessage);
-YOJIMBO_MESSAGE_FACTORY_FINISH();
+  yojimbo::Message* CreateMessageInternal(int type) {
+    yojimbo::Message* message;
+    yojimbo::Allocator& allocator = GetAllocator();
+    message = NetworkRegistry::factories[type].second(allocator.Allocate(
+        NetworkRegistry::factories[type].first, __FILE__, __LINE__));
+    if (!message) return NULL;
+    SetMessageType(message, type);
+    return message;
+  }
+};
 
-class IsettaAllocator : public yojimbo::Allocator {
+#define RPC_MESSAGE_DEFINE(MessageClass)         \
+  class MessageClass : public yojimbo::Message { \
+   public:                                       \
+    static MessageClass* Create(void* memory) {  \
+      return new (memory) MessageClass();        \
+    }
+
+#define RPC_CLIENT_FUNC \
+ public:                \
+  static void RpcClient(yojimbo::Client* client, yojimbo::Message* message)
+#define RPC_SERVER_FUNC                                         \
+ public:                                                        \
+  static void RpcServer(int clientIdx, yojimbo::Server* server, \
+                        yojimbo::Message* message)
+#define RPC_MESSAGE_FINISH               \
+ public:                                 \
+  YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS(); \
+  }                                      \
+  ;
+
+#define RPC_MESSAGE_INIT(MessageClass, Tag)            \
+  NetworkRegistry::RegisterMessageType(                \
+      sizeof(MessageClass), MessageClass::Create, Tag, \
+      MessageClass::RpcClient, MessageClass::RpcServer);
+
+class NetworkAllocator : public yojimbo::Allocator {
  public:
   // Network allocation is currently assumed to be LSR
-  IsettaAllocator(void* memory, Size size) {
+  NetworkAllocator(void* memory, Size size) {
     ASSERT(size > 0);
 
     // SetErrorLevel(yojimbo::ALLOCATOR_ERROR_NONE);
@@ -79,7 +105,7 @@ class IsettaAllocator : public yojimbo::Allocator {
   }
 
   // TODO(Caleb): Clean up this hacky copy constructor
-  IsettaAllocator(const IsettaAllocator& a) {
+  NetworkAllocator(const NetworkAllocator& a) {
     memPointer = a.memPointer;
     nextAvailable = a.nextAvailable;
   }
@@ -92,7 +118,7 @@ class IsettaAllocator : public yojimbo::Allocator {
       throw std::exception("Bad memory!");  // TODO(Caleb) better exception
     }
 
-    //TrackAlloc(p, size, file, line);  // This causes a 64 byte memory leak
+    // TrackAlloc(p, size, file, line);  // This causes a 64 byte memory leak
 
     nextAvailable += size;
 
@@ -104,7 +130,7 @@ class IsettaAllocator : public yojimbo::Allocator {
       return;
     }
 
-    //TrackFree(p, file, line);  // This causes a 64 byte memory leak
+    // TrackFree(p, file, line);  // This causes a 64 byte memory leak
 
     // Do nothing I guess? This is only supposed to be an LSR allocator
   }
@@ -135,7 +161,9 @@ class CustomAdapter : public yojimbo::Adapter {
    * @return yojimbo::MessageFactory*
    */
   yojimbo::MessageFactory* CreateMessageFactory(yojimbo::Allocator* allocator) {
-    return YOJIMBO_NEW(*allocator, IsettaMessageFactory, *allocator);
+    return new (
+        allocator->Allocate(sizeof(NetworkMessageFactory), __FILE__, __LINE__))
+        NetworkMessageFactory(*allocator, NetworkRegistry::GetCount());
   }
 };
 }  // namespace Isetta

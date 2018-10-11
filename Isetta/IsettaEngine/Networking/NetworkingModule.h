@@ -60,14 +60,14 @@ class NetworkingModule {
   /// Local server's current address and port.
   yojimbo::Address serverAddress;
   /// Local server.
-  ObjectHandle<yojimbo::Server> server;
+  yojimbo::Server* server;
   /// Configuration data for both the network and the client. This should
   /// probably stay the same among connected clients and servers.
   yojimbo::ClientServerConfig networkConfig;
   /// TODO(Caleb): Figure out how to allocate server at runtime instead of at
   /// startup
-  IsettaAllocator* clientAllocator;
-  IsettaAllocator* serverAllocator;
+  NetworkAllocator* clientAllocator;
+  NetworkAllocator* serverAllocator;
 
   /// Key used to join the server.
   U8* privateKey;
