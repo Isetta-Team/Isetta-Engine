@@ -394,9 +394,13 @@ void DebugDemo() {
     DebugDraw::Plane(Math::Matrix4::identity, Color::blue, 2);
   }
   // DebugDraw::WirePlane(Math::Matrix4::identity);
-  DebugDraw::Cube(Math::Matrix4::identity, Color::white);
+  DebugDraw::Cube(Math::Matrix4::Translate(Math::Vector3{2.8, 1.1, 0}) *
+                      Math::Matrix4::Scale(2.2 * Math::Vector3::one),
+                  Color::brown);
   // DebugDraw::WireCube(Math::Matrix4::Translate(Math::Vector3{0, 0, -2}));
   // DebugDraw::WireSphere(Math::Vector3::up, 1, Color::red);
+  DebugDraw::WireCapsule(Math::Matrix4::Translate(Math::Vector3{-1, 4, 1}), 0.5,
+                         2, Color::blue);
   DebugDraw::AxisSphere(Math::Vector3::up, 1);
   DebugDraw::Grid();
   DebugDraw::Axis();

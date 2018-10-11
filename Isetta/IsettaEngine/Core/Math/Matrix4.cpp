@@ -15,6 +15,15 @@ namespace Isetta::Math {
 const Matrix4 Matrix4::zero = Matrix4{};
 const Matrix4 Matrix4::identity =
     Matrix4{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
+const Matrix4 Matrix4::xRot45 =
+    Math::Matrix4::RotateX(0.5f * Math::Util::PI_HALF);
+const Matrix4 Matrix4::xRot90 = Math::Matrix4::RotateX(Math::Util::PI_HALF);
+const Matrix4 Matrix4::yRot45 =
+    Math::Matrix4::RotateY(0.5f * Math::Util::PI_HALF);
+const Matrix4 Matrix4::yRot90 = Math::Matrix4::RotateY(Math::Util::PI_HALF);
+const Matrix4 Matrix4::zRot45 =
+    Math::Matrix4::RotateZ(0.5f * Math::Util::PI_HALF);
+const Matrix4 Matrix4::zRot90 = Math::Matrix4::RotateZ(Math::Util::PI_HALF);
 
 Matrix4::Matrix4() { memset(data, 0, sizeof(data)); }
 
