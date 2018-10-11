@@ -15,15 +15,45 @@ namespace Isetta {
 
 void FlyController::OnEnable() {
   SetAttribute(ComponentAttributes::NEED_UPDATE, true);
+  lastFrameMousePos = Input::GetMousePosition();
 }
 
 void FlyController::Update() {
-  float speed = 100.f;
+  float speed = 30.f;
   float dt = EngineLoop::GetGameClock().GetDeltaTime();
 
   if (Input::IsKeyPressed(KeyCode::W)) {
     GetTransform().TranslateWorld(GetTransform().GetForward() * dt * speed * -1);
   }
+
+  if (Input::IsKeyPressed(KeyCode::S)) {
+    GetTransform().TranslateWorld(GetTransform().GetForward() * dt * speed * 1);
+  }
+
+  if (Input::IsKeyPressed(KeyCode::D)) {
+    GetTransform().TranslateWorld(GetTransform().GetLeft() * dt * speed * 1);
+  }
+
+  if (Input::IsKeyPressed(KeyCode::A)) {
+    GetTransform().TranslateWorld(GetTransform().GetLeft() * dt * speed * -1);
+  }
+
+  if (Input::IsKeyPressed(KeyCode::E)) {
+    GetTransform().TranslateWorld(GetTransform().GetUp() * dt * speed * 1);
+  }
+
+  if (Input::IsKeyPressed(KeyCode::Q)) {
+    GetTransform().TranslateWorld(GetTransform().GetUp() * dt * speed * -1);
+  }
+
+
+  // float smooth = -0.1f;
+  // float dy = Input::GetMousePosition().y - lastFrameMousePos.y;
+  // float dx = Input::GetMousePosition().x - lastFrameMousePos.x;
+
+  // GetTransform().RotateWorld(Math::Vector3{dy, dx, 0.f} * smooth);
+
+  lastFrameMousePos = Input::GetMousePosition();
 }
 
 void FlyController::GuiUpdate() {
