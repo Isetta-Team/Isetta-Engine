@@ -164,6 +164,7 @@
     </ClCompile>
     <ClCompile Include="Core\Filesystem.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
     <ClCompile Include="Custom\AxisDrawer.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
@@ -412,6 +413,7 @@
     </ClInclude>
     <ClInclude Include="Core\Filesystem.h">
       <Filter>Core</Filter>
+    </ClInclude>
     <ClInclude Include="Custom\AxisDrawer.h">
       <Filter>Custom</Filter>
     </ClInclude>
