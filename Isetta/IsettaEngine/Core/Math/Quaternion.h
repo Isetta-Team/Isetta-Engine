@@ -6,7 +6,7 @@
 #include "ISETTA_API.h"
 
 namespace Isetta::Math {
-ISETTA_API class Quaternion {
+class ISETTA_API Quaternion {
  public:
   static const Quaternion identity;
 

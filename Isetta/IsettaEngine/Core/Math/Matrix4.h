@@ -5,13 +5,17 @@
 #include "ISETTA_API.h"
 
 namespace Isetta::Math {
-ISETTA_API class Matrix4 {
+class ISETTA_API Matrix4 {
  public:
   static const Matrix4 zero;
   static const Matrix4 identity;
-  static const Matrix4 xRot45, xRot90;
-  static const Matrix4 yRot45, yRot90;
-  static const Matrix4 zRot45, zRot90;
+  static const Matrix4 xRot45;
+  static const Matrix4 xRot90;
+  static const Matrix4 yRot45;
+  static const Matrix4 yRot90;
+  static const Matrix4 zRot45;
+  static const Matrix4 zRot90;
+
   static const int ELEMENT_COUNT = 16;
   static const int ROW_COUNT = 4;
 

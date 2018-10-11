@@ -22,7 +22,7 @@ namespace Isetta {
  * features
  *
  */
-ISETTA_API class DebugDraw {
+class ISETTA_API DebugDraw {
  public:
   static void StartUp();
   static void Update();
@@ -97,10 +97,18 @@ ISETTA_API class DebugDraw {
   static const int indices[];
   static float lineVerticies[];
 
-  static const char *vertexShaderSource, *fragmentShaderSource;
+  static const char* vertexShaderSource;
+  static const char* fragmentShaderSource;
 
-  static int projectionLoc, viewLoc, modelLoc, colorLoc;
-  static unsigned int VBO, VAO, EBO, sVBO, sVAO;
+  static int projectionLoc;
+  static int viewLoc;
+  static int modelLoc;
+  static int colorLoc;
+  static unsigned int VBO;
+  static unsigned int VAO;
+  static unsigned int EBO;
+  static unsigned int sVBO;
+  static unsigned int sVAO;
   static int shaderProgram;
 
   static void OpenGLDraw(const Math::Matrix4& transformation,

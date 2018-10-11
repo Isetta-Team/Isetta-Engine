@@ -5,7 +5,7 @@
 #include "ISETTA_API.h"
 
 namespace Isetta::Math {
-ISETTA_API class Vector3Int {
+class ISETTA_API Vector3Int {
  public:
   // Constants
   static const Vector3Int zero;

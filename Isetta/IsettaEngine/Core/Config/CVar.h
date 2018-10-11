@@ -16,7 +16,7 @@ namespace Isetta {
  * @tparam T Template type must be have ostream operator>> and empty constructor
  */
 template <typename T>
-ISETTA_API class CVar : public ICVar {
+class ISETTA_API CVar : public ICVar {
  public:
   /**
    * @brief Construct a new CVar object

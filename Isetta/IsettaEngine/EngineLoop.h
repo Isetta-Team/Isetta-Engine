@@ -5,7 +5,7 @@
 #include "Core/Config/CVar.h"
 
 namespace Isetta {
-ISETTA_API class EngineLoop {
+class ISETTA_API EngineLoop {
  public:
   struct LoopConfig {
     CVar<int> maxFps{"max_fps", 16};

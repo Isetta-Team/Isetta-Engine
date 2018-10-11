@@ -7,7 +7,7 @@
 #include "ISETTA_API.h"
 
 namespace Isetta {
-ISETTA_API class StopWatch {
+class ISETTA_API StopWatch {
   using HighResClock = std::chrono::high_resolution_clock;
   using TimePoint = std::chrono::time_point<HighResClock>;
   using Seconds = std::chrono::duration<double>;

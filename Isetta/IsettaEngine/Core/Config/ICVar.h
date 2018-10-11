@@ -13,7 +13,7 @@ namespace Isetta {
  * @brief Base class of console variables
  *
  */
-ISETTA_API class ICVar {
+class ISETTA_API ICVar {
  public:
   /// Key name of CVar
   const std::string name;

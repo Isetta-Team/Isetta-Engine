@@ -5,7 +5,7 @@
 #include "Graphics/MeshComponent.h"
 
 namespace Isetta {
-ISETTA_API class AnimationComponent : public Component {
+class ISETTA_API AnimationComponent : public Component {
  public:
   explicit AnimationComponent(MeshComponent* model);
   int AddAnimation(std::string animationFilename, int layer,

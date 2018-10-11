@@ -9,7 +9,7 @@
 #include "Input/InputEnum.h"
 
 namespace Isetta {
-ISETTA_API class Input {
+class ISETTA_API Input {
  public:
   /**
    * \brief Register a callback function to window close event

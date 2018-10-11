@@ -20,7 +20,7 @@ namespace Isetta {
  * Integrated with the Microsoft API
  *
  */
-ISETTA_API class Filesystem {
+class ISETTA_API Filesystem {
  public:
   /**
    * @brief Singleton class instance

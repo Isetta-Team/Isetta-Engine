@@ -14,7 +14,7 @@ class LevelRegistry {
   static bool registered;
 };
 
-ISETTA_API class LevelManager {
+class ISETTA_API LevelManager {
  private:
   std::unordered_map<StringId, Func<class Level*>> levels;
 

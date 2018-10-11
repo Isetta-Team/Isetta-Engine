@@ -6,7 +6,7 @@
 #include "ISETTA_API.h"
 
 namespace Isetta {
-ISETTA_API class Component {
+class ISETTA_API Component {
   friend class Entity;
 
   std::bitset<4> attributes;

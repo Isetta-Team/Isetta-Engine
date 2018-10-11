@@ -7,7 +7,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-ISETTA_API class MeshComponent : public Component {
+class ISETTA_API MeshComponent : public Component {
   H3DNode renderNode;
   H3DRes renderResource;
 
