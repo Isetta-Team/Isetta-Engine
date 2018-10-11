@@ -4,7 +4,6 @@
 #pragma once
 
 #include <string>
-
 #include "Core/Color.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Math/Vector2.h"
@@ -25,7 +24,7 @@ class Rect;
 }  // namespace Isetta
 
 namespace Isetta {
-class GUI {
+ISETTA_API class GUI {
  public:
   enum class WindowFlags : U32 {
     None = 0,

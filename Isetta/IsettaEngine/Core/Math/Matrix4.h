@@ -2,9 +2,10 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include "ISETTA_API.h"
 
 namespace Isetta::Math {
-class Matrix4 {
+ISETTA_API class Matrix4 {
  public:
   static const Matrix4 zero;
   static const Matrix4 identity;

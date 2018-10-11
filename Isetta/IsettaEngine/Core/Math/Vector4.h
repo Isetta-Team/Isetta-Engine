@@ -1,12 +1,13 @@
 // "Copyright [2018] Isetta"
 #pragma once
+#include "ISETTA_API.h"
 
 namespace Isetta {
 class Color;
 }
 
 namespace Isetta::Math {
-class Vector4 {
+ISETTA_API class Vector4 {
  public:
   // Constants
   static const Vector4 zero;

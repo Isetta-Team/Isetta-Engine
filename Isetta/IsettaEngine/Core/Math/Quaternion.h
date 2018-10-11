@@ -3,9 +3,10 @@
  */
 #pragma once
 #include <string>
+#include "ISETTA_API.h"
 
 namespace Isetta::Math {
-class Quaternion {
+ISETTA_API class Quaternion {
  public:
   static const Quaternion identity;
 

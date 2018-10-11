@@ -7,7 +7,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-class MeshComponent : public Component {
+ISETTA_API class MeshComponent : public Component {
   H3DNode renderNode;
   H3DRes renderResource;
 
@@ -17,7 +17,6 @@ class MeshComponent : public Component {
   void UpdateTransform();
 
  public:
-
  protected:
   H3DRes LoadResourceFromFile(std::string resourceName) const;
 

@@ -3,8 +3,9 @@
  */
 #pragma once
 #include <unordered_map>
-#include "SID/sid.h"
 #include "Core/IsettaAlias.h"
+#include "ISETTA_API.h"
+#include "SID/sid.h"
 
 namespace Isetta {
 template <typename T>
@@ -13,7 +14,7 @@ class LevelRegistry {
   static bool registered;
 };
 
-class LevelManager {
+ISETTA_API class LevelManager {
  private:
   std::unordered_map<StringId, Func<class Level*>> levels;
 

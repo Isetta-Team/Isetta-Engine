@@ -4,6 +4,7 @@
 #include "Graphics/CameraComponent.h"
 #include "Core/Debug/Assert.h"
 #include "Graphics/RenderModule.h"
+#include "Scene/Component.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 #include "Util.h"

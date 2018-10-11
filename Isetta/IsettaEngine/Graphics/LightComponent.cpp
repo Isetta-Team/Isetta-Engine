@@ -2,10 +2,9 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Graphics/LightComponent.h"
-#include <Horde3DUtils.h>
 #include "Core/Config/Config.h"
-#include "Util.h"
 #include "Scene/Transform.h"
+#include "Util.h"
 
 namespace Isetta {
 

@@ -12,7 +12,7 @@
 
 namespace Isetta {
 // TODO(YIDI): Alloc all allocators on a big stack
-class MemoryManager {
+ISETTA_API class MemoryManager {
  public:
   struct MemoryConfig {
     CVar<Size> lsrAndLevelAllocatorSize{"LSR_and_level_allocator_size", 10_MB};
