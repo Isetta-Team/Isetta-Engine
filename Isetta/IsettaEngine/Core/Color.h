@@ -17,6 +17,7 @@ class Color {
   static const Color black;
   /// RGB color blue (0,0,1,1)
   static const Color blue;
+  static const Color brown;
   /// RGB color clear (0,0,0,0)
   static const Color clear;
   /// RGB color cyan (0,1,1,1)

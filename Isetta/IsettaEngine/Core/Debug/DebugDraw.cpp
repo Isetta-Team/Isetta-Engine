@@ -624,42 +624,43 @@ namespace Isetta {
     void DebugDraw::DrawWireCapsule(const Math::Matrix4& transformation,
         float radius, float height, const Color& color,
         float thickness, bool depthTest) {
-        const int halfCircle = 0.5f * CIRCLE_INDICIES;
+        static const int halfCircle = 0.5f * CIRCLE_INDICIES;
+        static const float squareScale = 0.5f * Math::Util::Sqrt(2);
         float lineHeight = height - 2 * radius;
         Math::Matrix4 up = Math::Matrix4::Translate(lineHeight * Math::Vector3::up);
         Math::Matrix4 down =
             Math::Matrix4::Translate(lineHeight * Math::Vector3::down);
         Math::Matrix4 scale = Math::Matrix4::Scale(Math::Vector3{ radius });
         OpenGLDraw(transformation * up * scale, color, thickness, depthTest,
-            [&halfCircle]() {
+            []() {
             glDrawElements(
                 GL_LINE_STRIP, halfCircle + 1, GL_UNSIGNED_INT,
                 (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
                     CUBE_WIRE_INDICIES)));
         });
         OpenGLDraw(transformation * up * scale * Math::Matrix4::yRot90, color, thickness, depthTest,
-            [&halfCircle]() {
+            []() {
             glDrawElements(
                 GL_LINE_STRIP, halfCircle + 1, GL_UNSIGNED_INT,
                 (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
                     CUBE_WIRE_INDICIES)));
         });
         OpenGLDraw(transformation * down * scale, color, thickness, depthTest,
-            [&halfCircle]() {
+            []() {
             glDrawElements(
                 GL_LINE_STRIP, halfCircle + 1, GL_UNSIGNED_INT,
                 (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
                     CUBE_WIRE_INDICIES + halfCircle)));
         });
-        OpenGLDraw(transformation * down * scale *  Math::Matrix4::yRot90 * Math::Matrix4::yRot45, color, thickness,
-            depthTest, [&halfCircle]() {
+        OpenGLDraw(transformation * down * scale *  Math::Matrix4::yRot90, color, thickness,
+            depthTest, []() {
             glDrawElements(
                 GL_LINE_STRIP, halfCircle + 1, GL_UNSIGNED_INT,
                 (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES +
                     CUBE_WIRE_INDICIES + halfCircle)));
         });
 
-        OpenGLDraw(transformation * Math::Matrix4::Scale(Math::Vector3{ 1, 2 * lineHeight,1 }),
+        OpenGLDraw(transformation * Math::Matrix4::Scale(Math::Vector3{ squareScale, 2 * lineHeight, squareScale })* Math::Matrix4::yRot45,
             color, thickness, depthTest, []() {
             glDrawArrays(GL_LINES, CUBE, 8);
         });
