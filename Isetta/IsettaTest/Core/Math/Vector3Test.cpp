@@ -88,12 +88,6 @@ TEST_METHOD(Slerp) {
   Assert::IsTrue(Math::Vector3::Slerp(vec1, vec2, 0.f) ==
                  Math::Vector3(1.f, 0.f, 0.f));
 }
-
-TEST_METHOD(AngleRad) {
-  Math::Vector3 a{1, 0, 0};
-  Math::Vector3 b{1, 1, 0};
-  Assert::IsTrue(Math::Vector3::AngleDeg(a, b) == 45);
-}
 }
 ;
 }

@@ -1,5 +1,0 @@
-<Material class="Translucent.Particle">
-	<Shader source="shaders/particle.shader"/>
-	
-	<Sampler name="albedoMap" map="overlays/logo.tga" />
-</Material>
