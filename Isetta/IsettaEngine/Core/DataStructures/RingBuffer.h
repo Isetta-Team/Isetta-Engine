@@ -6,10 +6,11 @@
 #include <initializer_list>
 #include <stdexcept>
 #include "Core/Memory/MemoryManager.h"
+#include "ISETTA_API.h"
 
 namespace Isetta {
 template <typename T>
-class RingBuffer {
+ISETTA_API class RingBuffer {
  public:
   // Constructors
 
@@ -32,15 +33,16 @@ class RingBuffer {
   void Put(T o);
   T GetBack();
   void PutFront(T o);
-  void Clear();
+  inline void Clear() { head = tail; }
   T* ToList() const;
 
   // Property accessors
 
-  bool IsEmpty() const;
-  bool IsFull() const;
-  int GetCapacity() const;
-  int GetLength() const;
+  inline bool IsEmpty() const { return head == tail; }
+  inline bool IsFull() const { return (tail + 1) % size == head; }
+
+  inline int GetCapacity() const { return size - 1; }
+  inline int GetLength() const { return abs(head - tail); }
 
  private:
   T* buffer;
@@ -197,11 +199,6 @@ void RingBuffer<T>::PutFront(T o) {
 }
 
 template <typename T>
-void RingBuffer<T>::Clear() {
-  head = tail;
-}
-
-template <typename T>
 T* RingBuffer<T>::ToList() const {
   T* list = MemoryManager::NewArrOnFreeList<T>(GetLength());
   int count = 0;
@@ -212,25 +209,5 @@ T* RingBuffer<T>::ToList() const {
     count++;
   }
   return list;
-}
-
-template <typename T>
-bool RingBuffer<T>::IsEmpty() const {
-  return head == tail;
-}
-
-template <typename T>
-bool RingBuffer<T>::IsFull() const {
-  return (tail + 1) % size == head;
-}
-
-template <typename T>
-int RingBuffer<T>::GetCapacity() const {
-  return size - 1;
-}
-
-template <typename T>
-int RingBuffer<T>::GetLength() const {
-  return abs(head - tail);
 }
 }  // namespace Isetta

@@ -108,9 +108,6 @@
     <ClCompile Include="Graphics\RenderModule.cpp">
       <Filter>Graphics\Render</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\RenderNode.cpp">
-      <Filter>Graphics\Render</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\GUI.cpp">
       <Filter>Graphics\GUI</Filter>
     </ClCompile>
@@ -348,9 +345,6 @@
     <ClInclude Include="Graphics\RenderModule.h">
       <Filter>Graphics\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\RenderNode.h">
-      <Filter>Graphics\Render</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\GUI.h">
       <Filter>Graphics\GUI</Filter>
     </ClInclude>
@@ -408,6 +402,7 @@
     <ClInclude Include="Core\Filesystem.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="ISETTA_API.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

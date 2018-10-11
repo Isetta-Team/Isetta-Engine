@@ -1,7 +1,9 @@
 // "Copyright [2018] Isetta"
 #pragma once
+#include "ISETTA_API.h"
+
 namespace Isetta::Math {
-class Rect {
+ISETTA_API class Rect {
  public:
   float x, y, width, height;
 

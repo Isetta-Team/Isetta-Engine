@@ -13,6 +13,7 @@
 #include "Core/Config/CVar.h"
 #include "Core/Debug/Debug.h"
 #include "Core/IsettaAlias.h"
+#include "ISETTA_API.h"
 
 namespace Isetta {
 #define LOG Isetta::LogObject(__FILENAME__, __LINE__)
@@ -29,7 +30,7 @@ namespace Isetta {
  * mask messages)
  *
  */
-class Logger {
+ISETTA_API class Logger {
  public:
   /**
    * @brief Logger configuration CVar struct

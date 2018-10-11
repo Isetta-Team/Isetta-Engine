@@ -7,10 +7,10 @@
 #include "Core/Math/Quaternion.h"
 #include "Core/Math/Vector3.h"
 #include "Core/Math/Vector4.h"
-#include "Graphics/RenderNode.h"
+#include "Horde3D.h"
 
 namespace Isetta {
-class Transform {
+ISETTA_API class Transform {
  public:
   // constructors
   Transform() = delete;
@@ -58,7 +58,9 @@ class Transform {
   // other
   void LookAt(const Math::Vector3& target,
               const Math::Vector3& worldUp = Math::Vector3::up);
-  class Entity* GetEntity() const { return entity; }
+  class Entity* GetEntity() const {
+    return entity;
+  }
   Size GetChildCount() const { return children.size(); }
   Transform* GetChild(U16 childIndex);
   inline std::string GetName() const;

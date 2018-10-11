@@ -3,11 +3,11 @@
  */
 #pragma once
 #include "Core/Math/Matrix4.h"
-#include "RenderNode.h"
+#include "Horde3D.h"
 #include "Scene/Component.h"
 
 namespace Isetta {
-class CameraComponent : public Component {
+ISETTA_API class CameraComponent : public Component {
  public:
   enum class Property {
     FOV,

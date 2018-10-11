@@ -79,7 +79,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)IsettaEngine;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(SolutionDir)External\imgui\examples\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>IN_ENGINE;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
@@ -168,7 +168,6 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Graphics\LightComponent.cpp" />
     <ClCompile Include="Graphics\MeshComponent.cpp" />
     <ClCompile Include="Graphics\RenderModule.cpp" />
-    <ClCompile Include="Graphics\RenderNode.cpp" />
     <ClCompile Include="Input\InputModule.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="Core\Math\Matrix4.cpp" />
@@ -246,8 +245,8 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Graphics\MeshComponent.h" />
     <ClInclude Include="Graphics\RectTransform.h" />
     <ClInclude Include="Graphics\RenderModule.h" />
-    <ClInclude Include="Graphics\RenderNode.h" />
     <ClInclude Include="Graphics\Window.h" />
+    <ClInclude Include="ISETTA_API.h" />
     <ClInclude Include="Networking\Messages.h" />
     <ClInclude Include="Networking\NetworkingModule.h" />
     <ClInclude Include="Input\Input.h" />

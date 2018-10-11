@@ -3,10 +3,9 @@
  */
 #pragma once
 #include "Graphics/MeshComponent.h"
-#include "Graphics/RenderNode.h"
 
 namespace Isetta {
-class AnimationComponent : public Component {
+ISETTA_API class AnimationComponent : public Component {
  public:
   explicit AnimationComponent(MeshComponent* model);
   int AddAnimation(std::string animationFilename, int layer,

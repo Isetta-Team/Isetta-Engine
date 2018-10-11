@@ -4,9 +4,10 @@
 #pragma once
 #include <chrono>
 #include "Core/IsettaAlias.h"
+#include "ISETTA_API.h"
 
 namespace Isetta {
-class StopWatch {
+ISETTA_API class StopWatch {
   using HighResClock = std::chrono::high_resolution_clock;
   using TimePoint = std::chrono::time_point<HighResClock>;
   using Seconds = std::chrono::duration<double>;

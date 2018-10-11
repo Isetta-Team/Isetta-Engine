@@ -8,7 +8,7 @@
 #include "Graphics/GUI.h"
 
 namespace Isetta {
-struct GUIStyle {
+ISETTA_API struct GUIStyle {
   float Alpha;                  // Global alpha applies to everything in ImGui.
   Math::Vector2 WindowPadding;  // Padding within a window.
   float WindowRounding;    // Radius of window corners rounding. Set to 0.0f

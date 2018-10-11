@@ -5,7 +5,7 @@
 
 #include <string>
 #include <unordered_map>
-#include "Core/Math/Vector3.h"
+#include "ISETTA_API.h"
 #include "SID/sid.h"
 
 namespace Isetta {
@@ -13,7 +13,7 @@ namespace Isetta {
  * @brief Base class of console variables
  *
  */
-class ICVar {
+ISETTA_API class ICVar {
  public:
   /// Key name of CVar
   const std::string name;

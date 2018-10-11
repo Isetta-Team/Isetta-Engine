@@ -2,10 +2,10 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include "ISETTA_API.h"
 
 namespace Isetta::Math {
-
-class Vector3Int {
+ISETTA_API class Vector3Int {
  public:
   // Constants
   static const Vector3Int zero;

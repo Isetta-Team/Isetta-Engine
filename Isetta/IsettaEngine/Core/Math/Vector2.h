@@ -3,10 +3,11 @@
  */
 #pragma once
 #include <string>
+#include "ISETTA_API.h"
 
 namespace Isetta::Math {
 
-class Vector2 {
+ISETTA_API class Vector2 {
  public:
   // Constants
   static const Vector2 zero;

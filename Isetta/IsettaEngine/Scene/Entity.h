@@ -11,7 +11,7 @@
 #include "Util.h"
 
 namespace Isetta {
-class Entity {
+ISETTA_API class Entity {
   enum class EntityAttributes { IS_ACTIVE, NEED_DESTROY, IS_TRANSFORM_DIRTY };
 
   friend class RenderModule;
