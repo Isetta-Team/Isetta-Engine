@@ -60,7 +60,7 @@ class NetworkingModule {
   /// Local server's current address and port.
   yojimbo::Address serverAddress;
   /// Local server.
-  ObjectHandle<yojimbo::Server> server;
+  yojimbo::Server* server;
   /// Configuration data for both the network and the client. This should
   /// probably stay the same among connected clients and servers.
   yojimbo::ClientServerConfig networkConfig;

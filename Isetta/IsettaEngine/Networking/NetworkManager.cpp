@@ -10,8 +10,9 @@ namespace Isetta {
 NetworkingModule* NetworkManager::networkingModule{nullptr};
 
 void NetworkManager::SendHandleMessageFromClient(int handle) {
-  HandleMessage* message = static_cast<HandleMessage*>(
-      networkingModule->client->CreateMessage(HANDLE_MESSAGE));
+
+  yojimbo::Message* message = 
+      networkingModule->client->CreateMessage(NetworkRegistry::GetId("HNDL"));
   message->handle = handle;
   networkingModule->AddClientToServerMessage(message);
 }
