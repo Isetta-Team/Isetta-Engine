@@ -1,0 +1,2 @@
+..\..\..\External\Horde3D\Build\Binaries\Windows\Release\ColladaConv.exe push\Pushing.dae -base ..\ -dest .\ -type model
+..\..\..\External\Horde3D\Build\Binaries\Windows\Release\ColladaConv.exe push\Pushing.dae -base ..\ -dest .\ -type anim
