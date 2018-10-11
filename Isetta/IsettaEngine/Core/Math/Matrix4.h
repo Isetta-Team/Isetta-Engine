@@ -11,7 +11,6 @@ class Matrix4 {
   static const Matrix4 xRot45, xRot90;
   static const Matrix4 yRot45, yRot90;
   static const Matrix4 zRot45, zRot90;
-
   static const int ELEMENT_COUNT = 16;
   static const int ROW_COUNT = 4;
 
