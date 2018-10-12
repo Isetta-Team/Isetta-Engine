@@ -25,15 +25,14 @@ FMOD_RESULT F_CALLBACK LogAudioModule(FMOD_DEBUG_FLAGS flags, const char* file,
 
 void AudioModule::StartUp() {
   CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
-  // FMOD::Memory_Initialize(std::malloc(10_MB), 10_MB, nullptr, nullptr,
-  // nullptr);
+  FMOD::Memory_Initialize(MemoryManager::AllocOnStack(10_MB), 10_MB, nullptr, nullptr, nullptr);
   fmodSystem = nullptr;
 
   FMOD::Debug_Initialize(FMOD_DEBUG_LEVEL_LOG, FMOD_DEBUG_MODE_CALLBACK,
                          LogAudioModule);
   FMOD::System_Create(&fmodSystem);
   CheckStatus(fmodSystem->init(512, FMOD_INIT_NORMAL, nullptr));
-  // TODO(YIDI): Set this in engine config
+
   auto& config = Config::Instance();
   soundFilesRoot = config.resourcePath.GetVal() + R"(\)" +
                    config.audioConfig.pathUnderResource.GetVal() + R"(\)";
