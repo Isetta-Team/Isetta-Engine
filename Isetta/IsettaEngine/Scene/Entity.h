@@ -60,6 +60,10 @@ class ISETTA_API Entity {
                     const Math::Vector3& worldEulerAngles = Math::Vector3::zero,
                     const Math::Vector3& localScale = Math::Vector3::one);
   Transform& GetTransform();
+#if _DEBUG
+  // TODO(YIDI): Delete this! This is used for in game editor
+  std::vector<class Component*> GetComponents() { return components; };
+#endif
 };
 
 template <typename T, typename... Args>

@@ -6,6 +6,7 @@
 #include "Core/Math/Matrix3.h"
 #include "Scene/Entity.h"
 #include "Util.h"
+#include "Scene/Component.h"
 #if _DEBUG
 #include "Graphics/GUI.h"
 #include "Graphics/RectTransform.h"
@@ -112,15 +113,36 @@ void Transform::RotateWorld(const Math::Vector3& axis, const float angle) {
 
 // passed
 void Transform::RotateLocal(const Math::Vector3& eulerAngles) {
-  SetLocalRot(Math::Quaternion::FromEulerAngles(GetLeft() * eulerAngles.x +
-                                                GetUp() * eulerAngles.y +
-                                                GetForward() * eulerAngles.z) *
+  // first, get the basis vectors in local space
+  bool hasParent = GetParent() != nullptr;
+  Math::Vector3 left, up, forward;
+  if (hasParent) {
+    Transform* parent = GetParent();
+    left = parent->LocalDirFromWorldDir(GetLeft());
+    up = parent->LocalDirFromWorldDir(GetUp());
+    forward = parent->LocalDirFromWorldDir(GetForward());
+  } else {
+    left = GetLeft();
+    up = GetUp();
+    forward = GetForward();
+  }
+  // then, map euler angles and basis
+  // i.e. Transform the euler angles to local space
+  SetLocalRot(Math::Quaternion::FromEulerAngles(left * eulerAngles.x +
+                                                up * eulerAngles.y +
+                                                forward * eulerAngles.z) *
               localRot);
 }
 
 // passed
-void Transform::RotateLocal(const Math::Vector3& axis, const float angle) {
-  SetLocalRot(Math::Quaternion::FromAngleAxis(axis, angle) * localRot);
+void Transform::RotateLocal(const Math::Vector3& axisWorldSpace,
+                            const float angle) {
+  // transform the axis from world space to the space that
+  // this object sits in, so it can understand the axis correctly
+  Math::Vector3 localAxis =
+      GetParent() != nullptr ? GetParent()->LocalDirFromWorldDir(axisWorldSpace)
+                             : axisWorldSpace;
+  SetLocalRot(Math::Quaternion::FromAngleAxis(localAxis, angle) * localRot);
 }
 
 // passed
@@ -149,6 +171,8 @@ void Transform::SetParent(Transform* transform) {
               GetName().c_str(), transform->GetName().c_str());
     return;
   }
+  Math::Vector3 originalPos = GetWorldPos();
+  Math::Quaternion originalRot = GetWorldRot();
 
   if (parent != nullptr) {
     parent->RemoveChild(this);
@@ -157,6 +181,8 @@ void Transform::SetParent(Transform* transform) {
     transform->AddChild(this);
   }
   parent = transform;
+  SetWorldPos(originalPos);
+  SetWorldRot(originalRot);
   SetDirty();
 
   // TODO(YIDI): Keep world transform and rotation and scale
@@ -270,20 +296,37 @@ void Transform::Print() {
 }
 
 void Transform::DrawGUI() {
+  std::string parentName = parent == nullptr ? "null" : parent->GetName();
   std::string content =
       GetName() + "\n\n" + "World Position: " + GetWorldPos().ToString() +
       "\n" + "Local Position: " + GetLocalPos().ToString() + "\n" +
-      "World Rotation: " + GetWorldRot().GetEulerAngles().ToString() + "\n" +
-      "Local Scale: " + GetLocalScale().ToString() + "\n";
+      "World Rotation: " + GetWorldEulerAngles().ToString() + "\n" +
+      "Local Rotation: " + GetLocalEulerAngles().ToString() + "\n" +
+      "Local Scale: " + GetLocalScale().ToString() + "\n" +
+      "Parent: " + parentName;
   GUI::Text(RectTransform{Math::Rect{-200, 200, 300, 100}, GUI::Pivot::TopRight,
                           GUI::Pivot::TopRight},
             content);
-  if (GUI::Button(RectTransform{Math::Rect{-200, 300, 300, 30},
+  if (GUI::Button(RectTransform{Math::Rect{-200, 330, 300, 30},
                                 GUI::Pivot::TopRight, GUI::Pivot::TopRight},
                   "Reset")) {
     SetLocalRot(Math::Quaternion::identity);
     SetLocalPos(Math::Vector3::zero);
     SetLocalScale(Math::Vector3::one);
+  }
+  
+  float height = 360;
+  float padding = 15;
+  GUI::Text(RectTransform{Math::Rect{-200, height, 300, 100},
+                          GUI::Pivot::TopRight, GUI::Pivot::TopRight},
+            "Components", GUI::TextStyle{Color::white});
+  height += padding;
+  for (const auto& component : entity->GetComponents()) {
+    Component& comp = *component;
+    GUI::Text(RectTransform{Math::Rect{-200, height, 300, 100},
+                            GUI::Pivot::TopRight, GUI::Pivot::TopRight},
+              typeid(comp).name());
+    height += padding;
   }
 }
 

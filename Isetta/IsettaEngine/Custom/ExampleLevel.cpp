@@ -59,6 +59,6 @@ void ExampleLevel::LoadLevel() {
 
   Entity* customEntity{AddEntity("custom")};
   customEntity->AddComponent<ExampleComponent>();
-  // customEntity->AddComponent<AxisDrawer>();
+  customEntity->AddComponent<AxisDrawer>();
 }
 }  // namespace Isetta

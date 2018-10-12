@@ -2,14 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Custom/FlyController.h"
-#include "Core/Debug/DebugDraw.h"
-#include "Graphics/GUI.h"
-#include "Util.h"
-#include "Graphics/RectTransform.h"
-#include "Input/Input.h"
-#include "Scene/Transform.h"
-#include "EngineLoop.h"
-#include "Core/Time/Clock.h"
+#include "Custom/IsettaCore.h"
 
 namespace Isetta {
 

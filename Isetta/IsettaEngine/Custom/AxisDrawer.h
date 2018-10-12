@@ -8,6 +8,5 @@ namespace Isetta {
 class AxisDrawer : public Component {
  public:
   void Update() override;
-
 };
 }  // namespace Isetta

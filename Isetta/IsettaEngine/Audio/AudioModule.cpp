@@ -98,7 +98,7 @@ void PrintAudioMemoryUsage() {
 
 void AudioModule::CheckStatus(const FMOD_RESULT status) {
   if (status != FMOD_OK) {
-    LOG_INFO(Debug::Channel::Sound, FMOD_ErrorString(status));
+    LOG_ERROR(Debug::Channel::Sound, FMOD_ErrorString(status));
     throw std::exception{Util::StrFormat("AudioSource::CheckStatus => %s",
                                          FMOD_ErrorString(status))};
   }

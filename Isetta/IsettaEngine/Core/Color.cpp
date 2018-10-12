@@ -10,7 +10,7 @@
 namespace Isetta {
 const Color Color::black = Color{0, 0, 0, 1};
 const Color Color::blue = Color{0, 0, 1, 1};
-const Color Color::brown = Color{165.f / 255, 42.f / 255, 42.f / 255, 1};
+const Color Color::brown = Color{150.f / 255, 75.f / 255, 0.f, 1};
 const Color Color::clear = Color{0, 0, 0, 0};
 const Color Color::cyan = Color{0, 1, 1, 1};
 const Color Color::green = Color{0, 1, 0, 1};
