@@ -10,7 +10,7 @@
 
 namespace Isetta {
 template <typename T>
-class ISETTA_API RingBuffer {
+class ISETTA_API_DECLARE RingBuffer {
  public:
   // Constructors
 

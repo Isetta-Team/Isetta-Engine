@@ -2,8 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 
-#include <iostream>
-
 #include "CppUnitTest.h"
 #include "EngineLoop.h"
 

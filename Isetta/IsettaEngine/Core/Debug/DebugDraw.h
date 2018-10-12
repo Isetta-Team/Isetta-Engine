@@ -22,7 +22,7 @@ namespace Isetta {
  * features
  *
  */
-class ISETTA_API DebugDraw {
+class ISETTA_API_DECLARE DebugDraw {
  public:
   static void StartUp();
   static void Update();
