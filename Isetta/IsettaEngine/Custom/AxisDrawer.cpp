@@ -14,14 +14,8 @@ void AxisDrawer::OnEnable() {}
 void AxisDrawer::Update() {
   auto& transform = GetTransform();
   float dt = EngineLoop::GetGameClock().GetDeltaTime() * 2;
-  DebugDraw::Line(transform.GetWorldPos(),
-                  transform.GetWorldPos() + transform.GetForward(), Color::blue,
-                  1, dt, false);
-  DebugDraw::Line(transform.GetWorldPos(),
-                  transform.GetWorldPos() + transform.GetLeft(), Color::red, 1,
-                  dt, false);
-  DebugDraw::Line(transform.GetWorldPos(),
-                  transform.GetWorldPos() + transform.GetUp(), Color::green, 1,
-                  dt, false);
+
+  DebugDraw::Axis(GetTransform().GetLocalToWorldMatrix(), Color::red,
+                  Color::green, Color::blue, 2, 0, 2, false);
 }
 }  // namespace Isetta
