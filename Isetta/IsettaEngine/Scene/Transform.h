@@ -72,9 +72,9 @@ class ISETTA_API_DECLARE Transform {
   Math::Vector3 WorldDirFromLocalDir(const Math::Vector3& localDirection);
   Math::Vector3 LocalDirFromWorldDir(const Math::Vector3& worldDirection);
 
-  void ForChildren(Action<Transform*> action);
-  void ForDescendents(Action<Transform*> action);
-  void ForSelfAndDescendents(Action<Transform*> action);
+  void ForChildren(const Action<Transform*>& action);
+  void ForDescendents(const Action<Transform*>& action);
+  void ForSelfAndDescendents(const Action<Transform*>& action);
 
   void SetWorldTransform(const Math::Vector3& inPosition,
                          const Math::Vector3& inEulerAngles,

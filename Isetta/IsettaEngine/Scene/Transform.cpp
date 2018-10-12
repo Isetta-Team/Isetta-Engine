@@ -7,6 +7,7 @@
 #include "Scene/Entity.h"
 #include "Util.h"
 #include "Scene/Component.h"
+#include "Core/Debug/DebugDraw.h"
 #if _DEBUG
 #include "Graphics/GUI.h"
 #include "Graphics/RectTransform.h"
@@ -207,7 +208,7 @@ void Transform::LookAt(const Math::Vector3& target,
       Math::Vector3::Cross(forwardDir, worldUp).Normalized();
   Math::Vector3 upDir = Math::Vector3::Cross(forwardDir, rightDir);
 
-  SetLocalRot(Math::Quaternion::FromLookRotation(forwardDir, upDir));
+  SetWorldRot(Math::Quaternion::FromLookRotation(forwardDir, upDir));
 }
 
 // TODO(YIDI): Test this
@@ -245,33 +246,30 @@ Math::Vector3 Transform::LocalDirFromWorldDir(
   return (GetLocalToWorldMatrix().Inverse() * sharedV4).GetVector3();
 }
 
-// TODO(YIDI): Test this
-void Transform::ForChildren(Action<Transform*> action) {
+void Transform::ForChildren(const Action<Transform*>& action) {
   for (auto& child : children) {
     action(child);
   }
 }
 
-// TODO(YIDI): test this
-void Transform::ForDescendents(Action<Transform*> action) {
+void Transform::ForDescendents(const Action<Transform*>& action) {
   for (auto& child : children) {
     action(child);
     child->ForDescendents(action);
   }
 }
 
-void Transform::ForSelfAndDescendents(Action<Transform*> action) {
+void Transform::ForSelfAndDescendents(const Action<Transform*>& action) {
   action(this);
   ForDescendents(action);
 }
 
-// TODO(YIDI): test this
 void Transform::SetWorldTransform(const Math::Vector3& inPosition,
                                   const Math::Vector3& inEulerAngles,
                                   const Math::Vector3& inScale) {
   SetWorldPos(inPosition);
   SetWorldRot(inEulerAngles);
-  SetLocalScale(inScale);  // TODO(YIDI): fix this ,
+  SetLocalScale(inScale);
 }
 
 void Transform::SetH3DNodeTransform(const H3DNode node, Transform& transform) {
@@ -328,9 +326,10 @@ void Transform::DrawGUI() {
               typeid(comp).name());
     height += padding;
   }
+  DebugDraw::Axis(GetLocalToWorldMatrix());
+  DebugDraw::AxisSphere(GetLocalToWorldMatrix());
 }
 
-// TODO(YIDI): test this
 const Math::Matrix4& Transform::GetLocalToWorldMatrix() {
   if (isMatrixDirty) {
     RecalculateLocalToWorldMatrix();
@@ -355,13 +354,11 @@ void Transform::RecalculateLocalToWorldMatrix() {
   }
 }
 
-// TODO(YIDI): Test this
 void Transform::AddChild(Transform* transform) {
   // duplicate child check is in SetParent
   children.push_back(transform);
 }
 
-// TODO(YIDI): test this
 void Transform::RemoveChild(Transform* transform) {
   for (auto it = children.begin(); it != children.end(); ++it) {
     if (*it == transform) {
@@ -378,9 +375,5 @@ void Transform::RemoveChild(Transform* transform) {
 void Transform::SetDirty() {
   ForSelfAndDescendents([](Transform* trans) { trans->isMatrixDirty = true; });
 }
-
-#if _DEBUG
-// TODO(YIDI): test this
-#endif
 
 }  // namespace Isetta
