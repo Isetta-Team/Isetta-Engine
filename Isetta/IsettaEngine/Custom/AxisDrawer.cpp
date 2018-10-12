@@ -3,19 +3,17 @@
  */
 #include "Custom/AxisDrawer.h"
 #include "Core/Debug/DebugDraw.h"
-#include "Core/Time/Clock.h"
-#include "EngineLoop.h"
 #include "Scene/Transform.h"
 
 namespace Isetta {
 
-void AxisDrawer::OnEnable() {}
-
 void AxisDrawer::Update() {
-  auto& transform = GetTransform();
-  float dt = EngineLoop::GetGameClock().GetDeltaTime() * 2;
+  // DebugDraw::Axis(GetTransform().GetLocalToWorldMatrix(), Color::red,
+                  // Color::green, Color::blue, 2, 0, 2, false);
 
-  DebugDraw::Axis(GetTransform().GetLocalToWorldMatrix(), Color::red,
-                  Color::green, Color::blue, 2, 0, 2, false);
+  DebugDraw::AxisSphere(GetTransform().GetLocalToWorldMatrix());
+  Math::Matrix4 mat = Math::Matrix4::identity;
+  mat.SetCol(3, GetTransform().GetWorldPos(), 1);
+  DebugDraw::Axis(mat, Color::red, Color::green, Color::blue, 2, 0, 3, false);
 }
 }  // namespace Isetta

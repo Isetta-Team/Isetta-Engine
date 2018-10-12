@@ -382,11 +382,11 @@ void DebugDemo() {
                   Color::brown);
   // DebugDraw::WireCube(Math::Matrix4::Translate(Math::Vector3{0, 0, -2}));
   // DebugDraw::WireSphere(Math::Vector3::up, 1, Color::red);
-  DebugDraw::WireCapsule(Math::Matrix4::Translate(Math::Vector3{-1, 4, 1}), 0.5,
-                         2, Color::blue);
-  DebugDraw::AxisSphere(Math::Vector3::up, 1);
+  // DebugDraw::WireCapsule(Math::Matrix4::Translate(Math::Vector3{-1, 4, 1}), 0.5,
+                         // 2, Color::blue);
+  // DebugDraw::AxisSphere(Math::Vector3::up, 1);
   DebugDraw::Grid();
-  DebugDraw::Axis();
+  DebugDraw::Axis(Math::Matrix4::identity, Color::red, Color::green, Color::blue, 2, 0, true);
 }
 
 }  // namespace Isetta

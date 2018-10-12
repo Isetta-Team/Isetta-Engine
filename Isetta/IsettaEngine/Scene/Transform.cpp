@@ -100,20 +100,21 @@ void Transform::SetLocalRot(const Math::Vector3& localEulers) {
   SetLocalRot(Math::Quaternion::FromEulerAngles(localEulers));
 }
 
+// passed
 void Transform::RotateWorld(const Math::Vector3& eulerAngles) {
   SetWorldRot(Math::Quaternion::FromEulerAngles(eulerAngles) * GetWorldRot());
 }
 
+// passed
 void Transform::RotateWorld(const Math::Vector3& axis, const float angle) {
   SetWorldRot(Math::Quaternion::FromAngleAxis(axis, angle) * GetWorldRot());
 }
 
 // passed
 void Transform::RotateLocal(const Math::Vector3& eulerAngles) {
-  SetLocalRot(Math::Quaternion::FromEulerAngles(
-                  GetLeft() * eulerAngles.x + 
-                  GetUp() * eulerAngles.y + 
-                  GetForward() * eulerAngles.z) *
+  SetLocalRot(Math::Quaternion::FromEulerAngles(GetLeft() * eulerAngles.x +
+                                                GetUp() * eulerAngles.y +
+                                                GetForward() * eulerAngles.z) *
               localRot);
 }
 
@@ -122,7 +123,7 @@ void Transform::RotateLocal(const Math::Vector3& axis, const float angle) {
   SetLocalRot(Math::Quaternion::FromAngleAxis(axis, angle) * localRot);
 }
 
-// passed test
+// passed
 void Transform::RotateLocal(const Math::Quaternion& rotation) {
   SetLocalRot(rotation * localRot);
 }
@@ -274,9 +275,16 @@ void Transform::DrawGUI() {
       "\n" + "Local Position: " + GetLocalPos().ToString() + "\n" +
       "World Rotation: " + GetWorldRot().GetEulerAngles().ToString() + "\n" +
       "Local Scale: " + GetLocalScale().ToString() + "\n";
-  GUI::Text(RectTransform{Math::Rect{-100, 100, 300, 100}, GUI::Pivot::TopRight,
+  GUI::Text(RectTransform{Math::Rect{-200, 200, 300, 100}, GUI::Pivot::TopRight,
                           GUI::Pivot::TopRight},
             content);
+  if (GUI::Button(RectTransform{Math::Rect{-200, 300, 300, 30},
+                                GUI::Pivot::TopRight, GUI::Pivot::TopRight},
+                  "Reset")) {
+    SetLocalRot(Math::Quaternion::identity);
+    SetLocalPos(Math::Vector3::zero);
+    SetLocalScale(Math::Vector3::one);
+  }
 }
 
 // TODO(YIDI): test this

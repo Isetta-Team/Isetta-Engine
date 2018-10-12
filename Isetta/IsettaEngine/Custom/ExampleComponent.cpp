@@ -44,22 +44,22 @@ void ExampleComponent::Update() {
 #if _DEBUG
   float speed = 10.f;
 
-  if (Input::IsKeyPressed(KeyCode::LEFT)) {
-    GetTransform().TranslateWorld(Math::Vector3::left *
-                                  EngineLoop::GetGameClock().GetDeltaTime() *
-                                  speed);
-    GetTransform().Print();
-  }
+  // if (Input::IsKeyPressed(KeyCode::LEFT)) {
+    // GetTransform().TranslateWorld(Math::Vector3::left *
+                                  // EngineLoop::GetGameClock().GetDeltaTime() *
+                                  // speed);
+    // GetTransform().Print();
+  // }
 
-  if (Input::IsKeyPressed(KeyCode::RIGHT)) {
-    GetTransform().TranslateWorld(Math::Vector3::right *
-                                  EngineLoop::GetGameClock().GetDeltaTime() *
-                                  speed);
-  }
+  // if (Input::IsKeyPressed(KeyCode::RIGHT)) {
+    // GetTransform().TranslateWorld(Math::Vector3::right *
+                                  // EngineLoop::GetGameClock().GetDeltaTime() *
+                                  // speed);
+  // }
 
-  if (Input::IsKeyPressed(KeyCode::P)) {
-    GetTransform().Print();
-  }
+  // if (Input::IsKeyPressed(KeyCode::P)) {
+    // GetTransform().Print();
+  // }
 #endif
 }
 }  // namespace Isetta

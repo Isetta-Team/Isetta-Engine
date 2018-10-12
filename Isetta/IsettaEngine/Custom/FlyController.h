@@ -15,5 +15,9 @@ class ISETTA_API FlyController : public Component {
 
 private:
   Math::Vector2 lastFrameMousePos;
+  float rotX{};
+  float rotY{};
+  float lookRotationSpeed{-0.1f};
+  float flySpeed = 15.f;
 };
 }  // namespace Isetta
