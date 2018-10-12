@@ -152,8 +152,6 @@ class ISETTA_API_DECLARE MemoryManager {
 
   static MemoryManager* GetInstance();
   /// only for internal test
-  void RegisterTests();
-  /// only for internal test
   static void DefragmentTest();
 
   static MemoryManager* instance;

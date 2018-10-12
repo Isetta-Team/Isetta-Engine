@@ -79,8 +79,6 @@ void EngineLoop::StartUp() {
 
   LevelManager::Instance().LoadLevel();
 
-  // TODO(Yidi) remove
-  memoryManager->RegisterTests();
   DebugDraw::StartUp();
 
   StartGameClock();
