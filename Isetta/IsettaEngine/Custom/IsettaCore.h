@@ -4,6 +4,7 @@
 #include "Core/Debug/DebugDraw.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Time/Clock.h"
+#include "Core/Time/Time.h"
 #include "EngineLoop.h"
 #include "Graphics/GUI.h"
 #include "Graphics/RectTransform.h"

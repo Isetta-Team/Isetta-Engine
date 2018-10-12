@@ -421,6 +421,9 @@
     <ClInclude Include="Custom\IsettaCore.h">
       <Filter>Custom</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Time\Time.h">
+      <Filter>Core\Time</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

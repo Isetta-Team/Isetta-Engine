@@ -8,7 +8,7 @@ namespace Isetta {
 void PlayerController::OnEnable() {}
 
 void PlayerController::Update() {
-  float dt = EngineLoop::GetGameClock().GetDeltaTime();
+  float dt = Time::GetDeltaTime();
 
   if (Input::IsKeyPressed(KeyCode::KP_4)) {
     // GetTransform().RotateLocal(GetTransform().GetUp(), rotSpeed * dt);
