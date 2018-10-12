@@ -421,6 +421,9 @@
     <ClInclude Include="Networking\ExampleMessages.h">
       <Filter>Networking</Filter>
     </ClInclude>
+    <ClInclude Include="Custom\IsettaCore.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

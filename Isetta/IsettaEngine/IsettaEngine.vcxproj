@@ -239,6 +239,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Custom\ExampleComponent.h" />
     <ClInclude Include="Custom\ExampleLevel.h" />
     <ClInclude Include="Custom\FlyController.h" />
+    <ClInclude Include="Custom\IsettaCore.h" />
     <ClInclude Include="Custom\PlayerController.h" />
     <ClInclude Include="EngineLoop.h" />
     <ClInclude Include="Graphics\AnimationComponent.h" />

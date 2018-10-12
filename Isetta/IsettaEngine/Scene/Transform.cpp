@@ -6,6 +6,10 @@
 #include "Core/Math/Matrix3.h"
 #include "Scene/Entity.h"
 #include "Util.h"
+#if _DEBUG
+#include "Graphics/GUI.h"
+#include "Graphics/RectTransform.h"
+#endif
 
 namespace Isetta {
 
@@ -231,15 +235,8 @@ void Transform::SetWorldTransform(const Math::Vector3& inPosition,
   SetLocalScale(inScale);  // TODO(YIDI): fix this ,
 }
 
-// TODO(YIDI): test this
 void Transform::SetH3DNodeTransform(const H3DNode node, Transform& transform) {
-  Math::Vector3 worldPos = transform.GetWorldPos();
-  Math::Vector3 worldEuler = transform.GetWorldEulerAngles();
-  Math::Vector3 worldScale = transform.GetWorldScale();
-
-  h3dSetNodeTransform(node, worldPos.x, worldPos.y, worldPos.z, worldEuler.x,
-                      worldEuler.y, worldEuler.z, worldScale.x, worldScale.y,
-                      worldScale.z);
+  h3dSetNodeTransMat(node, transform.GetLocalToWorldMatrix().Transpose().data);
 }
 
 void Transform::Print() {
@@ -257,6 +254,16 @@ void Transform::Print() {
            GetLocalRot().GetEulerAngles().ToString().c_str(),
            GetLocalRot().ToString().c_str(),
            GetWorldScale().ToString().c_str());
+}
+
+void Transform::DrawGUI() {
+  std::string content =
+      GetName() + "\n\n" + "World Position: " + GetWorldPos().ToString() + "\n" +
+      "Local Position: " + GetLocalPos().ToString() + "\n" +
+      "World Rotation: " + GetWorldRot().GetEulerAngles().ToString() + "\n" +
+      "Local Scale: " + GetLocalScale().ToString() + "\n";
+  GUI::Text(RectTransform{Math::Rect{-100, 100, 300, 100}, GUI::Pivot::TopRight,
+                          GUI::Pivot::TopRight}, content);
 }
 
 // TODO(YIDI): test this

@@ -85,6 +85,7 @@ class ISETTA_API Transform {
 
 #if _DEBUG
   void Print();
+  void DrawGUI();
 #endif
   const Math::Matrix4& GetLocalToWorldMatrix();
 
