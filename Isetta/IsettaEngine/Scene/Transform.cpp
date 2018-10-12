@@ -34,7 +34,7 @@ void Transform::SetWorldPos(const Math::Vector3& newWorldPos) {
   } else {
     sharedV4.Set(newWorldPos, 1);
     localPos =
-        (parent->GetLocalToWorldMatrix().Inverse() * sharedV4).GetVector3();
+        (parent->GetWorldToLocalMatrix() * sharedV4).GetVector3();
   }
 }
 
@@ -215,7 +215,6 @@ void Transform::LookAt(Transform& target, const Math::Vector3& worldUp) {
   LookAt(target.GetWorldPos(), worldUp);
 }
 
-// TODO(YIDI): Test this
 Transform* Transform::GetChild(const U16 childIndex) {
   if (childIndex >= GetChildCount()) {
     throw std::exception{
@@ -235,7 +234,7 @@ Math::Vector3 Transform::WorldPosFromLocalPos(const Math::Vector3& localPoint) {
 
 Math::Vector3 Transform::LocalPosFromWorldPos(const Math::Vector3& worldPoint) {
   sharedV4.Set(worldPoint, 1);
-  return (GetLocalToWorldMatrix().Inverse() * sharedV4).GetVector3();
+  return (GetWorldToLocalMatrix() * sharedV4).GetVector3();
 }
 
 Math::Vector3 Transform::WorldDirFromLocalDir(
@@ -247,7 +246,7 @@ Math::Vector3 Transform::WorldDirFromLocalDir(
 Math::Vector3 Transform::LocalDirFromWorldDir(
     const Math::Vector3& worldDirection) {
   sharedV4.Set(worldDirection, 0);
-  return (GetLocalToWorldMatrix().Inverse() * sharedV4).GetVector3();
+  return (worldToLocalMatrix * sharedV4).GetVector3();
 }
 
 void Transform::ForChildren(const Action<Transform*>& action) {
@@ -278,23 +277,6 @@ void Transform::SetWorldTransform(const Math::Vector3& inPosition,
 
 void Transform::SetH3DNodeTransform(const H3DNode node, Transform& transform) {
   h3dSetNodeTransMat(node, transform.GetLocalToWorldMatrix().Transpose().data);
-}
-
-void Transform::Print() {
-  LOG_INFO(Debug::Channel::Graphics,
-           "\nName [%s]"
-           "\nWorldPos %s"
-           "\nLocalPos %s"
-           "\nWorldRot %s"
-           "\nLocalRot %s"
-           "\nLocalQuat %s"
-           "\nWorldScale %s",
-           GetName().c_str(), GetWorldPos().ToString().c_str(),
-           GetLocalPos().ToString().c_str(),
-           GetWorldRot().GetEulerAngles().ToString().c_str(),
-           GetLocalRot().GetEulerAngles().ToString().c_str(),
-           GetLocalRot().ToString().c_str(),
-           GetWorldScale().ToString().c_str());
 }
 
 void Transform::DrawGUI() {
@@ -335,11 +317,19 @@ void Transform::DrawGUI() {
 }
 
 const Math::Matrix4& Transform::GetLocalToWorldMatrix() {
-  if (isMatrixDirty) {
+  if (isDirty) {
     RecalculateLocalToWorldMatrix();
-    isMatrixDirty = false;
+    isDirty = false;
   }
   return localToWorldMatrix;
+}
+
+const Math::Matrix4& Transform::GetWorldToLocalMatrix() {
+  if (isWorldToLocalDirty) {
+    worldToLocalMatrix = GetLocalToWorldMatrix().Inverse();
+    isWorldToLocalDirty = false;
+  }
+  return worldToLocalMatrix;
 }
 
 void Transform::RecalculateLocalToWorldMatrix() {
@@ -377,7 +367,10 @@ void Transform::RemoveChild(Transform* transform) {
 }
 
 void Transform::SetDirty() {
-  ForSelfAndDescendents([](Transform* trans) { trans->isMatrixDirty = true; });
+  ForSelfAndDescendents([](Transform* trans) {
+    trans->isDirty = true;
+    trans->isWorldToLocalDirty = true;
+  });
 }
 
 }  // namespace Isetta
