@@ -35,13 +35,17 @@ Quaternion Quaternion::FromEulerAngles(const float eulerX, const float eulerY,
   return Quaternion{eulerX, eulerY, eulerZ};
 }
 
+Quaternion Quaternion::FromAngleAxis(const Vector3& axis, const float angleDeg) {
+  float rad = angleDeg * Util::DEG2RAD;
+  rad /= 2;
+  float sin = Util::Sin(rad);
+  float cos = Util::Cos(rad);
+  return Quaternion{axis.x * sin, axis.y * sin, axis.z * sin, cos};
+}
+
 Quaternion::Quaternion(const Vector3 vector, const float scalar)
     : w{scalar}, x{vector.x}, y{vector.y}, z{vector.z} {
   Normalize();
-}
-
-Quaternion Quaternion::FromAngleAxis(const Vector3& axis, const float angle) {
-  return Quaternion{axis, angle};
 }
 
 Quaternion Quaternion::FromLookRotation(const Vector3& forwardDirection,
@@ -138,22 +142,22 @@ Vector3 Quaternion::GetEulerAngles() const {
   Quaternion q = (*this).Normalized();
 
   // roll (x-axis rotation)
-  float sinr = 2.f * (q.w * q.x + q.y * q.z);
-  float cosr = 1.f - 2.f * (q.x * q.x + q.y * q.y);
-  float roll = Util::Atan2(sinr, cosr);
+  float sinRoll = 2.f * (q.w * q.x + q.y * q.z);
+  float cosRoll = 1.f - 2.f * (q.x * q.x + q.y * q.y);
+  float roll = Util::Atan2(sinRoll, cosRoll);
 
   // pitch (y-axis rotation)
-  float sinp = 2.f * (q.w * q.y - q.z * q.x);
+  float sinPitch = 2.f * (q.w * q.y - q.z * q.x);
   float pitch;
-  if (Util::Abs(sinp) >= 1)
-    pitch = Util::PI / 2 * Util::Sign(sinp);  // use 90 degrees if out of range
+  if (Util::Abs(sinPitch) >= 1)
+    pitch = Util::PI / 2 * Util::Sign(sinPitch);  // use 90 degrees if out of range
   else
-    pitch = Util::Asin(sinp);
+    pitch = Util::Asin(sinPitch);
 
   // yaw (z-axis rotation)
-  float siny = 2.f * (q.w * q.z + q.x * q.y);
-  float cosy = 1.f - 2.f * (q.y * q.y + q.z * q.z);
-  float yaw = Util::Atan2(siny, cosy);
+  float sinYaw = 2.f * (q.w * q.z + q.x * q.y);
+  float cosYaw = 1.f - 2.f * (q.y * q.y + q.z * q.z);
+  float yaw = Util::Atan2(sinYaw, cosYaw);
 
   Vector3 angleInRad = Vector3{roll, pitch, yaw};
   return angleInRad * Util::RAD2DEG;

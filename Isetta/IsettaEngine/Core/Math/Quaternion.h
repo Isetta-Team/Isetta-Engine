@@ -42,7 +42,7 @@ class ISETTA_API Quaternion {
    * \param scalar The angle
    */
   Quaternion(class Vector3 vector, float scalar);
-  static Quaternion FromAngleAxis(const class Vector3& axis, float angle);
+  static Quaternion FromAngleAxis(const class Vector3& axis, float angleDeg);
   static Quaternion FromLookRotation(const class Vector3& forwardDirection,
                                      const class Vector3& upDirection);
 
