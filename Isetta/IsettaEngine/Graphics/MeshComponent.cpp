@@ -4,15 +4,13 @@
 #include "Graphics/MeshComponent.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Assert.h"
-#include "Input/Input.h"
-#include "Scene/Entity.h"
 #include "Scene/Transform.h"
 #include "Util.h"
 
 namespace Isetta {
 RenderModule* MeshComponent::renderModule{nullptr};
 
-MeshComponent::MeshComponent(std::string resourceName) : Component() {
+MeshComponent::MeshComponent(const std::string& resourceName) : Component() {
   // SetAttribute(ComponentAttributes::NEED_UPDATE, false);
   ASSERT(renderModule != nullptr);
   renderModule->meshComponents.push_back(this);
@@ -24,11 +22,11 @@ MeshComponent::~MeshComponent() {
   renderModule->meshComponents.remove(this);
 }
 
-void MeshComponent::UpdateTransform() {
+void MeshComponent::UpdateTransform() const {
   Transform::SetH3DNodeTransform(renderNode, GetTransform());
 }
 
-H3DRes MeshComponent::LoadResourceFromFile(std::string resourceName) const {
+H3DRes MeshComponent::LoadResourceFromFile(const std::string& resourceName) {
   H3DRes renderResource =
       h3dAddResource(H3DResTypes::SceneGraph, resourceName.c_str(), 0);
 

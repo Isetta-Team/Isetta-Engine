@@ -51,7 +51,6 @@ void PlayerController::Update() {
   // DebugDraw::Cube(mat * Math::Matrix4::Translate(Math::Vector3{0, 1.1, 2.8}) *
                       // Math::Matrix4::Scale(2.2 * Math::Vector3::one),
                   // Color::brown);
-  DebugDraw::AxisSphere(GetTransform().GetLocalToWorldMatrix());
   if (GetTransform().GetParent() != nullptr) {
     DebugDraw::Line(GetTransform().GetWorldPos(), GetTransform().GetParent()->GetWorldPos());
   }

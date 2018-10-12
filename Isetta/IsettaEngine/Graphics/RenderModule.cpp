@@ -46,14 +46,14 @@ void RenderModule::Update(float deltaTime) {
   for (const auto& light : lightComponents) {
     if (light->owner->GetAttribute(
             Entity::EntityAttributes::IS_TRANSFORM_DIRTY)) {
-      light->UpdateTransform();
+      light->UpdateH3DTransform();
     }
   }
   for (const auto& anim : animationComponents) {
     anim->UpdateAnimation(deltaTime);
   }
   for (const auto& cam : cameraComponents) {
-    cam->UpdateTransform();
+    cam->UpdateH3DTransform();
   }
   ASSERT(!cameraComponents.empty());
   CameraComponent::_main = cameraComponents.front();

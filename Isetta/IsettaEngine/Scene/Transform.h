@@ -59,6 +59,8 @@ class ISETTA_API_DECLARE Transform {
   // other
   void LookAt(const Math::Vector3& target,
               const Math::Vector3& worldUp = Math::Vector3::up);
+  void LookAt(Transform& target,
+              const Math::Vector3& worldUp = Math::Vector3::up);
   class Entity* GetEntity() const {
     return entity;
   }

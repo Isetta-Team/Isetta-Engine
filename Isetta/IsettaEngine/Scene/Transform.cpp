@@ -211,6 +211,10 @@ void Transform::LookAt(const Math::Vector3& target,
   SetWorldRot(Math::Quaternion::FromLookRotation(forwardDir, upDir));
 }
 
+void Transform::LookAt(Transform& target, const Math::Vector3& worldUp) {
+  LookAt(target.GetWorldPos(), worldUp);
+}
+
 // TODO(YIDI): Test this
 Transform* Transform::GetChild(const U16 childIndex) {
   if (childIndex >= GetChildCount()) {

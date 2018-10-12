@@ -23,7 +23,6 @@ using CameraProperty = CameraComponent::Property;
 void ExampleLevel::LoadLevel() {
   Entity* man{AddEntity("PushAnim")};
   man->SetTransform(Math::Vector3{0, 0, 0}, Math::Vector3{0, 90, 0});
-  man->AddComponent<AxisDrawer>();
   man->AddComponent<PlayerController>();
   MeshComponent* pushMesh =
       man->AddComponent<MeshComponent>(true, "push/Pushing.scene.xml");
@@ -59,6 +58,5 @@ void ExampleLevel::LoadLevel() {
 
   Entity* customEntity{AddEntity("custom")};
   customEntity->AddComponent<ExampleComponent>();
-  customEntity->AddComponent<AxisDrawer>();
 }
 }  // namespace Isetta

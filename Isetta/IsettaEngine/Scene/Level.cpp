@@ -50,6 +50,11 @@ void Level::Update() {
 }
 
 void Level::GUIUpdate() {
+  for (const auto& entity : entities) {
+    entity->GuiUpdate();
+  }
+
+#if _DEBUG
   float buttonHeight = 30;
   float buttonWidth = 200;
   float height = 80;
@@ -58,11 +63,7 @@ void Level::GUIUpdate() {
   static Transform* transform = nullptr;
 
   for (const auto& entity : entities) {
-    entity->GuiUpdate();
-
     if (entity->GetTransform().GetParent() == nullptr) {
-      std::string extraPadding = "|--";
-
       Func<int, Transform*> countLevel = [](Transform* trans) -> int {
         int i = 0;
         while (trans->GetParent() != nullptr) {
@@ -84,14 +85,13 @@ void Level::GUIUpdate() {
       };
 
       entity->GetTransform().ForSelfAndDescendents(action);
-      // GUI::Text(RectTransform{Math::Rect{0, height, buttonWidth,
-      // buttonHeight}}, ""); height += buttonHeight;
     }
   }
 
   if (transform != nullptr) {
     transform->DrawGUI();
   }
+#endif
 }
 
 void Level::LateUpdate() {
