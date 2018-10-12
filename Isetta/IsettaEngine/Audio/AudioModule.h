@@ -11,7 +11,6 @@
 #include "fmod.hpp"
 
 namespace Isetta {
-
 class AudioModule {
  public:
   struct AudioConfig {

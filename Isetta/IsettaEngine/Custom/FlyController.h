@@ -2,9 +2,9 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include "Core/Math/Vector2.h"
 #include "ISETTA_API.h"
 #include "Scene/Component.h"
-#include "Core/Math/Vector2.h"
 
 namespace Isetta {
 class ISETTA_API FlyController : public Component {
@@ -13,7 +13,7 @@ class ISETTA_API FlyController : public Component {
   void Update() override;
   void GuiUpdate() override;
 
-private:
+ private:
   Math::Vector2 lastFrameMousePos;
   float rotX{};
   float rotY{};

@@ -32,6 +32,7 @@ class ISETTA_API EngineLoop {
   class InputModule* inputModule;
   class GUIModule* guiModule;
   class NetworkingModule* networkingModule;
+  class PhysicsModule* physicsModule;
 
   void StartUp();
   void Update();

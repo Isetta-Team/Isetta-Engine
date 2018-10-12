@@ -38,6 +38,7 @@ class ISETTA_API Component {
   virtual void GuiUpdate() {}
   virtual void Update() {}
   virtual void LateUpdate() {}
+  virtual void FixedUpdate() {}
   virtual void OnDestroy() {}
   virtual void OnDisable() {}
 };

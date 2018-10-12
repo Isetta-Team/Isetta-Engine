@@ -70,10 +70,12 @@ float Util::Lerp(float start, float end, float time) {
 float Util::Ln(float number) { return logf(number); }
 float Util::Log(float number, float base) { return logf(number) / log(base); }
 float Util::Log10(float number) { return log10f(number); }
+float Util::Max(float a, float b) { return std::max(a, b); }
 float Util::Max(std::initializer_list<float> numbers) {
   return std::max(numbers);
 }
 int Util::Max(std::initializer_list<int> numbers) { return std::max(numbers); }
+float Util::Min(float a, float b) { return std::min(a, b); }
 float Util::Min(std::initializer_list<float> numbers) {
   return std::min(numbers);
 }
@@ -110,4 +112,5 @@ float Util::Sqrt(float number) { return sqrtf(number); }
 float Util::Square(float number) { return number * number; }
 int Util::Square(int number) { return number * number; }
 float Util::Tan(float radian) { return tanf(radian); }
+bool Util::FuzzyEquals(float a, float b) { return Abs(a - b) < EPSILON; }
 }  // namespace Isetta::Math

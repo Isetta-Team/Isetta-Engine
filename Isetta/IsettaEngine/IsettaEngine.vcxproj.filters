@@ -159,14 +159,29 @@
     <ClCompile Include="Custom\AxisDrawer.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
-    <ClCompile Include="Networking\NetworkIdentity.cpp">
-      <Filter>Networking</Filter>
+    <ClCompile Include="Custom\InEngineTestLevel.cpp">
+      <Filter>Custom</Filter>
     </ClCompile>
     <ClCompile Include="Networking\ExampleMessages.cpp">
       <Filter>Networking</Filter>
     </ClCompile>
-    <ClCompile Include="Custom\InEngineTestLevel.cpp">
-      <Filter>Custom</Filter>
+    <ClCompile Include="Physics\BoxCollider.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\CapsuleCollider.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\PhysicsModule.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\SphereCollider.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Collider.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\AABB.cpp">
+      <Filter>Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -226,6 +241,9 @@
     </Filter>
     <Filter Include="Custom">
       <UniqueIdentifier>{795c60e4-6516-48a5-bfc1-c446a905bb3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{c15f9d47-86d9-41b5-a7ee-43b1cc1fee77}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -415,11 +433,31 @@
     <ClInclude Include="Core\Time\Time.h">
       <Filter>Core\Time</Filter>
     </ClInclude>
-    <ClInclude Include="Networking\NetworkIdentity.h">
-      <Filter>Networking</Filter>
-    </ClInclude>
     <ClInclude Include="Custom\InEngineTestLevel.h">
       <Filter>Custom</Filter>
+    <ClInclude Include="Physics\BoxCollider.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\CapsuleCollider.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\PhysicsModule.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\SphereCollider.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Collider.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\AABB.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\AVLTree.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\Plane.h">
+      <Filter>Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

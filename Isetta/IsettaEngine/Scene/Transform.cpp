@@ -182,17 +182,13 @@ void Transform::SetParent(Transform* transform) {
   // TODO(YIDI): Keep world transform and rotation and scale
 }
 
-Math::Vector3 Transform::GetForward() {
-  return GetLocalToWorldMatrix().GetCol(2).GetVector3().Normalized();
-}
+Math::Vector3 Transform::GetForward() { return axis[2]; }
 
-Math::Vector3 Transform::GetUp() {
-  return GetLocalToWorldMatrix().GetCol(1).GetVector3().Normalized();
-}
+Math::Vector3 Transform::GetUp() { return axis[1]; }
 
-Math::Vector3 Transform::GetLeft() {
-  return GetLocalToWorldMatrix().GetCol(0).GetVector3().Normalized();
-}
+Math::Vector3 Transform::GetLeft() { return axis[0]; }
+
+Math::Vector3 Transform::GetAxis(int i) { return axis[i]; }
 
 void Transform::LookAt(const Math::Vector3& target,
                        const Math::Vector3& worldUp) {
@@ -341,6 +337,9 @@ void Transform::RecalculateLocalToWorldMatrix() {
     localToWorldMatrix = parent->GetLocalToWorldMatrix() * localToParentMatrix;
   } else {
     localToWorldMatrix = localToParentMatrix;
+  }
+  for (int i = 0; i < Math::Matrix3::ROW_COUNT; i++) {
+    axis[i] = localToWorldMatrix.GetCol(i).GetVector3().Normalized();
   }
 }
 

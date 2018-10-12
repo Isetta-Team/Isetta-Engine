@@ -45,10 +45,15 @@ Matrix3::Matrix3(Matrix3&& inMatrix) noexcept {
   }
 }
 
-float Matrix3::operator[](int i) const {
-  if (i < 0 || i > ELEMENT_COUNT - 1)
+// float Matrix3::operator[](int i) const {
+//  if (i < 0 || i > ELEMENT_COUNT - 1)
+//    throw std::out_of_range{"Matrix3::[] => Index access out of range."};
+//  return data[i];
+//}
+float* Matrix3::operator[](int i) const {
+  if (i < 0 || i > ROW_COUNT - 1)
     throw std::out_of_range{"Matrix3::[] => Index access out of range."};
-  return data[i];
+  return (float*)(row_col[i]);
 }
 Matrix3& Matrix3::operator=(const Matrix3& inMatrix) {
   for (int i = 0; i < ELEMENT_COUNT; i++) {
@@ -248,7 +253,8 @@ void Matrix3::SetDiagonal(const Vector3& diagonal) {
   SetDiagonal(diagonal.x, diagonal.y, diagonal.z);
 }
 
-void Matrix3::SetDiagonal(const float r0c0, const float r1c1, const float r2c2) {
+void Matrix3::SetDiagonal(const float r0c0, const float r1c1,
+                          const float r2c2) {
   Set(0, 0, r0c0);
   Set(1, 1, r1c1);
   Set(2, 2, r2c2);

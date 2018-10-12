@@ -55,8 +55,6 @@ class ISETTA_API_DECLARE RingBuffer {
   // Also cannot be unsigned because it is used for negative modulus calculation
 };
 
-// Class implementation
-
 template <typename T>
 RingBuffer<T>::RingBuffer() {
   buffer = MemoryManager::NewArrOnFreeList<T>(size);
@@ -210,4 +208,5 @@ T* RingBuffer<T>::ToList() const {
   }
   return list;
 }
+
 }  // namespace Isetta

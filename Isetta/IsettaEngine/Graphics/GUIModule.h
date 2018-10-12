@@ -91,10 +91,5 @@ class GUIModule {
   std::list<Action<>> updateCallbacks{};
 
   friend class EngineLoop;
-
-  // TODO(Jacob) remove
-  // Test variables
-  // bool show_demo_window, show_another_window;
-  // ImVec4 clear_color;
 };
 }  // namespace Isetta

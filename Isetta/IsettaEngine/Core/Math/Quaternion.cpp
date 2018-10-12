@@ -4,9 +4,10 @@
 #include "Core/Math/Quaternion.h"
 
 #include <sstream>
+#include "Core/Math/Matrix3.h"
+#include "Core/Math/Matrix4.h"
 #include "Core/Math/Util.h"
 #include "Core/Math/Vector3.h"
-#include "Matrix3.h"
 
 namespace Isetta::Math {
 
@@ -138,6 +139,12 @@ Vector3 Quaternion::operator*(const Vector3& rhs) const {
   return Vector3{quat.x, quat.y, quat.z};
 }
 
+Quaternion::operator Matrix4() {
+  Matrix4 ret = Matrix4::identity;
+  ret.SetTopLeftMatrix3(GetMatrix3());
+  return ret;
+}
+
 Vector3 Quaternion::GetEulerAngles() const {
   Quaternion q = (*this).Normalized();
 
@@ -266,13 +273,13 @@ Matrix3 Quaternion::GetMatrix3() const {
 Quaternion Quaternion::GetInverse() const { return Inverse(*this); }
 
 float Quaternion::AngleRad(const Quaternion& aQuaternion,
-                        const Quaternion& bQuaternion) {
+                           const Quaternion& bQuaternion) {
   float dot = Dot(aQuaternion, bQuaternion);
   return Util::Acos(Util::Min({Util::Abs(dot), 1.f})) * 2.f;
 }
 
 float Quaternion::AngleDeg(const Quaternion& aQuaternion,
-  const Quaternion& bQuaternion) {
+                           const Quaternion& bQuaternion) {
   return AngleDeg(aQuaternion, bQuaternion) * Util::RAD2DEG;
 }
 

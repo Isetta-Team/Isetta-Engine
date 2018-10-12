@@ -10,6 +10,7 @@
 #include "Graphics/Window.h"
 #include "Input/InputModule.h"
 #include "Networking/NetworkingModule.h"
+#include "Physics/PhysicsModule.h"
 
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
@@ -18,8 +19,8 @@
 #include "Graphics/GUI.h"
 #include "Input/Input.h"
 #include "Input/InputEnum.h"
-#include "Networking/NetworkManager.h"
 #include "Networking/ExampleMessages.h"
+#include "Networking/NetworkManager.h"
 #include "Scene/Level.h"
 
 // TODO(Jacob) Remove, used only for GUIDemo
@@ -49,6 +50,7 @@ EngineLoop::EngineLoop() {
   inputModule = new InputModule{};
   guiModule = new GUIModule{};
   networkingModule = new NetworkingModule{};
+  physicsModule = new PhysicsModule{};
 }
 EngineLoop::~EngineLoop() {
   delete windowModule;
@@ -58,6 +60,7 @@ EngineLoop::~EngineLoop() {
   delete guiModule;
   delete memoryManager;
   delete networkingModule;
+  delete physicsModule;
 }
 
 void EngineLoop::StartUp() {
@@ -71,11 +74,12 @@ void EngineLoop::StartUp() {
   maxSimulationCount = Config::Instance().loopConfig.maxSimCount.GetVal();
 
   memoryManager->StartUp();
-  audioModule->StartUp();
   windowModule->StartUp();
   renderModule->StartUp(windowModule->winHandle);
   inputModule->StartUp(windowModule->winHandle);
   guiModule->StartUp(windowModule->winHandle);
+  physicsModule->StartUp();
+  audioModule->StartUp();
   networkingModule->StartUp();
 
   LevelManager::Instance().LoadStartupLevel();
@@ -121,7 +125,7 @@ void EngineLoop::Update() {
 
 void EngineLoop::FixedUpdate(float deltaTime) {
   networkingModule->Update(deltaTime);
-  // TODO(all) Physics->Update(deltaTime);
+  physicsModule->Update(deltaTime);
 }
 void EngineLoop::VariableUpdate(float deltaTime) {
   inputModule->Update(deltaTime);
@@ -142,6 +146,7 @@ void EngineLoop::ShutDown() {
   NetworkingDemoEnd();
   networkingModule->ShutDown();
   audioModule->ShutDown();
+  physicsModule->ShutDown();
   guiModule->ShutDown();
   inputModule->ShutDown();
   DebugDraw::ShutDown();

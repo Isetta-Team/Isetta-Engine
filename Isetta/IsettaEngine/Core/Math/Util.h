@@ -134,6 +134,7 @@ class ISETTA_API Util {
    * \param number The number parameter
    */
   static float Log10(float number);
+  static float Max(float a, float b);
   /**
    * \brief Return the maximum number from input numbers
    * \param numbers The candidate numbers
@@ -144,6 +145,7 @@ class ISETTA_API Util {
    * \param numbers The candidate numbers
    */
   static int Max(std::initializer_list<int> numbers);
+  static float Min(float a, float b);
   /**
    * \brief Return the minimum number from input numbers
    * \param numbers The candidate numbers
@@ -226,5 +228,7 @@ class ISETTA_API Util {
    * \param radian The input radian
    */
   static float Tan(float radian);
+
+  static bool FuzzyEquals(float, float);
 };
 }  // namespace Isetta::Math

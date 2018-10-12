@@ -3,9 +3,6 @@
  */
 #include "Core/Math/Vector3.h"
 
-#include <cfloat>
-#include <cmath>
-#include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -32,13 +29,13 @@ Vector3::Vector3(const Vector3Int& inIntVector)
 Vector3::Vector3(const Vector2& inVector, float inZ)
     : x{inVector.x}, y{inVector.y}, z{inZ} {}
 
+Vector3::operator class Vector2() { return Vector2(x, y); }
+
 float Vector3::operator[](int i) const {
   if (i < 0 || i > ELEMENT_COUNT - 1)
     throw std::out_of_range{"Vector3::[] => Index access out of range."};
   return xyz[i];
 }
-
-Vector3::operator Vector2() { return Vector2(x, y); }
 
 float Vector3::Magnitude() const { return sqrtf(SqrMagnitude()); }
 float Vector3::SqrMagnitude() const { return x * x + y * y + z * z; }
@@ -59,9 +56,13 @@ std::string Vector3::ToString() const {
   return oss.str();
 }
 
+float Vector3::Max() const { return Util::Max({x, y, z}); }
+float Vector3::Min() const { return Util::Min({x, y, z}); }
+
 bool Vector3::FuzzyEqual(const Vector3& lhs, const Vector3& rhs) {
-  return abs(lhs.x - rhs.x) < FLT_EPSILON && abs(lhs.y - rhs.y) < FLT_EPSILON &&
-         abs(lhs.z - rhs.z) < FLT_EPSILON;
+  return Util::Abs(lhs.x - rhs.x) < Util::EPSILON &&
+         Util::Abs(lhs.y - rhs.y) < Util::EPSILON &&
+         Util::Abs(lhs.z - rhs.z) < Util::EPSILON;
 }
 float Vector3::Dot(const Vector3& lhs, const Vector3& rhs) {
   return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
@@ -83,9 +84,8 @@ Vector3 Vector3::Reflect(const Vector3& inVector, const Vector3& inNormal) {
   Vector3 normal{inNormal.Normalized()};
   return inVector - normal * Dot(inVector, normal) * 2.f;
 }
-Vector3 Vector3::Scale(const Vector3& inVector, const Vector3& scalar) {
-  return Vector3(inVector.x * scalar.x, inVector.y * scalar.y,
-                 inVector.z * scalar.z);
+Vector3 Vector3::Scale(const Vector3& a, const Vector3& b) {
+  return Vector3(a.x * b.x, a.y * b.y, a.z * b.z);
 }
 Vector3 Vector3::Slerp(const Vector3& start, const Vector3& end, float time) {
   float dot = Dot(start, end);

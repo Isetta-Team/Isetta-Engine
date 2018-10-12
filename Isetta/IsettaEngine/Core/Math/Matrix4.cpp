@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <utility>
 #include "Core/Math/Matrix3.h"
+#include "Core/Math/Quaternion.h"
 #include "Core/Math/Util.h"
 #include "Core/Math/Vector3.h"
 #include "Core/Math/Vector4.h"
@@ -67,6 +68,11 @@ Matrix4::Matrix4(float m11, float m12, float m13, float m14, float m21,
   data[15] = m44;
 }
 
+Matrix4::Matrix4(const Math::Quaternion& quat) {
+  SetTopLeftMatrix3(quat.GetMatrix3());
+  row_col[ROW_COUNT][ROW_COUNT] = 1;
+}
+
 Matrix4::Matrix4(const Matrix4& inMatrix) {
   for (int i = 0; i < ELEMENT_COUNT; i++) {
     data[i] = inMatrix.data[i];
@@ -112,10 +118,15 @@ Matrix4::Matrix4(const Vector4& aVector, const Vector4& bVector) {
   data[15] = aVector.w * bVector.w;
 }
 
-float Matrix4::operator[](int i) const {
-  if (i < 0 || i > ELEMENT_COUNT - 1)
+// float Matrix4::operator[](int i) const {
+//  if (i < 0 || i > ELEMENT_COUNT - 1)
+//    throw std::out_of_range{"Matrix4::[] => Index access out of range."};
+//  return data[i];
+//}
+float* Matrix4::operator[](int i) const {
+  if (i < 0 || i > ROW_COUNT - 1)
     throw std::out_of_range{"Matrix4::[] => Index access out of range."};
-  return data[i];
+  return (float*)(row_col[i]);
 }
 bool Matrix4::operator==(const Matrix4& rhs) const {
   for (int i = 0; i < ELEMENT_COUNT; i++) {
@@ -348,35 +359,43 @@ Vector4 Matrix4::GetRow(const int row) const {
 void Matrix4::SetRow(const int row, const Vector4& rowData) {
   if (row < 0 || row > ROW_COUNT)
     throw std::out_of_range{"Matrix4::SetRow => Row index out of range."};
-  for (int i = 0; i < ROW_COUNT; i++) row_col[row][i] = rowData[i];
+  for (int i = 0; i < ROW_COUNT; i++) {
+    row_col[row][i] = rowData[i];
+  }
 }
 
 void Matrix4::SetRow(const int row, const Vector3& rowData,
                      const float rowVal) {
   if (row < 0 || row > ROW_COUNT - 1)
     throw std::out_of_range{"Matrix4::SetRow => Row index out of range."};
-  for (int i = 0; i < Vector3::ELEMENT_COUNT; i++) row_col[row][i] = rowData[i];
+  for (int i = 0; i < Vector3::ELEMENT_COUNT; i++) {
+    row_col[row][i] = rowData[i];
+  }
   row_col[row][ROW_COUNT - 1] = rowVal;
 }
 
 Vector4 Matrix4::GetCol(const int col) const {
   if (col < 0 || col > ROW_COUNT - 1)
     throw std::out_of_range{"Matrix4:GetCol => Column index out of range."};
-  return Vector4(data[col], data[ROW_COUNT + col], data[ROW_COUNT * 2 + col],
-                 data[ROW_COUNT * 3 + col]);
+  return Vector4{row_col[0][col], row_col[1][col], row_col[2][col],
+                 row_col[3][col]};
 }
 
 void Matrix4::SetCol(const int col, const Vector4& colData) {
   if (col < 0 || col > ROW_COUNT)
     throw std::out_of_range{"Matrix4:SetCol => Column index out of range."};
-  for (int i = 0; i < ROW_COUNT; i++) row_col[i][col] = colData[i];
+  for (int i = 0; i < ROW_COUNT; i++) {
+    row_col[i][col] = colData[i];
+  }
 }
 
 void Matrix4::SetCol(const int col, const Vector3& colData,
                      const float colVal) {
   if (col < 0 || col > ROW_COUNT - 1)
     throw std::out_of_range{"Matrix4:SetCol => Column index out of range."};
-  for (int i = 0; i < Vector3::ELEMENT_COUNT; i++) row_col[i][col] = colData[i];
+  for (int i = 0; i < Vector3::ELEMENT_COUNT; i++) {
+    row_col[i][col] = colData[i];
+  }
   row_col[ROW_COUNT - 1][col] = colVal;
 }
 

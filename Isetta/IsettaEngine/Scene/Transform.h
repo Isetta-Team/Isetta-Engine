@@ -55,6 +55,7 @@ class ISETTA_API_DECLARE Transform {
   Math::Vector3 GetForward();
   Math::Vector3 GetUp();
   Math::Vector3 GetLeft();
+  Math::Vector3 GetAxis(int i);
 
   // other
   void LookAt(const Math::Vector3& target,
@@ -120,5 +121,6 @@ class ISETTA_API_DECLARE Transform {
   std::vector<Transform*> children;
 
   static Math::Vector4 sharedV4;
+  Math::Vector3 axis[3];
 };
 }  // namespace Isetta

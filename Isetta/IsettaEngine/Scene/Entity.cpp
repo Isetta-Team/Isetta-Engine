@@ -43,6 +43,15 @@ void Entity::Update() {
   }
 }
 
+void Entity::FixedUpdate() {
+  for (auto comp : components) {
+    if (comp->GetActive() &&
+        comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
+      comp->FixedUpdate();
+    }
+  }
+}
+
 void Entity::LastUpdate() {
   for (auto comp : components) {
     if (comp->GetActive() &&
