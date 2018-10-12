@@ -17,7 +17,6 @@ Math::Vector4 Transform::sharedV4{};
 
 Transform::Transform(Entity* entity) : entity(entity) {}
 
-// TODO(YIDI): Test this
 Math::Vector3 Transform::GetWorldPos() {
   return GetLocalToWorldMatrix().GetCol(3).GetVector3();
 }
@@ -109,12 +108,23 @@ void Transform::RotateWorld(const Math::Vector3& axis, const float angle) {
   SetWorldRot(Math::Quaternion::FromAngleAxis(axis, angle) * GetWorldRot());
 }
 
+// passed
 void Transform::RotateLocal(const Math::Vector3& eulerAngles) {
-  SetLocalRot(Math::Quaternion::FromEulerAngles(eulerAngles) * localRot);
+  SetLocalRot(Math::Quaternion::FromEulerAngles(
+                  GetLeft() * eulerAngles.x + 
+                  GetUp() * eulerAngles.y + 
+                  GetForward() * eulerAngles.z) *
+              localRot);
 }
 
+// passed
 void Transform::RotateLocal(const Math::Vector3& axis, const float angle) {
   SetLocalRot(Math::Quaternion::FromAngleAxis(axis, angle) * localRot);
+}
+
+// passed test
+void Transform::RotateLocal(const Math::Quaternion& rotation) {
+  SetLocalRot(rotation * localRot);
 }
 
 Math::Vector3 Transform::GetWorldScale() const {
@@ -147,6 +157,8 @@ void Transform::SetParent(Transform* transform) {
   }
   parent = transform;
   SetDirty();
+
+  // TODO(YIDI): Keep world transform and rotation and scale
 }
 
 Math::Vector3 Transform::GetForward() {
@@ -258,12 +270,13 @@ void Transform::Print() {
 
 void Transform::DrawGUI() {
   std::string content =
-      GetName() + "\n\n" + "World Position: " + GetWorldPos().ToString() + "\n" +
-      "Local Position: " + GetLocalPos().ToString() + "\n" +
+      GetName() + "\n\n" + "World Position: " + GetWorldPos().ToString() +
+      "\n" + "Local Position: " + GetLocalPos().ToString() + "\n" +
       "World Rotation: " + GetWorldRot().GetEulerAngles().ToString() + "\n" +
       "Local Scale: " + GetLocalScale().ToString() + "\n";
   GUI::Text(RectTransform{Math::Rect{-100, 100, 300, 100}, GUI::Pivot::TopRight,
-                          GUI::Pivot::TopRight}, content);
+                          GUI::Pivot::TopRight},
+            content);
 }
 
 // TODO(YIDI): test this

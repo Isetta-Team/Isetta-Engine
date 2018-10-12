@@ -40,6 +40,7 @@ class ISETTA_API Transform {
   void RotateWorld(const Math::Vector3& axis, float angle);
   void RotateLocal(const Math::Vector3& eulerAngles);
   void RotateLocal(const Math::Vector3& axis, float angle);
+  void RotateLocal(const Math::Quaternion& rotation);
 
   // scale
   Math::Vector3 GetWorldScale() const;
