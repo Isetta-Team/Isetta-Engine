@@ -162,6 +162,9 @@
     <ClCompile Include="Custom\PlayerController.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
+    <ClCompile Include="Custom\InEngineTestLevel.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -411,6 +414,9 @@
     </ClInclude>
     <ClInclude Include="Core\Time\Time.h">
       <Filter>Core\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\InEngineTestLevel.h">
+      <Filter>Custom</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

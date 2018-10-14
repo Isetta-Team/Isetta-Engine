@@ -158,6 +158,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Time\StopWatch.cpp" />
     <ClCompile Include="Custom\AxisDrawer.cpp" />
     <ClCompile Include="Custom\FlyController.cpp" />
+    <ClCompile Include="Custom\InEngineTestLevel.cpp" />
     <ClCompile Include="Custom\PlayerController.cpp" />
     <ClCompile Include="EngineLoop.cpp" />
     <ClCompile Include="Graphics\AnimationComponent.cpp" />
@@ -235,6 +236,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Time\Time.h" />
     <ClInclude Include="Custom\AxisDrawer.h" />
     <ClInclude Include="Custom\FlyController.h" />
+    <ClInclude Include="Custom\InEngineTestLevel.h" />
     <ClInclude Include="Custom\IsettaCore.h" />
     <ClInclude Include="Custom\PlayerController.h" />
     <ClInclude Include="EngineLoop.h" />
