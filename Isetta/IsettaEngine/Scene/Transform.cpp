@@ -203,12 +203,15 @@ Math::Vector3 Transform::GetLeft() {
 
 void Transform::LookAt(const Math::Vector3& target,
                        const Math::Vector3& worldUp) {
-  Math::Vector3 forwardDir = target - GetLocalPos();
+  Math::Vector3 forwardDir = (target - GetLocalPos()).Normalized();
   Math::Vector3 rightDir =
       Math::Vector3::Cross(forwardDir, worldUp).Normalized();
+  // upDir is guaranteed to be of unit length
+  // cause |upDir| = |forwardDir| * |rightDir| * sin();
   Math::Vector3 upDir = Math::Vector3::Cross(forwardDir, rightDir);
-
-  SetWorldRot(Math::Quaternion::FromLookRotation(forwardDir, upDir));
+  localToWorldMatrix.SetCol(0, rightDir, 0);
+  localToWorldMatrix.SetCol(1, upDir, 0);
+  localToWorldMatrix.SetCol(2, forwardDir, 0);
 }
 
 void Transform::LookAt(Transform& target, const Math::Vector3& worldUp) {
@@ -367,6 +370,7 @@ void Transform::RemoveChild(Transform* transform) {
 }
 
 void Transform::SetDirty() {
+  // TODO(YIDI): Don't need to traverse all children, if one child is dirty, all children all also dirty
   ForSelfAndDescendents([](Transform* trans) {
     trans->isDirty = true;
     trans->isWorldToLocalDirty = true;
