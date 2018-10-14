@@ -189,6 +189,9 @@
     <ClCompile Include="Custom\KeyTransform.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
+    <ClCompile Include="Physics\Plane.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -470,6 +473,9 @@
     </ClInclude>
     <ClInclude Include="Custom\KeyTransform.h">
       <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Plane.h">
+      <Filter>Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -197,6 +197,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Physics\CapsuleCollider.cpp" />
     <ClCompile Include="Physics\Collider.cpp" />
     <ClCompile Include="Physics\PhysicsModule.cpp" />
+    <ClCompile Include="Physics\Plane.cpp" />
     <ClCompile Include="Physics\SphereCollider.cpp" />
     <ClCompile Include="Scene\Component.cpp" />
     <ClCompile Include="Scene\Entity.cpp" />
@@ -274,6 +275,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Physics\CapsuleCollider.h" />
     <ClInclude Include="Physics\Collider.h" />
     <ClInclude Include="Physics\PhysicsModule.h" />
+    <ClInclude Include="Physics\Plane.h" />
     <ClInclude Include="Physics\Ray.h" />
     <ClInclude Include="Physics\SphereCollider.h" />
     <ClInclude Include="Scene\Component.h" />
