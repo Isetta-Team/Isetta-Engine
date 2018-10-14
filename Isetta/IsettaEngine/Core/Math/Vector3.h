@@ -2,11 +2,11 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-
 #include <string>
+#include "ISETTA_API.h"
 
 namespace Isetta::Math {
-class Vector3 {
+class ISETTA_API_DECLARE Vector3 {
  public:
   // Constants
   static const Vector3 zero;

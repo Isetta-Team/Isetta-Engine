@@ -3,9 +3,10 @@
  */
 #pragma once
 #include <string>
+#include "ISETTA_API.h"
 
 namespace Isetta::Math {
-class Quaternion {
+class ISETTA_API_DECLARE Quaternion {
  public:
   static const Quaternion identity;
 
@@ -41,7 +42,7 @@ class Quaternion {
    * \param scalar The angle
    */
   Quaternion(class Vector3 vector, float scalar);
-  static Quaternion FromAngleAxis(const class Vector3& axis, float angle);
+  static Quaternion FromAngleAxis(const class Vector3& axis, float angleDeg);
   static Quaternion FromLookRotation(const class Vector3& forwardDirection,
                                      const class Vector3& upDirection);
 

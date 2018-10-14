@@ -6,9 +6,4 @@
 
 namespace Isetta {
 
-void InitExampleMessages() {
-  RPC_MESSAGE_INIT(HandleMessage, "HNDL");
-  RPC_MESSAGE_INIT(StringMessage, "STRN");
-}
-
 }

@@ -99,8 +99,8 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;$(SolutionDir)Isetta;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(SolutionDir)External\imgui\examples\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;$(SolutionDir)IsettaEngine;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(SolutionDir)External\imgui\examples\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions);IN_TEST</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -108,12 +108,16 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(SolutionDir)External\FMOD\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(SolutionDir)\IsettaEngine\$(Platform)\$(ConfigurationName) DLL\;$(SolutionDir)External\FMOD\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\$(Configuration)*\*.lib;$(SolutionDir)External\GLFW\Build\src\$(ConfigurationName)\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\imgui\$(Platform)\$(Configuration)\imgui.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>
       </AdditionalOptions>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -154,8 +158,8 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;$(SolutionDir)Isetta;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(SolutionDir)External\imgui\examples\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;$(SolutionDir)IsettaEngine;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(SolutionDir)External\imgui\examples\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions);IN_TEST</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -198,8 +202,11 @@
     <ClInclude Include="..\IsettaEngine\Core\Memory\TemplatePoolAllocator.h" />
     <ClInclude Include="..\IsettaEngine\Core\Time\Clock.h" />
     <ClInclude Include="..\IsettaEngine\Core\Time\StopWatch.h" />
+    <ClInclude Include="..\IsettaEngine\Custom\AxisDrawer.h" />
     <ClInclude Include="..\IsettaEngine\Custom\ExampleComponent.h" />
     <ClInclude Include="..\IsettaEngine\Custom\ExampleLevel.h" />
+    <ClInclude Include="..\IsettaEngine\Custom\FlyController.h" />
+    <ClInclude Include="..\IsettaEngine\Custom\PlayerController.h" />
     <ClInclude Include="..\IsettaEngine\EngineLoop.h" />
     <ClInclude Include="..\IsettaEngine\Graphics\AnimationComponent.h" />
     <ClInclude Include="..\IsettaEngine\Graphics\CameraComponent.h" />
@@ -215,6 +222,8 @@
     <ClInclude Include="..\IsettaEngine\Input\Input.h" />
     <ClInclude Include="..\IsettaEngine\Input\InputEnum.h" />
     <ClInclude Include="..\IsettaEngine\Input\InputModule.h" />
+    <ClInclude Include="..\IsettaEngine\ISETTA_API.h" />
+    <ClInclude Include="..\IsettaEngine\Networking\ExampleMessages.h" />
     <ClInclude Include="..\IsettaEngine\Networking\Messages.h" />
     <ClInclude Include="..\IsettaEngine\Networking\NetworkingModule.h" />
     <ClInclude Include="..\IsettaEngine\Networking\NetworkManager.h" />
@@ -256,8 +265,11 @@
     <ClCompile Include="..\IsettaEngine\Core\Memory\StackAllocator.cpp" />
     <ClCompile Include="..\IsettaEngine\Core\Time\Clock.cpp" />
     <ClCompile Include="..\IsettaEngine\Core\Time\StopWatch.cpp" />
+    <ClCompile Include="..\IsettaEngine\Custom\AxisDrawer.cpp" />
     <ClCompile Include="..\IsettaEngine\Custom\ExampleComponent.cpp" />
     <ClCompile Include="..\IsettaEngine\Custom\ExampleLevel.cpp" />
+    <ClCompile Include="..\IsettaEngine\Custom\FlyController.cpp" />
+    <ClCompile Include="..\IsettaEngine\Custom\PlayerController.cpp" />
     <ClCompile Include="..\IsettaEngine\EngineLoop.cpp" />
     <ClCompile Include="..\IsettaEngine\Graphics\AnimationComponent.cpp" />
     <ClCompile Include="..\IsettaEngine\Graphics\CameraComponent.cpp" />
@@ -267,7 +279,6 @@
     <ClCompile Include="..\IsettaEngine\Graphics\LightComponent.cpp" />
     <ClCompile Include="..\IsettaEngine\Graphics\MeshComponent.cpp" />
     <ClCompile Include="..\IsettaEngine\Graphics\RenderModule.cpp" />
-    <ClCompile Include="..\IsettaEngine\Graphics\RenderNode.cpp" />
     <ClCompile Include="..\IsettaEngine\Graphics\Window.cpp" />
     <ClCompile Include="..\IsettaEngine\Input\Input.cpp" />
     <ClCompile Include="..\IsettaEngine\Input\InputModule.cpp" />
@@ -287,12 +298,6 @@
     <ClCompile Include="Core\Math\Vector3IntTest.cpp" />
     <ClCompile Include="Core\Math\Vector3Test.cpp" />
     <ClCompile Include="Core\Math\Vector4Test.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="TestInitialization.cpp" />
   </ItemGroup>
   <ItemGroup>

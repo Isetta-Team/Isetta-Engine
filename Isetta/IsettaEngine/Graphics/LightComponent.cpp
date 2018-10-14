@@ -2,24 +2,25 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Graphics/LightComponent.h"
-#include <Horde3DUtils.h>
+#include <utility>
 #include "Core/Config/Config.h"
-#include "Util.h"
 #include "Scene/Transform.h"
+#include "Util.h"
 
 namespace Isetta {
 
 RenderModule* LightComponent::renderModule{nullptr};
 
-LightComponent::LightComponent(std::string resourceName, std::string lightName)
-    : name{lightName} {
+LightComponent::LightComponent(const std::string& resourceName,
+                               std::string lightName)
+    : name{std::move(lightName)} {
   ASSERT(renderModule != nullptr);
   renderModule->lightComponents.push_back(this);
 
   renderResource = LoadResourceFromFile(resourceName);
 }
 
-H3DRes LightComponent::LoadResourceFromFile(std::string resourceName) {
+H3DRes LightComponent::LoadResourceFromFile(const std::string& resourceName) {
   H3DRes lightMatRes =
       h3dAddResource(H3DResTypes::Material, resourceName.c_str(), 0);
 
@@ -38,8 +39,7 @@ void LightComponent::OnEnable() {
 
 void LightComponent::OnDisable() { h3dRemoveNode(renderNode); }
 
-void LightComponent::UpdateTransform() {
-  Transform transform = owner->GetTransform();
-  Transform::SetH3DNodeTransform(renderNode, transform);
+void LightComponent::UpdateH3DTransform() const {
+  Transform::SetH3DNodeTransform(renderNode, GetTransform());
 }
 }  // namespace Isetta

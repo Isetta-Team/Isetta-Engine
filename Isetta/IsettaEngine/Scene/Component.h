@@ -3,9 +3,10 @@
  */
 #pragma once
 #include <bitset>
+#include "ISETTA_API.h"
 
 namespace Isetta {
-class Component {
+class ISETTA_API Component {
   friend class Entity;
 
   std::bitset<4> attributes;

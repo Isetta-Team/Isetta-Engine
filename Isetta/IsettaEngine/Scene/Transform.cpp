@@ -4,9 +4,14 @@
 #include "Scene/Transform.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Math/Matrix3.h"
-#include "Graphics/RenderNode.h"
 #include "Scene/Entity.h"
 #include "Util.h"
+#include "Scene/Component.h"
+#include "Core/Debug/DebugDraw.h"
+#if _DEBUG
+#include "Graphics/GUI.h"
+#include "Graphics/RectTransform.h"
+#endif
 
 namespace Isetta {
 
@@ -14,7 +19,6 @@ Math::Vector4 Transform::sharedV4{};
 
 Transform::Transform(Entity* entity) : entity(entity) {}
 
-// TODO(YIDI): Test this
 Math::Vector3 Transform::GetWorldPos() {
   return GetLocalToWorldMatrix().GetCol(3).GetVector3();
 }
@@ -30,7 +34,7 @@ void Transform::SetWorldPos(const Math::Vector3& newWorldPos) {
   } else {
     sharedV4.Set(newWorldPos, 1);
     localPos =
-        (parent->GetLocalToWorldMatrix().Inverse() * sharedV4).GetVector3();
+        (parent->GetWorldToLocalMatrix() * sharedV4).GetVector3();
   }
 }
 
@@ -98,20 +102,53 @@ void Transform::SetLocalRot(const Math::Vector3& localEulers) {
   SetLocalRot(Math::Quaternion::FromEulerAngles(localEulers));
 }
 
+// passed
 void Transform::RotateWorld(const Math::Vector3& eulerAngles) {
   SetWorldRot(Math::Quaternion::FromEulerAngles(eulerAngles) * GetWorldRot());
 }
 
+// passed
 void Transform::RotateWorld(const Math::Vector3& axis, const float angle) {
   SetWorldRot(Math::Quaternion::FromAngleAxis(axis, angle) * GetWorldRot());
 }
 
+// passed
 void Transform::RotateLocal(const Math::Vector3& eulerAngles) {
-  SetLocalRot(Math::Quaternion::FromEulerAngles(eulerAngles) * localRot);
+  // first, get the basis vectors in local space
+  bool hasParent = GetParent() != nullptr;
+  Math::Vector3 left, up, forward;
+  if (hasParent) {
+    Transform* parent = GetParent();
+    left = parent->LocalDirFromWorldDir(GetLeft());
+    up = parent->LocalDirFromWorldDir(GetUp());
+    forward = parent->LocalDirFromWorldDir(GetForward());
+  } else {
+    left = GetLeft();
+    up = GetUp();
+    forward = GetForward();
+  }
+  // then, map euler angles and basis
+  // i.e. Transform the euler angles to local space
+  SetLocalRot(Math::Quaternion::FromEulerAngles(left * eulerAngles.x +
+                                                up * eulerAngles.y +
+                                                forward * eulerAngles.z) *
+              localRot);
 }
 
-void Transform::RotateLocal(const Math::Vector3& axis, const float angle) {
-  SetLocalRot(Math::Quaternion::FromAngleAxis(axis, angle) * localRot);
+// passed
+void Transform::RotateLocal(const Math::Vector3& axisWorldSpace,
+                            const float angle) {
+  // transform the axis from world space to the space that
+  // this object sits in, so it can understand the axis correctly
+  Math::Vector3 localAxis =
+      GetParent() != nullptr ? GetParent()->LocalDirFromWorldDir(axisWorldSpace)
+                             : axisWorldSpace;
+  SetLocalRot(Math::Quaternion::FromAngleAxis(localAxis, angle) * localRot);
+}
+
+// passed
+void Transform::RotateLocal(const Math::Quaternion& rotation) {
+  SetLocalRot(rotation * localRot);
 }
 
 Math::Vector3 Transform::GetWorldScale() const {
@@ -135,6 +172,8 @@ void Transform::SetParent(Transform* transform) {
               GetName().c_str(), transform->GetName().c_str());
     return;
   }
+  Math::Vector3 originalPos = GetWorldPos();
+  Math::Quaternion originalRot = GetWorldRot();
 
   if (parent != nullptr) {
     parent->RemoveChild(this);
@@ -143,7 +182,11 @@ void Transform::SetParent(Transform* transform) {
     transform->AddChild(this);
   }
   parent = transform;
+  SetWorldPos(originalPos);
+  SetWorldRot(originalRot);
   SetDirty();
+
+  // TODO(YIDI): Keep world transform and rotation and scale
 }
 
 Math::Vector3 Transform::GetForward() {
@@ -165,10 +208,13 @@ void Transform::LookAt(const Math::Vector3& target,
       Math::Vector3::Cross(forwardDir, worldUp).Normalized();
   Math::Vector3 upDir = Math::Vector3::Cross(forwardDir, rightDir);
 
-  SetLocalRot(Math::Quaternion::FromLookRotation(forwardDir, upDir));
+  SetWorldRot(Math::Quaternion::FromLookRotation(forwardDir, upDir));
 }
 
-// TODO(YIDI): Test this
+void Transform::LookAt(Transform& target, const Math::Vector3& worldUp) {
+  LookAt(target.GetWorldPos(), worldUp);
+}
+
 Transform* Transform::GetChild(const U16 childIndex) {
   if (childIndex >= GetChildCount()) {
     throw std::exception{
@@ -188,7 +234,7 @@ Math::Vector3 Transform::WorldPosFromLocalPos(const Math::Vector3& localPoint) {
 
 Math::Vector3 Transform::LocalPosFromWorldPos(const Math::Vector3& worldPoint) {
   sharedV4.Set(worldPoint, 1);
-  return (GetLocalToWorldMatrix().Inverse() * sharedV4).GetVector3();
+  return (GetWorldToLocalMatrix() * sharedV4).GetVector3();
 }
 
 Math::Vector3 Transform::WorldDirFromLocalDir(
@@ -200,73 +246,90 @@ Math::Vector3 Transform::WorldDirFromLocalDir(
 Math::Vector3 Transform::LocalDirFromWorldDir(
     const Math::Vector3& worldDirection) {
   sharedV4.Set(worldDirection, 0);
-  return (GetLocalToWorldMatrix().Inverse() * sharedV4).GetVector3();
+  return (worldToLocalMatrix * sharedV4).GetVector3();
 }
 
-// TODO(YIDI): Test this
-void Transform::ForChildren(Action<Transform*> action) {
+void Transform::ForChildren(const Action<Transform*>& action) {
   for (auto& child : children) {
     action(child);
   }
 }
 
-// TODO(YIDI): test this
-void Transform::ForDescendents(Action<Transform*> action) {
+void Transform::ForDescendents(const Action<Transform*>& action) {
   for (auto& child : children) {
     action(child);
     child->ForDescendents(action);
   }
 }
 
-void Transform::ForSelfAndDescendents(Action<Transform*> action) {
+void Transform::ForSelfAndDescendents(const Action<Transform*>& action) {
   action(this);
   ForDescendents(action);
 }
 
-// TODO(YIDI): test this
 void Transform::SetWorldTransform(const Math::Vector3& inPosition,
                                   const Math::Vector3& inEulerAngles,
                                   const Math::Vector3& inScale) {
   SetWorldPos(inPosition);
   SetWorldRot(inEulerAngles);
-  SetLocalScale(inScale);  // TODO(YIDI): fix this ,
+  SetLocalScale(inScale);
 }
 
-// TODO(YIDI): test this
 void Transform::SetH3DNodeTransform(const H3DNode node, Transform& transform) {
-  Math::Vector3 worldPos = transform.GetWorldPos();
-  Math::Vector3 worldEuler = transform.GetWorldEulerAngles();
-  Math::Vector3 worldScale = transform.GetWorldScale();
-
-  h3dSetNodeTransform(node, worldPos.x, worldPos.y, worldPos.z, worldEuler.x,
-                      worldEuler.y, worldEuler.z, worldScale.x, worldScale.y,
-                      worldScale.z);
+  h3dSetNodeTransMat(node, transform.GetLocalToWorldMatrix().Transpose().data);
 }
 
-void Transform::Print() {
-  LOG_INFO(Debug::Channel::Graphics,
-           "\nName [%s]"
-           "\nWorldPos %s"
-           "\nLocalPos %s"
-           "\nWorldRot %s"
-           "\nLocalRot %s"
-           "\nLocalQuat %s"
-           "\nWorldScale %s",
-           GetName().c_str(), GetWorldPos().ToString().c_str(),
-           GetLocalPos().ToString().c_str(),
-           GetWorldRot().GetEulerAngles().ToString().c_str(),
-           GetLocalRot().GetEulerAngles().ToString().c_str(),
-           GetLocalRot().ToString().c_str(),
-           GetWorldScale().ToString().c_str());
+void Transform::DrawGUI() {
+  std::string parentName = parent == nullptr ? "null" : parent->GetName();
+  std::string content =
+      GetName() + "\n\n" + "World Position: " + GetWorldPos().ToString() +
+      "\n" + "Local Position: " + GetLocalPos().ToString() + "\n" +
+      "World Rotation: " + GetWorldEulerAngles().ToString() + "\n" +
+      "Local Rotation: " + GetLocalEulerAngles().ToString() + "\n" +
+      "Local Scale: " + GetLocalScale().ToString() + "\n" +
+      "Parent: " + parentName;
+  GUI::Text(RectTransform{Math::Rect{-200, 200, 300, 100}, GUI::Pivot::TopRight,
+                          GUI::Pivot::TopRight},
+            content);
+  if (GUI::Button(RectTransform{Math::Rect{-200, 330, 300, 30},
+                                GUI::Pivot::TopRight, GUI::Pivot::TopRight},
+                  "Reset")) {
+    SetLocalRot(Math::Quaternion::identity);
+    SetLocalPos(Math::Vector3::zero);
+    SetLocalScale(Math::Vector3::one);
+  }
+  
+  float height = 360;
+  float padding = 15;
+  GUI::Text(RectTransform{Math::Rect{-200, height, 300, 100},
+                          GUI::Pivot::TopRight, GUI::Pivot::TopRight},
+            "Components", GUI::TextStyle{Color::white});
+  height += padding;
+  for (const auto& component : entity->GetComponents()) {
+    Component& comp = *component;
+    GUI::Text(RectTransform{Math::Rect{-200, height, 300, 100},
+                            GUI::Pivot::TopRight, GUI::Pivot::TopRight},
+              typeid(comp).name());
+    height += padding;
+  }
+  DebugDraw::Axis(GetLocalToWorldMatrix());
+  DebugDraw::AxisSphere(GetLocalToWorldMatrix());
 }
 
-// TODO(YIDI): test this
 const Math::Matrix4& Transform::GetLocalToWorldMatrix() {
-  if (isMatrixDirty) {
+  if (isDirty) {
     RecalculateLocalToWorldMatrix();
-    isMatrixDirty = false;
+    isDirty = false;
   }
   return localToWorldMatrix;
+}
+
+const Math::Matrix4& Transform::GetWorldToLocalMatrix() {
+  if (isWorldToLocalDirty) {
+    worldToLocalMatrix = GetLocalToWorldMatrix().Inverse();
+    isWorldToLocalDirty = false;
+  }
+  return worldToLocalMatrix;
 }
 
 void Transform::RecalculateLocalToWorldMatrix() {
@@ -285,13 +348,11 @@ void Transform::RecalculateLocalToWorldMatrix() {
   }
 }
 
-// TODO(YIDI): Test this
 void Transform::AddChild(Transform* transform) {
   // duplicate child check is in SetParent
   children.push_back(transform);
 }
 
-// TODO(YIDI): test this
 void Transform::RemoveChild(Transform* transform) {
   for (auto it = children.begin(); it != children.end(); ++it) {
     if (*it == transform) {
@@ -306,11 +367,10 @@ void Transform::RemoveChild(Transform* transform) {
 }
 
 void Transform::SetDirty() {
-  ForSelfAndDescendents([](Transform* trans) { trans->isMatrixDirty = true; });
+  ForSelfAndDescendents([](Transform* trans) {
+    trans->isDirty = true;
+    trans->isWorldToLocalDirty = true;
+  });
 }
-
-#if _DEBUG
-// TODO(YIDI): test this
-#endif
 
 }  // namespace Isetta

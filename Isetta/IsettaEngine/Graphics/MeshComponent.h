@@ -7,19 +7,17 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-class MeshComponent : public Component {
-  H3DNode renderNode;
-  H3DRes renderResource;
+class ISETTA_API_DECLARE MeshComponent : public Component {
+  H3DNode renderNode{NULL};
+  H3DRes renderResource{NULL};
 
-  explicit MeshComponent(std::string resourceName);
+  explicit MeshComponent(const std::string& resourceName);
   ~MeshComponent();
 
-  void UpdateTransform();
-
- public:
+  void UpdateTransform() const;
 
  protected:
-  H3DRes LoadResourceFromFile(std::string resourceName) const;
+  static H3DRes LoadResourceFromFile(const std::string& resourceName);
 
   void OnEnable() override;
   void OnDisable() override;

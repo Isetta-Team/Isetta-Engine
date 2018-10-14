@@ -135,6 +135,4 @@ void Entity::SetTransform(const Math::Vector3& worldPos,
   // TODO(YIDI): Test this
   transform.SetWorldTransform(worldPos, worldEulerAngles, localScale);
 }
-
-Transform& Entity::GetTransform() { return transform; }
 }  // namespace Isetta

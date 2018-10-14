@@ -108,9 +108,6 @@
     <ClCompile Include="Graphics\RenderModule.cpp">
       <Filter>Graphics\Render</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\RenderNode.cpp">
-      <Filter>Graphics\Render</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\GUI.cpp">
       <Filter>Graphics\GUI</Filter>
     </ClCompile>
@@ -170,9 +167,6 @@
     </ClCompile>
     <ClCompile Include="Custom\PlayerController.cpp">
       <Filter>Custom</Filter>
-    </ClCompile>
-    <ClCompile Include="Networking\ExampleMessages.cpp">
-      <Filter>Networking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -357,9 +351,6 @@
     <ClInclude Include="Graphics\RenderModule.h">
       <Filter>Graphics\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\RenderNode.h">
-      <Filter>Graphics\Render</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\GUI.h">
       <Filter>Graphics\GUI</Filter>
     </ClInclude>
@@ -417,6 +408,7 @@
     <ClInclude Include="Core\Filesystem.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="ISETTA_API.h" />
     <ClInclude Include="Custom\AxisDrawer.h">
       <Filter>Custom</Filter>
     </ClInclude>
@@ -425,6 +417,12 @@
     </ClInclude>
     <ClInclude Include="Networking\ExampleMessages.h">
       <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\IsettaCore.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Time\Time.h">
+      <Filter>Core\Time</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

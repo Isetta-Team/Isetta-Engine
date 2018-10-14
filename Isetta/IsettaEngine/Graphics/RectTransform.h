@@ -12,7 +12,7 @@ class Vector2;
 }  // namespace Isetta::Math
 
 namespace Isetta {
-struct RectTransform {
+ISETTA_API struct RectTransform {
   Math::Rect rect;
   GUI::Pivot anchor = GUI::Pivot::TopLeft;
   GUI::Pivot pivot = GUI::Pivot::TopLeft;

@@ -12,7 +12,7 @@
 
 namespace Isetta {
 // TODO(YIDI): Alloc all allocators on a big stack
-class MemoryManager {
+class ISETTA_API_DECLARE MemoryManager {
  public:
   struct MemoryConfig {
     CVar<Size> lsrAndLevelAllocatorSize{"LSR_and_level_allocator_size", 10_MB};
@@ -151,8 +151,6 @@ class MemoryManager {
   void ClearLevelMemory();
 
   static MemoryManager* GetInstance();
-  /// only for internal test
-  void RegisterTests();
   /// only for internal test
   static void DefragmentTest();
 

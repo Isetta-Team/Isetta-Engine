@@ -2,6 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Custom/ExampleLevel.h"
+#include "AxisDrawer.h"
 #include "Core/Color.h"
 #include "Core/Config/Config.h"
 #include "Core/Math/Vector3.h"
@@ -11,9 +12,8 @@
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
 #include "Graphics/MeshComponent.h"
-#include "Scene/Entity.h"
-#include "AxisDrawer.h"
 #include "PlayerController.h"
+#include "Scene/Entity.h"
 
 namespace Isetta {
 
@@ -22,8 +22,7 @@ using CameraProperty = CameraComponent::Property;
 
 void ExampleLevel::LoadLevel() {
   Entity* man{AddEntity("PushAnim")};
-  man->SetTransform(Math::Vector3{0, 0, 0}, Math::Vector3{0, 0, 0});
-  man->AddComponent<AxisDrawer>();
+  man->SetTransform(Math::Vector3{0, 0, 0}, Math::Vector3{0, 90, 0});
   man->AddComponent<PlayerController>();
   MeshComponent* pushMesh =
       man->AddComponent<MeshComponent>(true, "push/Pushing.scene.xml");
@@ -59,6 +58,5 @@ void ExampleLevel::LoadLevel() {
 
   Entity* customEntity{AddEntity("custom")};
   customEntity->AddComponent<ExampleComponent>();
-  customEntity->AddComponent<AxisDrawer>();
 }
 }  // namespace Isetta

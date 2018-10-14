@@ -3,9 +3,10 @@
  */
 #pragma once
 #include <initializer_list>
+#include "ISETTA_API.h"
 
 namespace Isetta::Math {
-class Util {
+class ISETTA_API_DECLARE Util {
  public:
   static const float PI;
   static const float PI_HALF;

@@ -4,13 +4,12 @@
 #pragma once
 
 #include <GLFW/glfw3.h>
-#include <functional>
 #include "Core/IsettaAlias.h"
 #include "Core/Math/Vector2.h"
 #include "Input/InputEnum.h"
 
 namespace Isetta {
-class Input {
+class ISETTA_API_DECLARE Input {
  public:
   /**
    * \brief Register a callback function to window close event

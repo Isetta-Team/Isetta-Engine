@@ -11,7 +11,7 @@
 #include "Util.h"
 
 namespace Isetta {
-class Entity {
+class ISETTA_API Entity {
   enum class EntityAttributes { IS_ACTIVE, NEED_DESTROY, IS_TRANSFORM_DIRTY };
 
   friend class RenderModule;
@@ -59,7 +59,11 @@ class Entity {
   void SetTransform(const Math::Vector3& worldPos = Math::Vector3::zero,
                     const Math::Vector3& worldEulerAngles = Math::Vector3::zero,
                     const Math::Vector3& localScale = Math::Vector3::one);
-  Transform& GetTransform();
+  Transform& GetTransform() { return transform; }
+#if _DEBUG
+  // TODO(YIDI): Delete this! This is used for in game editor
+  std::vector<class Component*> GetComponents() { return components; }
+#endif
 };
 
 template <typename T, typename... Args>

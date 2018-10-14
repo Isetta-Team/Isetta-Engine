@@ -11,12 +11,13 @@ class Vector4;
 }
 
 namespace Isetta {
-class Color {
+class ISETTA_API_DECLARE Color {
  public:
   /// RGB color black (0,0,0,1)
   static const Color black;
   /// RGB color blue (0,0,1,1)
   static const Color blue;
+  static const Color brown;
   /// RGB color clear (0,0,0,0)
   static const Color clear;
   /// RGB color cyan (0,1,1,1)

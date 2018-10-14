@@ -100,6 +100,9 @@ RPC_SERVER_FUNC {
 
 RPC_MESSAGE_FINISH
 
-void InitExampleMessages();
+inline void InitExampleMessages() {
+  RPC_MESSAGE_INIT(HandleMessage, "HNDL");
+  RPC_MESSAGE_INIT(StringMessage, "STRN");
+}
 
 }
