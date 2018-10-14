@@ -2,13 +2,31 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Level\ExampleLevel.cpp" />
+    <ClCompile Include="Level\ExampleLevel.cpp">
+      <Filter>Level</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\ExampleComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
     <None Include="user.cfg" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Level\ExampleLevel.h" />
+    <Filter Include="Level">
+      <UniqueIdentifier>{ba77bd2b-051f-402a-a5da-d8af8acaacbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{3f2ed55d-bb73-41ad-a2e2-f15247894eff}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Level\ExampleLevel.h">
+      <Filter>Level</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\ExampleComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -19,9 +19,9 @@ class ISETTA_API Level {
 protected:
   std::list<class Entity*> entities;
 public:
-  virtual ~Level() {}
-  class Entity* GetEntityByName(std::string);
-  class std::list<class Entity*> GetEntitiesByName(std::string);
+  virtual ~Level() = default;
+  class Entity* GetEntityByName(const std::string&);
+  class std::list<class Entity*> GetEntitiesByName(const std::string&);
 
   virtual void LoadLevel() {}
   virtual void UnloadLevel();

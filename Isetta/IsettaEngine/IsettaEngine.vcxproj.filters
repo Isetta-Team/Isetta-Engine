@@ -150,9 +150,6 @@
     <ClCompile Include="Scene\LevelManager.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Custom\ExampleComponent.cpp">
-      <Filter>Custom</Filter>
-    </ClCompile>
     <ClCompile Include="Custom\FlyController.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
@@ -392,9 +389,6 @@
     </ClInclude>
     <ClInclude Include="Scene\LevelManager.h">
       <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Custom\ExampleComponent.h">
-      <Filter>Custom</Filter>
     </ClInclude>
     <ClInclude Include="Custom\FlyController.h">
       <Filter>Custom</Filter>

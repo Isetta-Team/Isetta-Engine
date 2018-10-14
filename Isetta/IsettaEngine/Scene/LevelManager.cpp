@@ -23,7 +23,7 @@ void LevelManager::LoadStartupLevel() {
 }
 
 void LevelManager::LoadLevel() {
-   currentLevel = levels.at(SID(currentLevelName.c_str()))();
+  currentLevel = levels.at(SID(currentLevelName.c_str()))();
   if (currentLevel != nullptr) {
     currentLevel->LoadLevel();
   }

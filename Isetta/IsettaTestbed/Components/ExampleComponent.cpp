@@ -1,39 +1,27 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Custom/ExampleComponent.h"
-#include "Core/Debug/DebugDraw.h"
-#include "Core/Time/Clock.h"
-#include "EngineLoop.h"
 #include "Graphics/AnimationComponent.h"
-#include "Input/Input.h"
-#include "Input/InputEnum.h"
-#include "Scene/Entity.h"
-#include "Scene/Level.h"
-#include "Scene/LevelManager.h"
+#include "ExampleComponent.h"
+#include "Custom/IsettaCore.h"
 
 namespace Isetta {
 
 void ExampleComponent::OnEnable() {
   Input::RegisterKeyPressCallback(KeyCode::F1, [&]() {
-    Entity* man =
-        LevelManager::Instance().currentLevel->GetEntityByName("PushAnim");
+    Entity* man = Entity::GetEntityByName("PushAnim");
     if (man->GetTransform().GetParent() == &GetTransform()) {
       man->GetTransform().SetParent(nullptr);
-      LOG_INFO(Debug::Channel::General, "Parent of %s is set to %s",
-               man->GetName().c_str(), "null");
     } else {
       man->GetTransform().SetParent(&GetTransform());
-      LOG_INFO(Debug::Channel::General, "Parent of %s is set to %s",
-               man->GetName().c_str(), owner->GetName().c_str());
     }
   });
 }
 
 void ExampleComponent::Update() {
-#if _DEBUG
-  Entity* entity =
-      LevelManager::Instance().currentLevel->GetEntityByName("PushAnim");
+  DebugDraw::WireCube(GetTransform().GetLocalToWorldMatrix());
+
+  Entity* entity = Entity::GetEntityByName("PushAnim");
 
   if (entity != nullptr) {
     if (Input::IsKeyPressed(KeyCode::N)) {
@@ -43,8 +31,6 @@ void ExampleComponent::Update() {
       entity->GetComponent<AnimationComponent>()->Play();
     }
   }
-
-  DebugDraw::WireCube(GetTransform().GetLocalToWorldMatrix());
 
   float speed = 3.f;
   float rotSpeed = 30.;
@@ -65,6 +51,5 @@ void ExampleComponent::Update() {
   if (Input::IsKeyPressed(KeyCode::RIGHT)) {
     GetTransform().RotateLocal(GetTransform().GetUp(), -rotSpeed * dt);
   }
-#endif
 }
 }  // namespace Isetta

@@ -7,7 +7,7 @@
 #include "Scene/Entity.h"
 #include "ExampleLevel.h"
 #include "Custom/FlyController.h"
-#include "Custom/ExampleComponent.h"
+#include "Components/ExampleComponent.h"
 
 namespace Isetta {
 
