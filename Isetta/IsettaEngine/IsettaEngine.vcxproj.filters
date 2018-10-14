@@ -183,6 +183,12 @@
     <ClCompile Include="Physics\AABB.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Custom\OscillateMove.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\KeyTransform.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -456,8 +462,14 @@
     <ClInclude Include="Core\DataStructures\AVLTree.h">
       <Filter>Core\DataStructures</Filter>
     </ClInclude>
-    <ClInclude Include="Core\DataStructures\Plane.h">
+    <ClInclude Include="Physics\Ray.h">
       <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\OscillateMove.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\KeyTransform.h">
+      <Filter>Custom</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

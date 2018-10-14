@@ -78,12 +78,12 @@ class ISETTA_API_DECLARE DebugDraw {
   static void Axis(
       const Math::Matrix4& transformation = Math::Matrix4::identity,
       const Color& xColor = Color::red, const Color& yColor = Color::green,
-      const Color& zColor = Color::blue, float thickness = 2.0,
-      float duration = 0, float length = 1, bool depthTest = true);
+      const Color& zColor = Color::blue, float thickness = 1.0,
+      float duration = 0, bool depthTest = true);
   static void AxisSphere(
       const Math::Matrix4& transformation = Math::Matrix4::identity,
       const Color& xColor = Color::red, const Color& yColor = Color::green,
-      const Color& zColor = Color::blue, float thickness = 2.0,
+      const Color& zColor = Color::blue, float thickness = 1.0,
       float duration = 0, bool depthTest = true);
   static void AxisSphere(const Math::Vector3& position, float radius,
                          const Color& xColor = Color::red,

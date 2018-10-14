@@ -126,16 +126,19 @@ Matrix3 Matrix3::operator*(const Matrix3& rhs) const {
   return ret;
 }
 Matrix3 Matrix3::operator*=(const Matrix3& rhs) {
-  float newData[9];
+  float newData[ROW_COUNT][ROW_COUNT];
   for (int i = 0; i < ROW_COUNT; i++) {
     for (int j = 0; j < ROW_COUNT; j++) {
+      newData[i][j] = 0;
       for (int k = 0; k < ROW_COUNT; k++) {
-        newData[i * 3 + j] += data[i * 3 + k] * rhs.data[k * 3 + j];
+        newData[i][j] += row_col[i][k] * rhs.row_col[k][j];
       }
     }
   }
-  for (int i = 0; i < ELEMENT_COUNT; i++) {
-    data[i] = newData[i];
+  for (int i = 0; i < ROW_COUNT; i++) {
+    for (int j = 0; j < ROW_COUNT; j++) {
+      row_col[i][j] = newData[i][j];
+    }
   }
   return *this;
 }

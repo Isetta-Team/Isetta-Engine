@@ -29,6 +29,7 @@ class ISETTA_API Color {
   static const Color lightGrey;
   /// RGB color magenta (1,0,1,1)
   static const Color magenta;
+  static const Color orange;
   /// RGB color red (1,0,0,1)
   static const Color red;
   /// RGB color white (1,1,1,1)

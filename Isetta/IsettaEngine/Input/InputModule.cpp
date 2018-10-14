@@ -320,10 +320,10 @@ int InputModule::KeyCodeToGlfwKey(KeyCode key) const {
     case KeyCode::BACKSPACE:
     case KeyCode::INSERT:
     case KeyCode::DEL:
-    case KeyCode::RIGHT:
-    case KeyCode::LEFT:
-    case KeyCode::DOWN:
-    case KeyCode::UP:
+    case KeyCode::RIGHT_ARROW:
+    case KeyCode::LEFT_ARROW:
+    case KeyCode::DOWN_ARROW:
+    case KeyCode::UP_ARROW:
     case KeyCode::PAGE_UP:
     case KeyCode::PAGE_DOWN:
     case KeyCode::HOME:

@@ -1,8 +1,8 @@
 #pragma once
 #include <cstdarg>
 #include <cstdio>
-#include "Core/Time/StopWatch.h"
 #include "Core/Debug/Logger.h"
+#include "Core/Time/StopWatch.h"
 
 namespace Isetta::Util {
 
@@ -23,7 +23,8 @@ inline void Benchmark(const char* name, const Action<>& benchmark) {
   StopWatch stopWatch;
   stopWatch.Start();
   benchmark();
-  LOG_INFO(Debug::Channel::General, "[Benchmark] %s took %fs", name, stopWatch.EvaluateInSecond());
+  LOG_INFO(Debug::Channel::General, "[Benchmark] %s took %fs", name,
+           stopWatch.EvaluateInSecond());
 }
 
 inline float MegaBytesFromBytes(const int byte) {
@@ -44,4 +45,13 @@ inline unsigned int CountSetBits(int N) {
   return cnt;
 }
 
-} // namespace Isetta::Util
+}  // namespace Isetta::Util
+
+namespace std {
+template <>
+struct hash<std::pair<int, int>> {
+  std::size_t operator()(const std::pair<int, int>& p) const {
+    return std::hash<int>()(p.first) ^ std::hash<int>()(p.second);
+  }
+};
+}  // namespace std

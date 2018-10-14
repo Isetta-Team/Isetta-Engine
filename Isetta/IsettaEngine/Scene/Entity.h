@@ -12,6 +12,7 @@
 
 namespace Isetta {
 class ISETTA_API Entity {
+ private:
   enum class EntityAttributes { IS_ACTIVE, NEED_DESTROY, IS_TRANSFORM_DIRTY };
 
   friend class RenderModule;

@@ -182,13 +182,25 @@ void Transform::SetParent(Transform* transform) {
   // TODO(YIDI): Keep world transform and rotation and scale
 }
 
-Math::Vector3 Transform::GetForward() { return axis[2]; }
+Math::Vector3 Transform::GetForward() {
+  GetLocalToWorldMatrix();
+  return axis[2];
+}
 
-Math::Vector3 Transform::GetUp() { return axis[1]; }
+Math::Vector3 Transform::GetUp() {
+  GetLocalToWorldMatrix();
+  return axis[1];
+}
 
-Math::Vector3 Transform::GetLeft() { return axis[0]; }
+Math::Vector3 Transform::GetLeft() {
+  GetLocalToWorldMatrix();
+  return axis[0];
+}
 
-Math::Vector3 Transform::GetAxis(int i) { return axis[i]; }
+Math::Vector3 Transform::GetAxis(int i) {
+  GetLocalToWorldMatrix();
+  return axis[i];
+}
 
 void Transform::LookAt(const Math::Vector3& target,
                        const Math::Vector3& worldUp) {
