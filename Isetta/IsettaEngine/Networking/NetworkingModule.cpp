@@ -3,8 +3,12 @@
  */
 
 #include "Networking/NetworkingModule.h"
+
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
+#include <utility>
+
 #include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
@@ -24,8 +28,7 @@ namespace Isetta {
 CustomAdapter NetworkingModule::NetworkAdapter;
 
 int NetworkRegistry::count;
-std::unordered_map<
-    int, std::pair<unsigned long long, Func<yojimbo::Message*, void*>>>
+std::unordered_map<int, std::pair<U64, Func<yojimbo::Message*, void*>>>
     NetworkRegistry::factories;
 std::unordered_map<int, Action<yojimbo::Client*, yojimbo::Message*>>
     NetworkRegistry::clientFuncs;

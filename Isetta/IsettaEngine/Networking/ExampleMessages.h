@@ -4,9 +4,10 @@
 
 #pragma once
 
-#include "Networking/Messages.h"
-#include "Core/Debug/Logger.h"
+#include <string>
 #include "Audio/AudioSource.h"
+#include "Core/Debug/Logger.h"
+#include "Networking/Messages.h"
 #include "Networking/NetworkManager.h"
 
 
@@ -22,7 +23,7 @@ HandleMessage() { handle = 0; }
 
 // TODO(Caleb): choose a more reasonable range for the int serialization
 template <typename Stream>
-bool Serialize(Stream& stream) {
+bool Serialize(Stream* stream) {
   serialize_int(stream, handle, 0, 64);
 
   return true;
@@ -58,8 +59,8 @@ RPC_SERVER_FUNC {
     if (!server->IsClientConnected(i)) {
       continue;
     }
-    HandleMessage* newMessage =
-        reinterpret_cast<HandleMessage*>(NetworkManager::GenerateMessageFromServer(i, "HNDL"));
+    HandleMessage* newMessage = reinterpret_cast<HandleMessage*>(
+        NetworkManager::GenerateMessageFromServer(i, "HNDL"));
     newMessage->handle = handleMessage->handle;
     NetworkManager::SendMessageFromServer(i, newMessage);
   }
@@ -77,7 +78,7 @@ StringMessage() { string = ""; }
 
 // TODO(Caleb): choose a more reasonable range for the int serialization
 template <typename Stream>
-bool Serialize(Stream& stream) {
+bool Serialize(Stream* stream) {
   serialize_string(stream, const_cast<char*>(string.c_str()), 512);
 
   return true;
@@ -105,4 +106,4 @@ inline void InitExampleMessages() {
   RPC_MESSAGE_INIT(StringMessage, "STRN");
 }
 
-}
+}  // namespace Isetta
