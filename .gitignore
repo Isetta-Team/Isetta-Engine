@@ -344,3 +344,6 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
+
+# Git ignore includes
+!/Isetta/IsettaEngine/Core/Debug/
