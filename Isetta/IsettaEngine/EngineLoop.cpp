@@ -162,22 +162,6 @@ Clock& EngineLoop::GetGameClock() {
   return gameTime;
 }
 
-struct TestObject {
-  static const Size size = 123;
-  U64 arr[size];
-
-  TestObject(U64 ini) {
-    for (Size i = 0; i < size; i++) {
-      arr[i] = 10;
-    }
-  }
-  void Print() {
-    for (int i = 0; i < size; i++) {
-      LOG_INFO(Debug::Channel::General, "%d, %I64u", i, arr[i]);
-    }
-  }
-};
-
 void InputDemo() {
   // TODO(Chaojie) remove later into game logic
 

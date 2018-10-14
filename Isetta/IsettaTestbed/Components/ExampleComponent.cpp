@@ -20,7 +20,6 @@ void ExampleComponent::OnEnable() {
 
 void ExampleComponent::Update() {
   DebugDraw::WireCube(GetTransform().GetLocalToWorldMatrix());
-
   Entity* entity = Entity::GetEntityByName("PushAnim");
 
   if (entity != nullptr) {

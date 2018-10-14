@@ -2,14 +2,13 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include <Horde3D.h>
 #include <string>
 #include "Core/Color.h"
-#include "Horde3D.h"
 #include "Scene/Component.h"
-#include "Scene/Entity.h"
 
 namespace Isetta {
-class ISETTA_API_DECLARE LightComponent : public Component {
+class ISETTA_API LightComponent : public Component {
  public:
   enum class Property {
     RADIUS,
