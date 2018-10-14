@@ -246,7 +246,7 @@ Math::Vector3 Transform::WorldDirFromLocalDir(
 Math::Vector3 Transform::LocalDirFromWorldDir(
     const Math::Vector3& worldDirection) {
   sharedV4.Set(worldDirection, 0);
-  return (worldToLocalMatrix * sharedV4).GetVector3();
+  return (GetWorldToLocalMatrix() * sharedV4).GetVector3();
 }
 
 void Transform::ForChildren(const Action<Transform*>& action) {

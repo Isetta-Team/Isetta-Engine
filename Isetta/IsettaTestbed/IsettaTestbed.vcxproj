@@ -70,12 +70,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\intermediate</IntDir>
+    <OutDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)-intermediate\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\intermediate</IntDir>
+    <OutDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)-intermediate\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -87,10 +87,11 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(SolutionDir)IsettaEngine\$(Platform)\$(Configuration) DLL\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>XCOPY /Y /R "$(SolutionDir)IsettaEngine\$(Platform)\$(Configuration) DLL\*.dll" "$(TargetDir)"</Command>
+      <Command>XCOPY /Y /R "$(ProjectDir)..\Build\IsettaEngine-$(Platform)-Debug DLL" "$(TargetDir)"</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -133,10 +134,11 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>$(SolutionDir)IsettaEngine\$(Platform)\$(ConfigurationName) DLL\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command> XCOPY /Y /D $(SolutionDir)IsettaEngine\$(Platform)\$(Configuration) DLL\*.dll" "$(TargetDir)"</Command>
+      <Command>XCOPY /Y /R "$(ProjectDir)..\Build\IsettaEngine-$(Platform)-Debug DLL" "$(TargetDir)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -4,6 +4,7 @@
 
 # Engine files
 /Isetta/IsettaEngine/user.cfg
+/Isetta/Build/
 
 /cpplint.py
 /Isetta/IsettaEngine/Horde3D_log.html
