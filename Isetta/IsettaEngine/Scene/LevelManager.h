@@ -3,6 +3,7 @@
  */
 #pragma once
 #include <unordered_map>
+#include "Core/Config/CVar.h"
 #include "Core/IsettaAlias.h"
 #include "ISETTA_API.h"
 #include "SID/sid.h"
@@ -19,17 +20,22 @@ class ISETTA_API LevelManager {
   std::unordered_map<StringId, Func<class Level*>> levels;
 
  public:
-  std::string currentLevelName;
-  class Level* currentLevel;
+  struct LevelConfig {
+    CVarString startLevel{"start_level", "Level1"};
+  };
+
+  std::string currentLevelName{};
+  class Level* currentLevel{nullptr};
 
   static LevelManager& Instance();
 
   bool Register(std::string, Func<class Level*>);
 
-  LevelManager();
+  LevelManager() = default;
+  void LoadStartupLevel();
   void LoadLevel();
   void UnloadLevel() const;
-  ~LevelManager();
+  ~LevelManager() = default;
 };
 
 template <typename T>

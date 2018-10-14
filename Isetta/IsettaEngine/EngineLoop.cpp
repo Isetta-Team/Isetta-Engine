@@ -77,7 +77,7 @@ void EngineLoop::StartUp() {
   guiModule->StartUp(windowModule->winHandle);
   networkingModule->StartUp();
 
-  LevelManager::Instance().LoadLevel();
+  LevelManager::Instance().LoadStartupLevel();
 
   DebugDraw::StartUp();
 

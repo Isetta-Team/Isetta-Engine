@@ -2,7 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Custom/ExampleLevel.h"
-#include "AxisDrawer.h"
 #include "Core/Color.h"
 #include "Core/Config/Config.h"
 #include "Core/Math/Vector3.h"

@@ -16,6 +16,7 @@
 #include "Graphics/RenderModule.h"
 #include "Graphics/Window.h"
 #include "Networking/NetworkingModule.h"
+#include "Scene/LevelManager.h"
 
 namespace Isetta {
 #define CONFIG_VAL(expr) Isetta::Config::Instance().expr.GetVal()
@@ -70,6 +71,7 @@ class Config {
   MemoryManager::MemoryConfig memoryConfig;
   /// AudioModule configuration CVars
   AudioModule::AudioConfig audioConfig;
+  LevelManager::LevelConfig levelConfig;
 
   /// Max FPS of the engine
   CVar<int> maxFps = {"max_fps", 16};
