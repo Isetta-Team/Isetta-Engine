@@ -44,7 +44,7 @@ class TestModule {
  * and storing all the CVars that are read from the configuration file for the
  * game. CVars not in this class will not be set by the configuration file.
  */
-class Config {
+class ISETTA_API Config {
  public:
   /**
    * @brief Singleton class instance

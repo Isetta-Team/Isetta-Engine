@@ -5,7 +5,6 @@
 
 #include <GLFW/glfw3.h>
 #include <Horde3D.h>
-#include <Horde3DUtils.h>
 #include <list>
 #include <string>
 #include "Core/Config/CVar.h"

@@ -3,6 +3,7 @@
  */
 #pragma once
 #include <list>
+#include "ISETTA_API.h"
 
 #define CREATE_LEVEL(NAME) class NAME : public Level, public LevelRegistry<NAME> {\
  public:\
@@ -14,7 +15,7 @@
  private:
 
 namespace Isetta {
-class Level {
+class ISETTA_API Level {
 protected:
   std::list<class Entity*> entities;
 public:

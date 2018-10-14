@@ -4,6 +4,7 @@
 #pragma once
 #include "Core/IsettaAlias.h"
 #include "MemUtil.h"
+#include "ISETTA_API.h"
 
 namespace Isetta {
 /*
@@ -17,7 +18,7 @@ namespace Isetta {
  */
 // TODO(YIDI): Add expansion functionality
 // TODO(YIDI): Optimize to use a tree as underlying structure to reduce time complexity
-class FreeListAllocator {
+class ISETTA_API FreeListAllocator {
  public:
   // This class is using RAII
   FreeListAllocator() = default;

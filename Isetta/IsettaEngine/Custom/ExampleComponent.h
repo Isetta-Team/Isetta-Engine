@@ -5,7 +5,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-class ExampleComponent : public Component {
+class ISETTA_API ExampleComponent : public Component {
  public:
   void OnEnable() override;
   void Update() override;

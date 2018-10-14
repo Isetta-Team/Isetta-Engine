@@ -2,9 +2,13 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Level\ExampleLevel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
     <None Include="user.cfg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Level\ExampleLevel.h" />
   </ItemGroup>
 </Project>
