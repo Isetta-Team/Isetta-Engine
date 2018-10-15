@@ -512,7 +512,7 @@ class ISETTA_API GUI {
         : window{window}, background{background} {}
   };
   // TODO(Jacob) refactor
-  struct TextStyle {
+  struct ISETTA_API TextStyle {
     bool isWrapped;
     bool isDisabled;
     // TODO(Jacob) Not worth implementing now

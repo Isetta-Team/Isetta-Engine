@@ -64,7 +64,7 @@ void Level::GUIUpdate() {
   static Transform* transform = nullptr;
 
   for (const auto& entity : entities) {
-    if (entity->GetTransform().GetParent() == nullptr) {
+    if (entity->GetActive() && entity->GetTransform().GetParent() == nullptr) {
       Func<int, Transform*> countLevel = [](Transform* trans) -> int {
         int i = 0;
         while (trans->GetParent() != nullptr) {

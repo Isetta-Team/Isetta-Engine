@@ -6,7 +6,7 @@
 #include "ISETTA_API.h"
 
 namespace Isetta::Math {
-class ISETTA_API_DECLARE Util {
+class ISETTA_API Util {
  public:
   static const float PI;
   static const float PI_HALF;

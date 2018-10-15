@@ -285,18 +285,11 @@ void Transform::DrawGUI() {
       "Local Rotation: " + GetLocalEulerAngles().ToString() + "\n" +
       "Local Scale: " + GetLocalScale().ToString() + "\n" +
       "Parent: " + parentName;
-  GUI::Text(RectTransform{Math::Rect{-200, 200, 300, 100}, GUI::Pivot::TopRight,
+  GUI::Text(RectTransform{Math::Rect{-200, 360, 300, 100}, GUI::Pivot::TopRight,
                           GUI::Pivot::TopRight},
             content);
-  if (GUI::Button(RectTransform{Math::Rect{-200, 330, 300, 30},
-                                GUI::Pivot::TopRight, GUI::Pivot::TopRight},
-                  "Reset")) {
-    SetLocalRot(Math::Quaternion::identity);
-    SetLocalPos(Math::Vector3::zero);
-    SetLocalScale(Math::Vector3::one);
-  }
   
-  float height = 360;
+  float height = 420;
   float padding = 15;
   GUI::Text(RectTransform{Math::Rect{-200, height, 300, 100},
                           GUI::Pivot::TopRight, GUI::Pivot::TopRight},
@@ -308,6 +301,13 @@ void Transform::DrawGUI() {
                             GUI::Pivot::TopRight, GUI::Pivot::TopRight},
               typeid(comp).name());
     height += padding;
+  }
+  if (GUI::Button(RectTransform{Math::Rect{-200, height, 300, 30},
+                                GUI::Pivot::TopRight, GUI::Pivot::TopRight},
+                  "Reset")) {
+    SetLocalRot(Math::Quaternion::identity);
+    SetLocalPos(Math::Vector3::zero);
+    SetLocalScale(Math::Vector3::one);
   }
   DebugDraw::Axis(GetLocalToWorldMatrix());
   DebugDraw::AxisSphere(GetLocalToWorldMatrix());

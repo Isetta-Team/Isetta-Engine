@@ -20,6 +20,12 @@
     <ClCompile Include="Components\CameraController.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="Components\GameManager.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Zombie.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
@@ -50,6 +56,12 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="Components\CameraController.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\GameManager.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Zombie.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>

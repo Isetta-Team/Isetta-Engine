@@ -3,6 +3,7 @@
 #pragma once
 
 #include <random>
+#include "ISETTA_API.h"
 
 namespace Isetta::Math {
 
@@ -42,7 +43,7 @@ class RandomGenerator {
   float GetValue() { return distribution(generator); }
 };
 
-class Random {
+class ISETTA_API Random {
  public:
   /**
    * \brief Get a random generator that generates number in range [start, end)

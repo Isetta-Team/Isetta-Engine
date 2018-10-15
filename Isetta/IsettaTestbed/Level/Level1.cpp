@@ -11,6 +11,7 @@
 #include "Graphics/LightComponent.h"
 #include "Scene/Entity.h"
 #include "Components/CameraController.h"
+#include "Components/GameManager.h"
 
 namespace Isetta {
 
@@ -57,5 +58,17 @@ void Level1::LoadLevel() {
 
   Entity* ground{AddEntity("Ground")};
   ground->AddComponent<MeshComponent>(true, "Ground/Level.scene.xml");
+
+  Entity* gameManager{AddEntity("Game Manager")};
+  gameManager->AddComponent<GameManager>();
+
+  // for (int i = 0; i < 10; i++) {
+  // Entity* zombie {AddEntity("Zombie")};
+  // zombie->SetTransform(Math::Vector3::forward, Math::Vector3::zero, Math::Vector3::one * 0.01f);
+  // MeshComponent* mesh = zombie->AddComponent<MeshComponent>(true, "Zombie/Zombie.scene.xml");
+  // AnimationComponent* animation = zombie->AddComponent<AnimationComponent>(true, mesh);
+  // animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
+  // zombie->AddComponent<Zombie>();
+  // }
 }
 }  // namespace Isetta

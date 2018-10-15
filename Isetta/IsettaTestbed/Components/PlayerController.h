@@ -4,6 +4,7 @@
 #pragma once
 #include "Scene/Component.h"
 #include "Audio/AudioSource.h"
+#include <vector>
 
 namespace Isetta {
 class PlayerController : public Component {
@@ -23,5 +24,7 @@ class PlayerController : public Component {
   float shootInterval = 0.15f;
   float cooldown{0};
   AudioSource shootAudio;
+  int poolSize = 100;
+  std::vector<Entity*> bullets;
 };
 }  // namespace Isetta
