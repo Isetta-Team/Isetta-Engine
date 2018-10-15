@@ -8,9 +8,9 @@
 #include "ExampleLevel.h"
 #include "Custom/FlyController.h"
 #include "Components/ExampleComponent.h"
-#include "Custom/PlayerController.h"
 #include "Graphics/AnimationComponent.h"
 #include "Graphics/LightComponent.h"
+#include "Components/PlayerController.h"
 
 namespace Isetta {
 

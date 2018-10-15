@@ -38,23 +38,19 @@ void Transform::SetWorldPos(const Math::Vector3& newWorldPos) {
   }
 }
 
-// TODO(YIDI): test this
 void Transform::SetLocalPos(const Math::Vector3& newLocalPos) {
   localPos = newLocalPos;
   SetDirty();
 }
 
-// TODO(YIDI): test this
 void Transform::TranslateWorld(const Math::Vector3& delta) {
   SetWorldPos(GetWorldPos() + delta);
 }
 
-// TODO(YIDI): test this
 void Transform::TranslateLocal(const Math::Vector3& delta) {
   SetLocalPos(localPos + delta);
 }
 
-// TODO(YIDI): test this
 Math::Quaternion Transform::GetWorldRot() {
   if (parent == nullptr) {
     worldRot = localRot;
@@ -65,15 +61,12 @@ Math::Quaternion Transform::GetWorldRot() {
   return worldRot;
 }
 
-// TODO(YIDI): test this
 Math::Quaternion Transform::GetLocalRot() const { return localRot; }
 
-// TODO(YIDI): test this
 Math::Vector3 Transform::GetWorldEulerAngles() {
   return GetWorldRot().GetEulerAngles();
 }
 
-// TODO(YIDI): test this
 Math::Vector3 Transform::GetLocalEulerAngles() const {
   return localRot.GetEulerAngles();
 }
@@ -208,10 +201,11 @@ void Transform::LookAt(const Math::Vector3& target,
       Math::Vector3::Cross(forwardDir, worldUp).Normalized();
   // upDir is guaranteed to be of unit length
   // cause |upDir| = |forwardDir| * |rightDir| * sin();
-  Math::Vector3 upDir = Math::Vector3::Cross(forwardDir, rightDir);
-  localToWorldMatrix.SetCol(0, rightDir, 0);
-  localToWorldMatrix.SetCol(1, upDir, 0);
-  localToWorldMatrix.SetCol(2, forwardDir, 0);
+  Math::Vector3 upDir = Math::Vector3::Cross(rightDir, forwardDir);
+  // localToWorldMatrix.SetCol(0, rightDir, 0);
+  // localToWorldMatrix.SetCol(1, upDir, 0);
+  // localToWorldMatrix.SetCol(2, forwardDir, 0);
+  SetLocalRot(Math::Quaternion::FromLookRotation(forwardDir, upDir));
 }
 
 void Transform::LookAt(Transform& target, const Math::Vector3& worldUp) {
@@ -337,12 +331,11 @@ const Math::Matrix4& Transform::GetWorldToLocalMatrix() {
 
 void Transform::RecalculateLocalToWorldMatrix() {
   Math::Matrix4 localToParentMatrix{};
-  localToParentMatrix.SetCol(3, localPos, 1);                    // translation
   localToParentMatrix.SetTopLeftMatrix3(localRot.GetMatrix3());  // rotation
-
   Math::Matrix4 temp;
   temp.SetDiagonal(localScale.x, localScale.y, localScale.z, 1);
   localToParentMatrix = temp * localToParentMatrix;  // scale
+  localToParentMatrix.SetCol(3, localPos, 1);         
 
   if (parent != nullptr) {
     localToWorldMatrix = parent->GetLocalToWorldMatrix() * localToParentMatrix;

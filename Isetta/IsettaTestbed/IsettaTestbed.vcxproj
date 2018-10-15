@@ -143,7 +143,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Components\ExampleComponent.cpp" />
+    <ClCompile Include="Components\PlayerController.cpp" />
     <ClCompile Include="Level\ExampleLevel.cpp" />
+    <ClCompile Include="Level\Level1.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -152,7 +154,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\ExampleComponent.h" />
+    <ClInclude Include="Components\PlayerController.h" />
     <ClInclude Include="Level\ExampleLevel.h" />
+    <ClInclude Include="Level\Level1.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

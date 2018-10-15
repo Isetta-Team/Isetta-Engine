@@ -159,7 +159,6 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Custom\AxisDrawer.cpp" />
     <ClCompile Include="Custom\FlyController.cpp" />
     <ClCompile Include="Custom\InEngineTestLevel.cpp" />
-    <ClCompile Include="Custom\PlayerController.cpp" />
     <ClCompile Include="EngineLoop.cpp" />
     <ClCompile Include="Graphics\AnimationComponent.cpp" />
     <ClCompile Include="Graphics\CameraComponent.cpp" />
@@ -238,7 +237,6 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Custom\FlyController.h" />
     <ClInclude Include="Custom\InEngineTestLevel.h" />
     <ClInclude Include="Custom\IsettaCore.h" />
-    <ClInclude Include="Custom\PlayerController.h" />
     <ClInclude Include="EngineLoop.h" />
     <ClInclude Include="Graphics\AnimationComponent.h" />
     <ClInclude Include="Graphics\CameraComponent.h" />

@@ -8,6 +8,12 @@
     <ClCompile Include="Components\ExampleComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="Components\PlayerController.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Level\Level1.cpp">
+      <Filter>Level</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
@@ -27,6 +33,12 @@
     </ClInclude>
     <ClInclude Include="Components\ExampleComponent.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\PlayerController.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Level\Level1.h">
+      <Filter>Level</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

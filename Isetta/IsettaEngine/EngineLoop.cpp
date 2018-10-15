@@ -342,7 +342,7 @@ void GUIDemo() {
                       312));
 }
 void DebugDemo() {
-  DebugDraw::Point(2 * Math::Vector3::left, Color::magenta, 20);
+  // DebugDraw::Point(2 * Math::Vector3::left, Color::magenta, 20);
   // DebugDraw::Line(Math::Vector3::zero, v);
   if (Input::IsKeyPressed(KeyCode::V)) {
     static float angle = 0.0f;

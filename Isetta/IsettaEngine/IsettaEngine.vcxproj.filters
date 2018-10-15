@@ -159,9 +159,6 @@
     <ClCompile Include="Custom\AxisDrawer.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
-    <ClCompile Include="Custom\PlayerController.cpp">
-      <Filter>Custom</Filter>
-    </ClCompile>
     <ClCompile Include="Custom\InEngineTestLevel.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
@@ -401,9 +398,6 @@
     </ClInclude>
     <ClInclude Include="ISETTA_API.h" />
     <ClInclude Include="Custom\AxisDrawer.h">
-      <Filter>Custom</Filter>
-    </ClInclude>
-    <ClInclude Include="Custom\PlayerController.h">
       <Filter>Custom</Filter>
     </ClInclude>
     <ClInclude Include="Networking\ExampleMessages.h">

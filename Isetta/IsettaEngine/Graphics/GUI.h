@@ -24,7 +24,7 @@ class Rect;
 }  // namespace Isetta
 
 namespace Isetta {
-class ISETTA_API_DECLARE GUI {
+class ISETTA_API GUI {
  public:
   enum class WindowFlags : U32 {
     None = 0,
@@ -458,7 +458,7 @@ class ISETTA_API_DECLARE GUI {
           offset{offset},
           tiling{tiling} {}
   };
-  struct InputStyle {
+  struct ISETTA_API InputStyle {
     Color background;
     Color hovered;
     Color active;
