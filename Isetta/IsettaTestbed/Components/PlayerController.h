@@ -3,6 +3,7 @@
  */
 #pragma once
 #include "Scene/Component.h"
+#include "Audio/AudioSource.h"
 
 namespace Isetta {
 class PlayerController : public Component {
@@ -14,9 +15,13 @@ class PlayerController : public Component {
 
  private:
   static PlayerController* instance;
+  void Shoot();
   float moveSpeed{15.0f};
-  int moveSpeedInt{15};
-  float lookSmooth{10.f};
+  float lookSmooth{30.f};
   float scale{0.01f};
+  // shooting
+  float shootInterval = 0.15f;
+  float cooldown{0};
+  AudioSource shootAudio;
 };
 }  // namespace Isetta

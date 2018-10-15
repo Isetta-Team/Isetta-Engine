@@ -56,11 +56,11 @@ void Level::GUIUpdate() {
   }
 
 #if _DEBUG
-  float buttonHeight = 30;
+  float buttonHeight = 20;
   float buttonWidth = 200;
   float height = 80;
   float left = 200;
-  float padding = 30;
+  float padding = 20;
   static Transform* transform = nullptr;
 
   for (const auto& entity : entities) {

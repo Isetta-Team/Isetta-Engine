@@ -126,7 +126,8 @@ void EngineLoop::VariableUpdate(float deltaTime) {
   inputModule->Update(deltaTime);
   LevelManager::Instance().currentLevel->Update();
   LevelManager::Instance().currentLevel->LateUpdate();
-  DebugDemo();
+  // DebugDemo();
+  DebugDraw::Axis(Math::Matrix4::identity, Color::red, Color::green, Color::blue, 2, 0, true);
   audioModule->Update(deltaTime);
   renderModule->Update(deltaTime);
   DebugDraw::Update();
@@ -367,7 +368,7 @@ void DebugDemo() {
   // DebugDraw::WireCapsule(Math::Matrix4::Translate(Math::Vector3{-1, 4, 1}), 0.5,
                          // 2, Color::blue);
   // DebugDraw::AxisSphere(Math::Vector3::up, 1);
-  DebugDraw::Grid();
+  // DebugDraw::Grid();
   DebugDraw::Axis(Math::Matrix4::identity, Color::red, Color::green, Color::blue, 2, 0, true);
 }
 

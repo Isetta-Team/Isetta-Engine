@@ -14,6 +14,12 @@
     <ClCompile Include="Level\Level1.cpp">
       <Filter>Level</Filter>
     </ClCompile>
+    <ClCompile Include="Components\Bullet.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\CameraController.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
@@ -39,6 +45,12 @@
     </ClInclude>
     <ClInclude Include="Level\Level1.h">
       <Filter>Level</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Bullet.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\CameraController.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
