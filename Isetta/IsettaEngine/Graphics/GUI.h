@@ -678,6 +678,9 @@ class ISETTA_API GUI {
   ////////////////////////////////////////
   // TODO(Jacob) NOT PART OF GAME NEEDS //
   ////////////////////////////////////////
+  static void SliderFloat(const RectTransform& transform, const std::string& label, float* value, float min,
+                          float max, float power = 1, const char* format = "%.3f",
+                          const InputStyle& style = {});
   /*
   // TODO(Jacob) refactor
   struct SliderStyle {

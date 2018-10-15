@@ -47,15 +47,14 @@ void PlayerController::Update() {
 }
 
 void PlayerController::GuiUpdate() {
-  GUI::InputInt(RectTransform{Math::Rect{-200, 500, 300, 100},
+  GUI::SliderFloat(RectTransform{Math::Rect{-200, 50, 300, 100},
                               GUI::Pivot::TopRight, GUI::Pivot::TopRight},
-                "Player Speed", &moveSpeedInt);
-  moveSpeed = moveSpeedInt;
+                "Player Speed", &moveSpeed, 0, 30);
 
-  GUI::InputInt(RectTransform{Math::Rect{-200, 550, 300, 100},
+  GUI::SliderFloat(RectTransform{Math::Rect{-200, 80, 300, 100},
                               GUI::Pivot::TopRight, GUI::Pivot::TopRight},
-                "Player Scale", &scaleInt);
-  GetTransform().SetLocalScale(scaleInt / 100.f * Math::Vector3::one);
+                "Player Scale", &scale, 0, 0.1f, 1);
+  GetTransform().SetLocalScale(scale * Math::Vector3::one);
 }
 
 PlayerController* PlayerController::Instance() { return instance; }

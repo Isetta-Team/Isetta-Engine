@@ -17,6 +17,6 @@ class PlayerController : public Component {
   float moveSpeed{15.0f};
   int moveSpeedInt{15};
   float lookSmooth{10.f};
-  int scaleInt{1};
+  float scale{0.01f};
 };
 }  // namespace Isetta
