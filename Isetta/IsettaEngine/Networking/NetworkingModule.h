@@ -6,8 +6,8 @@
 #include <functional>
 #include "Core/Config/CVar.h"
 #include "Core/DataStructures/RingBuffer.h"
-#include "Core/Time/Clock.h"
 #include "Networking/Messages.h"
+#include "Core/Time/Clock.h"
 #include "yojimbo/yojimbo.h"
 
 namespace Isetta {

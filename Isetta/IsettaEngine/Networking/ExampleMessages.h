@@ -8,10 +8,6 @@
 #include "Audio/AudioSource.h"
 #include "Core/Debug/Logger.h"
 #include "Networking/Messages.h"
-#include "Networking/NetworkManager.h"
-#include "Scene/Entity.h"
-#include "Scene/Level.h"
-#include "Scene/LevelManager.h"
 
 namespace Isetta {
 
@@ -73,7 +69,7 @@ RPC_MESSAGE_FINISH
 // Spawn
 RPC_MESSAGE_DEFINE(SpawnExample)
 
-SpawnExample() {}
+SpawnExample() { netId = a = b = c = 0; }
 
 template <typename Stream>
 bool Serialize(Stream* stream) {
@@ -81,6 +77,8 @@ bool Serialize(Stream* stream) {
   serialize_float(stream, a);
   serialize_float(stream, b);
   serialize_float(stream, c);
+
+  return true;
 }
 
 void Copy(const yojimbo::Message* otherMessage) override {
@@ -92,7 +90,7 @@ void Copy(const yojimbo::Message* otherMessage) override {
   c = message->c;
 }
 
-U32 netId;
+int netId;
 float a, b, c;
 
 RPC_MESSAGE_FINISH
@@ -100,11 +98,13 @@ RPC_MESSAGE_FINISH
 // Despawn
 RPC_MESSAGE_DEFINE(DespawnExample)
 
-DespawnExample() {}
+DespawnExample() { netId = 0; }
 
 template <typename Stream>
 bool Serialize(Stream* stream) {
   serialize_int(stream, netId, 0, 256);
+
+  return true;
 }
 
 void Copy(const yojimbo::Message* otherMessage) override {
@@ -113,144 +113,28 @@ void Copy(const yojimbo::Message* otherMessage) override {
   netId = message->netId;
 }
 
-U32 netId;
+int netId;
 
 RPC_MESSAGE_FINISH
 
-inline void InitExampleMessages() {
-  RPC_MESSAGE_INIT(HandleMessage, "HNDL");
-  RPC_MESSAGE_INIT(StringMessage, "STRN");
-  RPC_MESSAGE_INIT(SpawnExample, "SPWN");
-  RPC_MESSAGE_INIT(DespawnExample, "DSPN");
-}
-
 namespace NetworkingExample {
-U16 exampleClientHandleId = 0;
-U16 exampleServerHandleId = 0;
-U16 exampleClientStringId = 0;
-U16 exampleServerStringId = 0;
+void InitExampleMessages();
 
-U16 exampleClientSpawn = 0;
-U16 exampleServerSpawn = 0;
-U16 exampleClientDespawn = 0;
-U16 exampleServerDespawn = 0;
+extern U16 exampleClientHandleId;
+extern U16 exampleServerHandleId;
+extern U16 exampleClientStringId;
+extern U16 exampleServerStringId;
 
-std::vector<Entity*> spawnedEntities;
+extern U16 exampleClientSpawn;
+extern U16 exampleServerSpawn;
+extern U16 exampleClientDespawn;
+extern U16 exampleServerDespawn;
 
-inline void RegisterExampleMessageFunctions() {
-  exampleClientHandleId = NetworkRegistry::RegisterClientCallback(
-      "HNDL", [](yojimbo::Message* message) {
-        HandleMessage* handleMessage = static_cast<HandleMessage*>(message);
-        LOG(Debug::Channel::Networking, "Server sends handle #%d",
-            handleMessage->handle);
-        if (handleMessage->handle == 0) {
-          LOG(Debug::Channel::Networking,
-              "Server says we should play the animation!");
-        }
-        if (handleMessage->handle == 1) {
-          LOG(Debug::Channel::Networking,
-              "Server says we should stop the animation!");
-        }
-        if (handleMessage->handle == 2) {
-          AudioSource audio = AudioSource();
-          audio.SetAudioClip("gunshot.aiff");
-          audio.Play(false, 1.f);
-        }
-      });
+extern int despawnCounter;
+extern std::vector<Entity*> spawnedEntities;
 
-  exampleServerHandleId = NetworkRegistry::RegisterServerCallback(
-      "HNDL", [](int clientIdx, yojimbo::Message* message) {
-        HandleMessage* handleMessage =
-            reinterpret_cast<HandleMessage*>(message);
-        LOG(Debug::Channel::Networking, "Client %d sends handle #%d", clientIdx,
-            handleMessage->handle);
-
-        NetworkManager::SendAllMessageFromServer("HNDL", handleMessage);
-      });
-
-  exampleClientStringId = NetworkRegistry::RegisterClientCallback(
-      "STRN", [](yojimbo::Message* message) {
-        StringMessage* stringMessage = static_cast<StringMessage*>(message);
-        LOG(Debug::Channel::Networking, "Server says: %s",
-            stringMessage->string.c_str());
-      });
-
-  exampleServerStringId = NetworkRegistry::RegisterServerCallback(
-      "STRN", [](int clientIdx, yojimbo::Message* message) {
-        StringMessage* stringMessage =
-            reinterpret_cast<StringMessage*>(message);
-        LOG(Debug::Channel::Networking, "Client %d says: %s", clientIdx,
-            stringMessage->string.c_str());
-      });
-
-  exampleClientSpawn = NetworkRegistry::RegisterClientCallback(
-    "SPWN", [](yojimbo::Message* message) {
-        SpawnExample* spawnMessage = reinterpret_cast<SpawnExample*>(message);
-        const Entity* entity =
-            NetworkRegistry::GetNetworkEntity(spawnMessage->netId);
-        if (!entity) {
-          Entity* e = LevelManager::Instance().currentLevel->AddEntity(
-              Util::StrFormat("NetworkEntity%d", spawnMessage->netId));
-          e->AddComponent<NetworkIdentity>(spawnMessage->netId);
-          spawnedEntities.push_back(e);
-        }
-  });
-
-  exampleServerSpawn = NetworkRegistry::RegisterServerCallback(
-      "SPWN", [](int clientIdx, yojimbo::Message* message) {
-        SpawnExample* spawnMessage = reinterpret_cast<SpawnExample*>(message);
-        const Entity* entity =
-            NetworkRegistry::GetNetworkEntity(spawnMessage->netId);
-        if (!entity) {
-          Entity* e = LevelManager::Instance().currentLevel->AddEntity(
-              Util::StrFormat("NetworkEntity%d", spawnMessage->netId));
-          e->AddComponent<NetworkIdentity>(spawnMessage->netId);
-          spawnedEntities.push_back(e);
-        }
-
-        NetworkManager::SendAllMessageFromServer("SPWN", spawnMessage);
-  });
-
-  exampleClientDespawn = NetworkRegistry::RegisterClientCallback(
-    "DSPN", [](yojimbo::Message* message) {
-        DespawnExample* despawnMessage =
-            reinterpret_cast<DespawnExample*>(message);
-        Entity* entity =
-            NetworkRegistry::GetNetworkEntity(despawnMessage->netId);
-        if (!entity) {
-          return;
-        }
-        NetworkRegistry::RemoveNetworkId(despawnMessage->netId);
-        entity->SetActive(false);
-      });
-
-  exampleServerDespawn = NetworkRegistry::RegisterServerCallback(
-      "DSPN", [](int clientIdx, yojimbo::Message* message) {
-        DespawnExample* despawnMessage =
-            reinterpret_cast<DespawnExample*>(message);
-
-        NetworkManager::SendAllMessageFromServer("DSPN", despawnMessage);
-
-        Entity* entity =
-            NetworkRegistry::GetNetworkEntity(despawnMessage->netId);
-        if (!entity) {
-          return;
-        }
-        NetworkRegistry::RemoveNetworkId(despawnMessage->netId);
-        entity->SetActive(false);
-      });
-}
-
-inline void DeregisterExampleMessageFunctions() {
-  NetworkRegistry::UnregisterClientCallback("HNDL", exampleClientHandleId);
-  NetworkRegistry::UnregisterServerCallback("HNDL", exampleServerHandleId);
-  NetworkRegistry::UnregisterClientCallback("STRN", exampleClientStringId);
-  NetworkRegistry::UnregisterServerCallback("STRN", exampleServerStringId);
-  NetworkRegistry::UnregisterClientCallback("SPWN", exampleClientSpawn);
-  NetworkRegistry::UnregisterClientCallback("SPWN", exampleServerSpawn);
-  NetworkRegistry::UnregisterClientCallback("DSPN", exampleClientDespawn);
-  NetworkRegistry::UnregisterClientCallback("DSPN", exampleServerDespawn);
-}
+void RegisterExampleMessageFunctions();
+void DeregisterExampleMessageFunctions();
 }  // namespace NetworkingExample
 
 }  // namespace Isetta

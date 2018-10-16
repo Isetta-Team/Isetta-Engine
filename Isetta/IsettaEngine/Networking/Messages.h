@@ -7,128 +7,10 @@
 #include <utility>
 
 #include "Core/Debug/Assert.h"
-#include "Core/Memory/MemoryManager.h"
-#include "Networking/NetworkIdentity.h"
-#include "Util.h"
+#include "Networking/NetworkManager.h"
 #include "yojimbo/yojimbo.h"
 
 namespace Isetta {
-
-#define NETWORK_TAG_LEN 5
-
-class NetworkRegistry {
- public:
-  static U16 GetMessageTypeCount() { return messageTypeCount; }
-  static void RegisterMessageType(U64 size,
-                                  Func<yojimbo::Message*, void*> factory,
-                                  const char tag[NETWORK_TAG_LEN]) {
-    factories[messageTypeCount] = std::pair(size, factory);
-    tags[tag] = messageTypeCount;
-    ++messageTypeCount;
-  }
-  static int RegisterServerCallback(const char tag[NETWORK_TAG_LEN],
-                                    Action<int, yojimbo::Message*> func) {
-    serverCallbacks[GetMessageTypeId(tag)].push_back(
-        std::pair(functionCount, func));
-    return functionCount++;
-  }
-  static void UnregisterServerCallback(const char tag[NETWORK_TAG_LEN],
-                                       int handle) {
-    int messageId = GetMessageTypeId(tag);
-    serverCallbacks[messageId].remove_if(
-        [handle](std::pair<U16, Action<U16, yojimbo::Message*>> item) {
-          return item.first == handle;
-        });
-  }
-  static int RegisterClientCallback(const char tag[NETWORK_TAG_LEN],
-                                    Action<yojimbo::Message*> func) {
-    clientCallbacks[GetMessageTypeId(tag)].push_back(
-        std::pair(functionCount, func));
-    return functionCount++;
-  }
-  static void UnregisterClientCallback(const char tag[NETWORK_TAG_LEN],
-                                       int handle) {
-    int messageId = GetMessageTypeId(tag);
-    clientCallbacks[messageId].remove_if(
-        [handle](std::pair<U16, Action<yojimbo::Message*>> item) {
-          return item.first == handle;
-        });
-  }
-
-  static Entity* GetNetworkEntity(const U32 id) {
-    auto it = networkIdToEntityMap.find(id);
-    if (it != networkIdToEntityMap.end()) {
-      return it->second;
-    }
-    return NULL;
-  }
-  static U32 CreateNetworkId(NetworkIdentity networkIdentity) {
-    /*if (!NetworkManager::ServerIsRunning()) {
-      throw std::exception("Cannot create a new network id on a client");
-    }*/
-    U32 netId = nextNetworkId++;
-    networkIdentity.id = netId;
-    networkIdToEntityMap[netId] = networkIdentity.owner;
-  }
-  static U32 AssignNetworkId(U32 netId, NetworkIdentity networkIdentity) {
-    if (networkIdToEntityMap.find(netId) != networkIdToEntityMap.end()) {
-      throw std::exception(Util::StrFormat(
-          "Multiple objects trying to assign to the same network id: %d",
-          netId));
-    } else if (networkIdentity.id > 0) {
-      throw std::exception(
-          Util::StrFormat("Trying to assign network id %d to existing network "
-                          "object with id %d",
-                          netId, networkIdentity.id));
-    }
-    networkIdentity.id = netId;
-    networkIdToEntityMap[netId] = networkIdentity.owner;
-  }
-  static void RemoveNetworkId(NetworkIdentity networkIdentity) {
-    if (!networkIdentity.id) {
-      throw std::exception(Util::StrFormat(
-          "Cannot remove network id on a nonexistent network object"));
-    }
-    networkIdToEntityMap.erase(networkIdentity.id);
-    networkIdentity.id = NULL;
-  }
-
- private:
-  static int GetMessageTypeId(const char tag[NETWORK_TAG_LEN]) {
-    return tags[tag];
-  }
-  static std::list<std::pair<U16, Action<yojimbo::Message*>>>
-  GetClientFunctions(int type) {
-    return clientCallbacks[type];
-  }
-  static std::list<std::pair<U16, Action<int, yojimbo::Message*>>>
-  GetServerFunctions(int type) {
-    return serverCallbacks[type];
-  }
-
-  static int messageTypeCount;
-  static U16 functionCount;
-  static U32 nextNetworkId;
-  static std::unordered_map<int, std::pair<U64, Func<yojimbo::Message*, void*>>>
-      factories;
-  static std::unordered_map<const char*, int> tags;
-
-  static std::unordered_map<
-      int, std::list<std::pair<U16, Action<yojimbo::Message*>>>>
-      clientCallbacks;
-  static std::unordered_map<
-      int, std::list<std::pair<U16, Action<int, yojimbo::Message*>>>>
-      serverCallbacks;
-
-  static std::unordered_map<U32, Entity*> networkIdToEntityMap;
-
-  NetworkRegistry() = default;
-
-  friend class NetworkingModule;
-  friend class NetworkManager;
-  friend class NetworkMessageFactory;
-  friend class NetworkIdentity;
-};
 
 class NetworkMessageFactory : public yojimbo::MessageFactory {
  public:
@@ -138,15 +20,13 @@ class NetworkMessageFactory : public yojimbo::MessageFactory {
   yojimbo::Message* CreateMessageInternal(int type) {
     yojimbo::Message* message;
     yojimbo::Allocator& allocator = GetAllocator();
-    message = NetworkRegistry::factories[type].second(allocator.Allocate(
-        NetworkRegistry::factories[type].first, __FILE__, __LINE__));
+    message = NetworkManager::factories[type].second(allocator.Allocate(
+        NetworkManager::factories[type].first, __FILE__, __LINE__));
     if (!message) return NULL;
     SetMessageType(message, type);
     return message;
   }
 };
-
-class IdMessage : public yojimbo::Message {};
 
 #define RPC_MESSAGE_DEFINE(MessageClass)         \
   class MessageClass : public yojimbo::Message { \
@@ -161,9 +41,9 @@ class IdMessage : public yojimbo::Message {};
   }                                      \
   ;
 
-#define RPC_MESSAGE_INIT(MessageClass, Tag)                  \
-  NetworkRegistry::RegisterMessageType(sizeof(MessageClass), \
-                                       MessageClass::Create, Tag);
+#define RPC_MESSAGE_INIT(MessageClass, Tag)                 \
+  NetworkManager::RegisterMessageType(sizeof(MessageClass), \
+                                      MessageClass::Create, Tag);
 
 class NetworkAllocator : public yojimbo::Allocator {
  public:
@@ -237,8 +117,7 @@ class CustomAdapter : public yojimbo::Adapter {
   yojimbo::MessageFactory* CreateMessageFactory(yojimbo::Allocator* allocator) {
     return new (
         allocator->Allocate(sizeof(NetworkMessageFactory), __FILE__, __LINE__))
-        NetworkMessageFactory(allocator,
-                              NetworkRegistry::GetMessageTypeCount());
+        NetworkMessageFactory(allocator, NetworkManager::GetMessageTypeCount());
   }
 };
 }  // namespace Isetta

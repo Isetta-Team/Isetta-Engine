@@ -3,12 +3,18 @@
  */
 
 #include "Networking/NetworkIdentity.h"
+#include "Networking/NetworkManager.h"
+#include "Scene/Entity.h"
 
 namespace Isetta {
-NetworkIdentity::NetworkIdentity() { NetworkRegistry::CreateNetworkId(this); }
+NetworkIdentity::NetworkIdentity(Entity* owner) {
+  this->owner = owner;
+  NetworkManager::CreateNetworkId(this);
+}
 
-NetworkIdentity::NetworkIdentity(U32 id) {
-  NetworkRegistry::AssignNetworkId(id, this);
+NetworkIdentity::NetworkIdentity(Entity* owner, U32 id) {
+  this->owner = owner;
+  NetworkManager::AssignNetworkId(id, this);
 }
 
 }  // namespace Isetta

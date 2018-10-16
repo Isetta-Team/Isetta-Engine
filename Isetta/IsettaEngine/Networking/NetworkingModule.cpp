@@ -27,23 +27,23 @@ namespace Isetta {
 // Defining static variables
 CustomAdapter NetworkingModule::NetworkAdapter;
 
-int NetworkRegistry::messageTypeCount;
-U16 NetworkRegistry::functionCount;
-U32 NetworkRegistry::nextNetworkId = 1;
-std::unordered_map<const char*, int> NetworkRegistry::tags;
+int NetworkManager::messageTypeCount;
+U16 NetworkManager::functionCount;
+U32 NetworkManager::nextNetworkId = 1;
+std::unordered_map<const char*, int> NetworkManager::tags;
 std::unordered_map<int, std::pair<U64, Func<yojimbo::Message*, void*>>>
-    NetworkRegistry::factories;
+    NetworkManager::factories;
 std::unordered_map<int, std::list<std::pair<U16, Action<yojimbo::Message*>>>>
-    NetworkRegistry::clientCallbacks;
+    NetworkManager::clientCallbacks;
 std::unordered_map<int,
                    std::list<std::pair<U16, Action<int, yojimbo::Message*>>>>
-    NetworkRegistry::serverCallbacks;
-std::unordered_map<U32, Entity*> NetworkRegistry::networkIdToEntityMap;
+    NetworkManager::serverCallbacks;
+std::unordered_map<U32, Entity*> NetworkManager::networkIdToEntityMap;
 
 void NetworkingModule::StartUp() {
   NetworkManager::networkingModule = this;
 
-  InitExampleMessages();
+  NetworkingExample::InitExampleMessages();
 
   if (!InitializeYojimbo()) {
     throw std::exception(
@@ -216,9 +216,10 @@ void NetworkingModule::ProcessClientToServerMessages(int clientIdx) {
       break;
     }
 
-    auto serverFuncs = NetworkRegistry::GetServerFunctions(message->GetType());
-    for (const auto& func : serverFuncs) {
-      func.second(clientIdx, message);
+    auto serverFunctions =
+        NetworkManager::GetServerFunctions(message->GetType());
+    for (const auto& function : serverFunctions) {
+      function.second(clientIdx, message);
     }
 
     server->ReleaseMessage(clientIdx, message);
@@ -234,9 +235,10 @@ void NetworkingModule::ProcessServerToClientMessages() {
       break;
     }
 
-    auto clientFuncs = NetworkRegistry::GetClientFunctions(message->GetType());
-    for (auto func : clientFuncs) {
-      func.second(message);
+    auto clientFunctions =
+        NetworkManager::GetClientFunctions(message->GetType());
+    for (const auto& function : clientFunctions) {
+      function.second(message);
     }
 
     client->ReleaseMessage(message);

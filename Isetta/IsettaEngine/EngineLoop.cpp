@@ -217,6 +217,28 @@ void NetworkingDemo() {
         });
   }
 
+  Input::RegisterKeyPressCallback(KeyCode::Y, []() {
+    if (NetworkManager::ClientIsConnected()) {
+      SpawnExample* m = reinterpret_cast<SpawnExample*>(
+          NetworkManager::GenerateMessageFromClient("SPWN"));
+      m->a = 1;
+      m->b = 2;
+      m->c = 3;
+      NetworkManager::SendMessageFromClient(m);
+    }
+  });
+  Input::RegisterKeyPressCallback(KeyCode::H, []() {
+    if (NetworkManager::ClientIsConnected()) {
+      if (NetworkingExample::despawnCounter >= NetworkingExample::spawnedEntities.size()) {
+        return;
+      }
+      DespawnExample* m = reinterpret_cast<DespawnExample*>(
+          NetworkManager::GenerateMessageFromClient("DSPN"));
+      m->netId = NetworkingExample::despawnCounter++;
+      NetworkManager::SendMessageFromClient(m);
+    }
+  });
+
   Input::RegisterKeyPressCallback(KeyCode::P, []() {
     if (NetworkManager::ClientIsConnected()) {
       HandleMessage* handleMessage = reinterpret_cast<HandleMessage*>(
