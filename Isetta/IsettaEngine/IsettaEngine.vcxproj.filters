@@ -150,12 +150,6 @@
     <ClCompile Include="Scene\LevelManager.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Custom\ExampleLevel.cpp">
-      <Filter>Custom</Filter>
-    </ClCompile>
-    <ClCompile Include="Custom\ExampleComponent.cpp">
-      <Filter>Custom</Filter>
-    </ClCompile>
     <ClCompile Include="Custom\FlyController.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
@@ -163,9 +157,6 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Custom\AxisDrawer.cpp">
-      <Filter>Custom</Filter>
-    </ClCompile>
-    <ClCompile Include="Custom\PlayerController.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
     <ClCompile Include="Networking\NetworkIdentity.cpp">
@@ -405,12 +396,6 @@
     <ClInclude Include="Scene\LevelManager.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Custom\ExampleLevel.h">
-      <Filter>Custom</Filter>
-    </ClInclude>
-    <ClInclude Include="Custom\ExampleComponent.h">
-      <Filter>Custom</Filter>
-    </ClInclude>
     <ClInclude Include="Custom\FlyController.h">
       <Filter>Custom</Filter>
     </ClInclude>
@@ -419,9 +404,6 @@
     </ClInclude>
     <ClInclude Include="ISETTA_API.h" />
     <ClInclude Include="Custom\AxisDrawer.h">
-      <Filter>Custom</Filter>
-    </ClInclude>
-    <ClInclude Include="Custom\PlayerController.h">
       <Filter>Custom</Filter>
     </ClInclude>
     <ClInclude Include="Networking\ExampleMessages.h">

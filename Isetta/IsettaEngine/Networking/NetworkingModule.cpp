@@ -17,6 +17,7 @@
 #include "Graphics/AnimationComponent.h"
 #include "Networking/ExampleMessages.h"
 #include "Networking/NetworkManager.h"
+#include "Networking/ExampleMessages.h"
 
 // F Windows
 #ifdef SendMessage
