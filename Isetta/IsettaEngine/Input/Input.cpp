@@ -13,26 +13,26 @@ InputModule* Input::inputModule{nullptr};
 void Input::RegisterWindowCloseCallback(const Action<>& callback) {
   inputModule->RegisterWindowCloseCallback(callback);
 }
-U64 Input::RegisterWinSizeCallback(const Action<int, int>& callback) {
+U16 Input::RegisterWinSizeCallback(const Action<int, int>& callback) {
   return inputModule->RegisterWindowSizeCallback(callback);
 }
-void Input::UnegisterWindowSizeCallback(U64 handle) {
+void Input::UnegisterWindowSizeCallback(U16 handle) {
   inputModule->UnegisterWindowSizeCallback(handle);
 }
 bool Input::IsKeyPressed(KeyCode key) { return inputModule->IsKeyPressed(key); }
-U64 Input::RegisterKeyPressCallback(KeyCode key, const Action<>& callback) {
+U16 Input::RegisterKeyPressCallback(KeyCode key, const Action<>& callback) {
   return inputModule->RegisterKeyPressCallback(key, callback);
 }
 
-void Input::UnregisterKeyPressCallback(KeyCode key, U64 handle) {
+void Input::UnregisterKeyPressCallback(KeyCode key, U16 handle) {
   inputModule->UnregisterKeyPressCallback(key, handle);
 }
 
-U64 Input::RegisterKeyReleaseCallback(KeyCode key, const Action<>& callback) {
+U16 Input::RegisterKeyReleaseCallback(KeyCode key, const Action<>& callback) {
   return inputModule->RegisterKeyReleaseCallback(key, callback);
 }
 
-void Input::UnregisterKeyReleaseCallback(KeyCode key, U64 handle) {
+void Input::UnregisterKeyReleaseCallback(KeyCode key, U16 handle) {
   inputModule->UnregisterKeyReleaseCallback(key, handle);
 }
 
@@ -44,58 +44,58 @@ bool Input::IsMouseButtonPressed(MouseButtonCode mouseButton) {
   return inputModule->IsMouseButtonPressed(mouseButton);
 }
 
-U64 Input::RegisterMousePressCallback(MouseButtonCode mouseButton,
+U16 Input::RegisterMousePressCallback(MouseButtonCode mouseButton,
                                       const Action<>& callback) {
   return inputModule->RegisterMousePressCallback(mouseButton, callback);
 }
 
 void Input::UnregisterMousePressCallback(MouseButtonCode mouseButton,
-                                         U64 handle) {
+                                         U16 handle) {
   inputModule->UnregisterMousePressCallback(mouseButton, handle);
 }
 
-U64 Input::RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
+U16 Input::RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
                                         const Action<>& callback) {
   return inputModule->RegisterMouseReleaseCallback(mouseButton, callback);
 }
 
 void Input::UnregisterMouseReleaseCallback(MouseButtonCode mouseButton,
-                                           U64 handle) {
+                                           U16 handle) {
   inputModule->UnregisterMouseReleaseCallback(mouseButton, handle);
 }
 
-U64 Input::RegisterMouseButtonCallback(
+U16 Input::RegisterMouseButtonCallback(
     const Action<GLFWwindow*, int, int, int>& callback) {
   return inputModule->RegisterMouseButtonCallback(callback);
 }
 
-void Input::UnregisterMouseButtonCallback(U64 handle) {
+void Input::UnregisterMouseButtonCallback(U16 handle) {
   inputModule->UnregisterMouseButtonCallback(handle);
 }
 
-U64 Input::RegisterKeyCallback(
+U16 Input::RegisterKeyCallback(
     const Action<GLFWwindow*, int, int, int, int>& callback) {
   return inputModule->RegisterKeyCallback(callback);
 }
 
-void Input::UnegisterKeyCallback(U64 handle) {
+void Input::UnegisterKeyCallback(U16 handle) {
   inputModule->UnegisterKeyCallback(handle);
 }
-U64 Input::RegisterScrollCallback(
+U16 Input::RegisterScrollCallback(
     const Action<GLFWwindow*, double, double>& callback) {
   return inputModule->RegisterScrollCallback(callback);
 }
 
-void Input::UnegisterScrollCallback(U64 handle) {
+void Input::UnegisterScrollCallback(U16 handle) {
   inputModule->UnegisterScrollCallback(handle);
 }
 
-U64 Input::RegisterCharCallback(
+U16 Input::RegisterCharCallback(
     const Action<GLFWwindow*, unsigned int>& callback) {
   return inputModule->RegisterCharCallback(callback);
 }
 
-void Input::UnegisterCharCallback(U64 handle) {
+void Input::UnegisterCharCallback(U16 handle) {
   inputModule->UnegisterCharCallback(handle);
 }
 }  // namespace Isetta
