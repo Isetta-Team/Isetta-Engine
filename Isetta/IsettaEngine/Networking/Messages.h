@@ -3,63 +3,25 @@
  */
 #pragma once
 
+#include <unordered_map>
+#include <utility>
+
 #include "Core/Debug/Assert.h"
-#include "Core/Memory/MemoryManager.h"
+#include "Networking/NetworkManager.h"
 #include "yojimbo/yojimbo.h"
 
 namespace Isetta {
 
-class NetworkRegistry {
- public:
-  static int GetCount() { return count; }
-  static void RegisterMessageType(
-      unsigned long long size, Func<yojimbo::Message*, void*> factory,
-      const char tag[5], Action<yojimbo::Client*, yojimbo::Message*> clientFunc,
-      Action<int, yojimbo::Server*, yojimbo::Message*> serverFunc) {
-    factories[count] = std::pair(size, factory);
-    tags[tag] = count;
-    clientFuncs[count] = clientFunc;
-    serverFuncs[count] = serverFunc;
-    ++count;
-  }
-
- private:
-  static int GetId(const char tag[5]) { return tags[tag]; }
-  static Action<int, yojimbo::Server*, yojimbo::Message*> ServerFunc(int type) {
-    return serverFuncs[type];
-  }
-  static Action<yojimbo::Client*, yojimbo::Message*> ClientFunc(int type) {
-    return clientFuncs[type];
-  }
-  
-  static int count;
-  static std::unordered_map<
-      int, std::pair<unsigned long long, Func<yojimbo::Message*, void*>>>
-      factories;
-  static std::unordered_map<const char*, int> tags;
-  static std::unordered_map<int, Action<yojimbo::Client*, yojimbo::Message*>>
-      clientFuncs;
-  static std::unordered_map<int,
-                            Action<int, yojimbo::Server*, yojimbo::Message*>>
-      serverFuncs;
-
-  NetworkRegistry() = default;
-
-  friend class NetworkingModule;
-  friend class NetworkManager;
-  friend class NetworkMessageFactory;
-};
-
 class NetworkMessageFactory : public yojimbo::MessageFactory {
  public:
-  NetworkMessageFactory(yojimbo::Allocator& allocator, int num_message_types)
-      : MessageFactory(allocator, num_message_types){};
+  NetworkMessageFactory(yojimbo::Allocator* allocator, int num_message_types)
+      : MessageFactory(allocator, num_message_types) {}
 
   yojimbo::Message* CreateMessageInternal(int type) {
     yojimbo::Message* message;
     yojimbo::Allocator& allocator = GetAllocator();
-    message = NetworkRegistry::factories[type].second(allocator.Allocate(
-        NetworkRegistry::factories[type].first, __FILE__, __LINE__));
+    message = NetworkManager::factories[type].second(allocator.Allocate(
+        NetworkManager::factories[type].first, __FILE__, __LINE__));
     if (!message) return NULL;
     SetMessageType(message, type);
     return message;
@@ -73,23 +35,15 @@ class NetworkMessageFactory : public yojimbo::MessageFactory {
       return new (memory) MessageClass();        \
     }
 
-#define RPC_CLIENT_FUNC \
- public:                \
-  static void RpcClient(yojimbo::Client* client, yojimbo::Message* message)
-#define RPC_SERVER_FUNC                                         \
- public:                                                        \
-  static void RpcServer(int clientIdx, yojimbo::Server* server, \
-                        yojimbo::Message* message)
 #define RPC_MESSAGE_FINISH               \
  public:                                 \
   YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS(); \
   }                                      \
   ;
 
-#define RPC_MESSAGE_INIT(MessageClass, Tag)            \
-  NetworkRegistry::RegisterMessageType(                \
-      sizeof(MessageClass), MessageClass::Create, Tag, \
-      MessageClass::RpcClient, MessageClass::RpcServer);
+#define RPC_MESSAGE_INIT(MessageClass, Tag)                 \
+  NetworkManager::RegisterMessageType(sizeof(MessageClass), \
+                                      MessageClass::Create, Tag);
 
 class NetworkAllocator : public yojimbo::Allocator {
  public:
@@ -163,7 +117,7 @@ class CustomAdapter : public yojimbo::Adapter {
   yojimbo::MessageFactory* CreateMessageFactory(yojimbo::Allocator* allocator) {
     return new (
         allocator->Allocate(sizeof(NetworkMessageFactory), __FILE__, __LINE__))
-        NetworkMessageFactory(*allocator, NetworkRegistry::GetCount());
+        NetworkMessageFactory(allocator, NetworkManager::GetMessageTypeCount());
   }
 };
 }  // namespace Isetta

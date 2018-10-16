@@ -4,11 +4,10 @@
 
 #pragma once
 
-#include "Networking/Messages.h"
-#include "Core/Debug/Logger.h"
+#include <string>
 #include "Audio/AudioSource.h"
-#include "Networking/NetworkManager.h"
-
+#include "Core/Debug/Logger.h"
+#include "Networking/Messages.h"
 
 namespace Isetta {
 
@@ -22,48 +21,21 @@ HandleMessage() { handle = 0; }
 
 // TODO(Caleb): choose a more reasonable range for the int serialization
 template <typename Stream>
-bool Serialize(Stream& stream) {
+bool Serialize(Stream* stream) {
   serialize_int(stream, handle, 0, 64);
 
   return true;
 }
 
+void Copy(const yojimbo::Message* otherMessage) override {
+  const HandleMessage* message =
+      reinterpret_cast<const HandleMessage*>(otherMessage);
+  handle = message->handle;
+}
+
 public:
 int handle;
 
-RPC_CLIENT_FUNC {
-  HandleMessage* handleMessage = static_cast<HandleMessage*>(message);
-  LOG(Debug::Channel::Networking, "Server sends handle #%d",
-      handleMessage->handle);
-  if (handleMessage->handle == 0) {
-    LOG(Debug::Channel::Networking,
-        "Server says we should play the animation!");
-  }
-  if (handleMessage->handle == 1) {
-    LOG(Debug::Channel::Networking,
-        "Server says we should stop the animation!");
-  }
-  if (handleMessage->handle == 2) {
-    AudioSource audio = AudioSource();
-    audio.SetAudioClip("gunshot.aiff");
-    audio.Play(false, 1.f);
-  }
-}
-
-RPC_SERVER_FUNC {
-  HandleMessage* handleMessage = reinterpret_cast<HandleMessage*>(message);
-  LOG(Debug::Channel::Networking, "Client %d sends handle #%d", clientIdx,
-      handleMessage->handle);
-  for (int i = 0; i < server->GetMaxClients(); i++) {
-    if (!server->IsClientConnected(i)) {
-      continue;
-    }
-    HandleMessage* newMessage =
-        reinterpret_cast<HandleMessage*>(NetworkManager::GenerateMessageFromServer(i, "HNDL"));
-    newMessage->handle = handleMessage->handle;
-    NetworkManager::SendMessageFromServer(i, newMessage);
-  }
-}
 RPC_MESSAGE_FINISH
 
 /**
@@ -77,32 +49,92 @@ StringMessage() { string = ""; }
 
 // TODO(Caleb): choose a more reasonable range for the int serialization
 template <typename Stream>
-bool Serialize(Stream& stream) {
+bool Serialize(Stream* stream) {
   serialize_string(stream, const_cast<char*>(string.c_str()), 512);
 
   return true;
 }
 
+void Copy(const yojimbo::Message* otherMessage) override {
+  const StringMessage* message =
+      reinterpret_cast<const StringMessage*>(otherMessage);
+  string = message->string;
+}
+
 public:
 std::string string;
 
-RPC_CLIENT_FUNC {
-  StringMessage* stringMessage = static_cast<StringMessage*>(message);
-  LOG(Debug::Channel::Networking, "Server says: %s",
-      stringMessage->string.c_str());
+RPC_MESSAGE_FINISH
+
+// Spawn
+RPC_MESSAGE_DEFINE(SpawnExample)
+
+SpawnExample() { netId = a = b = c = 0; }
+
+template <typename Stream>
+bool Serialize(Stream* stream) {
+  serialize_int(stream, netId, 0, 256);
+  serialize_float(stream, a);
+  serialize_float(stream, b);
+  serialize_float(stream, c);
+
+  return true;
 }
 
-RPC_SERVER_FUNC {
-  StringMessage* stringMessage = reinterpret_cast<StringMessage*>(message);
-  LOG(Debug::Channel::Networking, "Client %d says: %s", clientIdx,
-      stringMessage->string.c_str());
+void Copy(const yojimbo::Message* otherMessage) override {
+  const SpawnExample* message =
+      reinterpret_cast<const SpawnExample*>(otherMessage);
+  netId = message->netId;
+  a = message->a;
+  b = message->b;
+  c = message->c;
 }
+
+int netId;
+float a, b, c;
 
 RPC_MESSAGE_FINISH
 
-inline void InitExampleMessages() {
-  RPC_MESSAGE_INIT(HandleMessage, "HNDL");
-  RPC_MESSAGE_INIT(StringMessage, "STRN");
+// Despawn
+RPC_MESSAGE_DEFINE(DespawnExample)
+
+DespawnExample() { netId = 0; }
+
+template <typename Stream>
+bool Serialize(Stream* stream) {
+  serialize_int(stream, netId, 0, 256);
+
+  return true;
 }
 
+void Copy(const yojimbo::Message* otherMessage) override {
+  const DespawnExample* message =
+      reinterpret_cast<const DespawnExample*>(otherMessage);
+  netId = message->netId;
 }
+
+int netId;
+
+RPC_MESSAGE_FINISH
+
+namespace NetworkingExample {
+void InitExampleMessages();
+
+extern U16 exampleClientHandleId;
+extern U16 exampleServerHandleId;
+extern U16 exampleClientStringId;
+extern U16 exampleServerStringId;
+
+extern U16 exampleClientSpawn;
+extern U16 exampleServerSpawn;
+extern U16 exampleClientDespawn;
+extern U16 exampleServerDespawn;
+
+extern int despawnCounter;
+extern std::vector<Entity*> spawnedEntities;
+
+void RegisterExampleMessageFunctions();
+void DeregisterExampleMessageFunctions();
+}  // namespace NetworkingExample
+
+}  // namespace Isetta

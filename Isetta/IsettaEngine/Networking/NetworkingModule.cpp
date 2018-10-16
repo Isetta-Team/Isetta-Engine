@@ -3,13 +3,19 @@
  */
 
 #include "Networking/NetworkingModule.h"
+
+#include <list>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
+#include <utility>
+
 #include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
 #include "Graphics/AnimationComponent.h"
+#include "Networking/ExampleMessages.h"
 #include "Networking/NetworkManager.h"
 #include "Networking/ExampleMessages.h"
 
@@ -23,20 +29,24 @@ namespace Isetta {
 // Defining static variables
 CustomAdapter NetworkingModule::NetworkAdapter;
 
-int NetworkRegistry::count;
-std::unordered_map<
-    int, std::pair<unsigned long long, Func<yojimbo::Message*, void*>>>
-    NetworkRegistry::factories;
-std::unordered_map<int, Action<yojimbo::Client*, yojimbo::Message*>>
-    NetworkRegistry::clientFuncs;
-std::unordered_map<int, Action<int, yojimbo::Server*, yojimbo::Message*>>
-    NetworkRegistry::serverFuncs;
-std::unordered_map<const char*, int> NetworkRegistry::tags;
+int NetworkManager::messageTypeCount;
+U16 NetworkManager::functionCount;
+U32 NetworkManager::nextNetworkId = 1;
+std::unordered_map<const char*, int> NetworkManager::tags;
+std::unordered_map<int, std::pair<U64, Func<yojimbo::Message*, void*>>>
+    NetworkManager::factories;
+std::unordered_map<int, std::list<std::pair<U16, Action<yojimbo::Message*>>>>
+    NetworkManager::clientCallbacks;
+std::unordered_map<int,
+                   std::list<std::pair<U16, Action<int, yojimbo::Message*>>>>
+    NetworkManager::serverCallbacks;
+std::unordered_map<U32, NetworkIdentity*>
+    NetworkManager::networkIdToComponentMap;
 
 void NetworkingModule::StartUp() {
   NetworkManager::networkingModule = this;
 
-  InitExampleMessages();
+  NetworkingExample::InitExampleMessages();
 
   if (!InitializeYojimbo()) {
     throw std::exception(
@@ -209,7 +219,11 @@ void NetworkingModule::ProcessClientToServerMessages(int clientIdx) {
       break;
     }
 
-    NetworkRegistry::ServerFunc(message->GetType())(clientIdx, server, message);
+    auto serverFunctions =
+        NetworkManager::GetServerFunctions(message->GetType());
+    for (const auto& function : serverFunctions) {
+      function.second(clientIdx, message);
+    }
 
     server->ReleaseMessage(clientIdx, message);
   }
@@ -224,7 +238,11 @@ void NetworkingModule::ProcessServerToClientMessages() {
       break;
     }
 
-    NetworkRegistry::ClientFunc(message->GetType())(client, message);
+    auto clientFunctions =
+        NetworkManager::GetClientFunctions(message->GetType());
+    for (const auto& function : clientFunctions) {
+      function.second(message);
+    }
 
     client->ReleaseMessage(message);
   }
