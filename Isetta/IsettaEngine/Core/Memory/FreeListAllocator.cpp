@@ -44,10 +44,12 @@ void* FreeListAllocator::Alloc(const Size size, const U8 alignment) {
                         "the new request")};
   }
 
+  // TODO(YIDI): the node can be overriden
   PtrInt rawAddress = reinterpret_cast<PtrInt>(node);
   rawAddress += headerSize;  // leave size for header
   PtrInt misAlignment = rawAddress & (alignment - 1);
   U64 adjustment = alignment - misAlignment;
+  adjustment += ((~alignment & adjustment) << 1);
   PtrInt alignedAddress = rawAddress + adjustment;
 
   Size occupiedSize = headerSize + adjustment + size;
@@ -80,6 +82,8 @@ void FreeListAllocator::Free(void* memPtr) {
   PtrInt nodeAddress = headerAddress - header->adjustment;
   auto* newNode = new (reinterpret_cast<void*>(nodeAddress)) Node(header->size);
 
+  // TODO(YIDI): Take care of double deletion, in that situation, memPtr is the
+  // same as head
   if (head == nullptr) {
     head = newNode;
     return;
