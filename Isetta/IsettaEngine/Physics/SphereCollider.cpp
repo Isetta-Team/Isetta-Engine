@@ -31,7 +31,7 @@ bool SphereCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
   if (discr < 0.0f) {
     return false;
   }
-  t = -b - Math::Util::Sqrt(discr);
+  float t = -b - Math::Util::Sqrt(discr);
   if (t < 0.0f) {
     return 0.0f;
   }

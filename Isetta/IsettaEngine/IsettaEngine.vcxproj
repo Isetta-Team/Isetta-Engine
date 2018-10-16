@@ -161,6 +161,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Custom\InEngineTestLevel.cpp" />
     <ClCompile Include="Custom\KeyTransform.cpp" />
     <ClCompile Include="Custom\OscillateMove.cpp" />
+    <ClCompile Include="Custom\PhysicsLevel.cpp" />
     <ClCompile Include="Custom\PlayerController.cpp" />
     <ClCompile Include="EngineLoop.cpp" />
     <ClCompile Include="Graphics\AnimationComponent.cpp" />
@@ -196,6 +197,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Physics\BoxCollider.cpp" />
     <ClCompile Include="Physics\CapsuleCollider.cpp" />
     <ClCompile Include="Physics\Collider.cpp" />
+    <ClCompile Include="Physics\Physics.cpp" />
     <ClCompile Include="Physics\PhysicsModule.cpp" />
     <ClCompile Include="Physics\Plane.cpp" />
     <ClCompile Include="Physics\SphereCollider.cpp" />
@@ -250,6 +252,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Custom\IsettaCore.h" />
     <ClInclude Include="Custom\KeyTransform.h" />
     <ClInclude Include="Custom\OscillateMove.h" />
+    <ClInclude Include="Custom\PhysicsLevel.h" />
     <ClInclude Include="Custom\PlayerController.h" />
     <ClInclude Include="EngineLoop.h" />
     <ClInclude Include="Graphics\AnimationComponent.h" />
@@ -274,6 +277,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Physics\BoxCollider.h" />
     <ClInclude Include="Physics\CapsuleCollider.h" />
     <ClInclude Include="Physics\Collider.h" />
+    <ClInclude Include="Physics\Physics.h" />
     <ClInclude Include="Physics\PhysicsModule.h" />
     <ClInclude Include="Physics\Plane.h" />
     <ClInclude Include="Physics\Ray.h" />

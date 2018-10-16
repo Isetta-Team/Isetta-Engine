@@ -25,11 +25,11 @@ class SphereCollider : public Collider {
       : Collider{isStatic, isTrigger, center}, radius{radius} {}
 
   bool Raycast(const Ray& ray, RaycastHit* const hitInfo,
-               float maxDistance = 0) override;
+               float maxDistance = 0) /*override*/;
 
   inline float GetWorldRadius() const {
     return radius * GetTransform().GetWorldScale().Max();
   }
-  bool Intersection(Collider* const other);
+  bool Intersection(Collider* const other) override;
 };
 }  // namespace Isetta

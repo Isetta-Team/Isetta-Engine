@@ -36,6 +36,11 @@ float Vector3::operator[](int i) const {
     throw std::out_of_range{"Vector3::[] => Index access out of range."};
   return xyz[i];
 }
+float& Vector3::operator[](int i) {
+  if (i < 0 || i > ELEMENT_COUNT - 1)
+    throw std::out_of_range{"Vector3::[] => Index access out of range."};
+  return xyz[i];
+}
 
 float Vector3::Magnitude() const { return sqrtf(SqrMagnitude()); }
 float Vector3::SqrMagnitude() const { return x * x + y * y + z * z; }

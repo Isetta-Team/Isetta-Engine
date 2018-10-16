@@ -67,7 +67,6 @@ void ExampleLevel::LoadLevel() {
   lightComp->SetProperty<LightProperty::SHADOW_MAP_COUNT>(1);
   lightComp->SetProperty<LightProperty::SHADOW_MAP_BIAS>(0.01f);
 
-  /*
   // Mesh
   Entity* man{AddEntity("PushAnim")};
   man->SetTransform(Math::Vector3{0, 0, 0}, Math::Vector3{0, 90, 0});
@@ -85,51 +84,5 @@ void ExampleLevel::LoadLevel() {
   Entity* customEntity{AddEntity("custom")};
   customEntity->AddComponent<ExampleComponent>();
   customEntity->AddComponent<AxisDrawer>();
-  */
-
-  // STATIC
-  Entity* staticCol[3];
-
-  staticCol[0] = AddEntity("collider");
-  staticCol[0]->SetTransform(Math::Vector3{0, 1, 0});
-  BoxCollider* bCol = staticCol[0]->AddComponent<BoxCollider>();
-  bCol->isStatic = true;
-
-  staticCol[1] = AddEntity("collider");
-  staticCol[1]->SetTransform(Math::Vector3{0, 1, -4});
-  SphereCollider* sCol = staticCol[1]->AddComponent<SphereCollider>();
-  sCol->isStatic = true;
-
-  staticCol[2] = AddEntity("collider");
-  staticCol[2]->SetTransform(Math::Vector3{0, 1, -8});
-  CapsuleCollider* cCol = staticCol[2]->AddComponent<CapsuleCollider>(
-      true, true, false, Math::Vector3::zero, 0.5, 2,
-      CapsuleCollider::Direction::X_AXIS);
-
-  // DYNAMIC
-  for (int i = 0; i < 3; i++) {
-    Entity* oscillator{AddEntity("oscillator")};
-    oscillator->GetTransform().SetParent(&staticCol[i]->GetTransform());
-    oscillator->GetTransform().SetLocalPos(7 * Math::Vector3::left);
-    oscillator->AddComponent<OscillateMove>(true, 0, 2, -1, 12);
-    // oscillator->AddComponent<KeyTransform>(true, 0.25);
-
-    Entity* box{AddEntity("collider")};
-    box->GetTransform().SetParent(&oscillator->GetTransform());
-    box->GetTransform().SetLocalPos(-2 * Math::Vector3::left);
-    box->AddComponent<BoxCollider>();
-
-    Entity* sphere{AddEntity("collider")};
-    sphere->GetTransform().SetParent(&oscillator->GetTransform());
-    sphere->AddComponent<SphereCollider>();
-
-    for (int j = 0; j < 3; j++) {
-      Entity* capsule{AddEntity("collider")};
-      capsule->GetTransform().SetParent(&oscillator->GetTransform());
-      capsule->GetTransform().SetLocalPos(3 * (j + 1) * Math::Vector3::left);
-      CapsuleCollider* col = capsule->AddComponent<CapsuleCollider>(
-          true, 0.5, 2, static_cast<CapsuleCollider::Direction>(j));
-    }
-  }
 }
 }  // namespace Isetta

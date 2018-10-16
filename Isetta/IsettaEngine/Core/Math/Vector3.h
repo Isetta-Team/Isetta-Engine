@@ -75,6 +75,7 @@ class ISETTA_API Vector3 {
   // Operators
 
   float operator[](int i) const;
+  float& operator[](int i);
   inline bool operator==(const Vector3& rhs) const {
     return x == rhs.x && y == rhs.y && z == rhs.z;
   }

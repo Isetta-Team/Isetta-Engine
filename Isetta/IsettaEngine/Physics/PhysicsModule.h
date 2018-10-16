@@ -59,13 +59,41 @@ class PhysicsModule {
   friend class Collider;
 
   // Utilities
-  float SqDistPointSegment(const Math::Vector3 &, const Math::Vector3 &,
-                           const Math::Vector3 &);
-  float ClosestPointSegmentSegment(const Math::Vector3 &, const Math::Vector3 &,
-                                   const Math::Vector3 &, const Math::Vector3 &,
-                                   float *const, float *const,
-                                   Math::Vector3 *const, Math::Vector3 *const);
-  Math::Vector3 ClosestPtPointOBB(const Math::Vector3 &,
-                                  const class BoxCollider &);
+  static bool Intersection(const Math::Vector3 &, const Math::Vector3 &,
+                           const class AABB &);
+  static float SqDistPointSegment(const Math::Vector3 &, const Math::Vector3 &,
+                                  const Math::Vector3 &);
+  static float SqDistPointOBB(const Math::Vector3 &, const class BoxCollider &);
+  static float SqDistSegmentOBB(const Math::Vector3 &, const Math::Vector3 &,
+                                const BoxCollider &);
+  static Math::Vector3 ClosestPtPointSegment(const Math::Vector3 &point,
+                                             const Math::Vector3 &p0,
+                                             const Math::Vector3 &p1,
+                                             float *const t);
+  static float ClosestPtSegmentSegment(const Math::Vector3 &,
+                                       const Math::Vector3 &,
+                                       const Math::Vector3 &,
+                                       const Math::Vector3 &, float *const,
+                                       float *const, Math::Vector3 *const,
+                                       Math::Vector3 *const);
+  static Math::Vector3 ClossetPtPointAABB(const Math::Vector3 &,
+                                          const class AABB &);
+  static Math::Vector3 ClosestPtPointOBB(const Math::Vector3 &,
+                                         const class BoxCollider &);
+  static Math::Vector3 ClosestPtRayOBB(const class Ray &,
+                                       const class BoxCollider &, float *,
+                                       float *);
+  static Math::Vector3 Face(int, const class Ray &, const class BoxCollider &,
+                            const Math::Vector3 &, float *, float *);
+  static Math::Vector3 ClosestPtSegmentOBB(const Math::Vector3 &,
+                                           const Math::Vector3 &,
+                                           const class BoxCollider &);
+  inline std::pair<int, int> CollisionPair(int i, int j) {
+    if (i < j) {
+      return std::make_pair(i, j);
+    } else {
+      return std::make_pair(j, i);
+    }
+  }
 };
 }  // namespace Isetta

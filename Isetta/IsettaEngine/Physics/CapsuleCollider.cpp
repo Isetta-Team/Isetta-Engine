@@ -62,6 +62,6 @@ bool CapsuleCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
                               float maxDistance) {
   return false;
 }
-INTERSECTION_TEST(CapsuleCollider)
 
+INTERSECTION_TEST(CapsuleCollider)
 }  // namespace Isetta

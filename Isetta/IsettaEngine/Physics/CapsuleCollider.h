@@ -45,7 +45,7 @@ class CapsuleCollider : public Collider {
   float GetWorldCapsule(Math::Matrix4* rotation, Math::Matrix4* scale) const;
 
   bool Raycast(const Ray& ray, RaycastHit* const hitInfo,
-               float maxDistance = 0);
+               float maxDistance = 0) /*override*/;
 
   inline float GetWorldRadius() const {
     switch (direction) {
@@ -70,6 +70,6 @@ class CapsuleCollider : public Collider {
         return GetTransform().GetWorldScale().z;
     }
   }
-  bool Intersection(Collider* const other);
+  bool Intersection(Collider* const other) override;
 };
 }  // namespace Isetta

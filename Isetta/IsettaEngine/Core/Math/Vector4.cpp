@@ -33,6 +33,11 @@ float Vector4::operator[](int i) const {
     throw std::out_of_range{"Vector4::[] => Index access out of range."};
   return xyzw[i];
 }
+float& Vector4::operator[](int i) {
+  if (i < 0 || i > ELEMENT_COUNT - 1)
+    throw std::out_of_range{"Vector4::[] => Index access out of range."};
+  return xyzw[i];
+}
 
 void Vector4::Set(const Vector3& inXYZ, const float inW) {
   x = inXYZ.x;

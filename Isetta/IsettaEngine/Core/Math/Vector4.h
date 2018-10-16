@@ -76,6 +76,7 @@ class ISETTA_API_DECLARE Vector4 {
   // Operators
 
   float operator[](int i) const;
+  float& operator[](int i);
   inline bool operator==(const Vector4& rhs) const {
     return x == rhs.x && y == rhs.y && z == rhs.z && w == rhs.w;
   }

@@ -192,6 +192,12 @@
     <ClCompile Include="Physics\Plane.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Custom\PhysicsLevel.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Physics.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -475,6 +481,12 @@
       <Filter>Custom</Filter>
     </ClInclude>
     <ClInclude Include="Physics\Plane.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\PhysicsLevel.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Physics.h">
       <Filter>Physics</Filter>
     </ClInclude>
   </ItemGroup>

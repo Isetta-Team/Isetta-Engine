@@ -25,6 +25,12 @@ class AABB {
     max = center + extents;
   }
 
+  inline Math::Vector3 GetCenter() const { return center; }
+  inline Math::Vector3 GetSize() const { return size; }
+  inline Math::Vector3 GetExtents() const { return extents; }
+  inline Math::Vector3 GetMin() const { return min; }
+  inline Math::Vector3 GetMax() const { return max; }
+
   inline bool Contains(Math::Vector3 point) {
     return (point.x >= min.x && point.x <= max.x) &&
            (point.y >= min.y && point.y <= max.y) &&
@@ -75,7 +81,6 @@ class AABB {
   }
 
   float SurfaceArea() const { return 2 * size.SqrMagnitude(); }
-
   // Math::Vector3 ClosestPoint(Math::Vector3 point);
   // void IntersectRay(Ray ray);
 };

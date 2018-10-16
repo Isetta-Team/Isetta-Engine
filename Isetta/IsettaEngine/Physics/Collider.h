@@ -42,10 +42,10 @@ class Collider : public Component {
     return center + GetTransform().GetWorldPos();
   }
 
- private:
-  void OnEnable() override;
   void OnDisable() override;
+  void OnEnable() override;
 
+ private:
  protected:
   AABB* bounding;
 
