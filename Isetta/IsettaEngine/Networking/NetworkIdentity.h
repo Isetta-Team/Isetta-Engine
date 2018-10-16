@@ -9,9 +9,8 @@
 namespace Isetta {
 class NetworkIdentity : public Component {
  public:
-  NetworkIdentity() = default;
-  NetworkIdentity(Entity* owner);
-  NetworkIdentity(Entity* owner, U32 id);
+  NetworkIdentity();
+  NetworkIdentity(U32 id);
 
   U32 id = 0;
   U8 clientAuthority = -1;

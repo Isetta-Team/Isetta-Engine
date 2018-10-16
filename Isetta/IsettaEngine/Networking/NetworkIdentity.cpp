@@ -7,13 +7,11 @@
 #include "Scene/Entity.h"
 
 namespace Isetta {
-NetworkIdentity::NetworkIdentity(Entity* owner) {
-  this->owner = owner;
+NetworkIdentity::NetworkIdentity() {
   NetworkManager::CreateNetworkId(this);
 }
 
-NetworkIdentity::NetworkIdentity(Entity* owner, U32 id) {
-  this->owner = owner;
+NetworkIdentity::NetworkIdentity(U32 id) {
   NetworkManager::AssignNetworkId(id, this);
 }
 

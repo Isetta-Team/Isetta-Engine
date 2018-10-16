@@ -3,6 +3,10 @@
  */
 #pragma once
 
+#include <list>
+#include <unordered_map>
+#include <utility>
+
 #include "Core/IsettaAlias.h"
 #include "yojimbo/yojimbo.h"
 
@@ -100,7 +104,7 @@ class NetworkManager {
       int, std::list<std::pair<U16, Action<int, yojimbo::Message*>>>>
       serverCallbacks;
 
-  static std::unordered_map<U32, Entity*> networkIdToEntityMap;
+  static std::unordered_map<U32, NetworkIdentity*> networkIdToComponentMap;
 
   friend class NetworkingModule;
   friend class NetworkMessageFactory;

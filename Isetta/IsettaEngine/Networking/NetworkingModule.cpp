@@ -4,6 +4,7 @@
 
 #include "Networking/NetworkingModule.h"
 
+#include <list>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
@@ -38,7 +39,8 @@ std::unordered_map<int, std::list<std::pair<U16, Action<yojimbo::Message*>>>>
 std::unordered_map<int,
                    std::list<std::pair<U16, Action<int, yojimbo::Message*>>>>
     NetworkManager::serverCallbacks;
-std::unordered_map<U32, Entity*> NetworkManager::networkIdToEntityMap;
+std::unordered_map<U32, NetworkIdentity*>
+    NetworkManager::networkIdToComponentMap;
 
 void NetworkingModule::StartUp() {
   NetworkManager::networkingModule = this;

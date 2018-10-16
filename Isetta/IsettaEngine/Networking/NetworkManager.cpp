@@ -123,9 +123,9 @@ void NetworkManager::UnregisterClientCallback(const char tag[NETWORK_TAG_LEN],
 }
 
 Entity* NetworkManager::GetNetworkEntity(const U32 id) {
-  auto it = networkIdToEntityMap.find(id);
-  if (it != networkIdToEntityMap.end()) {
-    return it->second;
+  auto it = networkIdToComponentMap.find(id);
+  if (it != networkIdToComponentMap.end()) {
+    return it->second->owner;
   }
   return NULL;
 }
@@ -135,11 +135,11 @@ U32 NetworkManager::CreateNetworkId(NetworkIdentity* networkIdentity) {
   }
   U32 netId = nextNetworkId++;
   networkIdentity->id = netId;
-  networkIdToEntityMap[netId] = networkIdentity->owner;
+  networkIdToComponentMap[netId] = networkIdentity;
 }
 U32 NetworkManager::AssignNetworkId(U32 netId,
                                     NetworkIdentity* networkIdentity) {
-  if (networkIdToEntityMap.find(netId) != networkIdToEntityMap.end()) {
+  if (networkIdToComponentMap.find(netId) != networkIdToComponentMap.end()) {
     throw std::exception(Util::StrFormat(
         "Multiple objects trying to assign to the same network id: %d", netId));
   } else if (networkIdentity->id > 0) {
@@ -149,14 +149,14 @@ U32 NetworkManager::AssignNetworkId(U32 netId,
                         netId, networkIdentity->id));
   }
   networkIdentity->id = netId;
-  networkIdToEntityMap[netId] = networkIdentity->owner;
+  networkIdToComponentMap[netId] = networkIdentity;
 }
 void NetworkManager::RemoveNetworkId(NetworkIdentity* networkIdentity) {
   if (!networkIdentity->id) {
     throw std::exception(Util::StrFormat(
         "Cannot remove network id on a nonexistent network object"));
   }
-  networkIdToEntityMap.erase(networkIdentity->id);
+  networkIdToComponentMap.erase(networkIdentity->id);
   networkIdentity->id = NULL;
 }
 }  // namespace Isetta
