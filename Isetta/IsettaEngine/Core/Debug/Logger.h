@@ -146,7 +146,7 @@ class ISETTA_API_DECLARE Logger {
  * passed by default at the given position
  *
  */
-struct LogObject {
+struct ISETTA_API LogObject {
   /// File where the log macro is called from
   std::string file;
   // Line where the log macro is called from

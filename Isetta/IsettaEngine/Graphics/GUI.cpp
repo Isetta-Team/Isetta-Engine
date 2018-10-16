@@ -194,6 +194,21 @@ void GUI::InputInt(const RectTransform& transform, const std::string& label,
   ImGui::PopStyleColor(4);
 }
 
+void GUI::SliderFloat(const RectTransform& transform, const std::string& label,
+                      float* value, float min, float max, float power, const char* format,
+                      const InputStyle& style) {
+  ImGui::SetCursorPos((ImVec2)SetPosition(transform));
+  ImGui::PushItemWidth(transform.rect.width);
+
+  ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)style.background);
+  ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)style.hovered);
+  ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)style.active);
+  ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)style.text);
+  ImGui::SliderFloat(label.c_str(), value, min, max, format, power);
+  ImGui::PopItemWidth();
+  ImGui::PopStyleColor(4);
+}
+
 // WINDOWS
 bool GUI::Window(const RectTransform& transform, const std::string& name,
                  const Action<>& ui, bool* isOpen, const BackgroundStyle& style,

@@ -174,6 +174,9 @@
     <ClCompile Include="Networking\ExampleMessages.cpp">
       <Filter>Networking</Filter>
     </ClCompile>
+    <ClCompile Include="Custom\InEngineTestLevel.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -432,6 +435,9 @@
     </ClInclude>
     <ClInclude Include="Networking\NetworkIdentity.h">
       <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\InEngineTestLevel.h">
+      <Filter>Custom</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

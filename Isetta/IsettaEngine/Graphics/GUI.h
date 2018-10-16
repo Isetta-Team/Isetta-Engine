@@ -24,7 +24,7 @@ class Rect;
 }  // namespace Isetta
 
 namespace Isetta {
-class ISETTA_API_DECLARE GUI {
+class ISETTA_API GUI {
  public:
   enum class WindowFlags : U32 {
     None = 0,
@@ -458,7 +458,7 @@ class ISETTA_API_DECLARE GUI {
           offset{offset},
           tiling{tiling} {}
   };
-  struct InputStyle {
+  struct ISETTA_API InputStyle {
     Color background;
     Color hovered;
     Color active;
@@ -512,7 +512,7 @@ class ISETTA_API_DECLARE GUI {
         : window{window}, background{background} {}
   };
   // TODO(Jacob) refactor
-  struct TextStyle {
+  struct ISETTA_API TextStyle {
     bool isWrapped;
     bool isDisabled;
     // TODO(Jacob) Not worth implementing now
@@ -678,6 +678,9 @@ class ISETTA_API_DECLARE GUI {
   ////////////////////////////////////////
   // TODO(Jacob) NOT PART OF GAME NEEDS //
   ////////////////////////////////////////
+  static void SliderFloat(const RectTransform& transform, const std::string& label, float* value, float min,
+                          float max, float power = 1, const char* format = "%.3f",
+                          const InputStyle& style = {});
   /*
   // TODO(Jacob) refactor
   struct SliderStyle {

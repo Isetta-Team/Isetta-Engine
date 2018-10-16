@@ -118,7 +118,7 @@ class ISETTA_API_DECLARE DebugDraw {
 
   static std::list<std::pair<float, Action<>>> durationDraw;
 
-  static void DebugDraw::DrawPoint(const Math::Vector3 point,
+  static void DrawPoint(const Math::Vector3 point,
                                    const Color& color, float size,
                                    bool depthTest);
   static void DrawLine(const Math::Vector3& start, const Math::Vector3& end,

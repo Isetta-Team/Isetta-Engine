@@ -2,6 +2,8 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Scene/Entity.h"
+#include "Level.h"
+#include "LevelManager.h"
 #include "Scene/Component.h"
 
 namespace Isetta {
@@ -112,6 +114,14 @@ Entity::~Entity() {
 
 void Entity::Destroy(Entity* entity) {
   entity->SetAttribute(EntityAttributes::NEED_DESTROY, true);
+}
+
+Entity* Entity::GetEntityByName(const std::string& name) {
+  return LevelManager::Instance().currentLevel->GetEntityByName(name);
+}
+
+std::list<Entity*> Entity::GetEntitiesByName(const std::string& name) {
+  return LevelManager::Instance().currentLevel->GetEntitiesByName(name);
 }
 
 void Entity::SetActive(bool inActive) {

@@ -10,17 +10,18 @@
 
 namespace Isetta {
 
-Entity* Level::GetEntityByName(std::string name) {
+Entity* Level::GetEntityByName(const std::string& name) {
   StringId inID{SID(name.c_str())};
   for (const auto& entity : entities) {
     if (entity->entityID == inID) {
       return entity;
     }
   }
+  LOG_WARNING(Debug::Channel::General, "Entity %s not found!", name.c_str());
   return nullptr;
 }
 
-std::list<Entity*> Level::GetEntitiesByName(std::string name) {
+std::list<Entity*> Level::GetEntitiesByName(const std::string& name) {
   std::list<Entity*> returnEntities;
   StringId inID{SID(name.c_str())};
   for (const auto& entity : entities) {
@@ -55,15 +56,15 @@ void Level::GUIUpdate() {
   }
 
 #if _DEBUG
-  float buttonHeight = 30;
+  float buttonHeight = 20;
   float buttonWidth = 200;
   float height = 80;
   float left = 200;
-  float padding = 30;
+  float padding = 20;
   static Transform* transform = nullptr;
 
   for (const auto& entity : entities) {
-    if (entity->GetTransform().GetParent() == nullptr) {
+    if (entity->GetActive() && entity->GetTransform().GetParent() == nullptr) {
       Func<int, Transform*> countLevel = [](Transform* trans) -> int {
         int i = 0;
         while (trans->GetParent() != nullptr) {

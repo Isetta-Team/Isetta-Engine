@@ -4,9 +4,10 @@
 #pragma once
 #include "Core/IsettaAlias.h"
 #include "Core/Memory/MemUtil.h"
+#include "ISETTA_API.h"
 
 namespace Isetta {
-class StackAllocator {
+class ISETTA_API StackAllocator {
  public:
   typedef Size Marker;
 

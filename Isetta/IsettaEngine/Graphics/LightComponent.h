@@ -2,14 +2,13 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include <Horde3D.h>
 #include <string>
 #include "Core/Color.h"
-#include "Horde3D.h"
 #include "Scene/Component.h"
-#include "Scene/Entity.h"
 
 namespace Isetta {
-class ISETTA_API_DECLARE LightComponent : public Component {
+class ISETTA_API LightComponent : public Component {
  public:
   enum class Property {
     RADIUS,
@@ -38,8 +37,8 @@ class ISETTA_API_DECLARE LightComponent : public Component {
   friend class RenderModule;
   void UpdateH3DTransform() const;
   std::string name;
-  H3DNode renderNode{NULL};
-  H3DRes renderResource{NULL};
+  H3DNode renderNode{0};
+  H3DRes renderResource{0};
 };
 
 template <LightComponent::Property Attr, typename T>

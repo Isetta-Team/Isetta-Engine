@@ -4,6 +4,7 @@
 #include "Scene/LevelManager.h"
 #include "Core/Memory/MemoryManager.h"
 #include "Scene/Level.h"
+#include "Core/Config/Config.h"
 
 namespace Isetta {
 LevelManager& LevelManager::Instance() {
@@ -16,12 +17,13 @@ bool LevelManager::Register(std::string name, Func<Level*> level) {
   return true;
 }
 
-LevelManager::LevelManager() {
-  currentLevelName = "ExampleLevel";
+void LevelManager::LoadStartupLevel() {
+  currentLevelName = Config::Instance().levelConfig.startLevel.GetVal();
+  LoadLevel();
 }
 
 void LevelManager::LoadLevel() {
-   currentLevel = levels.at(SID(currentLevelName.c_str()))();
+  currentLevel = levels.at(SID(currentLevelName.c_str()))();
   if (currentLevel != nullptr) {
     currentLevel->LoadLevel();
   }
@@ -33,7 +35,4 @@ void LevelManager::UnloadLevel() const {
   }
 }
 
-LevelManager::~LevelManager() {
-  
-}
 }  // namespace Isetta

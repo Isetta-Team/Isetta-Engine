@@ -18,8 +18,8 @@
 #include "Graphics/GUI.h"
 #include "Input/Input.h"
 #include "Input/InputEnum.h"
-#include "Networking/ExampleMessages.h"
 #include "Networking/NetworkManager.h"
+#include "Networking/ExampleMessages.h"
 #include "Scene/Level.h"
 
 // TODO(Jacob) Remove, used only for GUIDemo
@@ -36,7 +36,6 @@ namespace Isetta {
 
 void InputDemo();
 void NetworkingDemo();
-void NetworkingEndDemo();
 void GraphicsDemo();
 void GUIDemo();
 void DebugDemo();
@@ -78,7 +77,7 @@ void EngineLoop::StartUp() {
   guiModule->StartUp(windowModule->winHandle);
   networkingModule->StartUp();
 
-  LevelManager::Instance().LoadLevel();
+  LevelManager::Instance().LoadStartupLevel();
 
   DebugDraw::StartUp();
 
@@ -127,7 +126,8 @@ void EngineLoop::VariableUpdate(float deltaTime) {
   inputModule->Update(deltaTime);
   LevelManager::Instance().currentLevel->Update();
   LevelManager::Instance().currentLevel->LateUpdate();
-  DebugDemo();
+  // DebugDemo();
+  DebugDraw::Axis(Math::Matrix4::identity, Color::red, Color::green, Color::blue, 2, 0, true);
   audioModule->Update(deltaTime);
   renderModule->Update(deltaTime);
   DebugDraw::Update();
@@ -137,7 +137,6 @@ void EngineLoop::VariableUpdate(float deltaTime) {
 }
 
 void EngineLoop::ShutDown() {
-  NetworkingEndDemo();
   LevelManager::Instance().currentLevel->UnloadLevel();
   networkingModule->ShutDown();
   audioModule->ShutDown();
@@ -164,22 +163,6 @@ Clock& EngineLoop::GetGameClock() {
   return gameTime;
 }
 
-struct TestObject {
-  static const Size size = 123;
-  U64 arr[size];
-
-  TestObject(U64 ini) {
-    for (Size i = 0; i < size; i++) {
-      arr[i] = 10;
-    }
-  }
-  void Print() {
-    for (int i = 0; i < size; i++) {
-      LOG_INFO(Debug::Channel::General, "%d, %I64u", i, arr[i]);
-    }
-  }
-};
-
 void InputDemo() {
   // TODO(Chaojie) remove later into game logic
 
@@ -203,8 +186,6 @@ void InputDemo() {
 }
 void NetworkingDemo() {
   // Networking
-  NetworkingExample::RegisterExampleMessageFunctions();
-
   if (Config::Instance().networkConfig.runServer.GetVal()) {
     NetworkManager::CreateServer(
         Config::Instance().networkConfig.defaultServerIP.GetVal().c_str());
@@ -216,28 +197,6 @@ void NetworkingDemo() {
           LOG(Debug::Channel::Networking, "Client connection state: %d", b);
         });
   }
-
-  Input::RegisterKeyPressCallback(KeyCode::Y, []() {
-    if (NetworkManager::ClientIsConnected()) {
-      SpawnExample* m = reinterpret_cast<SpawnExample*>(
-          NetworkManager::GenerateMessageFromClient("SPWN"));
-      m->a = 1;
-      m->b = 2;
-      m->c = 3;
-      NetworkManager::SendMessageFromClient(m);
-    }
-  });
-  Input::RegisterKeyPressCallback(KeyCode::H, []() {
-    if (NetworkManager::ClientIsConnected()) {
-      if (NetworkingExample::despawnCounter >= NetworkingExample::spawnedEntities.size()) {
-        return;
-      }
-      DespawnExample* m = reinterpret_cast<DespawnExample*>(
-          NetworkManager::GenerateMessageFromClient("DSPN"));
-      m->netId = NetworkingExample::despawnCounter++;
-      NetworkManager::SendMessageFromClient(m);
-    }
-  });
 
   Input::RegisterKeyPressCallback(KeyCode::P, []() {
     if (NetworkManager::ClientIsConnected()) {
@@ -263,9 +222,6 @@ void NetworkingDemo() {
       NetworkManager::SendMessageFromClient(handleMessage);
     }
   });
-}
-void NetworkingEndDemo() {
-  NetworkingExample::DeregisterExampleMessageFunctions();
 }
 void GraphicsDemo() {}
 // TODO(Jacob) remove
@@ -387,7 +343,7 @@ void GUIDemo() {
                       312));
 }
 void DebugDemo() {
-  DebugDraw::Point(2 * Math::Vector3::left, Color::magenta, 20);
+  // DebugDraw::Point(2 * Math::Vector3::left, Color::magenta, 20);
   // DebugDraw::Line(Math::Vector3::zero, v);
   if (Input::IsKeyPressed(KeyCode::V)) {
     static float angle = 0.0f;
@@ -405,16 +361,15 @@ void DebugDemo() {
   }
   // DebugDraw::WirePlane(Math::Matrix4::identity);
   // DebugDraw::Cube(Math::Matrix4::Translate(Math::Vector3{2.8, 1.1, 0}) *
-  // Math::Matrix4::Scale(2.2 * Math::Vector3::one),
-  // Color::brown);
+                      // Math::Matrix4::Scale(2.2 * Math::Vector3::one),
+                  // Color::brown);
   // DebugDraw::WireCube(Math::Matrix4::Translate(Math::Vector3{0, 0, -2}));
   // DebugDraw::WireSphere(Math::Vector3::up, 1, Color::red);
-  // DebugDraw::WireCapsule(Math::Matrix4::Translate(Math::Vector3{-1, 4, 1}),
-  // 0.5, 2, Color::blue);
+  // DebugDraw::WireCapsule(Math::Matrix4::Translate(Math::Vector3{-1, 4, 1}), 0.5,
+                         // 2, Color::blue);
   // DebugDraw::AxisSphere(Math::Vector3::up, 1);
-  DebugDraw::Grid();
-  DebugDraw::Axis(Math::Matrix4::identity, Color::red, Color::green,
-                  Color::blue, 2, 0, true);
+  // DebugDraw::Grid();
+  DebugDraw::Axis(Math::Matrix4::identity, Color::red, Color::green, Color::blue, 2, 0, true);
 }
 
 }  // namespace Isetta

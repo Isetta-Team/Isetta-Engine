@@ -7,7 +7,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-class ISETTA_API_DECLARE CameraComponent : public Component {
+class ISETTA_API CameraComponent : public Component {
  public:
   enum class Property {
     FOV,

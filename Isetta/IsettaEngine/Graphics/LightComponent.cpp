@@ -33,11 +33,17 @@ H3DRes LightComponent::LoadResourceFromFile(const std::string& resourceName) {
 }
 
 void LightComponent::OnEnable() {
-  renderNode = h3dAddLightNode(H3DRootNode, name.c_str(), renderResource,
-                               "LIGHTING", "SHADOWMAP");
+  if (renderNode == 0) {
+    renderNode = h3dAddLightNode(H3DRootNode, name.c_str(), renderResource,
+                                 "LIGHTING", "SHADOWMAP");
+  } else {
+    h3dSetNodeFlags(renderNode, 0, true);
+  }
 }
 
-void LightComponent::OnDisable() { h3dRemoveNode(renderNode); }
+void LightComponent::OnDisable() {
+  h3dSetNodeFlags(renderNode, H3DNodeFlags::Inactive, true);
+}
 
 void LightComponent::UpdateH3DTransform() const {
   Transform::SetH3DNodeTransform(renderNode, GetTransform());

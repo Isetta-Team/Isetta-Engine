@@ -45,6 +45,8 @@ class ISETTA_API Entity {
 
   std::string GetName() const { return entityName; }
   static void Destroy(Entity* entity);
+  static Entity* GetEntityByName(const std::string& name);
+  static std::list<Entity*> GetEntitiesByName(const std::string& name);
 
   void SetActive(bool inActive);
   bool GetActive() const;

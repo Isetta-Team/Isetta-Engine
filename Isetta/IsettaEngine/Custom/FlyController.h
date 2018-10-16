@@ -19,5 +19,6 @@ private:
   float rotY{};
   float lookRotationSpeed{-0.1f};
   float flySpeed = 15.f;
+  bool enableLook = true;
 };
 }  // namespace Isetta

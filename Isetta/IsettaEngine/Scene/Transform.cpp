@@ -38,23 +38,19 @@ void Transform::SetWorldPos(const Math::Vector3& newWorldPos) {
   }
 }
 
-// TODO(YIDI): test this
 void Transform::SetLocalPos(const Math::Vector3& newLocalPos) {
   localPos = newLocalPos;
   SetDirty();
 }
 
-// TODO(YIDI): test this
 void Transform::TranslateWorld(const Math::Vector3& delta) {
   SetWorldPos(GetWorldPos() + delta);
 }
 
-// TODO(YIDI): test this
 void Transform::TranslateLocal(const Math::Vector3& delta) {
   SetLocalPos(localPos + delta);
 }
 
-// TODO(YIDI): test this
 Math::Quaternion Transform::GetWorldRot() {
   if (parent == nullptr) {
     worldRot = localRot;
@@ -65,15 +61,12 @@ Math::Quaternion Transform::GetWorldRot() {
   return worldRot;
 }
 
-// TODO(YIDI): test this
 Math::Quaternion Transform::GetLocalRot() const { return localRot; }
 
-// TODO(YIDI): test this
 Math::Vector3 Transform::GetWorldEulerAngles() {
   return GetWorldRot().GetEulerAngles();
 }
 
-// TODO(YIDI): test this
 Math::Vector3 Transform::GetLocalEulerAngles() const {
   return localRot.GetEulerAngles();
 }
@@ -203,12 +196,16 @@ Math::Vector3 Transform::GetLeft() {
 
 void Transform::LookAt(const Math::Vector3& target,
                        const Math::Vector3& worldUp) {
-  Math::Vector3 forwardDir = target - GetLocalPos();
+  Math::Vector3 forwardDir = (target - GetLocalPos()).Normalized();
   Math::Vector3 rightDir =
       Math::Vector3::Cross(forwardDir, worldUp).Normalized();
-  Math::Vector3 upDir = Math::Vector3::Cross(forwardDir, rightDir);
-
-  SetWorldRot(Math::Quaternion::FromLookRotation(forwardDir, upDir));
+  // upDir is guaranteed to be of unit length
+  // cause |upDir| = |forwardDir| * |rightDir| * sin();
+  Math::Vector3 upDir = Math::Vector3::Cross(rightDir, forwardDir);
+  // localToWorldMatrix.SetCol(0, rightDir, 0);
+  // localToWorldMatrix.SetCol(1, upDir, 0);
+  // localToWorldMatrix.SetCol(2, forwardDir, 0);
+  SetLocalRot(Math::Quaternion::FromLookRotation(forwardDir, upDir));
 }
 
 void Transform::LookAt(Transform& target, const Math::Vector3& worldUp) {
@@ -246,7 +243,7 @@ Math::Vector3 Transform::WorldDirFromLocalDir(
 Math::Vector3 Transform::LocalDirFromWorldDir(
     const Math::Vector3& worldDirection) {
   sharedV4.Set(worldDirection, 0);
-  return (worldToLocalMatrix * sharedV4).GetVector3();
+  return (GetWorldToLocalMatrix() * sharedV4).GetVector3();
 }
 
 void Transform::ForChildren(const Action<Transform*>& action) {
@@ -288,18 +285,11 @@ void Transform::DrawGUI() {
       "Local Rotation: " + GetLocalEulerAngles().ToString() + "\n" +
       "Local Scale: " + GetLocalScale().ToString() + "\n" +
       "Parent: " + parentName;
-  GUI::Text(RectTransform{Math::Rect{-200, 200, 300, 100}, GUI::Pivot::TopRight,
+  GUI::Text(RectTransform{Math::Rect{-200, 360, 300, 100}, GUI::Pivot::TopRight,
                           GUI::Pivot::TopRight},
             content);
-  if (GUI::Button(RectTransform{Math::Rect{-200, 330, 300, 30},
-                                GUI::Pivot::TopRight, GUI::Pivot::TopRight},
-                  "Reset")) {
-    SetLocalRot(Math::Quaternion::identity);
-    SetLocalPos(Math::Vector3::zero);
-    SetLocalScale(Math::Vector3::one);
-  }
   
-  float height = 360;
+  float height = 420;
   float padding = 15;
   GUI::Text(RectTransform{Math::Rect{-200, height, 300, 100},
                           GUI::Pivot::TopRight, GUI::Pivot::TopRight},
@@ -311,6 +301,13 @@ void Transform::DrawGUI() {
                             GUI::Pivot::TopRight, GUI::Pivot::TopRight},
               typeid(comp).name());
     height += padding;
+  }
+  if (GUI::Button(RectTransform{Math::Rect{-200, height, 300, 30},
+                                GUI::Pivot::TopRight, GUI::Pivot::TopRight},
+                  "Reset")) {
+    SetLocalRot(Math::Quaternion::identity);
+    SetLocalPos(Math::Vector3::zero);
+    SetLocalScale(Math::Vector3::one);
   }
   DebugDraw::Axis(GetLocalToWorldMatrix());
   DebugDraw::AxisSphere(GetLocalToWorldMatrix());
@@ -334,12 +331,11 @@ const Math::Matrix4& Transform::GetWorldToLocalMatrix() {
 
 void Transform::RecalculateLocalToWorldMatrix() {
   Math::Matrix4 localToParentMatrix{};
-  localToParentMatrix.SetCol(3, localPos, 1);                    // translation
   localToParentMatrix.SetTopLeftMatrix3(localRot.GetMatrix3());  // rotation
-
   Math::Matrix4 temp;
   temp.SetDiagonal(localScale.x, localScale.y, localScale.z, 1);
   localToParentMatrix = temp * localToParentMatrix;  // scale
+  localToParentMatrix.SetCol(3, localPos, 1);         
 
   if (parent != nullptr) {
     localToWorldMatrix = parent->GetLocalToWorldMatrix() * localToParentMatrix;
@@ -367,6 +363,7 @@ void Transform::RemoveChild(Transform* transform) {
 }
 
 void Transform::SetDirty() {
+  // TODO(YIDI): Don't need to traverse all children, if one child is dirty, all children all also dirty
   ForSelfAndDescendents([](Transform* trans) {
     trans->isDirty = true;
     trans->isWorldToLocalDirty = true;

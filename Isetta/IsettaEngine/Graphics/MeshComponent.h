@@ -8,8 +8,8 @@
 
 namespace Isetta {
 class ISETTA_API_DECLARE MeshComponent : public Component {
-  H3DNode renderNode{NULL};
-  H3DRes renderResource{NULL};
+  H3DNode renderNode{0};
+  H3DRes renderResource{0};
 
   explicit MeshComponent(const std::string& resourceName);
   ~MeshComponent();

@@ -39,12 +39,15 @@ H3DRes MeshComponent::LoadResourceFromFile(const std::string& resourceName) {
 }
 
 void MeshComponent::OnEnable() {
-  renderNode = h3dAddNodes(H3DRootNode, renderResource);
+  if (renderNode == 0) {
+    renderNode = h3dAddNodes(H3DRootNode, renderResource);
+  } else {
+    h3dSetNodeFlags(renderNode, 0, true);
+  }
 }
 
 void MeshComponent::OnDisable() {
-  // Disabling a mesh is also disabling its animation, need to fix it later
-  h3dRemoveNode(renderNode);
+  h3dSetNodeFlags(renderNode, H3DNodeFlags::Inactive, true);
 }
 
 }  // namespace Isetta
