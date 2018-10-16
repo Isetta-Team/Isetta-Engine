@@ -144,9 +144,6 @@
     <ClCompile Include="Scene\LevelManager.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Custom\FlyController.cpp">
-      <Filter>Custom</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Filesystem.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -240,6 +237,12 @@
     <ClCompile Include="Networking\NetworkIdentity.cpp">
       <Filter>Networking</Filter>
     </ClCompile>
+    <ClCompile Include="Components\FlyController.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\DebugComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -301,6 +304,9 @@
     </Filter>
     <Filter Include="Physics">
       <UniqueIdentifier>{c15f9d47-86d9-41b5-a7ee-43b1cc1fee77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{e5f06d6e-7bc1-4d7b-b063-c75a33bfbf4b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -471,9 +477,6 @@
     <ClInclude Include="Scene\LevelManager.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Custom\FlyController.h">
-      <Filter>Custom</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Filesystem.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -489,6 +492,12 @@
     </ClInclude>
     <ClInclude Include="Networking\NetworkIdentity.h">
       <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\FlyController.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\DebugComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
