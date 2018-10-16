@@ -41,9 +41,9 @@ void GameManager::GuiUpdate() {
                                  GUI::Pivot::TopRight, GUI::Pivot::TopRight},
                    "Zombie Speed", &Zombie::speed, 0, 5.f);
 
-  GUI::Text(RectTransform{Math::Rect{50, 200, 300, 100},
-                                 GUI::Pivot::Top, GUI::Pivot::Top}, 
-	  Util::StrFormat("Score: %d!", score), GUI::TextStyle{Color::green});
+  GUI::Text(RectTransform{Math::Rect{50, 200, 300, 100}, GUI::Pivot::Top,
+                          GUI::Pivot::Top},
+            Util::StrFormat("Score: %d!", score), GUI::TextStyle{Color::green});
 }
 
 void GameManager::SpawnZombie() const {
