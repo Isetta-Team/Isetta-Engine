@@ -20,7 +20,7 @@ void Bullet::Initialize(const Math::Vector3& pos, const Math::Vector3& flyDir) {
 
 void Bullet::OnEnable() {
   if (!initialized) {
-    owner->AddComponent<MeshComponent>(true, "Bullet/Bullet.scene.xml");
+    owner->AddComponent<MeshComponent, true>("Bullet/Bullet.scene.xml");
     initialized = true;
     audio.SetAudioClip("bullet-impact.wav");
   }

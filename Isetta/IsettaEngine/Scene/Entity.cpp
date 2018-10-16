@@ -61,6 +61,7 @@ void Entity::CheckDestroy() {
       comp->OnDestroy();
     }
     for (auto comp : components) {
+      comp->~Component();
       MemoryManager::FreeOnFreeList(comp);
     }
     // TODO(Chaojie): delete child
@@ -107,6 +108,7 @@ Entity::Entity(const std::string& name)
 }
 
 Entity::~Entity() {
+  LOG_INFO(Debug::Channel::Gameplay, "Entity destroyed: %s", entityName.c_str());
   OnDisable();
   Destroy(this);
   CheckDestroy();

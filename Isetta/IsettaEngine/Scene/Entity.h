@@ -51,8 +51,8 @@ class ISETTA_API Entity {
   void SetActive(bool inActive);
   bool GetActive() const;
 
-  template <typename T, typename... Args>
-  T* AddComponent(bool isActive = true, Args&&... args);
+  template <typename T, bool IsActive, typename... Args>
+  T* AddComponent(Args&&... args);
   template <typename T>
   T* GetComponent();
   template <typename T>
@@ -68,16 +68,16 @@ class ISETTA_API Entity {
 #endif
 };
 
-template <typename T, typename... Args>
-T* Entity::AddComponent(bool isActive, Args&&... args) {
+template <typename T, bool IsActive, typename... Args>
+T* Entity::AddComponent(Args&&... args) {
   if constexpr (!std::is_base_of<class Component, T>::value) {
     throw std::logic_error(Util::StrFormat(
         "%s is not a derived class from Component class", typeid(T).name));
   } else {
     T* component = MemoryManager::NewOnFreeList<T>(std::forward<Args>(args)...);
-    component->SetActive(isActive);
+    component->SetActive(IsActive);
     component->owner = this;
-    if (isActive) {
+    if (IsActive) {
       component->OnEnable();
     }
     componentTypes.emplace_back(std::type_index(typeid(T)));

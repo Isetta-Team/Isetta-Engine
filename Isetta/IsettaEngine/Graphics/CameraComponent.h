@@ -60,9 +60,7 @@ void CameraComponent::SetProperty(T value) {
   if constexpr (Attr == Property::PROJECTION) {
     projMat = value;
     h3dSetCameraProjMat(renderNode, projMat.data);
-    return;
-  }
-  if constexpr (Attr == Property::FOV) {
+  } else if constexpr (Attr == Property::FOV) {
     fov = value;
   } else if constexpr (Attr == Property::FAR_PLANE) {
     farPlane = value;

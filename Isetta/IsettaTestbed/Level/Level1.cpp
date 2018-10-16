@@ -2,6 +2,8 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Level1.h"
+#include "Components/CameraController.h"
+#include "Components/GameManager.h"
 #include "Components/PlayerController.h"
 #include "Core/Color.h"
 #include "Core/Config/Config.h"
@@ -10,8 +12,6 @@
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
 #include "Scene/Entity.h"
-#include "Components/CameraController.h"
-#include "Components/GameManager.h"
 
 namespace Isetta {
 
@@ -20,12 +20,12 @@ using CameraProperty = CameraComponent::Property;
 
 void Level1::LoadLevel() {
   Entity* cameraEntity{AddEntity("Camera")};
-  cameraEntity->AddComponent<CameraController>();
+  cameraEntity->AddComponent<CameraController, true>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
 
   CameraComponent* camComp =
-      cameraEntity->AddComponent<CameraComponent>(true, "Camera");
+      cameraEntity->AddComponent<CameraComponent, true>("Camera");
   camComp->SetProperty<CameraProperty::FOV>(
       CONFIG_VAL(renderConfig.fieldOfView));
   camComp->SetProperty<CameraProperty::NEAR_PLANE>(
@@ -34,8 +34,8 @@ void Level1::LoadLevel() {
       CONFIG_VAL(renderConfig.farClippingPlane));
 
   Entity* lightEntity{AddEntity("Light")};
-  LightComponent* lightComp = lightEntity->AddComponent<LightComponent>(
-      true, "materials/light.material.xml", "LIGHT_1");
+  LightComponent* lightComp = lightEntity->AddComponent<LightComponent, true>(
+      "materials/light.material.xml", "LIGHT_1");
   lightEntity->SetTransform(Math::Vector3{0, 200, 600},
                             Math::Vector3{-30, 0, 0});
   lightComp->SetProperty<LightProperty::RADIUS>(2500);
@@ -49,24 +49,26 @@ void Level1::LoadLevel() {
   player->SetTransform(Math::Vector3{0, 0, 0}, Math::Vector3{0, 90, 0},
                        0.03f * Math::Vector3::one);
   MeshComponent* playerMesh =
-      player->AddComponent<MeshComponent>(true, "Soldier/Soldier.scene.xml");
-  player->AddComponent<PlayerController>();
+      player->AddComponent<MeshComponent, true>("Soldier/Soldier.scene.xml");
+  player->AddComponent<PlayerController, true>();
 
   AnimationComponent* ani =
-      player->AddComponent<AnimationComponent>(true, playerMesh);
+      player->AddComponent<AnimationComponent, true>(playerMesh);
   ani->AddAnimation("Soldier/Soldier.anim", 0, "", false);
 
   Entity* ground{AddEntity("Ground")};
-  ground->AddComponent<MeshComponent>(true, "Ground/Level.scene.xml");
+  ground->AddComponent<MeshComponent, true>("Ground/Level.scene.xml");
 
   Entity* gameManager{AddEntity("Game Manager")};
-  gameManager->AddComponent<GameManager>();
+  gameManager->AddComponent<GameManager, true>();
 
   // for (int i = 0; i < 10; i++) {
   // Entity* zombie {AddEntity("Zombie")};
-  // zombie->SetTransform(Math::Vector3::forward, Math::Vector3::zero, Math::Vector3::one * 0.01f);
-  // MeshComponent* mesh = zombie->AddComponent<MeshComponent>(true, "Zombie/Zombie.scene.xml");
-  // AnimationComponent* animation = zombie->AddComponent<AnimationComponent>(true, mesh);
+  // zombie->SetTransform(Math::Vector3::forward, Math::Vector3::zero,
+  // Math::Vector3::one * 0.01f); MeshComponent* mesh =
+  // zombie->AddComponent<MeshComponent>(true, "Zombie/Zombie.scene.xml");
+  // AnimationComponent* animation =
+  // zombie->AddComponent<AnimationComponent>(true, mesh);
   // animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
   // zombie->AddComponent<Zombie>();
   // }

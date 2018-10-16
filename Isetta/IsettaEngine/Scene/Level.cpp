@@ -34,6 +34,7 @@ std::list<Entity*> Level::GetEntitiesByName(const std::string& name) {
 
 void Level::UnloadLevel() {
   for (auto& entity : entities) {
+    entity->~Entity();
     MemoryManager::FreeOnFreeList(entity);
   }
 }
