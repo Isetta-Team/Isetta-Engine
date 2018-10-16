@@ -48,6 +48,7 @@ void* FreeListAllocator::Alloc(const Size size, const U8 alignment) {
   rawAddress += headerSize;  // leave size for header
   PtrInt misAlignment = rawAddress & (alignment - 1);
   U64 adjustment = alignment - misAlignment;
+  adjustment += ((~alignment & adjustment) << 1);
   PtrInt alignedAddress = rawAddress + adjustment;
 
   Size occupiedSize = headerSize + adjustment + size;
@@ -80,7 +81,7 @@ void FreeListAllocator::Free(void* memPtr) {
   PtrInt nodeAddress = headerAddress - header->adjustment;
   auto* newNode = new (reinterpret_cast<void*>(nodeAddress)) Node(header->size);
 
-  if (head == nullptr) {
+  if (head == nullptr || head == newNode) {
     head = newNode;
     return;
   }
