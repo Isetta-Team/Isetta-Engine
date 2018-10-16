@@ -2,6 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Scene/Level.h"
+#include <algorithm>
 #include "Core/Math/Rect.h"
 #include "Core/Memory/MemoryManager.h"
 #include "Graphics/GUI.h"
@@ -65,7 +66,7 @@ void Level::GUIUpdate() {
   static Transform* transform = nullptr;
 
   for (const auto& entity : entities) {
-    if (entity->GetActive() && entity->GetTransform().GetParent() == nullptr) {
+    if (entity->GetTransform().GetParent() == nullptr) {
       Func<int, Transform*> countLevel = [](Transform* trans) -> int {
         int i = 0;
         while (trans->GetParent() != nullptr) {
@@ -98,7 +99,10 @@ void Level::GUIUpdate() {
 
 void Level::LateUpdate() {
   for (const auto& entity : entities) {
-    entity->LastUpdate();
+    entity->LateUpdate();
   }
+  entities.remove_if([](Entity*& entity) {
+    return entity->GetAttribute(Entity::EntityAttributes::NEED_DESTROY);
+  });
 }
 }  // namespace Isetta

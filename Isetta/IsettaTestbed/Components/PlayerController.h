@@ -5,11 +5,13 @@
 #include "Scene/Component.h"
 #include "Audio/AudioSource.h"
 #include <vector>
+#include "Graphics/AnimationComponent.h"
 
 namespace Isetta {
 class PlayerController : public Component {
  public:
   void OnEnable() override;
+  void Start() override;
   void Update() override;
   void GuiUpdate() override;
   static PlayerController* Instance();
@@ -25,6 +27,8 @@ class PlayerController : public Component {
   float cooldown{0};
   AudioSource shootAudio;
   int poolSize = 100;
+  AnimationComponent* animationComp;
+  bool isMoving;
   std::vector<Entity*> bullets;
 };
 }  // namespace Isetta
