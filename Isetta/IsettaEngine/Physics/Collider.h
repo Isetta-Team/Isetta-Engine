@@ -30,8 +30,15 @@ namespace Isetta {
 
 class Collider : public Component {
  public:
-  bool isTrigger, isStatic;  // TODO(Jacob) make private, getter/setter
-  Math::Vector3 center;      // TODO(JACOB) remove
+  enum class Attributes { IS_STATIC, IS_TRIGGER };
+  inline void SetAttribute(Attributes attr, bool value) {
+    attributes.set(static_cast<int>(attr), value);
+  }
+  inline bool GetAttribute(Attributes attr) const {
+    return attributes.test(static_cast<int>(attr));
+  }
+
+  Math::Vector3 center;  // TODO(JACOB) remove
 
   // virtual Math::Vector3 ClosestPoint(Math::Vector3 point) = 0;
   // Math::Vector3 ClosestPointOnAABB(Math::Vector3 point);
@@ -46,16 +53,23 @@ class Collider : public Component {
   void OnEnable() override;
 
  private:
+  std::bitset<2> attributes;
+
  protected:
   AABB* bounding;
 
   Color debugColor = Color::green;
 
-  Collider(const Math::Vector3& center)
-      : isStatic{false}, isTrigger{false}, center{center} {}
+  Collider(const Math::Vector3& center) : center{center} {
+    attributes[(int)Attributes::IS_STATIC] = 0;
+    attributes[(int)Attributes::IS_TRIGGER] = 0;
+  }
   Collider(bool isStatic = false, bool isTrigger = false,
            const Math::Vector3& center = Math::Vector3::zero)
-      : isStatic{isStatic}, isTrigger{isTrigger}, center{center} {}
+      : center{center} {
+    attributes[(int)Attributes::IS_STATIC] = isStatic;
+    attributes[(int)Attributes::IS_TRIGGER] = isTrigger;
+  }
   virtual ~Collider() = default;
 
   enum class ColliderType { BOX, SPHERE, CAPSULE };
