@@ -51,6 +51,8 @@ class ISETTA_API Entity {
   void SetActive(bool inActive);
   bool GetActive() const;
 
+  template <typename T, typename... Args>
+  T* AddComponent(Args&&... args);
   template <typename T, bool IsActive, typename... Args>
   T* AddComponent(Args&&... args);
   template <typename T>
@@ -67,6 +69,12 @@ class ISETTA_API Entity {
   std::vector<class Component*> GetComponents() { return components; }
 #endif
 };
+
+template <typename T, typename... Args>
+T* Entity::AddComponent(Args&&... args) {
+  T* component = AddComponent<T, true>(std::forward<Args>(args)...);
+  return component;
+}
 
 template <typename T, bool IsActive, typename... Args>
 T* Entity::AddComponent(Args&&... args) {

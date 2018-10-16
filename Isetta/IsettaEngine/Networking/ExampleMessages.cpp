@@ -90,7 +90,7 @@ void RegisterExampleMessageFunctions() {
         if (!entity) {
           Entity* e = LevelManager::Instance().currentLevel->AddEntity(
               Util::StrFormat("NetworkEntity%d", spawnMessage->netId));
-          e->AddComponent<NetworkIdentity>(true, spawnMessage->netId);
+          e->AddComponent<NetworkIdentity>(spawnMessage->netId);
           spawnedEntities.push_back(e);
         }
       });
