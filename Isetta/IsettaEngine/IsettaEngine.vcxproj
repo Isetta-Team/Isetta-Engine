@@ -190,6 +190,8 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Memory\PoolAllocator.cpp" />
     <ClCompile Include="Graphics\Window.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Networking\ExampleMessages.cpp" />
+    <ClCompile Include="Networking\NetworkIdentity.cpp" />
     <ClCompile Include="Networking\NetworkingModule.cpp" />
     <ClCompile Include="Networking\NetworkManager.cpp" />
     <ClCompile Include="Physics\AABB.cpp" />
@@ -266,6 +268,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="ISETTA_API.h" />
     <ClInclude Include="Networking\ExampleMessages.h" />
     <ClInclude Include="Networking\Messages.h" />
+    <ClInclude Include="Networking\NetworkIdentity.h" />
     <ClInclude Include="Networking\NetworkingModule.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Input\InputEnum.h" />

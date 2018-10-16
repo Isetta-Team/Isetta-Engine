@@ -234,6 +234,12 @@
     <ClInclude Include="Physics\Physics.h">
       <Filter>Physics</Filter>
     </ClInclude>
+    <ClCompile Include="Networking\ExampleMessages.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="Networking\NetworkIdentity.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -480,6 +486,9 @@
     </ClInclude>
     <ClInclude Include="Custom\IsettaCore.h">
       <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Networking\NetworkIdentity.h">
+      <Filter>Networking</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

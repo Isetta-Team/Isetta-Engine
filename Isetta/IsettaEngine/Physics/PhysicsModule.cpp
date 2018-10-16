@@ -214,6 +214,7 @@ bool PhysicsModule::Intersection(const BoxCollider &box,
 }
 bool PhysicsModule::Intersection(const BoxCollider &box,
                                  const CapsuleCollider &capsule) {
+  return false;
   Math::Matrix4 rot, scale;
   float radiusScale = capsule.GetWorldCapsule(&rot, &scale);
   Math::Vector3 dir = (Math::Vector3)(
