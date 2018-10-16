@@ -62,9 +62,6 @@
     <ClCompile Include="Audio\AudioSource.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Memory\StackAllocator.cpp">
-      <Filter>Core\Memory</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\Window.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -76,9 +73,6 @@
     </ClCompile>
     <ClCompile Include="Core\Time\StopWatch.cpp">
       <Filter>Core\Time</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Memory\MemoryManager.cpp">
-      <Filter>Core\Memory</Filter>
     </ClCompile>
     <ClCompile Include="Core\Memory\StackAllocator.cpp">
       <Filter>Core\Memory</Filter>
@@ -162,9 +156,6 @@
     <ClCompile Include="Custom\InEngineTestLevel.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
-    <ClCompile Include="Networking\ExampleMessages.cpp">
-      <Filter>Networking</Filter>
-    </ClCompile>
     <ClCompile Include="Physics\BoxCollider.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
@@ -198,6 +189,51 @@
     <ClCompile Include="Physics\Physics.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
+    <ClInclude Include="Core\Time\Time.h">
+      <Filter>Core\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\InEngineTestLevel.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\BoxCollider.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\CapsuleCollider.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\PhysicsModule.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\SphereCollider.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Collider.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\AABB.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\AVLTree.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Ray.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\OscillateMove.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\KeyTransform.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Plane.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\PhysicsLevel.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Physics.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -444,50 +480,6 @@
     </ClInclude>
     <ClInclude Include="Custom\IsettaCore.h">
       <Filter>Custom</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Time\Time.h">
-      <Filter>Core\Time</Filter>
-    </ClInclude>
-    <ClInclude Include="Custom\InEngineTestLevel.h">
-      <Filter>Custom</Filter>
-    <ClInclude Include="Physics\BoxCollider.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\CapsuleCollider.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\PhysicsModule.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\SphereCollider.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\Collider.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\AABB.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\DataStructures\AVLTree.h">
-      <Filter>Core\DataStructures</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\Ray.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Custom\OscillateMove.h">
-      <Filter>Custom</Filter>
-    </ClInclude>
-    <ClInclude Include="Custom\KeyTransform.h">
-      <Filter>Custom</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\Plane.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Custom\PhysicsLevel.h">
-      <Filter>Custom</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\Physics.h">
-      <Filter>Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

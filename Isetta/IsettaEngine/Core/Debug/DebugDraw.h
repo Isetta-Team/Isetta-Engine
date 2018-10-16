@@ -78,7 +78,7 @@ class ISETTA_API_DECLARE DebugDraw {
   static void Axis(
       const Math::Matrix4& transformation = Math::Matrix4::identity,
       const Color& xColor = Color::red, const Color& yColor = Color::green,
-      const Color& zColor = Color::blue, float thickness = 1.0,
+      const Color& zColor = Color::blue, float thickness = 2.0,
       float duration = 0, bool depthTest = true);
   static void AxisSphere(
       const Math::Matrix4& transformation = Math::Matrix4::identity,
@@ -118,9 +118,8 @@ class ISETTA_API_DECLARE DebugDraw {
 
   static std::list<std::pair<float, Action<>>> durationDraw;
 
-  static void DrawPoint(const Math::Vector3 point,
-                                   const Color& color, float size,
-                                   bool depthTest);
+  static void DrawPoint(const Math::Vector3 point, const Color& color,
+                        float size, bool depthTest);
   static void DrawLine(const Math::Vector3& start, const Math::Vector3& end,
                        const Color& color, float thickness, bool depthTest);
   static void DrawSphere(const Math::Matrix4& transformation,

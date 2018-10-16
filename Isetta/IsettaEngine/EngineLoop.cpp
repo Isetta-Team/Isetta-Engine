@@ -92,7 +92,7 @@ void EngineLoop::StartUp() {
   Input::RegisterKeyPressCallback(KeyCode::ESCAPE,
                                   [&]() { isGameRunning = false; });
 
-  NetworkingDemo();
+  // NetworkingDemo();
   // InputDemo();
   // RunYidiTest();
   // GraphicsDemo();
@@ -131,8 +131,7 @@ void EngineLoop::VariableUpdate(float deltaTime) {
   inputModule->Update(deltaTime);
   LevelManager::Instance().currentLevel->Update();
   LevelManager::Instance().currentLevel->LateUpdate();
-  // DebugDemo();
-  DebugDraw::Axis(Math::Matrix4::identity, Color::red, Color::green, Color::blue, 2, 0, true);
+  DebugDemo();
   audioModule->Update(deltaTime);
   renderModule->Update(deltaTime);
   DebugDraw::Update();
@@ -404,8 +403,8 @@ void DebugDemo() {
   // 0.5,
   //                       2, Color::blue);
   // DebugDraw::AxisSphere(Math::Vector3::up, 1);
-  DebugDraw::Grid();
   DebugDraw::Axis();
+  DebugDraw::Grid();
 }
 
 }  // namespace Isetta

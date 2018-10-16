@@ -9,7 +9,6 @@
 #include "Custom/FlyController.h"
 #include "Custom/KeyTransform.h"
 #include "Custom/OscillateMove.h"
-#include "Custom/PlayerController.h"
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
 #include "Scene/Entity.h"
@@ -55,7 +54,7 @@ void PhysicsLevel::LoadLevel() {
   Entity* staticCol[3];
 
   staticCol[0] = AddEntity("collider");
-  staticCol[0]->SetTransform(Math::Vector3{0, 1, 0});
+  staticCol[0]->SetTransform(Math::Vector3{0, 1, 0}, Math::Vector3{0, 30, 0});
   BoxCollider* bCol = staticCol[0]->AddComponent<BoxCollider>();
   bCol->isStatic = true;
 
@@ -73,8 +72,10 @@ void PhysicsLevel::LoadLevel() {
   //// DYNAMIC
   for (int i = 0; i < 1; i++) {
     Entity* oscillator{AddEntity("oscillator")};
-    oscillator->GetTransform().SetParent(&staticCol[i]->GetTransform());
-    oscillator->GetTransform().SetLocalPos(7 * Math::Vector3::left);
+    // oscillator->GetTransform().SetParent(&staticCol[i]->GetTransform());
+    // oscillator->GetTransform().SetLocalPos(7 * Math::Vector3::left);
+    oscillator->GetTransform().SetLocalPos(7 * Math::Vector3::left +
+                                           Math::Vector3::up);
     // oscillator->AddComponent<OscillateMove>(true, 0, 2, -1, 12);
     oscillator->AddComponent<KeyTransform>(true, 0.25);
 

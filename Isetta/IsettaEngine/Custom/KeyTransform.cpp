@@ -34,23 +34,23 @@ void KeyTransform::Update() {
   if (!pressed) return;
   if (Input::IsKeyPressed(KeyCode::RIGHT_ARROW)) {
     this->GetTransform().TranslateLocal(
-        0.1f * step * Math::Vector3::left *
-        EngineLoop::GetGameClock().GetElapsedTime());
+        10 * step * Math::Vector3::left *
+        EngineLoop::GetGameClock().GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::LEFT_ARROW)) {
     this->GetTransform().TranslateLocal(
-        0.1f * step * Math::Vector3::right *
-        EngineLoop::GetGameClock().GetElapsedTime());
+        10 * step * Math::Vector3::right *
+        EngineLoop::GetGameClock().GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::UP_ARROW)) {
     this->GetTransform().TranslateLocal(
-        0.1f * step * Math::Vector3::forward *
-        EngineLoop::GetGameClock().GetElapsedTime());
+        10 * step * Math::Vector3::forward *
+        EngineLoop::GetGameClock().GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::DOWN_ARROW)) {
     this->GetTransform().TranslateLocal(
-        0.1f * step * Math::Vector3::back *
-        EngineLoop::GetGameClock().GetElapsedTime());
+        10 * step * Math::Vector3::back *
+        EngineLoop::GetGameClock().GetDeltaTime());
   }
 }
 }  // namespace Isetta

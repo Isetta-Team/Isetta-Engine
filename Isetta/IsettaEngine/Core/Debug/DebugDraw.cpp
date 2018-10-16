@@ -352,14 +352,14 @@ void DebugDraw::Grid(const Math::Matrix4& transformation, const Color& color,
 }
 void DebugDraw::Axis(const Math::Matrix4& transformation, const Color& xColor,
                      const Color& yColor, const Color& zColor, float thickness,
-                     float duration, float length, bool depthTest) {
+                     float duration, bool depthTest) {
   Math::Vector3 start = static_cast<Math::Vector3>(transformation.GetCol(3));
   Math::Vector3 right = static_cast<Math::Vector3>(transformation.GetCol(0));
   Math::Vector3 up = static_cast<Math::Vector3>(transformation.GetCol(1));
   Math::Vector3 forward = static_cast<Math::Vector3>(transformation.GetCol(2));
-  Line(start, start + right * length, xColor, thickness, duration, depthTest);
-  Line(start, start + up * length, yColor, thickness, duration, depthTest);
-  Line(start, start + forward * length, zColor, thickness, duration, depthTest);
+  Line(start, start + right, xColor, thickness, duration, depthTest);
+  Line(start, start + up, yColor, thickness, duration, depthTest);
+  Line(start, start + forward, zColor, thickness, duration, depthTest);
 }
 void DebugDraw::AxisSphere(const Math::Matrix4& transformation,
                            const Color& xColor, const Color& yColor,

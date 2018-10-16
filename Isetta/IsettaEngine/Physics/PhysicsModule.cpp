@@ -214,7 +214,6 @@ bool PhysicsModule::Intersection(const BoxCollider &box,
 }
 bool PhysicsModule::Intersection(const BoxCollider &box,
                                  const CapsuleCollider &capsule) {
-  /* TODO */
   Math::Matrix4 rot, scale;
   float radiusScale = capsule.GetWorldCapsule(&rot, &scale);
   Math::Vector3 dir = (Math::Vector3)(
@@ -331,23 +330,26 @@ float PhysicsModule::SqDistPointSegment(const Math::Vector3 &a,
 float PhysicsModule::SqDistPointOBB(const Math::Vector3 &point,
                                     const BoxCollider &box) {
   Math::Vector3 closest = ClosestPtPointOBB(point, box);
+  // DebugDraw::Point(closest, Color::blue, 20, 0.1, false);
   float sqDist = Math::Vector3::Dot(closest - point, closest - point);
   return sqDist;
 }
 float PhysicsModule::SqDistSegmentOBB(const Math::Vector3 &p0,
                                       const Math::Vector3 &p1,
                                       const BoxCollider &box) {
-  Math::Vector3 q0 = box.GetTransform().LocalPosFromWorldPos(p0);
-  Math::Vector3 q1 = box.GetTransform().LocalPosFromWorldPos(p1);
-  Ray ray = Ray{q0, q1 - q0};
+  Ray ray = Ray{p0, p1 - p0};
+  // Ray ray = Ray{q0, q1 - q0};
   float t, distSq;
   Math::Vector3 pt = ClosestPtRayOBB(ray, box, &t, &distSq);
-  DebugDraw::Point(pt, Color::magenta, 8, 0, false);
-  LOG_INFO(Debug::Channel::Physics, "(%f, %f, %f)", pt.x, pt.y, pt.z);
+  DebugDraw::Point(pt, Color::red, 20, 0.1, false);
+  LOG_INFO(Debug::Channel::Physics, "(%f)", t);
+  // LOG_INFO(Debug::Channel::Physics, "(%f, %f, %f)", pt.x, pt.y, pt.z);
   if (t < 0) {
-    distSq = SqDistPointOBB(q0, box);
+    distSq = SqDistPointOBB(p0, box);
+    DebugDraw::Point(p0, Color::white, 20, 0.1, false);
   } else if (t > 1) {
-    distSq = SqDistPointOBB(q1, box);
+    distSq = SqDistPointOBB(p1, box);
+    DebugDraw::Point(p1, Color::white, 20, 0.1, false);
   }
   return distSq;
 }
@@ -466,30 +468,31 @@ Math::Vector3 PhysicsModule::ClosestPtRayOBB(const Ray &ray,
                                              const BoxCollider &box, float *_t,
                                              float *_distSq) {
   Math::Vector3 o = box.GetTransform().LocalPosFromWorldPos(ray.GetOrigin());
+  // Math::Vector3 o = ray.GetOrigin();
   Math::Vector3 dir =
       box.GetTransform().LocalDirFromWorldDir(ray.GetDirection());
-  Math::Vector3 flips = Math::Vector3::zero;
+  // Math::Vector3 dir = ray.GetDirection();
   float &t = *_t;
   float &distSq = *_distSq;
   distSq = 0;
 
-  int zeroes = 0;
+  int perp = 0;
   for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
-    if (dir[i] < 0) {
-      dir[i] *= -1;
-      o[i] *= -1;
-      flips[i] = -1;
-    }
-    if (dir[i] < Math::Util::EPSILON) zeroes++;
+    if (Math::Vector3::Dot(dir, box.GetTransform().GetAxis(i)) <
+        Math::Util::EPSILON)
+      perp++;
   }
-  switch (zeroes) {
+  switch (perp) {
     case 3:
+      LOG_INFO(Debug::Channel::Physics, "Case 3");
       distSq = t = 0;
       return ClosestPtPointOBB(ray.GetOrigin(), box);
     case 2: {
+      LOG_INFO(Debug::Channel::Physics, "Case 2");
       int x = -1;
       for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
-        if (dir[i] < Math::Util::EPSILON) {
+        if (Math::Vector3::Dot(dir, box.GetTransform().GetAxis(i)) >
+            Math::Util::EPSILON) {
           x = i;
           break;
         }
@@ -498,11 +501,11 @@ Math::Vector3 PhysicsModule::ClosestPtRayOBB(const Ray &ray,
           z = (x + 2) % Math::Vector3::ELEMENT_COUNT;
 
       Math::Vector3 extents = 0.5f * box.GetWorldSize();
-      t = (extents[x] - o[x]) / dir[x];
       Math::Vector3 pt;
-      pt[x] = extents[x];
+      pt[x] = o[x] < 0 ? -extents[x] : extents[x];
       pt[y] = o[y];
       pt[z] = o[z];
+      t = (pt[x] - o[x]) / dir[x];
       if (o[y] < -extents[y]) {
         float delta = o[y] + extents[y];
         distSq += delta * delta;
@@ -523,12 +526,17 @@ Math::Vector3 PhysicsModule::ClosestPtRayOBB(const Ray &ray,
         pt[z] = extents[z];
       }
       // dist = 0 means intersection
-      return pt;  // TODO might need to flip
+      return box.GetTransform().WorldPosFromLocalPos(pt);  // TODO test
+      // return pt;
+      // +box.GetWorldCenter();
+      // return pt + box.GetWorldCenter();
     }
     case 1: {
+      LOG_INFO(Debug::Channel::Physics, "Case 1");
       int z = -1;
       for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
-        if (dir[i] > Math::Util::EPSILON) {
+        if (Math::Vector3::Dot(dir, box.GetTransform().GetAxis(i)) <
+            Math::Util::EPSILON) {
           z = i;
           break;
         }
@@ -550,32 +558,53 @@ Math::Vector3 PhysicsModule::ClosestPtRayOBB(const Ray &ray,
         if (delta >= 0) {
           // no intersection
           float invLSq = 1.0f / (dir[x] * dir[x] + dir[y] * dir[y]);
-          distSq += (delta * delta) * invLSq;
+          distSq += delta * delta * invLSq;
 
           pt[y] = -extents[y];
-          float t = -(dir[x] * minusExtents[x] * dir[y] + tmp) * invLSq;
+          t = -(dir[x] * minusExtents[x] * dir[y] + tmp) * invLSq;
         } else {
           float inv = 1.0f / dir[x];
           pt[y] = o[y] - (p0 * inv);  // TODO might be wrong
-          float t = -minusExtents[x] * inv;
+          t = -minusExtents[x] * inv;
           distSq = 0;
         }
       } else {
         // y-axis
-        if (o[z] < -extents[z]) {
-          float delta = o[z] + extents[z];
-          distSq += delta * delta;
-          pt[z] = -extents.z;
-        } else if (o[z] > extents[z]) {
-          float delta = o[z] - extents[z];
-          distSq += delta * delta;
-          pt[z] = extents[z];
+        pt[y] = extents[y];
+        float tmp = o[x] + extents[x];
+        float delta = p1 - dir[y] * tmp;
+        if (delta >= 0) {
+          // no intersection
+          float invLSq = 1.0f / (dir[x] * dir[x] + dir[y] * dir[y]);
+          distSq += delta * delta * invLSq;
+
+          pt[y] = -extents[y];
+          t = -(dir[y] * minusExtents[y] * dir[x] + tmp) * invLSq;
+        } else {
+          float inv = 1.0f / dir[y];
+          pt[y] = o[y] - (p0 * inv);  // TODO might be wrong
+          t = -minusExtents[y] * inv;
+          distSq = 0;
         }
       }
+
+      if (o[z] < -extents[z]) {
+        float delta = o[z] + extents[z];
+        distSq += delta * delta;
+        pt[z] = -extents.z;
+      } else if (o[z] > extents[z]) {
+        float delta = o[z] - extents[z];
+        distSq += delta * delta;
+        pt[z] = extents[z];
+      }
+
+      DebugDraw::Point(pt, Color::brown, 10, .1, false);
       // distSq
-      return pt;
+      return box.GetTransform().WorldPosFromLocalPos(pt);
+      // return pt;
     }
     case 0: {
+      LOG_INFO(Debug::Channel::Physics, "Case 0");
       Math::Vector3 extents = 0.5f * box.GetWorldSize();
       Math::Vector3 minusExtents = o - extents;
       float dyEx = dir.y * minusExtents.x;
@@ -606,7 +635,7 @@ Math::Vector3 PhysicsModule::ClosestPtRayOBB(const Ray &ray,
       return pt;
     }
   };
-}
+}  // namespace Isetta
 Math::Vector3 PhysicsModule::Face(int x, const Ray &ray, const BoxCollider &box,
                                   const Math::Vector3 &minusExtents, float *_t,
                                   float *_distSq) {
