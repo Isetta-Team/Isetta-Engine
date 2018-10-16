@@ -7,6 +7,9 @@
 #include "yojimbo/yojimbo.h"
 
 namespace Isetta {
+
+#define NETWORK_TAG_LEN 5
+
 /**
  * @brief Wrapper class for NetworkingModule so that other engine components can
  * use networking features.
@@ -14,10 +17,13 @@ namespace Isetta {
 class NetworkManager {
  public:
   static yojimbo::Message* GenerateMessageFromClient(const char* messageString);
-  static yojimbo::Message* GenerateMessageFromServer(int clientIdx, const char* messageString);
+  static yojimbo::Message* GenerateMessageFromServer(int clientIdx,
+                                                     const char* messageString);
   // TODO(Caleb) Consider merging the generate and send functions
   static void SendMessageFromClient(yojimbo::Message* message);
   static void SendMessageFromServer(int clientIdx, yojimbo::Message* message);
+  static void SendAllMessageFromServer(const char tag[NETWORK_TAG_LEN],
+                                       yojimbo::Message* message);
 
   /**
    * @brief Connects the local Client to a server at the given address.

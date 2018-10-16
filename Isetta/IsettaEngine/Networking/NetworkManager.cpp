@@ -4,7 +4,6 @@
 
 #include "Networking/NetworkManager.h"
 #include "Core/Config/Config.h"
-#include "ExampleMessages.h"
 
 namespace Isetta {
 
@@ -13,13 +12,13 @@ NetworkingModule* NetworkManager::networkingModule{nullptr};
 yojimbo::Message* NetworkManager::GenerateMessageFromClient(
     const char* messageString) {
   return networkingModule->client->CreateMessage(
-      NetworkRegistry::GetId(messageString));
+      NetworkRegistry::GetMessageTypeId(messageString));
 }
 
 yojimbo::Message* NetworkManager::GenerateMessageFromServer(
     int clientIdx, const char* messageString) {
   return networkingModule->server->CreateMessage(
-      clientIdx, NetworkRegistry::GetId(messageString));
+      clientIdx, NetworkRegistry::GetMessageTypeId(messageString));
 }
 
 void NetworkManager::SendMessageFromClient(yojimbo::Message* message) {
@@ -29,6 +28,20 @@ void NetworkManager::SendMessageFromClient(yojimbo::Message* message) {
 void NetworkManager::SendMessageFromServer(int clientIdx,
                                            yojimbo::Message* message) {
   networkingModule->AddServerToClientMessage(clientIdx, message);
+}
+
+void NetworkManager::SendAllMessageFromServer(const char tag[NETWORK_TAG_LEN],
+                                              yojimbo::Message* refMessage) {
+  for (int i = 0; i < GetMaxClients(); i++) {
+    if (!networkingModule->server->IsClientConnected(i)) {
+      continue;
+    }
+
+    yojimbo::Message* newMessage =
+        NetworkManager::GenerateMessageFromServer(i, tag);
+    newMessage->Copy(refMessage);
+    NetworkManager::SendMessageFromServer(i, newMessage);
+  }
 }
 
 void NetworkManager::ConnectToServer(const char* serverAddress,

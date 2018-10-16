@@ -14,8 +14,8 @@
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
 #include "Graphics/AnimationComponent.h"
-#include "Networking/NetworkManager.h"
 #include "Networking/ExampleMessages.h"
+#include "Networking/NetworkManager.h"
 
 // F Windows
 #ifdef SendMessage
@@ -27,14 +27,18 @@ namespace Isetta {
 // Defining static variables
 CustomAdapter NetworkingModule::NetworkAdapter;
 
-int NetworkRegistry::count;
+int NetworkRegistry::messageTypeCount;
+U16 NetworkRegistry::functionCount;
+U32 NetworkRegistry::nextNetworkId = 1;
+std::unordered_map<const char*, int> NetworkRegistry::tags;
 std::unordered_map<int, std::pair<U64, Func<yojimbo::Message*, void*>>>
     NetworkRegistry::factories;
-std::unordered_map<int, Action<yojimbo::Client*, yojimbo::Message*>>
-    NetworkRegistry::clientFuncs;
-std::unordered_map<int, Action<int, yojimbo::Server*, yojimbo::Message*>>
-    NetworkRegistry::serverFuncs;
-std::unordered_map<const char*, int> NetworkRegistry::tags;
+std::unordered_map<int, std::list<std::pair<U16, Action<yojimbo::Message*>>>>
+    NetworkRegistry::clientCallbacks;
+std::unordered_map<int,
+                   std::list<std::pair<U16, Action<int, yojimbo::Message*>>>>
+    NetworkRegistry::serverCallbacks;
+std::unordered_map<U32, Entity*> NetworkRegistry::networkIdToEntityMap;
 
 void NetworkingModule::StartUp() {
   NetworkManager::networkingModule = this;
@@ -212,7 +216,10 @@ void NetworkingModule::ProcessClientToServerMessages(int clientIdx) {
       break;
     }
 
-    NetworkRegistry::ServerFunc(message->GetType())(clientIdx, server, message);
+    auto serverFuncs = NetworkRegistry::GetServerFunctions(message->GetType());
+    for (const auto& func : serverFuncs) {
+      func.second(clientIdx, message);
+    }
 
     server->ReleaseMessage(clientIdx, message);
   }
@@ -227,7 +234,10 @@ void NetworkingModule::ProcessServerToClientMessages() {
       break;
     }
 
-    NetworkRegistry::ClientFunc(message->GetType())(client, message);
+    auto clientFuncs = NetworkRegistry::GetClientFunctions(message->GetType());
+    for (auto func : clientFuncs) {
+      func.second(message);
+    }
 
     client->ReleaseMessage(message);
   }
