@@ -28,7 +28,7 @@ class ISETTA_API Entity {
   void GuiUpdate();
   void Update();
   void FixedUpdate();
-  void LastUpdate();
+  void LateUpdate();
   void CheckDestroy();
   void OnDisable();
 

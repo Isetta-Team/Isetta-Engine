@@ -21,43 +21,68 @@ void PlayerController::OnEnable() {
   }
 }
 
+void PlayerController::Start() {
+  animationComp = owner->GetComponent<AnimationComponent>();
+}
+
 void PlayerController::Update() {
+  if (Input::IsKeyPressed(KeyCode::L)) {
+    auto light =
+        LevelManager::Instance().currentLevel->GetEntityByName("Light");
+    if (light != nullptr) {
+      Entity::Destroy(light);
+    }
+  }
+
   float dt = Time::GetDeltaTime();
   Math::Vector3 lookDir;
+  Math::Vector3 movement{};
   if (Input::IsKeyPressed(KeyCode::W)) {
-    GetTransform().TranslateWorld(Math::Vector3::back * moveSpeed * dt);
+    movement += Math::Vector3::back;
   }
 
   if (Input::IsKeyPressed(KeyCode::S)) {
-    GetTransform().TranslateWorld(Math::Vector3::forward * moveSpeed * dt);
+    movement += Math::Vector3::forward;
   }
   if (Input::IsKeyPressed(KeyCode::A)) {
-    GetTransform().TranslateWorld(Math::Vector3::right * moveSpeed * dt);
+    movement += Math::Vector3::right;
   }
   if (Input::IsKeyPressed(KeyCode::D)) {
-    GetTransform().TranslateWorld(Math::Vector3::left * moveSpeed * dt);
+    movement += Math::Vector3::left;
   }
-  if (Input::IsKeyPressed(KeyCode::UP)) {
+
+  if (movement.Magnitude() > 0) {
+    if (!isMoving) {
+      isMoving = true;
+      animationComp->TransitToAnimationState(1, 0.2f);
+    }
+    GetTransform().TranslateWorld(movement.Normalized() * moveSpeed * dt);
+  } else {
+    if (isMoving) {
+      isMoving = false;
+      animationComp->TransitToAnimationState(0, 0.2f);
+    }
+  }
+
+  if (Input::IsKeyPressed(KeyCode::UP_ARROW)) {
     lookDir += Math::Vector3::back;
   }
 
-  if (Input::IsKeyPressed(KeyCode::DOWN)) {
+  if (Input::IsKeyPressed(KeyCode::DOWN_ARROW)) {
     lookDir += Math::Vector3::forward;
   }
 
-  if (Input::IsKeyPressed(KeyCode::LEFT)) {
+  if (Input::IsKeyPressed(KeyCode::LEFT_ARROW)) {
     lookDir += Math::Vector3::right;
   }
 
-  if (Input::IsKeyPressed(KeyCode::RIGHT)) {
+  if (Input::IsKeyPressed(KeyCode::RIGHT_ARROW)) {
     lookDir += Math::Vector3::left;
   }
 
-  
-
   if (lookDir.Magnitude() >= 1.f) {
     lookDir.Normalize();
-    GetTransform().LookAt(GetTransform().GetWorldPos() + lookDir );
+    GetTransform().LookAt(GetTransform().GetWorldPos() + lookDir);
     cooldown -= dt;
     if (cooldown <= 0.f) {
       Shoot();
@@ -108,7 +133,7 @@ void PlayerController::Shoot() {
   if (bullet != nullptr) {
     bullet->GetComponent<Bullet>()->Initialize(
         GetTransform().GetWorldPos() + GetTransform().GetForward() * 0.7 -
-            GetTransform().GetLeft() * 0.1,
+            GetTransform().GetLeft() * 0.1 + GetTransform().GetUp() * 1.5,
         GetTransform().GetForward());
   }
   // bulletComp->Initialize(GetTransform().GetWorldPos(),

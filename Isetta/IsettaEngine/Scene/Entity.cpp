@@ -52,7 +52,7 @@ void Entity::FixedUpdate() {
   }
 }
 
-void Entity::LastUpdate() {
+void Entity::LateUpdate() {
   for (auto comp : components) {
     if (comp->GetActive() &&
         comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
@@ -91,7 +91,6 @@ void Entity::CheckDestroy() {
       }
     }
   }
-  // TODO(Chaojie) unregister from level
 }
 
 void Entity::OnDisable() {

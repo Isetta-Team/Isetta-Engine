@@ -21,6 +21,7 @@ class ISETTA_API LightComponent : public Component {
 
   void OnEnable() override;
   void OnDisable() override;
+  void OnDestroy() override;
 
   LightComponent(const std::string& resourceName, std::string lightName);
 
