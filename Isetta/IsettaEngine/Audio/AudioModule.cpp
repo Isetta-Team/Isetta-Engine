@@ -25,8 +25,9 @@ FMOD_RESULT F_CALLBACK LogAudioModule(FMOD_DEBUG_FLAGS flags, const char* file,
 
 void AudioModule::StartUp() {
   CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
-  FMOD::Memory_Initialize(MemoryManager::AllocOnStack(10_MB), 10_MB, nullptr,
-                          nullptr, nullptr);
+  FMOD::Memory_Initialize(
+      MemoryManager::AllocOnStack(CONFIG_VAL(audioConfig.memorySize)),
+      CONFIG_VAL(audioConfig.memorySize), nullptr, nullptr, nullptr);
   fmodSystem = nullptr;
 
   FMOD::Debug_Initialize(FMOD_DEBUG_LEVEL_LOG, FMOD_DEBUG_MODE_CALLBACK,
@@ -80,11 +81,13 @@ void AudioModule::LoadAllAudioClips() {
   Size lastCommaPos = -1;
   Size commaPos = clipNames.find(',');
   while (commaPos != std::string::npos) {
-    clips.push_back(clipNames.substr(lastCommaPos + 1, commaPos - lastCommaPos - 1));
+    clips.push_back(
+        clipNames.substr(lastCommaPos + 1, commaPos - lastCommaPos - 1));
     lastCommaPos = commaPos;
     commaPos = clipNames.find(',', commaPos + 1);
   }
-  clips.push_back(clipNames.substr(lastCommaPos + 1, clipNames.length() - lastCommaPos - 1));
+  clips.push_back(clipNames.substr(lastCommaPos + 1,
+                                   clipNames.length() - lastCommaPos - 1));
 
   for (auto file : clipNames) {
     FMOD::Sound* sound = nullptr;
