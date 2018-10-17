@@ -163,6 +163,10 @@ float InputModule::GetGamepadAxis(GamepadAxis axis) {
   return gamepadState.axes[static_cast<int>(axis)];
 }
 
+float InputModule::GetGamepadAxis(GamepadAxis axis) {
+  return gamepadState.axes[static_cast<int>(axis)];
+}
+
 void InputModule::StartUp(GLFWwindow* win) {
   winHandle = win;
   Input::inputModule = this;
