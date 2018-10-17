@@ -88,8 +88,6 @@ class GUIModule {
   const GLFWwindow* winHandle;
   int winWidth, winHeight;
 
-  std::list<Action<>> updateCallbacks{};
-
   friend class EngineLoop;
 };
 }  // namespace Isetta

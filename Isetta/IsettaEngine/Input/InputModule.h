@@ -17,7 +17,7 @@ class Vector2;
 
 namespace Isetta {
 class InputModule {
-  using CBMap = std::unordered_map<int, std::list<std::pair<U64, Action<>>>>;
+  using CBMap = std::unordered_map<int, std::list<std::pair<U16, Action<>>>>;
 
  public:
   /**
@@ -25,8 +25,8 @@ class InputModule {
    * \param callback The callback function
    */
   void RegisterWindowCloseCallback(const Action<>& callback);
-  U64 RegisterWindowSizeCallback(const Action<int, int>& callback);
-  void UnegisterWindowSizeCallback(U64 handle);
+  U16 RegisterWindowSizeCallback(const Action<int, int>& callback);
+  void UnegisterWindowSizeCallback(U16 handle);
   /**
    * \brief Check if the key is pressed
    * \param key The keycode to detect
@@ -38,26 +38,26 @@ class InputModule {
    * \param key The keycode to detect
    * \param callback The callback function
    */
-  U64 RegisterKeyPressCallback(KeyCode key, const Action<>& callback);
+  U16 RegisterKeyPressCallback(KeyCode key, const Action<>& callback);
   /**
    * \brief Unregister a callback by the key and handle
    * \param key The key to detect
    * \param handle The handle to unregister
    */
-  void UnregisterKeyPressCallback(KeyCode key, U64 handle);
+  void UnregisterKeyPressCallback(KeyCode key, U16 handle);
   /**
    * \brief Register a callback function to the key release event and return its
    * handle
    * \param key The keycode to detect
    * \param callback The callback function
    */
-  U64 RegisterKeyReleaseCallback(KeyCode key, const Action<>& callback);
+  U16 RegisterKeyReleaseCallback(KeyCode key, const Action<>& callback);
   /**
    * \brief Unregister a callback by the key and handle
    * \param key The key to detect
    * \param handle The handle to unregister
    */
-  void UnregisterKeyReleaseCallback(KeyCode key, U64 handle);
+  void UnregisterKeyReleaseCallback(KeyCode key, U16 handle);
   /**
    * \brief Get the position of the mouse
    */
@@ -73,41 +73,41 @@ class InputModule {
    * \param mouseButton The mouse button to detect
    * \param callback The callback function
    */
-  U64 RegisterMousePressCallback(MouseButtonCode mouseButton,
+  U16 RegisterMousePressCallback(MouseButtonCode mouseButton,
                                  const Action<>& callback);
   /**
    * \brief Unregister a callback by the mouse button and handle
    * \param mouseButton The mouse button to detect
    * \param handle The handle to unregister
    */
-  void UnregisterMousePressCallback(MouseButtonCode mouseButton, U64 handle);
+  void UnregisterMousePressCallback(MouseButtonCode mouseButton, U16 handle);
   /**
    * \brief Register a callback function to the mouse release event and return
    * its handle
    * \param mouseButton The mouse button to detect
    * \param callback The callback function
    */
-  U64 RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
+  U16 RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
                                    const Action<>& callback);
   /**
    * \brief Unregister a callback by the mouse button and handle
    * \param mouseButton The mouse button to detect
    * \param handle The handle to unregister
    */
-  void UnregisterMouseReleaseCallback(MouseButtonCode mouseButton, U64 handle);
+  void UnregisterMouseReleaseCallback(MouseButtonCode mouseButton, U16 handle);
 
   // TODO(Chaojie + Jacob): Talk about these, should unregister return bool?
-  U64 RegisterMouseButtonCallback(
+  U16 RegisterMouseButtonCallback(
       const Action<GLFWwindow*, int, int, int>& callback);
-  void UnregisterMouseButtonCallback(U64 handle);
-  U64 RegisterKeyCallback(
+  void UnregisterMouseButtonCallback(U16 handle);
+  U16 RegisterKeyCallback(
       const Action<GLFWwindow*, int, int, int, int>& callback);
-  void UnegisterKeyCallback(U64 handle);
-  U64 RegisterScrollCallback(
+  void UnegisterKeyCallback(U16 handle);
+  U16 RegisterScrollCallback(
       const Action<GLFWwindow*, double, double>& callback);
-  void UnegisterScrollCallback(U64 handle);
-  U64 RegisterCharCallback(const Action<GLFWwindow*, unsigned int>& callback);
-  void UnegisterCharCallback(U64 handle);
+  void UnegisterScrollCallback(U16 handle);
+  U16 RegisterCharCallback(const Action<GLFWwindow*, unsigned int>& callback);
+  void UnegisterCharCallback(U16 handle);
 
  private:
   static GLFWwindow* winHandle;
@@ -119,8 +119,8 @@ class InputModule {
   void Update(float deltaTime);
   void ShutDown();
 
-  U64 RegisterCallback(int key, const Action<>& callback, CBMap* callbackMap);
-  void UnregisterCallback(int key, U64 handle, CBMap* callbackMap);
+  U16 RegisterCallback(int key, const Action<>& callback, CBMap* callbackMap);
+  void UnregisterCallback(int key, U16 handle, CBMap* callbackMap);
   int KeyCodeToGlfwKey(KeyCode key) const;
   int MouseButtonToGlfwKey(MouseButtonCode mouseButton) const;
 
@@ -139,19 +139,17 @@ class InputModule {
   static void ScrollEventListener(GLFWwindow*, double xoffset, double yoffset);
   static void WinSizeListener(GLFWwindow* win, int width, int height);
 
-  static std::unordered_map<U64, Action<GLFWwindow*, int, int, int>>
+  static std::unordered_map<U16, Action<GLFWwindow*, int, int, int>>
       mouseButtonCallbacks;
-  static std::unordered_map<U64, Action<GLFWwindow*, int, int, int, int>>
+  static std::unordered_map<U16, Action<GLFWwindow*, int, int, int, int>>
       keyCallbacks;
-  static std::unordered_map<U64, Action<GLFWwindow*, double, double>>
+  static std::unordered_map<U16, Action<GLFWwindow*, double, double>>
       scrollCallbacks;
-  static std::unordered_map<U64, Action<GLFWwindow*, unsigned int>>
+  static std::unordered_map<U16, Action<GLFWwindow*, unsigned int>>
       charCallbacks;
-  static std::unordered_map<U64, Action<int, int>> winSizeCallbacks;
+  static std::unordered_map<U16, Action<int, int>> winSizeCallbacks;
 
-  // TODO(Chaojie) Discuss if one handle for all callbacks is enough
-  // TODO(Jacob) U64 might be overkill? maybe just U16?
-  static U64 totalHandle;
+  static U16 totalHandle;
 
   friend class EngineLoop;
 };
