@@ -121,7 +121,6 @@ class ISETTA_API_DECLARE Transform {
   Transform* parent{nullptr};
   std::vector<Transform*> children;
 
-  static Math::Vector4 sharedV4;
   Math::Vector3 axis[3];
 };
 }  // namespace Isetta

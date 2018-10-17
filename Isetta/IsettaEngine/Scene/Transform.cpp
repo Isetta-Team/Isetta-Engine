@@ -2,20 +2,18 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Scene/Transform.h"
+#include "Core/Debug/DebugDraw.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Math/Matrix3.h"
+#include "Scene/Component.h"
 #include "Scene/Entity.h"
 #include "Util.h"
-#include "Scene/Component.h"
-#include "Core/Debug/DebugDraw.h"
 #if _DEBUG
 #include "Graphics/GUI.h"
 #include "Graphics/RectTransform.h"
 #endif
 
 namespace Isetta {
-
-Math::Vector4 Transform::sharedV4{};
 
 Transform::Transform(Entity* entity) : entity(entity) {}
 
@@ -32,9 +30,8 @@ void Transform::SetWorldPos(const Math::Vector3& newWorldPos) {
   if (parent == nullptr) {
     localPos = newWorldPos;
   } else {
-    sharedV4.Set(newWorldPos, 1);
-    localPos =
-        (parent->GetWorldToLocalMatrix() * sharedV4).GetVector3();
+    localPos = (parent->GetWorldToLocalMatrix() * Math::Vector4{newWorldPos, 1})
+                   .GetVector3();
   }
 }
 
@@ -241,25 +238,23 @@ Transform* Transform::GetChild(const U16 childIndex) {
 std::string Transform::GetName() const { return entity->GetName(); }
 
 Math::Vector3 Transform::WorldPosFromLocalPos(const Math::Vector3& localPoint) {
-  sharedV4.Set(localPoint, 1);
-  return (GetLocalToWorldMatrix() * sharedV4).GetVector3();
+  return (GetLocalToWorldMatrix() * Math::Vector4{localPoint, 1}).GetVector3();
 }
 
 Math::Vector3 Transform::LocalPosFromWorldPos(const Math::Vector3& worldPoint) {
-  sharedV4.Set(worldPoint, 1);
-  return (GetWorldToLocalMatrix() * sharedV4).GetVector3();
+  return (GetWorldToLocalMatrix() * Math::Vector4{worldPoint, 1}).GetVector3();
 }
 
 Math::Vector3 Transform::WorldDirFromLocalDir(
     const Math::Vector3& localDirection) {
-  sharedV4.Set(localDirection, 0);
-  return (GetLocalToWorldMatrix() * sharedV4).GetVector3();
+  return (GetLocalToWorldMatrix() * Math::Vector4{localDirection, 0})
+      .GetVector3();
 }
 
 Math::Vector3 Transform::LocalDirFromWorldDir(
     const Math::Vector3& worldDirection) {
-  sharedV4.Set(worldDirection, 0);
-  return (GetWorldToLocalMatrix() * sharedV4).GetVector3();
+  return (GetWorldToLocalMatrix() * Math::Vector4{worldDirection, 0})
+      .GetVector3();
 }
 
 void Transform::ForChildren(const Action<Transform*>& action) {
@@ -304,7 +299,7 @@ void Transform::DrawGUI() {
   GUI::Text(RectTransform{Math::Rect{-200, 360, 300, 100}, GUI::Pivot::TopRight,
                           GUI::Pivot::TopRight},
             content);
-  
+
   float height = 420;
   float padding = 15;
   GUI::Text(RectTransform{Math::Rect{-200, height, 300, 100},
@@ -351,7 +346,7 @@ void Transform::RecalculateLocalToWorldMatrix() {
   Math::Matrix4 temp;
   temp.SetDiagonal(localScale.x, localScale.y, localScale.z, 1);
   localToParentMatrix = temp * localToParentMatrix;  // scale
-  localToParentMatrix.SetCol(3, localPos, 1);         
+  localToParentMatrix.SetCol(3, localPos, 1);
 
   if (parent != nullptr) {
     localToWorldMatrix = parent->GetLocalToWorldMatrix() * localToParentMatrix;
@@ -382,7 +377,8 @@ void Transform::RemoveChild(Transform* transform) {
 }
 
 void Transform::SetDirty() {
-  // TODO(YIDI): Don't need to traverse all children, if one child is dirty, all children all also dirty
+  // TODO(YIDI): Don't need to traverse all children, if one child is dirty, all
+  // children all also dirty
   ForSelfAndDescendents([](Transform* trans) {
     trans->isDirty = true;
     trans->isWorldToLocalDirty = true;
