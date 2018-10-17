@@ -12,7 +12,7 @@ class ISETTA_API Component {
   std::bitset<4> attributes;
 
  protected:
-  class Entity* owner;
+  class Entity* entity;
 
   enum class ComponentAttributes {
     IS_ACTIVE,
