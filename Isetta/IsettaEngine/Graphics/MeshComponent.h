@@ -21,6 +21,7 @@ class ISETTA_API_DECLARE MeshComponent : public Component {
 
   void OnEnable() override;
   void OnDisable() override;
+  void OnDestroy() override;
 
   friend class AnimationComponent;
   friend class Entity;

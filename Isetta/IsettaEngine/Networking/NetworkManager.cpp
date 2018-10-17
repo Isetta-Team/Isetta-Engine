@@ -125,7 +125,7 @@ void NetworkManager::UnregisterClientCallback(const char tag[NETWORK_TAG_LEN],
 Entity* NetworkManager::GetNetworkEntity(const U32 id) {
   auto it = networkIdToComponentMap.find(id);
   if (it != networkIdToComponentMap.end()) {
-    return it->second->owner;
+    return it->second->entity;
   }
   return NULL;
 }

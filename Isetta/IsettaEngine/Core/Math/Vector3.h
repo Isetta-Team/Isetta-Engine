@@ -75,6 +75,7 @@ class ISETTA_API Vector3 {
   // Operators
 
   float operator[](int i) const;
+  float& operator[](int i);
   inline bool operator==(const Vector3& rhs) const {
     return x == rhs.x && y == rhs.y && z == rhs.z;
   }
@@ -143,6 +144,8 @@ class ISETTA_API Vector3 {
    * \brief Convert the vector to a string
    */
   std::string ToString() const;
+  float Max() const;
+  float Min() const;
 
   // static functions
 
@@ -194,7 +197,7 @@ class ISETTA_API Vector3 {
    * \param inVector The input vector
    * \param scalar The scalar vector
    */
-  static Vector3 Scale(const Vector3& inVector, const Vector3& scalar);
+  static Vector3 Scale(const Vector3& a, const Vector3& b);
   /**
    * \brief Spherically interpolates between two vectors
    * \param start The starting vector

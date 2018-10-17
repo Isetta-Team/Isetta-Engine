@@ -36,12 +36,12 @@ class ISETTA_API_DECLARE Matrix3 {
   Matrix3(Matrix3&& inMatrix) noexcept;
   Matrix3& operator=(const Matrix3& inMatrix);
   Matrix3& operator=(Matrix3&& inMatrix) noexcept;
-
   Matrix3(const class Vector3& aVector, const class Vector3& bVector);
 
   ~Matrix3() {}
 
-  float operator[](int i) const;
+  // float operator[](int i) const;
+  float* operator[](int i) const;
   bool operator==(const Matrix3& rhs) const;
   bool operator!=(const Matrix3& rhs) const;
   Matrix3 operator+(const Matrix3& rhs) const;

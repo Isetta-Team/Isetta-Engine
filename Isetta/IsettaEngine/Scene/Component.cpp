@@ -7,7 +7,7 @@
 
 namespace Isetta {
 
-Component::Component() : attributes{0b1001}, owner{nullptr} {}
+Component::Component() : attributes{0b1001}, entity{nullptr} {}
 
 void Component::SetAttribute(ComponentAttributes attr, bool value) {
   attributes.set(static_cast<int>(attr), value);
@@ -32,7 +32,7 @@ bool Component::GetActive() const {
 }
 
 Transform& Component::GetTransform() const {
-  return owner->GetTransform();
+  return entity->GetTransform();
 }
 
 }  // namespace Isetta

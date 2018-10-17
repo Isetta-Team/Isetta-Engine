@@ -2,9 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Core/Memory/MemoryManager.h"
-#include "Scene/Level.h"
-#include "Scene/LevelManager.h"
+#include "Scene/IsettaLevel.h"
 
 namespace Isetta {
 CREATE_LEVEL(InEngineTestLevel)

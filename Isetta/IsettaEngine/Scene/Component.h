@@ -12,7 +12,7 @@ class ISETTA_API Component {
   std::bitset<4> attributes;
 
  protected:
-  class Entity* owner;
+  class Entity* entity;
 
   enum class ComponentAttributes {
     IS_ACTIVE,
@@ -38,7 +38,16 @@ class ISETTA_API Component {
   virtual void GuiUpdate() {}
   virtual void Update() {}
   virtual void LateUpdate() {}
+  virtual void FixedUpdate() {}
   virtual void OnDestroy() {}
   virtual void OnDisable() {}
+
+  virtual void OnCollisionEnter(class Collider* const other) {}
+  virtual void OnCollisionStay(class Collider* const other) {}
+  virtual void OnCollisionExit(class Collider* const other) {}
+  // TODO(Jacob) are these needed?
+  // virtual void OnTriggerEnter(class Collider* const other) {}
+  // virtual void OnTriggerStay(class Collider* const other) {}
+  // virtual void OnTriggerExit(class Collider* const other) {}
 };
 }  // namespace Isetta

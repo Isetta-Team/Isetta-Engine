@@ -10,6 +10,7 @@
 #include "Graphics/Window.h"
 #include "Input/InputModule.h"
 #include "Networking/NetworkingModule.h"
+#include "Physics/PhysicsModule.h"
 
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
@@ -18,8 +19,8 @@
 #include "Graphics/GUI.h"
 #include "Input/Input.h"
 #include "Input/InputEnum.h"
-#include "Networking/NetworkManager.h"
 #include "Networking/ExampleMessages.h"
+#include "Networking/NetworkManager.h"
 #include "Scene/Level.h"
 
 // TODO(Jacob) Remove, used only for GUIDemo
@@ -36,6 +37,7 @@ namespace Isetta {
 
 void InputDemo();
 void NetworkingDemo();
+void NetworkingDemoEnd();
 void GraphicsDemo();
 void GUIDemo();
 void DebugDemo();
@@ -48,6 +50,7 @@ EngineLoop::EngineLoop() {
   inputModule = new InputModule{};
   guiModule = new GUIModule{};
   networkingModule = new NetworkingModule{};
+  physicsModule = new PhysicsModule{};
 }
 EngineLoop::~EngineLoop() {
   delete windowModule;
@@ -57,6 +60,7 @@ EngineLoop::~EngineLoop() {
   delete guiModule;
   delete memoryManager;
   delete networkingModule;
+  delete physicsModule;
 }
 
 void EngineLoop::StartUp() {
@@ -70,11 +74,12 @@ void EngineLoop::StartUp() {
   maxSimulationCount = Config::Instance().loopConfig.maxSimCount.GetVal();
 
   memoryManager->StartUp();
-  audioModule->StartUp();
   windowModule->StartUp();
   renderModule->StartUp(windowModule->winHandle);
   inputModule->StartUp(windowModule->winHandle);
   guiModule->StartUp(windowModule->winHandle);
+  physicsModule->StartUp();
+  audioModule->StartUp();
   networkingModule->StartUp();
 
   LevelManager::Instance().LoadStartupLevel();
@@ -87,7 +92,7 @@ void EngineLoop::StartUp() {
   Input::RegisterKeyPressCallback(KeyCode::ESCAPE,
                                   [&]() { isGameRunning = false; });
 
-  NetworkingDemo();
+  // NetworkingDemo();
   // InputDemo();
   // RunYidiTest();
   // GraphicsDemo();
@@ -120,14 +125,13 @@ void EngineLoop::Update() {
 
 void EngineLoop::FixedUpdate(float deltaTime) {
   networkingModule->Update(deltaTime);
-  // TODO(all) Physics->Update(deltaTime);
+  physicsModule->Update(deltaTime);
 }
 void EngineLoop::VariableUpdate(float deltaTime) {
   inputModule->Update(deltaTime);
   LevelManager::Instance().currentLevel->Update();
   LevelManager::Instance().currentLevel->LateUpdate();
   // DebugDemo();
-  DebugDraw::Axis(Math::Matrix4::identity, Color::red, Color::green, Color::blue, 2, 0, true);
   audioModule->Update(deltaTime);
   renderModule->Update(deltaTime);
   DebugDraw::Update();
@@ -138,8 +142,10 @@ void EngineLoop::VariableUpdate(float deltaTime) {
 
 void EngineLoop::ShutDown() {
   LevelManager::Instance().currentLevel->UnloadLevel();
+  NetworkingDemoEnd();
   networkingModule->ShutDown();
   audioModule->ShutDown();
+  physicsModule->ShutDown();
   guiModule->ShutDown();
   inputModule->ShutDown();
   DebugDraw::ShutDown();
@@ -186,6 +192,8 @@ void InputDemo() {
 }
 void NetworkingDemo() {
   // Networking
+  NetworkingExample::RegisterExampleMessageFunctions();
+
   if (Config::Instance().networkConfig.runServer.GetVal()) {
     NetworkManager::CreateServer(
         Config::Instance().networkConfig.defaultServerIP.GetVal().c_str());
@@ -197,6 +205,29 @@ void NetworkingDemo() {
           LOG(Debug::Channel::Networking, "Client connection state: %d", b);
         });
   }
+
+  Input::RegisterKeyPressCallback(KeyCode::Y, []() {
+    if (NetworkManager::ClientIsConnected()) {
+      SpawnExample* m = reinterpret_cast<SpawnExample*>(
+          NetworkManager::GenerateMessageFromClient("SPWN"));
+      m->a = 1;
+      m->b = 2;
+      m->c = 3;
+      NetworkManager::SendMessageFromClient(m);
+    }
+  });
+  Input::RegisterKeyPressCallback(KeyCode::H, []() {
+    if (NetworkManager::ClientIsConnected()) {
+      if (NetworkingExample::despawnCounter >=
+          NetworkingExample::spawnedEntities.size()) {
+        return;
+      }
+      DespawnExample* m = reinterpret_cast<DespawnExample*>(
+          NetworkManager::GenerateMessageFromClient("DSPN"));
+      m->netId = NetworkingExample::despawnCounter++;
+      NetworkManager::SendMessageFromClient(m);
+    }
+  });
 
   Input::RegisterKeyPressCallback(KeyCode::P, []() {
     if (NetworkManager::ClientIsConnected()) {
@@ -222,6 +253,9 @@ void NetworkingDemo() {
       NetworkManager::SendMessageFromClient(handleMessage);
     }
   });
+}
+void NetworkingDemoEnd() {
+  NetworkingExample::RegisterExampleMessageFunctions();
 }
 void GraphicsDemo() {}
 // TODO(Jacob) remove
@@ -345,31 +379,32 @@ void GUIDemo() {
 void DebugDemo() {
   // DebugDraw::Point(2 * Math::Vector3::left, Color::magenta, 20);
   // DebugDraw::Line(Math::Vector3::zero, v);
-  if (Input::IsKeyPressed(KeyCode::V)) {
-    static float angle = 0.0f;
-    angle += 0.4f * EngineLoop::GetGameClock().GetDeltaTime();
-    if (angle >= 2 * Math::Util::PI) {
-      angle = 0;
-    }
-    DebugDraw::Ray(
-        Math::Vector3::zero,
-        Math::Vector3{Math::Util::Cos(angle), 0, Math::Util::Sin(angle)},
-        Color::cyan, 2);
-  }
-  if (Input::IsKeyPressed(KeyCode::B)) {
-    DebugDraw::Plane(Math::Matrix4::identity, Color::blue, 2);
-  }
+  // if (Input::IsKeyPressed(KeyCode::V)) {
+  //  static float angle = 0.0f;
+  //  angle += 0.4f * EngineLoop::GetGameClock().GetDeltaTime();
+  //  if (angle >= 2 * Math::Util::PI) {
+  //    angle = 0;
+  //  }
+  //  DebugDraw::Ray(
+  //      Math::Vector3::zero,
+  //      Math::Vector3{Math::Util::Cos(angle), 0, Math::Util::Sin(angle)},
+  //      Color::cyan, 2);
+  //}
+  // if (Input::IsKeyPressed(KeyCode::B)) {
+  //  DebugDraw::Plane(Math::Matrix4::identity, Color::blue, 2);
+  //}
   // DebugDraw::WirePlane(Math::Matrix4::identity);
   // DebugDraw::Cube(Math::Matrix4::Translate(Math::Vector3{2.8, 1.1, 0}) *
-                      // Math::Matrix4::Scale(2.2 * Math::Vector3::one),
-                  // Color::brown);
+  //                    Math::Matrix4::Scale(2.2 * Math::Vector3::one),
+  //                Color::brown);
   // DebugDraw::WireCube(Math::Matrix4::Translate(Math::Vector3{0, 0, -2}));
   // DebugDraw::WireSphere(Math::Vector3::up, 1, Color::red);
-  // DebugDraw::WireCapsule(Math::Matrix4::Translate(Math::Vector3{-1, 4, 1}), 0.5,
-                         // 2, Color::blue);
+  // DebugDraw::WireCapsule(Math::Matrix4::Translate(Math::Vector3{-1, 4, 1}),
+  // 0.5,
+  //                       2, Color::blue);
   // DebugDraw::AxisSphere(Math::Vector3::up, 1);
+  // DebugDraw::Axis();
   // DebugDraw::Grid();
-  DebugDraw::Axis(Math::Matrix4::identity, Color::red, Color::green, Color::blue, 2, 0, true);
 }
 
 }  // namespace Isetta

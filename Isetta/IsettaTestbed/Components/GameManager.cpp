@@ -41,16 +41,16 @@ void GameManager::GuiUpdate() {
                                  GUI::Pivot::TopRight, GUI::Pivot::TopRight},
                    "Zombie Speed", &Zombie::speed, 0, 5.f);
 
-  GUI::Text(RectTransform{Math::Rect{50, 200, 300, 100},
-                                 GUI::Pivot::Top, GUI::Pivot::Top}, 
-	  Util::StrFormat("Score: %d!", score), GUI::TextStyle{Color::green});
+  GUI::Text(RectTransform{Math::Rect{50, 200, 300, 100}, GUI::Pivot::Top,
+                          GUI::Pivot::Top},
+            Util::StrFormat("Score: %d!", score), GUI::TextStyle{Color::green});
 }
 
 void GameManager::SpawnZombie() const {
   auto player = PlayerController::Instance();
   if (player == nullptr) return;
 
-  float angle = Math::Random::GetRandom01() * Math::Util::PI;
+  float angle = Math::Random::GetRandom01() * Math::Util::PI * 2;
   Math::Vector3 zombiePos =
       player->GetTransform().GetWorldPos() +
       Math::Vector3{spawnRadius * Math::Util::Sin(angle), 0,

@@ -62,9 +62,6 @@
     <ClCompile Include="Audio\AudioSource.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Memory\StackAllocator.cpp">
-      <Filter>Core\Memory</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\Window.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -76,9 +73,6 @@
     </ClCompile>
     <ClCompile Include="Core\Time\StopWatch.cpp">
       <Filter>Core\Time</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Memory\MemoryManager.cpp">
-      <Filter>Core\Memory</Filter>
     </ClCompile>
     <ClCompile Include="Core\Memory\StackAllocator.cpp">
       <Filter>Core\Memory</Filter>
@@ -150,23 +144,104 @@
     <ClCompile Include="Scene\LevelManager.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Custom\FlyController.cpp">
-      <Filter>Custom</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Filesystem.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Custom\AxisDrawer.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
-    <ClCompile Include="Networking\NetworkIdentity.cpp">
-      <Filter>Networking</Filter>
+    <ClCompile Include="Custom\InEngineTestLevel.cpp">
+      <Filter>Custom</Filter>
     </ClCompile>
+    <ClCompile Include="Physics\BoxCollider.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\CapsuleCollider.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\PhysicsModule.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\SphereCollider.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Collider.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\AABB.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\OscillateMove.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\KeyTransform.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Plane.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\PhysicsLevel.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Physics.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClInclude Include="Core\Time\Time.h">
+      <Filter>Core\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\InEngineTestLevel.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\BoxCollider.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\CapsuleCollider.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\PhysicsModule.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\SphereCollider.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Collider.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\AABB.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\AVLTree.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Ray.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\OscillateMove.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\KeyTransform.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Plane.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\PhysicsLevel.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Physics.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
     <ClCompile Include="Networking\ExampleMessages.cpp">
       <Filter>Networking</Filter>
     </ClCompile>
-    <ClCompile Include="Custom\InEngineTestLevel.cpp">
-      <Filter>Custom</Filter>
+    <ClCompile Include="Networking\NetworkIdentity.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\FlyController.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\DebugComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -226,6 +301,12 @@
     </Filter>
     <Filter Include="Custom">
       <UniqueIdentifier>{795c60e4-6516-48a5-bfc1-c446a905bb3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{c15f9d47-86d9-41b5-a7ee-43b1cc1fee77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{e5f06d6e-7bc1-4d7b-b063-c75a33bfbf4b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -396,9 +477,6 @@
     <ClInclude Include="Scene\LevelManager.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Custom\FlyController.h">
-      <Filter>Custom</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Filesystem.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -412,14 +490,17 @@
     <ClInclude Include="Custom\IsettaCore.h">
       <Filter>Custom</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Time\Time.h">
-      <Filter>Core\Time</Filter>
-    </ClInclude>
     <ClInclude Include="Networking\NetworkIdentity.h">
       <Filter>Networking</Filter>
     </ClInclude>
-    <ClInclude Include="Custom\InEngineTestLevel.h">
-      <Filter>Custom</Filter>
+    <ClInclude Include="Components\FlyController.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\DebugComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\IsettaLevel.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

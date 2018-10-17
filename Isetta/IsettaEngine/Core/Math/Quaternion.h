@@ -6,6 +6,7 @@
 #include "ISETTA_API.h"
 
 namespace Isetta::Math {
+class Matrix4;
 class ISETTA_API_DECLARE Quaternion {
  public:
   static const Quaternion identity;
@@ -63,6 +64,8 @@ class ISETTA_API_DECLARE Quaternion {
   Quaternion& operator*=(const Quaternion& rhs);
   Quaternion operator*(float scalar) const;
   Vector3 operator*(const Vector3& rhs) const;
+
+  explicit operator Matrix4();
 
   /**
    * \brief Get the euler angles of the quaternion

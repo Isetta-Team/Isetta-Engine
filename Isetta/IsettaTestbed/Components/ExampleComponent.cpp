@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Graphics/AnimationComponent.h"
 #include "ExampleComponent.h"
 #include "Custom/IsettaCore.h"
+#include "Graphics/AnimationComponent.h"
 
 namespace Isetta {
 
@@ -35,19 +35,19 @@ void ExampleComponent::Update() {
   float rotSpeed = 30.;
   float dt = EngineLoop::GetGameClock().GetDeltaTime();
 
-  if (Input::IsKeyPressed(KeyCode::UP)) {
+  if (Input::IsKeyPressed(KeyCode::UP_ARROW)) {
     GetTransform().TranslateWorld(GetTransform().GetForward() * dt * speed);
   }
 
-  if (Input::IsKeyPressed(KeyCode::DOWN)) {
+  if (Input::IsKeyPressed(KeyCode::DOWN_ARROW)) {
     GetTransform().TranslateWorld(GetTransform().GetForward() * dt * -speed);
   }
 
-  if (Input::IsKeyPressed(KeyCode::LEFT)) {
+  if (Input::IsKeyPressed(KeyCode::LEFT_ARROW)) {
     GetTransform().RotateLocal(GetTransform().GetUp(), rotSpeed * dt);
   }
 
-  if (Input::IsKeyPressed(KeyCode::RIGHT)) {
+  if (Input::IsKeyPressed(KeyCode::RIGHT_ARROW)) {
     GetTransform().RotateLocal(GetTransform().GetUp(), -rotSpeed * dt);
   }
 }
