@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Graphics/AnimationComponent.h"
 #include "ExampleComponent.h"
 #include "Custom/IsettaCore.h"
+#include "Graphics/AnimationComponent.h"
 
 namespace Isetta {
 

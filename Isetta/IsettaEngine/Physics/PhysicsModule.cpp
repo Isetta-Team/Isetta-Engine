@@ -89,19 +89,19 @@ void PhysicsModule::Update(float deltaTime) {
 void PhysicsModule::ShutDown() {}
 
 void PhysicsModule::OnCollisionEnter(Collider *const collider) {
-  for (auto component : collider->owner->GetComponents<Component>()) {
+  for (auto component : collider->entity->GetComponents<Component>()) {
     component->OnDestroy();
   }
 }
 
 void PhysicsModule::OnCollisionStay(Collider *const collider) {
-  for (auto component : collider->owner->GetComponents<Component>()) {
+  for (auto component : collider->entity->GetComponents<Component>()) {
     component->OnDestroy();
   }
 }
 
 void PhysicsModule::OnCollisionExit(Collider *const collider) {
-  for (auto component : collider->owner->GetComponents<Component>()) {
+  for (auto component : collider->entity->GetComponents<Component>()) {
     component->OnDestroy();
   }
 }

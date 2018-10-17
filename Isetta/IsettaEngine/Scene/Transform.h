@@ -50,6 +50,7 @@ class ISETTA_API_DECLARE Transform {
   // hierarchy
   void SetParent(Transform* transform);
   Transform* GetParent() const { return parent; }
+  Transform* GetRoot() const;
 
   // helper
   Math::Vector3 GetForward();
@@ -120,7 +121,6 @@ class ISETTA_API_DECLARE Transform {
   Transform* parent{nullptr};
   std::vector<Transform*> children;
 
-  static Math::Vector4 sharedV4;
   Math::Vector3 axis[3];
 };
 }  // namespace Isetta

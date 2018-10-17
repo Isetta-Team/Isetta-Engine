@@ -499,6 +499,9 @@
     <ClInclude Include="Components\DebugComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="Scene\IsettaLevel.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

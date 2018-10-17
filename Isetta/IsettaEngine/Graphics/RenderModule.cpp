@@ -34,7 +34,7 @@ void RenderModule::StartUp(GLFWwindow* win) {
 void RenderModule::Update(float deltaTime) {
   for (const auto& mesh : meshComponents) {
     bool isTransformDirty =
-        mesh->owner->GetAttribute(Entity::EntityAttributes::IS_TRANSFORM_DIRTY);
+        mesh->entity->GetAttribute(Entity::EntityAttributes::IS_TRANSFORM_DIRTY);
     // TODO(YIDI): Remove this when finish debugging
 #if _DEBUG
     isTransformDirty = true;
@@ -44,7 +44,7 @@ void RenderModule::Update(float deltaTime) {
     }
   }
   for (const auto& light : lightComponents) {
-    if (light->owner->GetAttribute(
+    if (light->entity->GetAttribute(
             Entity::EntityAttributes::IS_TRANSFORM_DIRTY)) {
       light->UpdateH3DTransform();
     }

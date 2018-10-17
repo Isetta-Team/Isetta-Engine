@@ -22,7 +22,7 @@ void PlayerController::OnEnable() {
 }
 
 void PlayerController::Start() {
-  animationComp = owner->GetComponent<AnimationComponent>();
+  animationComp = entity->GetComponent<AnimationComponent>();
 }
 
 void PlayerController::Update() {

@@ -25,7 +25,9 @@ FMOD_RESULT F_CALLBACK LogAudioModule(FMOD_DEBUG_FLAGS flags, const char* file,
 
 void AudioModule::StartUp() {
   CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
-  FMOD::Memory_Initialize(MemoryManager::AllocOnStack(10_MB), 10_MB, nullptr, nullptr, nullptr);
+  FMOD::Memory_Initialize(
+      MemoryManager::AllocOnStack(CONFIG_VAL(audioConfig.memorySize)),
+      CONFIG_VAL(audioConfig.memorySize), nullptr, nullptr, nullptr);
   fmodSystem = nullptr;
 
   FMOD::Debug_Initialize(FMOD_DEBUG_LEVEL_LOG, FMOD_DEBUG_MODE_CALLBACK,
@@ -72,16 +74,17 @@ FMOD::Channel* AudioModule::Play(FMOD::Sound* sound, const bool loop,
 }
 
 void AudioModule::LoadAllAudioClips() {
-  // TODO(YIDI): get this array of string from game config
-  const char* files[]{"gunshot.aiff", "bullet-impact.wav", "zombie-death.mp3", "zombie-hit.wav"};
-
-  for (auto file : files) {
+  std::string clipNames = CONFIG_VAL(audioConfig.audioClips);
+  Util::StrRemoveSpaces(&clipNames);
+  std::vector<std::string> clips = Util::StrSplit(clipNames, ',');
+  
+  for (const auto& file : clips) {
     FMOD::Sound* sound = nullptr;
     std::string path = soundFilesRoot + file;
     CheckStatus(
         fmodSystem->createSound(path.c_str(), FMOD_LOWMEM, nullptr, &sound));
 
-    soundMap.insert({SID(file), sound});
+    soundMap.insert({SID(file.c_str()), sound});
   }
 }
 
