@@ -6,7 +6,7 @@
 #include "Core/Color.h"
 #include "Core/Config/Config.h"
 #include "Core/Math/Vector3.h"
-#include "Custom/FlyController.h"
+#include "Components/FlyController.h"
 #include "Custom/KeyTransform.h"
 #include "Custom/OscillateMove.h"
 #include "Graphics/CameraComponent.h"

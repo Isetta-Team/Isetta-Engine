@@ -5,7 +5,7 @@
 #include "Core/Color.h"
 #include "Core/Config/Config.h"
 #include "Core/Math/Vector3.h"
-#include "FlyController.h"
+#include "Components/FlyController.h"
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
 #include "Scene/Entity.h"
