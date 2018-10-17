@@ -16,6 +16,7 @@
 
 namespace Isetta {
 class ISETTA_API Level {
+  std::list<class Entity*> entitiesToRemove;
 protected:
   std::list<class Entity*> entities;
 public:
@@ -26,7 +27,6 @@ public:
   virtual void LoadLevel() {}
   virtual void UnloadLevel();
 
-  // TODO(Chaojie) Change to MACRO
   class Entity* AddEntity(std::string name);
 
   void Update();

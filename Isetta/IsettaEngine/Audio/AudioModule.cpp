@@ -73,7 +73,7 @@ FMOD::Channel* AudioModule::Play(FMOD::Sound* sound, const bool loop,
 
 void AudioModule::LoadAllAudioClips() {
   // TODO(YIDI): get this array of string from game config
-  const char* files[]{"gunshot.aiff"};
+  const char* files[]{"gunshot.aiff", "bullet-impact.wav", "zombie-death.mp3", "zombie-hit.wav"};
 
   for (auto file : files) {
     FMOD::Sound* sound = nullptr;

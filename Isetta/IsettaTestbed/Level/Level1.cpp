@@ -54,6 +54,7 @@ void Level1::LoadLevel() {
 
   AnimationComponent* ani =
       player->AddComponent<AnimationComponent, true>(playerMesh);
+  ani->AddAnimation("Soldier/Soldier_Idle.anim", 0, "", false);
   ani->AddAnimation("Soldier/Soldier.anim", 0, "", false);
 
   Entity* ground{AddEntity("Ground")};

@@ -50,7 +50,7 @@ void GameManager::SpawnZombie() const {
   auto player = PlayerController::Instance();
   if (player == nullptr) return;
 
-  float angle = Math::Random::GetRandom01() * Math::Util::PI;
+  float angle = Math::Random::GetRandom01() * Math::Util::PI * 2;
   Math::Vector3 zombiePos =
       player->GetTransform().GetWorldPos() +
       Math::Vector3{spawnRadius * Math::Util::Sin(angle), 0,

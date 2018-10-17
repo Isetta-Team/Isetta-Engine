@@ -28,7 +28,7 @@ class ISETTA_API Entity {
   void GuiUpdate();
   void Update();
   void FixedUpdate();
-  void LastUpdate();
+  void LateUpdate();
   void CheckDestroy();
   void OnDisable();
 
@@ -85,7 +85,7 @@ T* Entity::AddComponent(Args&&... args) {
   } else {
     T* component = MemoryManager::NewOnFreeList<T>(std::forward<Args>(args)...);
     component->SetActive(IsActive);
-    component->owner = this;
+    component->entity = this;
     if (IsActive) {
       component->OnEnable();
     }

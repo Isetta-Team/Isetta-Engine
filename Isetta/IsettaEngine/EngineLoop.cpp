@@ -403,8 +403,8 @@ void DebugDemo() {
   // 0.5,
   //                       2, Color::blue);
   // DebugDraw::AxisSphere(Math::Vector3::up, 1);
-  DebugDraw::Axis();
-  DebugDraw::Grid();
+  // DebugDraw::Axis();
+  // DebugDraw::Grid();
 }
 
 }  // namespace Isetta
