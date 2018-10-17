@@ -101,6 +101,8 @@ class ISETTA_API_DECLARE Input {
   static U16 RegisterCharCallback(
       const Action<GLFWwindow*, unsigned int>& callback);
   static void UnegisterCharCallback(U16 handle);
+  static float GetGamepadAxis(GamepadAxis axis);
+  static bool IsGamepadButtonPressed(GamepadButton button);
 
  private:
   static class InputModule* inputModule;

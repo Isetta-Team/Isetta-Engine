@@ -4,7 +4,7 @@
 #pragma once
 
 #include <GLFW/glfw3.h>
-#include <functional>
+#include <array>
 #include <list>
 #include <unordered_map>
 #include <utility>
@@ -108,6 +108,10 @@ class InputModule {
   void UnegisterScrollCallback(U16 handle);
   U16 RegisterCharCallback(const Action<GLFWwindow*, unsigned int>& callback);
   void UnegisterCharCallback(U16 handle);
+  float GetGamepadAxis(GamepadAxis axis);
+  bool IsGamepadButtonPressed(GamepadButton button);
+  U16 RegisterGamepadConnectionCallback(const Action<int, int>& callback);
+  void UnegisterGamepadConnectionCallback(U16 handle);
 
  private:
   static GLFWwindow* winHandle;
@@ -123,6 +127,9 @@ class InputModule {
   void UnregisterCallback(int key, U16 handle, CBMap* callbackMap);
   int KeyCodeToGlfwKey(KeyCode key) const;
   int MouseButtonToGlfwKey(MouseButtonCode mouseButton) const;
+  GLFWgamepadstate gamepadState;
+  void UpdateGamepadState();
+  void DeadZoneOptimize(float* horizontal, float* verticle);
 
   static std::list<Action<>> windowCloseCallbacks;
   static void WindowCloseListener(GLFWwindow* win);
@@ -138,6 +145,7 @@ class InputModule {
   static void CharEventListener(GLFWwindow*, unsigned int c);
   static void ScrollEventListener(GLFWwindow*, double xoffset, double yoffset);
   static void WinSizeListener(GLFWwindow* win, int width, int height);
+  static void GamepadEventListener(int gamepadID, int gamepadEvent);
 
   static std::unordered_map<U16, Action<GLFWwindow*, int, int, int>>
       mouseButtonCallbacks;
@@ -148,6 +156,7 @@ class InputModule {
   static std::unordered_map<U16, Action<GLFWwindow*, unsigned int>>
       charCallbacks;
   static std::unordered_map<U16, Action<int, int>> winSizeCallbacks;
+  static std::unordered_map<U16, Action<int, int>> gamepadConnectionCallbacks;
 
   static U16 totalHandle;
 

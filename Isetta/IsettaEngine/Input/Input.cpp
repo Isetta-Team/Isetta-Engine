@@ -98,4 +98,12 @@ U16 Input::RegisterCharCallback(
 void Input::UnegisterCharCallback(U16 handle) {
   inputModule->UnegisterCharCallback(handle);
 }
+
+float Input::GetGamepadAxis(GamepadAxis axis) {
+  return inputModule->GetGamepadAxis(axis);
+}
+
+bool Input::IsGamepadButtonPressed(GamepadButton button) {
+  return inputModule->IsGamepadButtonPressed(button);
+}
 }  // namespace Isetta
