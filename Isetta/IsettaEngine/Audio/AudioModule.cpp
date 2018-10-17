@@ -75,27 +75,16 @@ FMOD::Channel* AudioModule::Play(FMOD::Sound* sound, const bool loop,
 
 void AudioModule::LoadAllAudioClips() {
   std::string clipNames = CONFIG_VAL(audioConfig.audioClips);
-  auto end = std::remove_if(clipNames.begin(), clipNames.end(), isspace);
-  clipNames.erase(end, clipNames.end());
-  std::vector<std::string> clips;
-  Size lastCommaPos = -1;
-  Size commaPos = clipNames.find(',');
-  while (commaPos != std::string::npos) {
-    clips.push_back(
-        clipNames.substr(lastCommaPos + 1, commaPos - lastCommaPos - 1));
-    lastCommaPos = commaPos;
-    commaPos = clipNames.find(',', commaPos + 1);
-  }
-  clips.push_back(clipNames.substr(lastCommaPos + 1,
-                                   clipNames.length() - lastCommaPos - 1));
-
-  for (auto file : clipNames) {
+  Util::StrRemoveSpaces(&clipNames);
+  std::vector<std::string> clips = Util::StrSplit(clipNames, ',');
+  
+  for (const auto& file : clips) {
     FMOD::Sound* sound = nullptr;
     std::string path = soundFilesRoot + file;
     CheckStatus(
         fmodSystem->createSound(path.c_str(), FMOD_LOWMEM, nullptr, &sound));
 
-    soundMap.insert({SID(file), sound});
+    soundMap.insert({SID(file.c_str()), sound});
   }
 }
 
