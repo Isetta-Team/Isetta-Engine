@@ -178,8 +178,16 @@ void Transform::SetParent(Transform* transform) {
   SetWorldPos(originalPos);
   SetWorldRot(originalRot);
   SetDirty();
+}
 
-  // TODO(YIDI): Keep world transform and rotation and scale
+Transform* Transform::GetRoot() const {
+  Transform* par = parent;
+  Transform* ret = par;
+  while (par != nullptr) {
+    ret = par;
+    par = par->GetParent();
+  }
+  return ret;
 }
 
 Math::Vector3 Transform::GetForward() {

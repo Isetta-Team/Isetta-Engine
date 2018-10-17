@@ -287,6 +287,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Physics\SphereCollider.h" />
     <ClInclude Include="Scene\Component.h" />
     <ClInclude Include="Scene\Entity.h" />
+    <ClInclude Include="Scene\IsettaLevel.h" />
     <ClInclude Include="Scene\Level.h" />
     <ClInclude Include="Scene\LevelManager.h" />
     <ClInclude Include="Scene\Transform.h" />

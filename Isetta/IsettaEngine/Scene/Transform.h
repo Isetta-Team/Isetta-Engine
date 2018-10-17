@@ -50,6 +50,7 @@ class ISETTA_API_DECLARE Transform {
   // hierarchy
   void SetParent(Transform* transform);
   Transform* GetParent() const { return parent; }
+  Transform* GetRoot() const;
 
   // helper
   Math::Vector3 GetForward();
