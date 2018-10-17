@@ -25,7 +25,8 @@ FMOD_RESULT F_CALLBACK LogAudioModule(FMOD_DEBUG_FLAGS flags, const char* file,
 
 void AudioModule::StartUp() {
   CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
-  FMOD::Memory_Initialize(MemoryManager::AllocOnStack(10_MB), 10_MB, nullptr, nullptr, nullptr);
+  FMOD::Memory_Initialize(MemoryManager::AllocOnStack(10_MB), 10_MB, nullptr,
+                          nullptr, nullptr);
   fmodSystem = nullptr;
 
   FMOD::Debug_Initialize(FMOD_DEBUG_LEVEL_LOG, FMOD_DEBUG_MODE_CALLBACK,
@@ -72,10 +73,20 @@ FMOD::Channel* AudioModule::Play(FMOD::Sound* sound, const bool loop,
 }
 
 void AudioModule::LoadAllAudioClips() {
-  // TODO(YIDI): get this array of string from game config
-  const char* files[]{"gunshot.aiff", "bullet-impact.wav", "zombie-death.mp3", "zombie-hit.wav"};
+  std::string clipNames = CONFIG_VAL(audioConfig.audioClips);
+  auto end = std::remove_if(clipNames.begin(), clipNames.end(), isspace);
+  clipNames.erase(end, clipNames.end());
+  std::vector<std::string> clips;
+  Size lastCommaPos = -1;
+  Size commaPos = clipNames.find(',');
+  while (commaPos != std::string::npos) {
+    clips.push_back(clipNames.substr(lastCommaPos + 1, commaPos - lastCommaPos - 1));
+    lastCommaPos = commaPos;
+    commaPos = clipNames.find(',', commaPos + 1);
+  }
+  clips.push_back(clipNames.substr(lastCommaPos + 1, clipNames.length() - lastCommaPos - 1));
 
-  for (auto file : files) {
+  for (auto file : clipNames) {
     FMOD::Sound* sound = nullptr;
     std::string path = soundFilesRoot + file;
     CheckStatus(

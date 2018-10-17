@@ -16,6 +16,7 @@ class AudioModule {
   struct AudioConfig {
     CVarString pathUnderResource{"audio_file_path", "Sound"};
     CVar<Size> memorySize{"audio_memory_size", 10485760};
+    CVarString audioClips{"audio_clips", ""};
   };
 
  private:
