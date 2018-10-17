@@ -37,27 +37,25 @@ void PlayerController::Update() {
   if (Input::IsKeyPressed(KeyCode::D)) {
     GetTransform().TranslateWorld(Math::Vector3::left * moveSpeed * dt);
   }
-  if (Input::IsKeyPressed(KeyCode::UP)) {
+  if (Input::IsKeyPressed(KeyCode::UP_ARROW)) {
     lookDir += Math::Vector3::back;
   }
 
-  if (Input::IsKeyPressed(KeyCode::DOWN)) {
+  if (Input::IsKeyPressed(KeyCode::DOWN_ARROW)) {
     lookDir += Math::Vector3::forward;
   }
 
-  if (Input::IsKeyPressed(KeyCode::LEFT)) {
+  if (Input::IsKeyPressed(KeyCode::LEFT_ARROW)) {
     lookDir += Math::Vector3::right;
   }
 
-  if (Input::IsKeyPressed(KeyCode::RIGHT)) {
+  if (Input::IsKeyPressed(KeyCode::RIGHT_ARROW)) {
     lookDir += Math::Vector3::left;
   }
 
-  
-
   if (lookDir.Magnitude() >= 1.f) {
     lookDir.Normalize();
-    GetTransform().LookAt(GetTransform().GetWorldPos() + lookDir );
+    GetTransform().LookAt(GetTransform().GetWorldPos() + lookDir);
     cooldown -= dt;
     if (cooldown <= 0.f) {
       Shoot();

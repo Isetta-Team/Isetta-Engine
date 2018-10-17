@@ -131,7 +131,7 @@ void EngineLoop::VariableUpdate(float deltaTime) {
   inputModule->Update(deltaTime);
   LevelManager::Instance().currentLevel->Update();
   LevelManager::Instance().currentLevel->LateUpdate();
-  DebugDemo();
+  // DebugDemo();
   audioModule->Update(deltaTime);
   renderModule->Update(deltaTime);
   DebugDraw::Update();

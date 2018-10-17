@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Custom/FlyController.h"
+#include "Components/FlyController.h"
 #include "Custom/IsettaCore.h"
 
 namespace Isetta {
