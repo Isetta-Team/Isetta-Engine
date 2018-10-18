@@ -82,6 +82,7 @@ void RegisterExampleMessageFunctions() {
           spawnedEntities.push_back(e);
 
           // Zomble
+          e->GetTransform().SetLocalScale(Math::Vector3::one * .01);
           MeshComponent* mesh = e->AddComponent<MeshComponent, true>(
               "Zombie/Zombie.scene.xml");
           AnimationComponent* animation =
@@ -104,8 +105,6 @@ void RegisterExampleMessageFunctions() {
           spawnedEntities.push_back(e);
           spawnMessage->netId = netIdentity->id;
 
-          LOG("%u", netIdentity->id);
-
           // Zomble
           e->GetTransform().SetLocalScale(Math::Vector3::one * .01);
           MeshComponent* mesh =
@@ -114,8 +113,6 @@ void RegisterExampleMessageFunctions() {
               e->AddComponent<AnimationComponent, true>(mesh);
           animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
           e->GetComponent<AnimationComponent>()->Play();
-        } else {
-          LOG("ALREADY SPAWNED: %u", spawnMessage->netId);
         }
 
         NetworkManager::Instance().SendAllMessageFromServer<SpawnMessage>(spawnMessage);
@@ -144,8 +141,6 @@ void RegisterExampleMessageFunctions() {
       [](int clientIdx, yojimbo::Message* message) {
         DespawnMessage* despawnMessage =
             reinterpret_cast<DespawnMessage*>(message);
-
-        LOG("%u", despawnMessage->netId);
 
         if (!despawnMessage->netId) {
           return;
