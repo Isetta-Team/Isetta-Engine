@@ -3,8 +3,9 @@
  */
 #include "Custom/CollisionsLevel.h"
 
-#include "Components/DebugComponent.h"
 #include "Components/FlyController.h"
+#include "Components/GridComponent.h"
+
 #include "Core/Color.h"
 #include "Core/Config/Config.h"
 #include "Core/Math/Vector3.h"
@@ -54,7 +55,7 @@ void CollisionsLevel::LoadLevel() {
   lightComp->SetProperty<LightProperty::SHADOW_MAP_BIAS>(0.01f);
 
   Entity* grid{AddEntity("Grid")};
-  grid->AddComponent<DebugComponent>();
+  grid->AddComponent<GridComponent>();
 
   // STATIC
   Entity* staticCol[3];

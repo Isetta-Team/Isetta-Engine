@@ -228,11 +228,11 @@
     <ClCompile Include="Components\FlyController.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="Components\DebugComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="Collisions\CollisionsModule.cpp">
       <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\GridComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -487,14 +487,14 @@
     <ClInclude Include="Components\FlyController.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="Components\DebugComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="Scene\IsettaLevel.h">
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Collisions\CollisionsModule.h">
       <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\GridComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -9,7 +9,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-class ISETTA_API DebugComponent : public Component {
+class ISETTA_API GridComponent : public Component {
  public:
   void Update() override;
 };

@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "DebugComponent.h"
+#include "Components/GridComponent.h"
 
 #include "Core/Debug/DebugDraw.h"
 
 namespace Isetta {
-void DebugComponent::Update() {
+void GridComponent::Update() {
   DebugDraw::Grid();
   DebugDraw::Axis();
 }

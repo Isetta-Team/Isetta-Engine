@@ -144,7 +144,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
   <ItemGroup>
     <ClCompile Include="Audio\AudioModule.cpp" />
     <ClCompile Include="Audio\AudioSource.cpp" />
-    <ClCompile Include="Components\DebugComponent.cpp" />
+    <ClCompile Include="Components\GridComponent.cpp" />
     <ClCompile Include="Components\FlyController.cpp" />
     <ClCompile Include="Core\Config\Config.cpp" />
     <ClCompile Include="Core\Color.cpp" />
@@ -211,7 +211,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
   <ItemGroup>
     <ClInclude Include="Audio\AudioModule.h" />
     <ClInclude Include="Audio\AudioSource.h" />
-    <ClInclude Include="Components\DebugComponent.h" />
+    <ClInclude Include="Components\GridComponent.h" />
     <ClInclude Include="Components\FlyController.h" />
     <ClInclude Include="Core\Config\Config.h" />
     <ClInclude Include="Core\Color.h" />
