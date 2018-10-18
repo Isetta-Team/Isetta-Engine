@@ -32,7 +32,7 @@ CustomAdapter NetworkingModule::NetworkAdapter;
 int NetworkManager::messageTypeCount;
 U16 NetworkManager::functionCount;
 U32 NetworkManager::nextNetworkId = 1;
-std::unordered_map<const char*, int> NetworkManager::tags;
+std::unordered_map < std::type_index, int > NetworkManager::typeMap;
 std::unordered_map<int, std::pair<U64, Func<yojimbo::Message*, void*>>>
     NetworkManager::factories;
 std::unordered_map<int, std::list<std::pair<U16, Action<yojimbo::Message*>>>>

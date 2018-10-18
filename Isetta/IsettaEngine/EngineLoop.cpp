@@ -92,7 +92,7 @@ void EngineLoop::StartUp() {
   Input::RegisterKeyPressCallback(KeyCode::ESCAPE,
                                   [&]() { isGameRunning = false; });
 
-  // NetworkingDemo();
+  NetworkingDemo();
   // InputDemo();
   // RunYidiTest();
   // GraphicsDemo();
@@ -207,9 +207,9 @@ void NetworkingDemo() {
   }
 
   Input::RegisterKeyPressCallback(KeyCode::Y, []() {
-    if (NetworkManager::ClientIsConnected()) {
-      SpawnExample* m = reinterpret_cast<SpawnExample*>(
-          NetworkManager::GenerateMessageFromClient("SPWN"));
+    if (NetworkManager::LocalClientIsConnected()) {
+      SpawnExample* m = 
+          NetworkManager::GenerateMessageFromClient<SpawnExample>();
       m->a = 1;
       m->b = 2;
       m->c = 3;
@@ -217,38 +217,38 @@ void NetworkingDemo() {
     }
   });
   Input::RegisterKeyPressCallback(KeyCode::H, []() {
-    if (NetworkManager::ClientIsConnected()) {
+    if (NetworkManager::LocalClientIsConnected()) {
       if (NetworkingExample::despawnCounter >=
           NetworkingExample::spawnedEntities.size()) {
         return;
       }
-      DespawnExample* m = reinterpret_cast<DespawnExample*>(
-          NetworkManager::GenerateMessageFromClient("DSPN"));
+      DespawnExample* m = 
+          NetworkManager::GenerateMessageFromClient<DespawnExample>();
       m->netId = NetworkingExample::despawnCounter++;
       NetworkManager::SendMessageFromClient(m);
     }
   });
 
   Input::RegisterKeyPressCallback(KeyCode::P, []() {
-    if (NetworkManager::ClientIsConnected()) {
-      HandleMessage* handleMessage = reinterpret_cast<HandleMessage*>(
-          NetworkManager::GenerateMessageFromClient("HNDL"));
+    if (NetworkManager::LocalClientIsConnected()) {
+      HandleMessage* handleMessage = 
+          NetworkManager::GenerateMessageFromClient<HandleMessage>();
       handleMessage->handle = 0;
       NetworkManager::SendMessageFromClient(handleMessage);
     }
   });
   Input::RegisterKeyPressCallback(KeyCode::O, []() {
-    if (NetworkManager::ClientIsConnected()) {
-      HandleMessage* handleMessage = reinterpret_cast<HandleMessage*>(
-          NetworkManager::GenerateMessageFromClient("HNDL"));
+    if (NetworkManager::LocalClientIsConnected()) {
+      HandleMessage* handleMessage = 
+          NetworkManager::GenerateMessageFromClient<HandleMessage>();
       handleMessage->handle = 1;
       NetworkManager::SendMessageFromClient(handleMessage);
     }
   });
   Input::RegisterMousePressCallback(MouseButtonCode::MOUSE_LEFT, []() {
-    if (NetworkManager::ClientIsConnected()) {
-      HandleMessage* handleMessage = reinterpret_cast<HandleMessage*>(
-          NetworkManager::GenerateMessageFromClient("HNDL"));
+    if (NetworkManager::LocalClientIsConnected()) {
+      HandleMessage* handleMessage =
+          NetworkManager::GenerateMessageFromClient<HandleMessage>();
       handleMessage->handle = 2;
       NetworkManager::SendMessageFromClient(handleMessage);
     }

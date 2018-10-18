@@ -33,8 +33,8 @@ void InitExampleMessages() {
 }
 
 void RegisterExampleMessageFunctions() {
-  exampleClientHandleId = NetworkManager::RegisterClientCallback(
-      "HNDL", [](yojimbo::Message* message) {
+  exampleClientHandleId = NetworkManager::RegisterClientCallback<HandleMessage>(
+      [](yojimbo::Message* message) {
         HandleMessage* handleMessage = static_cast<HandleMessage*>(message);
         LOG(Debug::Channel::Networking, "Server sends handle #%d",
             handleMessage->handle);
@@ -53,33 +53,33 @@ void RegisterExampleMessageFunctions() {
         }
       });
 
-  exampleServerHandleId = NetworkManager::RegisterServerCallback(
-      "HNDL", [](int clientIdx, yojimbo::Message* message) {
+  exampleServerHandleId = NetworkManager::RegisterServerCallback<HandleMessage>(
+      [](int clientIdx, yojimbo::Message* message) {
         HandleMessage* handleMessage =
             reinterpret_cast<HandleMessage*>(message);
         LOG(Debug::Channel::Networking, "Client %d sends handle #%d", clientIdx,
             handleMessage->handle);
 
-        NetworkManager::SendAllMessageFromServer("HNDL", handleMessage);
+        NetworkManager::SendAllMessageFromServer<HandleMessage>(handleMessage);
       });
 
-  exampleClientStringId = NetworkManager::RegisterClientCallback(
-      "STRN", [](yojimbo::Message* message) {
+  exampleClientStringId = NetworkManager::RegisterClientCallback<StringMessage>(
+      [](yojimbo::Message* message) {
         StringMessage* stringMessage = static_cast<StringMessage*>(message);
         LOG(Debug::Channel::Networking, "Server says: %s",
             stringMessage->string.c_str());
       });
 
-  exampleServerStringId = NetworkManager::RegisterServerCallback(
-      "STRN", [](int clientIdx, yojimbo::Message* message) {
+  exampleServerStringId = NetworkManager::RegisterServerCallback<StringMessage>(
+      [](int clientIdx, yojimbo::Message* message) {
         StringMessage* stringMessage =
             reinterpret_cast<StringMessage*>(message);
         LOG(Debug::Channel::Networking, "Client %d says: %s", clientIdx,
             stringMessage->string.c_str());
       });
 
-  exampleClientSpawn = NetworkManager::RegisterClientCallback(
-      "SPWN", [](yojimbo::Message* message) {
+  exampleClientSpawn = NetworkManager::RegisterClientCallback<SpawnExample>(
+      [](yojimbo::Message* message) {
         if (NetworkManager::ServerIsRunning()) {
           return;
         }
@@ -95,25 +95,24 @@ void RegisterExampleMessageFunctions() {
         }
       });
 
-  exampleServerSpawn = NetworkManager::RegisterServerCallback(
-      "SPWN", [](int clientIdx, yojimbo::Message* message) {
+  exampleServerSpawn = NetworkManager::RegisterServerCallback<SpawnExample>(
+      [](int clientIdx, yojimbo::Message* message) {
         static int count = 1;
         SpawnExample* spawnMessage = reinterpret_cast<SpawnExample*>(message);
 
         if (!spawnMessage->netId) {
           Entity* e = LevelManager::Instance().currentLevel->AddEntity(
               Util::StrFormat("NetworkEntity%d", count++));
-          NetworkIdentity* netIdentity =
-              e->AddComponent<NetworkIdentity>();
+          NetworkIdentity* netIdentity = e->AddComponent<NetworkIdentity>();
           spawnedEntities.push_back(e);
           spawnMessage->netId = netIdentity->id;
         }
 
-        NetworkManager::SendAllMessageFromServer("SPWN", spawnMessage);
+        NetworkManager::SendAllMessageFromServer<SpawnExample>(spawnMessage);
       });
 
-  exampleClientDespawn = NetworkManager::RegisterClientCallback(
-      "DSPN", [](yojimbo::Message* message) {
+  exampleClientDespawn = NetworkManager::RegisterClientCallback<DespawnExample>(
+      [](yojimbo::Message* message) {
         if (NetworkManager::ServerIsRunning()) {
           return;
         }
@@ -129,11 +128,11 @@ void RegisterExampleMessageFunctions() {
             entity->GetComponent<NetworkIdentity>());
         entity->SetActive(false);
         entity->SetTransform(Math::Vector3(10000.0, 10000.0, 10000.0));
-        //Entity::Destroy(entity);
+        // Entity::Destroy(entity);
       });
 
-  exampleServerDespawn = NetworkManager::RegisterServerCallback(
-      "DSPN", [](int clientIdx, yojimbo::Message* message) {
+  exampleServerDespawn = NetworkManager::RegisterServerCallback<DespawnExample>(
+      [](int clientIdx, yojimbo::Message* message) {
         DespawnExample* despawnMessage =
             reinterpret_cast<DespawnExample*>(message);
 
@@ -141,7 +140,8 @@ void RegisterExampleMessageFunctions() {
           return;
         }
 
-        NetworkManager::SendAllMessageFromServer("DSPN", despawnMessage);
+        NetworkManager::SendAllMessageFromServer<DespawnExample>(
+            despawnMessage);
 
         Entity* entity =
             NetworkManager::GetNetworkEntity(despawnMessage->netId);
@@ -153,19 +153,25 @@ void RegisterExampleMessageFunctions() {
             entity->GetComponent<NetworkIdentity>());
         entity->SetActive(false);
         entity->SetTransform(Math::Vector3(10000.0, 10000.0, 10000.0));
-        //Entity::Destroy(entity);
+        // Entity::Destroy(entity);
       });
 }
 
 void DeregisterExampleMessageFunctions() {
-  NetworkManager::UnregisterClientCallback("HNDL", exampleClientHandleId);
-  NetworkManager::UnregisterServerCallback("HNDL", exampleServerHandleId);
-  NetworkManager::UnregisterClientCallback("STRN", exampleClientStringId);
-  NetworkManager::UnregisterServerCallback("STRN", exampleServerStringId);
-  NetworkManager::UnregisterClientCallback("SPWN", exampleClientSpawn);
-  NetworkManager::UnregisterClientCallback("SPWN", exampleServerSpawn);
-  NetworkManager::UnregisterClientCallback("DSPN", exampleClientDespawn);
-  NetworkManager::UnregisterClientCallback("DSPN", exampleServerDespawn);
+  NetworkManager::UnregisterClientCallback<HandleMessage>(
+      exampleClientHandleId);
+  NetworkManager::UnregisterServerCallback<HandleMessage>(
+      exampleServerHandleId);
+  NetworkManager::UnregisterClientCallback<StringMessage>(
+      exampleClientStringId);
+  NetworkManager::UnregisterServerCallback<StringMessage>(
+      exampleServerStringId);
+  NetworkManager::UnregisterClientCallback<SpawnExample>(exampleClientSpawn);
+  NetworkManager::UnregisterClientCallback<SpawnExample>(exampleServerSpawn);
+  NetworkManager::UnregisterClientCallback<DespawnExample>(
+      exampleClientDespawn);
+  NetworkManager::UnregisterClientCallback<DespawnExample>(
+      exampleServerDespawn);
 
   while (spawnedEntities.size() > 0) {
     Entity::Destroy(spawnedEntities[spawnedEntities.size() - 1]);

@@ -41,9 +41,9 @@ class NetworkMessageFactory : public yojimbo::MessageFactory {
   }                                      \
   ;
 
-#define RPC_MESSAGE_INIT(MessageClass, Tag)                 \
-  NetworkManager::RegisterMessageType(sizeof(MessageClass), \
-                                      MessageClass::Create, Tag);
+#define RPC_MESSAGE_INIT(MessageClass)                                    \
+  NetworkManager::RegisterMessageType<MessageClass>(sizeof(MessageClass), \
+                                                    MessageClass::Create);
 
 class NetworkAllocator : public yojimbo::Allocator {
  public:

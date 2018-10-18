@@ -4,6 +4,7 @@
 #pragma once
 
 #include <list>
+#include <typeindex>
 #include <unordered_map>
 #include <utility>
 
@@ -12,7 +13,6 @@
 
 namespace Isetta {
 
-#define NETWORK_TAG_LEN 5
 class Entity;
 class NetworkIdentity;
 
@@ -22,27 +22,28 @@ class NetworkIdentity;
  */
 class NetworkManager {
  public:
-  static yojimbo::Message* GenerateMessageFromClient(const char* messageString);
-  static yojimbo::Message* GenerateMessageFromServer(int clientIdx,
-                                                     const char* messageString);
+  template <typename T>
+  static T* GenerateMessageFromClient();
+  template <typename T>
+  static T* GenerateMessageFromServer(int clientIdx);
   // TODO(Caleb) Consider merging the generate and send functions
   static void SendMessageFromClient(yojimbo::Message* message);
   static void SendMessageFromServer(int clientIdx, yojimbo::Message* message);
-  static void SendAllMessageFromServer(const char tag[NETWORK_TAG_LEN],
-                                       yojimbo::Message* message);
+  template <typename T>
+  static void SendAllMessageFromServer(yojimbo::Message* message);
 
   static U16 GetMessageTypeCount() { return messageTypeCount; }
+  template <typename T>
   static void RegisterMessageType(U64 size,
-                                  Func<yojimbo::Message*, void*> factory,
-                                  const char tag[NETWORK_TAG_LEN]);
-  static int RegisterServerCallback(const char tag[NETWORK_TAG_LEN],
-                                    Action<int, yojimbo::Message*> func);
-  static void UnregisterServerCallback(const char tag[NETWORK_TAG_LEN],
-                                       int handle);
-  static int RegisterClientCallback(const char tag[NETWORK_TAG_LEN],
-                                    Action<yojimbo::Message*> func);
-  static void UnregisterClientCallback(const char tag[NETWORK_TAG_LEN],
-                                       int handle);
+                                  Func<yojimbo::Message*, void*> factory);
+  template <typename T>
+  static int RegisterServerCallback(Action<int, yojimbo::Message*> func);
+  template <typename T>
+  static void UnregisterServerCallback(int handle);
+  template <typename T>
+  static int RegisterClientCallback(Action<yojimbo::Message*> func);
+  template <typename T>
+  static void UnregisterClientCallback(int handle);
 
   static Entity* GetNetworkEntity(const U32 id);
   static U32 CreateNetworkId(NetworkIdentity* networkIdentity);
@@ -77,12 +78,17 @@ class NetworkManager {
    */
   static void CloseServer();
 
-  static bool ClientIsConnected();
+  static bool LocalClientIsConnected();
+  static bool ClientIsConnected(int clientIdx);
   static bool ServerIsRunning();
   static int GetMaxClients();
 
  private:
-  static int GetMessageTypeId(const char tag[NETWORK_TAG_LEN]);
+  static yojimbo::Message* CreateClientMessage(int messageId);
+  static yojimbo::Message* CreateServerMessage(int clientIdx, int messageId);
+
+  template <typename T>
+  static int GetMessageTypeId();
   static std::list<std::pair<U16, Action<yojimbo::Message*>>>
   GetClientFunctions(int type);
   static std::list<std::pair<U16, Action<int, yojimbo::Message*>>>
@@ -95,7 +101,7 @@ class NetworkManager {
   static U32 nextNetworkId;
   static std::unordered_map<int, std::pair<U64, Func<yojimbo::Message*, void*>>>
       factories;
-  static std::unordered_map<const char*, int> tags;
+  static std::unordered_map<std::type_index, int> typeMap;
 
   static std::unordered_map<
       int, std::list<std::pair<U16, Action<yojimbo::Message*>>>>
@@ -109,4 +115,66 @@ class NetworkManager {
   friend class NetworkingModule;
   friend class NetworkMessageFactory;
 };
+
+template <typename T>
+T* NetworkManager::GenerateMessageFromClient() {
+  return reinterpret_cast<T*>(CreateClientMessage(GetMessageTypeId<T>()));
+}
+template <typename T>
+T* NetworkManager::GenerateMessageFromServer(int clientIdx) {
+  return reinterpret_cast<T*>(CreateServerMessage(clientIdx, GetMessageTypeId<T>()));
+}
+template <typename T>
+int NetworkManager::GetMessageTypeId() {
+  return typeMap[std::type_index(typeid(T))];
+}
+template <typename T>
+void NetworkManager::SendAllMessageFromServer(yojimbo::Message* refMessage) {
+  for (int i = 0; i < GetMaxClients(); ++i) {
+    if (!ClientIsConnected(i)) {
+      continue;
+    }
+
+    yojimbo::Message* newMessage = GenerateMessageFromServer<T>(i);
+    newMessage->Copy(refMessage);
+    SendMessageFromServer(i, newMessage);
+  }
+}
+template <typename T>
+void NetworkManager::RegisterMessageType(
+    U64 size, Func<yojimbo::Message*, void*> factory) {
+  factories[messageTypeCount] = std::pair(size, factory);
+  typeMap[std::type_index(typeid(T))] = messageTypeCount;
+  ++messageTypeCount;
+}
+template <typename T>
+int NetworkManager::RegisterServerCallback(
+    Action<int, yojimbo::Message*> func) {
+  serverCallbacks[GetMessageTypeId<T>()].push_back(
+      std::pair(functionCount, func));
+  return functionCount++;
+}
+template <typename T>
+void NetworkManager::UnregisterServerCallback(int handle) {
+  int messageId = GetMessageTypeId<T>();
+  serverCallbacks[messageId].remove_if(
+      [handle](std::pair<U16, Action<U16, yojimbo::Message*>> item) {
+        return item.first == handle;
+      });
+}
+template <typename T>
+int NetworkManager::RegisterClientCallback(Action<yojimbo::Message*> func) {
+  clientCallbacks[GetMessageTypeId<T>()].push_back(
+      std::pair(functionCount, func));
+  return functionCount++;
+}
+template <typename T>
+void NetworkManager::UnregisterClientCallback(int handle) {
+  int messageId = GetMessageTypeId<T>();
+  clientCallbacks[messageId].remove_if(
+      [handle](std::pair<U16, Action<yojimbo::Message*>> item) {
+        return item.first == handle;
+      });
+}
+
 }  // namespace Isetta

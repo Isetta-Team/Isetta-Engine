@@ -17,8 +17,6 @@ namespace Isetta {
  *
  */
 RPC_MESSAGE_DEFINE(HandleMessage)
-HandleMessage() { handle = 0; }
-
 // TODO(Caleb): choose a more reasonable range for the int serialization
 template <typename Stream>
 bool Serialize(Stream* stream) {
@@ -34,7 +32,7 @@ void Copy(const yojimbo::Message* otherMessage) override {
 }
 
 public:
-int handle;
+int handle = 0;
 
 RPC_MESSAGE_FINISH
 
@@ -44,9 +42,6 @@ RPC_MESSAGE_FINISH
  *
  */
 RPC_MESSAGE_DEFINE(StringMessage)
-
-StringMessage() { string = ""; }
-
 // TODO(Caleb): choose a more reasonable range for the int serialization
 template <typename Stream>
 bool Serialize(Stream* stream) {
@@ -62,7 +57,7 @@ void Copy(const yojimbo::Message* otherMessage) override {
 }
 
 public:
-std::string string;
+std::string string = "";
 
 RPC_MESSAGE_FINISH
 
