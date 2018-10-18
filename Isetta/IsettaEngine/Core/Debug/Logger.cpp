@@ -142,6 +142,31 @@ void LogObject::operator()(const Debug::Channel channel,
 }
 
 void LogObject::operator()(
+    const std::initializer_list<std::string>& inFormat) const {
+  std::string stream;
+  for (auto& elem : inFormat) {
+    stream += elem;
+  }
+  Logger::DebugPrintF(file, line, Debug::Channel::General, verbosity,
+                      stream.c_str(), NULL);
+}
+
+void LogObject::operator()(const char* inFormat, ...) const {
+  va_list argList;
+  va_start(argList, &inFormat);
+
+  Logger::DebugPrintF(file, line, Debug::Channel::General, verbosity, inFormat,
+                      argList);
+
+  va_end(argList);
+}
+
+void LogObject::operator()(const std::string& inFormat) const {
+  Logger::DebugPrintF(file, line, Debug::Channel::General, verbosity,
+                      inFormat.c_str(), NULL);
+}
+
+void LogObject::operator()(
     const Debug::Channel channel,
     const std::initializer_list<std::string>& inFormat) const {
   std::string stream;

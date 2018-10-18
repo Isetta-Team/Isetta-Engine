@@ -15,9 +15,7 @@
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
 #include "Graphics/AnimationComponent.h"
-#include "Networking/ExampleMessages.h"
 #include "Networking/NetworkManager.h"
-#include "Networking/ExampleMessages.h"
 
 // F Windows
 #ifdef SendMessage
@@ -29,24 +27,8 @@ namespace Isetta {
 // Defining static variables
 CustomAdapter NetworkingModule::NetworkAdapter;
 
-int NetworkManager::messageTypeCount;
-U16 NetworkManager::functionCount;
-U32 NetworkManager::nextNetworkId = 1;
-std::unordered_map < std::type_index, int > NetworkManager::typeMap;
-std::unordered_map<int, std::pair<U64, Func<yojimbo::Message*, void*>>>
-    NetworkManager::factories;
-std::unordered_map<int, std::list<std::pair<U16, Action<yojimbo::Message*>>>>
-    NetworkManager::clientCallbacks;
-std::unordered_map<int,
-                   std::list<std::pair<U16, Action<int, yojimbo::Message*>>>>
-    NetworkManager::serverCallbacks;
-std::unordered_map<U32, NetworkIdentity*>
-    NetworkManager::networkIdToComponentMap;
-
 void NetworkingModule::StartUp() {
-  NetworkManager::networkingModule = this;
-
-  NetworkingExample::InitExampleMessages();
+  NetworkManager::Instance().networkingModule = this;
 
   if (!InitializeYojimbo()) {
     throw std::exception(
@@ -220,7 +202,7 @@ void NetworkingModule::ProcessClientToServerMessages(int clientIdx) {
     }
 
     auto serverFunctions =
-        NetworkManager::GetServerFunctions(message->GetType());
+        NetworkManager::Instance().GetServerFunctions(message->GetType());
     for (const auto& function : serverFunctions) {
       function.second(clientIdx, message);
     }
@@ -239,7 +221,7 @@ void NetworkingModule::ProcessServerToClientMessages() {
     }
 
     auto clientFunctions =
-        NetworkManager::GetClientFunctions(message->GetType());
+        NetworkManager::Instance().GetClientFunctions(message->GetType());
     for (const auto& function : clientFunctions) {
       function.second(message);
     }

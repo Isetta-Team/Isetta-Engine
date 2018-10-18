@@ -10,7 +10,10 @@
 
 namespace Isetta {
 
-NetworkingModule* NetworkManager::networkingModule{nullptr};
+NetworkManager& NetworkManager::Instance() {
+  static NetworkManager instance;
+  return instance;
+}
 
 void NetworkManager::SendMessageFromClient(yojimbo::Message* message) {
   networkingModule->AddClientToServerMessage(message);
@@ -20,20 +23,6 @@ void NetworkManager::SendMessageFromServer(int clientIdx,
                                            yojimbo::Message* message) {
   networkingModule->AddServerToClientMessage(clientIdx, message);
 }
-
-// void NetworkManager::SendAllMessageFromServer(const char
-// tag[NETWORK_TAG_LEN],
-//                                              yojimbo::Message* refMessage) {
-//  for (int i = 0; i < GetMaxClients(); i++) {
-//    if (!networkingModule->server->IsClientConnected(i)) {
-//      continue;
-//    }
-//
-//    yojimbo::Message* newMessage = GenerateMessageFromServer(i, tag);
-//    newMessage->Copy(refMessage);
-//    SendMessageFromServer(i, newMessage);
-//  }
-//}
 
 void NetworkManager::ConnectToServer(const char* serverAddress,
                                      Action<bool> callback) {
@@ -67,9 +56,6 @@ int NetworkManager::GetMaxClients() {
 
 void NetworkManager::CloseServer() { networkingModule->CloseServer(); }
 
-// int NetworkManager::GetMessageTypeId(const char tag[NETWORK_TAG_LEN]) {
-//  return tags[tag];
-//}
 std::list<std::pair<U16, Action<yojimbo::Message*>>>
 NetworkManager::GetClientFunctions(int type) {
   return clientCallbacks[type];
@@ -78,45 +64,6 @@ std::list<std::pair<U16, Action<int, yojimbo::Message*>>>
 NetworkManager::GetServerFunctions(int type) {
   return serverCallbacks[type];
 }
-
-// void NetworkManager::RegisterMessageType(U64 size,
-//                                         Func<yojimbo::Message*, void*>
-//                                         factory, const char
-//                                         tag[NETWORK_TAG_LEN]) {
-//  factories[messageTypeCount] = std::pair(size, factory);
-//  tags[tag] = messageTypeCount;
-//  ++messageTypeCount;
-//}
-// int NetworkManager::RegisterServerCallback(
-//    const char tag[NETWORK_TAG_LEN], Action<int, yojimbo::Message*> func) {
-//  serverCallbacks[GetMessageTypeId(tag)].push_back(
-//      std::pair(functionCount, func));
-//  return functionCount++;
-////}
-// void NetworkManager::UnregisterServerCallback(const char
-// tag[NETWORK_TAG_LEN],
-//                                              int handle) {
-//  int messageId = GetMessageTypeId(tag);
-//  serverCallbacks[messageId].remove_if(
-//      [handle](std::pair<U16, Action<U16, yojimbo::Message*>> item) {
-//        return item.first == handle;
-//      });
-//}
-// int NetworkManager::RegisterClientCallback(const char tag[NETWORK_TAG_LEN],
-//                                           Action<yojimbo::Message*> func) {
-//  clientCallbacks[GetMessageTypeId(tag)].push_back(
-//      std::pair(functionCount, func));
-//  return functionCount++;
-//}
-// void NetworkManager::UnregisterClientCallback(const char
-// tag[NETWORK_TAG_LEN],
-//                                              int handle) {
-//  int messageId = GetMessageTypeId(tag);
-//  clientCallbacks[messageId].remove_if(
-//      [handle](std::pair<U16, Action<yojimbo::Message*>> item) {
-//        return item.first == handle;
-//      });
-//}
 
 yojimbo::Message* NetworkManager::CreateClientMessage(int messageId) {
   return networkingModule->client->CreateMessage(messageId);
