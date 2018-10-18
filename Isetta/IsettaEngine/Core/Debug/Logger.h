@@ -208,7 +208,6 @@ struct ISETTA_API LogObject {
    * verbosity set in constructor
    *
    * @param channel of the message
-   * @param verbosity of the message
    * @param inFormat the format string similar to printf
    * @param ... input arguments to fill the formats
    */
@@ -219,7 +218,6 @@ struct ISETTA_API LogObject {
    * verbosity set in constructor
    *
    * @param channel of the message
-   * @param verbosity of the message
    * @param inFormat the string to output
    */
   void operator()(const Debug::Channel channel,
@@ -229,10 +227,33 @@ struct ISETTA_API LogObject {
    * verbosity set in constructor
    *
    * @param channel of the message
-   * @param verbosity of the message
    * @param inFormat initializer list of strings to output
    */
   void operator()(const Debug::Channel channel,
                   const std::initializer_list<std::string>& inFormat) const;
+
+  /**
+   * @brief Call to DebugPrintF to output a log message,
+   * verbosity set in constructor
+   *
+   * @param inFormat the format string similar to printf
+   * @param ... input arguments to fill the formats
+   */
+  void operator()(const char* inFormat,
+                  ...) const;
+  /**
+   * @brief Call to DebugPrintF to output a log message,
+   * verbosity set in constructor
+   *
+   * @param inFormat the string to output
+   */
+  void operator()(const std::string& inFormat) const;
+  /**
+   * @brief Call to DebugPrintF to output a log message,
+   * verbosity set in constructor
+   *
+   * @param inFormat initializer list of strings to output
+   */
+  void operator()(const std::initializer_list<std::string>& inFormat) const;
 };
 }  // namespace Isetta

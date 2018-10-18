@@ -144,7 +144,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
   <ItemGroup>
     <ClCompile Include="Audio\AudioModule.cpp" />
     <ClCompile Include="Audio\AudioSource.cpp" />
-    <ClCompile Include="Components\DebugComponent.cpp" />
+    <ClCompile Include="Components\GridComponent.cpp" />
     <ClCompile Include="Components\FlyController.cpp" />
     <ClCompile Include="Core\Config\Config.cpp" />
     <ClCompile Include="Core\Color.cpp" />
@@ -161,8 +161,9 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Custom\AxisDrawer.cpp" />
     <ClCompile Include="Custom\InEngineTestLevel.cpp" />
     <ClCompile Include="Custom\KeyTransform.cpp" />
+    <ClCompile Include="Custom\NetworkLevel.cpp" />
     <ClCompile Include="Custom\OscillateMove.cpp" />
-    <ClCompile Include="Custom\PhysicsLevel.cpp" />
+    <ClCompile Include="Custom\CollisionsLevel.cpp" />
     <ClCompile Include="EngineLoop.cpp" />
     <ClCompile Include="Graphics\AnimationComponent.cpp" />
     <ClCompile Include="Graphics\CameraComponent.cpp" />
@@ -191,18 +192,16 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Memory\PoolAllocator.cpp" />
     <ClCompile Include="Graphics\Window.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Networking\ExampleMessages.cpp" />
     <ClCompile Include="Networking\NetworkIdentity.cpp" />
     <ClCompile Include="Networking\NetworkingModule.cpp" />
     <ClCompile Include="Networking\NetworkManager.cpp" />
-    <ClCompile Include="Physics\AABB.cpp" />
-    <ClCompile Include="Physics\BoxCollider.cpp" />
-    <ClCompile Include="Physics\CapsuleCollider.cpp" />
-    <ClCompile Include="Physics\Collider.cpp" />
-    <ClCompile Include="Physics\Physics.cpp" />
-    <ClCompile Include="Physics\PhysicsModule.cpp" />
-    <ClCompile Include="Physics\Plane.cpp" />
-    <ClCompile Include="Physics\SphereCollider.cpp" />
+    <ClCompile Include="Collisions\AABB.cpp" />
+    <ClCompile Include="Collisions\BoxCollider.cpp" />
+    <ClCompile Include="Collisions\CapsuleCollider.cpp" />
+    <ClCompile Include="Collisions\Collider.cpp" />
+    <ClCompile Include="Collisions\CollisionsModule.cpp" />
+    <ClCompile Include="Collisions\Plane.cpp" />
+    <ClCompile Include="Collisions\SphereCollider.cpp" />
     <ClCompile Include="Scene\Component.cpp" />
     <ClCompile Include="Scene\Entity.cpp" />
     <ClCompile Include="Scene\Level.cpp" />
@@ -212,7 +211,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
   <ItemGroup>
     <ClInclude Include="Audio\AudioModule.h" />
     <ClInclude Include="Audio\AudioSource.h" />
-    <ClInclude Include="Components\DebugComponent.h" />
+    <ClInclude Include="Components\GridComponent.h" />
     <ClInclude Include="Components\FlyController.h" />
     <ClInclude Include="Core\Config\Config.h" />
     <ClInclude Include="Core\Color.h" />
@@ -254,8 +253,9 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Custom\InEngineTestLevel.h" />
     <ClInclude Include="Custom\IsettaCore.h" />
     <ClInclude Include="Custom\KeyTransform.h" />
+    <ClInclude Include="Custom\NetworkLevel.h" />
     <ClInclude Include="Custom\OscillateMove.h" />
-    <ClInclude Include="Custom\PhysicsLevel.h" />
+    <ClInclude Include="Custom\CollisionsLevel.h" />
     <ClInclude Include="EngineLoop.h" />
     <ClInclude Include="Graphics\AnimationComponent.h" />
     <ClInclude Include="Graphics\CameraComponent.h" />
@@ -268,7 +268,6 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Graphics\RenderModule.h" />
     <ClInclude Include="Graphics\Window.h" />
     <ClInclude Include="ISETTA_API.h" />
-    <ClInclude Include="Networking\ExampleMessages.h" />
     <ClInclude Include="Networking\Messages.h" />
     <ClInclude Include="Networking\NetworkIdentity.h" />
     <ClInclude Include="Networking\NetworkingModule.h" />
@@ -276,15 +275,14 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Input\InputEnum.h" />
     <ClInclude Include="Input\InputModule.h" />
     <ClInclude Include="Networking\NetworkManager.h" />
-    <ClInclude Include="Physics\AABB.h" />
-    <ClInclude Include="Physics\BoxCollider.h" />
-    <ClInclude Include="Physics\CapsuleCollider.h" />
-    <ClInclude Include="Physics\Collider.h" />
-    <ClInclude Include="Physics\Physics.h" />
-    <ClInclude Include="Physics\PhysicsModule.h" />
-    <ClInclude Include="Physics\Plane.h" />
-    <ClInclude Include="Physics\Ray.h" />
-    <ClInclude Include="Physics\SphereCollider.h" />
+    <ClInclude Include="Collisions\AABB.h" />
+    <ClInclude Include="Collisions\BoxCollider.h" />
+    <ClInclude Include="Collisions\CapsuleCollider.h" />
+    <ClInclude Include="Collisions\Collider.h" />
+    <ClInclude Include="Collisions\CollisionsModule.h" />
+    <ClInclude Include="Collisions\Plane.h" />
+    <ClInclude Include="Collisions\Ray.h" />
+    <ClInclude Include="Collisions\SphereCollider.h" />
     <ClInclude Include="Scene\Component.h" />
     <ClInclude Include="Scene\Entity.h" />
     <ClInclude Include="Scene\IsettaLevel.h" />
@@ -299,6 +297,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
   <ItemGroup>
     <None Include="config.cfg" />
     <None Include="Resources\test\Low-Poly-Racing-Car.geo" />
+    <None Include="user.cfg" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Resources\materials\compute.material.xml" />

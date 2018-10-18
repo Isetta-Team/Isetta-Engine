@@ -96,22 +96,29 @@ class InputModule {
    */
   void UnregisterMouseReleaseCallback(MouseButtonCode mouseButton, U16 handle);
 
-  // TODO(Chaojie + Jacob): Talk about these, should unregister return bool?
-  U16 RegisterMouseButtonCallback(
-      const Action<GLFWwindow*, int, int, int>& callback);
-  void UnregisterMouseButtonCallback(U16 handle);
-  U16 RegisterKeyCallback(
-      const Action<GLFWwindow*, int, int, int, int>& callback);
-  void UnegisterKeyCallback(U16 handle);
-  U16 RegisterScrollCallback(
-      const Action<GLFWwindow*, double, double>& callback);
-  void UnegisterScrollCallback(U16 handle);
-  U16 RegisterCharCallback(const Action<GLFWwindow*, unsigned int>& callback);
-  void UnegisterCharCallback(U16 handle);
+  U16 RegisterWindowResizeCallback(const Action<int, int>& callback);
+  void UnregisterWindowResizeCallback(U16 handle);
+  U16 RegisterScrollCallback(const Action<double, double>& callback);
+  void UnregisterScrollCallback(U16 handle);
+
   float GetGamepadAxis(GamepadAxis axis);
   bool IsGamepadButtonPressed(GamepadButton button);
   U16 RegisterGamepadConnectionCallback(const Action<int, int>& callback);
   void UnegisterGamepadConnectionCallback(U16 handle);
+
+  // TODO(Chaojie + Jacob): Talk about these, should unregister return bool?
+  U16 RegisterMouseButtonGLFWCallback(
+      const Action<GLFWwindow*, int, int, int>& callback);
+  void UnregisterMouseButtonGLFWCallback(U16 handle);
+  U16 RegisterKeyGLFWCallback(
+      const Action<GLFWwindow*, int, int, int, int>& callback);
+  void UnegisterKeyGLFWCallback(U16 handle);
+  U16 RegisterScrollGLFWCallback(
+      const Action<GLFWwindow*, double, double>& callback);
+  void UnregisterScrollGLFWCallback(U16 handle);
+  U16 RegisterCharGLFWCallback(
+      const Action<GLFWwindow*, unsigned int>& callback);
+  void UnegisterCharGLFWCallback(U16 handle);
 
  private:
   static GLFWwindow* winHandle;
@@ -138,25 +145,27 @@ class InputModule {
   static CBMap keyReleaseCallbacks;
   static CBMap mousePressCallbacks;
   static CBMap mouseReleaseCallbacks;
+  static std::unordered_map<U16, Action<int, int>> windowResizeCallbacks;
+  static std::unordered_map<U16, Action<double, double>> scrollCallbacks;
+  static std::unordered_map<U16, Action<int, int>> gamepadConnectionCallbacks;
+
   static void KeyEventListener(GLFWwindow* win, int key, int scancode,
                                int action, int mods);
   static void MouseEventListener(GLFWwindow* win, int button, int action,
                                  int mods);
   static void CharEventListener(GLFWwindow*, unsigned int c);
   static void ScrollEventListener(GLFWwindow*, double xoffset, double yoffset);
-  static void WinSizeListener(GLFWwindow* win, int width, int height);
   static void GamepadEventListener(int gamepadID, int gamepadEvent);
+  static void WindowSizeListener(GLFWwindow* win, int width, int height);
 
   static std::unordered_map<U16, Action<GLFWwindow*, int, int, int>>
-      mouseButtonCallbacks;
+      mouseButtonGLFWCallbacks;
   static std::unordered_map<U16, Action<GLFWwindow*, int, int, int, int>>
-      keyCallbacks;
+      keyGLFWCallbacks;
   static std::unordered_map<U16, Action<GLFWwindow*, double, double>>
-      scrollCallbacks;
+      scrollGLFWCallbacks;
   static std::unordered_map<U16, Action<GLFWwindow*, unsigned int>>
-      charCallbacks;
-  static std::unordered_map<U16, Action<int, int>> winSizeCallbacks;
-  static std::unordered_map<U16, Action<int, int>> gamepadConnectionCallbacks;
+      charGLFWCallbacks;
 
   static U16 totalHandle;
 

@@ -48,6 +48,27 @@ Instruction:
 ### Setup Done (for now...)
 You can start playting with our (TODO) simplistic demo!
 
+### Building the Engine
+There are currently 3 configuration options with this solution of the engine: Debug, Debug DLL, and Release. To use Debug or Release, the startup project must be the IsettaEngine (this is done by right clicking the IsettaEngine project and selecting "Set as Startup Project"). These configurations will build and run the engine, so the levels/tests we have within their. To run any level within IsettaTestbed, the configuration should be put in Debug DLL to build the engine into a DLL, the startup project should then be IsettaTestbed.
+
+### Create a User Config
+If you want any personal options when using the engine (such as selecting a level for your computer to run) without changing the `config.cfg` you will need a `user.cfg`. You will need a `user.cfg` for each project (ie. IsettaEngine, IsettaTest, and IsettaTestbed), this fill needs to be placed at the root directory of the project (not the .sln).
+
+### Selectable Levels
+In your `user.cfg` add the lines: 
+```
+# Level Settings
+start_level = LEVEL_NAME
+# End
+```
+`LEVEL_NAME` can then be replaced with any of these options:
+- InEngineTestLevel (only in IsettaEngine): Level with a fly camera and light
+- CollisionsLevel (only in IsettaEngine): Level testing our collision intersections
+- ExampleLevel (only in IsettaTestbed): Level with an animating model and example component
+- Level1 (only in IsettaTestbed): First demo twin-stick shooter game we created!
+- DebugLevel (only in IsettaTestbed): Level demoing our debug drawing capabilities
+- GUILevel (only in IsettaTestbed): Level demoing our GUI capabilities
+
 ## Going Through Time
 Assuming you have checked out master, you are looking at our latest work. If you would like to view the engine from the start you can use the tags feature to see the code week to week. If you are interested in a specific feature, there are branches for each of the major systems of development for you to `checkout` (the majority of development happened on those branches, we slipped up sometimes and made changes on staging).
 

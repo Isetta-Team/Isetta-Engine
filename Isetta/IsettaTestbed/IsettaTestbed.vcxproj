@@ -148,6 +148,10 @@
     <ClCompile Include="Components\GameManager.cpp" />
     <ClCompile Include="Components\PlayerController.cpp" />
     <ClCompile Include="Components\Zombie.cpp" />
+    <ClCompile Include="DebugLevel\DebugComponent.cpp" />
+    <ClCompile Include="DebugLevel\DebugLevel.cpp" />
+    <ClCompile Include="GUILevel\GUILevel.cpp" />
+    <ClCompile Include="GUILevel\GUIComponent.cpp" />
     <ClCompile Include="Level\ExampleLevel.cpp" />
     <ClCompile Include="Level\Level1.cpp" />
     <ClCompile Include="main.cpp" />
@@ -163,6 +167,10 @@
     <ClInclude Include="Components\GameManager.h" />
     <ClInclude Include="Components\PlayerController.h" />
     <ClInclude Include="Components\Zombie.h" />
+    <ClInclude Include="DebugLevel\DebugComponent.h" />
+    <ClInclude Include="DebugLevel\DebugLevel.h" />
+    <ClInclude Include="GUILevel\GUILevel.h" />
+    <ClInclude Include="GUILevel\GUIComponent.h" />
     <ClInclude Include="Level\ExampleLevel.h" />
     <ClInclude Include="Level\Level1.h" />
   </ItemGroup>

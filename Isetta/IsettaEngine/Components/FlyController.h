@@ -19,6 +19,7 @@ class ISETTA_API FlyController : public Component {
   float rotY{};
   float lookRotationSpeed{-0.1f};
   float flySpeed = 15.f;
+  float flyMultiplier = 2.0f;
   bool enableLook = true;
 };
 }  // namespace Isetta

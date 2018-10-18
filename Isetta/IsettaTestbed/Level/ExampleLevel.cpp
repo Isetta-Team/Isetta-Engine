@@ -2,11 +2,13 @@
  * Copyright (c) 2018 Isetta
  */
 #include "ExampleLevel.h"
+
 #include "Components/ExampleComponent.h"
+#include "Components/FlyController.h"
+#include "Components/GridComponent.h"
 #include "Components/PlayerController.h"
 #include "Core/Color.h"
 #include "Core/Config/Config.h"
-#include "Custom/FlyController.h"
 #include "Graphics/AnimationComponent.h"
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
@@ -45,7 +47,7 @@ void ExampleLevel::LoadLevel() {
 
   Entity* man{AddEntity("PushAnim")};
   man->SetTransform(Math::Vector3{0, 0, 0}, Math::Vector3{0, 90, 0});
-  man->AddComponent<PlayerController, true>();
+  // man->AddComponent<PlayerController, true>();
   MeshComponent* pushMesh =
       man->AddComponent<MeshComponent, true>("push/Pushing.scene.xml");
 
@@ -55,5 +57,6 @@ void ExampleLevel::LoadLevel() {
 
   Entity* customEntity{AddEntity("custom")};
   customEntity->AddComponent<ExampleComponent, true>();
+  customEntity->AddComponent<GridComponent>();
 }
 }  // namespace Isetta
