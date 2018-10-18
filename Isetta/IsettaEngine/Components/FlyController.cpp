@@ -16,7 +16,7 @@ void FlyController::OnEnable() {
   });
   Input::RegisterScrollCallback([&](double xOffset, double yOffset) {
     flyMultiplier += yOffset;
-    flyMultiplier = Math::Util::Max(flyMultiplier, 1f);
+    flyMultiplier = Math::Util::Max(flyMultiplier, 1.f);
   });
 }
 
