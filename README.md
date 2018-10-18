@@ -13,7 +13,8 @@ First, let's make sure you have the right environment!
 
 **Before you build** you must pull and build the submodules:
 - [ ] Pull all submodules by using `git submodule update --init` in a commandline
-- [ ] Now you build the submodules
+- [ ] If there is no output (ie. nothing was update or initialized) you can skip to *Setup Done*
+	- [ ] Else build the submodules
 
 ### Building GLFW
 We are using CMake GUI tool for building GLFW (v3.10.2 tested).
@@ -49,7 +50,7 @@ Instruction:
 You can start playting with our (TODO) simplistic demo!
 
 ### Building the Engine
-There are currently 3 configuration options with this solution of the engine: Debug, Debug DLL, and Release. To use Debug or Release, the startup project must be the IsettaEngine (this is done by right clicking the IsettaEngine project and selecting "Set as Startup Project"). These configurations will build and run the engine, so the levels/tests we have within their. To run any level within IsettaTestbed, the configuration should be put in Debug DLL to build the engine into a DLL, the startup project should then be IsettaTestbed.
+There are currently 3 configuration options with this solution of the engine: `Debug`, `Debug DLL`, and `Release`. `Debug` and `Release` build the engine into an executable (quicker for internal testing) and `Debug DLL` builds the engine into a dll (so games can be made without needing to modify the engine). To use `Debug` or `Release`, the startup project must be the IsettaEngine (this is done by right clicking the IsettaEngine project and selecting "Set as Startup Project"). These configurations will build and run the engine as an executable, so the levels/tests we have within the engine can be viewed (these levels are typically have engine features that are still in development). To run any level within IsettaTestbed, the configuration should be put in `Debug DLL` which builds the engine into a DLL and the startup project should then be IsettaTestbed. The levels in IsettaTestbed are more feature complete, tech demos.
 
 ### Create a User Config
 If you want any personal options when using the engine (such as selecting a level for your computer to run) without changing the `config.cfg` you will need a `user.cfg`. You will need a `user.cfg` for each project (ie. IsettaEngine, IsettaTest, and IsettaTestbed), this fill needs to be placed at the root directory of the project (not the .sln).
