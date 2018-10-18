@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Custom/PhysicsLevel.h"
+#include "Custom/CollisionsLevel.h"
 
+#include "Components/DebugComponent.h"
 #include "Components/FlyController.h"
 #include "Core/Color.h"
 #include "Core/Config/Config.h"
@@ -13,16 +14,18 @@
 #include "Graphics/LightComponent.h"
 #include "Scene/Entity.h"
 
-#include "Physics/BoxCollider.h"
-#include "Physics/CapsuleCollider.h"
-#include "Physics/SphereCollider.h"
+#include "Collisions/BoxCollider.h"
+#include "Collisions/CapsuleCollider.h"
+#include "Collisions/Collider.h"
+#include "Collisions/SphereCollider.h"
 
 namespace Isetta {
 
 using LightProperty = LightComponent::Property;
 using CameraProperty = CameraComponent::Property;
+using ColliderAttribute = Collider::Attributes;
 
-void PhysicsLevel::LoadLevel() {
+void CollisionsLevel::LoadLevel() {
   // Camera
   Entity* cameraEntity{AddEntity("Camera")};
   CameraComponent* camComp =
@@ -50,18 +53,21 @@ void PhysicsLevel::LoadLevel() {
   lightComp->SetProperty<LightProperty::SHADOW_MAP_COUNT>(1);
   lightComp->SetProperty<LightProperty::SHADOW_MAP_BIAS>(0.01f);
 
+  Entity* grid{AddEntity("Grid")};
+  grid->AddComponent<DebugComponent>();
+
   // STATIC
   Entity* staticCol[3];
 
   staticCol[0] = AddEntity("collider");
   staticCol[0]->SetTransform(Math::Vector3{0, 1, 0});
   BoxCollider* bCol = staticCol[0]->AddComponent<BoxCollider>();
-  bCol->isStatic = true;
+  bCol->SetAttribute(ColliderAttribute::IS_STATIC, true);
 
   staticCol[1] = AddEntity("collider");
   staticCol[1]->SetTransform(Math::Vector3{0, 1, -4});
   SphereCollider* sCol = staticCol[1]->AddComponent<SphereCollider>();
-  sCol->isStatic = true;
+  sCol->SetAttribute(ColliderAttribute::IS_STATIC, true);
 
   staticCol[2] = AddEntity("collider");
   staticCol[2]->SetTransform(Math::Vector3{0, 1, -8});

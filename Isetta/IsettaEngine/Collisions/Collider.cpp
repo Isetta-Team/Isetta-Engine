@@ -1,26 +1,26 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Physics/Collider.h"
-#include "Physics/BoxCollider.h"
-#include "Physics/CapsuleCollider.h"
-#include "Physics/PhysicsModule.h"
-#include "Physics/SphereCollider.h"
+#include "Collisions/Collider.h"
+#include "Collisions/BoxCollider.h"
+#include "Collisions/CapsuleCollider.h"
+#include "Collisions/CollisionsModule.h"
+#include "Collisions/SphereCollider.h"
 
-#include "Physics/Ray.h"
+#include "Collisions/Ray.h"
 #include "Scene/Entity.h"
 
 namespace Isetta {
-PhysicsModule* Collider::physicsModule{nullptr};
+CollisionsModule* Collider::collisionsModule{nullptr};
 void Collider::OnEnable() {
-  // physicsModule->tree.Add(bounding);
+  // CollisionsModule->tree.Add(bounding);
   // TODO(Jacob) remove
-  // if (!isStatic) physicsModule->dynamicColliders.push_back(this);
-  physicsModule->colliders.push_back(this);
+  // if (!isStatic) CollisionsModule->dynamicColliders.push_back(this);
+  collisionsModule->colliders.push_back(this);
 }
 void Collider::OnDisable() {
   // TODO(Jacob) remove this element
-  /*physicsModule->colliders.erase();*/
+  /*CollisionsModule->colliders.erase();*/
 }
 void Collider::RaycastHitCtor(RaycastHit* const hitInfo, float distance,
                               const Math::Vector3& point,

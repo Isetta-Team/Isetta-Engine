@@ -4,13 +4,13 @@
 #include "EngineLoop.h"
 
 #include "Audio/AudioModule.h"
+#include "Collisions/CollisionsModule.h"
 #include "Core/Memory/MemoryManager.h"
 #include "Graphics/GUIModule.h"
 #include "Graphics/RenderModule.h"
 #include "Graphics/Window.h"
 #include "Input/InputModule.h"
 #include "Networking/NetworkingModule.h"
-#include "Physics/PhysicsModule.h"
 
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
@@ -50,7 +50,7 @@ EngineLoop::EngineLoop() {
   inputModule = new InputModule{};
   guiModule = new GUIModule{};
   networkingModule = new NetworkingModule{};
-  physicsModule = new PhysicsModule{};
+  collisionsModule = new CollisionsModule{};
 }
 EngineLoop::~EngineLoop() {
   delete windowModule;
@@ -60,7 +60,7 @@ EngineLoop::~EngineLoop() {
   delete guiModule;
   delete memoryManager;
   delete networkingModule;
-  delete physicsModule;
+  delete collisionsModule;
 }
 
 void EngineLoop::StartUp() {
@@ -78,7 +78,7 @@ void EngineLoop::StartUp() {
   renderModule->StartUp(windowModule->winHandle);
   inputModule->StartUp(windowModule->winHandle);
   guiModule->StartUp(windowModule->winHandle);
-  physicsModule->StartUp();
+  collisionsModule->StartUp();
   audioModule->StartUp();
   networkingModule->StartUp();
 
@@ -125,7 +125,7 @@ void EngineLoop::Update() {
 
 void EngineLoop::FixedUpdate(float deltaTime) {
   networkingModule->Update(deltaTime);
-  physicsModule->Update(deltaTime);
+  collisionsModule->Update(deltaTime);
 }
 void EngineLoop::VariableUpdate(float deltaTime) {
   inputModule->Update(deltaTime);
@@ -145,7 +145,7 @@ void EngineLoop::ShutDown() {
   NetworkingDemoEnd();
   networkingModule->ShutDown();
   audioModule->ShutDown();
-  physicsModule->ShutDown();
+  collisionsModule->ShutDown();
   guiModule->ShutDown();
   inputModule->ShutDown();
   DebugDraw::ShutDown();

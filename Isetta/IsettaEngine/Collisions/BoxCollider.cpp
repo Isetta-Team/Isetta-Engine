@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Physics/BoxCollider.h"
-#include "Physics/CapsuleCollider.h"
-#include "Physics/PhysicsModule.h"
-#include "Physics/SphereCollider.h"
+#include "Collisions/BoxCollider.h"
+#include "Collisions/CapsuleCollider.h"
+#include "Collisions/CollisionsModule.h"
+#include "Collisions/SphereCollider.h"
 
+#include "Collisions/Ray.h"
 #include "Core/Debug/DebugDraw.h"
 #include "Core/Math/Matrix4.h"
 #include "Scene/Transform.h"

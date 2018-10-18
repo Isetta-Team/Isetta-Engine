@@ -2,10 +2,9 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include "Collisions/AABB.h"
 #include "Core/Color.h"
 #include "Core/Math/Vector3.h"
-#include "Physics/AABB.h"
-#include "Physics/Ray.h"
 #include "Scene/Component.h"
 #include "Scene/Transform.h"
 
@@ -14,15 +13,15 @@ namespace Isetta {
   bool TYPE::Intersection(Collider* const other) {          \
     switch (other->GetType()) {                             \
       case Collider::ColliderType::BOX:                     \
-        return physicsModule->Intersection(                 \
+        return collisionsModule->Intersection(              \
             *this, dynamic_cast<BoxCollider&>(*other));     \
         break;                                              \
       case Collider::ColliderType::SPHERE:                  \
-        return physicsModule->Intersection(                 \
+        return collisionsModule->Intersection(              \
             *this, dynamic_cast<SphereCollider&>(*other));  \
         break;                                              \
       case Collider::ColliderType::CAPSULE:                 \
-        return physicsModule->Intersection(                 \
+        return collisionsModule->Intersection(              \
             *this, dynamic_cast<CapsuleCollider&>(*other)); \
         break;                                              \
     };                                                      \
@@ -42,7 +41,7 @@ class Collider : public Component {
 
   // virtual Math::Vector3 ClosestPoint(Math::Vector3 point) = 0;
   // Math::Vector3 ClosestPointOnAABB(Math::Vector3 point);
-  virtual bool Raycast(const Ray& ray, RaycastHit* const hitInfo,
+  virtual bool Raycast(const class Ray& ray, class RaycastHit* const hitInfo,
                        float maxDistance = 0) = 0;
 
   inline Math::Vector3 GetWorldCenter() const {
@@ -82,7 +81,7 @@ class Collider : public Component {
   void RaycastHitCtor(class RaycastHit* const hitInfo, float distance,
                       const Math::Vector3& point, const Math::Vector3& normal);
 
-  static class PhysicsModule* physicsModule;
-  friend class PhysicsModule;
+  static class CollisionsModule* collisionsModule;
+  friend class CollisionsModule;
 };
 }  // namespace Isetta

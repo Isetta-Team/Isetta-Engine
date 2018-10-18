@@ -2,7 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Physics/Collider.h"
+#include "Collisions/Collider.h"
 
 namespace Isetta {
 class SphereCollider : public Collider {

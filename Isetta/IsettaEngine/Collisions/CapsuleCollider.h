@@ -2,7 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Physics/Collider.h"
+#include "Collisions/Collider.h"
 
 namespace Isetta::Math {
 class Matrix4;
@@ -45,7 +45,7 @@ class CapsuleCollider : public Collider {
   float GetWorldCapsule(Math::Matrix4* rotation, Math::Matrix4* scale) const;
 
   bool Raycast(const Ray& ray, RaycastHit* const hitInfo,
-               float maxDistance = 0) /*override*/;
+               float maxDistance = 0) override;
 
   inline float GetWorldRadius() const {
     switch (direction) {

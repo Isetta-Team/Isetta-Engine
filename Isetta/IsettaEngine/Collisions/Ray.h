@@ -26,14 +26,14 @@ class Ray {
 class RaycastHit {
  private:
   class Collider* collider;
-  float distance;
+  float distance{INFINITY};
   Math::Vector3 normal, point;
 
   RaycastHit(class Collider* collider, float distance, Math::Vector3 normal,
              Math::Vector3 point)
       : collider{collider}, distance{distance}, normal{normal}, point{point} {}
 
-  // friend PhysicsModule? Collider?
+  // friend CollisionsModule? Collider?
  public:
   inline class Collider* GetCollider() { return collider; }
   inline float GetDistance() { return distance; }

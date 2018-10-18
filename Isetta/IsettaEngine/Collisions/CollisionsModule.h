@@ -5,7 +5,6 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-//#include "Physics/AABB.h"
 #include "Util.h"
 
 namespace Isetta::Math {
@@ -13,7 +12,7 @@ class Vector3;
 }
 
 namespace Isetta {
-class PhysicsModule {
+class CollisionsModule {
  public:
   // TODO(Jacob) can these just be static?
   static bool Intersection(const class BoxCollider &,
@@ -35,9 +34,12 @@ class PhysicsModule {
   static bool Intersection(const class CapsuleCollider &,
                            const class SphereCollider &);
 
+  bool Raycast(const class Ray &ray, class RaycastHit *const hitInfo,
+               float maxDistance = 0);
+
  private:
-  PhysicsModule() = default;
-  ~PhysicsModule() = default;
+  CollisionsModule() = default;
+  ~CollisionsModule() = default;
 
   // BVTree tree;
   // TODO(Jacob) remove

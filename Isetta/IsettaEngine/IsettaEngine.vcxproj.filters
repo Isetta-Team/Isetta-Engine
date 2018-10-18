@@ -153,23 +153,20 @@
     <ClCompile Include="Custom\InEngineTestLevel.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
-    <ClCompile Include="Physics\BoxCollider.cpp">
-      <Filter>Physics</Filter>
+    <ClCompile Include="Collisions\BoxCollider.cpp">
+      <Filter>Collisions</Filter>
     </ClCompile>
-    <ClCompile Include="Physics\CapsuleCollider.cpp">
-      <Filter>Physics</Filter>
+    <ClCompile Include="Collisions\CapsuleCollider.cpp">
+      <Filter>Collisions</Filter>
     </ClCompile>
-    <ClCompile Include="Physics\PhysicsModule.cpp">
-      <Filter>Physics</Filter>
+    <ClCompile Include="Collisions\SphereCollider.cpp">
+      <Filter>Collisions</Filter>
     </ClCompile>
-    <ClCompile Include="Physics\SphereCollider.cpp">
-      <Filter>Physics</Filter>
+    <ClCompile Include="Collisions\Collider.cpp">
+      <Filter>Collisions</Filter>
     </ClCompile>
-    <ClCompile Include="Physics\Collider.cpp">
-      <Filter>Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics\AABB.cpp">
-      <Filter>Physics</Filter>
+    <ClCompile Include="Collisions\AABB.cpp">
+      <Filter>Collisions</Filter>
     </ClCompile>
     <ClCompile Include="Custom\OscillateMove.cpp">
       <Filter>Custom</Filter>
@@ -177,14 +174,11 @@
     <ClCompile Include="Custom\KeyTransform.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
-    <ClCompile Include="Physics\Plane.cpp">
-      <Filter>Physics</Filter>
+    <ClCompile Include="Collisions\Plane.cpp">
+      <Filter>Collisions</Filter>
     </ClCompile>
-    <ClCompile Include="Custom\PhysicsLevel.cpp">
+    <ClCompile Include="Custom\CollisionsLevel.cpp">
       <Filter>Custom</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics\Physics.cpp">
-      <Filter>Physics</Filter>
     </ClCompile>
     <ClInclude Include="Core\Time\Time.h">
       <Filter>Core\Time</Filter>
@@ -192,29 +186,26 @@
     <ClInclude Include="Custom\InEngineTestLevel.h">
       <Filter>Custom</Filter>
     </ClInclude>
-    <ClInclude Include="Physics\BoxCollider.h">
-      <Filter>Physics</Filter>
+    <ClInclude Include="Collisions\BoxCollider.h">
+      <Filter>Collisions</Filter>
     </ClInclude>
-    <ClInclude Include="Physics\CapsuleCollider.h">
-      <Filter>Physics</Filter>
+    <ClInclude Include="Collisions\CapsuleCollider.h">
+      <Filter>Collisions</Filter>
     </ClInclude>
-    <ClInclude Include="Physics\PhysicsModule.h">
-      <Filter>Physics</Filter>
+    <ClInclude Include="Collisions\SphereCollider.h">
+      <Filter>Collisions</Filter>
     </ClInclude>
-    <ClInclude Include="Physics\SphereCollider.h">
-      <Filter>Physics</Filter>
+    <ClInclude Include="Collisions\Collider.h">
+      <Filter>Collisions</Filter>
     </ClInclude>
-    <ClInclude Include="Physics\Collider.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\AABB.h">
-      <Filter>Physics</Filter>
+    <ClInclude Include="Collisions\AABB.h">
+      <Filter>Collisions</Filter>
     </ClInclude>
     <ClInclude Include="Core\DataStructures\AVLTree.h">
       <Filter>Core\DataStructures</Filter>
     </ClInclude>
-    <ClInclude Include="Physics\Ray.h">
-      <Filter>Physics</Filter>
+    <ClInclude Include="Collisions\Ray.h">
+      <Filter>Collisions</Filter>
     </ClInclude>
     <ClInclude Include="Custom\OscillateMove.h">
       <Filter>Custom</Filter>
@@ -222,14 +213,11 @@
     <ClInclude Include="Custom\KeyTransform.h">
       <Filter>Custom</Filter>
     </ClInclude>
-    <ClInclude Include="Physics\Plane.h">
-      <Filter>Physics</Filter>
+    <ClInclude Include="Collisions\Plane.h">
+      <Filter>Collisions</Filter>
     </ClInclude>
-    <ClInclude Include="Custom\PhysicsLevel.h">
+    <ClInclude Include="Custom\CollisionsLevel.h">
       <Filter>Custom</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics\Physics.h">
-      <Filter>Physics</Filter>
     </ClInclude>
     <ClCompile Include="Networking\ExampleMessages.cpp">
       <Filter>Networking</Filter>
@@ -242,6 +230,12 @@
     </ClCompile>
     <ClCompile Include="Components\DebugComponent.cpp">
       <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\RaycastClick.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Collisions\CollisionsModule.cpp">
+      <Filter>Collisions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -302,11 +296,11 @@
     <Filter Include="Custom">
       <UniqueIdentifier>{795c60e4-6516-48a5-bfc1-c446a905bb3d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Physics">
-      <UniqueIdentifier>{c15f9d47-86d9-41b5-a7ee-43b1cc1fee77}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Components">
       <UniqueIdentifier>{e5f06d6e-7bc1-4d7b-b063-c75a33bfbf4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collisions">
+      <UniqueIdentifier>{c15f9d47-86d9-41b5-a7ee-43b1cc1fee77}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -501,6 +495,9 @@
     </ClInclude>
     <ClInclude Include="Scene\IsettaLevel.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\CollisionsModule.h">
+      <Filter>Collisions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

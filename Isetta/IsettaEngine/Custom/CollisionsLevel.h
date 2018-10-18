@@ -7,7 +7,7 @@
 #include "Scene/LevelManager.h"
 
 namespace Isetta {
-CREATE_LEVEL(PhysicsLevel)
+CREATE_LEVEL(CollisionsLevel)
 void LoadLevel() override;
 };  // namespace Isetta
 }  // namespace Isetta

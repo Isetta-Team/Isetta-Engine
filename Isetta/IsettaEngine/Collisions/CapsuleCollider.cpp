@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Physics/CapsuleCollider.h"
-#include "Physics/BoxCollider.h"
-#include "Physics/PhysicsModule.h"
-#include "Physics/SphereCollider.h"
+#include "Collisions/CapsuleCollider.h"
+#include "Collisions/BoxCollider.h"
+#include "Collisions/CollisionsModule.h"
+#include "Collisions/SphereCollider.h"
 
+#include "Collisions/Ray.h"
 #include "Core/Debug/DebugDraw.h"
 #include "Core/Math/Matrix4.h"
 #include "Scene/Transform.h"
@@ -60,6 +61,34 @@ float CapsuleCollider::GetWorldCapsule(Math::Matrix4* rotation,
 }
 bool CapsuleCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
                               float maxDistance) {
+  Math::Matrix4 rot, scale;
+  float radiusScale = GetWorldCapsule(&rot, &scale);
+  Math::Vector3 dir = (Math::Vector3)(
+      rot * scale * Math::Matrix4::Scale(Math::Vector3{height - 2 * radius}) *
+      Math::Vector4{0, 1, 0, 0});
+  Math::Vector3 p0 = GetWorldCenter() - dir;
+  Math::Vector3 p1 = GetWorldCenter() + dir;
+
+  Math::Vector3 to = p1 - p0;
+  Math::Vector3 o = ray.GetOrigin() - p0;
+
+  float toDir = Math::Vector3::Dot(to, ray.GetDirection());
+  float toO = Math::Vector3::Dot(to, o);
+  float toDot = Math::Vector3::Dot(to, to);
+
+  float m = toDir / toDot;
+  float n = toO / toDot;
+
+  Math::Vector3 q = ray.GetDirection() - (to * m);
+  Math::Vector3 r = o - (to * n);
+
+  float a = Math::Vector3::Dot(q, q);
+  float b = 2.0f * Math::Vector3::Dot(q, r);
+  float c = Math::Vector3::Dot(r, r) - GetWorldRadius();
+
+  if (a == 0.0f) {
+  }
+
   return false;
 }
 

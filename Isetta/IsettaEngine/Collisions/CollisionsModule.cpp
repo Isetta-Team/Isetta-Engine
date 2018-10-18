@@ -1,26 +1,26 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Physics/PhysicsModule.h"
+#include "Collisions/CollisionsModule.h"
 
+#include "Collisions/AABB.h"
+#include "Collisions/Ray.h"
 #include "Core/Debug/DebugDraw.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Math/Matrix3.h"
 #include "Core/Math/Vector3.h"
-#include "Physics/AABB.h"
-#include "Physics/Ray.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 
-#include "Physics/BoxCollider.h"
-#include "Physics/CapsuleCollider.h"
-#include "Physics/Collider.h"
-#include "Physics/SphereCollider.h"
+#include "Collisions/BoxCollider.h"
+#include "Collisions/CapsuleCollider.h"
+#include "Collisions/Collider.h"
+#include "Collisions/SphereCollider.h"
 
 namespace Isetta {
-void Isetta::PhysicsModule::StartUp() { Collider::physicsModule = this; }
+void CollisionsModule::StartUp() { Collider::collisionsModule = this; }
 
-void PhysicsModule::Update(float deltaTime) {
+void CollisionsModule::Update(float deltaTime) {
   /*
    * TODO(Yidi)Broadphase check
    */
@@ -37,7 +37,7 @@ void PhysicsModule::Update(float deltaTime) {
   //  }
   //}
   for (int i = 0; i < colliders.size(); i++) {
-    if (colliders[i]->isStatic) continue;
+    if (colliders[i]->GetAttribute(Collider::Attributes::IS_STATIC)) continue;
     for (int j = 0; j < colliders.size(); j++) {
       if (colliders[i] == colliders[j]) continue;
       if (colliders[i]->Intersection(colliders[j])) {
@@ -86,27 +86,25 @@ void PhysicsModule::Update(float deltaTime) {
   }
 }
 
-void PhysicsModule::ShutDown() {}
+void CollisionsModule::ShutDown() {}
 
-void PhysicsModule::OnCollisionEnter(Collider *const collider) {
-  for (auto component : collider->entity->GetComponents<Component>()) {
-    component->OnDestroy();
+void CollisionsModule::OnCollisionEnter(Collider *const collider) {
+  for (auto component : collider->owner->GetComponents<Component>()) {
   }
 }
 
-void PhysicsModule::OnCollisionStay(Collider *const collider) {
-  for (auto component : collider->entity->GetComponents<Component>()) {
-    component->OnDestroy();
+void CollisionsModule::OnCollisionStay(Collider *const collider) {
+  for (auto component : collider->owner->GetComponents<Component>()) {
   }
 }
 
-void PhysicsModule::OnCollisionExit(Collider *const collider) {
-  for (auto component : collider->entity->GetComponents<Component>()) {
-    component->OnDestroy();
+void CollisionsModule::OnCollisionExit(Collider *const collider) {
+  for (auto component : collider->owner->GetComponents<Component>()) {
   }
 }
 
-bool PhysicsModule::Intersection(const BoxCollider &a, const BoxCollider &b) {
+bool CollisionsModule::Intersection(const BoxCollider &a,
+                                    const BoxCollider &b) {
   float ra, rb;
   Math::Matrix3 rot, absRot;
 
@@ -204,16 +202,16 @@ bool PhysicsModule::Intersection(const BoxCollider &a, const BoxCollider &b) {
   return true;
 }
 
-bool PhysicsModule::Intersection(const BoxCollider &box,
-                                 const SphereCollider &sphere) {
+bool CollisionsModule::Intersection(const BoxCollider &box,
+                                    const SphereCollider &sphere) {
   Math::Vector3 center = sphere.GetWorldCenter();
   Math::Vector3 pt = ClosestPtPointOBB(center, box);
   Math::Vector3 to = pt - center;
   return Math::Vector3::Dot(to, to) <=
          sphere.GetWorldRadius() * sphere.GetWorldRadius();
 }
-bool PhysicsModule::Intersection(const BoxCollider &box,
-                                 const CapsuleCollider &capsule) {
+bool CollisionsModule::Intersection(const BoxCollider &box,
+                                    const CapsuleCollider &capsule) {
   return false;
   Math::Matrix4 rot, scale;
   float radiusScale = capsule.GetWorldCapsule(&rot, &scale);
@@ -227,17 +225,17 @@ bool PhysicsModule::Intersection(const BoxCollider &box,
   return SqDistSegmentOBB(p0, p1, box) <=
          Math::Util::Square(capsule.radius * radiusScale);
 }
-bool PhysicsModule::Intersection(const SphereCollider &a,
-                                 const SphereCollider &b) {
+bool CollisionsModule::Intersection(const SphereCollider &a,
+                                    const SphereCollider &b) {
   return (a.GetWorldCenter() - b.GetWorldCenter()).SqrMagnitude() <=
          Math::Util::Square(a.GetWorldRadius() + b.GetWorldRadius());
 }
-bool PhysicsModule::Intersection(const SphereCollider &sphere,
-                                 const BoxCollider &box) {
+bool CollisionsModule::Intersection(const SphereCollider &sphere,
+                                    const BoxCollider &box) {
   return Intersection(box, sphere);
 }
-bool PhysicsModule::Intersection(const SphereCollider &sphere,
-                                 const CapsuleCollider &capsule) {
+bool CollisionsModule::Intersection(const SphereCollider &sphere,
+                                    const CapsuleCollider &capsule) {
   Math::Matrix4 rot, scale;
   float radiusScale = capsule.GetWorldCapsule(&rot, &scale);
   Math::Vector3 dir = (Math::Vector3)(
@@ -250,8 +248,8 @@ bool PhysicsModule::Intersection(const SphereCollider &sphere,
   return distSq <= Math::Util::Square(sphere.radius * sphere.GetWorldRadius() +
                                       capsule.radius * radiusScale);
 }
-bool PhysicsModule::Intersection(const CapsuleCollider &a,
-                                 const CapsuleCollider &b) {
+bool CollisionsModule::Intersection(const CapsuleCollider &a,
+                                    const CapsuleCollider &b) {
   Math::Matrix4 aRot, aScale, bRot, bScale;
   float arScale = a.GetWorldCapsule(&aRot, &aScale);
   float brScale = b.GetWorldCapsule(&bRot, &bScale);
@@ -274,16 +272,28 @@ bool PhysicsModule::Intersection(const CapsuleCollider &a,
 
   return distSq <= Math::Util::Square(a.radius * arScale + b.radius * brScale);
 }
-bool PhysicsModule::Intersection(const CapsuleCollider &capsule,
-                                 const BoxCollider &box) {
+bool CollisionsModule::Intersection(const CapsuleCollider &capsule,
+                                    const BoxCollider &box) {
   return Intersection(box, capsule);
 }
-bool PhysicsModule::Intersection(const CapsuleCollider &capsule,
-                                 const SphereCollider &sphere) {
+bool CollisionsModule::Intersection(const CapsuleCollider &capsule,
+                                    const SphereCollider &sphere) {
   return Intersection(sphere, capsule);
 }
-bool PhysicsModule::Intersection(const Math::Vector3 &p0,
-                                 const Math::Vector3 &p1, const AABB &aabb) {
+bool CollisionsModule::Raycast(const Ray &ray, RaycastHit *const hitInfo,
+                               float maxDistance) {
+  for (int i = 0; i < colliders.size(); i++) {
+    RaycastHit hit{};
+    if (colliders[i]->Raycast(ray, &hit, maxDistance)) {
+      if (hit.GetDistance() < hitInfo->GetDistance()) {
+        *hitInfo = hit;
+      }
+    }
+  }
+  return hitInfo->GetDistance() < INFINITY;
+}
+bool CollisionsModule::Intersection(const Math::Vector3 &p0,
+                                    const Math::Vector3 &p1, const AABB &aabb) {
   Math::Vector3 c = aabb.GetSize();
   Math::Vector3 e = aabb.GetMax() - c;
   Math::Vector3 m = 0.5f * (p0 + p1);
@@ -318,9 +328,9 @@ bool PhysicsModule::Intersection(const Math::Vector3 &p0,
 
   return true;
 }
-float PhysicsModule::SqDistPointSegment(const Math::Vector3 &a,
-                                        const Math::Vector3 &b,
-                                        const Math::Vector3 &c) {
+float CollisionsModule::SqDistPointSegment(const Math::Vector3 &a,
+                                           const Math::Vector3 &b,
+                                           const Math::Vector3 &c) {
   Math::Vector3 ab = b - a, ac = c - a, bc = c - b;
   float e = Math::Vector3::Dot(ac, ab);
   if (e <= 0) return Math::Vector3::Dot(ac, ac);
@@ -328,23 +338,23 @@ float PhysicsModule::SqDistPointSegment(const Math::Vector3 &a,
   if (e >= f) return Math::Vector3::Dot(bc, bc);
   return Math::Vector3::Dot(ac, ac) - e * e / f;
 }
-float PhysicsModule::SqDistPointOBB(const Math::Vector3 &point,
-                                    const BoxCollider &box) {
+float CollisionsModule::SqDistPointOBB(const Math::Vector3 &point,
+                                       const BoxCollider &box) {
   Math::Vector3 closest = ClosestPtPointOBB(point, box);
   // DebugDraw::Point(closest, Color::blue, 20, 0.1, false);
   float sqDist = Math::Vector3::Dot(closest - point, closest - point);
   return sqDist;
 }
-float PhysicsModule::SqDistSegmentOBB(const Math::Vector3 &p0,
-                                      const Math::Vector3 &p1,
-                                      const BoxCollider &box) {
+float CollisionsModule::SqDistSegmentOBB(const Math::Vector3 &p0,
+                                         const Math::Vector3 &p1,
+                                         const BoxCollider &box) {
   Ray ray = Ray{p0, p1 - p0};
   // Ray ray = Ray{q0, q1 - q0};
   float t, distSq;
   Math::Vector3 pt = ClosestPtRayOBB(ray, box, &t, &distSq);
   DebugDraw::Point(pt, Color::red, 20, 0.1, false);
-  LOG_INFO(Debug::Channel::Physics, "(%f)", t);
-  // LOG_INFO(Debug::Channel::Physics, "(%f, %f, %f)", pt.x, pt.y, pt.z);
+  LOG_INFO(Debug::Channel::Collisions, "(%f)", t);
+  // LOG_INFO(Debug::Channel::Collisions, "(%f, %f, %f)", pt.x, pt.y, pt.z);
   if (t < 0) {
     distSq = SqDistPointOBB(p0, box);
     DebugDraw::Point(p0, Color::white, 20, 0.1, false);
@@ -354,10 +364,9 @@ float PhysicsModule::SqDistSegmentOBB(const Math::Vector3 &p0,
   }
   return distSq;
 }
-Math::Vector3 PhysicsModule::ClosestPtPointSegment(const Math::Vector3 &point,
-                                                   const Math::Vector3 &p0,
-                                                   const Math::Vector3 &p1,
-                                                   float *const _t) {
+Math::Vector3 CollisionsModule::ClosestPtPointSegment(
+    const Math::Vector3 &point, const Math::Vector3 &p0,
+    const Math::Vector3 &p1, float *const _t) {
   float &t = *_t;
   Math::Vector3 to = p1 - p0;
   t = Math::Vector3::Dot(point - p0, to) / Math::Vector3::Dot(to, to);
@@ -369,7 +378,7 @@ Math::Vector3 PhysicsModule::ClosestPtPointSegment(const Math::Vector3 &point,
   }
   return p0 + t * to;
 }
-float PhysicsModule::ClosestPtSegmentSegment(
+float CollisionsModule::ClosestPtSegmentSegment(
     const Math::Vector3 &p0, const Math::Vector3 &p1, const Math::Vector3 &q0,
     const Math::Vector3 &q1, float *const tP, float *const tQ,
     Math::Vector3 *const cP, Math::Vector3 *const cQ) {
@@ -435,8 +444,8 @@ float PhysicsModule::ClosestPtSegmentSegment(
   c2 = q0 + d2 * t;
   return Math::Vector3::Dot(c1 - c2, c1 - c2);
 }
-Math::Vector3 PhysicsModule::ClossetPtPointAABB(const Math::Vector3 &point,
-                                                const AABB &aabb) {
+Math::Vector3 CollisionsModule::ClossetPtPointAABB(const Math::Vector3 &point,
+                                                   const AABB &aabb) {
   Math::Vector3 pt;
   pt.x = Math::Util::Min(Math::Util::Max(point.x, aabb.GetMin().x),
                          aabb.GetMax().x);
@@ -446,8 +455,8 @@ Math::Vector3 PhysicsModule::ClossetPtPointAABB(const Math::Vector3 &point,
                          aabb.GetMax().z);
   return Math::Vector3();
 }
-Math::Vector3 PhysicsModule::ClosestPtPointOBB(const Math::Vector3 &point,
-                                               const BoxCollider &box) {
+Math::Vector3 CollisionsModule::ClosestPtPointOBB(const Math::Vector3 &point,
+                                                  const BoxCollider &box) {
   Math::Vector3 d = point - (box.GetWorldCenter());
   Math::Vector3 pt = box.GetWorldCenter();
 
@@ -465,9 +474,9 @@ Math::Vector3 PhysicsModule::ClosestPtPointOBB(const Math::Vector3 &point,
   }
   return pt;
 }
-Math::Vector3 PhysicsModule::ClosestPtRayOBB(const Ray &ray,
-                                             const BoxCollider &box, float *_t,
-                                             float *_distSq) {
+Math::Vector3 CollisionsModule::ClosestPtRayOBB(const Ray &ray,
+                                                const BoxCollider &box,
+                                                float *_t, float *_distSq) {
   Math::Vector3 o = box.GetTransform().LocalPosFromWorldPos(ray.GetOrigin());
   // Math::Vector3 o = ray.GetOrigin();
   Math::Vector3 dir =
@@ -485,11 +494,11 @@ Math::Vector3 PhysicsModule::ClosestPtRayOBB(const Ray &ray,
   }
   switch (perp) {
     case 3:
-      LOG_INFO(Debug::Channel::Physics, "Case 3");
+      LOG_INFO(Debug::Channel::Collisions, "Case 3");
       distSq = t = 0;
       return ClosestPtPointOBB(ray.GetOrigin(), box);
     case 2: {
-      LOG_INFO(Debug::Channel::Physics, "Case 2");
+      LOG_INFO(Debug::Channel::Collisions, "Case 2");
       int x = -1;
       for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
         if (Math::Vector3::Dot(dir, box.GetTransform().GetAxis(i)) >
@@ -533,7 +542,7 @@ Math::Vector3 PhysicsModule::ClosestPtRayOBB(const Ray &ray,
       // return pt + box.GetWorldCenter();
     }
     case 1: {
-      LOG_INFO(Debug::Channel::Physics, "Case 1");
+      LOG_INFO(Debug::Channel::Collisions, "Case 1");
       int z = -1;
       for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
         if (Math::Vector3::Dot(dir, box.GetTransform().GetAxis(i)) <
@@ -605,7 +614,7 @@ Math::Vector3 PhysicsModule::ClosestPtRayOBB(const Ray &ray,
       // return pt;
     }
     case 0: {
-      LOG_INFO(Debug::Channel::Physics, "Case 0");
+      LOG_INFO(Debug::Channel::Collisions, "Case 0");
       Math::Vector3 extents = 0.5f * box.GetWorldSize();
       Math::Vector3 minusExtents = o - extents;
       float dyEx = dir.y * minusExtents.x;
@@ -637,9 +646,10 @@ Math::Vector3 PhysicsModule::ClosestPtRayOBB(const Ray &ray,
     }
   };
 }  // namespace Isetta
-Math::Vector3 PhysicsModule::Face(int x, const Ray &ray, const BoxCollider &box,
-                                  const Math::Vector3 &minusExtents, float *_t,
-                                  float *_distSq) {
+Math::Vector3 CollisionsModule::Face(int x, const Ray &ray,
+                                     const BoxCollider &box,
+                                     const Math::Vector3 &minusExtents,
+                                     float *_t, float *_distSq) {
   int y = (x + 1) % Math::Vector3::ELEMENT_COUNT,
       z = (x + 2) % Math::Vector3::ELEMENT_COUNT;
   float &t = *_t, &distSq = *_distSq;
@@ -811,9 +821,9 @@ Math::Vector3 PhysicsModule::Face(int x, const Ray &ray, const BoxCollider &box,
   }
   return Math::Vector3();
 }
-Math::Vector3 PhysicsModule::ClosestPtSegmentOBB(const Math::Vector3 &p0,
-                                                 const Math::Vector3 &p1,
-                                                 const BoxCollider &box) {
+Math::Vector3 CollisionsModule::ClosestPtSegmentOBB(const Math::Vector3 &p0,
+                                                    const Math::Vector3 &p1,
+                                                    const BoxCollider &box) {
   Math::Vector3 q0 = box.GetTransform().LocalPosFromWorldPos(p0);
   Math::Vector3 q1 = box.GetTransform().LocalPosFromWorldPos(p1);
   Ray ray = Ray{q0, q1 - q0};
