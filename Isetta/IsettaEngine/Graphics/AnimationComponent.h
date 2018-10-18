@@ -3,10 +3,9 @@
  */
 #pragma once
 #include "Graphics/MeshComponent.h"
-#include "Graphics/RenderNode.h"
 
 namespace Isetta {
-class AnimationComponent : public Component {
+class ISETTA_API AnimationComponent : public Component {
  public:
   explicit AnimationComponent(MeshComponent* model);
   int AddAnimation(std::string animationFilename, int layer,
@@ -18,6 +17,7 @@ class AnimationComponent : public Component {
    * \param deltaTime The update deltaTime
    */
   void UpdateAnimation(float deltaTime);
+  void TransitToAnimationState(int state, float time);
   /**
    * \brief Play the animation
    */
@@ -41,6 +41,8 @@ class AnimationComponent : public Component {
   bool isPlaying;
   // TODO(Chaojie): SubClock?
   float animationTime;
+  float blendWeight;
+  float blendDuration;
 
   static class RenderModule* renderModule;
   friend class RenderModule;

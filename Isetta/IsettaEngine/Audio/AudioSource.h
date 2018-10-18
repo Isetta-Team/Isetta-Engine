@@ -2,6 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include "ISETTA_API.h"
 #include "fmod.hpp"
 
 namespace Isetta {
@@ -11,21 +12,21 @@ class AudioModule;
 /**
  * \brief AudioSource is the class used to play specific sound clips
  */
-class AudioSource {
+class ISETTA_API_DECLARE AudioSource {
  public:
   AudioSource() = default;
   ~AudioSource() = default;
 
   /**
    * \brief Set the audio clip to be played on this AudioSource
-   * \param soundName 
+   * \param soundName
    */
   void SetAudioClip(const char* soundName);
 
   /**
    * \brief Play the sound with specified properties
-   * \param loop 
-   * \param volume 
+   * \param loop
+   * \param volume
    */
   void Play(bool loop, float volume);
 
@@ -56,7 +57,7 @@ class AudioSource {
 
   /**
    * \brief Check if the sound is currently playing
-   * \return 
+   * \return
    */
   bool IsPlaying() const;
 

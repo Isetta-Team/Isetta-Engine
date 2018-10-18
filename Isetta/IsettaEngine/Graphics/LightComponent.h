@@ -2,14 +2,13 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include <Horde3D.h>
 #include <string>
 #include "Core/Color.h"
-#include "Graphics/RenderNode.h"
 #include "Scene/Component.h"
-#include "Scene/Entity.h"
 
 namespace Isetta {
-class LightComponent : public Component {
+class ISETTA_API LightComponent : public Component {
  public:
   enum class Property {
     RADIUS,
@@ -22,8 +21,9 @@ class LightComponent : public Component {
 
   void OnEnable() override;
   void OnDisable() override;
+  void OnDestroy() override;
 
-  LightComponent(std::string resourceName, std::string lightName);
+  LightComponent(const std::string& resourceName, std::string lightName);
 
   template <Property Attr, typename T>
   void SetProperty(T value);
@@ -32,14 +32,14 @@ class LightComponent : public Component {
   T GetProperty() const;
 
  private:
-  H3DRes LoadResourceFromFile(std::string resourceName);
+  static H3DRes LoadResourceFromFile(const std::string& resourceName);
 
   static class RenderModule* renderModule;
   friend class RenderModule;
-  void UpdateTransform();
+  void UpdateH3DTransform() const;
   std::string name;
-  H3DNode renderNode;
-  H3DRes renderResource;
+  H3DNode renderNode{0};
+  H3DRes renderResource{0};
 };
 
 template <LightComponent::Property Attr, typename T>

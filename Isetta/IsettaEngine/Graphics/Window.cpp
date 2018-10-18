@@ -50,7 +50,7 @@ void WindowModule::InitWindow() {  // Create OpenGL window
     while (glfwGetTime() - startTime < 5.0) { /* Sleep */
     }
 
-    throw new std::exception(
+    throw std::exception(
         "Render::InitWindow: Unable to initialize window. Make sure you have "
         "an OpenGL compatible graphics card.");
   }

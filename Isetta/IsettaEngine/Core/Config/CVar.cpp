@@ -7,6 +7,9 @@
 #include "Core/Config/CVarRegistry.h"
 
 namespace Isetta {
+// added explicit declarations so they can export correctly
+template class ISETTA_API CVar<float>;
+
 std::unordered_map<StringId, ICVar*> CVarRegistry::registry;
 
 CVarString::CVarString(const std::string& name, const std::string& defaultValue)

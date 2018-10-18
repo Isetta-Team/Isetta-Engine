@@ -9,14 +9,8 @@
 #include <string>
 #include "Core/Config/CVar.h"
 
-// TODO(Chaojie) remove
-#include "Core/Math/Matrix4.h"
-namespace Isetta::Math {
-class Vector3;
-}
-
 namespace Isetta {
-class RenderModule {
+class ISETTA_API_DECLARE RenderModule {
  public:
   struct RenderConfig {
     CVar<int> hordeLoadTextures{"horde_load_textures", 1};
@@ -42,7 +36,6 @@ class RenderModule {
   std::list<class MeshComponent*> meshComponents;
   std::list<class LightComponent*> lightComponents;
   std::list<class CameraComponent*> cameraComponents;
-  CameraComponent* MainCamera() const;
 
  private:
   RenderModule() = default;

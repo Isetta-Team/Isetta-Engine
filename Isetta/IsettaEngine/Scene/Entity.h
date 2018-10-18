@@ -11,7 +11,8 @@
 #include "Util.h"
 
 namespace Isetta {
-class Entity {
+class ISETTA_API Entity {
+ private:
   enum class EntityAttributes { IS_ACTIVE, NEED_DESTROY, IS_TRANSFORM_DIRTY };
 
   friend class RenderModule;
@@ -27,7 +28,7 @@ class Entity {
   void GuiUpdate();
   void Update();
   void FixedUpdate();
-  void LastUpdate();
+  void LateUpdate();
   void CheckDestroy();
   void OnDisable();
 
@@ -45,33 +46,47 @@ class Entity {
 
   std::string GetName() const { return entityName; }
   static void Destroy(Entity* entity);
+  static Entity* GetEntityByName(const std::string& name);
+  static std::list<Entity*> GetEntitiesByName(const std::string& name);
 
   void SetActive(bool inActive);
   bool GetActive() const;
 
   template <typename T, typename... Args>
-  T* AddComponent(bool isActive, Args&&... args);
+  T* AddComponent(Args&&... args);
+  template <typename T, bool IsActive, typename... Args>
+  T* AddComponent(Args&&... args);
   template <typename T>
   T* GetComponent();
   template <typename T>
   std::vector<T*> GetComponents();
 
-  void SetTransform(const Math::Vector3& inPosition,
-                    const Math::Vector3& inRotation,
-                    const Math::Vector3& inScale);
-  Transform& GetTransform();
+  void SetTransform(const Math::Vector3& worldPos = Math::Vector3::zero,
+                    const Math::Vector3& worldEulerAngles = Math::Vector3::zero,
+                    const Math::Vector3& localScale = Math::Vector3::one);
+  Transform& GetTransform() { return transform; }
+#if _DEBUG
+  // TODO(YIDI): Delete this! This is used for in game editor
+  std::vector<class Component*> GetComponents() { return components; }
+#endif
 };
 
 template <typename T, typename... Args>
-T* Entity::AddComponent(bool isActive, Args&&... args) {
+T* Entity::AddComponent(Args&&... args) {
+  T* component = AddComponent<T, true>(std::forward<Args>(args)...);
+  return component;
+}
+
+template <typename T, bool IsActive, typename... Args>
+T* Entity::AddComponent(Args&&... args) {
   if constexpr (!std::is_base_of<class Component, T>::value) {
     throw std::logic_error(Util::StrFormat(
         "%s is not a derived class from Component class", typeid(T).name));
   } else {
     T* component = MemoryManager::NewOnFreeList<T>(std::forward<Args>(args)...);
-    component->SetActive(isActive);
-    component->owner = this;
-    if (isActive) {
+    component->SetActive(IsActive);
+    component->entity = this;
+    if (IsActive) {
       component->OnEnable();
     }
     componentTypes.emplace_back(std::type_index(typeid(T)));

@@ -25,15 +25,16 @@ FMOD_RESULT F_CALLBACK LogAudioModule(FMOD_DEBUG_FLAGS flags, const char* file,
 
 void AudioModule::StartUp() {
   CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
-  // FMOD::Memory_Initialize(std::malloc(10_MB), 10_MB, nullptr, nullptr,
-  // nullptr);
+  FMOD::Memory_Initialize(
+      MemoryManager::AllocOnStack(CONFIG_VAL(audioConfig.memorySize)),
+      CONFIG_VAL(audioConfig.memorySize), nullptr, nullptr, nullptr);
   fmodSystem = nullptr;
 
   FMOD::Debug_Initialize(FMOD_DEBUG_LEVEL_LOG, FMOD_DEBUG_MODE_CALLBACK,
                          LogAudioModule);
   FMOD::System_Create(&fmodSystem);
   CheckStatus(fmodSystem->init(512, FMOD_INIT_NORMAL, nullptr));
-  // TODO(YIDI): Set this in engine config
+
   auto& config = Config::Instance();
   soundFilesRoot = config.resourcePath.GetVal() + R"(\)" +
                    config.audioConfig.pathUnderResource.GetVal() + R"(\)";
@@ -73,16 +74,17 @@ FMOD::Channel* AudioModule::Play(FMOD::Sound* sound, const bool loop,
 }
 
 void AudioModule::LoadAllAudioClips() {
-  // TODO(YIDI): get this array of string from game config
-  const char* files[]{"singing.wav", "wave.mp3", "gunshot.aiff"};
-
-  for (auto file : files) {
+  std::string clipNames = CONFIG_VAL(audioConfig.audioClips);
+  Util::StrRemoveSpaces(&clipNames);
+  std::vector<std::string> clips = Util::StrSplit(clipNames, ',');
+  
+  for (const auto& file : clips) {
     FMOD::Sound* sound = nullptr;
     std::string path = soundFilesRoot + file;
     CheckStatus(
         fmodSystem->createSound(path.c_str(), FMOD_LOWMEM, nullptr, &sound));
 
-    soundMap.insert({SID(file), sound});
+    soundMap.insert({SID(file.c_str()), sound});
   }
 }
 
@@ -98,7 +100,7 @@ void PrintAudioMemoryUsage() {
 
 void AudioModule::CheckStatus(const FMOD_RESULT status) {
   if (status != FMOD_OK) {
-    LOG_INFO(Debug::Channel::Sound, FMOD_ErrorString(status));
+    LOG_ERROR(Debug::Channel::Sound, FMOD_ErrorString(status));
     throw std::exception{Util::StrFormat("AudioSource::CheckStatus => %s",
                                          FMOD_ErrorString(status))};
   }

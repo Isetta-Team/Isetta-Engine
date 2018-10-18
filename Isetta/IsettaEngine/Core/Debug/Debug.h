@@ -5,6 +5,7 @@
 
 #include <string>
 #include "Core/IsettaAlias.h"
+#include "ISETTA_API.h"
 
 namespace Isetta::Debug {
 /**
@@ -15,7 +16,7 @@ namespace Isetta::Debug {
  * Info - messages to inform developers/users
  * All - all messages will be output (only needed for mask)
  */
-enum class Verbosity : U8 {
+ISETTA_API enum class Verbosity : U8 {
   Off = 0,
   Error = (1u << 0),
   Warning = (1u << 1),
@@ -50,13 +51,13 @@ static inline const std::string ToString(Verbosity v) {
  * Horde3D - messages stripped from Horde3D (so they can be surpressed)
  * All others are messages associated with the modules
  */
-enum class Channel : U16 {
+ISETTA_API enum class Channel : U16 {
   General = (1u << 0),
   Memory = (1u << 1),
   Networking = (1u << 2),
   Graphics = (1u << 3),
   Horde3D = (1u << 4),
-  Physics = (1u << 5),
+  Collisions = (1u << 5),
   Gameplay = (1u << 6),
   Sound = (1u << 7),
   FileIO = (1u << 8),
@@ -79,8 +80,8 @@ static inline const std::string ToString(Channel c) {
       return "Graphics";
     case Channel::Horde3D:
       return "Horde3D";
-    case Channel::Physics:
-      return "Physics";
+    case Channel::Collisions:
+      return "Collisions";
     case Channel::Gameplay:
       return "Gameplay";
     case Channel::Sound:

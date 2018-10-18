@@ -3,6 +3,7 @@
  */
 #pragma once
 #include <list>
+#include "ISETTA_API.h"
 
 #define CREATE_LEVEL(NAME) class NAME : public Level, public LevelRegistry<NAME> {\
  public:\
@@ -14,18 +15,18 @@
  private:
 
 namespace Isetta {
-class Level {
+class ISETTA_API Level {
+  std::list<class Entity*> entitiesToRemove;
 protected:
   std::list<class Entity*> entities;
 public:
-  virtual ~Level() {}
-  class Entity* GetEntityByName(std::string);
-  class std::list<class Entity*> GetEntitiesByName(std::string);
+  virtual ~Level() = default;
+  class Entity* GetEntityByName(const std::string&);
+  class std::list<class Entity*> GetEntitiesByName(const std::string&);
 
   virtual void LoadLevel() {}
   virtual void UnloadLevel();
 
-  // TODO(Chaojie) Change to MACRO
   class Entity* AddEntity(std::string name);
 
   void Update();

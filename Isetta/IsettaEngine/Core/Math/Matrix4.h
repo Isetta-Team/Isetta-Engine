@@ -2,15 +2,19 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include "ISETTA_API.h"
 
 namespace Isetta::Math {
-class Matrix4 {
+class ISETTA_API Matrix4 {
  public:
   static const Matrix4 zero;
   static const Matrix4 identity;
-  static const Matrix4 xRot45, xRot90;
-  static const Matrix4 yRot45, yRot90;
-  static const Matrix4 zRot45, zRot90;
+  static const Matrix4 xRot45;
+  static const Matrix4 xRot90;
+  static const Matrix4 yRot45;
+  static const Matrix4 yRot90;
+  static const Matrix4 zRot45;
+  static const Matrix4 zRot90;
 
   static const int ELEMENT_COUNT = 16;
   static const int ROW_COUNT = 4;
@@ -34,6 +38,7 @@ class Matrix4 {
   Matrix4(float m11, float m12, float m13, float m14, float m21, float m22,
           float m23, float m24, float m31, float m32, float m33, float m34,
           float m41, float m42, float m43, float m44);
+  explicit Matrix4(const class Quaternion& quat);
 
   Matrix4(const Matrix4& inMatrix);
   Matrix4(Matrix4&& inMatrix) noexcept;
@@ -44,7 +49,8 @@ class Matrix4 {
 
   ~Matrix4() {}
 
-  float operator[](int i) const;
+  // float operator[](int i) const;
+  float* operator[](int i) const;
   bool operator==(const Matrix4& rhs) const;
   bool operator!=(const Matrix4& rhs) const;
   Matrix4 operator+(const Matrix4& rhs) const;

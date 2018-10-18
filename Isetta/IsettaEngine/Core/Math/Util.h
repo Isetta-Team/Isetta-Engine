@@ -3,9 +3,10 @@
  */
 #pragma once
 #include <initializer_list>
+#include "ISETTA_API.h"
 
 namespace Isetta::Math {
-class Util {
+class ISETTA_API Util {
  public:
   static const float PI;
   static const float PI_HALF;
@@ -133,6 +134,7 @@ class Util {
    * \param number The number parameter
    */
   static float Log10(float number);
+  static float Max(float a, float b);
   /**
    * \brief Return the maximum number from input numbers
    * \param numbers The candidate numbers
@@ -143,6 +145,7 @@ class Util {
    * \param numbers The candidate numbers
    */
   static int Max(std::initializer_list<int> numbers);
+  static float Min(float a, float b);
   /**
    * \brief Return the minimum number from input numbers
    * \param numbers The candidate numbers
@@ -225,5 +228,7 @@ class Util {
    * \param radian The input radian
    */
   static float Tan(float radian);
+
+  static bool FuzzyEquals(float, float);
 };
 }  // namespace Isetta::Math

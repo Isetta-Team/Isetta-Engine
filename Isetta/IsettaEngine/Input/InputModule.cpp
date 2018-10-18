@@ -9,7 +9,7 @@
 #include "Input/Input.h"
 
 namespace Isetta {
-using CBMap = std::unordered_map<int, std::list<std::pair<U64, Action<>>>>;
+using CBMap = std::unordered_map<int, std::list<std::pair<U16, Action<>>>>;
 
 std::list<Action<>> InputModule::windowCloseCallbacks{};
 CBMap InputModule::keyPressCallbacks{};
@@ -17,52 +17,53 @@ CBMap InputModule::keyReleaseCallbacks{};
 CBMap InputModule::mousePressCallbacks{};
 CBMap InputModule::mouseReleaseCallbacks{};
 
-std::unordered_map<U64, Action<GLFWwindow*, int, int, int>>
-    InputModule::mouseButtonCallbacks;
-std::unordered_map<U64, Action<GLFWwindow*, int, int, int, int>>
-    InputModule::keyCallbacks;
-std::unordered_map<U64, Action<GLFWwindow*, double, double>>
-    InputModule::scrollCallbacks;
-std::unordered_map<U64, Action<GLFWwindow*, unsigned int>>
-    InputModule::charCallbacks;
-std::unordered_map<U64, Action<int, int>> InputModule::winSizeCallbacks;
+std::unordered_map<U16, Action<GLFWwindow*, int, int, int>>
+    InputModule::mouseButtonGLFWCallbacks;
+std::unordered_map<U16, Action<GLFWwindow*, int, int, int, int>>
+    InputModule::keyGLFWCallbacks;
+std::unordered_map<U16, Action<GLFWwindow*, double, double>>
+    InputModule::scrollGLFWCallbacks;
+std::unordered_map<U16, Action<GLFWwindow*, unsigned int>>
+    InputModule::charGLFWCallbacks;
+std::unordered_map<U16, Action<int, int>> InputModule::windowResizeCallbacks;
+std::unordered_map<U16, Action<double, double>> InputModule::scrollCallbacks;
 
-U64 InputModule::totalHandle{};
+U16 InputModule::totalHandle{};
 
 GLFWwindow* InputModule::winHandle{nullptr};
 
 void InputModule::RegisterWindowCloseCallback(const Action<>& callback) {
   windowCloseCallbacks.push_back(callback);
 }
-U64 InputModule::RegisterWindowSizeCallback(const Action<int, int>& callback) {
-  U64 handle = totalHandle++;
-  winSizeCallbacks.insert(std::make_pair(handle, callback));
+U16 InputModule::RegisterWindowSizeCallback(const Action<int, int>& callback) {
+  U16 handle = totalHandle++;
+  windowResizeCallbacks.insert(std::make_pair(handle, callback));
   return handle;
 }
-void InputModule::UnegisterWindowSizeCallback(U64 handle) {
-  winSizeCallbacks.erase(handle);
+void InputModule::UnegisterWindowSizeCallback(U16 handle) {
+  windowResizeCallbacks.erase(handle);
 }
 bool InputModule::IsKeyPressed(KeyCode key) const {
   int glfwKey = KeyCodeToGlfwKey(key);
   return glfwGetKey(winHandle, glfwKey) == GLFW_PRESS;
 }
 
-U64 InputModule::RegisterKeyPressCallback(KeyCode key,
+U16 InputModule::RegisterKeyPressCallback(KeyCode key,
                                           const Action<>& callback) {
   return RegisterCallback(KeyCodeToGlfwKey(key), callback, &keyPressCallbacks);
 }
 
-void InputModule::UnregisterKeyPressCallback(KeyCode key, U64 handle) {
+void InputModule::UnregisterKeyPressCallback(KeyCode key, U16 handle) {
   UnregisterCallback(KeyCodeToGlfwKey(key), handle, &keyPressCallbacks);
 }
 
-U64 InputModule::RegisterKeyReleaseCallback(KeyCode key,
+U16 InputModule::RegisterKeyReleaseCallback(KeyCode key,
                                             const Action<>& callback) {
   return RegisterCallback(KeyCodeToGlfwKey(key), callback,
                           &keyReleaseCallbacks);
 }
 
-void InputModule::UnregisterKeyReleaseCallback(KeyCode key, U64 handle) {
+void InputModule::UnregisterKeyReleaseCallback(KeyCode key, U16 handle) {
   UnregisterCallback(KeyCodeToGlfwKey(key), handle, &keyReleaseCallbacks);
 }
 
@@ -77,72 +78,94 @@ bool InputModule::IsMouseButtonPressed(MouseButtonCode mouseButton) const {
   return state == GLFW_PRESS;
 }
 
-U64 InputModule::RegisterMousePressCallback(MouseButtonCode mouseButton,
+U16 InputModule::RegisterMousePressCallback(MouseButtonCode mouseButton,
                                             const Action<>& callback) {
   return RegisterCallback(MouseButtonToGlfwKey(mouseButton), callback,
                           &mousePressCallbacks);
 }
 
 void InputModule::UnregisterMousePressCallback(MouseButtonCode mouseButton,
-                                               U64 handle) {
+                                               U16 handle) {
   UnregisterCallback(MouseButtonToGlfwKey(mouseButton), handle,
                      &mousePressCallbacks);
 }
 
-U64 InputModule::RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
+U16 InputModule::RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
                                               const Action<>& callback) {
   return RegisterCallback(MouseButtonToGlfwKey(mouseButton), callback,
                           &mouseReleaseCallbacks);
 }
 
 void InputModule::UnregisterMouseReleaseCallback(MouseButtonCode mouseButton,
-                                                 U64 handle) {
+                                                 U16 handle) {
   UnregisterCallback(MouseButtonToGlfwKey(mouseButton), handle,
                      &mouseReleaseCallbacks);
 }
 
-U64 InputModule::RegisterMouseButtonCallback(
-    const Action<GLFWwindow*, int, int, int>& callback) {
-  U64 handle = totalHandle++;
-  mouseButtonCallbacks.insert(std::make_pair(handle, callback));
+U16 InputModule::RegisterWindowResizeCallback(
+    const Action<int, int>& callback) {
+  U16 handle = totalHandle++;
+  windowResizeCallbacks.insert(std::make_pair(handle, callback));
   return handle;
 }
 
-void InputModule::UnregisterMouseButtonCallback(U64 handle) {
-  mouseButtonCallbacks.erase(handle);
+void InputModule::UnregisterWindowResizeCallback(U16 handle) {
+  windowResizeCallbacks.erase(handle);
 }
 
-U64 InputModule::RegisterKeyCallback(
-    const Action<GLFWwindow*, int, int, int, int>& callback) {
-  U64 handle = totalHandle++;
-  keyCallbacks.insert(std::make_pair(handle, callback));
-  return handle;
-}
-
-void InputModule::UnegisterKeyCallback(U64 handle) {
-  keyCallbacks.erase(handle);
-}
-
-U64 InputModule::RegisterScrollCallback(
-    const Action<GLFWwindow*, double, double>& callback) {
-  U64 handle = totalHandle++;
+U16 InputModule::RegisterScrollCallback(
+    const Action<double, double>& callback) {
+  U16 handle = totalHandle++;
   scrollCallbacks.insert(std::make_pair(handle, callback));
   return handle;
 }
 
-void InputModule::UnegisterScrollCallback(U64 handle) {
-  scrollCallbacks.erase(handle);
+void InputModule::UnregisterScrollCallback(U16 handle) {
+  windowResizeCallbacks.erase(handle);
 }
 
-U64 InputModule::RegisterCharCallback(
-    const Action<GLFWwindow*, unsigned int>& callback) {
-  U64 handle = totalHandle++;
-  charCallbacks.insert(std::make_pair(handle, callback));
+U16 InputModule::RegisterMouseButtonGLFWCallback(
+    const Action<GLFWwindow*, int, int, int>& callback) {
+  U16 handle = totalHandle++;
+  mouseButtonGLFWCallbacks.insert(std::make_pair(handle, callback));
   return handle;
 }
 
-void InputModule::UnegisterCharCallback(U64 handle) {
-  charCallbacks.erase(handle);
+void InputModule::UnregisterMouseButtonGLFWCallback(U16 handle) {
+  mouseButtonGLFWCallbacks.erase(handle);
+}
+
+U16 InputModule::RegisterKeyGLFWCallback(
+    const Action<GLFWwindow*, int, int, int, int>& callback) {
+  U16 handle = totalHandle++;
+  keyGLFWCallbacks.insert(std::make_pair(handle, callback));
+  return handle;
+}
+
+void InputModule::UnegisterKeyGLFWCallback(U16 handle) {
+  keyGLFWCallbacks.erase(handle);
+}
+
+U16 InputModule::RegisterScrollGLFWCallback(
+    const Action<GLFWwindow*, double, double>& callback) {
+  U16 handle = totalHandle++;
+  scrollGLFWCallbacks.insert(std::make_pair(handle, callback));
+  return handle;
+}
+
+void InputModule::UnregisterScrollGLFWCallback(U16 handle) {
+  scrollGLFWCallbacks.erase(handle);
+}
+
+U16 InputModule::RegisterCharGLFWCallback(
+    const Action<GLFWwindow*, unsigned int>& callback) {
+  U16 handle = totalHandle++;
+  charGLFWCallbacks.insert(std::make_pair(handle, callback));
+  return handle;
+}
+
+void InputModule::UnegisterCharGLFWCallback(U16 handle) {
+  charGLFWCallbacks.erase(handle);
 }
 
 void InputModule::StartUp(GLFWwindow* win) {
@@ -155,25 +178,25 @@ void InputModule::StartUp(GLFWwindow* win) {
   glfwSetMouseButtonCallback(winHandle, MouseEventListener);
   glfwSetCharCallback(winHandle, CharEventListener);
   glfwSetScrollCallback(winHandle, ScrollEventListener);
-  glfwSetWindowSizeCallback(winHandle, WinSizeListener);
+  glfwSetWindowSizeCallback(winHandle, WindowSizeListener);
 }
 
 void InputModule::Update(float deltaTime) { glfwPollEvents(); }
 
 void InputModule::ShutDown() {}
 
-U64 InputModule::RegisterCallback(int key, const Action<>& callback,
+U16 InputModule::RegisterCallback(int key, const Action<>& callback,
                                   CBMap* callbackMap) {
   auto& callbackList = (*callbackMap)[key];
-  U64 handle = totalHandle++;
+  U16 handle = totalHandle++;
   callbackList.push_back(std::make_pair(handle, callback));
   return handle;
 }
 
-void InputModule::UnregisterCallback(int key, U64 handle, CBMap* callbackMap) {
+void InputModule::UnregisterCallback(int key, U16 handle, CBMap* callbackMap) {
   auto& callbackList = (*callbackMap)[key];
   callbackList.remove_if(
-      [handle](std::pair<U64, Action<>> item) { return item.first == handle; });
+      [handle](std::pair<U16, Action<>> item) { return item.first == handle; });
 }
 
 void InputModule::WindowCloseListener(GLFWwindow* win) {
@@ -201,7 +224,7 @@ void InputModule::KeyEventListener(GLFWwindow* win, int key, int scancode,
   //}
   // currCallbacks.clear();
   // TODO(Chaojie + Jacob): can we pass this information to all the functions?
-  for (const auto& handleCallback : keyCallbacks) {
+  for (const auto& handleCallback : keyGLFWCallbacks) {
     handleCallback.second(win, key, scancode, action, mods);
   }
 }
@@ -225,25 +248,28 @@ void InputModule::MouseEventListener(GLFWwindow* win, int button, int action,
   //}
   // currCallbacks.clear();
   // TODO(Chaojie + Jacob): can we pass this information to all the functions?
-  for (const auto& handleCallback : mouseButtonCallbacks) {
+  for (const auto& handleCallback : mouseButtonGLFWCallbacks) {
     handleCallback.second(win, button, action, mods);
   }
 }
 
 void InputModule::CharEventListener(GLFWwindow* win, unsigned int c) {
-  for (const auto& handleCallback : charCallbacks) {
+  for (const auto& handleCallback : charGLFWCallbacks) {
     handleCallback.second(win, c);
   }
 }
 void InputModule::ScrollEventListener(GLFWwindow* win, double xoffset,
                                       double yoffset) {
   for (const auto& handleCallback : scrollCallbacks) {
+    handleCallback.second(xoffset, yoffset);
+  }
+  for (const auto& handleCallback : scrollGLFWCallbacks) {
     handleCallback.second(win, xoffset, yoffset);
   }
 }
 
-void InputModule::WinSizeListener(GLFWwindow* win, int width, int height) {
-  for (const auto& handleCallback : winSizeCallbacks) {
+void InputModule::WindowSizeListener(GLFWwindow* win, int width, int height) {
+  for (const auto& handleCallback : windowResizeCallbacks) {
     handleCallback.second(width, height);
   }
 }
@@ -320,10 +346,10 @@ int InputModule::KeyCodeToGlfwKey(KeyCode key) const {
     case KeyCode::BACKSPACE:
     case KeyCode::INSERT:
     case KeyCode::DEL:
-    case KeyCode::RIGHT:
-    case KeyCode::LEFT:
-    case KeyCode::DOWN:
-    case KeyCode::UP:
+    case KeyCode::RIGHT_ARROW:
+    case KeyCode::LEFT_ARROW:
+    case KeyCode::DOWN_ARROW:
+    case KeyCode::UP_ARROW:
     case KeyCode::PAGE_UP:
     case KeyCode::PAGE_DOWN:
     case KeyCode::HOME:
@@ -385,6 +411,9 @@ int InputModule::KeyCodeToGlfwKey(KeyCode key) const {
     case KeyCode::KP_ADD:
     case KeyCode::KP_ENTER:
     case KeyCode::KP_EQUAL:
+      glfwKey = GLFW_KEY_KP_0 - static_cast<int>(KeyCode::KP_0) +
+                static_cast<int>(key);
+      break;
     case KeyCode::LEFT_SHIFT:
     case KeyCode::LEFT_CONTROL:
     case KeyCode::LEFT_ALT:
@@ -394,7 +423,7 @@ int InputModule::KeyCodeToGlfwKey(KeyCode key) const {
     case KeyCode::RIGHT_ALT:
     case KeyCode::RIGHT_SUPER:
     case KeyCode::MENU:
-      glfwKey = GLFW_KEY_KP_0 - static_cast<int>(KeyCode::KP_0) +
+      glfwKey = GLFW_KEY_LEFT_SHIFT - static_cast<int>(KeyCode::LEFT_SHIFT) +
                 static_cast<int>(key);
       break;
     default:

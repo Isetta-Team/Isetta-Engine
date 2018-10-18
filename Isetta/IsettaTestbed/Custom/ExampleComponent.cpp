@@ -44,14 +44,14 @@ void ExampleComponent::Update() {
 #if _DEBUG
   float speed = 10.f;
 
-  if (Input::IsKeyPressed(KeyCode::LEFT)) {
+  if (Input::IsKeyPressed(KeyCode::LEFT_ARROW)) {
     GetTransform().TranslateWorld(Math::Vector3::left *
                                   EngineLoop::GetGameClock().GetDeltaTime() *
                                   speed);
     GetTransform().Print();
   }
 
-  if (Input::IsKeyPressed(KeyCode::RIGHT)) {
+  if (Input::IsKeyPressed(KeyCode::RIGHT_ARROW)) {
     GetTransform().TranslateWorld(Math::Vector3::right *
                                   EngineLoop::GetGameClock().GetDeltaTime() *
                                   speed);

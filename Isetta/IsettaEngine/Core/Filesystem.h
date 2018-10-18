@@ -8,6 +8,7 @@
 #include <string>
 #include <unordered_map>
 #include "Core/IsettaAlias.h"
+#include "ISETTA_API.h"
 
 #define IOCP_EOF 3
 #define IOCP_WRITE 1
@@ -19,7 +20,7 @@ namespace Isetta {
  * Integrated with the Microsoft API
  *
  */
-class Filesystem {
+class ISETTA_API Filesystem {
  public:
   /**
    * @brief Singleton class instance

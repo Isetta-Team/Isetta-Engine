@@ -39,13 +39,30 @@ void AnimationComponent::UpdateAnimation(float deltaTime) {
   if (isPlaying) {
     // TODO(Chaojie): Animation frame rate;
     animationTime += deltaTime * 30;
-    h3dSetModelAnimParams(animatedModel->renderNode, currentState,
-                          animationTime, 1);
+    if (blendWeight >= 1) {
+      h3dSetModelAnimParams(animatedModel->renderNode, currentState,
+                            animationTime, 1);
+    } else {
+      blendWeight += deltaTime / blendDuration;
+      if (blendWeight > 1) blendWeight = 1;
+      h3dSetModelAnimParams(animatedModel->renderNode, previousState,
+                            animationTime, 1 - blendWeight);
+      h3dSetModelAnimParams(animatedModel->renderNode, currentState,
+                            animationTime, blendWeight);
+    }
 
     h3dUpdateModel(
         animatedModel->renderNode,
         H3DModelUpdateFlags::Animation | H3DModelUpdateFlags::Geometry);
   }
+}
+
+void AnimationComponent::TransitToAnimationState(int state, float duration) {
+  if (state == currentState) return;
+  previousState = currentState;
+  currentState = state;
+  blendWeight = 0;
+  blendDuration = duration;
 }
 
 void AnimationComponent::Play() { isPlaying = true; }

@@ -13,9 +13,12 @@ namespace Isetta::Math {
 
 const Vector4 Vector4::zero = Vector4();
 const Vector4 Vector4::one = Vector4(1.f);
-const Vector4 Vector4::right = Vector4{1.0f, 0, 0, 0};
+const Vector4 Vector4::right = Vector4{-1.0f, 0, 0, 0};
+const Vector4 Vector4::left = Vector4{1.0f, 0, 0, 0};
 const Vector4 Vector4::up = Vector4{0, 1.0f, 0, 0};
+const Vector4 Vector4::down = Vector4{0, -1.0f, 0, 0};
 const Vector4 Vector4::forward = Vector4{0, 0, 1.0f, 0};
+const Vector4 Vector4::back = Vector4{0, 0, -1.0f, 0};
 
 Vector4::Vector4(const Vector3& inVector, float inW)
     : x{inVector.x}, y{inVector.y}, z{inVector.z}, w{inW} {}
@@ -23,9 +26,14 @@ Vector4::Vector4(const Vector3& inVector, float inW)
 Vector4::Vector4(const Color& c) : x{c.r}, y{c.g}, z{c.b}, w{c.a} {}
 Vector4::operator Color() { return Color(x, y, z, w); }
 
-Vector4::operator class Vector3() { return Vector3(x, y, z); }
+Vector4::operator class Vector3() const { return Vector3(x, y, z); }
 
 float Vector4::operator[](int i) const {
+  if (i < 0 || i > ELEMENT_COUNT - 1)
+    throw std::out_of_range{"Vector4::[] => Index access out of range."};
+  return xyzw[i];
+}
+float& Vector4::operator[](int i) {
   if (i < 0 || i > ELEMENT_COUNT - 1)
     throw std::out_of_range{"Vector4::[] => Index access out of range."};
   return xyzw[i];

@@ -16,7 +16,7 @@ namespace Isetta {
  * @tparam T Template type must be have ostream operator>> and empty constructor
  */
 template <typename T>
-class CVar : public ICVar {
+class ISETTA_API CVar : public ICVar {
  public:
   /**
    * @brief Construct a new CVar object
@@ -66,7 +66,7 @@ class CVar : public ICVar {
  * templated parameter the spaces are removed
  *
  */
-class CVarString : public ICVar {
+class ISETTA_API CVarString : public ICVar {
  public:
   /**
    * @brief Construct a new CVarString object
@@ -102,7 +102,7 @@ class CVarString : public ICVar {
   std::string sVal;
 };
 
-class CVarVector3 : public ICVar {
+class ISETTA_API CVarVector3 : public ICVar {
  public:
   /**
    * @brief Construct a new CVarVector3 object

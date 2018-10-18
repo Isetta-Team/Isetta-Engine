@@ -35,10 +35,10 @@ TEST_METHOD(IsZero) {
   Assert::IsTrue(Math::Matrix3::zero.IsZero());
 }
 TEST_METHOD(GetRow) {
-  Assert::IsTrue(Math::Matrix3::identity.GetRow(0) == Math::Vector3::right);
+  Assert::IsTrue(Math::Matrix3::identity.GetRow(0) == Math::Vector3::left);
 }
 TEST_METHOD(GetCol) {
-  Assert::IsTrue(Math::Matrix3::identity.GetCol(0) == Math::Vector3::right);
+  Assert::IsTrue(Math::Matrix3::identity.GetCol(0) == Math::Vector3::left);
 }
 }
 ;

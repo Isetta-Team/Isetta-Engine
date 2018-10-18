@@ -3,8 +3,13 @@
  */
 
 #include "Networking/NetworkingModule.h"
+
+#include <list>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
+#include <utility>
+
 #include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
@@ -18,10 +23,12 @@
 #endif
 
 namespace Isetta {
+
+// Defining static variables
 CustomAdapter NetworkingModule::NetworkAdapter;
 
 void NetworkingModule::StartUp() {
-  NetworkManager::networkingModule = this;
+  NetworkManager::Instance().networkingModule = this;
 
   if (!InitializeYojimbo()) {
     throw std::exception(
@@ -32,7 +39,7 @@ void NetworkingModule::StartUp() {
   // TODO(Caleb): Figure out some more robust channel settings
   networkConfig.numChannels = 1;
   networkConfig.channel[0].type = yojimbo::CHANNEL_TYPE_UNRELIABLE_UNORDERED;
-  networkConfig.timeout = 1000000;
+  networkConfig.timeout = 20;
 
   privateKey = new (MemoryManager::AllocOnStack(
       sizeof(U8) * Config::Instance().networkConfig.keyBytes.GetVal()))
@@ -46,8 +53,8 @@ void NetworkingModule::StartUp() {
 
   void* memPointer =
       MemoryManager::AllocOnStack(networkConfig.clientMemory + 1_MB);
-  clientAllocator = new (MemoryManager::AllocOnStack(sizeof(IsettaAllocator)))
-      IsettaAllocator(memPointer, (Size)networkConfig.clientMemory + 1_MB);
+  clientAllocator = new (MemoryManager::AllocOnStack(sizeof(NetworkAllocator)))
+      NetworkAllocator(memPointer, (Size)networkConfig.clientMemory + 1_MB);
 
   if (Config::Instance().networkConfig.runServer.GetVal()) {
     Size serverMemorySize =
@@ -56,8 +63,9 @@ void NetworkingModule::StartUp() {
         (Config::Instance().networkConfig.maxClients.GetVal() + 1);
 
     memPointer = MemoryManager::AllocOnStack(serverMemorySize);
-    serverAllocator = new (MemoryManager::AllocOnStack(sizeof(IsettaAllocator)))
-        IsettaAllocator(memPointer, serverMemorySize);
+    serverAllocator =
+        new (MemoryManager::AllocOnStack(sizeof(NetworkAllocator)))
+            NetworkAllocator(memPointer, serverMemorySize);
   }
 
   client = new (MemoryManager::AllocOnStack(sizeof(yojimbo::Client)))
@@ -193,28 +201,10 @@ void NetworkingModule::ProcessClientToServerMessages(int clientIdx) {
       break;
     }
 
-    switch (message->GetType()) {
-      case HANDLE_MESSAGE: {
-        HandleMessage* handleMessage =
-            reinterpret_cast<HandleMessage*>(message);
-        LOG(Debug::Channel::Networking, "Client %d sends handle #%d", clientIdx,
-            handleMessage->handle);
-        for (int i = 0; i < server->GetMaxClients(); i++) {
-          if (!server->IsClientConnected(i)) {
-            continue;
-          }
-          HandleMessage* newMessage = static_cast<HandleMessage*>(
-              server->CreateMessage(i, HANDLE_MESSAGE));
-          newMessage->handle = handleMessage->handle;
-          AddServerToClientMessage(i, newMessage);
-        }
-      } break;
-      case STRING_MESSAGE: {
-        StringMessage* stringMessage =
-            reinterpret_cast<StringMessage*>(message);
-        LOG(Debug::Channel::Networking, "Client %d says: %s", clientIdx,
-            stringMessage->string.c_str());
-      } break;
+    auto serverFunctions =
+        NetworkManager::Instance().GetServerFunctions(message->GetType());
+    for (const auto& function : serverFunctions) {
+      function.second(clientIdx, message);
     }
 
     server->ReleaseMessage(clientIdx, message);
@@ -230,30 +220,10 @@ void NetworkingModule::ProcessServerToClientMessages() {
       break;
     }
 
-    switch (message->GetType()) {
-      case HANDLE_MESSAGE: {
-        HandleMessage* handleMessage = static_cast<HandleMessage*>(message);
-        LOG(Debug::Channel::Networking, "Server sends handle #%d",
-            handleMessage->handle);
-        if (handleMessage->handle == 0) {
-          LOG(Debug::Channel::Networking,
-              "Server says we should play the animation!");
-        }
-        if (handleMessage->handle == 1) {
-          LOG(Debug::Channel::Networking,
-              "Server says we should stop the animation!");
-        }
-        if (handleMessage->handle == 2) {
-          AudioSource audio = AudioSource();
-          audio.SetAudioClip("gunshot.aiff");
-          audio.Play(false, 1.f);
-        }
-      } break;
-      case STRING_MESSAGE: {
-        StringMessage* stringMessage = static_cast<StringMessage*>(message);
-        LOG(Debug::Channel::Networking, "Server says: %s",
-            stringMessage->string.c_str());
-      } break;
+    auto clientFunctions =
+        NetworkManager::Instance().GetClientFunctions(message->GetType());
+    for (const auto& function : clientFunctions) {
+      function.second(message);
     }
 
     client->ReleaseMessage(message);
@@ -297,7 +267,7 @@ void NetworkingModule::CreateServer(const char* address, int port) {
   }
 
   serverAddress = yojimbo::Address(address, port);
-  server = MemoryManager::NewDynamic<yojimbo::Server>(
+  server = MemoryManager::NewOnFreeList<yojimbo::Server>(
       serverAllocator, privateKey, serverAddress, networkConfig,
       &NetworkingModule::NetworkAdapter, clock.GetElapsedTime());
   server->Start(Config::Instance().networkConfig.maxClients.GetVal());
@@ -315,7 +285,7 @@ void NetworkingModule::CloseServer() {
         "running.");
   }
   server->Stop();
-  MemoryManager::DeleteDynamic(server);
+  MemoryManager::FreeOnFreeList(server);
   MemoryManager::FreeOnFreeList(serverSendBufferArray);
 }
 }  // namespace Isetta

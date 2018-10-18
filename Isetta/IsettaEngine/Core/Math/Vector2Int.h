@@ -2,10 +2,10 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include "ISETTA_API.h"
 
 namespace Isetta::Math {
-
-class Vector2Int {
+class ISETTA_API_DECLARE Vector2Int {
  public:
   // Constants
   static const Vector2Int zero;

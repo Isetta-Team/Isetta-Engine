@@ -3,11 +3,11 @@
  */
 #pragma once
 #include "Core/Math/Matrix4.h"
-#include "RenderNode.h"
+#include "Horde3D.h"
 #include "Scene/Component.h"
 
 namespace Isetta {
-class CameraComponent : public Component {
+class ISETTA_API CameraComponent : public Component {
  public:
   enum class Property {
     FOV,
@@ -27,27 +27,27 @@ class CameraComponent : public Component {
   template <Property Attr, typename T>
   T GetProperty() const;
 
-  inline static const CameraComponent* Main() { return _main; }
+  static const CameraComponent* Main() { return _main; }
 
   Math::Matrix4 GetHordeTransform() const {
     const float* transformPtr;
-    h3dGetNodeTransMats(renderNode, NULL, &transformPtr);
+    h3dGetNodeTransMats(renderNode, nullptr, &transformPtr);
     return Math::Matrix4(transformPtr);
   }
 
  private:
-  void UpdateTransform();
-  void ResizeViewport();
-  void SetupCameraViewport();
+  void UpdateH3DTransform() const;
+  void ResizeViewport() const;
+  void SetupCameraViewport() const;
 
   static CameraComponent* _main;
 
   static class RenderModule* renderModule;
   friend class RenderModule;
 
-  float fov;
-  float nearPlane;
-  float farPlane;
+  float fov{};
+  float nearPlane{};
+  float farPlane{};
   Math::Matrix4 projMat;
 
   std::string name;
@@ -60,9 +60,7 @@ void CameraComponent::SetProperty(T value) {
   if constexpr (Attr == Property::PROJECTION) {
     projMat = value;
     h3dSetCameraProjMat(renderNode, projMat.data);
-    return;
-  }
-  if constexpr (Attr == Property::FOV) {
+  } else if constexpr (Attr == Property::FOV) {
     fov = value;
   } else if constexpr (Attr == Property::FAR_PLANE) {
     farPlane = value;

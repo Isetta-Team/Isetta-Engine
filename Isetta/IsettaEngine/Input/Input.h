@@ -4,21 +4,20 @@
 #pragma once
 
 #include <GLFW/glfw3.h>
-#include <functional>
 #include "Core/IsettaAlias.h"
 #include "Core/Math/Vector2.h"
 #include "Input/InputEnum.h"
 
 namespace Isetta {
-class Input {
+class ISETTA_API_DECLARE Input {
  public:
   /**
    * \brief Register a callback function to window close event
    * \param callback The callback function
    */
   static void RegisterWindowCloseCallback(const Action<>& callback);
-  static U64 RegisterWinSizeCallback(const Action<int, int>& callback);
-  static void UnegisterWindowSizeCallback(U64 handle);
+  static U16 RegisterWinSizeCallback(const Action<int, int>& callback);
+  static void UnegisterWindowSizeCallback(U16 handle);
   /**
    * \brief Check if the key is pressed
    * \param key The keycode to detect
@@ -30,26 +29,26 @@ class Input {
    * \param key The keycode to detect
    * \param callback The callback function
    */
-  static U64 RegisterKeyPressCallback(KeyCode key, const Action<>& callback);
+  static U16 RegisterKeyPressCallback(KeyCode key, const Action<>& callback);
   /**
    * \brief Unregister a callback by the key and handle
    * \param key The key to detect
    * \param handle The handle to unregister
    */
-  static void UnregisterKeyPressCallback(KeyCode key, U64 handle);
+  static void UnregisterKeyPressCallback(KeyCode key, U16 handle);
   /**
    * \brief Register a callback function to the key release event and return its
    * handle
    * \param key The keycode to detect
    * \param callback The callback function
    */
-  static U64 RegisterKeyReleaseCallback(KeyCode key, const Action<>& callback);
+  static U16 RegisterKeyReleaseCallback(KeyCode key, const Action<>& callback);
   /**
    * \brief Unregister a callback by the key and handle
    * \param key The key to detect
    * \param handle The handle to unregister
    */
-  static void UnregisterKeyReleaseCallback(KeyCode key, U64 handle);
+  static void UnregisterKeyReleaseCallback(KeyCode key, U16 handle);
   /**
    * \brief Get the position of the mouse
    */
@@ -65,7 +64,7 @@ class Input {
    * \param mouseButton The mouse button to detect
    * \param callback The callback function
    */
-  static U64 RegisterMousePressCallback(MouseButtonCode mouseButton,
+  static U16 RegisterMousePressCallback(MouseButtonCode mouseButton,
                                         const Action<>& callback);
   /**
    * \brief Unregister a callback by the mouse button and handle
@@ -73,14 +72,14 @@ class Input {
    * \param handle The handle to unregister
    */
   static void UnregisterMousePressCallback(MouseButtonCode mouseButton,
-                                           U64 handle);
+                                           U16 handle);
   /**
    * \brief Register a callback function to the mouse release event and return
    * its handle
    * \param mouseButton The mouse button to detect
    * \param callback The callback function
    */
-  static U64 RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
+  static U16 RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
                                           const Action<>& callback);
   /**
    * \brief Unregister a callback by the mouse button and handle
@@ -88,20 +87,23 @@ class Input {
    * \param handle The handle to unregister
    */
   static void UnregisterMouseReleaseCallback(MouseButtonCode mouseButton,
-                                             U64 handle);
+                                             U16 handle);
 
-  static U64 RegisterMouseButtonCallback(
+  static U16 RegisterScrollCallback(const Action<double, double>& callback);
+  static void UnregisterScrollCallback(U16 handle);
+
+  static U16 RegisterMouseButtonGLFWCallback(
       const Action<GLFWwindow*, int, int, int>& callback);
-  static void UnregisterMouseButtonCallback(U64 handle);
-  static U64 RegisterKeyCallback(
+  static void UnregisterMouseButtonGLFWCallback(U16 handle);
+  static U16 RegisterKeyGLFWCallback(
       const Action<GLFWwindow*, int, int, int, int>& callback);
-  static void UnegisterKeyCallback(U64 handle);
-  static U64 RegisterScrollCallback(
+  static void UnegisterKeyGLFWCallback(U16 handle);
+  static U16 RegisterScrollGLFWCallback(
       const Action<GLFWwindow*, double, double>& callback);
-  static void UnegisterScrollCallback(U64 handle);
-  static U64 RegisterCharCallback(
+  static void UnegisterScrollGLFWCallback(U16 handle);
+  static U16 RegisterCharGLFWCallback(
       const Action<GLFWwindow*, unsigned int>& callback);
-  static void UnegisterCharCallback(U64 handle);
+  static void UnegisterCharGLFWCallback(U16 handle);
 
  private:
   static class InputModule* inputModule;

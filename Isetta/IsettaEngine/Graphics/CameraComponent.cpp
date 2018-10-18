@@ -2,8 +2,10 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Graphics/CameraComponent.h"
+#include <utility>
 #include "Core/Debug/Assert.h"
 #include "Graphics/RenderModule.h"
+#include "Scene/Component.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 #include "Util.h"
@@ -11,10 +13,14 @@
 namespace Isetta {
 RenderModule* CameraComponent::renderModule{nullptr};
 CameraComponent* CameraComponent::_main{nullptr};
+
 CameraComponent::CameraComponent(std::string cameraName)
-    : renderNode(0), renderResource(0), name{cameraName} {
+    : name{std::move(cameraName)}, renderNode(NULL), renderResource(NULL) {
   ASSERT(renderModule != nullptr);
   renderModule->cameraComponents.push_back(this);
+  if (!_main) {
+    _main = this;
+  }
 }
 
 void CameraComponent::OnEnable() {
@@ -26,12 +32,11 @@ void CameraComponent::OnEnable() {
 }
 
 void CameraComponent::OnDisable() { h3dRemoveNode(renderNode); }
-void CameraComponent::UpdateTransform() {
-  Transform transform = owner->GetTransform();
-  Transform::SetH3DNodeTransform(renderNode, transform);
+void CameraComponent::UpdateH3DTransform() const {
+  Transform::SetH3DNodeTransform(renderNode, GetTransform());
 }
 
-void CameraComponent::ResizeViewport() {
+void CameraComponent::ResizeViewport() const {
   int width, height;
   ASSERT(renderModule != nullptr);
   ASSERT(renderModule->winHandle != nullptr);
@@ -43,7 +48,7 @@ void CameraComponent::ResizeViewport() {
   h3dResizePipelineBuffers(renderModule->pipelineRes, width, height);
 }
 
-void CameraComponent::SetupCameraViewport() {
+void CameraComponent::SetupCameraViewport() const {
   int width, height;
   ASSERT(renderModule != nullptr);
   ASSERT(renderModule->winHandle != nullptr);

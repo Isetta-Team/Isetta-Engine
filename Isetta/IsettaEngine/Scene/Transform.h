@@ -7,10 +7,10 @@
 #include "Core/Math/Quaternion.h"
 #include "Core/Math/Vector3.h"
 #include "Core/Math/Vector4.h"
-#include "Graphics/RenderNode.h"
+#include "Horde3D.h"
 
 namespace Isetta {
-class Transform {
+class ISETTA_API_DECLARE Transform {
  public:
   // constructors
   Transform() = delete;
@@ -39,7 +39,8 @@ class Transform {
   void RotateWorld(const Math::Vector3& eulerAngles);
   void RotateWorld(const Math::Vector3& axis, float angle);
   void RotateLocal(const Math::Vector3& eulerAngles);
-  void RotateLocal(const Math::Vector3& axis, float angle);
+  void RotateLocal(const Math::Vector3& axisWorldSpace, float angle);
+  void RotateLocal(const Math::Quaternion& rotation);
 
   // scale
   Math::Vector3 GetWorldScale() const;
@@ -49,16 +50,22 @@ class Transform {
   // hierarchy
   void SetParent(Transform* transform);
   Transform* GetParent() const { return parent; }
+  Transform* GetRoot() const;
 
   // helper
   Math::Vector3 GetForward();
   Math::Vector3 GetUp();
-  Math::Vector3 GetRight();
+  Math::Vector3 GetLeft();
+  Math::Vector3 GetAxis(int i);
 
   // other
   void LookAt(const Math::Vector3& target,
               const Math::Vector3& worldUp = Math::Vector3::up);
-  class Entity* GetEntity() const { return entity; }
+  void LookAt(Transform& target,
+              const Math::Vector3& worldUp = Math::Vector3::up);
+  class Entity* GetEntity() const {
+    return entity;
+  }
   Size GetChildCount() const { return children.size(); }
   Transform* GetChild(U16 childIndex);
   inline std::string GetName() const;
@@ -69,9 +76,9 @@ class Transform {
   Math::Vector3 WorldDirFromLocalDir(const Math::Vector3& localDirection);
   Math::Vector3 LocalDirFromWorldDir(const Math::Vector3& worldDirection);
 
-  void ForChildren(Action<Transform*> action);
-  void ForDescendents(Action<Transform*> action);
-  void ForSelfAndDescendents(Action<Transform*> action);
+  void ForChildren(const Action<Transform*>& action);
+  void ForDescendents(const Action<Transform*>& action);
+  void ForSelfAndDescendents(const Action<Transform*>& action);
 
   void SetWorldTransform(const Math::Vector3& inPosition,
                          const Math::Vector3& inEulerAngles,
@@ -82,9 +89,10 @@ class Transform {
   static void SetH3DNodeTransform(H3DNode node, Transform& transform);
 
 #if _DEBUG
-  void Print();
+  void DrawGUI();
 #endif
   const Math::Matrix4& GetLocalToWorldMatrix();
+  const Math::Matrix4& GetWorldToLocalMatrix();
 
  private:
   void RecalculateLocalToWorldMatrix();
@@ -96,6 +104,7 @@ class Transform {
   Math::Quaternion worldRot;  // only for query
 
   Math::Matrix4 localToWorldMatrix{};
+  Math::Matrix4 worldToLocalMatrix{};
   Math::Vector3 localPos{Math::Vector3::zero};  // part of local storage
   Math::Quaternion localRot{
       Math::Quaternion::identity};               // part of local storage
@@ -104,13 +113,14 @@ class Transform {
   // marked when anything local changed
   // cleared when matrix recalculated
   void SetDirty();
-  bool isMatrixDirty{true};
+  bool isDirty{true};
+  bool isWorldToLocalDirty{true};
 
   class Entity* entity{nullptr};
   Transform* root{nullptr};
   Transform* parent{nullptr};
   std::vector<Transform*> children;
 
-  static Math::Vector4 sharedV4;
+  Math::Vector3 axis[3];
 };
 }  // namespace Isetta

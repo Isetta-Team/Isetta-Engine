@@ -1,19 +1,23 @@
 // "Copyright [2018] Isetta"
 #pragma once
+#include "ISETTA_API.h"
 
 namespace Isetta {
 class Color;
 }
 
 namespace Isetta::Math {
-class Vector4 {
+class ISETTA_API_DECLARE Vector4 {
  public:
   // Constants
   static const Vector4 zero;
   static const Vector4 one;
   static const Vector4 right;
+  static const Vector4 left;
   static const Vector4 up;
+  static const Vector4 down;
   static const Vector4 forward;
+  static const Vector4 back;
   static const int ELEMENT_COUNT = 4;
 
   union {
@@ -72,6 +76,7 @@ class Vector4 {
   // Operators
 
   float operator[](int i) const;
+  float& operator[](int i);
   inline bool operator==(const Vector4& rhs) const {
     return x == rhs.x && y == rhs.y && z == rhs.z && w == rhs.w;
   }
@@ -90,6 +95,7 @@ class Vector4 {
   inline Vector4 operator-(const Vector4& rhs) const {
     return Vector4(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w);
   }
+  inline Vector4 operator-() const { return Vector4(-x, -y, -z, -w); }
   inline Vector4& operator-=(const Vector4& rhs) {
     x -= rhs.x;
     y -= rhs.y;
@@ -123,7 +129,7 @@ class Vector4 {
 
   // Conversions
   explicit operator Color();
-  explicit operator class Vector3();
+  explicit operator class Vector3() const;
 
   // Functions
 

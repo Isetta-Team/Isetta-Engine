@@ -13,6 +13,7 @@
 #include "Core/Config/CVar.h"
 #include "Core/Debug/Debug.h"
 #include "Core/IsettaAlias.h"
+#include "ISETTA_API.h"
 
 namespace Isetta {
 #define LOG Isetta::LogObject(__FILENAME__, __LINE__)
@@ -29,7 +30,7 @@ namespace Isetta {
  * mask messages)
  *
  */
-class Logger {
+class ISETTA_API_DECLARE Logger {
  public:
   /**
    * @brief Logger configuration CVar struct
@@ -145,7 +146,7 @@ class Logger {
  * passed by default at the given position
  *
  */
-struct LogObject {
+struct ISETTA_API LogObject {
   /// File where the log macro is called from
   std::string file;
   // Line where the log macro is called from
@@ -207,7 +208,6 @@ struct LogObject {
    * verbosity set in constructor
    *
    * @param channel of the message
-   * @param verbosity of the message
    * @param inFormat the format string similar to printf
    * @param ... input arguments to fill the formats
    */
@@ -218,7 +218,6 @@ struct LogObject {
    * verbosity set in constructor
    *
    * @param channel of the message
-   * @param verbosity of the message
    * @param inFormat the string to output
    */
   void operator()(const Debug::Channel channel,
@@ -228,10 +227,33 @@ struct LogObject {
    * verbosity set in constructor
    *
    * @param channel of the message
-   * @param verbosity of the message
    * @param inFormat initializer list of strings to output
    */
   void operator()(const Debug::Channel channel,
                   const std::initializer_list<std::string>& inFormat) const;
+
+  /**
+   * @brief Call to DebugPrintF to output a log message,
+   * verbosity set in constructor
+   *
+   * @param inFormat the format string similar to printf
+   * @param ... input arguments to fill the formats
+   */
+  void operator()(const char* inFormat,
+                  ...) const;
+  /**
+   * @brief Call to DebugPrintF to output a log message,
+   * verbosity set in constructor
+   *
+   * @param inFormat the string to output
+   */
+  void operator()(const std::string& inFormat) const;
+  /**
+   * @brief Call to DebugPrintF to output a log message,
+   * verbosity set in constructor
+   *
+   * @param inFormat initializer list of strings to output
+   */
+  void operator()(const std::initializer_list<std::string>& inFormat) const;
 };
 }  // namespace Isetta
