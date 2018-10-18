@@ -287,6 +287,7 @@ void Transform::SetH3DNodeTransform(const H3DNode node, Transform& transform) {
   h3dSetNodeTransMat(node, transform.GetLocalToWorldMatrix().Transpose().data);
 }
 
+#if _DEBUG
 void Transform::DrawGUI() {
   std::string parentName = parent == nullptr ? "null" : parent->GetName();
   std::string content =
@@ -323,6 +324,7 @@ void Transform::DrawGUI() {
   DebugDraw::Axis(GetLocalToWorldMatrix());
   DebugDraw::AxisSphere(GetLocalToWorldMatrix());
 }
+#endif
 
 const Math::Matrix4& Transform::GetLocalToWorldMatrix() {
   if (isDirty) {
@@ -339,7 +341,6 @@ const Math::Matrix4& Transform::GetWorldToLocalMatrix() {
   }
   return worldToLocalMatrix;
 }
-
 void Transform::RecalculateLocalToWorldMatrix() {
   Math::Matrix4 localToParentMatrix{};
   localToParentMatrix.SetTopLeftMatrix3(localRot.GetMatrix3());  // rotation

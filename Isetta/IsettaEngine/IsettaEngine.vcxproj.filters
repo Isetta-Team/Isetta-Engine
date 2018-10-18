@@ -210,27 +210,29 @@
     <ClCompile Include="Components\GridComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="Custom\NetworkLevel.cpp" />
-    <ClCompile Include="Physics\AABB.cpp">
+    <ClCompile Include="Collisions\SphereCollider.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
-    <ClCompile Include="Physics\BoxCollider.cpp">
+    <ClCompile Include="Collisions\Plane.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
-    <ClCompile Include="Physics\CapsuleCollider.cpp">
+    <ClCompile Include="Collisions\CollisionsModule.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
-    <ClCompile Include="Physics\Collider.cpp">
+    <ClCompile Include="Collisions\CapsuleCollider.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
-    <ClCompile Include="Physics\CollisionsModule.cpp">
+    <ClCompile Include="Collisions\Collider.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
-    <ClCompile Include="Physics\Plane.cpp">
+    <ClCompile Include="Collisions\BoxCollider.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
-    <ClCompile Include="Physics\SphereCollider.cpp">
+    <ClCompile Include="Collisions\AABB.cpp">
       <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\NetworkLevel.cpp">
+      <Filter>Custom</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -494,6 +496,9 @@
     <ClInclude Include="Custom\NetworkLevel.h">
       <Filter>Custom</Filter>
     </ClInclude>
+    <ClInclude Include="Custom\RaycastClick.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -564,7 +569,6 @@
       <Filter>Resources\test</Filter>
     </None>
     <None Include="config.cfg" />
-    <None Include="user.cfg" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Resources\test\Low-Poly-Racing-Car.scene.xml">
