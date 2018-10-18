@@ -255,7 +255,6 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Custom\KeyTransform.h" />
     <ClInclude Include="Custom\OscillateMove.h" />
     <ClInclude Include="Custom\CollisionsLevel.h" />
-    <ClInclude Include="Custom\RaycastClick.h" />
     <ClInclude Include="EngineLoop.h" />
     <ClInclude Include="Graphics\AnimationComponent.h" />
     <ClInclude Include="Graphics\CameraComponent.h" />

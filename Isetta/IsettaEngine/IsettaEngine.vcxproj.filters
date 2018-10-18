@@ -496,7 +496,6 @@
     <ClInclude Include="Collisions\CollisionsModule.h">
       <Filter>Collisions</Filter>
     </ClInclude>
-    <ClInclude Include="Custom\RaycastClick.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

@@ -26,7 +26,7 @@ class Rect;
 namespace Isetta {
 class ISETTA_API GUI {
  public:
-  enum class WindowFlags : U32 {
+  enum class ISETTA_API WindowFlags : U32 {
     None = 0,
     NoTitleBar = 1 << 0,   // Disable title-bar
     NoResize = 1 << 1,     // Disable user resizing with the lower-right grip
@@ -80,7 +80,7 @@ class ISETTA_API GUI {
     ChildMenu = 1 << 28      // Don't use! For internal use by BeginMenu()
   };
 
-  enum class TreeNodeFlags : U16 {
+  enum class ISETTA_API TreeNodeFlags : U16 {
     None = 0,
     Selected = 1 << 0,  // Draw as selected
     Framed = 1 << 1,    // Full colored frame (e.g. for CollapsingHeader)
@@ -117,7 +117,7 @@ class ISETTA_API GUI {
     CollapsingHeader = Framed | NoTreePushOnOpen | NoAutoOpenOnLog
   };
 
-  enum class ColorStyles {
+  enum class ISETTA_API ColorStyles {
     Text,
     TextDisabled,
     WindowBg,  // Background of normal windows
@@ -167,7 +167,7 @@ class ISETTA_API GUI {
     COUNT
   };
 
-  enum class InputTextFlags : U32 {
+  enum class ISETTA_API InputTextFlags : U32 {
     None = 0,
     CharsDecimal = 1 << 0,      // Allow 0123456789.+-*/
     CharsHexadecimal = 1 << 1,  // Allow 0123456789ABCDEFabcdef
@@ -211,7 +211,7 @@ class ISETTA_API GUI {
     Multiline = 1 << 20  // For internal use by InputTextMultiline()
   };
 
-  enum class ColorEditFlags : U32 {
+  enum class ISETTA_API ColorEditFlags : U32 {
     None = 0,
     NoAlpha = 1 << 1,  //              // ColorEdit, ColorPicker, ColorButton:
                        //              ignore Alpha component (read 3 components
@@ -286,7 +286,7 @@ class ISETTA_API GUI {
         PickerHueBar  // Change application default using SetColorEditOptions()
   };
 
-  enum class StyleVar {
+  enum class ISETTA_API StyleVar {
     Alpha,              // float     Alpha
     WindowPadding,      // ImVec2    WindowPadding
     WindowRounding,     // float     WindowRounding
@@ -311,7 +311,7 @@ class ISETTA_API GUI {
     COUNT
   };
 
-  enum class DrawCornerFlags : U8 {
+  enum class ISETTA_API DrawCornerFlags : U8 {
     TopLeft = 1 << 0,             // 0x1
     TopRight = 1 << 1,            // 0x2
     BotLeft = 1 << 2,             // 0x4
@@ -323,7 +323,7 @@ class ISETTA_API GUI {
     All = 0xF
   };
 
-  enum class SelectableFlags {
+  enum class ISETTA_API SelectableFlags {
     None = 0,
     DontClosePopups = 1 << 0,   // Clicking this don't close parent popup window
     SpanAllColumns = 1 << 1,    // Selectable frame can span all columns (text
@@ -332,7 +332,7 @@ class ISETTA_API GUI {
     Disabled = 1 << 3           // Cannot be selected, display greyed out text
   };
 
-  enum class HoveredFlags : U8 {
+  enum class ISETTA_API HoveredFlags : U8 {
     None = 0,  // Return true if directly over the item/window, not obstructed
                // by another window, not obstructed by an active popup or modal
                // blocking inputs under them.
@@ -359,7 +359,7 @@ class ISETTA_API GUI {
     RootAndChildWindows = RootWindow | ChildWindows
   };
 
-  enum class FocusedFlags : U8 {
+  enum class ISETTA_API FocusedFlags : U8 {
     None = 0,
     ChildWindows = 1 << 0,  // IsWindowFocused(): Return true if any children of
                             // the window is focused
@@ -370,7 +370,7 @@ class ISETTA_API GUI {
     RootAndChildWindows = RootWindow | ChildWindows
   };
 
-  enum class MouseCursor {
+  enum class ISETTA_API MouseCursor {
     None = -1,
     Arrow = 0,
     TextInput,   // When hovering over InputText, etc.
@@ -387,7 +387,7 @@ class ISETTA_API GUI {
     COUNT
   };
 
-  enum class Cond : U8 {
+  enum class ISETTA_API Cond : U8 {
     Always = 1 << 0,        // Set the variable
     Once = 1 << 1,          // Set the variable once per runtime session (only
                             // the first call with succeed)
@@ -401,7 +401,7 @@ class ISETTA_API GUI {
   // enum class GUIDir {};
 
   // TODO(Jacob) "Same" as GUIDrawCorners but with center do we merge?
-  enum class Pivot : U8 {
+  enum class ISETTA_API Pivot : U8 {
     TopLeft = 1 << 0,             // 0x1
     TopRight = 1 << 1,            // 0x2
     BotLeft = 1 << 2,             // 0x4
@@ -413,25 +413,30 @@ class ISETTA_API GUI {
     Center = Top | Bot | Left | Right,
   };
 
-  friend WindowFlags operator|(WindowFlags lhs, WindowFlags rhs);
-  friend WindowFlags operator&(WindowFlags lhs, WindowFlags rhs);
-  friend TreeNodeFlags operator|(TreeNodeFlags lhs, TreeNodeFlags rhs);
-  friend InputTextFlags operator|(InputTextFlags lhs, InputTextFlags rhs);
-  friend ColorEditFlags operator|(ColorEditFlags lhs, ColorEditFlags rhs);
-  friend DrawCornerFlags operator|(DrawCornerFlags lhs, DrawCornerFlags rhs);
-  friend SelectableFlags operator|(SelectableFlags lhs, SelectableFlags rhs);
-  friend HoveredFlags operator|(HoveredFlags lhs, HoveredFlags rhs);
-  friend FocusedFlags operator|(FocusedFlags lhs, FocusedFlags rhs);
-  friend Cond operator|(Cond lhs, Cond rhs);
-  friend Pivot operator|(Pivot lhs, Pivot rhs);
-  friend Pivot operator&(Pivot lhs, Pivot rhs);
+  ISETTA_API friend WindowFlags operator|(WindowFlags lhs, WindowFlags rhs);
+  ISETTA_API friend WindowFlags operator&(WindowFlags lhs, WindowFlags rhs);
+  ISETTA_API friend TreeNodeFlags operator|(TreeNodeFlags lhs,
+                                            TreeNodeFlags rhs);
+  ISETTA_API friend InputTextFlags operator|(InputTextFlags lhs,
+                                             InputTextFlags rhs);
+  ISETTA_API friend ColorEditFlags operator|(ColorEditFlags lhs,
+                                             ColorEditFlags rhs);
+  ISETTA_API friend DrawCornerFlags operator|(DrawCornerFlags lhs,
+                                              DrawCornerFlags rhs);
+  ISETTA_API friend SelectableFlags operator|(SelectableFlags lhs,
+                                              SelectableFlags rhs);
+  ISETTA_API friend HoveredFlags operator|(HoveredFlags lhs, HoveredFlags rhs);
+  ISETTA_API friend FocusedFlags operator|(FocusedFlags lhs, FocusedFlags rhs);
+  ISETTA_API friend Cond operator|(Cond lhs, Cond rhs);
+  ISETTA_API friend Pivot operator|(Pivot lhs, Pivot rhs);
+  ISETTA_API friend Pivot operator&(Pivot lhs, Pivot rhs);
 
-  struct BackgroundStyle {
+  struct ISETTA_API BackgroundStyle {
     bool enabled = false;
     Color background;
     BackgroundStyle() = default;
   };
-  struct ButtonStyle {
+  struct ISETTA_API ButtonStyle {
     Color background;
     Color hover;
     Color active;
@@ -439,7 +444,7 @@ class ISETTA_API GUI {
     ButtonStyle(Color background, Color hover, Color active)
         : background{background}, hover{hover}, active{active} {}
   };
-  struct ImageStyle {
+  struct ISETTA_API ImageStyle {
     Color tint = Color::white;
     Color frame = Color::clear;
     Math::Vector2 offset = Math::Vector2::zero;
@@ -476,7 +481,7 @@ class ISETTA_API GUI {
           text{text},
           font{font} {}
   };
-  struct LabelStyle {
+  struct ISETTA_API LabelStyle {
     Color text;
     Color background;
     Font* font;
@@ -486,7 +491,7 @@ class ISETTA_API GUI {
     LabelStyle(const Color& text, const Color& background, Font* const font)
         : text{text}, background{background}, font{font} {}
   };
-  struct ProgressBarStyle {
+  struct ISETTA_API ProgressBarStyle {
     Color background;
     Color bar;
     Color overlayText;
@@ -504,7 +509,7 @@ class ISETTA_API GUI {
           hoverChange{hoverChange},
           hover{hover} {}
   };
-  struct ModalStyle {
+  struct ISETTA_API ModalStyle {
     Color window;
     Color background;
     ModalStyle();
@@ -678,8 +683,10 @@ class ISETTA_API GUI {
   ////////////////////////////////////////
   // TODO(Jacob) NOT PART OF GAME NEEDS //
   ////////////////////////////////////////
-  static void SliderFloat(const RectTransform& transform, const std::string& label, float* value, float min,
-                          float max, float power = 1, const char* format = "%.3f",
+  static void SliderFloat(const RectTransform& transform,
+                          const std::string& label, float* value, float min,
+                          float max, float power = 1,
+                          const char* format = "%.3f",
                           const InputStyle& style = {});
   /*
   // TODO(Jacob) refactor
@@ -812,7 +819,7 @@ class ISETTA_API GUI {
                             FLT_MAX, Math::Vector2 graphSize =
                             Math::Vector2(0, 0), int stride = sizeof(float));
   */
-  struct Draw {
+  struct ISETTA_API Draw {
     static void Rect(const RectTransform& transform, const Color& color,
                      const float roundCorners = 0.0f,
                      DrawCornerFlags flags = DrawCornerFlags::All,

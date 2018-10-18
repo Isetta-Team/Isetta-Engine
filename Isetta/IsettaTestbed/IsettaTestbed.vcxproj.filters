@@ -26,6 +26,18 @@
     <ClCompile Include="Components\Zombie.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="GUILevel\GUIComponent.cpp">
+      <Filter>GUI Level</Filter>
+    </ClCompile>
+    <ClCompile Include="GUILevel\GUILevel.cpp">
+      <Filter>GUI Level</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugLevel\DebugComponent.cpp">
+      <Filter>Debug Level</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugLevel\DebugLevel.cpp">
+      <Filter>Debug Level</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
@@ -37,6 +49,12 @@
     </Filter>
     <Filter Include="Components">
       <UniqueIdentifier>{3f2ed55d-bb73-41ad-a2e2-f15247894eff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI Level">
+      <UniqueIdentifier>{f2d9fe62-d581-4bf4-97ba-e5aec5129198}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debug Level">
+      <UniqueIdentifier>{c701d3fd-d9ec-4002-8464-cf2fc751dc78}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +81,18 @@
     </ClInclude>
     <ClInclude Include="Components\Zombie.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GUILevel\GUILevel.h">
+      <Filter>GUI Level</Filter>
+    </ClInclude>
+    <ClInclude Include="GUILevel\GUIComponent.h">
+      <Filter>GUI Level</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugLevel\DebugComponent.h">
+      <Filter>Debug Level</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugLevel\DebugLevel.h">
+      <Filter>Debug Level</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
