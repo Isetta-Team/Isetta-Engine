@@ -231,9 +231,6 @@
     <ClCompile Include="Components\DebugComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="Custom\RaycastClick.cpp">
-      <Filter>Custom</Filter>
-    </ClCompile>
     <ClCompile Include="Collisions\CollisionsModule.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
@@ -499,6 +496,7 @@
     <ClInclude Include="Collisions\CollisionsModule.h">
       <Filter>Collisions</Filter>
     </ClInclude>
+    <ClInclude Include="Custom\RaycastClick.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
