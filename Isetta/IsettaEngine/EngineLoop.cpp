@@ -11,29 +11,25 @@
 #include "Graphics/Window.h"
 #include "Input/InputModule.h"
 #include "Networking/NetworkingModule.h"
+#include "Collisions/CollisionsModule.h"
 
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Filesystem.h"
 #include "Core/Time/Clock.h"
-#include "Graphics/GUI.h"
 #include "Input/Input.h"
 #include "Input/InputEnum.h"
-#include "Networking/ExampleMessages.h"
 #include "Networking/NetworkManager.h"
 #include "Scene/Level.h"
 
 #include "Scene/Entity.h"
 #include "Scene/LevelManager.h"
-#include "imgui/imgui.h"
 
 #include "Core/Debug/DebugDraw.h"
 
 namespace Isetta {
 
 void InputDemo();
-void NetworkingDemo();
-void NetworkingDemoEnd();
 
 EngineLoop::EngineLoop() {
   memoryManager = new MemoryManager{};
@@ -85,10 +81,8 @@ void EngineLoop::StartUp() {
   Input::RegisterKeyPressCallback(KeyCode::ESCAPE,
                                   [&]() { isGameRunning = false; });
 
-  // NetworkingDemo();
   // InputDemo();
   // RunYidiTest();
-  // GraphicsDemo();
 }
 
 void EngineLoop::Update() {
@@ -134,7 +128,6 @@ void EngineLoop::VariableUpdate(float deltaTime) {
 
 void EngineLoop::ShutDown() {
   LevelManager::Instance().currentLevel->UnloadLevel();
-  NetworkingDemoEnd();
   networkingModule->ShutDown();
   audioModule->ShutDown();
   collisionsModule->ShutDown();
@@ -181,73 +174,6 @@ void InputDemo() {
         Input::UnregisterMousePressCallback(MouseButtonCode::MOUSE_LEFT,
                                             handleC);
       });
-}
-void NetworkingDemo() {
-  // Networking
-  NetworkingExample::RegisterExampleMessageFunctions();
-
-  if (Config::Instance().networkConfig.runServer.GetVal()) {
-    NetworkManager::CreateServer(
-        Config::Instance().networkConfig.defaultServerIP.GetVal().c_str());
-  }
-  if (Config::Instance().networkConfig.connectToServer.GetVal()) {
-    NetworkManager::ConnectToServer(
-        Config::Instance().networkConfig.defaultServerIP.GetVal().c_str(),
-        [](bool b) {
-          LOG(Debug::Channel::Networking, "Client connection state: %d", b);
-        });
-  }
-
-  Input::RegisterKeyPressCallback(KeyCode::Y, []() {
-    if (NetworkManager::ClientIsConnected()) {
-      SpawnExample* m = reinterpret_cast<SpawnExample*>(
-          NetworkManager::GenerateMessageFromClient("SPWN"));
-      m->a = 1;
-      m->b = 2;
-      m->c = 3;
-      NetworkManager::SendMessageFromClient(m);
-    }
-  });
-  Input::RegisterKeyPressCallback(KeyCode::H, []() {
-    if (NetworkManager::ClientIsConnected()) {
-      if (NetworkingExample::despawnCounter >=
-          NetworkingExample::spawnedEntities.size()) {
-        return;
-      }
-      DespawnExample* m = reinterpret_cast<DespawnExample*>(
-          NetworkManager::GenerateMessageFromClient("DSPN"));
-      m->netId = NetworkingExample::despawnCounter++;
-      NetworkManager::SendMessageFromClient(m);
-    }
-  });
-
-  Input::RegisterKeyPressCallback(KeyCode::P, []() {
-    if (NetworkManager::ClientIsConnected()) {
-      HandleMessage* handleMessage = reinterpret_cast<HandleMessage*>(
-          NetworkManager::GenerateMessageFromClient("HNDL"));
-      handleMessage->handle = 0;
-      NetworkManager::SendMessageFromClient(handleMessage);
-    }
-  });
-  Input::RegisterKeyPressCallback(KeyCode::O, []() {
-    if (NetworkManager::ClientIsConnected()) {
-      HandleMessage* handleMessage = reinterpret_cast<HandleMessage*>(
-          NetworkManager::GenerateMessageFromClient("HNDL"));
-      handleMessage->handle = 1;
-      NetworkManager::SendMessageFromClient(handleMessage);
-    }
-  });
-  Input::RegisterMousePressCallback(MouseButtonCode::MOUSE_LEFT, []() {
-    if (NetworkManager::ClientIsConnected()) {
-      HandleMessage* handleMessage = reinterpret_cast<HandleMessage*>(
-          NetworkManager::GenerateMessageFromClient("HNDL"));
-      handleMessage->handle = 2;
-      NetworkManager::SendMessageFromClient(handleMessage);
-    }
-  });
-}
-void NetworkingDemoEnd() {
-  NetworkingExample::RegisterExampleMessageFunctions();
 }
 
 }  // namespace Isetta

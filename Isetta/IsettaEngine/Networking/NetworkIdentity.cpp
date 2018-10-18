@@ -8,11 +8,11 @@
 
 namespace Isetta {
 NetworkIdentity::NetworkIdentity() {
-  NetworkManager::CreateNetworkId(this);
+  NetworkManager::Instance().CreateNetworkId(this);
 }
 
 NetworkIdentity::NetworkIdentity(U32 id) {
-  NetworkManager::AssignNetworkId(id, this);
+  NetworkManager::Instance().AssignNetworkId(id, this);
 }
 
 }  // namespace Isetta

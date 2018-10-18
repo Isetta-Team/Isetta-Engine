@@ -153,29 +153,11 @@
     <ClCompile Include="Custom\InEngineTestLevel.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
-    <ClCompile Include="Collisions\BoxCollider.cpp">
-      <Filter>Collisions</Filter>
-    </ClCompile>
-    <ClCompile Include="Collisions\CapsuleCollider.cpp">
-      <Filter>Collisions</Filter>
-    </ClCompile>
-    <ClCompile Include="Collisions\SphereCollider.cpp">
-      <Filter>Collisions</Filter>
-    </ClCompile>
-    <ClCompile Include="Collisions\Collider.cpp">
-      <Filter>Collisions</Filter>
-    </ClCompile>
-    <ClCompile Include="Collisions\AABB.cpp">
-      <Filter>Collisions</Filter>
-    </ClCompile>
     <ClCompile Include="Custom\OscillateMove.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
     <ClCompile Include="Custom\KeyTransform.cpp">
       <Filter>Custom</Filter>
-    </ClCompile>
-    <ClCompile Include="Collisions\Plane.cpp">
-      <Filter>Collisions</Filter>
     </ClCompile>
     <ClCompile Include="Custom\CollisionsLevel.cpp">
       <Filter>Custom</Filter>
@@ -219,20 +201,36 @@
     <ClInclude Include="Custom\CollisionsLevel.h">
       <Filter>Custom</Filter>
     </ClInclude>
-    <ClCompile Include="Networking\ExampleMessages.cpp">
-      <Filter>Networking</Filter>
-    </ClCompile>
     <ClCompile Include="Networking\NetworkIdentity.cpp">
       <Filter>Networking</Filter>
     </ClCompile>
     <ClCompile Include="Components\FlyController.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="Collisions\CollisionsModule.cpp">
-      <Filter>Collisions</Filter>
-    </ClCompile>
     <ClCompile Include="Components\GridComponent.cpp">
       <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\NetworkLevel.cpp" />
+    <ClCompile Include="Physics\AABB.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\BoxCollider.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\CapsuleCollider.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Collider.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\CollisionsModule.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Plane.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\SphereCollider.cpp">
+      <Filter>Collisions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -475,9 +473,6 @@
     <ClInclude Include="Custom\AxisDrawer.h">
       <Filter>Custom</Filter>
     </ClInclude>
-    <ClInclude Include="Networking\ExampleMessages.h">
-      <Filter>Networking</Filter>
-    </ClInclude>
     <ClInclude Include="Custom\IsettaCore.h">
       <Filter>Custom</Filter>
     </ClInclude>
@@ -495,6 +490,9 @@
     </ClInclude>
     <ClInclude Include="Components\GridComponent.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\NetworkLevel.h">
+      <Filter>Custom</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
