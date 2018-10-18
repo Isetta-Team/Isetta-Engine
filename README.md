@@ -8,7 +8,7 @@ Please visit our website [https://isetta.io](https://isetta.io) for a full docum
 First, let's make sure you have the right environment!
 - [ ] 64-bit Windows systems ([How to check?](https://www.howtogeek.com/howto/21726/how-do-i-know-if-im-running-32-bit-or-64-bit-windows-answers/))
 - [ ] [Visual Studio 2017](https://visualstudio.microsoft.com/)
-	- [ ] With VC++ 2017 and Windows 10 SDK (10.0.17134.0). You can install them with *Visual Studio Installer*, just select "Game Development with C++" and the right Windows 10 SDK version.
+	- [ ] With VC++ 2017 and Windows 10 SDK (10.0.17134.0). You can install them with *Visual Studio Installer*, just select "Desktop development with C++" and the right Windows 10 SDK version.
 - [ ] [CMake](https://cmake.org/download/) 3.10.2 or later
 
 **Before you build** you must pull and build the submodules:
