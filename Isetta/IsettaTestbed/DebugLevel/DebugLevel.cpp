@@ -3,6 +3,7 @@
  */
 #include "DebugLevel/DebugLevel.h"
 
+#include "Components/FlyController.h"
 #include "Core/Config/Config.h"
 #include "DebugLevel/DebugComponent.h"
 #include "Graphics/CameraComponent.h"
@@ -24,6 +25,7 @@ void DebugLevel::LoadLevel() {
       CONFIG_VAL(renderConfig.nearClippingPlane));
   camComp->SetProperty<CameraProperty::FAR_PLANE>(
       CONFIG_VAL(renderConfig.farClippingPlane));
+  cameraEntity->AddComponent<FlyController>();
 
   cameraEntity->AddComponent<DebugComponent>();
 }

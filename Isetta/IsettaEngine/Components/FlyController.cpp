@@ -11,10 +11,23 @@ void FlyController::OnEnable() {
   lastFrameMousePos = Input::GetMousePosition();
   Input::RegisterKeyPressCallback(KeyCode::F,
                                   [&]() { enableLook = !enableLook; });
+  Input::RegisterKeyPressCallback(KeyCode::KP_1, [&]() {
+    GetTransform().SetWorldPos(Math::Vector3::zero);
+  });
+  Input::RegisterScrollCallback([&](double xOffset, double yOffset) {
+    flyMultiplier += yOffset;
+    flyMultiplier = Math::Util::Max(flyMultiplier, 0);
+  });
 }
 
 void FlyController::Update() {
   float dt = EngineLoop::GetGameClock().GetDeltaTime();
+
+  if (Input::IsKeyPressed(KeyCode::LEFT_SHIFT)) {
+    dt *= flyMultiplier;
+  } else if (Input::IsKeyPressed(KeyCode::LEFT_CONTROL)) {
+    dt /= flyMultiplier;
+  }
 
   if (Input::IsKeyPressed(KeyCode::W)) {
     GetTransform().TranslateWorld(-GetTransform().GetForward() * dt * flySpeed);

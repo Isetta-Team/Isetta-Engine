@@ -297,6 +297,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
   <ItemGroup>
     <None Include="config.cfg" />
     <None Include="Resources\test\Low-Poly-Racing-Car.geo" />
+    <None Include="user.cfg" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Resources\materials\compute.material.xml" />

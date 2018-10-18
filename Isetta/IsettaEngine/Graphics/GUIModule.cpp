@@ -9,11 +9,11 @@
 #include "Graphics/GUI.h"
 #include "Input/Input.h"
 
+#include "Scene/Level.h"
+#include "Scene/LevelManager.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
-#include "Scene/LevelManager.h"
-#include "Scene/Level.h"
 
 void* MemAlloc(size_t size, void* user_data) {
   if (user_data) {
@@ -73,10 +73,10 @@ void GUIModule::StartUp(const GLFWwindow* win) {
   // NULL, io.Fonts->GetGlyphRangesJapanese());
   // IM_ASSERT(font != NULL);
 
-  Input::RegisterMouseButtonCallback(ImGui_ImplGlfw_MouseButtonCallback);
-  Input::RegisterScrollCallback(ImGui_ImplGlfw_ScrollCallback);
-  Input::RegisterKeyCallback(ImGui_ImplGlfw_KeyCallback);
-  Input::RegisterCharCallback(ImGui_ImplGlfw_CharCallback);
+  Input::RegisterMouseButtonGLFWCallback(ImGui_ImplGlfw_MouseButtonCallback);
+  Input::RegisterScrollGLFWCallback(ImGui_ImplGlfw_ScrollCallback);
+  Input::RegisterKeyGLFWCallback(ImGui_ImplGlfw_KeyCallback);
+  Input::RegisterCharGLFWCallback(ImGui_ImplGlfw_CharCallback);
 }
 
 void GUIModule::Update(float deltaTime) {

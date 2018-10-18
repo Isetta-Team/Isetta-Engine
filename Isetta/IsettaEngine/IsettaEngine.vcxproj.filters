@@ -564,6 +564,7 @@
       <Filter>Resources\test</Filter>
     </None>
     <None Include="config.cfg" />
+    <None Include="user.cfg" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Resources\test\Low-Poly-Racing-Car.scene.xml">

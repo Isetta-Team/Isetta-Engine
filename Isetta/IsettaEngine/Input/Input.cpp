@@ -63,39 +63,45 @@ void Input::UnregisterMouseReleaseCallback(MouseButtonCode mouseButton,
                                            U16 handle) {
   inputModule->UnregisterMouseReleaseCallback(mouseButton, handle);
 }
-
-U16 Input::RegisterMouseButtonCallback(
-    const Action<GLFWwindow*, int, int, int>& callback) {
-  return inputModule->RegisterMouseButtonCallback(callback);
-}
-
-void Input::UnregisterMouseButtonCallback(U16 handle) {
-  inputModule->UnregisterMouseButtonCallback(handle);
-}
-
-U16 Input::RegisterKeyCallback(
-    const Action<GLFWwindow*, int, int, int, int>& callback) {
-  return inputModule->RegisterKeyCallback(callback);
-}
-
-void Input::UnegisterKeyCallback(U16 handle) {
-  inputModule->UnegisterKeyCallback(handle);
-}
-U16 Input::RegisterScrollCallback(
-    const Action<GLFWwindow*, double, double>& callback) {
+U16 Input::RegisterScrollCallback(const Action<double, double>& callback) {
   return inputModule->RegisterScrollCallback(callback);
 }
-
-void Input::UnegisterScrollCallback(U16 handle) {
-  inputModule->UnegisterScrollCallback(handle);
+void Input::UnregisterScrollCallback(U16 handle) {
+  inputModule->UnregisterScrollCallback(handle);
 }
 
-U16 Input::RegisterCharCallback(
+/// GLFW Callbacks
+U16 Input::RegisterMouseButtonGLFWCallback(
+    const Action<GLFWwindow*, int, int, int>& callback) {
+  return inputModule->RegisterMouseButtonGLFWCallback(callback);
+}
+
+void Input::UnregisterMouseButtonGLFWCallback(U16 handle) {
+  inputModule->UnregisterMouseButtonGLFWCallback(handle);
+}
+
+U16 Input::RegisterKeyGLFWCallback(
+    const Action<GLFWwindow*, int, int, int, int>& callback) {
+  return inputModule->RegisterKeyGLFWCallback(callback);
+}
+
+void Input::UnegisterKeyGLFWCallback(U16 handle) {
+  inputModule->UnegisterKeyGLFWCallback(handle);
+}
+U16 Input::RegisterScrollGLFWCallback(
+    const Action<GLFWwindow*, double, double>& callback) {
+  return inputModule->RegisterScrollGLFWCallback(callback);
+}
+void Input::UnegisterScrollGLFWCallback(U16 handle) {
+  inputModule->UnregisterScrollGLFWCallback(handle);
+}
+
+U16 Input::RegisterCharGLFWCallback(
     const Action<GLFWwindow*, unsigned int>& callback) {
-  return inputModule->RegisterCharCallback(callback);
+  return inputModule->RegisterCharGLFWCallback(callback);
 }
 
-void Input::UnegisterCharCallback(U16 handle) {
-  inputModule->UnegisterCharCallback(handle);
+void Input::UnegisterCharGLFWCallback(U16 handle) {
+  inputModule->UnegisterCharGLFWCallback(handle);
 }
 }  // namespace Isetta

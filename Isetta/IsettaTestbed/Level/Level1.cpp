@@ -3,11 +3,11 @@
  */
 #include "Level1.h"
 #include "Components/CameraController.h"
+#include "Components/FlyController.h"
 #include "Components/GameManager.h"
 #include "Components/PlayerController.h"
 #include "Core/Color.h"
 #include "Core/Config/Config.h"
-#include "Custom/FlyController.h"
 #include "Graphics/AnimationComponent.h"
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
