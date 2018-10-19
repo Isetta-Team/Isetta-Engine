@@ -113,19 +113,18 @@ void RenderModule::LoadResourceFromDisk(H3DRes resource,
   // resource and ad nested resources into the resource list as unloaded
   // resources. So here, I need to iteratively load all unloaded resources.
   // Assumption: the resource handle is always increasing
-  if (resource == 0 || h3dIsResLoaded(resource)) {
-    return;
-  }
-  std::string filepath{h3dGetResName(resource)};
-  Filesystem::Concat({resourcePath}, &filepath);
-  int fileSize = Filesystem::Instance().GetFileLength(filepath);
-  Filesystem::Instance().ReadAsync(filepath, [&](const char* data) {
+  while (resource != 0 && !h3dIsResLoaded(resource)) {
+    std::string filepath{h3dGetResName(resource)};
+    Filesystem::Concat({resourcePath}, &filepath);
+    int fileSize = Filesystem::Instance().GetFileLength(filepath);
+    auto data = Filesystem::Instance().Read(filepath.c_str());
     if (!h3dLoadResource(resource, data, fileSize)) {
       throw std::exception{errorMessage.c_str()};
     }
+
     delete[] data;
+    // Use undefined to return all kinds of resources
     resource = h3dGetNextResource(H3DResTypes::Undefined, resource);
-    LoadResourceFromDisk(resource, errorMessage);
-  });
+  }
 }
 }  // namespace Isetta
