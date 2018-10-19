@@ -142,6 +142,44 @@ bool CapsuleCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
     return true;
   }
 
+  float discrim = b * b - 4.f * a * c;
+  if (discrim < 0.f) return false;
+  float sqrtDiscrim = Math::Util::Sqrt(discrim);
+  float denom = 0.5f / a;
+  float tmin = -(b + sqrtDiscrim) * denom;
+  float tmax = (-b + sqrtDiscrim) * denom;
+  if (tmin > tmax) std::swap(tmin, tmax);
+
+  float tkMin = tmin * m + n;
+  RaycastHit hitMin;
+  if (tkMin < 0.f) {
+    // if (!RaycastSphere(p0, radius * radiusScale, ray, &hitMin, maxDistance))
+    //  return false;
+    return RaycastSphere(p0, radius * radiusScale, ray, hitInfo, maxDistance);
+  } else if (tkMin > 1.f) {
+    // if (!RaycastSphere(p1, radius * radiusScale, ray, &hitMin, maxDistance))
+    //  return false;
+    return RaycastSphere(p1, radius * radiusScale, ray, hitInfo, maxDistance);
+  } else {
+    Math::Vector3 pt = ray.GetPoint(tmin);
+    // RaycastHitCtor(&hitMin, tmin, pt, pt - (p0 + to * tkMin));
+    RaycastHitCtor(hitInfo, tmin, pt, pt - (p0 + to * tkMin));
+    return true;
+  }
+
+  // float tkMax = tmax * m + n;
+  // RaycastHit hitMax;
+  // if (tkMax < 0.f) {
+  //  if (!RaycastSphere(p1, radius * radiusScale, ray, &hitMax, maxDistance))
+  //    return false;
+  //} else if (tkMin > 1.f) {
+  //  if (!RaycastSphere(p0, radius * radiusScale, ray, &hitMax, maxDistance))
+  //    return false;
+  //} else {
+  //  Math::Vector3 pt = ray.GetPoint(tmax);
+  //  RaycastHitCtor(&hitMin, tmin, pt, pt - (p1 + to * tkMax));
+  //}
+
   return false;
 }
 
