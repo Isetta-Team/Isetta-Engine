@@ -15,10 +15,14 @@
 #include "Collisions/BoxCollider.h"
 #include "Collisions/CapsuleCollider.h"
 #include "Collisions/Collider.h"
+#include "Collisions/Collisions.h"
 #include "Collisions/SphereCollider.h"
 
 namespace Isetta {
-void CollisionsModule::StartUp() { Collider::collisionsModule = this; }
+void CollisionsModule::StartUp() {
+  Collider::collisionsModule = this;
+  Collisions::collisionsModule = this;
+}
 
 void CollisionsModule::Update(float deltaTime) {
   /*
@@ -443,6 +447,55 @@ float CollisionsModule::ClosestPtSegmentSegment(
   c1 = p0 + d1 * s;
   c2 = q0 + d2 * t;
   return Math::Vector3::Dot(c1 - c2, c1 - c2);
+}
+float CollisionsModule::ClosestPtRaySegment(
+    const Ray &ray, const Math::Vector3 &p0, const Math::Vector3 &p1,
+    float *const _tRay, float *const _tSeg, Math::Vector3 *const _cRay,
+    Math::Vector3 *const _cSeg) {
+  float &tRay = *_tRay, &tSeg = *_tSeg;
+  Math::Vector3 &cRay = *_cRay, &cSeg = *_cSeg;
+
+  Math::Vector3 d = p1 - p0;  // Direction vector of segment S1
+  Math::Vector3 r = p0 - ray.GetOrigin();
+  float a = Math::Vector3::Dot(
+      d, d);  // Squared length of segment S1, always nonnegative
+  float e = Math::Vector3::Dot(
+      ray.GetDirection(),
+      ray.GetDirection());  // Squared length of segment S2, always nonnegative
+  float f = Math::Vector3::Dot(ray.GetDirection(), r);
+
+  if (a <= Math::Util::EPSILON) {
+    // First segment degenerates into a point
+    tSeg = 0.0f;
+    tRay = f / e;  // s = 0 => t = (b*s + f) / e = f / e
+    tRay = Math::Util::Max(tRay, 0.f);
+  } else {
+    float c = Math::Vector3::Dot(d, r);
+    // The general nondegenerate case starts here
+    float b = Math::Vector3::Dot(d, ray.GetDirection());
+    float denom = a * e - b * b;  // Always nonnegative
+                                  // If segments not parallel, compute closest
+                                  // point on L1 to L2 and clamp to segment
+                                  // S1. Else pick arbitrary s (here 0)
+    if (denom != 0.0f) {
+      tSeg = Math::Util::Clamp01((b * f - c * e) / denom);
+    } else {
+      tSeg = 0.0f;
+    }
+    // Compute point on L2 closest to S1(s) using
+    // t = Dot((P1 + D1*s) - P2,D2) / Dot(D2,D2) = (b*s + f) / e
+    tRay = (b * tSeg + f) / e;
+    // If t in [0,1] done. Else clamp t, recompute s for the new value
+    // of t using s = Dot((P2 + D2*t) - P1,D1) / Dot(D1,D1)= (t*b - c) / a
+    // and clamp s to [0, 1]
+    if (tRay < 0.0f) {
+      tRay = 0.0f;
+      tSeg = Math::Util::Clamp01(-c / a);
+    }
+  }
+  cRay = ray.GetPoint(tRay);
+  cSeg = p0 + d * tSeg;
+  return Math::Vector3::Dot(cRay - cSeg, cRay - cSeg);
 }
 Math::Vector3 CollisionsModule::ClossetPtPointAABB(const Math::Vector3 &point,
                                                    const AABB &aabb) {

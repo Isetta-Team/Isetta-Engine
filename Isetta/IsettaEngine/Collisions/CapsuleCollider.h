@@ -12,6 +12,9 @@ namespace Isetta {
 class CapsuleCollider : public Collider {
  private:
   void Update() override;
+  // TODO(Jacob) duplicate code
+  bool RaycastSphere(const Math::Vector3& center, float radius, const Ray& ray,
+                     RaycastHit* const hitInfo, float maxDistance);
 
  protected:
   const ColliderType GetType() const override {

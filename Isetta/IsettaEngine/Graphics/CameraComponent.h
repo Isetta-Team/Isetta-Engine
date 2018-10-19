@@ -7,6 +7,14 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
+class Ray;
+namespace Math {
+class Vector3;
+class Vector2;
+}  // namespace Math
+}  // namespace Isetta
+
+namespace Isetta {
 class ISETTA_API CameraComponent : public Component {
  public:
   enum class Property {
@@ -34,6 +42,15 @@ class ISETTA_API CameraComponent : public Component {
     h3dGetNodeTransMats(renderNode, nullptr, &transformPtr);
     return Math::Matrix4(transformPtr);
   }
+
+  Ray ScreenPointToRay(const Math::Vector2& position) const;
+  // TODO(all) ScreenToViewportPoint
+  // TODO(all) ScreenToWorldPoint
+  // TODO(all) ViewportPointToRay
+  // TODO(all) ViewportToScreenPoint
+  // TODO(all) ViewportToWorldPoint
+  // TODO(all) WorldToScreenPoint
+  // TODO(all) WorldToViewportPoint
 
  private:
   void UpdateH3DTransform() const;

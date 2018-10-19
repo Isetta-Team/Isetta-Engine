@@ -27,18 +27,18 @@ class RaycastHit {
  private:
   class Collider* collider;
   float distance{INFINITY};
-  Math::Vector3 normal, point;
+  Math::Vector3 point, normal;
 
-  RaycastHit(class Collider* collider, float distance, Math::Vector3 normal,
-             Math::Vector3 point)
-      : collider{collider}, distance{distance}, normal{normal}, point{point} {}
+  RaycastHit(class Collider* collider, float distance, Math::Vector3 point,
+             Math::Vector3 normal)
+      : collider{collider}, distance{distance}, point{point}, normal{normal} {}
 
   // friend CollisionsModule? Collider?
  public:
   inline class Collider* GetCollider() { return collider; }
   inline float GetDistance() { return distance; }
-  inline Math::Vector3 GetNormal() { return normal; }
   inline Math::Vector3 GetPoint() { return point; }
+  inline Math::Vector3 GetNormal() { return normal; }
 
   RaycastHit() = default;
   friend class Collider;

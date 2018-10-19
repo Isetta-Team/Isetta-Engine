@@ -31,6 +31,7 @@ class BoxCollider : public Collider {
   inline Math::Vector3 GetWorldSize() const {
     return Math::Vector3::Scale(size, GetTransform().GetWorldScale());
   }
+  inline Math::Vector3 GetWorldExtents() const { return 0.5f * GetWorldSize(); }
   bool Intersection(Collider* const other) override;
 };
 }  // namespace Isetta

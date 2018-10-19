@@ -5,12 +5,13 @@
 
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
+#include "Custom/KeyTransform.h"
+#include "Custom/OscillateMove.h"
+#include "Custom/RaycastClick.h"
 
 #include "Core/Color.h"
 #include "Core/Config/Config.h"
 #include "Core/Math/Vector3.h"
-#include "Custom/KeyTransform.h"
-#include "Custom/OscillateMove.h"
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
 #include "Scene/Entity.h"
@@ -56,6 +57,7 @@ void CollisionsLevel::LoadLevel() {
 
   Entity* grid{AddEntity("Grid")};
   grid->AddComponent<GridComponent>();
+  grid->AddComponent<RaycastClick>();
 
   // STATIC
   Entity* staticCol[3];
@@ -77,6 +79,7 @@ void CollisionsLevel::LoadLevel() {
       CapsuleCollider::Direction::X_AXIS);
 
   //// DYNAMIC
+  /*
   for (int i = 0; i < 3; i++) {
     Entity* oscillator{AddEntity("oscillator")};
     oscillator->GetTransform().SetParent(&staticCol[i]->GetTransform());
@@ -104,5 +107,6 @@ void CollisionsLevel::LoadLevel() {
           0.5, 2, static_cast<CapsuleCollider::Direction>(j));
     }
   }
+  */
 }
 }  // namespace Isetta

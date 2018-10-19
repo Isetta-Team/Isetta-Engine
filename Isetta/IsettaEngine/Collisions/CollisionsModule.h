@@ -14,7 +14,6 @@ class Vector3;
 namespace Isetta {
 class CollisionsModule {
  public:
-  // TODO(Jacob) can these just be static?
   static bool Intersection(const class BoxCollider &,
                            const class BoxCollider &);
   static bool Intersection(const class BoxCollider &,
@@ -37,6 +36,12 @@ class CollisionsModule {
   bool Raycast(const class Ray &ray, class RaycastHit *const hitInfo,
                float maxDistance = 0);
 
+  static float ClosestPtRaySegment(const class Ray &, const Math::Vector3 &,
+                                   const Math::Vector3 &, float *const,
+                                   float *const, Math::Vector3 *const,
+                                   Math::Vector3 *const);
+
+  // TODO(Jacob) collision layers
  private:
   CollisionsModule() = default;
   ~CollisionsModule() = default;
@@ -59,6 +64,7 @@ class CollisionsModule {
 
   friend class EngineLoop;
   friend class Collider;
+  friend class Collisions;
 
   // Utilities
   static bool Intersection(const Math::Vector3 &, const Math::Vector3 &,

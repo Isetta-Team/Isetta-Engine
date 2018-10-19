@@ -25,7 +25,7 @@ void Collider::OnDisable() {
 void Collider::RaycastHitCtor(RaycastHit* const hitInfo, float distance,
                               const Math::Vector3& point,
                               const Math::Vector3& normal) {
-  *hitInfo = std::move(RaycastHit{this, distance, normal, point});
+  *hitInfo = std::move(RaycastHit{this, distance, point, normal.Normalized()});
 }
 
 }  // namespace Isetta

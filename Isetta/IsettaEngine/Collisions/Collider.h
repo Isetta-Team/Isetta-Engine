@@ -37,10 +37,11 @@ class Collider : public Component {
     return attributes.test(static_cast<int>(attr));
   }
 
-  Math::Vector3 center;  // TODO(JACOB) remove
+  Math::Vector3 center;
 
-  // virtual Math::Vector3 ClosestPoint(Math::Vector3 point) = 0;
-  // Math::Vector3 ClosestPointOnAABB(Math::Vector3 point);
+  // TODO(Jacob) IgnoreCollision
+  // TODO(Jacob) virtual Math::Vector3 ClosestPoint(Math::Vector3 point) = 0;
+  // TODO(Jacob) Math::Vector3 ClosestPointOnAABB(Math::Vector3 point);
   virtual bool Raycast(const class Ray& ray, class RaycastHit* const hitInfo,
                        float maxDistance = 0) = 0;
 
