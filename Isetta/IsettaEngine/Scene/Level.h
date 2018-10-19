@@ -14,6 +14,8 @@
   static std::string GetLevelName() { return #NAME; }\
  private:
 
+#define CREATE_LEVEL_END };
+
 namespace Isetta {
 class ISETTA_API Level {
   std::list<class Entity*> entitiesToRemove;
