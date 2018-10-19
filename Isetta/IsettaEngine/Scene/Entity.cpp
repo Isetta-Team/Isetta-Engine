@@ -9,13 +9,13 @@
 namespace Isetta {
 
 void Entity::OnEnable() {
-  for (auto comp : components) {
+  for (auto& comp : components) {
     comp->OnEnable();
   }
 }
 
 void Entity::CheckStart() {
-  for (auto comp : components) {
+  for (auto& comp : components) {
     if (comp->GetActive() &&
         !comp->GetAttribute(Component::ComponentAttributes::HAS_STARTED)) {
       comp->SetAttribute(Component::ComponentAttributes::HAS_STARTED, true);
@@ -25,7 +25,7 @@ void Entity::CheckStart() {
 }
 
 void Entity::GuiUpdate() {
-  for (auto comp : components) {
+  for (auto& comp : components) {
     if (comp->GetActive() &&
         comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
       comp->GuiUpdate();
@@ -35,7 +35,7 @@ void Entity::GuiUpdate() {
 
 void Entity::Update() {
   CheckStart();
-  for (auto comp : components) {
+  for (auto& comp : components) {
     if (comp->GetActive() &&
         comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
       comp->Update();
@@ -44,7 +44,7 @@ void Entity::Update() {
 }
 
 void Entity::FixedUpdate() {
-  for (auto comp : components) {
+  for (auto& comp : components) {
     if (comp->GetActive() &&
         comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
       comp->FixedUpdate();
@@ -53,7 +53,7 @@ void Entity::FixedUpdate() {
 }
 
 void Entity::LateUpdate() {
-  for (auto comp : components) {
+  for (auto& comp : components) {
     if (comp->GetActive() &&
         comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
       comp->LateUpdate();
@@ -66,10 +66,10 @@ void Entity::LateUpdate() {
 void Entity::CheckDestroy() {
   if (GetAttribute(EntityAttributes::NEED_DESTROY)) {
     // Destroy itself
-    for (auto comp : components) {
+    for (auto& comp : components) {
       comp->OnDestroy();
     }
-    for (auto comp : components) {
+    for (auto& comp : components) {
       comp->~Component();
       MemoryManager::FreeOnFreeList(comp);
     }
@@ -81,6 +81,7 @@ void Entity::CheckDestroy() {
     while (typeIter != componentTypes.end() && compIter != components.end()) {
       Component* comp = *compIter;
       if (comp->GetAttribute(Component::ComponentAttributes::NEED_DESTROY)) {
+        comp->~Component();
         comp->OnDestroy();
         MemoryManager::FreeOnFreeList(comp);
         components.erase(compIter);
@@ -94,7 +95,7 @@ void Entity::CheckDestroy() {
 }
 
 void Entity::OnDisable() {
-  for (auto comp : components) {
+  for (auto& comp : components) {
     comp->OnDisable();
   }
 }
@@ -116,7 +117,6 @@ Entity::Entity(const std::string& name)
 }
 
 Entity::~Entity() {
-  LOG_INFO(Debug::Channel::Gameplay, "Entity destroyed: %s", entityName.c_str());
   OnDisable();
   Destroy(this);
   CheckDestroy();

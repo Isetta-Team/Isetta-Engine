@@ -32,6 +32,7 @@ void LevelManager::LoadLevel() {
 void LevelManager::UnloadLevel() const {
   if (currentLevel != nullptr) {
     currentLevel->UnloadLevel();
+    currentLevel->~Level();
   }
 }
 

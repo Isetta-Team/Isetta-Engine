@@ -127,7 +127,7 @@ void EngineLoop::VariableUpdate(float deltaTime) {
 }
 
 void EngineLoop::ShutDown() {
-  LevelManager::Instance().currentLevel->UnloadLevel();
+  LevelManager::Instance().UnloadLevel();
   networkingModule->ShutDown();
   audioModule->ShutDown();
   collisionsModule->ShutDown();
