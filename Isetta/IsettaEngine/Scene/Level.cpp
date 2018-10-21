@@ -80,22 +80,22 @@ void Level::GUIUpdate() {
         static Transform* transform = nullptr;
 
         for (const auto& entity : entities) {
-          Func<int, Transform*> countLevel = [](Transform* trans) -> int {
+          Func<int, Transform*> countLevel = [](Transform* t) -> int {
             int i = 0;
-            while (trans->GetParent() != nullptr) {
-              trans = trans->GetParent();
+            while (t->GetParent() != nullptr) {
+              t = t->GetParent();
               i++;
             }
             return i;
           };
 
-          Action<Transform*> action = [&](Transform* tran) {
-            int level = countLevel(tran);
+          Action<Transform*> action = [&](Transform* t) {
+            int level = countLevel(t);
             if (GUI::Button(RectTransform{Math::Rect{
                                 left + level * padding, height,
                                 buttonWidth - level * padding, buttonHeight}},
-                            tran->GetName())) {
-              transform = transform == tran ? nullptr : tran;
+                            t->GetName())) {
+              transform = transform == t ? nullptr : t;
             }
             height += 1.25f * buttonHeight;
           };
