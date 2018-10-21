@@ -296,23 +296,13 @@ void Transform::DrawGUI() {
       "Local Rotation: " + GetLocalEulerAngles().ToString() + "\n" +
       "Local Scale: " + GetLocalScale().ToString() + "\n" +
       "Parent: " + parentName;
+
   GUI::Text(RectTransform{Math::Rect{-200, 360, 300, 100}, GUI::Pivot::TopRight,
                           GUI::Pivot::TopRight},
             content);
 
-  float height = 420;
+  float height = 470;
   float padding = 15;
-  GUI::Text(RectTransform{Math::Rect{-200, height, 300, 100},
-                          GUI::Pivot::TopRight, GUI::Pivot::TopRight},
-            "Components", GUI::TextStyle{Color::white});
-  height += padding;
-  for (const auto& component : entity->GetComponents()) {
-    Component& comp = *component;
-    GUI::Text(RectTransform{Math::Rect{-200, height, 300, 100},
-                            GUI::Pivot::TopRight, GUI::Pivot::TopRight},
-              typeid(comp).name());
-    height += padding;
-  }
   if (GUI::Button(RectTransform{Math::Rect{-200, height, 300, 30},
                                 GUI::Pivot::TopRight, GUI::Pivot::TopRight},
                   "Reset")) {
@@ -320,8 +310,33 @@ void Transform::DrawGUI() {
     SetLocalPos(Math::Vector3::zero);
     SetLocalScale(Math::Vector3::one);
   }
-  DebugDraw::Axis(GetLocalToWorldMatrix());
-  DebugDraw::AxisSphere(GetLocalToWorldMatrix());
+
+  height += 50;
+
+  GUI::Text(RectTransform{Math::Rect{-200, height, 300, 100},
+                          GUI::Pivot::TopRight, GUI::Pivot::TopRight},
+            "Components", GUI::TextStyle{Color::white});
+
+  height += padding;
+
+  for (const auto& component : entity->GetComponents()) {
+    Component& comp = *component;
+    GUI::Text(RectTransform{Math::Rect{-200, height, 300, 100},
+                            GUI::Pivot::TopRight, GUI::Pivot::TopRight},
+              typeid(comp).name());
+    height += padding;
+  }
+
+  Math::Matrix4 temp{};
+  temp.SetTopLeftMatrix3(localRot.GetMatrix3());  // rotation
+  temp.SetCol(3, localPos, 1);
+
+  if (parent != nullptr) {
+    temp = parent->GetLocalToWorldMatrix() * temp;
+  }
+
+  DebugDraw::Axis(temp);
+  DebugDraw::AxisSphere(temp);
 }
 
 const Math::Matrix4& Transform::GetLocalToWorldMatrix() {
