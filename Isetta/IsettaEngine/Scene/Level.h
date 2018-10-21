@@ -22,6 +22,8 @@ class ISETTA_API Level {
 protected:
   std::list<class Entity*> entities;
 public:
+  class Entity* LevelRoot;
+  Level();
   virtual ~Level() = default;
   class Entity* GetEntityByName(const std::string&);
   class std::list<class Entity*> GetEntitiesByName(const std::string&);
@@ -30,6 +32,7 @@ public:
   virtual void UnloadLevel();
 
   class Entity* AddEntity(std::string name);
+  class Entity* AddEntity(std::string name, class Entity* parent);
 
   void Update();
   void GUIUpdate();
