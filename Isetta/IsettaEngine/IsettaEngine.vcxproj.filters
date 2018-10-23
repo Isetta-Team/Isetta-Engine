@@ -244,6 +244,9 @@
     <ClCompile Include="Collisions\Collisions.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
+    <ClCompile Include="Collisions\CollisionHandler.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -517,6 +520,9 @@
       <Filter>Custom</Filter>
     </ClInclude>
     <ClInclude Include="Collisions\Collisions.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\CollisionHandler.h">
       <Filter>Collisions</Filter>
     </ClInclude>
   </ItemGroup>

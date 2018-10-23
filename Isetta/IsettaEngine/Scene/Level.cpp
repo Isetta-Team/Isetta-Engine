@@ -8,6 +8,7 @@
 #include "Graphics/GUI.h"
 #include "Graphics/RectTransform.h"
 #include "Scene/Entity.h"
+#include "Scene/Transform.h"
 
 namespace Isetta {
 

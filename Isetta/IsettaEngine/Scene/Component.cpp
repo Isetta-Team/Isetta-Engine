@@ -31,8 +31,8 @@ bool Component::GetActive() const {
   return GetAttribute(ComponentAttributes::IS_ACTIVE);
 }
 
-Transform& Component::GetTransform() const {
-  return entity->GetTransform();
-}
+Transform& Component::GetTransform() const { return entity->GetTransform(); }
+
+Entity* Component::GetEntity() const { return entity; }
 
 }  // namespace Isetta

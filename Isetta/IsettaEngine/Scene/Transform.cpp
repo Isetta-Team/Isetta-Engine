@@ -264,16 +264,11 @@ void Transform::ForChildren(const Action<Transform*>& action) {
   }
 }
 
-void Transform::ForDescendents(const Action<Transform*>& action) {
+void Transform::ForDescendants(const Action<Transform*>& action) {
   for (auto& child : children) {
     action(child);
-    child->ForDescendents(action);
+    child->ForDescendants(action);
   }
-}
-
-void Transform::ForSelfAndDescendents(const Action<Transform*>& action) {
-  action(this);
-  ForDescendents(action);
 }
 
 void Transform::SetWorldTransform(const Math::Vector3& inPosition,
@@ -406,7 +401,8 @@ void Transform::RemoveChild(Transform* transform) {
 void Transform::SetDirty() {
   // TODO(YIDI): Don't need to traverse all children, if one child is dirty, all
   // children all also dirty
-  ForSelfAndDescendents([](Transform* trans) {
+  isDirty = true;
+  ForDescendants([](Transform* trans) {
     trans->isDirty = true;
     trans->isWorldToLocalDirty = true;
   });

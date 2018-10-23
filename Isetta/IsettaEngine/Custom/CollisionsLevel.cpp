@@ -19,6 +19,7 @@
 #include "Collisions/BoxCollider.h"
 #include "Collisions/CapsuleCollider.h"
 #include "Collisions/Collider.h"
+#include "Collisions/CollisionHandler.h"
 #include "Collisions/SphereCollider.h"
 
 namespace Isetta {
@@ -60,53 +61,55 @@ void CollisionsLevel::LoadLevel() {
   grid->AddComponent<RaycastClick>();
 
   // STATIC
-  Entity* staticCol[3];
+  const int COLLIDERS = 3;
+  Entity* staticCol[COLLIDERS];
 
-  staticCol[0] = AddEntity("collider");
-  staticCol[0]->SetTransform(Math::Vector3{0, 1, 0});
+  staticCol[0] = AddEntity("box-collider");
+  staticCol[0]->SetTransform(Math::Vector3{0, 1, 0}, Math::Vector3{0, 0, 0});
   BoxCollider* bCol = staticCol[0]->AddComponent<BoxCollider>();
   bCol->SetAttribute(ColliderAttribute::IS_STATIC, true);
+  CollisionHandler* handler = staticCol[0]->AddComponent<CollisionHandler>();
+  handler->RegisterOnEnter([](Collider* col) {
+    LOG("collided with " + col->GetEntity()->GetName());
+  });
 
-  staticCol[1] = AddEntity("collider");
+  staticCol[1] = AddEntity("sphere-collider");
   staticCol[1]->SetTransform(Math::Vector3{0, 1, -4});
   SphereCollider* sCol = staticCol[1]->AddComponent<SphereCollider>();
   sCol->SetAttribute(ColliderAttribute::IS_STATIC, true);
 
-  staticCol[2] = AddEntity("collider");
+  staticCol[2] = AddEntity("capsule-collider");
   staticCol[2]->SetTransform(Math::Vector3{0, 1, -8});
   CapsuleCollider* cCol = staticCol[2]->AddComponent<CapsuleCollider>(
       true, false, Math::Vector3::zero, 0.5, 2,
       CapsuleCollider::Direction::X_AXIS);
 
   //// DYNAMIC
-  /*
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < COLLIDERS; i++) {
     Entity* oscillator{AddEntity("oscillator")};
     oscillator->GetTransform().SetParent(&staticCol[i]->GetTransform());
     oscillator->GetTransform().SetLocalPos(7 * Math::Vector3::left);
-    // oscillator->GetTransform().SetLocalPos(7 * Math::Vector3::left +
-    //                                       Math::Vector3::up);
-    oscillator->AddComponent<OscillateMove>(0, 2, -1, 12);
-    // oscillator->AddComponent<KeyTransform>(0.25);
+    oscillator->AddComponent<OscillateMove>(0, 1, -1, 12);
+    oscillator->AddComponent<KeyTransform>(0.25);
 
-    Entity* box{AddEntity("collider")};
+    Entity* box{AddEntity("box-collider" + i)};
     box->GetTransform().SetParent(&oscillator->GetTransform());
     box->GetTransform().SetLocalPos(-2 * Math::Vector3::left);
     box->AddComponent<BoxCollider>();
 
-    Entity* sphere{AddEntity("collider")};
+    Entity* sphere{AddEntity("sphere-collider" + i)};
     sphere->GetTransform().SetParent(&oscillator->GetTransform());
     sphere->GetTransform().SetLocalPos(Math::Vector3::zero);
     sphere->AddComponent<SphereCollider>();
 
     for (int j = 0; j < 3; j++) {
-      Entity* capsule{AddEntity("collider")};
+      Entity* capsule{AddEntity("capsule-collider" + i + j)};
       capsule->GetTransform().SetParent(&oscillator->GetTransform());
       capsule->GetTransform().SetLocalPos(3 * (j + 1) * Math::Vector3::left);
+      capsule->GetTransform().SetLocalRot(-30 * Math::Vector3::up);
       CapsuleCollider* col = capsule->AddComponent<CapsuleCollider>(
           0.5, 2, static_cast<CapsuleCollider::Direction>(j));
     }
   }
-  */
 }
 }  // namespace Isetta

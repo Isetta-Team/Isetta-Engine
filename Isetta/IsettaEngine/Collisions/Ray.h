@@ -5,21 +5,30 @@
 #include "Core/Math/Vector3.h"
 
 namespace Isetta {
-class Ray {
- private:
+class Line {
+ protected:
   Math::Vector3 origin, direction;
 
  public:
-  Ray(const Math::Vector3& origin, const Math::Vector3& direction)
-      : origin{origin}, direction{direction.Normalized()} {}
+  Line(const Math::Vector3& origin, const Math::Vector3& direction)
+      : origin{origin}, direction{direction} {}
 
   inline Math::Vector3 GetOrigin() const { return origin; }
   inline Math::Vector3 GetDirection() const { return direction; }
   inline void SetOrigin(Math::Vector3 o) { origin = o; }
-  inline void SetDirection(Math::Vector3 d) { direction = d.Normalized(); }
-
+  inline virtual void SetDirection(Math::Vector3 d) { direction = d; }
   inline Math::Vector3 GetPoint(float distance) const {
     return origin + distance * direction;
+  }
+};
+
+class Ray : public Line {
+ public:
+  Ray(const Math::Vector3& origin, const Math::Vector3& direction)
+      : Line(origin, direction.Normalized()) {}
+
+  inline void SetDirection(Math::Vector3 d) override {
+    direction = d.Normalized();
   }
 };
 
@@ -33,7 +42,6 @@ class RaycastHit {
              Math::Vector3 normal)
       : collider{collider}, distance{distance}, point{point}, normal{normal} {}
 
-  // friend CollisionsModule? Collider?
  public:
   inline class Collider* GetCollider() { return collider; }
   inline float GetDistance() { return distance; }

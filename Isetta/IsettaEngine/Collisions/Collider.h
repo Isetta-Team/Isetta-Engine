@@ -54,6 +54,14 @@ class Collider : public Component {
 
  private:
   std::bitset<2> attributes;
+  class CollisionHandler* handler{nullptr};
+
+  inline class CollisionHandler* GetHandler() { return handler; }
+  inline void SetHandler(class CollisionHandler* const h) { handler = h; }
+
+  static class CollisionsModule* collisionsModule;
+  friend class CollisionsModule;
+  friend class CollisionHandler;
 
  protected:
   AABB* bounding;
@@ -81,8 +89,5 @@ class Collider : public Component {
   virtual bool Intersection(Collider* const other) = 0;
   void RaycastHitCtor(class RaycastHit* const hitInfo, float distance,
                       const Math::Vector3& point, const Math::Vector3& normal);
-
-  static class CollisionsModule* collisionsModule;
-  friend class CollisionsModule;
 };
 }  // namespace Isetta

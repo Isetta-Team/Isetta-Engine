@@ -15,6 +15,7 @@
 #include "Collisions/BoxCollider.h"
 #include "Collisions/CapsuleCollider.h"
 #include "Collisions/Collider.h"
+#include "Collisions/CollisionHandler.h"
 #include "Collisions/Collisions.h"
 #include "Collisions/SphereCollider.h"
 
@@ -44,15 +45,18 @@ void CollisionsModule::Update(float deltaTime) {
     if (colliders[i]->GetAttribute(Collider::Attributes::IS_STATIC)) continue;
     for (int j = 0; j < colliders.size(); j++) {
       if (colliders[i] == colliders[j]) continue;
+      CollisionHandler *handlerI = colliders[i]->GetHandler();
+      CollisionHandler *handlerJ = colliders[j]->GetHandler();
+      if (handlerI && handlerJ && handlerI == handlerJ) continue;
       if (colliders[i]->Intersection(colliders[j])) {
         if (collisionPairs.find(CollisionPair(i, j)) != collisionPairs.end()) {
           // TODO(Jacob) Collision Stay
-          OnCollisionStay(colliders[i]);
-          OnCollisionStay(colliders[j]);
+          if (handlerI) handlerI->OnCollisionStay(colliders[j]);
+          if (handlerJ) handlerJ->OnCollisionStay(colliders[i]);
         } else {
           // TODO(Jacob) Collision Enter
-          OnCollisionEnter(colliders[i]);
-          OnCollisionEnter(colliders[j]);
+          if (handlerI) handlerI->OnCollisionEnter(colliders[j]);
+          if (handlerJ) handlerJ->OnCollisionEnter(colliders[i]);
           collisionPairs.insert(CollisionPair(i, j));
           // TODO(Jacob) remove
           if (collisions.find(i) != collisions.end()) {
@@ -72,8 +76,8 @@ void CollisionsModule::Update(float deltaTime) {
       } else if (collisionPairs.find(CollisionPair(i, j)) !=
                  collisionPairs.end()) {
         // TODO(Jacob) Collision Exit
-        OnCollisionExit(colliders[i]);
-        OnCollisionExit(colliders[j]);
+        if (handlerI) handlerI->OnCollisionExit(colliders[j]);
+        if (handlerJ) handlerJ->OnCollisionExit(colliders[i]);
         collisionPairs.erase(CollisionPair(i, j));
         // TODO(Jacob) remove
         collisions[i]--;
@@ -91,21 +95,6 @@ void CollisionsModule::Update(float deltaTime) {
 }
 
 void CollisionsModule::ShutDown() {}
-
-void CollisionsModule::OnCollisionEnter(Collider *const collider) {
-  for (auto component : collider->entity->GetComponents<Component>()) {
-  }
-}
-
-void CollisionsModule::OnCollisionStay(Collider *const collider) {
-  for (auto component : collider->entity->GetComponents<Component>()) {
-  }
-}
-
-void CollisionsModule::OnCollisionExit(Collider *const collider) {
-  for (auto component : collider->entity->GetComponents<Component>()) {
-  }
-}
 
 bool CollisionsModule::Intersection(const BoxCollider &a,
                                     const BoxCollider &b) {
@@ -216,7 +205,6 @@ bool CollisionsModule::Intersection(const BoxCollider &box,
 }
 bool CollisionsModule::Intersection(const BoxCollider &box,
                                     const CapsuleCollider &capsule) {
-  return false;
   Math::Matrix4 rot, scale;
   float radiusScale = capsule.GetWorldCapsule(&rot, &scale);
   Math::Vector3 dir = (Math::Vector3)(
@@ -225,9 +213,20 @@ bool CollisionsModule::Intersection(const BoxCollider &box,
       Math::Vector4{0, 1, 0, 0});
   Math::Vector3 p0 = capsule.GetWorldCenter() - dir;
   Math::Vector3 p1 = capsule.GetWorldCenter() + dir;
-
   return SqDistSegmentOBB(p0, p1, box) <=
          Math::Util::Square(capsule.radius * radiusScale);
+
+  // Not working
+  // Math::Vector3 localP0 = box.GetTransform().LocalPosFromWorldPos(p0);
+  // Math::Vector3 localP1 = box.GetTransform().LocalPosFromWorldPos(p1);
+
+  // float t;
+  // bool intersect =
+  //    CapsuleAABBIntersect(localP0, localP1, capsule.radius * radiusScale,
+  //                         box.GetWorldExtents(), &t);
+  // t = Math::Util::Clamp01(t);
+  // DebugDraw::Point(p0 + t * (p1 - p0), Color::magenta, 10, 0.1, false);
+  // return intersect;
 }
 bool CollisionsModule::Intersection(const SphereCollider &a,
                                     const SphereCollider &b) {
@@ -352,20 +351,23 @@ float CollisionsModule::SqDistPointOBB(const Math::Vector3 &point,
 float CollisionsModule::SqDistSegmentOBB(const Math::Vector3 &p0,
                                          const Math::Vector3 &p1,
                                          const BoxCollider &box) {
-  Ray ray = Ray{p0, p1 - p0};
-  // Ray ray = Ray{q0, q1 - q0};
+  Line line = Line{p0, p1 - p0};
+  // Line line = Line{p0, p1 - p0};
   float t, distSq;
-  Math::Vector3 pt = ClosestPtRayOBB(ray, box, &t, &distSq);
-  DebugDraw::Point(pt, Color::red, 20, 0.1, false);
-  LOG_INFO(Debug::Channel::Collisions, "(%f)", t);
+  Math::Vector3 pt = ClosestPtLineOBB(line, box, &t, &distSq);
+  // DebugDraw::Point(pt, Color::red, 20, 0.1, false);
+  // LOG_INFO(Debug::Channel::Collisions, "(%f)", t);
   // LOG_INFO(Debug::Channel::Collisions, "(%f, %f, %f)", pt.x, pt.y, pt.z);
   if (t < 0) {
     distSq = SqDistPointOBB(p0, box);
-    DebugDraw::Point(p0, Color::white, 20, 0.1, false);
+    // DebugDraw::Point(p0, Color::white, 20, 0.1, false);
   } else if (t > 1) {
     distSq = SqDistPointOBB(p1, box);
-    DebugDraw::Point(p1, Color::white, 20, 0.1, false);
+    // DebugDraw::Point(p1, Color::white, 20, 0.1, false);
   }
+  // else {
+  //  DebugDraw::Point(line.GetPoint(t), Color::white, 20, 0.1, false);
+  //}
   return distSq;
 }
 Math::Vector3 CollisionsModule::ClosestPtPointSegment(
@@ -527,34 +529,33 @@ Math::Vector3 CollisionsModule::ClosestPtPointOBB(const Math::Vector3 &point,
   }
   return pt;
 }
-Math::Vector3 CollisionsModule::ClosestPtRayOBB(const Ray &ray,
-                                                const BoxCollider &box,
-                                                float *_t, float *_distSq) {
-  Math::Vector3 o = box.GetTransform().LocalPosFromWorldPos(ray.GetOrigin());
-  // Math::Vector3 o = ray.GetOrigin();
+Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
+                                                 const BoxCollider &box,
+                                                 float *_t, float *_distSq) {
+  Math::Vector3 o = box.GetTransform().LocalPosFromWorldPos(line.GetOrigin());
   Math::Vector3 dir =
-      box.GetTransform().LocalDirFromWorldDir(ray.GetDirection());
-  // Math::Vector3 dir = ray.GetDirection();
+      box.GetTransform().LocalDirFromWorldDir(line.GetDirection());
   float &t = *_t;
   float &distSq = *_distSq;
   distSq = 0;
 
   int perp = 0;
   for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
-    if (Math::Vector3::Dot(dir, box.GetTransform().GetAxis(i)) <
-        Math::Util::EPSILON)
+    if (Math::Util::Abs(Math::Vector3::Dot(
+            dir, Math::Matrix3::identity.GetRow(i))) < Math::Util::EPSILON)
       perp++;
   }
   switch (perp) {
     case 3:
-      LOG_INFO(Debug::Channel::Collisions, "Case 3");
+      // LOG_INFO(Debug::Channel::Collisions, "Case 3");
       distSq = t = 0;
-      return ClosestPtPointOBB(ray.GetOrigin(), box);
+      return ClosestPtPointOBB(line.GetOrigin(), box);
     case 2: {
-      LOG_INFO(Debug::Channel::Collisions, "Case 2");
+      // LOG_INFO(Debug::Channel::Collisions, "Case 2");
       int x = -1;
       for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
-        if (Math::Vector3::Dot(dir, box.GetTransform().GetAxis(i)) >
+        if (Math::Util::Abs(
+                Math::Vector3::Dot(dir, Math::Matrix3::identity.GetRow(i))) >
             Math::Util::EPSILON) {
           x = i;
           break;
@@ -563,7 +564,7 @@ Math::Vector3 CollisionsModule::ClosestPtRayOBB(const Ray &ray,
       int y = (x + 1) % Math::Vector3::ELEMENT_COUNT,
           z = (x + 2) % Math::Vector3::ELEMENT_COUNT;
 
-      Math::Vector3 extents = 0.5f * box.GetWorldSize();
+      Math::Vector3 extents = box.GetWorldExtents();
       Math::Vector3 pt;
       pt[x] = o[x] < 0 ? -extents[x] : extents[x];
       pt[y] = o[y];
@@ -576,7 +577,7 @@ Math::Vector3 CollisionsModule::ClosestPtRayOBB(const Ray &ray,
       } else if (o[y] > extents[y]) {
         float delta = o[y] - extents[y];
         distSq += delta * delta;
-        o[y] = extents[y];
+        pt[y] = extents[y];
       }
 
       if (o[z] < -extents[z]) {
@@ -589,16 +590,14 @@ Math::Vector3 CollisionsModule::ClosestPtRayOBB(const Ray &ray,
         pt[z] = extents[z];
       }
       // dist = 0 means intersection
-      return box.GetTransform().WorldPosFromLocalPos(pt);  // TODO test
-      // return pt;
-      // +box.GetWorldCenter();
-      // return pt + box.GetWorldCenter();
+      return box.GetTransform().WorldPosFromLocalPos(pt);
     }
     case 1: {
-      LOG_INFO(Debug::Channel::Collisions, "Case 1");
+      // LOG_INFO(Debug::Channel::Collisions, "Case 1");
       int z = -1;
       for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
-        if (Math::Vector3::Dot(dir, box.GetTransform().GetAxis(i)) <
+        if (Math::Util::Abs(
+                Math::Vector3::Dot(dir, Math::Matrix3::identity.GetRow(i))) <
             Math::Util::EPSILON) {
           z = i;
           break;
@@ -607,49 +606,12 @@ Math::Vector3 CollisionsModule::ClosestPtRayOBB(const Ray &ray,
       int x = (z + 1) % Math::Vector3::ELEMENT_COUNT,
           y = (z + 2) % Math::Vector3::ELEMENT_COUNT;
 
-      Math::Vector3 extents = 0.5f * box.GetWorldSize();
+      Math::Vector3 extents = box.GetWorldExtents();
       Math::Vector3 minusExtents = o - extents;
-      float p0 = dir[y] * minusExtents[x];
-      float p1 = dir[x] * minusExtents[y];
+      float prod0 = dir[y] * minusExtents[x];
+      float prod1 = dir[x] * minusExtents[y];
       Math::Vector3 pt;
       pt[z] = o[z];
-      if (p0 >= p1) {
-        // x-axis
-        pt[x] = extents[x];
-        float tmp = o[y] + extents[y];
-        float delta = p0 - dir[x] * tmp;
-        if (delta >= 0) {
-          // no intersection
-          float invLSq = 1.0f / (dir[x] * dir[x] + dir[y] * dir[y]);
-          distSq += delta * delta * invLSq;
-
-          pt[y] = -extents[y];
-          t = -(dir[x] * minusExtents[x] * dir[y] + tmp) * invLSq;
-        } else {
-          float inv = 1.0f / dir[x];
-          pt[y] = o[y] - (p0 * inv);  // TODO might be wrong
-          t = -minusExtents[x] * inv;
-          distSq = 0;
-        }
-      } else {
-        // y-axis
-        pt[y] = extents[y];
-        float tmp = o[x] + extents[x];
-        float delta = p1 - dir[y] * tmp;
-        if (delta >= 0) {
-          // no intersection
-          float invLSq = 1.0f / (dir[x] * dir[x] + dir[y] * dir[y]);
-          distSq += delta * delta * invLSq;
-
-          pt[y] = -extents[y];
-          t = -(dir[y] * minusExtents[y] * dir[x] + tmp) * invLSq;
-        } else {
-          float inv = 1.0f / dir[y];
-          pt[y] = o[y] - (p0 * inv);  // TODO might be wrong
-          t = -minusExtents[y] * inv;
-          distSq = 0;
-        }
-      }
 
       if (o[z] < -extents[z]) {
         float delta = o[z] + extents[z];
@@ -661,79 +623,98 @@ Math::Vector3 CollisionsModule::ClosestPtRayOBB(const Ray &ray,
         pt[z] = extents[z];
       }
 
-      DebugDraw::Point(pt, Color::brown, 10, .1, false);
-      // distSq
+      Ray r{o, dir};
+      Math::Vector3 p0{}, p1{};
+      p0[x] = o[x] < 0 ? -extents[x] : extents[x];
+      p0[y] = o[y] < 0 ? -extents[y] : extents[y];
+
+      p0[z] = pt[z];
+      distSq = INFINITY;
+      // TODO(Jacob) could be optimized maybe
+      for (int i = 0; i < 2; i++) {
+        p1 = p0;
+        float tRay, tSeg;
+        Math::Vector3 ptRay, ptSeg;
+        p1[(x + i) % 3] = -p0[(x + i) % 3];
+        float dist =
+            ClosestPtRaySegment(r, p0, p1, &tRay, &tSeg, &ptRay, &ptSeg);
+        if (dist < distSq) {
+          t = tRay;
+          pt = ptSeg;
+          distSq = dist;
+        }
+      }
+      t /= line.GetDirection().Magnitude();
       return box.GetTransform().WorldPosFromLocalPos(pt);
-      // return pt;
     }
-    case 0: {
-      LOG_INFO(Debug::Channel::Collisions, "Case 0");
-      Math::Vector3 extents = 0.5f * box.GetWorldSize();
+    case 0: {  // assuming line is positive
+      // LOG_INFO(Debug::Channel::Collisions, "Case 0");
+      // TODO(Jacob) does not work in completeness
+      // http://lib.ysu.am/open_books/312121.pdf p 450/487 - 465/502
+      Math::Vector3 extents = box.GetWorldExtents();
       Math::Vector3 minusExtents = o - extents;
       float dyEx = dir.y * minusExtents.x;
       float dxEy = dir.x * minusExtents.y;
 
-      Math::Vector3 pt;
-      Ray r = Ray{o, dir};
+      Math::Vector3 pt = extents;
       if (dyEx >= dxEy) {
         float dzEx = dir.z * minusExtents.x;
         float dxEz = dir.x * minusExtents.z;
 
-        if (dzEx >= dxEz) {
-          pt = Face(0, r, box, minusExtents, &t, &distSq);
-        } else {
-          pt = Face(2, r, box, minusExtents, &t, &distSq);
+        if (dzEx >= dxEz) {  // line intersects x = box.extent.x plane
+          pt = Face(0, Line{o, dir}, box, minusExtents, &t, &distSq);
+        } else {  // line intersects z = box.extent.z plane
+          pt = Face(2, Line{o, dir}, box, minusExtents, &t, &distSq);
         }
       } else {
         float dzEy = dir.z * minusExtents.y;
         float dyEz = dir.y * minusExtents.z;
 
-        if (dzEy >= dyEz) {
-          pt = Face(1, r, box, minusExtents, &t, &distSq);
-        } else {
-          pt = Face(2, r, box, minusExtents, &t, &distSq);
+        if (dzEy >= dyEz) {  // line intersects y = box.extent.y plane
+          pt = Face(1, Line{o, dir}, box, minusExtents, &t, &distSq);
+        } else {  // line intersects z = box.extent.z plane
+          pt = Face(2, Line{o, dir}, box, minusExtents, &t, &distSq);
         }
       }
-      // distSq;
-      return pt;
+      return box.GetTransform().WorldPosFromLocalPos(pt);
     }
   };
-}  // namespace Isetta
-Math::Vector3 CollisionsModule::Face(int x, const Ray &ray,
+}
+Math::Vector3 CollisionsModule::Face(int x, const Line &line,
                                      const BoxCollider &box,
                                      const Math::Vector3 &minusExtents,
                                      float *_t, float *_distSq) {
   int y = (x + 1) % Math::Vector3::ELEMENT_COUNT,
       z = (x + 2) % Math::Vector3::ELEMENT_COUNT;
   float &t = *_t, &distSq = *_distSq;
-  Math::Vector3 pt = ray.GetOrigin();
+  Math::Vector3 pt = line.GetOrigin();
   distSq = 0;
 
   Math::Vector3 extents = 0.5 * box.GetWorldSize();
-  Math::Vector3 plusExtents = ray.GetOrigin() + extents;
+  Math::Vector3 plusExtents = line.GetOrigin() + extents;
 
-  if (ray.GetDirection()[x] * plusExtents[y] >=
-      ray.GetDirection()[y] * minusExtents[x]) {  // region 0, 5, or 4
-    if (ray.GetDirection().x * plusExtents[z] >=
-        ray.GetDirection()[z] * minusExtents[x]) {  // region 0
+  if (line.GetDirection()[x] * plusExtents[y] >=
+      line.GetDirection()[y] * minusExtents[x]) {  // region 0, 5, or 4
+    if (line.GetDirection()[x] * plusExtents[z] >=
+        line.GetDirection()[z] * minusExtents[x]) {  // region 0
       pt[x] = extents[x];
-      float inv = 1.0f / ray.GetDirection()[x];
-      pt[y] -= ray.GetDirection()[y] * minusExtents[x] * inv;
-      pt[z] -= ray.GetDirection()[z] * minusExtents[x] * inv;
+      float inv = 1.0f / line.GetDirection()[x];
+      pt[y] -= line.GetDirection()[y] * minusExtents[x] * inv;
+      pt[z] -= line.GetDirection()[z] * minusExtents[x] * inv;
       t = -minusExtents[x] * inv;  // todo what?
     } else {                       // region 4 or 5
-      float lSqr = ray.GetDirection()[x] * ray.GetDirection()[x] +
-                   ray.GetDirection()[z] * ray.GetDirection()[z];
+      float lSqr = line.GetDirection()[x] * line.GetDirection()[x] +
+                   line.GetDirection()[z] * line.GetDirection()[z];
       float tmp =
           lSqr * plusExtents[y] -
-          ray.GetDirection()[y] * (ray.GetDirection()[x] * minusExtents[x] +
-                                   ray.GetDirection()[z] * plusExtents[z]);
+          line.GetDirection()[y] * (line.GetDirection()[x] * minusExtents[x] +
+                                    line.GetDirection()[z] * plusExtents[z]);
       if (tmp <= 2 * lSqr * extents[y]) {  // region 4
         tmp = plusExtents[y] - (tmp / lSqr);
-        lSqr += ray.GetDirection()[y] * ray.GetDirection()[y];
-        float delta = ray.GetDirection()[x] * minusExtents[x] +
-                      ray.GetDirection()[y] * tmp +
-                      ray.GetDirection()[z] * plusExtents[z];
+        lSqr += line.GetDirection()[y] * line.GetDirection()[y];
+        float delta = line.GetDirection()[x] * minusExtents[x] +
+                      line.GetDirection()[y] * tmp +
+                      line.GetDirection()[z] * plusExtents[z];
         t = -delta / lSqr;
         distSq += minusExtents[x] * minusExtents[x] + tmp * tmp +
                   plusExtents[z] * plusExtents[z] + delta * t;
@@ -741,10 +722,10 @@ Math::Vector3 CollisionsModule::Face(int x, const Ray &ray,
         pt[y] = t - extents[y];
         pt[z] = -extents[z];
       } else {  // region 5
-        lSqr += ray.GetDirection()[y] * ray.GetDirection()[y];
-        float delta = ray.GetDirection()[x] * minusExtents[x] +
-                      ray.GetDirection()[y] * minusExtents[y] +
-                      ray.GetDirection()[z] * plusExtents[z];
+        lSqr += line.GetDirection()[y] * line.GetDirection()[y];
+        float delta = line.GetDirection()[x] * minusExtents[x] +
+                      line.GetDirection()[y] * minusExtents[y] +
+                      line.GetDirection()[z] * plusExtents[z];
         t = -delta / lSqr;
         distSq += minusExtents[x] * minusExtents[x] +
                   minusExtents[y] * minusExtents[y] +
@@ -755,31 +736,31 @@ Math::Vector3 CollisionsModule::Face(int x, const Ray &ray,
       }
     }
   } else {  // region 1 or 2
-    if (ray.GetDirection()[x] * plusExtents[z] >=
-        ray.GetDirection()[z] * minusExtents[x]) {
-      float lSqr = ray.GetDirection()[x] * ray.GetDirection()[x] +
-                   ray.GetDirection()[y] * ray.GetDirection()[y];
-      float tmp =
-          lSqr * plusExtents[z] -
-          ray.GetDirection()[z] * (ray.GetDirection()[x] * minusExtents[x] +
-                                   ray.GetDirection()[y] * plusExtents[y]);
-      if (tmp <= 2 * lSqr * extents[z]) {  // region 2
+    if (line.GetDirection()[x] * plusExtents[z] >=
+        line.GetDirection()[z] * minusExtents[x]) {
+      float lSqr = line.GetDirection()[x] * line.GetDirection()[x] +
+                   line.GetDirection()[y] * line.GetDirection()[y];
+      float tmp = lSqr * plusExtents[z] -
+                  line.GetDirection()[z] *
+                      (line.GetDirection()[x] * minusExtents[x] +
+                       line.GetDirection()[y] * plusExtents[y]);  // todo what?
+      if (tmp <= 2 * lSqr * extents[z]) {                         // region 2
         tmp = plusExtents[z] - (tmp / lSqr);
-        lSqr += ray.GetDirection()[z] * ray.GetDirection()[z];
-        float delta = ray.GetDirection()[x] * minusExtents[x] +
-                      ray.GetDirection()[y] * plusExtents[y] +
-                      ray.GetDirection()[z] * tmp;
+        lSqr += line.GetDirection()[z] * line.GetDirection()[z];
+        float delta = line.GetDirection()[x] * minusExtents[x] +
+                      line.GetDirection()[y] * plusExtents[y] +
+                      line.GetDirection()[z] * tmp;
         t = -delta / lSqr;
         distSq += minusExtents[x] * minusExtents[x] +
                   minusExtents[y] * minusExtents[y] + tmp * tmp + delta * t;
         pt[x] = extents[x];
         pt[y] = -extents[y];
-        pt[z] = -extents[z];
+        pt[z] = t - extents[z];
       } else {  // region 1
-        lSqr += ray.GetDirection()[z] * ray.GetDirection()[z];
-        float delta = ray.GetDirection()[x] * minusExtents[x] +
-                      ray.GetDirection()[y] * minusExtents[y] +
-                      ray.GetDirection()[z] * plusExtents[z];
+        lSqr += line.GetDirection()[z] * line.GetDirection()[z];
+        float delta = line.GetDirection()[x] * minusExtents[x] +
+                      line.GetDirection()[y] * minusExtents[y] +
+                      line.GetDirection()[z] * plusExtents[z];
         t = -delta / lSqr;
         distSq += minusExtents[x] * minusExtents[x] +
                   plusExtents[y] * plusExtents[y] +
@@ -789,19 +770,19 @@ Math::Vector3 CollisionsModule::Face(int x, const Ray &ray,
         pt[z] = extents[z];
       }
     } else {
-      float lSqr = ray.GetDirection()[x] * ray.GetDirection()[x] +
-                   ray.GetDirection()[z] * ray.GetDirection()[z];
+      float lSqr = line.GetDirection()[x] * line.GetDirection()[x] +
+                   line.GetDirection()[z] * line.GetDirection()[z];
       float tmp =
           lSqr * plusExtents[y] -
-          ray.GetDirection()[y] * (ray.GetDirection()[x] * minusExtents[x] +
-                                   ray.GetDirection()[z] * plusExtents[z]);
+          line.GetDirection()[y] * (line.GetDirection()[x] * minusExtents[x] +
+                                    line.GetDirection()[z] * plusExtents[z]);
       if (tmp >= 0) {                        // region 4 or 5 -- copied
         if (tmp <= 2 * lSqr * extents[z]) {  // region 4 -- copied
           tmp = plusExtents[y] - (tmp / lSqr);
-          lSqr += ray.GetDirection()[y] * ray.GetDirection()[y];
-          float delta = ray.GetDirection()[x] * minusExtents[x] +
-                        ray.GetDirection()[y] * tmp +
-                        ray.GetDirection()[z] * plusExtents[z];
+          lSqr += line.GetDirection()[y] * line.GetDirection()[y];
+          float delta = line.GetDirection()[x] * minusExtents[x] +
+                        line.GetDirection()[y] * tmp +
+                        line.GetDirection()[z] * plusExtents[z];
           t = -delta / lSqr;
           distSq += minusExtents[x] * minusExtents[x] + tmp * tmp +
                     plusExtents[z] * plusExtents[z] + delta * t;
@@ -809,10 +790,10 @@ Math::Vector3 CollisionsModule::Face(int x, const Ray &ray,
           pt[y] = t - extents[y];
           pt[z] = -extents[z];
         } else {  // region 5 -- copied
-          lSqr += ray.GetDirection()[y] * ray.GetDirection()[y];
-          float delta = ray.GetDirection()[x] * minusExtents[x] +
-                        ray.GetDirection()[y] * minusExtents[y] +
-                        ray.GetDirection()[z] * plusExtents[z];
+          lSqr += line.GetDirection()[y] * line.GetDirection()[y];
+          float delta = line.GetDirection()[x] * minusExtents[x] +
+                        line.GetDirection()[y] * minusExtents[y] +
+                        line.GetDirection()[z] * plusExtents[z];
           t = -delta / lSqr;
           distSq += minusExtents[x] * minusExtents[x] +
                     minusExtents[y] * minusExtents[y] +
@@ -823,30 +804,30 @@ Math::Vector3 CollisionsModule::Face(int x, const Ray &ray,
         }
       }
 
-      lSqr = ray.GetDirection()[x] * ray.GetDirection()[x] +
-             ray.GetDirection()[y] * ray.GetDirection()[y];
+      lSqr = line.GetDirection()[x] * line.GetDirection()[x] +
+             line.GetDirection()[y] * line.GetDirection()[y];
       tmp = lSqr * plusExtents[z] -
-            ray.GetDirection()[z] * (ray.GetDirection()[x] * minusExtents[x] +
-                                     ray.GetDirection()[y] * plusExtents[y]);
+            line.GetDirection()[z] * (line.GetDirection()[x] * minusExtents[x] +
+                                      line.GetDirection()[y] * plusExtents[y]);
 
       if (tmp >= 0) {                        // region 1 or 2 -- copied
         if (tmp <= 2 * lSqr * extents[z]) {  // region 2 -- copied
           tmp = plusExtents[z] - (tmp / lSqr);
-          lSqr += ray.GetDirection()[z] * ray.GetDirection()[z];
-          float delta = ray.GetDirection()[x] * minusExtents[x] +
-                        ray.GetDirection()[y] * plusExtents[y] +
-                        ray.GetDirection()[z] * tmp;
+          lSqr += line.GetDirection()[z] * line.GetDirection()[z];
+          float delta = line.GetDirection()[x] * minusExtents[x] +
+                        line.GetDirection()[y] * plusExtents[y] +
+                        line.GetDirection()[z] * tmp;
           t = -delta / lSqr;
           distSq += minusExtents[x] * minusExtents[x] +
                     minusExtents[y] * minusExtents[y] + tmp * tmp + delta * t;
           pt[x] = extents[x];
           pt[y] = -extents[y];
-          pt[z] = -extents[z];
+          pt[z] = t - extents[z];
         } else {  // region 1 -- copied
-          lSqr += ray.GetDirection()[z] * ray.GetDirection()[z];
-          float delta = ray.GetDirection()[x] * minusExtents[x] +
-                        ray.GetDirection()[y] * minusExtents[y] +
-                        ray.GetDirection()[z] * plusExtents[z];
+          lSqr += line.GetDirection()[z] * line.GetDirection()[z];
+          float delta = line.GetDirection()[x] * minusExtents[x] +
+                        line.GetDirection()[y] * minusExtents[y] +
+                        line.GetDirection()[z] * plusExtents[z];
           t = -delta / lSqr;
           distSq += minusExtents[x] * minusExtents[x] +
                     plusExtents[y] * plusExtents[y] +
@@ -858,10 +839,10 @@ Math::Vector3 CollisionsModule::Face(int x, const Ray &ray,
         return pt;
       }
       // region 3
-      lSqr += ray.GetDirection()[y] * ray.GetDirection()[y];
-      float delta = ray.GetDirection()[x] * minusExtents[x] +
-                    ray.GetDirection()[y] * plusExtents[y] +
-                    ray.GetDirection()[z] * plusExtents[z];
+      lSqr += line.GetDirection()[y] * line.GetDirection()[y];
+      float delta = line.GetDirection()[x] * minusExtents[x] +
+                    line.GetDirection()[y] * plusExtents[y] +
+                    line.GetDirection()[z] * plusExtents[z];
       t = -delta / lSqr;
       distSq += minusExtents[x] * minusExtents[x] +
                 plusExtents[y] * plusExtents[y] +
@@ -872,15 +853,221 @@ Math::Vector3 CollisionsModule::Face(int x, const Ray &ray,
       return pt;
     }
   }
-  return Math::Vector3();
+  return pt;
+}
+bool CollisionsModule::CapsuleAABBIntersect(const Math::Vector3 &start,
+                                            const Math::Vector3 &end,
+                                            const float radius,
+                                            const Math::Vector3 &extents,
+                                            float *t) {
+  // Does not work completely
+  return false;
+  // Youtube video on the topic:
+  // https://www.youtube.com/watch?v=fa0gz0t61oA&t=971s
+  // Youtube video on the
+  // topic: https://www.youtube.com/watch?v=1OVZDeqkBvU&t=955s
+  Math::Vector3 to = end - start;
+  Math::Vector3 denom = 1.0f / to;
+  Math::Vector3 cneg = Math::Vector3::Scale(
+      (-extents - radius * Math::Vector3::one - start), denom);
+  Math::Vector3 cpos = Math::Vector3::Scale(
+      (extents + radius * Math::Vector3::one - start), denom);
+
+  Math::Vector3 ineg[Math::Vector3::ELEMENT_COUNT];
+  Math::Vector3 ipos[Math::Vector3::ELEMENT_COUNT];
+  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
+    ineg[i] = cneg[i] * to + start;
+    ipos[i] = cpos[i] * to + start;
+  }
+
+  for (int x = 0; x < Math::Vector3::ELEMENT_COUNT; x++) {
+    int y = (x + 1) % 3;
+    int z = (x + 2) % 3;
+    if (Math::Util::Abs(ineg[x][y]) > extents[y] ||
+        Math::Util::Abs(ineg[x][z]) > extents[z]) {
+      cneg[x] = INFINITY;
+    }
+    if (Math::Util::Abs(ipos[x][y]) > extents[y] ||
+        Math::Util::Abs(ipos[x][z]) > extents[z]) {
+      cpos[x] = INFINITY;
+    }
+  }
+
+  Math::Vector3 c;
+  float s;
+
+  // 8 points
+  // 12 lines
+  // 6 faces
+
+  float line[12];
+  float point[8];
+  Math::Vector3 face[4] = {Math::Vector3{1, 1, 0}, Math::Vector3{1, 0, 1},
+                           Math::Vector3{0, 1, 1}, Math::Vector3::one};
+
+  // lines
+  line[0] = INFINITY;
+  c = Math::Vector3{-extents.x, extents.y, 0};
+  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[0], &s))
+    line[0] = s;
+
+  line[1] = INFINITY;
+  c = Math::Vector3{extents.x, extents.y, 0};
+  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[0], &s))
+    line[1] = s;
+
+  line[2] = INFINITY;
+  c = Math::Vector3{0, extents.y, -extents.z};
+  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[2], &s))
+    line[2] = s;
+
+  line[3] = INFINITY;
+  c = Math::Vector3{0, extents.y, extents.z};
+  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[2], &s))
+    line[3] = s;
+
+  line[4] = INFINITY;
+  c = Math::Vector3{-extents.x, -extents.y, 0};
+  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[0], &s))
+    line[4] = s;
+
+  line[5] = INFINITY;
+  c = Math::Vector3{extents.x, -extents.y, 0};
+  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[0], &s))
+    line[5] = s;
+
+  line[6] = INFINITY;
+  c = Math::Vector3{0, -extents.y, -extents.z};
+  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[2], &s))
+    line[6] = s;
+
+  line[7] = INFINITY;
+  c = Math::Vector3{0, -extents.y, extents.z};
+  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[2], &s))
+    line[7] = s;
+
+  line[8] = INFINITY;
+  c = Math::Vector3{extents.x, 0, extents.z};
+  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[1], &s))
+    line[8] = s;
+
+  line[9] = INFINITY;
+  c = Math::Vector3{extents.x, 0, -extents.z};
+  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[1], &s))
+    line[9] = s;
+
+  line[10] = INFINITY;
+  c = Math::Vector3{-extents.x, 0, extents.z};
+  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[1], &s))
+    line[10] = s;
+
+  line[11] = INFINITY;
+  c = Math::Vector3{-extents.x, 0, -extents.z};
+  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[1], &s))
+    line[11] = s;
+
+  // points
+  point[0] = INFINITY;
+  c = Math::Vector3{extents.x, extents.y, extents.z};
+  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
+    point[0] = s;
+
+  point[1] = INFINITY;
+  c = Math::Vector3{extents.x, extents.y, -extents.z};
+  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
+    point[1] = s;
+
+  point[2] = INFINITY;
+  c = Math::Vector3{extents.x, -extents.y, extents.z};
+  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
+    point[2] = s;
+
+  point[3] = INFINITY;
+  c = Math::Vector3{extents.x, -extents.y, -extents.z};
+  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
+    point[3] = s;
+
+  point[4] = INFINITY;
+  c = Math::Vector3{-extents.x, extents.y, extents.z};
+  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
+    point[4] = s;
+
+  point[5] = INFINITY;
+  c = Math::Vector3{-extents.x, extents.y, -extents.z};
+  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
+    point[5] = s;
+
+  point[6] = INFINITY;
+  c = Math::Vector3{-extents.x, -extents.y, extents.z};
+  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
+    point[6] = s;
+
+  point[7] = INFINITY;
+  c = Math::Vector3{-extents.x, -extents.y, -extents.z};
+  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
+    point[7] = s;
+
+  *t = Math::Util::Min(
+      {cneg[0],  cneg[1],  cneg[2],  cpos[0],  cpos[1],  cpos[2],  line[0],
+       line[1],  line[2],  line[3],  line[4],  line[5],  line[6],  line[7],
+       line[8],  line[9],  line[10], line[11], point[0], point[1], point[2],
+       point[3], point[4], point[5], point[6], point[7]});
+
+  return *t < INFINITY;
+}
+bool CollisionsModule::RaySphereIntersectLimited(
+    const Math::Vector3 &start, const Math::Vector3 &end,
+    const Math::Vector3 &center, float radius, const Math::Vector3 &extents,
+    const Math::Vector3 &face, float *_t) {
+  float &t = *_t;
+  Math::Vector3 a = Math::Vector3::Scale(start, face) - center;
+  Math::Vector3 b = Math::Vector3::Scale(end, face) - center;
+  Math::Vector3 to = b - a;
+
+  float toADot = Math::Vector3::Dot(to, a);
+  float aSq = Math::Vector3::Dot(a, a);
+  float toSq = Math::Vector3::Dot(to, to);
+
+  float q = toADot * toADot - toSq * (aSq - radius * radius);
+  if (q < 0) {
+    t = 0;
+    return false;
+  } else {
+    t = -(toADot + Math::Util::Sqrt(q)) / toSq;
+    if (t < 0 || t > 1) {
+      t = INFINITY;
+      return false;
+    }
+    float d = SqDistanceToAABB(-extents, extents, to * t + start);
+    if (Math::Util::Abs(d - radius * radius) > Math::Util::EPSILON) {
+      t = INFINITY;
+      return false;
+    }
+    return true;
+  }
+}
+float CollisionsModule::SqDistanceToAABB(const Math::Vector3 &min,
+                                         const Math::Vector3 &max,
+                                         const Math::Vector3 &center) {
+  float t, distSq = 0;
+  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
+    if (center[i] < min[i]) {
+      t = center[i] - min[i];
+      distSq += t * t;
+    } else if (center[i] > max[i]) {
+      t = center[i] - max[i];
+      distSq += t * t;
+    }
+  }
+  return distSq;
 }
 Math::Vector3 CollisionsModule::ClosestPtSegmentOBB(const Math::Vector3 &p0,
                                                     const Math::Vector3 &p1,
                                                     const BoxCollider &box) {
   Math::Vector3 q0 = box.GetTransform().LocalPosFromWorldPos(p0);
   Math::Vector3 q1 = box.GetTransform().LocalPosFromWorldPos(p1);
-  Ray ray = Ray{q0, q1 - q0};
+  Line line = Line{q0, q1 - q0};
   float t, distSq;
-  return ClosestPtRayOBB(ray, box, &t, &distSq);
+  return ClosestPtLineOBB(line, box, &t, &distSq);
 }
 }  // namespace Isetta

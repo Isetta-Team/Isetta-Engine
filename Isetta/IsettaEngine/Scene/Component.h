@@ -32,6 +32,30 @@ class ISETTA_API Component {
   void SetActive(bool value);
   bool GetActive() const;
   class Transform& GetTransform() const;
+  class Entity* GetEntity() const;
+  // TODO(Jacob) possibly remove?
+  template <typename CheckType, typename InstanceType>
+  bool IsInstanceOf(const InstanceType& instance) {
+    return (dynamic_cast<CheckType*>(&instance) != NULL);
+  }
+
+  // TODO(Jacob) do we want?
+  // template <typename T>
+  // T* GetComponent();
+  // template <typename T>
+  // std::vector<T*> GetComponents();
+  // template <typename T>
+  // T* GetComponentInParent();
+  // template <typename T>
+  // std::vector<T*> GetComponentsInParent();
+  // template <typename T>
+  // T* GetComponentInChildren();
+  // template <typename T>
+  // std::vector<T*> GetComponentsInChildren();
+  // template <typename T>
+  // T* GetComponentInDescendant();
+  // template <typename T>
+  // std::vector<T*> GetComponentsInDescendant();
 
   virtual void OnEnable() {}
   virtual void Start() {}
@@ -41,13 +65,5 @@ class ISETTA_API Component {
   virtual void FixedUpdate() {}
   virtual void OnDestroy() {}
   virtual void OnDisable() {}
-
-  virtual void OnCollisionEnter(class Collider* const) {}
-  virtual void OnCollisionStay(class Collider* const) {}
-  virtual void OnCollisionExit(class Collider* const) {}
-  // TODO(Jacob) are these needed?
-  // virtual void OnTriggerEnter(class Collider* const other) {}
-  // virtual void OnTriggerStay(class Collider* const other) {}
-  // virtual void OnTriggerExit(class Collider* const other) {}
 };
 }  // namespace Isetta
