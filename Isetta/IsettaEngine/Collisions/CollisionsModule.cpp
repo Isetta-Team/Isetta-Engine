@@ -118,8 +118,8 @@ bool CollisionsModule::Intersection(const BoxCollider &a,
     }
   }
 
-  Math::Vector3 aExtents = 0.5f * a.GetWorldSize();
-  Math::Vector3 bExtents = 0.5f * b.GetWorldSize();
+  Math::Vector3 aExtents = a.GetWorldExtents();
+  Math::Vector3 bExtents = b.GetWorldExtents();
   // Test axes L = A0, L = A1, L = A2
   for (int i = 0; i < 3; i++) {
     ra = aExtents[i];
@@ -515,8 +515,7 @@ Math::Vector3 CollisionsModule::ClosestPtPointOBB(const Math::Vector3 &point,
   Math::Vector3 d = point - (box.GetWorldCenter());
   Math::Vector3 pt = box.GetWorldCenter();
 
-  Math::Vector3 extents =
-      0.5f * Math::Vector3::Scale(box.GetTransform().GetWorldScale(), box.size);
+  Math::Vector3 extents = box.GetWorldExtents();
   for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
     float dist = Math::Vector3::Dot(d, box.GetTransform().GetAxis(i));
     if (dist > extents[i]) {
@@ -690,7 +689,7 @@ Math::Vector3 CollisionsModule::Face(int x, const Line &line,
   Math::Vector3 pt = line.GetOrigin();
   distSq = 0;
 
-  Math::Vector3 extents = 0.5 * box.GetWorldSize();
+  Math::Vector3 extents = box.GetWorldExtents();
   Math::Vector3 plusExtents = line.GetOrigin() + extents;
 
   if (line.GetDirection()[x] * plusExtents[y] >=
