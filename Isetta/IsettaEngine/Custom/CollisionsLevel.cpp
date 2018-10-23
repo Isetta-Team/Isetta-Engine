@@ -111,6 +111,5 @@ void CollisionsLevel::LoadLevel() {
           0.5, 2, static_cast<CapsuleCollider::Direction>(j));
     }
   }
-  */
 }
 }  // namespace Isetta

@@ -216,8 +216,13 @@ bool CollisionsModule::Intersection(const BoxCollider &box,
          Math::Util::Square(capsule.radius * radiusScale);
 
   // Not working
+<<<<<<< 0d5a296b6a19c6c10e6ea5492a87d6acb4dd7d5c
   // Math::Vector3 localP0 = box.GetTransform()->LocalPosFromWorldPos(p0);
   // Math::Vector3 localP1 = box.GetTransform()->LocalPosFromWorldPos(p1);
+=======
+  // Math::Vector3 localP0 = box.GetTransform().LocalPosFromWorldPos(p0);
+  // Math::Vector3 localP1 = box.GetTransform().LocalPosFromWorldPos(p1);
+>>>>>>> Collisions and raycast -- full capsule collision put on hold
 
   // float t;
   // bool intersect =
@@ -530,9 +535,15 @@ Math::Vector3 CollisionsModule::ClosestPtPointOBB(const Math::Vector3 &point,
 Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
                                                  const BoxCollider &box,
                                                  float *_t, float *_distSq) {
+<<<<<<< 0d5a296b6a19c6c10e6ea5492a87d6acb4dd7d5c
   Math::Vector3 o = box.GetTransform()->LocalPosFromWorldPos(line.GetOrigin());
   Math::Vector3 dir =
       box.GetTransform()->LocalDirFromWorldDir(line.GetDirection());
+=======
+  Math::Vector3 o = box.GetTransform().LocalPosFromWorldPos(line.GetOrigin());
+  Math::Vector3 dir =
+      box.GetTransform().LocalDirFromWorldDir(line.GetDirection());
+>>>>>>> Collisions and raycast -- full capsule collision put on hold
   float &t = *_t;
   float &distSq = *_distSq;
   distSq = 0;
@@ -588,7 +599,11 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
         pt[z] = extents[z];
       }
       // dist = 0 means intersection
+<<<<<<< 0d5a296b6a19c6c10e6ea5492a87d6acb4dd7d5c
       return box.GetTransform()->WorldPosFromLocalPos(pt);
+=======
+      return box.GetTransform().WorldPosFromLocalPos(pt);
+>>>>>>> Collisions and raycast -- full capsule collision put on hold
     }
     case 1: {
       // LOG_INFO(Debug::Channel::Collisions, "Case 1");
@@ -643,7 +658,11 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
         }
       }
       t /= line.GetDirection().Magnitude();
+<<<<<<< 0d5a296b6a19c6c10e6ea5492a87d6acb4dd7d5c
       return box.GetTransform()->WorldPosFromLocalPos(pt);
+=======
+      return box.GetTransform().WorldPosFromLocalPos(pt);
+>>>>>>> Collisions and raycast -- full capsule collision put on hold
     }
     case 0: {  // assuming line is positive
       // LOG_INFO(Debug::Channel::Collisions, "Case 0");
@@ -674,7 +693,11 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
           pt = Face(2, Line{o, dir}, box, minusExtents, &t, &distSq);
         }
       }
+<<<<<<< 0d5a296b6a19c6c10e6ea5492a87d6acb4dd7d5c
       return box.GetTransform()->WorldPosFromLocalPos(pt);
+=======
+      return box.GetTransform().WorldPosFromLocalPos(pt);
+>>>>>>> Collisions and raycast -- full capsule collision put on hold
     }
   };
 }
@@ -688,7 +711,11 @@ Math::Vector3 CollisionsModule::Face(int x, const Line &line,
   Math::Vector3 pt = line.GetOrigin();
   distSq = 0;
 
+<<<<<<< 0d5a296b6a19c6c10e6ea5492a87d6acb4dd7d5c
   Math::Vector3 extents = box.GetWorldExtents();
+=======
+  Math::Vector3 extents = 0.5 * box.GetWorldSize();
+>>>>>>> Collisions and raycast -- full capsule collision put on hold
   Math::Vector3 plusExtents = line.GetOrigin() + extents;
 
   if (line.GetDirection()[x] * plusExtents[y] >=
@@ -1062,8 +1089,13 @@ float CollisionsModule::SqDistanceToAABB(const Math::Vector3 &min,
 Math::Vector3 CollisionsModule::ClosestPtSegmentOBB(const Math::Vector3 &p0,
                                                     const Math::Vector3 &p1,
                                                     const BoxCollider &box) {
+<<<<<<< 0d5a296b6a19c6c10e6ea5492a87d6acb4dd7d5c
   Math::Vector3 q0 = box.GetTransform()->LocalPosFromWorldPos(p0);
   Math::Vector3 q1 = box.GetTransform()->LocalPosFromWorldPos(p1);
+=======
+  Math::Vector3 q0 = box.GetTransform().LocalPosFromWorldPos(p0);
+  Math::Vector3 q1 = box.GetTransform().LocalPosFromWorldPos(p1);
+>>>>>>> Collisions and raycast -- full capsule collision put on hold
   Line line = Line{q0, q1 - q0};
   float t, distSq;
   return ClosestPtLineOBB(line, box, &t, &distSq);
