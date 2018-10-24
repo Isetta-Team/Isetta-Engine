@@ -142,6 +142,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Application.cpp" />
     <ClCompile Include="Audio\AudioModule.cpp" />
     <ClCompile Include="Audio\AudioSource.cpp" />
     <ClCompile Include="Components\GridComponent.cpp" />
@@ -159,6 +160,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Time\Clock.cpp" />
     <ClCompile Include="Core\Time\StopWatch.cpp" />
     <ClCompile Include="Custom\AxisDrawer.cpp" />
+    <ClCompile Include="Custom\EmptyLevel\EmptyLevel.cpp" />
     <ClCompile Include="Custom\InEngineTestLevel.cpp" />
     <ClCompile Include="Custom\KeyTransform.cpp" />
     <ClCompile Include="Custom\NetworkLevel.cpp" />
@@ -209,6 +211,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Scene\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Application.h" />
     <ClInclude Include="Audio\AudioModule.h" />
     <ClInclude Include="Audio\AudioSource.h" />
     <ClInclude Include="Components\GridComponent.h" />
@@ -250,6 +253,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Time\StopWatch.h" />
     <ClInclude Include="Core\Time\Time.h" />
     <ClInclude Include="Custom\AxisDrawer.h" />
+    <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h" />
     <ClInclude Include="Custom\InEngineTestLevel.h" />
     <ClInclude Include="Custom\IsettaCore.h" />
     <ClInclude Include="Custom\KeyTransform.h" />
