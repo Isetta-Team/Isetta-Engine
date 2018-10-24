@@ -9,6 +9,7 @@ namespace Isetta {
 
 class ISETTA_API Application {
  public:
+  static void Start();
   static void Exit();
 };
 

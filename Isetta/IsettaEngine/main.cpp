@@ -21,7 +21,7 @@ Between our own hands-on process and sage advice from veteran engineers, we hope
 to give newcomers a clearer representation of the engine-building process.
 */
 int main() {
-  EngineLoop::Instance().Run();
+  Application::Start();
 
   return 0;
 }

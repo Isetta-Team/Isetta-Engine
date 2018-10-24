@@ -152,8 +152,6 @@ void EngineLoop::Run() {
   ShutDown();
 }
 
-void EngineLoop::Stop() { isGameRunning = false; }
-
 Clock& EngineLoop::GetGameClock() {
   static Clock gameTime{};
   return gameTime;
