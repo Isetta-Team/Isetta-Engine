@@ -86,7 +86,6 @@ class ISETTA_API_DECLARE Transform {
   // more utilities
   // TODO(YIDI): Decide if they should stay here
   static void SetH3DNodeTransform(H3DNode node, Transform& transform);
-  
 
 #if _DEBUG
   void InspectorGUI();
