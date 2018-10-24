@@ -37,7 +37,7 @@ class ISETTA_API CameraComponent : public Component {
 
  private:
   void UpdateH3DTransform() const;
-  void ResizeViewport() const;
+  void ResizeViewport(int width, int height);
   void SetupCameraViewport() const;
 
   static CameraComponent* _main;
@@ -53,6 +53,7 @@ class ISETTA_API CameraComponent : public Component {
   std::string name;
   H3DNode renderNode;
   H3DRes renderResource;
+  int resizeHandle;
 };
 
 template <CameraComponent::Property Attr, typename T>

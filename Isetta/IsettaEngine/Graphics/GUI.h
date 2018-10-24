@@ -6,6 +6,7 @@
 #include <string>
 #include "Core/Color.h"
 #include "Core/IsettaAlias.h"
+#include "Core/Math/Rect.h"
 #include "Core/Math/Vector2.h"
 
 typedef void* TextureID;
@@ -524,11 +525,19 @@ class ISETTA_API GUI {
     // bool isBulleted;
     Color text;
     TextStyle();
-    TextStyle(const Color& text) : text{text} {}
+    TextStyle(const Color& text)
+        : text{text}, isWrapped{false}, isDisabled{false} {}
     TextStyle(bool wrapped, bool disabled, const Color& text)
         : isWrapped{wrapped},
           isDisabled{disabled},
           /*isBulleted{b},*/ text{text} {}
+  };
+  struct ISETTA_API WindowStyle {
+    Color background;
+    Math::Rect constraints;
+    WindowStyle();
+    WindowStyle(const Color& background, const Math::Rect& constraints)
+        : background{background}, constraints{constraints} {}
   };
 
   // BUTTONS
@@ -768,7 +777,7 @@ class ISETTA_API GUI {
   // WINDOWS
   static bool Window(const RectTransform& transform, const std::string& name,
                      const Action<>& ui, bool* isOpen = NULL,
-                     const BackgroundStyle& style = {},
+                     const WindowStyle& style = {},
                      const WindowFlags flags = WindowFlags::None);
   static bool MenuBar(const Action<>& ui, bool main = false,
                       const BackgroundStyle& style = {});

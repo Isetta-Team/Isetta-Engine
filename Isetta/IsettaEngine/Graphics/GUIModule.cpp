@@ -62,6 +62,7 @@ void GUIModule::StartUp(const GLFWwindow* win) {
   ImGui::StyleColorsDark();
   // ImGui::StyleColorsClassic();
 
+  // io.IniFilename = NULL;
   // Load Fonts
   // io.Fonts->AddFontDefault();
   // io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);

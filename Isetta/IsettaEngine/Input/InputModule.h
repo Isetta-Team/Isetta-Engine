@@ -96,8 +96,6 @@ class InputModule {
    */
   void UnregisterMouseReleaseCallback(MouseButtonCode mouseButton, U16 handle);
 
-  U16 RegisterWindowResizeCallback(const Action<int, int>& callback);
-  void UnregisterWindowResizeCallback(U16 handle);
   U16 RegisterScrollCallback(const Action<double, double>& callback);
   void UnregisterScrollCallback(U16 handle);
 
@@ -145,7 +143,7 @@ class InputModule {
   static CBMap keyReleaseCallbacks;
   static CBMap mousePressCallbacks;
   static CBMap mouseReleaseCallbacks;
-  static std::unordered_map<U16, Action<int, int>> windowResizeCallbacks;
+  static std::unordered_map<U16, Action<int, int>> windowSizeCallbacks;
   static std::unordered_map<U16, Action<double, double>> scrollCallbacks;
   static std::unordered_map<U16, Action<int, int>> gamepadConnectionCallbacks;
 

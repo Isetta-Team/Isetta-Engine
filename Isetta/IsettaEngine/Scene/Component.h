@@ -44,7 +44,7 @@ class ISETTA_API Component {
 
   virtual void OnCollisionEnter(class Collider* const) {}
   virtual void OnCollisionStay(class Collider* const) {}
-  virtual void OnCollisionExit(class Collider* constther) {}
+  virtual void OnCollisionExit(class Collider* const) {}
   // TODO(Jacob) are these needed?
   // virtual void OnTriggerEnter(class Collider* const other) {}
   // virtual void OnTriggerStay(class Collider* const other) {}

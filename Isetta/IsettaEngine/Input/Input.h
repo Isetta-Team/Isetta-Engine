@@ -16,7 +16,7 @@ class ISETTA_API_DECLARE Input {
    * \param callback The callback function
    */
   static void RegisterWindowCloseCallback(const Action<>& callback);
-  static U16 RegisterWinSizeCallback(const Action<int, int>& callback);
+  static U16 RegisterWindowSizeCallback(const Action<int, int>& callback);
   static void UnegisterWindowSizeCallback(U16 handle);
   /**
    * \brief Check if the key is pressed
@@ -94,7 +94,7 @@ class ISETTA_API_DECLARE Input {
 
   static float GetGamepadAxis(GamepadAxis axis);
   static bool IsGamepadButtonPressed(GamepadButton button);
-  
+
   static U16 RegisterMouseButtonGLFWCallback(
       const Action<GLFWwindow*, int, int, int>& callback);
   static void UnregisterMouseButtonGLFWCallback(U16 handle);
