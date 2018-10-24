@@ -7,11 +7,14 @@
 
 namespace Isetta {
 
+bool Component::isFlattened = false;
+
 bool Component::RegisterComponent(std::type_index curr, std::type_index base) {
   std::type_index baseIndex{base};
   std::type_index currIndex{curr};
 
-  std::unordered_map<std::type_index, std::list<std::type_index>>& children = childrenTypes();
+  std::unordered_map<std::type_index, std::list<std::type_index>>& children =
+      childrenTypes();
 
   if (children.count(currIndex) > 0) {
     children.at(currIndex).push_front(currIndex);
@@ -27,7 +30,38 @@ bool Component::RegisterComponent(std::type_index curr, std::type_index base) {
   return true;
 }
 
-Component::Component() : attributes{0b1001}, entity{nullptr} {}
+void Component::FlattenComponentList() {
+  if (isFlattened) return;
+  isFlattened = true;
+  std::unordered_map<std::type_index, std::list<std::type_index>>& children =
+      childrenTypes();
+  std::type_index componentIndex{typeid(Component)};
+  std::list<std::type_index>* componentList = &children.at(componentIndex);
+  for (auto& childList : *componentList) {
+    if (childList != componentIndex) {
+      FlattenHelper(componentIndex, childList);
+    }
+  }
+}
+
+void Component::FlattenHelper(std::type_index parent, std::type_index curr) {
+  std::unordered_map<std::type_index, std::list<std::type_index>>& children =
+      childrenTypes();
+  std::list<std::type_index>* parentList = &children.at(parent);
+  std::list<std::type_index>* componentList = &children.at(curr);
+  for (auto& childList : *componentList) {
+    if (childList != curr) {
+      parentList->push_back(childList);
+      FlattenHelper(curr, childList);
+    }
+  }
+}
+
+Component::Component() : attributes{0b1001}, entity{nullptr} {
+  if (!isFlattened) {
+    FlattenComponentList();
+  }
+}
 
 void Component::SetAttribute(ComponentAttributes attr, bool value) {
   attributes.set(static_cast<int>(attr), value);

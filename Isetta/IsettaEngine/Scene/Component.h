@@ -45,6 +45,10 @@ class ISETTA_API_DECLARE Component {
     return children;
   }
 
+  static void FlattenComponentList();
+  static void FlattenHelper(std::type_index parent, std::type_index curr);
+  static bool isFlattened;
+
  protected:
   class Entity* entity;
 
