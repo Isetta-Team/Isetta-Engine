@@ -99,5 +99,8 @@ GUI::ModalStyle::ModalStyle() {
 GUI::TextStyle::TextStyle() {
   text = GetStyle().Colors[(int)ColorStyles::Text];
 }
-
+GUI::WindowStyle::WindowStyle() {
+  background = GetStyle().Colors[(int)ColorStyles::WindowBg];
+  constraints = Math::Rect{};
+}
 }  // namespace Isetta

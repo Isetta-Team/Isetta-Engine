@@ -14,7 +14,6 @@ class Vector3;
 namespace Isetta {
 class CollisionsModule {
  public:
-  // TODO(Jacob) can these just be static?
   static bool Intersection(const class BoxCollider &,
                            const class BoxCollider &);
   static bool Intersection(const class BoxCollider &,
@@ -37,6 +36,12 @@ class CollisionsModule {
   bool Raycast(const class Ray &ray, class RaycastHit *const hitInfo,
                float maxDistance = 0);
 
+  static float ClosestPtRaySegment(const class Ray &, const Math::Vector3 &,
+                                   const Math::Vector3 &, float *const,
+                                   float *const, Math::Vector3 *const,
+                                   Math::Vector3 *const);
+
+  // TODO(Jacob) collision layers
  private:
   CollisionsModule() = default;
   ~CollisionsModule() = default;
@@ -53,12 +58,9 @@ class CollisionsModule {
   void Update(float deltaTime);
   void ShutDown();
 
-  void OnCollisionEnter(class Collider *const);
-  void OnCollisionStay(class Collider *const);
-  void OnCollisionExit(class Collider *const);
-
   friend class EngineLoop;
   friend class Collider;
+  friend class Collisions;
 
   // Utilities
   static bool Intersection(const Math::Vector3 &, const Math::Vector3 &,
@@ -72,6 +74,10 @@ class CollisionsModule {
                                              const Math::Vector3 &p0,
                                              const Math::Vector3 &p1,
                                              float *const t);
+  // static float ClosestPtRaySegment(const Ray &, const Math::Vector3 &,
+  //                                 const Math::Vector3 &, float *const,
+  //                                 float *const, Math::Vector3 *const,
+  //                                 Math::Vector3 *const);
   static float ClosestPtSegmentSegment(const Math::Vector3 &,
                                        const Math::Vector3 &,
                                        const Math::Vector3 &,
@@ -82,11 +88,25 @@ class CollisionsModule {
                                           const class AABB &);
   static Math::Vector3 ClosestPtPointOBB(const Math::Vector3 &,
                                          const class BoxCollider &);
-  static Math::Vector3 ClosestPtRayOBB(const class Ray &,
-                                       const class BoxCollider &, float *,
-                                       float *);
-  static Math::Vector3 Face(int, const class Ray &, const class BoxCollider &,
+  ///
+  static Math::Vector3 ClosestPtLineOBB(const class Line &,
+                                        const class BoxCollider &, float *,
+                                        float *);
+  static Math::Vector3 Face(int, const class Line &, const class BoxCollider &,
                             const Math::Vector3 &, float *, float *);
+  static bool CapsuleAABBIntersect(const Math::Vector3 &start,
+                                   const Math::Vector3 &end, const float radius,
+                                   const Math::Vector3 &extents, float *t);
+  static bool RaySphereIntersectLimited(const Math::Vector3 &start,
+                                        const Math::Vector3 &end,
+                                        const Math::Vector3 &center,
+                                        float radius,
+                                        const Math::Vector3 &extents,
+                                        const Math::Vector3 &face, float *_t);
+  static float SqDistanceToAABB(const Math::Vector3 &min,
+                                const Math::Vector3 &max,
+                                const Math::Vector3 &center);
+  ///
   static Math::Vector3 ClosestPtSegmentOBB(const Math::Vector3 &,
                                            const Math::Vector3 &,
                                            const class BoxCollider &);

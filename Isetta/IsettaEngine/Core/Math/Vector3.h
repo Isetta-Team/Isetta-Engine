@@ -115,6 +115,9 @@ class ISETTA_API Vector3 {
   inline Vector3 operator/(float scalar) const {
     return Vector3(x / scalar, y / scalar, z / scalar);
   }
+  inline friend Vector3 operator/(float scalar, Vector3 v) {
+    return Vector3(scalar / v.x, scalar / v.y, scalar / v.z);
+  }
   inline Vector3& operator/=(float scalar) {
     x /= scalar;
     y /= scalar;

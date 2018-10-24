@@ -5,7 +5,7 @@
 #include "Scene/IsettaLevel.h"
 
 namespace Isetta {
-CREATE_LEVEL(InEngineTestLevel)
-  void LoadLevel() override;
+CREATE_LEVEL(EmptyLevel)
+void LoadLevel() override;
 CREATE_LEVEL_END
 }  // namespace Isetta

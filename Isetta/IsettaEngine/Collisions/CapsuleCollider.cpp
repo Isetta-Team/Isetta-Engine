@@ -29,6 +29,26 @@ void CapsuleCollider::Update() {
    Math::Vector3 P1 = GetTransform().GetWorldPos() + center + dir;*/
   // DebugDraw::Line(P0, P1, Color::blue);
 }
+bool CapsuleCollider::RaycastSphere(const Math::Vector3& center, float radius,
+                                    const Ray& ray, RaycastHit* const hitInfo,
+                                    float maxDistance) {
+  Math::Vector3 to = ray.GetOrigin() - center;
+  float b = Math::Vector3::Dot(to, ray.GetDirection());
+  float c = Math::Vector3::Dot(to, to) - radius * radius;
+  if (c > 0.0f && b > 0.0f) {
+    return false;
+  }
+  float discrim = b * b - c;
+  if (discrim < 0.0f) {
+    return false;
+  }
+  discrim = Math::Util::Sqrt(discrim);
+  float t = -b - discrim;
+  if (t < 0.f) t = -b + discrim;
+  Math::Vector3 pt = ray.GetPoint(t);
+  RaycastHitCtor(hitInfo, t, pt, pt - center);
+  return true;
+}
 float CapsuleCollider::GetWorldCapsule(Math::Matrix4* rotation,
                                        Math::Matrix4* scale) const {
   Math::Matrix4& rot = *rotation;
@@ -84,9 +104,41 @@ bool CapsuleCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
 
   float a = Math::Vector3::Dot(q, q);
   float b = 2.0f * Math::Vector3::Dot(q, r);
-  float c = Math::Vector3::Dot(r, r) - GetWorldRadius();
+  float c = Math::Vector3::Dot(r, r) - Math::Util::Square(radius * radiusScale);
 
   if (a == 0.0f) {
+    RaycastHit aHit, bHit;
+    if (!RaycastSphere(p0, radius * radiusScale, ray, &aHit, maxDistance) ||
+        !RaycastSphere(p0, radius * radiusScale, ray, &aHit, maxDistance))
+      return false;
+    if (aHit.GetDistance() < bHit.GetDistance())
+      *hitInfo = aHit;
+    else
+      *hitInfo = bHit;
+    return true;
+  }
+
+  float discrim = b * b - 4.f * a * c;
+  if (discrim < 0.f) return false;
+  float sqrtDiscrim = Math::Util::Sqrt(discrim);
+  float denom = 0.5f / a;
+  float tmin = -(b + sqrtDiscrim) * denom;
+  float tmax = (-b + sqrtDiscrim) * denom;
+  if (tmin > tmax) std::swap(tmin, tmax);
+
+  float tkMin = tmin * m + n;
+  // TODO(Jacob) if point is inside capsule && inside sphere poles then it will
+  // end on pole
+  if (tkMin < 0.f) {
+    return RaycastSphere(p0, radius * radiusScale, ray, hitInfo, maxDistance);
+  } else if (tkMin > 1.f) {
+    return RaycastSphere(p1, radius * radiusScale, ray, hitInfo, maxDistance);
+  } else {
+    Math::Vector3 pt = ray.GetPoint(tmin);
+    RaycastHitCtor(hitInfo, tmin, pt, pt - (p0 + to * tkMin));
+    // DebugDraw::Point(pt, Color::cyan, 10, 10);
+    // DebugDraw::Point(p0 + to * tkMin, Color::cyan, 10, 10);
+    return true;
   }
 
   return false;

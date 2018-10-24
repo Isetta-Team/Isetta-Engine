@@ -13,7 +13,7 @@ InputModule* Input::inputModule{nullptr};
 void Input::RegisterWindowCloseCallback(const Action<>& callback) {
   inputModule->RegisterWindowCloseCallback(callback);
 }
-U16 Input::RegisterWinSizeCallback(const Action<int, int>& callback) {
+U16 Input::RegisterWindowSizeCallback(const Action<int, int>& callback) {
   return inputModule->RegisterWindowSizeCallback(callback);
 }
 void Input::UnegisterWindowSizeCallback(U16 handle) {
@@ -103,5 +103,13 @@ U16 Input::RegisterCharGLFWCallback(
 
 void Input::UnegisterCharGLFWCallback(U16 handle) {
   inputModule->UnegisterCharGLFWCallback(handle);
+}
+
+float Input::GetGamepadAxis(GamepadAxis axis) {
+  return inputModule->GetGamepadAxis(axis);
+}
+
+bool Input::IsGamepadButtonPressed(GamepadButton button) {
+  return inputModule->IsGamepadButtonPressed(button);
 }
 }  // namespace Isetta
