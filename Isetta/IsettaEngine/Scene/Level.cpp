@@ -38,10 +38,12 @@ void Level::UnloadLevel() {
     entity->~Entity();
     MemoryManager::FreeOnFreeList(entity);
   }
+  levelRoot->~Entity();
+  MemoryManager::FreeOnFreeList(levelRoot);
 }
 
 Entity* Level::AddEntity(std::string name) {
-  return AddEntity(name, LevelRoot);
+  return AddEntity(name, levelRoot);
 }
 
 Entity* Level::AddEntity(std::string name, Entity* parent) {
@@ -112,6 +114,6 @@ void Level::LateUpdate() {
 
 Level::Level() {
   Entity* entity = MemoryManager::NewOnFreeList<Entity>("Root");
-  LevelRoot = entity;
+  levelRoot = entity;
 }
 }  // namespace Isetta

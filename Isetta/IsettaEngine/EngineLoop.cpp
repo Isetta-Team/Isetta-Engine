@@ -38,23 +38,23 @@ EngineLoop& EngineLoop::Instance() {
 
 EngineLoop::EngineLoop() {
   memoryManager = new MemoryManager{};
-  audioModule = new AudioModule{};
   windowModule = new WindowModule{};
   renderModule = new RenderModule{};
   inputModule = new InputModule{};
   guiModule = new GUIModule{};
-  networkingModule = new NetworkingModule{};
   collisionsModule = new CollisionsModule{};
+  audioModule = new AudioModule{};
+  networkingModule = new NetworkingModule{};
 }
 EngineLoop::~EngineLoop() {
+  delete memoryManager;
   delete windowModule;
-  delete audioModule;
   delete renderModule;
   delete inputModule;
   delete guiModule;
-  delete memoryManager;
-  delete networkingModule;
   delete collisionsModule;
+  delete audioModule;
+  delete networkingModule;
 }
 
 void EngineLoop::StartUp() {
@@ -74,13 +74,12 @@ void EngineLoop::StartUp() {
   renderModule->StartUp(windowModule->winHandle);
   inputModule->StartUp(windowModule->winHandle);
   guiModule->StartUp(windowModule->winHandle);
+  DebugDraw::StartUp();
   collisionsModule->StartUp();
   audioModule->StartUp();
   networkingModule->StartUp();
 
   LevelManager::Instance().LoadStartupLevel();
-
-  DebugDraw::StartUp();
 
   StartGameClock();
 
@@ -134,9 +133,9 @@ void EngineLoop::ShutDown() {
   networkingModule->ShutDown();
   audioModule->ShutDown();
   collisionsModule->ShutDown();
+  DebugDraw::ShutDown();
   guiModule->ShutDown();
   inputModule->ShutDown();
-  DebugDraw::ShutDown();
   renderModule->ShutDown();
   windowModule->ShutDown();
   memoryManager->ShutDown();

@@ -22,7 +22,7 @@ class ISETTA_API Level {
 protected:
   std::list<class Entity*> entities;
 public:
-  class Entity* LevelRoot;
+  class Entity* levelRoot;
   Level();
   virtual ~Level() = default;
   class Entity* GetEntityByName(const std::string&);
