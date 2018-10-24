@@ -21,13 +21,13 @@ TEST_METHOD(SqrMagnitude) {
 
 TEST_METHOD(Normalized) {
   Math::Vector3 vec{5.f, 0.f, 0.f};
-  Assert::IsTrue(Math::Vector3::right == vec.Normalized());
+  Assert::IsTrue(Math::Vector3::left == vec.Normalized());
 }
 
 TEST_METHOD(Normalize) {
   Math::Vector3 vec{5.f, 0.f, 0.f};
   vec.Normalize();
-  Assert::IsTrue(Math::Vector3::right == vec);
+  Assert::IsTrue(Math::Vector3::left == vec);
 }
 
 TEST_METHOD(Equals) {
@@ -87,6 +87,12 @@ TEST_METHOD(Slerp) {
   Math::Vector3 vec2(0.f, 1.f, 0.f);
   Assert::IsTrue(Math::Vector3::Slerp(vec1, vec2, 0.f) ==
                  Math::Vector3(1.f, 0.f, 0.f));
+}
+
+TEST_METHOD(AngleRad) {
+  Math::Vector3 a{1, 0, 0};
+  Math::Vector3 b{1, 1, 0};
+  Assert::IsTrue(Math::Vector3::AngleDeg(a, b) == 45);
 }
 }
 ;
