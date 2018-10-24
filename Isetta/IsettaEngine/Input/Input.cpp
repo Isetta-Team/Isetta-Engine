@@ -13,7 +13,7 @@ InputModule* Input::inputModule{nullptr};
 void Input::RegisterWindowCloseCallback(const Action<>& callback) {
   inputModule->RegisterWindowCloseCallback(callback);
 }
-U16 Input::RegisterWinSizeCallback(const Action<int, int>& callback) {
+U16 Input::RegisterWindowSizeCallback(const Action<int, int>& callback) {
   return inputModule->RegisterWindowSizeCallback(callback);
 }
 void Input::UnegisterWindowSizeCallback(U16 handle) {

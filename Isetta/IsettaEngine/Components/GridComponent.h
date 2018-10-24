@@ -9,8 +9,8 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-class ISETTA_API GridComponent : public Component {
- public:
+CREATE_COMPONENT_BEGIN(GridComponent, Component)
+public:
   void Update() override;
-};
+CREATE_COMPONENT_END(GridComponent, Component)
 }  // namespace Isetta

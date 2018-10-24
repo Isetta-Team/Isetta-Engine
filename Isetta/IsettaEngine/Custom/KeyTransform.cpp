@@ -52,5 +52,15 @@ void KeyTransform::Update() {
         10 * step * Math::Vector3::back *
         EngineLoop::GetGameClock().GetDeltaTime());
   }
+  if (Input::IsKeyPressed(KeyCode::PAGE_UP)) {
+    this->GetTransform().TranslateLocal(
+        10 * step * Math::Vector3::up *
+        EngineLoop::GetGameClock().GetDeltaTime());
+  }
+  if (Input::IsKeyPressed(KeyCode::PAGE_DOWN)) {
+    this->GetTransform().TranslateLocal(
+        10 * step * Math::Vector3::down *
+        EngineLoop::GetGameClock().GetDeltaTime());
+  }
 }
 }  // namespace Isetta

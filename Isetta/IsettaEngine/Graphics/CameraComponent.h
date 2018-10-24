@@ -7,7 +7,13 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-class ISETTA_API CameraComponent : public Component {
+class Ray;
+namespace Math {
+class Vector3;
+class Vector2;
+}  // namespace Math
+
+CREATE_COMPONENT_BEGIN(CameraComponent, Component)
  public:
   enum class Property {
     FOV,
@@ -35,9 +41,18 @@ class ISETTA_API CameraComponent : public Component {
     return Math::Matrix4(transformPtr);
   }
 
+  Ray ScreenPointToRay(const Math::Vector2& position) const;
+  // TODO(all) ScreenToViewportPoint
+  // TODO(all) ScreenToWorldPoint
+  // TODO(all) ViewportPointToRay
+  // TODO(all) ViewportToScreenPoint
+  // TODO(all) ViewportToWorldPoint
+  // TODO(all) WorldToScreenPoint
+  // TODO(all) WorldToViewportPoint
+
  private:
   void UpdateH3DTransform() const;
-  void ResizeViewport() const;
+  void ResizeViewport(int width, int height);
   void SetupCameraViewport() const;
 
   static CameraComponent* _main;
@@ -53,7 +68,8 @@ class ISETTA_API CameraComponent : public Component {
   std::string name;
   H3DNode renderNode;
   H3DRes renderResource;
-};
+  int resizeHandle;
+CREATE_COMPONENT_END(CameraComponent, Component)
 
 template <CameraComponent::Property Attr, typename T>
 void CameraComponent::SetProperty(T value) {

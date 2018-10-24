@@ -25,7 +25,7 @@ std::unordered_map<U16, Action<GLFWwindow*, double, double>>
     InputModule::scrollGLFWCallbacks;
 std::unordered_map<U16, Action<GLFWwindow*, unsigned int>>
     InputModule::charGLFWCallbacks;
-std::unordered_map<U16, Action<int, int>> InputModule::windowResizeCallbacks;
+std::unordered_map<U16, Action<int, int>> InputModule::windowSizeCallbacks;
 std::unordered_map<U16, Action<double, double>> InputModule::scrollCallbacks;
 std::unordered_map<U16, Action<int, int>>
     InputModule::gamepadConnectionCallbacks;
@@ -39,11 +39,11 @@ void InputModule::RegisterWindowCloseCallback(const Action<>& callback) {
 }
 U16 InputModule::RegisterWindowSizeCallback(const Action<int, int>& callback) {
   U16 handle = totalHandle++;
-  windowResizeCallbacks.insert(std::make_pair(handle, callback));
+  windowSizeCallbacks.insert(std::make_pair(handle, callback));
   return handle;
 }
 void InputModule::UnegisterWindowSizeCallback(U16 handle) {
-  windowResizeCallbacks.erase(handle);
+  windowSizeCallbacks.erase(handle);
 }
 bool InputModule::IsKeyPressed(KeyCode key) const {
   int glfwKey = KeyCodeToGlfwKey(key);
@@ -104,17 +104,6 @@ void InputModule::UnregisterMouseReleaseCallback(MouseButtonCode mouseButton,
                      &mouseReleaseCallbacks);
 }
 
-U16 InputModule::RegisterWindowResizeCallback(
-    const Action<int, int>& callback) {
-  U16 handle = totalHandle++;
-  windowResizeCallbacks.insert(std::make_pair(handle, callback));
-  return handle;
-}
-
-void InputModule::UnregisterWindowResizeCallback(U16 handle) {
-  windowResizeCallbacks.erase(handle);
-}
-
 U16 InputModule::RegisterScrollCallback(
     const Action<double, double>& callback) {
   U16 handle = totalHandle++;
@@ -123,7 +112,7 @@ U16 InputModule::RegisterScrollCallback(
 }
 
 void InputModule::UnregisterScrollCallback(U16 handle) {
-  windowResizeCallbacks.erase(handle);
+  windowSizeCallbacks.erase(handle);
 }
 
 U16 InputModule::RegisterMouseButtonGLFWCallback(
@@ -180,6 +169,7 @@ void InputModule::StartUp(GLFWwindow* win) {
   glfwSetInputMode(winHandle, GLFW_STICKY_KEYS, 1);
   glfwSetInputMode(winHandle, GLFW_STICKY_MOUSE_BUTTONS, 1);
   glfwSetWindowCloseCallback(winHandle, WindowCloseListener);
+  glfwSetWindowSizeCallback(winHandle, WindowSizeListener);
   glfwSetKeyCallback(winHandle, KeyEventListener);
   glfwSetMouseButtonCallback(winHandle, MouseEventListener);
   glfwSetCharCallback(winHandle, CharEventListener);
@@ -278,7 +268,7 @@ void InputModule::ScrollEventListener(GLFWwindow* win, double xoffset,
 }
 
 void InputModule::WindowSizeListener(GLFWwindow* win, int width, int height) {
-  for (const auto& handleCallback : windowResizeCallbacks) {
+  for (const auto& handleCallback : windowSizeCallbacks) {
     handleCallback.second(width, height);
   }
 }

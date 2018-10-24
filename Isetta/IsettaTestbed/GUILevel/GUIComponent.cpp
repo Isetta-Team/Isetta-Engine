@@ -10,7 +10,7 @@
 #include "Graphics/GUI.h"
 #include "Graphics/RectTransform.h"
 #include "Util.h"
-//#include "imgui/imgui.h"
+#include "imgui/imgui.h"
 
 using namespace Isetta;
 
@@ -50,11 +50,12 @@ void GUIComponent::GuiUpdate() {
   GUI::InputInt(RectTransform{{1000, 150, 100, 40}}, "inputInt", &val);
   static bool open = false;
   open = open || GUI::Button(RectTransform{{100, 700, 80, 20}}, "window btn");
+  static RectTransform movableWindow{{200, 700, 500, 200}};
   if (open) {
-    GUI::Window(RectTransform{{200, 700, 400, 400}}, "window name",
+    GUI::Window(movableWindow, "window name",
                 []() {
                   GUI::MenuBar([]() {
-                    // ImGui::Text("words in menu");
+                    ImGui::Text("words in menu");
                     GUI::Menu("menu2", []() {
                       GUI::MenuItem("item2", "Ctrl+99", []() {
                         LOG_INFO(Debug::Channel::GUI, "menu selected");
@@ -64,9 +65,9 @@ void GUIComponent::GuiUpdate() {
                               []() { GUI::MenuItem("item3", "Ctrl+99"); },
                               false);
                   });
-                  // ImGui::Text("words in window");
+                  ImGui::Text("words in window");
                 },
-                &open, GUI::BackgroundStyle{}, GUI::WindowFlags::MenuBar);
+                &open, GUI::WindowStyle{}, GUI::WindowFlags::MenuBar);
   }
   GUI::MenuBar(
       []() { GUI::Menu("menu1", []() { GUI::MenuItem("item1", "Ctrl+99"); }); },
@@ -75,9 +76,9 @@ void GUIComponent::GuiUpdate() {
   GUI::Modal(
       RectTransform{{0, 0, 100, 100}, GUI::Pivot::Center, GUI::Pivot::Center},
       "modal", []() {
-        // if (ImGui::Button("close", (ImVec2)Math::Vector2(40, 40))) {
-        //  GUI::CloseCurrentPopup();
-        //}
+        if (ImGui::Button("close", (ImVec2)Math::Vector2(40, 40))) {
+          GUI::CloseCurrentPopup();
+        }
       });
   if (GUI::Button(RectTransform{{100, 800, 80, 20}}, "modal btn")) {
     GUI::OpenPopup("modal");

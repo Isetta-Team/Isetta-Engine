@@ -9,9 +9,12 @@ class Matrix4;
 }
 
 namespace Isetta {
-class CapsuleCollider : public Collider {
+CREATE_COMPONENT_BEGIN(CapsuleCollider, Collider)
  private:
   void Update() override;
+  // TODO(Jacob) duplicate code
+  bool RaycastSphere(const Math::Vector3& center, float radius, const Ray& ray,
+                     RaycastHit* const hitInfo, float maxDistance);
 
  protected:
   const ColliderType GetType() const override {
@@ -71,5 +74,5 @@ class CapsuleCollider : public Collider {
     }
   }
   bool Intersection(Collider* const other) override;
-};
+CREATE_COMPONENT_END(CapsuleCollider, Collider)
 }  // namespace Isetta

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "EngineLoop.h"
+#include "Application.h"
 
 using namespace Isetta;
 
@@ -22,6 +22,5 @@ to give newcomers a clearer representation of the engine-building process.
 */
 int main() {
   Application::Start();
-
   return 0;
 }

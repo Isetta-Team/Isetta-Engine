@@ -4,9 +4,9 @@
 #pragma once
 #include "Scene/Component.h"
 
-using namespace Isetta;
-
-class DebugComponent : public Component {
- public:
-  void Update() override;
-};
+namespace Isetta {
+CREATE_COMPONENT_BEGIN(DebugComponent, Component)
+public:
+void Update() override;
+CREATE_COMPONENT_END(DebugComponent, Component)
+}  // namespace Isetta

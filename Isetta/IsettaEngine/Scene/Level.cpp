@@ -8,6 +8,7 @@
 #include "Graphics/GUI.h"
 #include "Graphics/RectTransform.h"
 #include "Scene/Entity.h"
+#include "Scene/Transform.h"
 
 namespace Isetta {
 
@@ -66,40 +67,48 @@ void Level::GUIUpdate() {
   }
 
 #if _DEBUG
-  float buttonHeight = 20;
-  float buttonWidth = 200;
-  float height = 80;
-  float left = 200;
-  float padding = 20;
-  static Transform* transform = nullptr;
+  static RectTransform rectTrans{{0, 20, 200, 500}};
+  bool isOpen = true;
+  GUI::Window(
+      rectTrans, "Heirarchy",
+      [&]() {
+        float buttonHeight = 20;
+        float buttonWidth = 200;
+        float height = 10;
+        float left = 5;
+        float padding = 20;
+        static Transform* transform = nullptr;
 
-  for (const auto& entity : entities) {
-    Func<int, Transform*> countLevel = [](Transform* trans) -> int {
-      int i = 0;
-      while (trans->GetParent() != nullptr) {
-        trans = trans->GetParent();
-        i++;
-      }
-      return i;
-    };
+        for (const auto& entity : entities) {
+          Func<int, Transform*> countLevel = [](Transform* trans) -> int {
+            int i = 0;
+            while (trans->GetParent() != nullptr) {
+              trans = trans->GetParent();
+              i++;
+            }
+            return i;
+          };
 
-    Action<Transform*> action = [&](Transform* tran) {
-      int level = countLevel(tran);
-      if (GUI::Button(RectTransform{Math::Rect{left + level * padding, height,
-                                               buttonWidth - level * padding,
-                                               buttonHeight}},
-                      tran->GetName())) {
-        transform = transform == tran ? nullptr : tran;
-      }
-      height += buttonHeight;
-    };
+          Action<Transform*> action = [&](Transform* tran) {
+            int level = countLevel(tran);
+            if (GUI::Button(RectTransform{Math::Rect{
+                                left + level * padding, height,
+                                buttonWidth - level * padding, buttonHeight}},
+                            tran->GetName())) {
+              transform = transform == tran ? nullptr : tran;
+            }
+            height += 1.25f * buttonHeight;
+          };
 
-    entity->GetTransform().ForSelfAndDescendents(action);
-  }
+          entity->GetTransform().ForDescendants(action);
+        }
 
-  if (transform != nullptr) {
-    transform->DrawGUI();
-  }
+        if (transform != nullptr) {
+          transform->InspectorGUI();
+        }
+      },
+      NULL, GUI::WindowStyle{},
+      GUI::WindowFlags::NoMove | GUI::WindowFlags::NoResize);
 #endif
 }
 

@@ -22,21 +22,19 @@ void SphereCollider::Update() {
 
 bool SphereCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
                              float maxDistance) {
-  Math::Vector3 to = ray.GetOrigin() - (center + GetTransform().GetWorldPos());
+  Math::Vector3 to = ray.GetOrigin() - GetWorldCenter();
   float b = Math::Vector3::Dot(to, ray.GetDirection());
-  float c = Math::Vector3::Dot(to, to) - GetWorldRadius();
+  float c = Math::Vector3::Dot(to, to) - GetWorldRadius() * GetWorldRadius();
   if (c > 0.0f && b > 0.0f) {
     return false;
   }
-  float discr = b * b - c;
-  if (discr < 0.0f) {
-    return false;
-  }
-  float t = -b - Math::Util::Sqrt(discr);
-  if (t < 0.0f) {
-    return 0.0f;
-  }
-  RaycastHitCtor(hitInfo, t, ray.GetPoint(t), -ray.GetDirection());
+  float discrim = b * b - c;
+  if (discrim < 0.0f) return false;
+  discrim = Math::Util::Sqrt(discrim);
+  float t = -b - discrim;
+  if (t < 0.f) t = -b + discrim;
+  Math::Vector3 pt = ray.GetPoint(t);
+  RaycastHitCtor(hitInfo, t, pt, pt - GetWorldCenter());
   return true;
 }
 
