@@ -234,6 +234,10 @@
     <ClCompile Include="Custom\NetworkLevel.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
+    <ClCompile Include="Custom\EmptyLevel\EmptyLevel.cpp">
+      <Filter>Custom\EmptyLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -298,6 +302,9 @@
     </Filter>
     <Filter Include="Collisions">
       <UniqueIdentifier>{c15f9d47-86d9-41b5-a7ee-43b1cc1fee77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\EmptyLevel">
+      <UniqueIdentifier>{41a303ff-7dcc-4225-b47b-6d0aae3ea40f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -496,6 +503,10 @@
     <ClInclude Include="Custom\NetworkLevel.h">
       <Filter>Custom</Filter>
     </ClInclude>
+    <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h">
+      <Filter>Custom\EmptyLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
