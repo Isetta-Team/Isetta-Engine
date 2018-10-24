@@ -100,7 +100,7 @@ void Level::GUIUpdate() {
             height += 1.25f * buttonHeight;
           };
 
-          entity->GetTransform().ForSelfAndDescendents(action);
+          entity->GetTransform().ForDescendants(action);
         }
 
         if (transform != nullptr) {

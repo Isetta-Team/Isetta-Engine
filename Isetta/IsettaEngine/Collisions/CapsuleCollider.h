@@ -9,7 +9,7 @@ class Matrix4;
 }
 
 namespace Isetta {
-class CapsuleCollider : public Collider {
+CREATE_COMPONENT_BEGIN(CapsuleCollider, Collider)
  private:
   void Update() override;
   // TODO(Jacob) duplicate code
@@ -74,5 +74,5 @@ class CapsuleCollider : public Collider {
     }
   }
   bool Intersection(Collider* const other) override;
-};
+CREATE_COMPONENT_END(CapsuleCollider, Collider)
 }  // namespace Isetta

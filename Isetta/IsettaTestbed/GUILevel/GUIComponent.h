@@ -4,12 +4,12 @@
 #pragma once
 #include "Scene/Component.h"
 
-using namespace Isetta;
+namespace Isetta {
+CREATE_COMPONENT_BEGIN(GUIComponent, Component)
+private:
+static bool checkbox;
 
-class GUIComponent : public Component {
- private:
-  static bool checkbox;
-
- public:
-  void GuiUpdate() override;
-};
+public:
+void GuiUpdate() override;
+CREATE_COMPONENT_END(GUIComponent, Component)
+}  // namespace Isetta

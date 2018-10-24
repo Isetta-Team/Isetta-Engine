@@ -5,12 +5,12 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-class CameraController : public Component {
- public:
-  void Update() override;
-  void GuiUpdate() override;
+CREATE_COMPONENT_BEGIN(CameraController, Component)
+public : void Update() override;
+void GuiUpdate() override;
+
 private:
-  float y = 9.8;
-  float z = 4.6;
-};
+float y = 9.8;
+float z = 4.6;
+CREATE_COMPONENT_END(CameraController, Component)
 }  // namespace Isetta

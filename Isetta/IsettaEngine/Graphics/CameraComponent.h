@@ -12,10 +12,8 @@ namespace Math {
 class Vector3;
 class Vector2;
 }  // namespace Math
-}  // namespace Isetta
 
-namespace Isetta {
-class ISETTA_API CameraComponent : public Component {
+CREATE_COMPONENT_BEGIN(CameraComponent, Component)
  public:
   enum class Property {
     FOV,
@@ -71,7 +69,7 @@ class ISETTA_API CameraComponent : public Component {
   H3DNode renderNode;
   H3DRes renderResource;
   int resizeHandle;
-};
+CREATE_COMPONENT_END(CameraComponent, Component)
 
 template <CameraComponent::Property Attr, typename T>
 void CameraComponent::SetProperty(T value) {
