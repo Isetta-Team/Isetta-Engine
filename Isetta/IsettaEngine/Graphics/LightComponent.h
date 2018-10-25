@@ -8,7 +8,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(LightComponent, Component)
+CREATE_COMPONENT_BEGIN(LightComponent, Component, true)
  public:
   enum class Property {
     RADIUS,

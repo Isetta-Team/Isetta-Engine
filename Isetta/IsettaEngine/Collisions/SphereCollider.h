@@ -5,7 +5,7 @@
 #include "Collisions/Collider.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(SphereCollider, Collider)
+CREATE_COMPONENT_BEGIN(SphereCollider, Collider, false)
 private:
 void Update() override;
 

@@ -7,7 +7,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(FlyController, Component)
+CREATE_COMPONENT_BEGIN(FlyController, Component, false)
 public:
   void OnEnable() override;
   void Update() override;

@@ -3,34 +3,37 @@
  */
 #pragma once
 #include <bitset>
+#include <set>
 #include <typeindex>
 #include <unordered_map>
 #include "ISETTA_API.h"
 
-#define CREATE_COMPONENT_BEGIN(NAME, BASE)                                     \
-  template <typename Dummy>                                                    \
-  class ISETTA_API_DECLARE ComponentRegistry<class NAME, BASE, Dummy> {        \
-   protected:                                                                  \
-    static bool NAME##Registered;                                              \
-  };                                                                           \
-  class ISETTA_API_DECLARE NAME : public BASE,                                 \
-                                  public ComponentRegistry<NAME, BASE, void> { \
-   protected:                                                                  \
-    static bool isRegistered() { return NAME##Registered; }                    \
-                                                                               \
+#define CREATE_COMPONENT_BEGIN(NAME, BASE, EXCLUDE)           \
+  template <bool Exclude, typename Dummy>                     \
+  class ISETTA_API_DECLARE                                    \
+      ComponentRegistry<class NAME, BASE, Exclude, Dummy> {   \
+   protected:                                                 \
+    static bool NAME##Registered;                             \
+  };                                                          \
+  class ISETTA_API_DECLARE NAME                               \
+      : public BASE,                                          \
+        public ComponentRegistry<NAME, BASE, EXCLUDE, void> { \
+   protected:                                                 \
+    static bool isRegistered() { return NAME##Registered; }   \
+                                                              \
    private:
 
-#define CREATE_COMPONENT_END(NAME, BASE)                          \
-  }                                                               \
-  ;                                                               \
-  template <typename Dummy>                                       \
-  bool ComponentRegistry<NAME, BASE, Dummy>::NAME##Registered =   \
-      Component::RegisterComponent(std::type_index(typeid(NAME)), \
-                                   std::type_index(typeid(BASE)));
+#define CREATE_COMPONENT_END(NAME, BASE)                                 \
+  }                                                                      \
+  ;                                                                      \
+  template <bool Exclude, typename Dummy>                                \
+  bool ComponentRegistry<NAME, BASE, Exclude, Dummy>::NAME##Registered = \
+      Component::RegisterComponent(std::type_index(typeid(NAME)),        \
+                                   std::type_index(typeid(BASE)), Exclude);
 
 namespace Isetta {
 
-template <typename Curr, typename Base, typename Dummy>
+template <typename Curr, typename Base, bool Exclude, typename Dummy>
 struct ISETTA_API_DECLARE ComponentRegistry {};
 
 class ISETTA_API Component {
@@ -43,6 +46,11 @@ class ISETTA_API Component {
     static std::unordered_map<std::type_index, std::list<std::type_index>>
         children{};
     return children;
+  }
+
+  static std::set<std::type_index>& excludeComponents() {
+    static std::set<std::type_index> excludes{};
+    return excludes;
   }
 
   static void FlattenComponentList();
@@ -95,7 +103,8 @@ class ISETTA_API Component {
   // template <typename T>
   // std::vector<T*> GetComponentsInDescendant();
 
-  static bool RegisterComponent(std::type_index curr, std::type_index base);
+  static bool RegisterComponent(std::type_index curr, std::type_index base,
+                                bool isExclude);
 
   virtual void OnEnable() {}
   virtual void Start() {}

@@ -96,13 +96,25 @@ T* Entity::AddComponent(Args&&... args) {
     throw std::logic_error(Util::StrFormat(
         "%s is not a derived class from Component class", typeid(T).name));
   } else {
+    std::type_index typeIndex{typeid(T)};
+    if (std::any_of(
+            Component::excludeComponents().begin(),
+            Component::excludeComponents().end(),
+            [typeIndex](std::type_index type) { return type == typeIndex; }) &&
+        std::any_of(
+            componentTypes.begin(), componentTypes.end(),
+            [typeIndex](std::type_index type) { return type == typeIndex; })) {
+      throw std::logic_error(Util::StrFormat(
+          "Adding multiple excluded components %s", typeIndex.name()));
+      return nullptr;
+    }
     T* component = MemoryManager::NewOnFreeList<T>(std::forward<Args>(args)...);
     component->SetActive(IsActive);
     component->entity = this;
     if (IsActive) {
       component->OnEnable();
     }
-    componentTypes.emplace_back(std::type_index(typeid(T)));
+    componentTypes.emplace_back(typeIndex);
     components.emplace_back(component);
     return component;
   }

@@ -27,7 +27,7 @@ namespace Isetta {
     };                                                      \
   }
 
-CREATE_COMPONENT_BEGIN(Collider, Component)
+CREATE_COMPONENT_BEGIN(Collider, Component, false)
 public:
 enum class Attributes { IS_STATIC, IS_TRIGGER };
 inline void SetAttribute(Attributes attr, bool value) {

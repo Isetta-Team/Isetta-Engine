@@ -5,7 +5,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(GUIComponent, Component)
+CREATE_COMPONENT_BEGIN(GUIComponent, Component, true)
 private:
 static bool checkbox;
 

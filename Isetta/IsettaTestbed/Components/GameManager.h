@@ -6,7 +6,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(GameManager, Component)
+CREATE_COMPONENT_BEGIN(GameManager, Component, true)
 public : void OnEnable() override;
 void Update() override;
 void GuiUpdate() override;

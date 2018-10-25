@@ -9,23 +9,21 @@ namespace Isetta {
 
 bool Component::isFlattened = false;
 
-bool Component::RegisterComponent(std::type_index curr, std::type_index base) {
-  std::type_index baseIndex{base};
-  std::type_index currIndex{curr};
-
+bool Component::RegisterComponent(std::type_index curr, std::type_index base, bool isExclude) {
+  if (isExclude) excludeComponents().insert(curr);
   std::unordered_map<std::type_index, std::list<std::type_index>>& children =
       childrenTypes();
 
-  if (children.count(currIndex) > 0) {
-    children.at(currIndex).push_front(currIndex);
+  if (children.count(curr) > 0) {
+    children.at(curr).push_front(curr);
   } else {
-    children.insert({currIndex, std::list<std::type_index>{currIndex}});
+    children.insert({curr, std::list<std::type_index>{curr}});
   }
 
-  if (children.count(baseIndex) > 0) {
-    children.at(baseIndex).emplace_back(currIndex);
+  if (children.count(base) > 0) {
+    children.at(base).emplace_back(curr);
   } else {
-    children.insert({baseIndex, std::list<std::type_index>{currIndex}});
+    children.insert({base, std::list<std::type_index>{curr}});
   }
   return true;
 }

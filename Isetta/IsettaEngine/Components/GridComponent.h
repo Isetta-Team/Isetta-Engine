@@ -9,7 +9,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(GridComponent, Component)
+CREATE_COMPONENT_BEGIN(GridComponent, Component, false)
 public:
   void Update() override;
 CREATE_COMPONENT_END(GridComponent, Component)
