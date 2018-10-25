@@ -4,7 +4,6 @@
 #include "PlayerController.h"
 #include "Bullet.h"
 #include "Custom/IsettaCore.h"
-#include "Graphics/MeshComponent.h"
 
 namespace Isetta {
 PlayerController* PlayerController::instance;
