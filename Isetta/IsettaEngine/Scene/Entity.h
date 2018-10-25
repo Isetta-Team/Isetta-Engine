@@ -6,12 +6,13 @@
 #include <typeindex>
 #include <typeinfo>
 #include <vector>
+#include "Component.h"
 #include "Core/Memory/MemoryManager.h"
 #include "Scene/Transform.h"
 #include "Util.h"
 
 namespace Isetta {
-class ISETTA_API Entity {
+class ISETTA_API_DECLARE Entity {
  private:
   enum class EntityAttributes { IS_ACTIVE, NEED_DESTROY, IS_TRANSFORM_DIRTY };
 
@@ -109,8 +110,15 @@ T* Entity::AddComponent(Args&&... args) {
 
 template <typename T>
 T* Entity::GetComponent() {
+  auto types = Component::childrenTypes();
+  std::list<std::type_index> availableTypes =
+      types.at(std::type_index(typeid(T)));
   for (int i = 0; i < componentTypes.size(); i++) {
-    if (std::type_index(typeid(T)) == componentTypes[i]) {
+    std::type_index componentType = componentTypes[i];
+    if (std::any_of(availableTypes.begin(), availableTypes.end(),
+                    [componentType](std::type_index x) {
+                      return x == componentType;
+                    })) {
       return static_cast<T*>(components[i]);
     }
   }
@@ -119,10 +127,16 @@ T* Entity::GetComponent() {
 
 template <typename T>
 std::vector<T*> Entity::GetComponents() {
+  std::list<std::type_index> availableTypes =
+      Component::childrenTypes().at(std::type_index(typeid(T)));
   std::vector<T*> returnValue;
   returnValue.reserve(componentTypes.size());
   for (int i = 0; i < componentTypes.size(); i++) {
-    if (std::type_index(typeid(T)) == componentTypes[i]) {
+    std::type_index componentType = componentTypes[i];
+    if (std::any_of(availableTypes.begin(), availableTypes.end(),
+                    [componentType](std::type_index x) {
+                      return x == componentType;
+                    })) {
       returnValue.emplace_back(static_cast<T*>(components[i]));
     }
   }

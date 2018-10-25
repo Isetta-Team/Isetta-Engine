@@ -33,7 +33,7 @@ namespace Isetta {
 template <typename Curr, typename Base, typename Dummy>
 struct ISETTA_API_DECLARE ComponentRegistry {};
 
-class ISETTA_API_DECLARE Component {
+class ISETTA_API Component {
   friend class Entity;
 
   std::bitset<4> attributes;

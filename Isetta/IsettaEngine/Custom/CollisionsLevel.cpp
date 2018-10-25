@@ -76,6 +76,7 @@ void CollisionsLevel::LoadLevel() {
   staticCol[1] = AddEntity("sphere-collider");
   staticCol[1]->SetTransform(Math::Vector3{0, 1, -4});
   SphereCollider* sCol = staticCol[1]->AddComponent<SphereCollider>();
+  Collider* c = staticCol[1]->GetComponent<Collider>();
   sCol->SetAttribute(ColliderAttribute::IS_STATIC, true);
 
   staticCol[2] = AddEntity("capsule-collider");
