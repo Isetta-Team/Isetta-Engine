@@ -247,6 +247,9 @@
     <ClCompile Include="Collisions\CollisionHandler.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
+    <ClCompile Include="Custom\FrameReporter.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -524,6 +527,9 @@
     </ClInclude>
     <ClInclude Include="Collisions\CollisionHandler.h">
       <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\FrameReporter.h">
+      <Filter>Custom</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
