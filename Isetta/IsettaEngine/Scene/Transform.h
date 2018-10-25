@@ -77,8 +77,7 @@ class ISETTA_API_DECLARE Transform {
   Math::Vector3 LocalDirFromWorldDir(const Math::Vector3& worldDirection);
 
   void ForChildren(const Action<Transform*>& action);
-  void ForDescendents(const Action<Transform*>& action);
-  void ForSelfAndDescendents(const Action<Transform*>& action);
+  void ForDescendants(const Action<Transform*>& action);
 
   void SetWorldTransform(const Math::Vector3& inPosition,
                          const Math::Vector3& inEulerAngles,
@@ -89,10 +88,19 @@ class ISETTA_API_DECLARE Transform {
   static void SetH3DNodeTransform(H3DNode node, Transform& transform);
 
 #if _DEBUG
-  void DrawGUI();
+  void InspectorGUI();
 #endif
   const Math::Matrix4& GetLocalToWorldMatrix();
   const Math::Matrix4& GetWorldToLocalMatrix();
+
+  // iterator
+  typedef std::vector<Transform*>::iterator iterator;
+  typedef std::vector<Transform*>::const_iterator const_iterator;
+
+  inline iterator begin() { return children.begin(); }
+  inline const_iterator begin() const { return children.begin(); }
+  inline iterator end() { return children.end(); }
+  inline const_iterator end() const { return children.end(); }
 
  private:
   void RecalculateLocalToWorldMatrix();

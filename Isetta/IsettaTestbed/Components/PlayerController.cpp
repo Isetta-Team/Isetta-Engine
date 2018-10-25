@@ -26,7 +26,7 @@ void PlayerController::Start() {
 }
 
 void PlayerController::Update() {
-  if (Input::IsKeyPressed(KeyCode::L)) {
+  if (Input::IsGamepadButtonPressed(GamepadButton::Y)) {
     auto light =
         LevelManager::Instance().currentLevel->GetEntityByName("Light");
     if (light != nullptr) {
@@ -37,18 +37,14 @@ void PlayerController::Update() {
   float dt = Time::GetDeltaTime();
   Math::Vector3 lookDir;
   Math::Vector3 movement{};
-  if (Input::IsKeyPressed(KeyCode::W)) {
-    movement += Math::Vector3::back;
-  }
 
-  if (Input::IsKeyPressed(KeyCode::S)) {
-    movement += Math::Vector3::forward;
-  }
-  if (Input::IsKeyPressed(KeyCode::A)) {
-    movement += Math::Vector3::right;
-  }
-  if (Input::IsKeyPressed(KeyCode::D)) {
-    movement += Math::Vector3::left;
+  movement +=
+      Input::GetGamepadAxis(GamepadAxis::L_HORIZONTAL) *
+          Math::Vector3::left +
+      Input::GetGamepadAxis(GamepadAxis::L_VERTICLE) * Math::Vector3::forward;
+
+  if (movement.Magnitude() > 1) {
+    movement.Normalize();
   }
 
   if (movement.Magnitude() > 0) {
@@ -56,28 +52,18 @@ void PlayerController::Update() {
       isMoving = true;
       animationComp->TransitToAnimationState(1, 0.2f);
     }
-    GetTransform().TranslateWorld(movement.Normalized() * moveSpeed * dt);
+    GetTransform().TranslateWorld(movement * moveSpeed * dt);
   } else {
     if (isMoving) {
       isMoving = false;
       animationComp->TransitToAnimationState(0, 0.2f);
     }
   }
-  if (Input::IsKeyPressed(KeyCode::UP_ARROW)) {
-    lookDir += Math::Vector3::back;
-  }
 
-  if (Input::IsKeyPressed(KeyCode::DOWN_ARROW)) {
-    lookDir += Math::Vector3::forward;
-  }
-
-  if (Input::IsKeyPressed(KeyCode::LEFT_ARROW)) {
-    lookDir += Math::Vector3::right;
-  }
-
-  if (Input::IsKeyPressed(KeyCode::RIGHT_ARROW)) {
-    lookDir += Math::Vector3::left;
-  }
+  lookDir +=
+      Input::GetGamepadAxis(GamepadAxis::R_HORIZONTAL) *
+          Math::Vector3::left +
+      Input::GetGamepadAxis(GamepadAxis::R_VERTICLE) * Math::Vector3::forward;
 
   if (lookDir.Magnitude() >= 1.f) {
     lookDir.Normalize();

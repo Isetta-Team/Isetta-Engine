@@ -7,8 +7,8 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-class ISETTA_API FlyController : public Component {
- public:
+CREATE_COMPONENT_BEGIN(FlyController, Component)
+public:
   void OnEnable() override;
   void Update() override;
   void GuiUpdate() override;
@@ -19,6 +19,7 @@ class ISETTA_API FlyController : public Component {
   float rotY{};
   float lookRotationSpeed{-0.1f};
   float flySpeed = 15.f;
+  float flyMultiplier = 2.0f;
   bool enableLook = true;
-};
+CREATE_COMPONENT_END(FlyController, Component)
 }  // namespace Isetta

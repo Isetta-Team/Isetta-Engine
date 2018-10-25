@@ -5,7 +5,7 @@
 #include "ISETTA_API.h"
 
 namespace Isetta::Math {
-class ISETTA_API_DECLARE Matrix4 {
+class ISETTA_API Matrix4 {
  public:
   static const Matrix4 zero;
   static const Matrix4 identity;

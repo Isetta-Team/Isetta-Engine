@@ -2,16 +2,19 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Physics/Collider.h"
+#include "Collisions/Collider.h"
 
 namespace Isetta::Math {
 class Matrix4;
 }
 
 namespace Isetta {
-class CapsuleCollider : public Collider {
+CREATE_COMPONENT_BEGIN(CapsuleCollider, Collider)
  private:
   void Update() override;
+  // TODO(Jacob) duplicate code
+  bool RaycastSphere(const Math::Vector3& center, float radius, const Ray& ray,
+                     RaycastHit* const hitInfo, float maxDistance);
 
  protected:
   const ColliderType GetType() const override {
@@ -45,7 +48,7 @@ class CapsuleCollider : public Collider {
   float GetWorldCapsule(Math::Matrix4* rotation, Math::Matrix4* scale) const;
 
   bool Raycast(const Ray& ray, RaycastHit* const hitInfo,
-               float maxDistance = 0) /*override*/;
+               float maxDistance = 0) override;
 
   inline float GetWorldRadius() const {
     switch (direction) {
@@ -71,5 +74,5 @@ class CapsuleCollider : public Collider {
     }
   }
   bool Intersection(Collider* const other) override;
-};
+CREATE_COMPONENT_END(CapsuleCollider, Collider)
 }  // namespace Isetta

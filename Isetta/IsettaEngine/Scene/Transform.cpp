@@ -11,6 +11,7 @@
 #if _DEBUG
 #include "Graphics/GUI.h"
 #include "Graphics/RectTransform.h"
+#include "imgui/imgui.h"
 #endif
 
 namespace Isetta {
@@ -263,16 +264,11 @@ void Transform::ForChildren(const Action<Transform*>& action) {
   }
 }
 
-void Transform::ForDescendents(const Action<Transform*>& action) {
+void Transform::ForDescendants(const Action<Transform*>& action) {
   for (auto& child : children) {
     action(child);
-    child->ForDescendents(action);
+    child->ForDescendants(action);
   }
-}
-
-void Transform::ForSelfAndDescendents(const Action<Transform*>& action) {
-  action(this);
-  ForDescendents(action);
 }
 
 void Transform::SetWorldTransform(const Math::Vector3& inPosition,
@@ -287,41 +283,67 @@ void Transform::SetH3DNodeTransform(const H3DNode node, Transform& transform) {
   h3dSetNodeTransMat(node, transform.GetLocalToWorldMatrix().Transpose().data);
 }
 
-void Transform::DrawGUI() {
-  std::string parentName = parent == nullptr ? "null" : parent->GetName();
-  std::string content =
-      GetName() + "\n\n" + "World Position: " + GetWorldPos().ToString() +
-      "\n" + "Local Position: " + GetLocalPos().ToString() + "\n" +
-      "World Rotation: " + GetWorldEulerAngles().ToString() + "\n" +
-      "Local Rotation: " + GetLocalEulerAngles().ToString() + "\n" +
-      "Local Scale: " + GetLocalScale().ToString() + "\n" +
-      "Parent: " + parentName;
-  GUI::Text(RectTransform{Math::Rect{-200, 360, 300, 100}, GUI::Pivot::TopRight,
-                          GUI::Pivot::TopRight},
-            content);
+void Transform::InspectorGUI() {
+  static RectTransform rectTrans{{0, 0, 350, 300}, GUI::Pivot::TopRight};
+  static bool isOpen = true;
+  GUI::Window(
+      rectTrans, "Inspector",
+      [&]() {
+        std::string parentName = parent == nullptr ? "null" : parent->GetName();
 
-  float height = 420;
-  float padding = 15;
-  GUI::Text(RectTransform{Math::Rect{-200, height, 300, 100},
-                          GUI::Pivot::TopRight, GUI::Pivot::TopRight},
-            "Components", GUI::TextStyle{Color::white});
-  height += padding;
-  for (const auto& component : entity->GetComponents()) {
-    Component& comp = *component;
-    GUI::Text(RectTransform{Math::Rect{-200, height, 300, 100},
-                            GUI::Pivot::TopRight, GUI::Pivot::TopRight},
-              typeid(comp).name());
-    height += padding;
+        float height = 5;
+        float padding = 15;
+        GUI::Text(RectTransform{Math::Rect{padding, height, 300, 100}},
+                  GetName(), GUI::TextStyle{Color::white});
+        height += 15;
+
+        std::string content =
+            "World Position: " + GetWorldPos().ToString() + "\n" +
+            "Local Position: " + GetLocalPos().ToString() + "\n" +
+            "World Rotation: " + GetWorldEulerAngles().ToString() + "\n" +
+            "Local Rotation: " + GetLocalEulerAngles().ToString() + "\n" +
+            "Local Scale: " + GetLocalScale().ToString() + "\n" +
+            "Parent: " + parentName;
+
+        GUI::Text(RectTransform{Math::Rect{padding, height, 300, 100}},
+                  content);
+
+        height += 90;
+
+        if (GUI::Button(RectTransform{Math::Rect{padding, height, 300, 30}},
+                        "Reset")) {
+          // if (ImGui::Button("Reset", (ImVec2)Math::Vector2{300, 30})) {
+          SetLocalRot(Math::Quaternion::identity);
+          SetLocalPos(Math::Vector3::zero);
+          SetLocalScale(Math::Vector3::one);
+        }
+
+        height += 50;
+
+        GUI::Text(RectTransform{Math::Rect{padding, height, 300, 100}},
+                  "Components", GUI::TextStyle{Color::white});
+
+        height += padding;
+
+        for (const auto& component : entity->GetComponents()) {
+          Component& comp = *component;
+          GUI::Text(RectTransform{Math::Rect{padding, height, 300, 100}},
+                    typeid(comp).name());
+          height += padding;
+        }
+      },
+      &isOpen);
+
+  Math::Matrix4 temp{};
+  temp.SetTopLeftMatrix3(localRot.GetMatrix3());  // rotation
+  temp.SetCol(3, localPos, 1);
+
+  if (parent != nullptr) {
+    temp = parent->GetLocalToWorldMatrix() * temp;
   }
-  if (GUI::Button(RectTransform{Math::Rect{-200, height, 300, 30},
-                                GUI::Pivot::TopRight, GUI::Pivot::TopRight},
-                  "Reset")) {
-    SetLocalRot(Math::Quaternion::identity);
-    SetLocalPos(Math::Vector3::zero);
-    SetLocalScale(Math::Vector3::one);
-  }
-  DebugDraw::Axis(GetLocalToWorldMatrix());
-  DebugDraw::AxisSphere(GetLocalToWorldMatrix());
+
+  DebugDraw::Axis(temp);
+  DebugDraw::AxisSphere(temp);
 }
 
 const Math::Matrix4& Transform::GetLocalToWorldMatrix() {
@@ -379,7 +401,8 @@ void Transform::RemoveChild(Transform* transform) {
 void Transform::SetDirty() {
   // TODO(YIDI): Don't need to traverse all children, if one child is dirty, all
   // children all also dirty
-  ForSelfAndDescendents([](Transform* trans) {
+  isDirty = true;
+  ForDescendants([](Transform* trans) {
     trans->isDirty = true;
     trans->isWorldToLocalDirty = true;
   });

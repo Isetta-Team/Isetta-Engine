@@ -8,7 +8,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-class ISETTA_API LightComponent : public Component {
+CREATE_COMPONENT_BEGIN(LightComponent, Component)
  public:
   enum class Property {
     RADIUS,
@@ -40,7 +40,7 @@ class ISETTA_API LightComponent : public Component {
   std::string name;
   H3DNode renderNode{0};
   H3DRes renderResource{0};
-};
+CREATE_COMPONENT_END(LightComponent, Component)
 
 template <LightComponent::Property Attr, typename T>
 void LightComponent::SetProperty(T value) {

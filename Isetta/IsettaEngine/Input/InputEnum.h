@@ -126,4 +126,32 @@ enum class KeyCode {
 };
 enum class MouseButtonCode { MOUSE_LEFT, MOUSE_RIGHT, MOUSE_MIDDLE, ALL };
 
+enum class GamepadAxis {
+  L_HORIZONTAL,
+  L_VERTICLE,
+  R_HORIZONTAL,
+  R_VERTICLE,
+  L_TRIGGER,
+  R_TRIGGER,
+  ALL
+};
+
+enum class GamepadButton {
+  A,
+  B,
+  X,
+  Y,
+  LEFT_BUMPER,
+  RIGHT_BUMPER,
+  BACK,
+  START,
+  GUIDE,
+  LEFT_THUMB,
+  RIGHT_THUMB,
+  DPAD_UP,
+  DPAD_RIGHT,
+  DPAD_DOWN,
+  DPAD_LEFT,
+  ALL,
+};
 }  // namespace Isetta

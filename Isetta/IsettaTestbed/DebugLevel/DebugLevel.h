@@ -6,8 +6,9 @@
 #include "Scene/Level.h"
 #include "Scene/LevelManager.h"
 
-namespace Isetta {
-CREATE_LEVEL(PhysicsLevel)
+using namespace Isetta;
+
+CREATE_LEVEL(DebugLevel)
 void LoadLevel() override;
-};  // namespace Isetta
-}  // namespace Isetta
+}
+;

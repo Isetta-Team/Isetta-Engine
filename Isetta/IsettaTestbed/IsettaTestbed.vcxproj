@@ -87,7 +87,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL\*.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL\*.lib;$(SolutionDir)External\imgui\lib\$(Configuration)\imgui.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
@@ -134,7 +134,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL\*.lib;$(SolutionDir)External\imgui\lib\$(Configuration)\imgui.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
@@ -148,6 +148,10 @@
     <ClCompile Include="Components\GameManager.cpp" />
     <ClCompile Include="Components\PlayerController.cpp" />
     <ClCompile Include="Components\Zombie.cpp" />
+    <ClCompile Include="DebugLevel\DebugComponent.cpp" />
+    <ClCompile Include="DebugLevel\DebugLevel.cpp" />
+    <ClCompile Include="GUILevel\GUILevel.cpp" />
+    <ClCompile Include="GUILevel\GUIComponent.cpp" />
     <ClCompile Include="Level\ExampleLevel.cpp" />
     <ClCompile Include="Level\Level1.cpp" />
     <ClCompile Include="main.cpp" />
@@ -163,6 +167,10 @@
     <ClInclude Include="Components\GameManager.h" />
     <ClInclude Include="Components\PlayerController.h" />
     <ClInclude Include="Components\Zombie.h" />
+    <ClInclude Include="DebugLevel\DebugComponent.h" />
+    <ClInclude Include="DebugLevel\DebugLevel.h" />
+    <ClInclude Include="GUILevel\GUILevel.h" />
+    <ClInclude Include="GUILevel\GUIComponent.h" />
     <ClInclude Include="Level\ExampleLevel.h" />
     <ClInclude Include="Level\Level1.h" />
   </ItemGroup>

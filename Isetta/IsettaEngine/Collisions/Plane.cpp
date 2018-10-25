@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Physics/Plane.h"
+#include "Collisions/Plane.h"
+#include "Collisions/Ray.h"
 #include "Core/Math/Util.h"
-#include "Physics/Ray.h"
 
 namespace Isetta {
 Plane::Plane(const Math::Vector3& a, const Math::Vector3& b,

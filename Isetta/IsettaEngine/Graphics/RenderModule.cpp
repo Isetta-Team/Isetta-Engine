@@ -33,8 +33,8 @@ void RenderModule::StartUp(GLFWwindow* win) {
 
 void RenderModule::Update(float deltaTime) {
   for (const auto& mesh : meshComponents) {
-    bool isTransformDirty =
-        mesh->entity->GetAttribute(Entity::EntityAttributes::IS_TRANSFORM_DIRTY);
+    bool isTransformDirty = mesh->entity->GetAttribute(
+        Entity::EntityAttributes::IS_TRANSFORM_DIRTY);
     // TODO(YIDI): Remove this when finish debugging
 #if _DEBUG
     isTransformDirty = true;

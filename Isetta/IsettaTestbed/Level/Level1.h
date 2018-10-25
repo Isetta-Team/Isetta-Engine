@@ -8,6 +8,6 @@
 
 namespace Isetta {
 CREATE_LEVEL(Level1)
-  void LoadLevel() override;
-};
+void LoadLevel() override;
+CREATE_LEVEL_END
 }  // namespace Isetta
