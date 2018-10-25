@@ -201,9 +201,6 @@
     <ClInclude Include="Custom\CollisionsLevel.h">
       <Filter>Custom</Filter>
     </ClInclude>
-    <ClCompile Include="Networking\NetworkIdentity.cpp">
-      <Filter>Networking</Filter>
-    </ClCompile>
     <ClCompile Include="Components\FlyController.cpp">
       <Filter>Components</Filter>
     </ClCompile>
@@ -238,6 +235,12 @@
       <Filter>Custom\EmptyLevel</Filter>
     </ClCompile>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Collisions\CollisionHandler.cpp" />
+    <ClCompile Include="Collisions\Collisions.cpp" />
+    <ClCompile Include="Custom\RaycastClick.cpp" />
+    <ClCompile Include="Networking\NetworkId.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -485,9 +488,6 @@
     <ClInclude Include="Custom\IsettaCore.h">
       <Filter>Custom</Filter>
     </ClInclude>
-    <ClInclude Include="Networking\NetworkIdentity.h">
-      <Filter>Networking</Filter>
-    </ClInclude>
     <ClInclude Include="Components\FlyController.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -507,6 +507,12 @@
       <Filter>Custom\EmptyLevel</Filter>
     </ClInclude>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Collisions\CollisionHandler.h" />
+    <ClInclude Include="Collisions\Collisions.h" />
+    <ClInclude Include="Custom\RaycastClick.h" />
+    <ClInclude Include="Networking\NetworkId.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

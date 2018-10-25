@@ -4,7 +4,7 @@
 
 #include "Networking/NetworkManager.h"
 #include "Core/Config/Config.h"
-#include "Networking/NetworkIdentity.h"
+#include "Networking/NetworkId.h"
 #include "Networking/NetworkingModule.h"
 #include "Scene/Entity.h"
 
@@ -81,34 +81,34 @@ Entity* NetworkManager::GetNetworkEntity(const U32 id) {
   }
   return NULL;
 }
-U32 NetworkManager::CreateNetworkId(NetworkIdentity* networkIdentity) {
+U32 NetworkManager::CreateNetworkId(NetworkId* NetworkId) {
   if (!ServerIsRunning()) {
     throw std::exception("Cannot create a new network id on a client");
   }
   U32 netId = nextNetworkId++;
-  networkIdentity->id = netId;
-  networkIdToComponentMap[netId] = networkIdentity;
+  NetworkId->id = netId;
+  networkIdToComponentMap[netId] = NetworkId;
 }
 U32 NetworkManager::AssignNetworkId(U32 netId,
-                                    NetworkIdentity* networkIdentity) {
+                                    NetworkId* NetworkId) {
   if (networkIdToComponentMap.find(netId) != networkIdToComponentMap.end()) {
     throw std::exception(Util::StrFormat(
         "Multiple objects trying to assign to the same network id: %d", netId));
-  } else if (networkIdentity->id > 0) {
+  } else if (NetworkId->id > 0) {
     throw std::exception(
         Util::StrFormat("Trying to assign network id %d to existing network "
                         "object with id %d",
-                        netId, networkIdentity->id));
+                        netId, NetworkId->id));
   }
-  networkIdentity->id = netId;
-  networkIdToComponentMap[netId] = networkIdentity;
+  NetworkId->id = netId;
+  networkIdToComponentMap[netId] = NetworkId;
 }
-void NetworkManager::RemoveNetworkId(NetworkIdentity* networkIdentity) {
-  if (!networkIdentity->id) {
+void NetworkManager::RemoveNetworkId(NetworkId* NetworkId) {
+  if (!NetworkId->id) {
     throw std::exception(Util::StrFormat(
         "Cannot remove network id on a nonexistent network object"));
   }
-  networkIdToComponentMap.erase(networkIdentity->id);
-  networkIdentity->id = NULL;
+  networkIdToComponentMap.erase(NetworkId->id);
+  NetworkId->id = NULL;
 }
 }  // namespace Isetta

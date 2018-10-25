@@ -13,7 +13,7 @@
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
 #include "Input/Input.h"
-#include "Networking/NetworkIdentity.h"
+#include "Networking/NetworkId.h"
 #include "Scene/Entity.h"
 
 using namespace Isetta;
@@ -78,7 +78,7 @@ void RegisterExampleMessageFunctions() {
         if (!entity) {
           Entity* e = LevelManager::Instance().currentLevel->AddEntity(
               Util::StrFormat("NetworkEntity%d", spawnMessage->netId));
-          e->AddComponent<NetworkIdentity>(spawnMessage->netId);
+          e->AddComponent<NetworkId>(spawnMessage->netId);
           spawnedEntities.push_back(e);
 
           // Zomble
@@ -101,7 +101,7 @@ void RegisterExampleMessageFunctions() {
         if (!spawnMessage->netId) {
           Entity* e = LevelManager::Instance().currentLevel->AddEntity(
               Util::StrFormat("NetworkEntity%d", count++));
-          NetworkIdentity* netIdentity = e->AddComponent<NetworkIdentity>();
+          NetworkId* netIdentity = e->AddComponent<NetworkId>();
           spawnedEntities.push_back(e);
           spawnMessage->netId = netIdentity->id;
 
@@ -132,7 +132,7 @@ void RegisterExampleMessageFunctions() {
           return;
         }
         NetworkManager::Instance().RemoveNetworkId(
-            entity->GetComponent<NetworkIdentity>());
+            entity->GetComponent<NetworkId>());
         spawnedEntities.remove(entity);
         Entity::Destroy(entity);
       });
@@ -156,7 +156,7 @@ void RegisterExampleMessageFunctions() {
         }
 
         NetworkManager::Instance().RemoveNetworkId(
-            entity->GetComponent<NetworkIdentity>());
+            entity->GetComponent<NetworkId>());
         spawnedEntities.remove(entity);
         Entity::Destroy(entity);
       });
