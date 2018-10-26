@@ -38,6 +38,12 @@
     <ClCompile Include="Example\ExampleLevel.cpp">
       <Filter>Example</Filter>
     </ClCompile>
+    <ClCompile Include="InputLevel\InputLevel.cpp">
+      <Filter>Input Level</Filter>
+    </ClCompile>
+    <ClCompile Include="InputLevel\InputTestComponent.cpp">
+      <Filter>Input Level</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
@@ -55,6 +61,9 @@
     </Filter>
     <Filter Include="Example">
       <UniqueIdentifier>{ed8f8d87-125f-4dc1-9db0-ef26e043470d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input Level">
+      <UniqueIdentifier>{b2aa16a6-0583-4fa7-8226-452f3aaeeb72}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -93,6 +102,12 @@
     </ClInclude>
     <ClInclude Include="Example\ExampleLevel.h">
       <Filter>Example</Filter>
+    </ClInclude>
+    <ClInclude Include="InputLevel\InputLevel.h">
+      <Filter>Input Level</Filter>
+    </ClInclude>
+    <ClInclude Include="InputLevel\InputTestComponent.h">
+      <Filter>Input Level</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

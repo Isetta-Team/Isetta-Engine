@@ -29,8 +29,6 @@
 
 namespace Isetta {
 
-void InputDemo();
-
 EngineLoop& EngineLoop::Instance() {
   static EngineLoop instance;
   return instance;
@@ -82,9 +80,6 @@ void EngineLoop::StartUp() {
   LevelManager::Instance().LoadStartupLevel();
 
   StartGameClock();
-
-  // InputDemo();
-  // RunYidiTest();
 }
 
 void EngineLoop::Update() {
@@ -158,27 +153,4 @@ Clock& EngineLoop::GetGameClock() {
   static Clock gameTime{};
   return gameTime;
 }
-
-void InputDemo() {
-  // TODO(Chaojie) remove later into game logic
-
-  // Register Input callback from player script
-  U64 handleA, handleB, handleC;
-  handleA = Input::RegisterKeyPressCallback(KeyCode::NUM1, [&handleA]() {
-    LOG_INFO(Debug::Channel::General, "A pressed");
-    Input::UnregisterKeyPressCallback(KeyCode::A, handleA);
-  });
-  handleB = Input::RegisterKeyReleaseCallback(KeyCode::A, [&handleB]() {
-    LOG_INFO(Debug::Channel::General, "A released");
-    Input::UnregisterKeyReleaseCallback(KeyCode::A, handleB);
-  });
-  handleC = Input::RegisterMousePressCallback(
-      MouseButtonCode::MOUSE_LEFT, [&handleC]() {
-        LOG_INFO(Debug::Channel::General,
-                 {"Left pressed at: " + Input::GetMousePosition().ToString()});
-        Input::UnregisterMousePressCallback(MouseButtonCode::MOUSE_LEFT,
-                                            handleC);
-      });
-}
-
 }  // namespace Isetta
