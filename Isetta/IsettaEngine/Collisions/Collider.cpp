@@ -4,6 +4,7 @@
 #include "Collisions/Collider.h"
 #include "Collisions/BoxCollider.h"
 #include "Collisions/CapsuleCollider.h"
+#include "Collisions/CollisionHandler.h"
 #include "Collisions/CollisionsModule.h"
 #include "Collisions/SphereCollider.h"
 
