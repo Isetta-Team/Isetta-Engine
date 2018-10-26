@@ -67,11 +67,6 @@ class ISETTA_API_DECLARE Component {
   bool GetActive() const;
   class Transform* GetTransform() const;
   class Entity* GetEntity() const;
-  // TODO(Jacob) possibly remove?
-  template <typename CheckType, typename InstanceType>
-  bool IsInstanceOf(const InstanceType& instance) {
-    return (dynamic_cast<CheckType*>(&instance) != NULL);
-  }
 
   // TODO(Jacob) do we want?
   // template <typename T>

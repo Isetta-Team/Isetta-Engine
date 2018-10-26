@@ -121,8 +121,5 @@ void Level::LateUpdate() {
   });
 }
 
-Level::Level() {
-  Entity* entity = MemoryManager::NewOnFreeList<Entity>("Root");
-  levelRoot = entity;
-}
+Level::Level() : levelRoot{MemoryManager::NewOnFreeList<Entity>("Root")} {}
 }  // namespace Isetta

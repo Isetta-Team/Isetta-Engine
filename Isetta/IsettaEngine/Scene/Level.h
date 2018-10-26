@@ -5,11 +5,11 @@
 #include <list>
 #include "ISETTA_API.h"
 
-#define CREATE_LEVEL(NAME) class NAME : public Level, public LevelRegistry<NAME> {\
+#define CREATE_LEVEL(NAME) class NAME : public Isetta::Level, public Isetta::LevelRegistry<NAME> {\
  public:\
   bool IsRegisteredInLevelManager() const { return registered; }\
   static inline Func<NAME*> CreateMethod = []() {\
-    return MemoryManager::NewOnStack<NAME>();\
+    return Isetta::MemoryManager::NewOnStack<NAME>();\
   };\
   static std::string GetLevelName() { return #NAME; }\
  private:
@@ -22,7 +22,7 @@ class ISETTA_API Level {
 protected:
   std::list<class Entity*> entities;
 public:
-  class Entity* levelRoot;
+  class Entity* const levelRoot;
   Level();
   virtual ~Level() = default;
   class Entity* GetEntityByName(const std::string&);
