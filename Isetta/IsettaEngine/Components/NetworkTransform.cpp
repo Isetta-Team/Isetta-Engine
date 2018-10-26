@@ -22,7 +22,13 @@ void NetworkTransform::Start() {
               reinterpret_cast<TransformMessage*>(message);
           Entity* entity = NetworkManager::Instance().GetNetworkEntity(
               transformMessage->netId);
+
+          LOG(Util::StrFormat("%f, %f, %f", transformMessage->localPos.x,
+                              transformMessage->localPos.y,
+                              transformMessage->localPos.z));
+          LOG(Util::StrFormat("NetId: %d", transformMessage->netId));
           if (entity) {
+            LOG(Util::StrFormat("Entity exists!"));
             Transform t = entity->GetTransform();
             t.SetLocalPos(transformMessage->localPos);
             t.SetLocalScale(transformMessage->localScale);
@@ -47,6 +53,8 @@ void NetworkTransform::Start() {
           NetworkManager::Instance().SendAllMessageFromServer<TransformMessage>(
               transformMessage);
         });
+
+    NetworkTransform::registeredCallback = true;
   }
   netId = entity->GetComponent<NetworkId>();
 }

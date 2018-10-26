@@ -43,6 +43,17 @@ void Level::UnloadLevel() {
   MemoryManager::FreeOnFreeList(levelRoot);
 }
 
+void Level::AddComponentToStart(Component* component) {
+  componentsToStart.push(component);
+}
+
+void Level::StartComponents() {
+  while (!componentsToStart.empty()) {
+    componentsToStart.top()->Start();
+    componentsToStart.pop();
+  }
+}
+
 Entity* Level::AddEntity(std::string name) {
   return AddEntity(name, levelRoot);
 }
@@ -56,8 +67,16 @@ Entity* Level::AddEntity(std::string name, Entity* parent) {
 }
 
 void Level::Update() {
+  StartComponents();
   for (const auto& entity : entities) {
     entity->Update();
+  }
+}
+
+void Level::FixedUpdate() {
+  StartComponents();
+  for (const auto& entity : entities) {
+    entity->FixedUpdate();
   }
 }
 

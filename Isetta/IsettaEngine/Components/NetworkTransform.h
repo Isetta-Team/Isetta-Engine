@@ -47,7 +47,6 @@ void Copy(const yojimbo::Message* otherMessage) override {
   localPos = message->localPos;
   localScale = message->localScale;
   localRot = message->localRot;
-  // copy stuff here
 }
 
 public:

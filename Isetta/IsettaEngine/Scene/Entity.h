@@ -116,6 +116,8 @@ T* Entity::AddComponent(Args&&... args) {
     }
     componentTypes.emplace_back(typeIndex);
     components.emplace_back(component);
+
+    LevelManager::Instance().currentLevel->AddComponentToStart(component);
     return component;
   }
 }
