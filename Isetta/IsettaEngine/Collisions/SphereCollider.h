@@ -28,7 +28,7 @@ bool Raycast(const Ray& ray, RaycastHit* const hitInfo,
              float maxDistance = 0) override;
 
 inline float GetWorldRadius() const {
-  return radius * GetTransform().GetWorldScale().Max();
+  return radius * GetTransform()->GetWorldScale().Max();
 }
 bool Intersection(Collider* const other) override;
 CREATE_COMPONENT_END(SphereCollider, Collider)

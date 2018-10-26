@@ -5,8 +5,7 @@
 
 #include "Collisions/AABB.h"
 #include "Collisions/Ray.h"
-#include "Core/Debug/DebugDraw.h"
-#include "Core/IsettaAlias.h"
+#include "Core/Math/Vector4.h"
 #include "Core/Math/Matrix3.h"
 #include "Core/Math/Vector3.h"
 #include "Scene/Entity.h"
@@ -104,14 +103,14 @@ bool CollisionsModule::Intersection(const BoxCollider &a,
   // TODO(all) is there a better way to do this?
   for (int i = 0; i < Math::Matrix3::ROW_COUNT; i++) {
     for (int j = 0; j < Math::Matrix3::ROW_COUNT; j++) {
-      rot[i][j] = Math::Vector3::Dot(a.GetTransform().GetAxis(i),
-                                     b.GetTransform().GetAxis(j));
+      rot[i][j] = Math::Vector3::Dot(a.GetTransform()->GetAxis(i),
+                                     b.GetTransform()->GetAxis(j));
     }
   }
   Math::Vector3 t = b.GetWorldCenter() - a.GetWorldCenter();
-  t = Math::Vector3{Math::Vector3::Dot(t, a.GetTransform().GetLeft()),
-                    Math::Vector3::Dot(t, a.GetTransform().GetUp()),
-                    Math::Vector3::Dot(t, a.GetTransform().GetForward())};
+  t = Math::Vector3{Math::Vector3::Dot(t, a.GetTransform()->GetLeft()),
+                    Math::Vector3::Dot(t, a.GetTransform()->GetUp()),
+                    Math::Vector3::Dot(t, a.GetTransform()->GetForward())};
   for (int i = 0; i < Math::Matrix3::ROW_COUNT; i++) {
     for (int j = 0; j < Math::Matrix3::ROW_COUNT; j++) {
       absRot[i][j] = Math::Util::Abs(rot[i][j]) + Math::Util::EPSILON;
@@ -217,8 +216,8 @@ bool CollisionsModule::Intersection(const BoxCollider &box,
          Math::Util::Square(capsule.radius * radiusScale);
 
   // Not working
-  // Math::Vector3 localP0 = box.GetTransform().LocalPosFromWorldPos(p0);
-  // Math::Vector3 localP1 = box.GetTransform().LocalPosFromWorldPos(p1);
+  // Math::Vector3 localP0 = box.GetTransform()->LocalPosFromWorldPos(p0);
+  // Math::Vector3 localP1 = box.GetTransform()->LocalPosFromWorldPos(p1);
 
   // float t;
   // bool intersect =
@@ -517,23 +516,23 @@ Math::Vector3 CollisionsModule::ClosestPtPointOBB(const Math::Vector3 &point,
 
   Math::Vector3 extents = box.GetWorldExtents();
   for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
-    float dist = Math::Vector3::Dot(d, box.GetTransform().GetAxis(i));
+    float dist = Math::Vector3::Dot(d, box.GetTransform()->GetAxis(i));
     if (dist > extents[i]) {
       dist = extents[i];
     }
     if (dist < -extents[i]) {
       dist = -extents[i];
     }
-    pt += dist * box.GetTransform().GetAxis(i);
+    pt += dist * box.GetTransform()->GetAxis(i);
   }
   return pt;
 }
 Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
                                                  const BoxCollider &box,
                                                  float *_t, float *_distSq) {
-  Math::Vector3 o = box.GetTransform().LocalPosFromWorldPos(line.GetOrigin());
+  Math::Vector3 o = box.GetTransform()->LocalPosFromWorldPos(line.GetOrigin());
   Math::Vector3 dir =
-      box.GetTransform().LocalDirFromWorldDir(line.GetDirection());
+      box.GetTransform()->LocalDirFromWorldDir(line.GetDirection());
   float &t = *_t;
   float &distSq = *_distSq;
   distSq = 0;
@@ -589,7 +588,7 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
         pt[z] = extents[z];
       }
       // dist = 0 means intersection
-      return box.GetTransform().WorldPosFromLocalPos(pt);
+      return box.GetTransform()->WorldPosFromLocalPos(pt);
     }
     case 1: {
       // LOG_INFO(Debug::Channel::Collisions, "Case 1");
@@ -644,7 +643,7 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
         }
       }
       t /= line.GetDirection().Magnitude();
-      return box.GetTransform().WorldPosFromLocalPos(pt);
+      return box.GetTransform()->WorldPosFromLocalPos(pt);
     }
     case 0: {  // assuming line is positive
       // LOG_INFO(Debug::Channel::Collisions, "Case 0");
@@ -675,7 +674,7 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
           pt = Face(2, Line{o, dir}, box, minusExtents, &t, &distSq);
         }
       }
-      return box.GetTransform().WorldPosFromLocalPos(pt);
+      return box.GetTransform()->WorldPosFromLocalPos(pt);
     }
   };
 }
@@ -1063,8 +1062,8 @@ float CollisionsModule::SqDistanceToAABB(const Math::Vector3 &min,
 Math::Vector3 CollisionsModule::ClosestPtSegmentOBB(const Math::Vector3 &p0,
                                                     const Math::Vector3 &p1,
                                                     const BoxCollider &box) {
-  Math::Vector3 q0 = box.GetTransform().LocalPosFromWorldPos(p0);
-  Math::Vector3 q1 = box.GetTransform().LocalPosFromWorldPos(p1);
+  Math::Vector3 q0 = box.GetTransform()->LocalPosFromWorldPos(p0);
+  Math::Vector3 q1 = box.GetTransform()->LocalPosFromWorldPos(p1);
   Line line = Line{q0, q1 - q0};
   float t, distSq;
   return ClosestPtLineOBB(line, box, &t, &distSq);

@@ -65,7 +65,7 @@ class ISETTA_API_DECLARE Component {
   virtual ~Component() = default;
   void SetActive(bool value);
   bool GetActive() const;
-  class Transform& GetTransform() const;
+  class Transform* GetTransform() const;
   class Entity* GetEntity() const;
   // TODO(Jacob) possibly remove?
   template <typename CheckType, typename InstanceType>

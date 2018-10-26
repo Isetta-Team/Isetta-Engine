@@ -29,7 +29,7 @@ bool Raycast(const Ray& ray, RaycastHit* const hitInfo,
              float maxDistance = 0) override;
 
 inline Math::Vector3 GetWorldSize() const {
-  return Math::Vector3::Scale(size, GetTransform().GetWorldScale());
+  return Math::Vector3::Scale(size, GetTransform()->GetWorldScale());
 }
 inline Math::Vector3 GetWorldExtents() const { return 0.5f * GetWorldSize(); }
 bool Intersection(Collider* const other) override;

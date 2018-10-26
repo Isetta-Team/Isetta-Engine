@@ -14,18 +14,18 @@ void CollisionHandler::OnEnable() {
   for (int i = 0; i < colliders.size(); i++) {
     colliders[i]->SetHandler(this);
   }
-  GetTransform().ForChildren(
+  GetTransform()->ForChildren(
       std::bind(&CollisionHandler::ColliderHandle, std::placeholders::_1,
                 [&](Collider* c) { c->SetHandler(this); }));
 }
 void CollisionHandler::OnDisable() {
   CollisionHandler* handler = nullptr;
-  Transform* parent = GetTransform().GetParent();
+  Transform* parent = GetTransform()->GetParent();
   while (parent && !handler) {
     handler = parent->GetEntity()->GetComponent<CollisionHandler>();
     parent = parent->GetParent();
   }
-  GetTransform().ForChildren(
+  GetTransform()->ForChildren(
       std::bind(&CollisionHandler::ColliderHandle, std::placeholders::_1,
                 [&handler](Collider* c) { c->SetHandler(handler); }));
 }
