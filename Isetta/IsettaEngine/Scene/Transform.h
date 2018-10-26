@@ -11,6 +11,7 @@
 namespace Isetta {
 class ISETTA_API_DECLARE Transform {
   friend class Entity;
+
  public:
   // constructors
   Transform() = delete;
@@ -130,5 +131,8 @@ class ISETTA_API_DECLARE Transform {
   std::vector<Transform*> children;
 
   Math::Vector3 axis[3];
+  Math::Vector3& left = axis[0];
+  Math::Vector3& up = axis[1];
+  Math::Vector3& forward = axis[2];
 };
 }  // namespace Isetta
