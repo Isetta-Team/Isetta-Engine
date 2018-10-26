@@ -5,7 +5,7 @@
 #include "Collisions/Collider.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(BoxCollider, Collider)
+CREATE_COMPONENT_BEGIN(BoxCollider, Collider, false)
 protected:
 const ColliderType GetType() const override {
   return Collider::ColliderType::BOX;

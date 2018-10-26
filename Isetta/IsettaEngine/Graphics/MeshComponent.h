@@ -7,7 +7,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(MeshComponent, Component)
+CREATE_COMPONENT_BEGIN(MeshComponent, Component, false)
   H3DNode renderNode{0};
   H3DRes renderResource{0};
 

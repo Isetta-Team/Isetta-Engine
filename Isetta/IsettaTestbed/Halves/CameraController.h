@@ -5,7 +5,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(CameraController, Component)
+CREATE_COMPONENT_BEGIN(CameraController, Component, true)
 public : void Update() override;
 void GuiUpdate() override;
 

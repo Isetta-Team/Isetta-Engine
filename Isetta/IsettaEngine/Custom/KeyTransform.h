@@ -5,7 +5,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(KeyTransform, Component)
+CREATE_COMPONENT_BEGIN(KeyTransform, Component, true)
 private:
   float step;
   bool pressed;

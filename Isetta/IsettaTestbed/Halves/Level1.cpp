@@ -2,10 +2,10 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Level1.h"
-#include "Components/CameraController.h"
+#include "CameraController.h"
 #include "Components/FlyController.h"
-#include "Components/GameManager.h"
-#include "Components/PlayerController.h"
+#include "GameManager.h"
+#include "PlayerController.h"
 #include "Core/Color.h"
 #include "Core/Config/Config.h"
 #include "Graphics/AnimationComponent.h"

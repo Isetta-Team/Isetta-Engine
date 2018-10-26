@@ -2,29 +2,41 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Level\ExampleLevel.cpp">
-      <Filter>Level</Filter>
+    <ClCompile Include="GUILevel\GUIComponent.cpp">
+      <Filter>GUI Level</Filter>
     </ClCompile>
-    <ClCompile Include="Components\ExampleComponent.cpp">
-      <Filter>Components</Filter>
+    <ClCompile Include="GUILevel\GUILevel.cpp">
+      <Filter>GUI Level</Filter>
     </ClCompile>
-    <ClCompile Include="Components\PlayerController.cpp">
-      <Filter>Components</Filter>
+    <ClCompile Include="DebugLevel\DebugComponent.cpp">
+      <Filter>Debug Level</Filter>
     </ClCompile>
-    <ClCompile Include="Level\Level1.cpp">
-      <Filter>Level</Filter>
+    <ClCompile Include="DebugLevel\DebugLevel.cpp">
+      <Filter>Debug Level</Filter>
     </ClCompile>
-    <ClCompile Include="Components\Bullet.cpp">
-      <Filter>Components</Filter>
+    <ClCompile Include="Halves\Bullet.cpp">
+      <Filter>Halves</Filter>
     </ClCompile>
-    <ClCompile Include="Components\CameraController.cpp">
-      <Filter>Components</Filter>
+    <ClCompile Include="Halves\CameraController.cpp">
+      <Filter>Halves</Filter>
     </ClCompile>
-    <ClCompile Include="Components\GameManager.cpp">
-      <Filter>Components</Filter>
+    <ClCompile Include="Halves\GameManager.cpp">
+      <Filter>Halves</Filter>
     </ClCompile>
-    <ClCompile Include="Components\Zombie.cpp">
-      <Filter>Components</Filter>
+    <ClCompile Include="Halves\Level1.cpp">
+      <Filter>Halves</Filter>
+    </ClCompile>
+    <ClCompile Include="Halves\PlayerController.cpp">
+      <Filter>Halves</Filter>
+    </ClCompile>
+    <ClCompile Include="Halves\Zombie.cpp">
+      <Filter>Halves</Filter>
+    </ClCompile>
+    <ClCompile Include="Example\ExampleComponent.cpp">
+      <Filter>Example</Filter>
+    </ClCompile>
+    <ClCompile Include="Example\ExampleLevel.cpp">
+      <Filter>Example</Filter>
     </ClCompile>
     <ClCompile Include="GUILevel\GUIComponent.cpp">
       <Filter>GUI Level</Filter>
@@ -44,11 +56,17 @@
     <None Include="user.cfg" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Level">
-      <UniqueIdentifier>{ba77bd2b-051f-402a-a5da-d8af8acaacbd}</UniqueIdentifier>
+    <Filter Include="GUI Level">
+      <UniqueIdentifier>{f2d9fe62-d581-4bf4-97ba-e5aec5129198}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Components">
-      <UniqueIdentifier>{3f2ed55d-bb73-41ad-a2e2-f15247894eff}</UniqueIdentifier>
+    <Filter Include="Debug Level">
+      <UniqueIdentifier>{c701d3fd-d9ec-4002-8464-cf2fc751dc78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Halves">
+      <UniqueIdentifier>{4aa29f51-7ac3-496d-a336-2d7f5e1baed0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Example">
+      <UniqueIdentifier>{ed8f8d87-125f-4dc1-9db0-ef26e043470d}</UniqueIdentifier>
     </Filter>
     <Filter Include="GUI Level">
       <UniqueIdentifier>{f2d9fe62-d581-4bf4-97ba-e5aec5129198}</UniqueIdentifier>
@@ -58,29 +76,41 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Level\ExampleLevel.h">
-      <Filter>Level</Filter>
+    <ClInclude Include="GUILevel\GUILevel.h">
+      <Filter>GUI Level</Filter>
     </ClInclude>
-    <ClInclude Include="Components\ExampleComponent.h">
-      <Filter>Components</Filter>
+    <ClInclude Include="GUILevel\GUIComponent.h">
+      <Filter>GUI Level</Filter>
     </ClInclude>
-    <ClInclude Include="Components\PlayerController.h">
-      <Filter>Components</Filter>
+    <ClInclude Include="DebugLevel\DebugComponent.h">
+      <Filter>Debug Level</Filter>
     </ClInclude>
-    <ClInclude Include="Level\Level1.h">
-      <Filter>Level</Filter>
+    <ClInclude Include="DebugLevel\DebugLevel.h">
+      <Filter>Debug Level</Filter>
     </ClInclude>
-    <ClInclude Include="Components\Bullet.h">
-      <Filter>Components</Filter>
+    <ClInclude Include="Halves\Bullet.h">
+      <Filter>Halves</Filter>
     </ClInclude>
-    <ClInclude Include="Components\CameraController.h">
-      <Filter>Components</Filter>
+    <ClInclude Include="Halves\CameraController.h">
+      <Filter>Halves</Filter>
     </ClInclude>
-    <ClInclude Include="Components\GameManager.h">
-      <Filter>Components</Filter>
+    <ClInclude Include="Halves\GameManager.h">
+      <Filter>Halves</Filter>
     </ClInclude>
-    <ClInclude Include="Components\Zombie.h">
-      <Filter>Components</Filter>
+    <ClInclude Include="Halves\Level1.h">
+      <Filter>Halves</Filter>
+    </ClInclude>
+    <ClInclude Include="Halves\PlayerController.h">
+      <Filter>Halves</Filter>
+    </ClInclude>
+    <ClInclude Include="Halves\Zombie.h">
+      <Filter>Halves</Filter>
+    </ClInclude>
+    <ClInclude Include="Example\ExampleComponent.h">
+      <Filter>Example</Filter>
+    </ClInclude>
+    <ClInclude Include="Example\ExampleLevel.h">
+      <Filter>Example</Filter>
     </ClInclude>
     <ClInclude Include="GUILevel\GUILevel.h">
       <Filter>GUI Level</Filter>

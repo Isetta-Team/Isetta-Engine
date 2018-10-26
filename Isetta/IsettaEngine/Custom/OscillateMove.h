@@ -6,7 +6,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(OscillateMove, Component)
+CREATE_COMPONENT_BEGIN(OscillateMove, Component, true)
 private:
 int axis = 0;
 int direction = 1;

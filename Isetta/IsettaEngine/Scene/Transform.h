@@ -11,6 +11,7 @@
 
 namespace Isetta {
 class ISETTA_API_DECLARE Transform {
+  friend class Entity;
  public:
   // constructors
   Transform() = delete;

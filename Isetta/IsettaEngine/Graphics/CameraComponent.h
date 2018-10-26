@@ -13,7 +13,7 @@ class Vector3;
 class Vector2;
 }  // namespace Math
 
-CREATE_COMPONENT_BEGIN(CameraComponent, Component)
+CREATE_COMPONENT_BEGIN(CameraComponent, Component, true)
  public:
   enum class Property {
     FOV,
