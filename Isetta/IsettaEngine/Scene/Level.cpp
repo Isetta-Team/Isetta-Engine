@@ -99,7 +99,7 @@ void Level::GUIUpdate() {
             }
             height += 1.25f * buttonHeight;
           };
-
+          action(&entity->GetTransform());
           entity->GetTransform()->ForDescendants(action);
         }
 

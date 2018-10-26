@@ -37,26 +37,30 @@ inline bool GetAttribute(Attributes attr) const {
   return attributes.test(static_cast<int>(attr));
 }
 
-Math::Vector3 center;  // TODO(JACOB) remove
+  Math::Vector3 center;
+  Color debugColor = Color::green;
 
-// virtual Math::Vector3 ClosestPoint(Math::Vector3 point) = 0;
-// Math::Vector3 ClosestPointOnAABB(Math::Vector3 point);
-virtual bool Raycast(const class Ray& ray, class RaycastHit* const hitInfo,
-                     float maxDistance = 0) = 0;
+  // TODO(Jacob) virtual Math::Vector3 ClosestPoint(Math::Vector3 point) = 0;
+  // TODO(Jacob) Math::Vector3 ClosestPointOnAABB(Math::Vector3 point);
+  virtual bool Raycast(const class Ray& ray, class RaycastHit* const hitInfo,
+                       float maxDistance = 0) = 0;
 
 inline Math::Vector3 GetWorldCenter() const {
   return center + GetTransform()->GetWorldPos();
 }
 
-void OnDisable() override;
-void OnEnable() override;
+  void Start() override;
+  void OnEnable() override;
+  void OnDisable() override;
 
  private:
   std::bitset<2> attributes;
+  int hierchyHandle;
   class CollisionHandler* handler{nullptr};
 
   inline class CollisionHandler* GetHandler() { return handler; }
   inline void SetHandler(class CollisionHandler* const h) { handler = h; }
+  void FindHandler();
 
   static class CollisionsModule* collisionsModule;
   friend class CollisionsModule;
@@ -65,19 +69,17 @@ void OnEnable() override;
 protected:
 AABB* bounding;
 
-Color debugColor = Color::green;
-
-Collider(const Math::Vector3& center) : center{center} {
-  attributes[(int)Attributes::IS_STATIC] = 0;
-  attributes[(int)Attributes::IS_TRIGGER] = 0;
-}
-Collider(bool isStatic = false, bool isTrigger = false,
-         const Math::Vector3& center = Math::Vector3::zero)
-    : center{center} {
-  attributes[(int)Attributes::IS_STATIC] = isStatic;
-  attributes[(int)Attributes::IS_TRIGGER] = isTrigger;
-}
-virtual ~Collider() = default;
+  Collider(const Math::Vector3& center) : center{center} {
+    attributes[(int)Attributes::IS_STATIC] = 0;
+    attributes[(int)Attributes::IS_TRIGGER] = 0;
+  }
+  Collider(bool isStatic = false, bool isTrigger = false,
+           const Math::Vector3& center = Math::Vector3::zero)
+      : center{center} {
+    attributes[(int)Attributes::IS_STATIC] = isStatic;
+    attributes[(int)Attributes::IS_TRIGGER] = isTrigger;
+  }
+  virtual ~Collider() = default;
 
 enum class ColliderType { BOX, SPHERE, CAPSULE };
 friend class BoxCollider;

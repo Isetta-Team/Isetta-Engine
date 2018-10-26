@@ -68,26 +68,6 @@ class ISETTA_API_DECLARE Component {
   class Transform* GetTransform() const;
   class Entity* GetEntity() const;
 
-  // TODO(Jacob) do we want?
-  // template <typename T>
-  // T* GetComponent();
-  // template <typename T>
-  // std::vector<T*> GetComponents();
-  // template <typename T>
-  // T* GetComponentInParent();
-  // template <typename T>
-  // std::vector<T*> GetComponentsInParent();
-  // template <typename T>
-  // T* GetComponentInChildren();
-  // template <typename T>
-  // std::vector<T*> GetComponentsInChildren();
-  // template <typename T>
-  // T* GetComponentInDescendant();
-  // template <typename T>
-  // std::vector<T*> GetComponentsInDescendant();
-
-  static bool RegisterComponent(std::type_index curr, std::type_index base);
-
   virtual void OnEnable() {}
   virtual void Start() {}
   virtual void GuiUpdate() {}

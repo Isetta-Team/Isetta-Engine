@@ -35,6 +35,7 @@ class ISETTA_API Entity {
 
   StringId entityID;
   std::string entityName;
+  int layer;
 
   void SetAttribute(EntityAttributes attr, bool value);
   bool GetAttribute(EntityAttributes attr) const;
@@ -81,6 +82,11 @@ class ISETTA_API Entity {
   // TODO(Jacob) no don't this is good
   std::vector<class Component*> GetComponents() const { return components; }
   //#endif
+
+  void SetLayer(int layer);
+  void SetLayer(std::string layer);
+  int GetLayerIndex() const;
+  std::string GetLayerName() const;
 };
 
 template <typename T, typename... Args>

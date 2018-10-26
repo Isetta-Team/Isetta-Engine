@@ -247,6 +247,12 @@
     <ClCompile Include="Collisions\CollisionHandler.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\Layers.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\DebugCollision.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -524,6 +530,12 @@
     </ClInclude>
     <ClInclude Include="Collisions\CollisionHandler.h">
       <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Layers.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\DebugCollision.h">
+      <Filter>Custom</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
