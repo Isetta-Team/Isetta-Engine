@@ -7,7 +7,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(NetworkId, Component)
+CREATE_COMPONENT_BEGIN(NetworkId, Component, true)
 public:
 NetworkId();
 NetworkId(U32 id);

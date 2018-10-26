@@ -201,9 +201,6 @@
     <ClInclude Include="Custom\CollisionsLevel.h">
       <Filter>Custom</Filter>
     </ClInclude>
-    <ClCompile Include="Networking\NetworkIdentity.cpp">
-      <Filter>Networking</Filter>
-    </ClCompile>
     <ClCompile Include="Components\FlyController.cpp">
       <Filter>Components</Filter>
     </ClCompile>
@@ -249,6 +246,9 @@
     </ClCompile>
     <ClCompile Include="Networking\NetworkId.cpp">
       <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\NetworkTransform.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -527,6 +527,9 @@
     </ClInclude>
     <ClInclude Include="Networking\NetworkId.h">
       <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\NetworkTransform.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,7 @@
  */
 #include "Custom/NetworkLevel.h"
 
+#include "Components/NetworkTransform.h"
 #include "Components/FlyController.h"
 #include "Core/Color.h"
 #include "Core/Config/Config.h"
@@ -36,130 +37,143 @@ U16 exampleClientDespawn;
 U16 exampleServerDespawn;
 
 void RegisterExampleMessageFunctions() {
-  exampleClientHandleId = NetworkManager::Instance().RegisterClientCallback<HandleMessage>(
-      [](yojimbo::Message* message) {
-        HandleMessage* handleMessage = static_cast<HandleMessage*>(message);
-        LOG(Debug::Channel::Networking, "Server sends handle #%d",
-            handleMessage->handle);
-        if (handleMessage->handle == 0) {
-          LOG(Debug::Channel::Networking,
-              "Server says we should play the animation!");
-        }
-        if (handleMessage->handle == 1) {
-          LOG(Debug::Channel::Networking,
-              "Server says we should stop the animation!");
-        }
-        if (handleMessage->handle == 2) {
-          AudioSource audio = AudioSource();
-          audio.SetAudioClip("gunshot.aiff");
-          audio.Play(false, 1.f);
-        }
-      });
+  exampleClientHandleId =
+      NetworkManager::Instance().RegisterClientCallback<HandleMessage>(
+          [](yojimbo::Message* message) {
+            HandleMessage* handleMessage = static_cast<HandleMessage*>(message);
+            LOG(Debug::Channel::Networking, "Server sends handle #%d",
+                handleMessage->handle);
+            if (handleMessage->handle == 0) {
+              LOG(Debug::Channel::Networking,
+                  "Server says we should play the animation!");
+            }
+            if (handleMessage->handle == 1) {
+              LOG(Debug::Channel::Networking,
+                  "Server says we should stop the animation!");
+            }
+            if (handleMessage->handle == 2) {
+              AudioSource audio = AudioSource();
+              audio.SetAudioClip("gunshot.aiff");
+              audio.Play(false, 1.f);
+            }
+          });
 
-  exampleServerHandleId = NetworkManager::Instance().RegisterServerCallback<HandleMessage>(
-      [](int clientIdx, yojimbo::Message* message) {
-        HandleMessage* handleMessage =
-            reinterpret_cast<HandleMessage*>(message);
-        LOG(Debug::Channel::Networking, "Client %d sends handle #%d", clientIdx,
-            handleMessage->handle);
+  exampleServerHandleId =
+      NetworkManager::Instance().RegisterServerCallback<HandleMessage>(
+          [](int clientIdx, yojimbo::Message* message) {
+            HandleMessage* handleMessage =
+                reinterpret_cast<HandleMessage*>(message);
+            LOG(Debug::Channel::Networking, "Client %d sends handle #%d",
+                clientIdx, handleMessage->handle);
 
-        NetworkManager::Instance().SendAllMessageFromServer<HandleMessage>(handleMessage);
-      });
+            NetworkManager::Instance().SendAllMessageFromServer<HandleMessage>(
+                handleMessage);
+          });
 
-  exampleClientSpawn = NetworkManager::Instance().RegisterClientCallback<SpawnMessage>(
-      [](yojimbo::Message* message) {
-        if (NetworkManager::Instance().ServerIsRunning()) {
-          return;
-        }
+  exampleClientSpawn =
+      NetworkManager::Instance().RegisterClientCallback<SpawnMessage>(
+          [](yojimbo::Message* message) {
+            if (NetworkManager::Instance().ServerIsRunning()) {
+              return;
+            }
 
-        SpawnMessage* spawnMessage = reinterpret_cast<SpawnMessage*>(message);
-        const Entity* entity =
-            NetworkManager::Instance().GetNetworkEntity(spawnMessage->netId);
-        if (!entity) {
-          Entity* e = LevelManager::Instance().currentLevel->AddEntity(
-              Util::StrFormat("NetworkEntity%d", spawnMessage->netId));
-          e->AddComponent<NetworkId>(spawnMessage->netId);
-          spawnedEntities.push_back(e);
+            SpawnMessage* spawnMessage =
+                reinterpret_cast<SpawnMessage*>(message);
+            const Entity* entity = NetworkManager::Instance().GetNetworkEntity(
+                spawnMessage->netId);
+            if (!entity) {
+              Entity* e = LevelManager::Instance().currentLevel->AddEntity(
+                  Util::StrFormat("NetworkEntity%d", spawnMessage->netId));
+              e->AddComponent<NetworkId>(spawnMessage->netId);
+              spawnedEntities.push_back(e);
 
-          // Zomble
-          e->GetTransform().SetLocalScale(Math::Vector3::one * .01);
-          MeshComponent* mesh = e->AddComponent<MeshComponent, true>(
-              "Zombie/Zombie.scene.xml");
-          AnimationComponent* animation =
-              e->AddComponent<AnimationComponent, true>(mesh);
-          animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
-          e->GetComponent<AnimationComponent>()->Play();
-        }
-      });
+              // Zomble
+              e->GetTransform().SetLocalScale(Math::Vector3::one * .01);
+              MeshComponent* mesh = e->AddComponent<MeshComponent, true>(
+                  "Zombie/Zombie.scene.xml");
+              AnimationComponent* animation =
+                  e->AddComponent<AnimationComponent, true>(mesh);
+              animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
+              e->GetComponent<AnimationComponent>()->Play();
+              e->AddComponent<KeyTransform>();
+              e->AddComponent<NetworkTransform>();
+            }
+          });
 
-  exampleServerSpawn = NetworkManager::Instance().RegisterServerCallback<SpawnMessage>(
-      [](int clientIdx, yojimbo::Message* message) {
-        static int count = 1;
-        SpawnMessage* spawnMessage =
-            reinterpret_cast<SpawnMessage*>(message);
+  exampleServerSpawn =
+      NetworkManager::Instance().RegisterServerCallback<SpawnMessage>(
+          [](int clientIdx, yojimbo::Message* message) {
+            static int count = 1;
+            SpawnMessage* spawnMessage =
+                reinterpret_cast<SpawnMessage*>(message);
 
-        if (!spawnMessage->netId) {
-          Entity* e = LevelManager::Instance().currentLevel->AddEntity(
-              Util::StrFormat("NetworkEntity%d", count++));
-          NetworkId* netIdentity = e->AddComponent<NetworkId>();
-          spawnedEntities.push_back(e);
-          spawnMessage->netId = netIdentity->id;
+            if (!spawnMessage->netId) {
+              Entity* e = LevelManager::Instance().currentLevel->AddEntity(
+                  Util::StrFormat("NetworkEntity%d", count++));
+              NetworkId* netIdentity = e->AddComponent<NetworkId>();
+              spawnedEntities.push_back(e);
+              spawnMessage->netId = netIdentity->id;
 
-          // Zomble
-          e->GetTransform().SetLocalScale(Math::Vector3::one * .01);
-          MeshComponent* mesh =
-              e->AddComponent<MeshComponent, true>("Zombie/Zombie.scene.xml");
-          AnimationComponent* animation =
-              e->AddComponent<AnimationComponent, true>(mesh);
-          animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
-          e->GetComponent<AnimationComponent>()->Play();
-        }
+              // Zomble
+              e->GetTransform().SetLocalScale(Math::Vector3::one * .01);
+              MeshComponent* mesh = e->AddComponent<MeshComponent, true>(
+                  "Zombie/Zombie.scene.xml");
+              AnimationComponent* animation =
+                  e->AddComponent<AnimationComponent, true>(mesh);
+              animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
+              e->GetComponent<AnimationComponent>()->Play();
+              e->AddComponent<KeyTransform>();
+              e->AddComponent<NetworkTransform>();
+            }
 
-        NetworkManager::Instance().SendAllMessageFromServer<SpawnMessage>(spawnMessage);
-      });
+            NetworkManager::Instance().SendAllMessageFromServer<SpawnMessage>(
+                spawnMessage);
+          });
 
-  exampleClientDespawn = NetworkManager::Instance().RegisterClientCallback<DespawnMessage>(
-      [](yojimbo::Message* message) {
-        if (NetworkManager::Instance().ServerIsRunning()) {
-          return;
-        }
+  exampleClientDespawn =
+      NetworkManager::Instance().RegisterClientCallback<DespawnMessage>(
+          [](yojimbo::Message* message) {
+            if (NetworkManager::Instance().ServerIsRunning()) {
+              return;
+            }
 
-        DespawnMessage* despawnMessage =
-            reinterpret_cast<DespawnMessage*>(message);
-        Entity* entity =
-            NetworkManager::Instance().GetNetworkEntity(despawnMessage->netId);
-        if (!entity) {
-          return;
-        }
-        NetworkManager::Instance().RemoveNetworkId(
-            entity->GetComponent<NetworkId>());
-        spawnedEntities.remove(entity);
-        Entity::Destroy(entity);
-      });
+            DespawnMessage* despawnMessage =
+                reinterpret_cast<DespawnMessage*>(message);
+            Entity* entity = NetworkManager::Instance().GetNetworkEntity(
+                despawnMessage->netId);
+            if (!entity) {
+              return;
+            }
+            NetworkManager::Instance().RemoveNetworkId(
+                entity->GetComponent<NetworkId>());
+            spawnedEntities.remove(entity);
+            Entity::Destroy(entity);
+          });
 
-  exampleServerDespawn = NetworkManager::Instance().RegisterServerCallback<DespawnMessage>(
-      [](int clientIdx, yojimbo::Message* message) {
-        DespawnMessage* despawnMessage =
-            reinterpret_cast<DespawnMessage*>(message);
+  exampleServerDespawn =
+      NetworkManager::Instance().RegisterServerCallback<DespawnMessage>(
+          [](int clientIdx, yojimbo::Message* message) {
+            DespawnMessage* despawnMessage =
+                reinterpret_cast<DespawnMessage*>(message);
 
-        if (!despawnMessage->netId) {
-          return;
-        }
+            if (!despawnMessage->netId) {
+              return;
+            }
 
-        NetworkManager::Instance().SendAllMessageFromServer<DespawnMessage>(
-            despawnMessage);
+            NetworkManager::Instance().SendAllMessageFromServer<DespawnMessage>(
+                despawnMessage);
 
-        Entity* entity =
-            NetworkManager::Instance().GetNetworkEntity(despawnMessage->netId);
-        if (!entity) {
-          return;
-        }
+            Entity* entity = NetworkManager::Instance().GetNetworkEntity(
+                despawnMessage->netId);
+            if (!entity) {
+              return;
+            }
 
-        NetworkManager::Instance().RemoveNetworkId(
-            entity->GetComponent<NetworkId>());
-        spawnedEntities.remove(entity);
-        Entity::Destroy(entity);
-      });
+            NetworkManager::Instance().RemoveNetworkId(
+                entity->GetComponent<NetworkId>());
+            spawnedEntities.remove(entity);
+            Entity::Destroy(entity);
+          });
 }
 
 void DeregisterExampleMessageFunctions() {
@@ -167,8 +181,10 @@ void DeregisterExampleMessageFunctions() {
       exampleClientHandleId);
   NetworkManager::Instance().UnregisterServerCallback<HandleMessage>(
       exampleServerHandleId);
-  NetworkManager::Instance().UnregisterClientCallback<SpawnMessage>(exampleClientSpawn);
-  NetworkManager::Instance().UnregisterClientCallback<SpawnMessage>(exampleServerSpawn);
+  NetworkManager::Instance().UnregisterClientCallback<SpawnMessage>(
+      exampleClientSpawn);
+  NetworkManager::Instance().UnregisterClientCallback<SpawnMessage>(
+      exampleServerSpawn);
   NetworkManager::Instance().UnregisterClientCallback<DespawnMessage>(
       exampleClientDespawn);
   NetworkManager::Instance().UnregisterClientCallback<DespawnMessage>(
@@ -208,8 +224,8 @@ void NetworkLevel::LoadLevel() {
       if (despawnCounter > spawnCounter) {
         return;
       }
-      DespawnMessage* m =
-          NetworkManager::Instance().GenerateMessageFromClient<DespawnMessage>();
+      DespawnMessage* m = NetworkManager::Instance()
+                              .GenerateMessageFromClient<DespawnMessage>();
       m->netId = despawnCounter;
       NetworkManager::Instance().SendMessageFromClient(m);
 
@@ -268,9 +284,6 @@ void NetworkLevel::LoadLevel() {
   lightComp->SetProperty<LightProperty::COLOR_MULTIPLIER>(1.0f);
   lightComp->SetProperty<LightProperty::SHADOW_MAP_COUNT>(1);
   lightComp->SetProperty<LightProperty::SHADOW_MAP_BIAS>(0.01f);
-
 }
 
-void NetworkLevel::UnloadLevel() {
-  RegisterExampleMessageFunctions();
-}
+void NetworkLevel::UnloadLevel() { RegisterExampleMessageFunctions(); }
