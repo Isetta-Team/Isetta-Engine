@@ -247,6 +247,9 @@
     <ClCompile Include="Collisions\CollisionHandler.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Texture.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -524,6 +527,9 @@
     </ClInclude>
     <ClInclude Include="Collisions\CollisionHandler.h">
       <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Texture.h">
+      <Filter>Graphics\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

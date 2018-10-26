@@ -8,6 +8,7 @@
 #include "Components/FlyController.h"
 #include "Core/Config/Config.h"
 #include "Components/GridComponent.h"
+#include "Graphics/Texture.h"
 
 namespace Isetta {
 
@@ -48,5 +49,7 @@ void InEngineTestLevel::LoadLevel() {
         zombie->AddComponent<AnimationComponent>(zombie->AddComponent<MeshComponent>("Zombie/Zombie.scene.xml"));
     animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
   zombie->SetTransform(Math::Vector3::zero, Math::Vector3::zero, Math::Vector3::one * 0.01f);
+  int w, h;
+  auto d = Texture::LoadTexture("textures/common/defnorm.png", &w, &h);
 }
 }  // namespace Isetta
