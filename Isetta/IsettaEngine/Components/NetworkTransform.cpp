@@ -26,7 +26,7 @@ void NetworkTransform::Start() {
           Entity* entity = netId->GetEntity();
 
           if (entity) {
-            Transform t = entity->GetTransform();
+            Transform &t = entity->GetTransform();
             t.SetLocalPos(transformMessage->localPos);
             t.SetLocalScale(transformMessage->localScale);
             t.SetLocalRot(transformMessage->localRot);
@@ -51,7 +51,6 @@ void NetworkTransform::FixedUpdate() {
   if (netId->clientAuthority == NetworkManager::Instance().GetClientIndex()) {
     ++updateCounter;
     if (updateCounter >= netId->updateInterval) {
-      LOG("HI!");
       updateCounter = 0;
       TransformMessage* message =
           NetworkManager::Instance()

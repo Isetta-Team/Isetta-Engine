@@ -47,8 +47,6 @@ RPC_MESSAGE_FINISH
 // Spawn
 RPC_MESSAGE_DEFINE(SpawnMessage)
 
-SpawnMessage() { netId = a = b = c = 0; }
-
 template <typename Stream>
 bool Serialize(Stream* stream) {
   serialize_int(stream, netId, 0, 256);
@@ -71,8 +69,8 @@ void Copy(const yojimbo::Message* otherMessage) override {
   c = message->c;
 }
 
-int netId, clientAuthority;
-float a, b, c;
+int netId = 0, clientAuthority = 0;
+float a = 0, b = 0, c = 0;
 
 RPC_MESSAGE_FINISH
 

@@ -51,7 +51,7 @@ bool NetworkManager::ServerIsRunning() {
 }
 
 int NetworkManager::GetMaxClients() {
-  return !ServerIsRunning() ? -1 : networkingModule->server->GetMaxClients();
+  return Config::Instance().networkConfig.maxClients.GetVal();
 }
 
 int NetworkManager::GetClientIndex() {

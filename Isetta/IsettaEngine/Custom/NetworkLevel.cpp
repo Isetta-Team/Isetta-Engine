@@ -115,6 +115,7 @@ void RegisterExampleMessageFunctions() {
               netIdentity->clientAuthority = clientIdx;
               spawnedEntities.push_back(e);
               spawnMessage->netId = netIdentity->id;
+              spawnMessage->clientAuthority = clientIdx;
 
               // Zomble
               e->GetTransform().SetLocalScale(Math::Vector3::one * .01);
