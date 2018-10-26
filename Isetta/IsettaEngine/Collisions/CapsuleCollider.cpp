@@ -128,29 +128,6 @@ bool CapsuleCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
   if (tmin > tmax) std::swap(tmin, tmax);
 
   float tkMin = tmin * m + n;
-  // TODO(Jacob) if point is inside capsule && inside sphere poles then it will
-  // end on pole
-  if (tkMin < 0.f) {
-    return RaycastSphere(p0, radius * radiusScale, ray, hitInfo, maxDistance);
-  } else if (tkMin > 1.f) {
-    return RaycastSphere(p1, radius * radiusScale, ray, hitInfo, maxDistance);
-  } else {
-    Math::Vector3 pt = ray.GetPoint(tmin);
-    RaycastHitCtor(hitInfo, tmin, pt, pt - (p0 + to * tkMin));
-    // DebugDraw::Point(pt, Color::cyan, 10, 10);
-    // DebugDraw::Point(p0 + to * tkMin, Color::cyan, 10, 10);
-    return true;
-  }
-
-  float discrim = b * b - 4.f * a * c;
-  if (discrim < 0.f) return false;
-  float sqrtDiscrim = Math::Util::Sqrt(discrim);
-  float denom = 0.5f / a;
-  float tmin = -(b + sqrtDiscrim) * denom;
-  float tmax = (-b + sqrtDiscrim) * denom;
-  if (tmin > tmax) std::swap(tmin, tmax);
-
-  float tkMin = tmin * m + n;
   RaycastHit hitMin;
   if (tkMin < 0.f) {
     return RaycastSphere(p0, radius * radiusScale, ray, hitInfo, maxDistance);

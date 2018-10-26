@@ -31,7 +31,7 @@ void Collider::OnDisable() {
 }
 void Collider::FindHandler() {
   handler = entity->GetComponent<CollisionHandler>();
-  Transform* parent = GetTransform().GetParent();
+  Transform* parent = GetTransform()->GetParent();
   while (parent && !handler) {
     handler = parent->GetEntity()->GetComponent<CollisionHandler>();
     parent = parent->GetParent();

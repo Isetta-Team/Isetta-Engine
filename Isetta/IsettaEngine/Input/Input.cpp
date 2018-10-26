@@ -112,12 +112,4 @@ float Input::GetGamepadAxis(GamepadAxis axis) {
 bool Input::IsGamepadButtonPressed(GamepadButton button) {
   return inputModule->IsGamepadButtonPressed(button);
 }
-
-float Input::GetGamepadAxis(GamepadAxis axis) {
-  return inputModule->GetGamepadAxis(axis);
-}
-
-bool Input::IsGamepadButtonPressed(GamepadButton button) {
-  return inputModule->IsGamepadButtonPressed(button);
-}
 }  // namespace Isetta

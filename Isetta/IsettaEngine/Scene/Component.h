@@ -76,6 +76,8 @@ class ISETTA_API_DECLARE Component {
   virtual void FixedUpdate() {}
   virtual void OnDestroy() {}
   virtual void OnDisable() {}
+
+  static bool RegisterComponent(std::type_index curr, std::type_index base);
 };
 
 }  // namespace Isetta

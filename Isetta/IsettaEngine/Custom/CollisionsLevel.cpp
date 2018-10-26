@@ -5,6 +5,7 @@
 
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
+#include "Custom/DebugCollision.h"
 #include "Custom/KeyTransform.h"
 #include "Custom/OscillateMove.h"
 #include "Custom/RaycastClick.h"
@@ -72,17 +73,20 @@ void CollisionsLevel::LoadLevel() {
   handler->RegisterOnEnter([](Collider* const col) {
     LOG("collided with " + col->GetEntity()->GetName());
   });
+  staticCol[0]->AddComponent<DebugCollision>();
 
   staticCol[1] = AddEntity("sphere-collider");
   staticCol[1]->SetTransform(Math::Vector3{0, 1, -4});
   SphereCollider* sCol = staticCol[1]->AddComponent<SphereCollider>();
   sCol->SetAttribute(ColliderAttribute::IS_STATIC, true);
+  // staticCol[1]->AddComponent<DebugCollision>();
 
   staticCol[2] = AddEntity("capsule-collider");
   staticCol[2]->SetTransform(Math::Vector3{0, 1, -8});
   CapsuleCollider* cCol = staticCol[2]->AddComponent<CapsuleCollider>(
       true, false, Math::Vector3::zero, 0.5, 2,
       CapsuleCollider::Direction::X_AXIS);
+  // staticCol[2]->AddComponent<DebugCollision>();
 
   //// DYNAMIC
   for (int i = 0; i < COLLIDERS; i++) {
@@ -91,6 +95,7 @@ void CollisionsLevel::LoadLevel() {
     oscillator->GetTransform()->SetLocalPos(7 * Math::Vector3::left);
     oscillator->AddComponent<OscillateMove>(0, 1, -1, 12);
     oscillator->AddComponent<KeyTransform>(0.25);
+    oscillator->AddComponent<CollisionHandler>();
 
     Entity* box{AddEntity("box-collider" + i)};
     box->GetTransform()->SetParent(oscillator->GetTransform());

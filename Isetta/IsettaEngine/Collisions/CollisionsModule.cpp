@@ -5,9 +5,9 @@
 
 #include "Collisions/AABB.h"
 #include "Collisions/Ray.h"
-#include "Core/Math/Vector4.h"
 #include "Core/Math/Matrix3.h"
 #include "Core/Math/Vector3.h"
+#include "Core/Math/Vector4.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 
@@ -680,15 +680,7 @@ Math::Vector3 CollisionsModule::Face(int x, const Line &line,
   Math::Vector3 pt = line.GetOrigin();
   distSq = 0;
 
-<<<<<<< 95a207812ad6563e2dbf288b3f6a1b6170991c8e
-<<<<<<< 0d5a296b6a19c6c10e6ea5492a87d6acb4dd7d5c
   Math::Vector3 extents = box.GetWorldExtents();
-=======
-  Math::Vector3 extents = 0.5 * box.GetWorldSize();
->>>>>>> Collisions and raycast -- full capsule collision put on hold
-=======
-  Math::Vector3 extents = box.GetWorldExtents();
->>>>>>> changed to use extents function call
   Math::Vector3 plusExtents = line.GetOrigin() + extents;
 
   if (line.GetDirection()[x] * plusExtents[y] >=
@@ -1062,13 +1054,8 @@ float CollisionsModule::SqDistanceToAABB(const Math::Vector3 &min,
 Math::Vector3 CollisionsModule::ClosestPtSegmentOBB(const Math::Vector3 &p0,
                                                     const Math::Vector3 &p1,
                                                     const BoxCollider &box) {
-<<<<<<< 0d5a296b6a19c6c10e6ea5492a87d6acb4dd7d5c
   Math::Vector3 q0 = box.GetTransform()->LocalPosFromWorldPos(p0);
   Math::Vector3 q1 = box.GetTransform()->LocalPosFromWorldPos(p1);
-=======
-  Math::Vector3 q0 = box.GetTransform().LocalPosFromWorldPos(p0);
-  Math::Vector3 q1 = box.GetTransform().LocalPosFromWorldPos(p1);
->>>>>>> Collisions and raycast -- full capsule collision put on hold
   Line line = Line{q0, q1 - q0};
   float t, distSq;
   return ClosestPtLineOBB(line, box, &t, &distSq);

@@ -11,7 +11,6 @@
 #include "Graphics/Window.h"
 #include "Input/InputModule.h"
 #include "Networking/NetworkingModule.h"
-#include "Collisions/CollisionsModule.h"
 
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
@@ -151,8 +150,6 @@ void EngineLoop::Run() {
   }
   ShutDown();
 }
-
-void EngineLoop::Stop() { isGameRunning = false; }
 
 Clock& EngineLoop::GetGameClock() {
   static Clock gameTime{};

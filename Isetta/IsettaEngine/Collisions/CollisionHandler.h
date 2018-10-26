@@ -10,7 +10,7 @@ namespace Isetta {
 class CollisionHandler : public Component {
  private:
   std::unordered_map<U16, Action<class Collider*>> onEnter, onStay, onExit;
-  U16 handles;
+  U16 handles = 0;
 
   static void SetColliderHandler(Transform* transform,
                                  const Action<Collider* const>& action);
@@ -27,6 +27,8 @@ class CollisionHandler : public Component {
       class Collider* const col);
 
  public:
+  CollisionHandler() = default;
+
   void OnEnable() override;
   void OnDisable() override;
 
