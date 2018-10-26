@@ -77,6 +77,7 @@ class NetworkManager {
   void UnregisterClientCallback(int handle);
 
   Entity* GetNetworkEntity(const U32 id);
+  NetworkId* GetNetworkId(const U32 id);
   U32 CreateNetworkId(NetworkId* NetworkId);
   U32 AssignNetworkId(U32 netId, NetworkId* NetworkId);
   void RemoveNetworkId(NetworkId* NetworkId);
@@ -113,6 +114,7 @@ class NetworkManager {
   bool ClientIsConnected(int clientIdx);
   bool ServerIsRunning();
   int GetMaxClients();
+  int GetClientIndex();
 
   NetworkManager() = default;
   ~NetworkManager() = default;

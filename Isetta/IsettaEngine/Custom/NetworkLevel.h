@@ -52,6 +52,8 @@ SpawnMessage() { netId = a = b = c = 0; }
 template <typename Stream>
 bool Serialize(Stream* stream) {
   serialize_int(stream, netId, 0, 256);
+  serialize_int(stream, clientAuthority, 0,
+                NetworkManager::Instance().GetMaxClients());
   serialize_float(stream, a);
   serialize_float(stream, b);
   serialize_float(stream, c);
@@ -63,12 +65,13 @@ void Copy(const yojimbo::Message* otherMessage) override {
   const SpawnMessage* message =
       reinterpret_cast<const SpawnMessage*>(otherMessage);
   netId = message->netId;
+  clientAuthority = message->clientAuthority;
   a = message->a;
   b = message->b;
   c = message->c;
 }
 
-int netId;
+int netId, clientAuthority;
 float a, b, c;
 
 RPC_MESSAGE_FINISH

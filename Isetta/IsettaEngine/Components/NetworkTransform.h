@@ -22,7 +22,7 @@ CREATE_COMPONENT_END(NetworkTransform, Component)
 RPC_MESSAGE_DEFINE(TransformMessage)
 template <typename Stream>
 bool Serialize(Stream* stream) {
-  serialize_uint32(stream, netId);
+  serialize_int(stream, netId, 0, 1024);
 
   serialize_float(stream, localPos.x);
   serialize_float(stream, localPos.y);
@@ -50,7 +50,7 @@ void Copy(const yojimbo::Message* otherMessage) override {
 }
 
 public:
-U32 netId;
+int netId;
 Math::Vector3 localPos;
 Math::Vector3 localScale;
 Math::Quaternion localRot;

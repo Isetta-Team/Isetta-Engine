@@ -54,6 +54,10 @@ int NetworkManager::GetMaxClients() {
   return !ServerIsRunning() ? -1 : networkingModule->server->GetMaxClients();
 }
 
+int NetworkManager::GetClientIndex() {
+  return networkingModule->client->GetClientIndex();
+}
+
 void NetworkManager::CloseServer() { networkingModule->CloseServer(); }
 
 std::list<std::pair<U16, Action<yojimbo::Message*>>>
@@ -81,6 +85,15 @@ Entity* NetworkManager::GetNetworkEntity(const U32 id) {
   }
   return NULL;
 }
+
+NetworkId* NetworkManager::GetNetworkId(const U32 id) {
+  auto it = networkIdToComponentMap.find(id);
+  if (it != networkIdToComponentMap.end()) {
+    return it->second;
+  }
+  return NULL;
+}
+
 U32 NetworkManager::CreateNetworkId(NetworkId* NetworkId) {
   if (!ServerIsRunning()) {
     throw std::exception("Cannot create a new network id on a client");
@@ -89,6 +102,7 @@ U32 NetworkManager::CreateNetworkId(NetworkId* NetworkId) {
   NetworkId->id = netId;
   networkIdToComponentMap[netId] = NetworkId;
 }
+
 U32 NetworkManager::AssignNetworkId(U32 netId,
                                     NetworkId* NetworkId) {
   if (networkIdToComponentMap.find(netId) != networkIdToComponentMap.end()) {
@@ -103,6 +117,7 @@ U32 NetworkManager::AssignNetworkId(U32 netId,
   NetworkId->id = netId;
   networkIdToComponentMap[netId] = NetworkId;
 }
+
 void NetworkManager::RemoveNetworkId(NetworkId* NetworkId) {
   if (!NetworkId->id) {
     throw std::exception(Util::StrFormat(

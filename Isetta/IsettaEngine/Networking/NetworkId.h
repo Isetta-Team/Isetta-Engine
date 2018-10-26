@@ -13,7 +13,7 @@ NetworkId();
 NetworkId(U32 id);
 
 U32 id = 0;
-U8 clientAuthority = -1;
+int clientAuthority = 0;
 int updateInterval = 5;
 
 friend class NetworkManager;
