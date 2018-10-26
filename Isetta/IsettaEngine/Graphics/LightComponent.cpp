@@ -11,8 +11,8 @@ namespace Isetta {
 
 RenderModule* LightComponent::renderModule{nullptr};
 
-LightComponent::LightComponent(const std::string& resourceName,
-                               std::string lightName)
+LightComponent::LightComponent(std::string_view resourceName,
+                               std::string_view lightName)
     : name{std::move(lightName)} {
   ASSERT(renderModule != nullptr);
   renderModule->lightComponents.push_back(this);
@@ -20,21 +20,21 @@ LightComponent::LightComponent(const std::string& resourceName,
   renderResource = LoadResourceFromFile(resourceName);
 }
 
-H3DRes LightComponent::LoadResourceFromFile(const std::string& resourceName) {
+H3DRes LightComponent::LoadResourceFromFile(std::string_view resourceName) {
   H3DRes lightMatRes =
-      h3dAddResource(H3DResTypes::Material, resourceName.c_str(), 0);
+      h3dAddResource(H3DResTypes::Material, resourceName.data(), 0);
 
   RenderModule::LoadResourceFromDisk(
       lightMatRes, Util::StrFormat("LightComponent::LoadResourceFromFile => "
                                    "Cannot load the resource from %s",
-                                   resourceName.c_str()));
+                                   resourceName.data()));
 
   return lightMatRes;
 }
 
 void LightComponent::OnEnable() {
   if (renderNode == 0) {
-    renderNode = h3dAddLightNode(H3DRootNode, name.c_str(), renderResource,
+    renderNode = h3dAddLightNode(H3DRootNode, name.data(), renderResource,
                                  "LIGHTING", "SHADOWMAP");
   } else {
     h3dSetNodeFlags(renderNode, 0, true);

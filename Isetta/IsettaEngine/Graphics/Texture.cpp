@@ -5,17 +5,18 @@
 #include <Horde3D.h>
 #include "RenderModule.h"
 #include "Util.h"
+#include <string_view>
 
 namespace Isetta {
 
-U8* Texture::LoadTexture(const std::string& textureName, int* width,
+U8* Texture::LoadTexture(std::string_view textureName, int* width,
                          int* height) {
   H3DRes renderResource =
-      h3dAddResource(H3DResTypes::Texture, textureName.c_str(), 0);
+      h3dAddResource(H3DResTypes::Texture, textureName.data(), 0);
   RenderModule::LoadResourceFromDisk(
       renderResource, Util::StrFormat("Texture::LoadResourceFromFile => "
                                       "Cannot load the resource from %s",
-                                      textureName.c_str()));
+                                      textureName.data()));
   // TODO(Chaojie) + TODO(Jacob): With .png it's rgb; with .tga it's rgba(or rgb0)
   // ImgPixelStream  - Pixel data of an image. The data
   // layout matches the layout specified by the texture format with the

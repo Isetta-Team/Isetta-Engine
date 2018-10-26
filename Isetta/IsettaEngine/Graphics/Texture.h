@@ -8,7 +8,7 @@
 namespace Isetta {
 class Texture {
  public:
-  static U8* LoadTexture(const std::string& textureName, int* width,
+  static U8* LoadTexture(std::string_view textureName, int* width,
                          int* height);
 };
 }  // namespace Isetta

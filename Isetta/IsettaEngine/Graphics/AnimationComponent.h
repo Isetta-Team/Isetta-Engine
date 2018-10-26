@@ -8,10 +8,10 @@ namespace Isetta {
 CREATE_COMPONENT_BEGIN(AnimationComponent, Component, false)
 public:
 explicit AnimationComponent(MeshComponent* model);
-int AddAnimation(std::string animationFilename, int layer,
-                 std::string startNode, bool additive);
-int AddAnimation(std::string animationFilename, int layer,
-                 std::string startNode, bool additive, int stateIndex);
+int AddAnimation(std::string_view animationFilename, int layer,
+                 std::string_view startNode, bool additive);
+int AddAnimation(std::string_view animationFilename, int layer,
+                 std::string_view startNode, bool additive, int stateIndex);
 /**
  * \brief Update the animation by delta time
  * \param deltaTime The update deltaTime
@@ -31,7 +31,7 @@ void OnEnable() override;
 void OnDisable() override;
 
 protected:
-H3DRes LoadResourceFromFile(std::string resourceName);
+H3DRes LoadResourceFromFile(std::string_view resourceName);
 
 private:
 int previousState;
