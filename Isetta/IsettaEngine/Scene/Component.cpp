@@ -7,6 +7,26 @@
 
 namespace Isetta {
 
+bool Component::RegisterComponent(std::type_index curr, std::type_index base) {
+  std::type_index baseIndex{base};
+  std::type_index currIndex{curr};
+
+  std::unordered_map<std::type_index, std::list<std::type_index>>& children = childrenTypes();
+
+  if (children.count(currIndex) > 0) {
+    children.at(currIndex).push_front(currIndex);
+  } else {
+    children.insert({currIndex, std::list<std::type_index>{currIndex}});
+  }
+
+  if (children.count(baseIndex) > 0) {
+    children.at(baseIndex).emplace_back(currIndex);
+  } else {
+    children.insert({baseIndex, std::list<std::type_index>{currIndex}});
+  }
+  return true;
+}
+
 Component::Component() : attributes{0b1001}, entity{nullptr} {}
 
 void Component::SetAttribute(ComponentAttributes attr, bool value) {
@@ -31,8 +51,7 @@ bool Component::GetActive() const {
   return GetAttribute(ComponentAttributes::IS_ACTIVE);
 }
 
-Transform& Component::GetTransform() const {
-  return entity->GetTransform();
-}
+Transform* Component::GetTransform() const { return entity->GetTransform(); }
 
+Entity* Component::GetEntity() const { return entity; }
 }  // namespace Isetta

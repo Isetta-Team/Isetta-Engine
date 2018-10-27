@@ -13,19 +13,19 @@ namespace Isetta {
 void KeyTransform::OnEnable() {
   Input::RegisterKeyPressCallback(KeyCode::RIGHT_ARROW, [&]() {
     if (pressed) return;
-    this->GetTransform().TranslateLocal(step * Math::Vector3::left);
+    this->GetTransform()->TranslateLocal(step * Math::Vector3::left);
   });
   Input::RegisterKeyPressCallback(KeyCode::LEFT_ARROW, [&]() {
     if (pressed) return;
-    this->GetTransform().TranslateLocal(step * Math::Vector3::right);
+    this->GetTransform()->TranslateLocal(step * Math::Vector3::right);
   });
   Input::RegisterKeyPressCallback(KeyCode::UP_ARROW, [&]() {
     if (pressed) return;
-    this->GetTransform().TranslateLocal(step * Math::Vector3::forward);
+    this->GetTransform()->TranslateLocal(step * Math::Vector3::forward);
   });
   Input::RegisterKeyPressCallback(KeyCode::DOWN_ARROW, [&]() {
     if (pressed) return;
-    this->GetTransform().TranslateLocal(step * Math::Vector3::back);
+    this->GetTransform()->TranslateLocal(step * Math::Vector3::back);
   });
 
   Input::RegisterKeyPressCallback(KeyCode::M, [&]() { pressed = !pressed; });
@@ -33,23 +33,33 @@ void KeyTransform::OnEnable() {
 void KeyTransform::Update() {
   if (!pressed) return;
   if (Input::IsKeyPressed(KeyCode::RIGHT_ARROW)) {
-    this->GetTransform().TranslateLocal(
+    this->GetTransform()->TranslateLocal(
         10 * step * Math::Vector3::left *
         EngineLoop::GetGameClock().GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::LEFT_ARROW)) {
-    this->GetTransform().TranslateLocal(
+    this->GetTransform()->TranslateLocal(
         10 * step * Math::Vector3::right *
         EngineLoop::GetGameClock().GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::UP_ARROW)) {
-    this->GetTransform().TranslateLocal(
+    this->GetTransform()->TranslateLocal(
         10 * step * Math::Vector3::forward *
         EngineLoop::GetGameClock().GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::DOWN_ARROW)) {
-    this->GetTransform().TranslateLocal(
+    this->GetTransform()->TranslateLocal(
         10 * step * Math::Vector3::back *
+        EngineLoop::GetGameClock().GetDeltaTime());
+  }
+  if (Input::IsKeyPressed(KeyCode::PAGE_UP)) {
+    this->GetTransform()->TranslateLocal(
+        10 * step * Math::Vector3::up *
+        EngineLoop::GetGameClock().GetDeltaTime());
+  }
+  if (Input::IsKeyPressed(KeyCode::PAGE_DOWN)) {
+    this->GetTransform()->TranslateLocal(
+        10 * step * Math::Vector3::down *
         EngineLoop::GetGameClock().GetDeltaTime());
   }
 }

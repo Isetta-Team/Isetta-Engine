@@ -21,7 +21,6 @@ class ISETTA_API Entity {
   std::vector<std::type_index> componentTypes;
   std::vector<class Component*> components;
   Transform transform;
-  std::vector<Entity*> children;
 
   void OnEnable();
   void CheckStart();
@@ -36,6 +35,7 @@ class ISETTA_API Entity {
 
   StringId entityID;
   std::string entityName;
+  int layer;
 
   void SetAttribute(EntityAttributes attr, bool value);
   bool GetAttribute(EntityAttributes attr) const;
@@ -60,15 +60,33 @@ class ISETTA_API Entity {
   T* GetComponent();
   template <typename T>
   std::vector<T*> GetComponents();
+  template <typename T>
+  T* GetComponentInParent();
+  template <typename T>
+  std::vector<T*> GetComponentsInParent();
+  template <typename T>
+  T* GetComponentInChildren();
+  template <typename T>
+  std::vector<T*> GetComponentsInChildren();
+  template <typename T>
+  T* GetComponentInDescendant();
+  template <typename T>
+  std::vector<T*> GetComponentsInDescendant();
 
   void SetTransform(const Math::Vector3& worldPos = Math::Vector3::zero,
                     const Math::Vector3& worldEulerAngles = Math::Vector3::zero,
                     const Math::Vector3& localScale = Math::Vector3::one);
-  Transform& GetTransform() { return transform; }
-#if _DEBUG
+  Transform* const GetTransform() { return &transform; }
+  //#if _DEBUG
   // TODO(YIDI): Delete this! This is used for in game editor
-  std::vector<class Component*> GetComponents() { return components; }
-#endif
+  // TODO(Jacob) no don't this is good
+  std::vector<class Component*> GetComponents() const { return components; }
+  //#endif
+
+  void SetLayer(int layer);
+  void SetLayer(std::string layer);
+  int GetLayerIndex() const;
+  std::string GetLayerName() const;
 };
 
 template <typename T, typename... Args>
@@ -115,5 +133,56 @@ std::vector<T*> Entity::GetComponents() {
     }
   }
   return returnValue;
+}
+template <typename T>
+inline T* Entity::GetComponentInParent() {
+  return transform.parent->entity->GetComponent<T>();
+}
+template <typename T>
+inline std::vector<T*> Entity::GetComponentsInParent() {
+  return transform.parent->entity->GetComponents<T>();
+}
+template <typename T>
+inline T* Entity::GetComponentInChildren() {
+  T* component = nullptr;
+  for (auto it = transform.begin(); it != transform.end() && !component; it++) {
+    // TODO Calling getcomponent on iterator could break
+    component = it->GetComponent<T>();
+  }
+  return component;
+}
+template <typename T>
+inline std::vector<T*> Entity::GetComponentsInChildren() {
+  std::vector<T*> components;
+  for (auto it = transform.begin(); it != transform.end(); it++) {
+    // TODO Calling getcomponent on iterator could break
+    std::vector<T*> c;
+    c = it->GetComponents<T>();
+    components.insert(components.end(), c.begin(), c.end());
+  }
+  return components;
+}
+template <typename T>
+inline T* Entity::GetComponentInDescendant() {
+  T* component = nullptr;
+  for (auto it = transform.begin(); it != transform.end() && !component; it++) {
+    // TODO Calling getcomponent on iterator could break
+    component = it->GetComponent<T>();
+    if (!component) component = it->GetComponentInDescendant<T>();
+  }
+  return component;
+}
+template <typename T>
+inline std::vector<T*> Entity::GetComponentsInDescendant() {
+  std::vector<T*> components;
+  for (auto it = transform.begin(); it != transform.end(); it++) {
+    // TODO Calling getcomponent on iterator could break
+    std::vector<T*> c;
+    c = it->GetComponents<T>();
+    components.insert(components.end(), c.begin(), c.end());
+    c = it->GetComponentsInDescendant<T>();
+    components.insert(components.end(), c.begin(), c.end());
+  }
+  return components;
 }
 }  // namespace Isetta

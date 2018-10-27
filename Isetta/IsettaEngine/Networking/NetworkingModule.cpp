@@ -37,8 +37,9 @@ void NetworkingModule::StartUp() {
   srand((unsigned int)time(NULL));
 
   // TODO(Caleb): Figure out some more robust channel settings
-  networkConfig.numChannels = 1;
+  networkConfig.numChannels = 2;
   networkConfig.channel[0].type = yojimbo::CHANNEL_TYPE_UNRELIABLE_UNORDERED;
+  networkConfig.channel[1].type = yojimbo::CHANNEL_TYPE_RELIABLE_ORDERED;
   networkConfig.timeout = 20;
 
   privateKey = new (MemoryManager::AllocOnStack(
@@ -123,6 +124,9 @@ void NetworkingModule::ShutDown() {
   }
 
   ShutdownYojimbo();
+
+  client->~Client();
+  clientAllocator->~NetworkAllocator();
 }
 
 // NOTE: Deletes the oldest message in the queue if the queue is
@@ -285,7 +289,9 @@ void NetworkingModule::CloseServer() {
         "running.");
   }
   server->Stop();
+  server->~Server();
   MemoryManager::FreeOnFreeList(server);
   MemoryManager::FreeOnFreeList(serverSendBufferArray);
+  serverAllocator->~NetworkAllocator();
 }
 }  // namespace Isetta

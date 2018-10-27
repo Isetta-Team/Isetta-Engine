@@ -195,8 +195,8 @@ void GUI::InputInt(const RectTransform& transform, const std::string& label,
 }
 
 void GUI::SliderFloat(const RectTransform& transform, const std::string& label,
-                      float* value, float min, float max, float power, const char* format,
-                      const InputStyle& style) {
+                      float* value, float min, float max, float power,
+                      const char* format, const InputStyle& style) {
   ImGui::SetCursorPos((ImVec2)SetPosition(transform));
   ImGui::PushItemWidth(transform.rect.width);
 
@@ -211,28 +211,24 @@ void GUI::SliderFloat(const RectTransform& transform, const std::string& label,
 
 // WINDOWS
 bool GUI::Window(const RectTransform& transform, const std::string& name,
-                 const Action<>& ui, bool* isOpen, const BackgroundStyle& style,
+                 const Action<>& ui, bool* isOpen, const WindowStyle& style,
                  const WindowFlags flags) {
-  if (style.enabled) {
-    ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)style.background);
-    ImGui::SetNextWindowBgAlpha(style.background.a);
+  ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)style.background);
+  ImGui::SetNextWindowBgAlpha(style.background.a);
+  ImGui::SetNextWindowPos((ImVec2)SetPosition(transform), ImGuiCond_Once);
+  if (transform.rect.Size() != Math::Vector2::zero) {
+    ImGui::SetNextWindowSize((ImVec2)transform.rect.Size(), ImGuiCond_Once);
   }
-  ImGui::SetNextWindowPos((ImVec2)SetPosition(transform));
-  if (transform.rect.x != 0 || transform.rect.y != 0) {
-    ImGui::SetNextWindowSize((ImVec2)transform.rect.Size());
-    if ((flags & WindowFlags::NoResize) == WindowFlags::NoResize) {
-      ImGui::SetNextWindowSizeConstraints((ImVec2)transform.rect.Size(),
-                                          (ImVec2)transform.rect.Size());
-    }
+  if (style.constraints.Min() != style.constraints.Max()) {
+    ImGui::SetNextWindowSizeConstraints((ImVec2)style.constraints.Min(),
+                                        (ImVec2)style.constraints.Max());
   }
   bool collapsed = ImGui::Begin(name.c_str(), isOpen, ImGuiWindowFlags(flags));
   if (collapsed) {
     ui();
   }
   ImGui::End();
-  if (style.enabled) {
-    ImGui::PopStyleColor();
-  }
+  ImGui::PopStyleColor();
   return collapsed;
 }
 bool GUI::MenuBar(const Action<>& ui, bool main, const BackgroundStyle& style) {
@@ -425,7 +421,8 @@ Math::Vector2 GUI::SetPosition(const RectTransform& transform) {
       ImGui::GetCurrentWindow()->TitleBarHeight() * Math::Vector2::up;
   Math::Vector2 anchor = PivotPosition(
       Math::Rect{transform.rect.Position() +
-                     (Math::Vector2)ImGui::GetWindowPos() + titleBar,
+                     //(Math::Vector2)ImGui::GetWindowPos() + titleBar,
+                     titleBar,
                  // TODO(Jacob + Chaojie) Is there a get viewport
                  // function that I could call?
                  (Math::Vector2)ImGui::GetWindowSize() - titleBar},

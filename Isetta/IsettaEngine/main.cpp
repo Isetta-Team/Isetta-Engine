@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "EngineLoop.h"
+#include "Application.h"
 
 using namespace Isetta;
 
@@ -21,8 +21,6 @@ Between our own hands-on process and sage advice from veteran engineers, we hope
 to give newcomers a clearer representation of the engine-building process.
 */
 int main() {
-  EngineLoop loop;
-  loop.Run();
-
+  Application::Start();
   return 0;
 }

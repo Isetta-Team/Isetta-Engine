@@ -50,6 +50,6 @@ void LightComponent::OnDestroy() {
 }
 
 void LightComponent::UpdateH3DTransform() const {
-  Transform::SetH3DNodeTransform(renderNode, GetTransform());
+  Transform::SetH3DNodeTransform(renderNode, *GetTransform());
 }
 }  // namespace Isetta

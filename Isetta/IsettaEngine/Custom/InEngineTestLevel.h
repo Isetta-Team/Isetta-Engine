@@ -7,5 +7,5 @@
 namespace Isetta {
 CREATE_LEVEL(InEngineTestLevel)
   void LoadLevel() override;
-};
+CREATE_LEVEL_END
 }  // namespace Isetta

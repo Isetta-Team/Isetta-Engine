@@ -31,10 +31,10 @@ void Zombie::Update() {
   if (player == nullptr) return;
 
   Math::Vector3 dir =
-      player->GetTransform().GetWorldPos() - GetTransform().GetWorldPos();
-  GetTransform().TranslateWorld(dir.Normalized() * Time::GetDeltaTime() *
+      player->GetTransform()->GetWorldPos() - GetTransform()->GetWorldPos();
+  GetTransform()->TranslateWorld(dir.Normalized() * Time::GetDeltaTime() *
                                 speed);
-  GetTransform().LookAt(GetTransform().GetWorldPos() + dir);
+  GetTransform()->LookAt(GetTransform()->GetWorldPos() + dir);
 }
 
 void Zombie::TakeDamage(float damage) {

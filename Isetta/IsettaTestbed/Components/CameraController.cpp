@@ -10,9 +10,9 @@ namespace Isetta {
 void CameraController::Update() {
   auto player = PlayerController::Instance();
   if (player != nullptr) {
-    GetTransform().SetWorldPos(player->GetTransform().GetWorldPos() + Math::Vector3{0, y, z});
-    Math::Vector3 dir = GetTransform().GetWorldPos() - player->GetTransform().GetWorldPos();
-    GetTransform().LookAt(GetTransform().GetWorldPos() + dir);
+    GetTransform()->SetWorldPos(player->GetTransform()->GetWorldPos() + Math::Vector3{0, y, z});
+    Math::Vector3 dir = GetTransform()->GetWorldPos() - player->GetTransform()->GetWorldPos();
+    GetTransform()->LookAt(GetTransform()->GetWorldPos() + dir);
   }
 }
 

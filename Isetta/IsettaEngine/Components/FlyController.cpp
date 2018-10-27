@@ -12,7 +12,7 @@ void FlyController::OnEnable() {
   Input::RegisterKeyPressCallback(KeyCode::F,
                                   [&]() { enableLook = !enableLook; });
   Input::RegisterKeyPressCallback(KeyCode::KP_1, [&]() {
-    GetTransform().SetWorldPos(Math::Vector3::zero);
+    GetTransform()->SetWorldPos(Math::Vector3::zero);
   });
   Input::RegisterScrollCallback([&](double xOffset, double yOffset) {
     flyMultiplier += yOffset;
@@ -30,27 +30,27 @@ void FlyController::Update() {
   }
 
   if (Input::IsKeyPressed(KeyCode::W)) {
-    GetTransform().TranslateWorld(-GetTransform().GetForward() * dt * flySpeed);
+    GetTransform()->TranslateWorld(-GetTransform()->GetForward() * dt * flySpeed);
   }
 
   if (Input::IsKeyPressed(KeyCode::S)) {
-    GetTransform().TranslateWorld(GetTransform().GetForward() * dt * flySpeed);
+    GetTransform()->TranslateWorld(GetTransform()->GetForward() * dt * flySpeed);
   }
 
   if (Input::IsKeyPressed(KeyCode::D)) {
-    GetTransform().TranslateWorld(GetTransform().GetLeft() * dt * flySpeed);
+    GetTransform()->TranslateWorld(GetTransform()->GetLeft() * dt * flySpeed);
   }
 
   if (Input::IsKeyPressed(KeyCode::A)) {
-    GetTransform().TranslateWorld(-GetTransform().GetLeft() * dt * flySpeed);
+    GetTransform()->TranslateWorld(-GetTransform()->GetLeft() * dt * flySpeed);
   }
 
   if (Input::IsKeyPressed(KeyCode::E)) {
-    GetTransform().TranslateWorld(GetTransform().GetUp() * dt * flySpeed);
+    GetTransform()->TranslateWorld(GetTransform()->GetUp() * dt * flySpeed);
   }
 
   if (Input::IsKeyPressed(KeyCode::Q)) {
-    GetTransform().TranslateWorld(-GetTransform().GetUp() * dt * flySpeed);
+    GetTransform()->TranslateWorld(-GetTransform()->GetUp() * dt * flySpeed);
   }
 
   if (enableLook) {
@@ -58,9 +58,9 @@ void FlyController::Update() {
     rotX += mouseDelta.x * lookRotationSpeed;
     rotY += mouseDelta.y * lookRotationSpeed;
 
-    GetTransform().SetLocalRot(
+    GetTransform()->SetLocalRot(
         Math::Quaternion::FromAngleAxis(Math::Vector3::up, rotX));
-    GetTransform().RotateLocal(GetTransform().GetLeft(), rotY);
+    GetTransform()->RotateLocal(GetTransform()->GetLeft(), rotY);
   }
   lastFrameMousePos = Input::GetMousePosition();
 }

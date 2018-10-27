@@ -25,8 +25,10 @@ std::unordered_map<U16, Action<GLFWwindow*, double, double>>
     InputModule::scrollGLFWCallbacks;
 std::unordered_map<U16, Action<GLFWwindow*, unsigned int>>
     InputModule::charGLFWCallbacks;
-std::unordered_map<U16, Action<int, int>> InputModule::windowResizeCallbacks;
+std::unordered_map<U16, Action<int, int>> InputModule::windowSizeCallbacks;
 std::unordered_map<U16, Action<double, double>> InputModule::scrollCallbacks;
+std::unordered_map<U16, Action<int, int>>
+    InputModule::gamepadConnectionCallbacks;
 
 U16 InputModule::totalHandle{};
 
@@ -37,11 +39,11 @@ void InputModule::RegisterWindowCloseCallback(const Action<>& callback) {
 }
 U16 InputModule::RegisterWindowSizeCallback(const Action<int, int>& callback) {
   U16 handle = totalHandle++;
-  windowResizeCallbacks.insert(std::make_pair(handle, callback));
+  windowSizeCallbacks.insert(std::make_pair(handle, callback));
   return handle;
 }
 void InputModule::UnegisterWindowSizeCallback(U16 handle) {
-  windowResizeCallbacks.erase(handle);
+  windowSizeCallbacks.erase(handle);
 }
 bool InputModule::IsKeyPressed(KeyCode key) const {
   int glfwKey = KeyCodeToGlfwKey(key);
@@ -102,17 +104,6 @@ void InputModule::UnregisterMouseReleaseCallback(MouseButtonCode mouseButton,
                      &mouseReleaseCallbacks);
 }
 
-U16 InputModule::RegisterWindowResizeCallback(
-    const Action<int, int>& callback) {
-  U16 handle = totalHandle++;
-  windowResizeCallbacks.insert(std::make_pair(handle, callback));
-  return handle;
-}
-
-void InputModule::UnregisterWindowResizeCallback(U16 handle) {
-  windowResizeCallbacks.erase(handle);
-}
-
 U16 InputModule::RegisterScrollCallback(
     const Action<double, double>& callback) {
   U16 handle = totalHandle++;
@@ -121,7 +112,7 @@ U16 InputModule::RegisterScrollCallback(
 }
 
 void InputModule::UnregisterScrollCallback(U16 handle) {
-  windowResizeCallbacks.erase(handle);
+  windowSizeCallbacks.erase(handle);
 }
 
 U16 InputModule::RegisterMouseButtonGLFWCallback(
@@ -168,20 +159,28 @@ void InputModule::UnegisterCharGLFWCallback(U16 handle) {
   charGLFWCallbacks.erase(handle);
 }
 
+float InputModule::GetGamepadAxis(GamepadAxis axis) {
+  return gamepadState.axes[static_cast<int>(axis)];
+}
+
 void InputModule::StartUp(GLFWwindow* win) {
   winHandle = win;
   Input::inputModule = this;
   glfwSetInputMode(winHandle, GLFW_STICKY_KEYS, 1);
   glfwSetInputMode(winHandle, GLFW_STICKY_MOUSE_BUTTONS, 1);
   glfwSetWindowCloseCallback(winHandle, WindowCloseListener);
+  glfwSetWindowSizeCallback(winHandle, WindowSizeListener);
   glfwSetKeyCallback(winHandle, KeyEventListener);
   glfwSetMouseButtonCallback(winHandle, MouseEventListener);
   glfwSetCharCallback(winHandle, CharEventListener);
   glfwSetScrollCallback(winHandle, ScrollEventListener);
-  glfwSetWindowSizeCallback(winHandle, WindowSizeListener);
+  glfwSetJoystickCallback(GamepadEventListener);
 }
 
-void InputModule::Update(float deltaTime) { glfwPollEvents(); }
+void InputModule::Update(float deltaTime) {
+  glfwPollEvents();
+  UpdateGamepadState();
+}
 
 void InputModule::ShutDown() {}
 
@@ -269,8 +268,14 @@ void InputModule::ScrollEventListener(GLFWwindow* win, double xoffset,
 }
 
 void InputModule::WindowSizeListener(GLFWwindow* win, int width, int height) {
-  for (const auto& handleCallback : windowResizeCallbacks) {
+  for (const auto& handleCallback : windowSizeCallbacks) {
     handleCallback.second(width, height);
+  }
+}
+
+void InputModule::GamepadEventListener(int gamepadID, int gamepadEvent) {
+  for (const auto& handleCallback : gamepadConnectionCallbacks) {
+    handleCallback.second(gamepadID, gamepadEvent);
   }
 }
 
@@ -365,7 +370,6 @@ int InputModule::KeyCodeToGlfwKey(KeyCode key) const {
       glfwKey = GLFW_KEY_CAPS_LOCK - static_cast<int>(KeyCode::CAPS_LOCK) +
                 static_cast<int>(key);
       break;
-
     case KeyCode::F1:
     case KeyCode::F2:
     case KeyCode::F3:
@@ -435,5 +439,38 @@ int InputModule::KeyCodeToGlfwKey(KeyCode key) const {
 
 int InputModule::MouseButtonToGlfwKey(MouseButtonCode mouseButton) const {
   return static_cast<int>(mouseButton);
+}
+
+void InputModule::UpdateGamepadState() {
+  glfwGetGamepadState(GLFW_JOYSTICK_1, &gamepadState);
+  DeadZoneOptimize(&gamepadState.axes[0], &gamepadState.axes[1]);
+  DeadZoneOptimize(&gamepadState.axes[2], &gamepadState.axes[3]);
+}
+
+void InputModule::DeadZoneOptimize(float* horizontal, float* verticle) {
+  Math::Vector2 axis{*horizontal, *verticle};
+
+  if (axis.Magnitude() < 0.15f) {
+    axis = Math::Vector2::zero;
+  } else {
+    axis = axis.Normalized() * ((axis.Magnitude() - 0.15f) / (1 - 0.15f));
+  }
+  *horizontal = axis.x;
+  *verticle = axis.y;
+}
+
+bool InputModule::IsGamepadButtonPressed(GamepadButton button) {
+  return gamepadState.buttons[static_cast<int>(button)];
+}
+
+U16 InputModule::RegisterGamepadConnectionCallback(
+    const Action<int, int>& callback) {
+  U16 handle = totalHandle++;
+  gamepadConnectionCallbacks.insert(std::make_pair(handle, callback));
+  return handle;
+}
+
+void InputModule::UnegisterGamepadConnectionCallback(U16 handle) {
+  gamepadConnectionCallbacks.erase(handle);
 }
 }  // namespace Isetta

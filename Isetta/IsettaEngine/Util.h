@@ -6,6 +6,8 @@
 #include "Core/Time/StopWatch.h"
 
 namespace Isetta::Util {
+#define BIND_1(callback, reference) \
+  std::bind(&callback, reference, std::placeholders::_1)
 
 inline const char* StrFormat(const char* format, ...) {
   const int MAX_CHARS = 1023;
@@ -24,7 +26,8 @@ inline void StrRemoveSpaces(std::string* str) {
   str->erase(std::remove_if(str->begin(), str->end(), isspace), str->end());
 }
 
-inline std::vector<std::string> StrSplit(const std::string& inStr, const char separator) {
+inline std::vector<std::string> StrSplit(const std::string& inStr,
+                                         const char separator) {
   std::vector<std::string> results;
   Size lastPos = -1;
   Size sepPos = inStr.find(separator);
@@ -66,10 +69,10 @@ inline unsigned int CountSetBits(int N) {
 }  // namespace Isetta::Util
 
 namespace std {
-template <>
-struct hash<std::pair<int, int>> {
-  std::size_t operator()(const std::pair<int, int>& p) const {
-    return std::hash<int>()(p.first) ^ std::hash<int>()(p.second);
+struct UnorderedPairHash {
+  template <typename T>
+  std::size_t operator()(std::pair<T, T> const& p) const {
+    return (std::hash<T>()(p.first) ^ std::hash<T>()(p.second));
   }
 };
 }  // namespace std

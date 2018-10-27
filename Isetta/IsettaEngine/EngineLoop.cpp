@@ -11,7 +11,6 @@
 #include "Graphics/Window.h"
 #include "Input/InputModule.h"
 #include "Networking/NetworkingModule.h"
-#include "Collisions/CollisionsModule.h"
 
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
@@ -31,25 +30,30 @@ namespace Isetta {
 
 void InputDemo();
 
+EngineLoop& EngineLoop::Instance() {
+  static EngineLoop instance;
+  return instance;
+}
+
 EngineLoop::EngineLoop() {
   memoryManager = new MemoryManager{};
-  audioModule = new AudioModule{};
   windowModule = new WindowModule{};
   renderModule = new RenderModule{};
   inputModule = new InputModule{};
   guiModule = new GUIModule{};
-  networkingModule = new NetworkingModule{};
   collisionsModule = new CollisionsModule{};
+  audioModule = new AudioModule{};
+  networkingModule = new NetworkingModule{};
 }
 EngineLoop::~EngineLoop() {
+  delete memoryManager;
   delete windowModule;
-  delete audioModule;
   delete renderModule;
   delete inputModule;
   delete guiModule;
-  delete memoryManager;
-  delete networkingModule;
   delete collisionsModule;
+  delete audioModule;
+  delete networkingModule;
 }
 
 void EngineLoop::StartUp() {
@@ -62,24 +66,21 @@ void EngineLoop::StartUp() {
   intervalTime = 1.0 / Config::Instance().loopConfig.maxFps.GetVal();
   maxSimulationCount = Config::Instance().loopConfig.maxSimCount.GetVal();
 
+  isGameRunning = true;
+
   memoryManager->StartUp();
   windowModule->StartUp();
   renderModule->StartUp(windowModule->winHandle);
   inputModule->StartUp(windowModule->winHandle);
   guiModule->StartUp(windowModule->winHandle);
+  DebugDraw::StartUp();
   collisionsModule->StartUp();
   audioModule->StartUp();
   networkingModule->StartUp();
 
   LevelManager::Instance().LoadStartupLevel();
 
-  DebugDraw::StartUp();
-
   StartGameClock();
-  isGameRunning = true;
-
-  Input::RegisterKeyPressCallback(KeyCode::ESCAPE,
-                                  [&]() { isGameRunning = false; });
 
   // InputDemo();
   // RunYidiTest();
@@ -127,13 +128,13 @@ void EngineLoop::VariableUpdate(float deltaTime) {
 }
 
 void EngineLoop::ShutDown() {
-  LevelManager::Instance().currentLevel->UnloadLevel();
+  LevelManager::Instance().UnloadLevel();
   networkingModule->ShutDown();
   audioModule->ShutDown();
   collisionsModule->ShutDown();
+  DebugDraw::ShutDown();
   guiModule->ShutDown();
   inputModule->ShutDown();
-  DebugDraw::ShutDown();
   renderModule->ShutDown();
   windowModule->ShutDown();
   memoryManager->ShutDown();
@@ -142,6 +143,7 @@ void EngineLoop::ShutDown() {
 void EngineLoop::StartGameClock() const { GetGameClock(); }
 
 void EngineLoop::Run() {
+  ASSERT(!isGameRunning);
   StartUp();
   while (isGameRunning) {
     Update();

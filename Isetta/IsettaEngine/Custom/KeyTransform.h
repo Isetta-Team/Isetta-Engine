@@ -5,8 +5,8 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-class KeyTransform : public Component {
- private:
+CREATE_COMPONENT_BEGIN(KeyTransform, Component)
+private:
   float step;
   bool pressed;
 
@@ -15,5 +15,5 @@ class KeyTransform : public Component {
 
   void OnEnable() override;
   void Update() override;
-};
+CREATE_COMPONENT_END(KeyTransform, Component)
 }  // namespace Isetta
