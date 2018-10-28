@@ -163,6 +163,9 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Time\StopWatch.cpp" />
     <ClCompile Include="Custom\AxisDrawer.cpp" />
     <ClCompile Include="Custom\EmptyLevel\EmptyLevel.cpp" />
+    <ClCompile Include="Custom\EventTestLevel\EventListenerComponent.cpp" />
+    <ClCompile Include="Custom\EventTestLevel\EventSenderComponent.cpp" />
+    <ClCompile Include="Custom\EventTestLevel\EventTestLevel.cpp" />
     <ClCompile Include="Custom\InEngineTestLevel.cpp" />
     <ClCompile Include="Custom\KeyTransform.cpp" />
     <ClCompile Include="Custom\NetworkLevel.cpp" />
@@ -170,6 +173,8 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Custom\CollisionsLevel.cpp" />
     <ClCompile Include="Custom\RaycastClick.cpp" />
     <ClCompile Include="EngineLoop.cpp" />
+    <ClCompile Include="Events\EventObject.cpp" />
+    <ClCompile Include="Events\Events.cpp" />
     <ClCompile Include="Graphics\AnimationComponent.cpp" />
     <ClCompile Include="Graphics\CameraComponent.cpp" />
     <ClCompile Include="Graphics\GUI.cpp" />
@@ -260,6 +265,9 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Time\Time.h" />
     <ClInclude Include="Custom\AxisDrawer.h" />
     <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h" />
+    <ClInclude Include="Custom\EventTestLevel\EventListenerComponent.h" />
+    <ClInclude Include="Custom\EventTestLevel\EventSenderComponent.h" />
+    <ClInclude Include="Custom\EventTestLevel\EventTestLevel.h" />
     <ClInclude Include="Custom\InEngineTestLevel.h" />
     <ClInclude Include="Custom\IsettaCore.h" />
     <ClInclude Include="Custom\KeyTransform.h" />
@@ -268,6 +276,8 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Custom\CollisionsLevel.h" />
     <ClInclude Include="Custom\RaycastClick.h" />
     <ClInclude Include="EngineLoop.h" />
+    <ClInclude Include="Events\EventObject.h" />
+    <ClInclude Include="Events\Events.h" />
     <ClInclude Include="Graphics\AnimationComponent.h" />
     <ClInclude Include="Graphics\CameraComponent.h" />
     <ClInclude Include="Graphics\GUI.h" />

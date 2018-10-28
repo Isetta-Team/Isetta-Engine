@@ -2,14 +2,15 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include <string>
+#include <functional>
 #include <variant>
 #include <vector>
+#include "Core/IsettaAlias.h"
 #include "Core/Math/Vector3.h"
-#include <functional>
 
 namespace Isetta {
-using EventParam = std::variant<bool, int, float, Math::Vector3, void*>;
+using EventParam =
+    std::variant<bool, int, float, const char*, Math::Vector3, void*>;
 
 enum class EventPriority {
   LOW = 3000,
@@ -20,20 +21,23 @@ enum class EventPriority {
 
 struct EventObject {
   std::string eventName;
-  int timeFrame;
+  U64 timeFrame;
   EventPriority eventPriority;
   std::vector<EventParam> eventParams;
 
-  EventObject(std::string name, int frame, EventPriority priority,
+  EventObject(std::string name, U64 frame, EventPriority priority,
               std::vector<EventParam> params);
+  EventObject(std::string name, std::vector<EventParam> params);
   EventObject(const EventObject& other);
-  EventObject(EventObject&& other);
+  EventObject(EventObject&& other) noexcept;
   EventObject& operator=(const EventObject& other);
-  EventObject& operator=(EventObject&& other);
+  EventObject& operator=(EventObject&& other) noexcept;
 
   bool operator==(const EventObject& other) const;
   bool operator!=(const EventObject& other) const;
+  bool operator>(const EventObject& rhs) const;
 
-  static std::function<bool(const EventObject&, const EventObject&)> queueComparer;
+  static std::function<bool(const EventObject&, const EventObject&)>
+      queueComparer;
 };
 }  // namespace Isetta

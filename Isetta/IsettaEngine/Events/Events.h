@@ -28,7 +28,7 @@ class Events {
  private:
   Events() = default;
   std::priority_queue<EventObject, std::vector<EventObject>,
-                      decltype(EventObject::queueComparer)>
+                      std::greater<EventObject>>
       eventQueue;
   std::unordered_map<StringId, std::vector<CallbackPair>> callbackMap;
 

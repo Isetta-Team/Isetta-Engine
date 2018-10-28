@@ -21,6 +21,7 @@
 #include "Input/InputEnum.h"
 #include "Networking/NetworkManager.h"
 #include "Scene/Level.h"
+#include "Events/Events.h"
 
 #include "Scene/Entity.h"
 #include "Scene/LevelManager.h"
@@ -114,6 +115,7 @@ void EngineLoop::FixedUpdate(float deltaTime) {
 void EngineLoop::VariableUpdate(float deltaTime) {
   inputModule->Update(deltaTime);
   LevelManager::Instance().currentLevel->Update();
+  Events::Instance().Update();
   LevelManager::Instance().currentLevel->LateUpdate();
   audioModule->Update(deltaTime);
   renderModule->Update(deltaTime);
