@@ -42,7 +42,7 @@ void CollisionsModule::Update(float deltaTime) {
   //  }
   //}
   for (int i = 0; i < colliders.size(); i++) {
-    if (colliders[i]->GetAttribute(Collider::Attributes::IS_STATIC)) continue;
+    if (colliders[i]->GetProperties(Collider::Properties::IS_STATIC)) continue;
     for (int j = 0; j < colliders.size(); j++) {
       if (colliders[i] == colliders[j]) continue;
       CollisionHandler *handlerI = colliders[i]->GetHandler();

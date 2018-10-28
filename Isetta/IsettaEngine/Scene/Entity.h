@@ -114,6 +114,8 @@ T* Entity::AddComponent(Args&&... args) {
     component->SetActive(IsActive);
     component->entity = this;
     if (IsActive) {
+      component->Awake();
+      component->SetAttribute(Component::ComponentAttributes::HAS_AWAKEN, true);
       component->OnEnable();
     }
     componentTypes.emplace_back(typeIndex);
