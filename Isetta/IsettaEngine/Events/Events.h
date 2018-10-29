@@ -17,7 +17,7 @@ class Events {
     return instance;
   }
 
-  void RaiseEvent(const EventObject& eventObject);
+  void RaiseEventQueue(const EventObject& eventObject);
   void RaiseEventImmediate(const EventObject& eventObject);
 
   U16 RegisterEventListener(std::string_view eventName,

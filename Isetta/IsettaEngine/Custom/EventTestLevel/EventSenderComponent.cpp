@@ -14,7 +14,7 @@ void EventSenderComponent::Start() {
                                     Isetta::Time::GetTimeFrame(),
                                     Isetta::EventPriority::MEDIUM,
                                     {param}};
-    Isetta::Events::Instance().RaiseEvent(eventObject);
+    Isetta::Events::Instance().RaiseEventQueue(eventObject);
   });
   Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::S, []() {
     Isetta::EventParam param{"RaiseEvent Immediately"};
@@ -42,8 +42,8 @@ void EventSenderComponent::Start() {
                                      Isetta::EventPriority::HIGH,
                                      {param3}};
 
-    Isetta::Events::Instance().RaiseEvent(eventObject1);
-    Isetta::Events::Instance().RaiseEvent(eventObject2);
-    Isetta::Events::Instance().RaiseEvent(eventObject3);
+    Isetta::Events::Instance().RaiseEventQueue(eventObject1);
+    Isetta::Events::Instance().RaiseEventQueue(eventObject2);
+    Isetta::Events::Instance().RaiseEventQueue(eventObject3);
   });
 }

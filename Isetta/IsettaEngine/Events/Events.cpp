@@ -9,7 +9,7 @@
 using namespace Isetta;
 U16 Events::totalListeners = 0;
 
-void Events::RaiseEvent(const EventObject& eventObject) {
+void Events::RaiseEventQueue(const EventObject& eventObject) {
   eventQueue.push(eventObject);
 }
 
@@ -61,7 +61,7 @@ void Events::UnregisterEventListener(std::string_view eventName,
 }
 
 void Events::Update() {
-  while(!eventQueue.empty()) {
+  while (!eventQueue.empty()) {
     EventObject currEvent = eventQueue.top();
     if (currEvent.timeFrame > Time::GetTimeFrame()) {
       break;
