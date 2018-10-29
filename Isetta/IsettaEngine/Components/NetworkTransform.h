@@ -13,8 +13,18 @@ public:
 void Start() override;
 void FixedUpdate() override;
 
+float updateDistance = .01;
+float snapDistance = 1;
+
 private:
 int updateCounter = 0;
+float interpolation = 0;
+Math::Vector3 targetPos;
+Math::Vector3 prevPos;
+Math::Quaternion targetRot;
+Math::Quaternion prevRot;
+Math::Vector3 targetScale;
+Math::Vector3 prevScale;
 static bool registeredCallback;
 class NetworkId* netId;
 CREATE_COMPONENT_END(NetworkTransform, Component)
@@ -22,7 +32,7 @@ CREATE_COMPONENT_END(NetworkTransform, Component)
 RPC_MESSAGE_DEFINE(TransformMessage)
 template <typename Stream>
 bool Serialize(Stream* stream) {
-  serialize_int(stream, netId, 0, 1024);
+  serialize_int(stream, netId, 0, NetworkManager::Instance().GetMaxClients());
 
   serialize_float(stream, localPos.x);
   serialize_float(stream, localPos.y);

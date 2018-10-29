@@ -12,9 +12,12 @@ public:
 NetworkId();
 NetworkId(U32 id);
 
+bool HasClientAuthority() const;
+
 U32 id = 0;
-int clientAuthority = 0;
+int clientAuthorityId = 0;
 int updateInterval = 5;
+float interpolationFactor = 1;
 
 friend class NetworkManager;
 CREATE_COMPONENT_END(NetworkId, Component)

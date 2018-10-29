@@ -15,4 +15,9 @@ NetworkId::NetworkId(U32 id) {
   NetworkManager::Instance().AssignNetworkId(id, this);
 }
 
+bool NetworkId::HasClientAuthority() const {
+  return clientAuthorityId ==
+         NetworkManager::Instance().GetClientIndex();
+}
+
 }  // namespace Isetta

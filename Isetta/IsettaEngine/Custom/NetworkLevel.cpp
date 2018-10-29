@@ -85,7 +85,7 @@ void RegisterExampleMessageFunctions() {
               Entity* e = LevelManager::Instance().currentLevel->AddEntity(
                   Util::StrFormat("NetworkEntity%d", spawnMessage->netId));
               NetworkId* netId = e->AddComponent<NetworkId>(spawnMessage->netId);
-              netId->clientAuthority = spawnMessage->clientAuthority;
+              netId->clientAuthorityId = spawnMessage->clientAuthorityId;
               spawnedEntities.push_back(e);
 
               // Zomble
@@ -112,10 +112,10 @@ void RegisterExampleMessageFunctions() {
               Entity* e = LevelManager::Instance().currentLevel->AddEntity(
                   Util::StrFormat("NetworkEntity%d", count++));
               NetworkId* netIdentity = e->AddComponent<NetworkId>();
-              netIdentity->clientAuthority = clientIdx;
+              netIdentity->clientAuthorityId = clientIdx;
               spawnedEntities.push_back(e);
               spawnMessage->netId = netIdentity->id;
-              spawnMessage->clientAuthority = clientIdx;
+              spawnMessage->clientAuthorityId = clientIdx;
 
               // Zomble
               e->GetTransform().SetLocalScale(Math::Vector3::one * .01);
