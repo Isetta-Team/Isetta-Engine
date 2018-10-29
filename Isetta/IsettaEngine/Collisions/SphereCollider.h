@@ -34,6 +34,7 @@ float GetWorldRadius() const {
 }
 
 bool Intersection(Collider* const other) override;
+AABB GetFatAABB() final;
 AABB GetAABB() final;
 CREATE_COMPONENT_END(SphereCollider, Collider)
 }  // namespace Isetta

@@ -52,7 +52,14 @@ void OnDisable() override;
 void OnEnable() override;
 
 // TODO(YIDI): Actually implement this for each collider
-virtual AABB GetAABB() {return AABB{Math::Vector3::zero, Math::Vector3::one};};
+virtual AABB GetFatAABB() {
+  return AABB{Math::Vector3::zero, Math::Vector3::one * (1 + fatFactor)};
+}
+
+virtual AABB GetAABB() {
+  return AABB{Math::Vector3::zero, Math::Vector3::one};
+}
+
   // TODO(YIDI): DebugOnly
 void AddToBVTree();
 private:
@@ -67,7 +74,7 @@ friend class CollisionsModule;
 friend class CollisionHandler;
 
 protected:
-AABB* aabb;
+static float fatFactor;
 
 Color debugColor = Color::green;
 

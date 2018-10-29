@@ -18,15 +18,17 @@
 #include "Collisions/CollisionHandler.h"
 #include "Collisions/Collisions.h"
 #include "Collisions/SphereCollider.h"
+#include "Core/Config/Config.h"
 
 namespace Isetta {
 void CollisionsModule::StartUp() {
   Collider::collisionsModule = this;
+  Collider::fatFactor = CONFIG_VAL(collisionConfig.fatFactor);
   Collisions::collisionsModule = this;
 }
 
 void CollisionsModule::Update(float deltaTime) {
-  bvTree.DebugDraw();
+  bvTree.Update();
   /*
    * TODO(Yidi)Broadphase check
    */

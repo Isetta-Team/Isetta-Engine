@@ -15,6 +15,10 @@ class Vector3;
 namespace Isetta {
 class CollisionsModule {
  public:
+  struct CollisionConfig {
+    CVar<float> fatFactor{"collision_fat_factor", 0.2f};
+  };
+
   static bool Intersection(const class BoxCollider &,
                            const class BoxCollider &);
   static bool Intersection(const class BoxCollider &,
@@ -54,7 +58,7 @@ class CollisionsModule {
   CollisionUtil::ColliderPairSet collidingPairs;
 
   // TODO(Jacob) only for color as of now
-   std::unordered_set<std::pair<int, int>> collisionPairs;
+  std::unordered_set<std::pair<int, int>> collisionPairs;
   std::unordered_map<void *, int> collisions{};
   BVTree bvTree;
   void CollisionDetectionBVTree();
@@ -115,6 +119,5 @@ class CollisionsModule {
   static Math::Vector3 ClosestPtSegmentOBB(const Math::Vector3 &,
                                            const Math::Vector3 &,
                                            const class BoxCollider &);
-
 };
 }  // namespace Isetta

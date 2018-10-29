@@ -20,8 +20,8 @@ void SphereCollider::Update() {
       debugColor, debugColor, debugColor);
 
   // AABB aabb = GetAABB();
-  // DebugDraw::WireCube(Math::Matrix4::Translate(aabb.GetCenter()) * Math::Matrix4::Scale(aabb.GetSize()),
-	  // Color::white);
+  // DebugDraw::WireCube(Math::Matrix4::Translate(aabb.GetCenter()) *
+  // Math::Matrix4::Scale(aabb.GetSize()), Color::white);
 }
 
 bool SphereCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
@@ -44,7 +44,13 @@ bool SphereCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
 
 INTERSECTION_TEST(SphereCollider)
 
+AABB SphereCollider::GetFatAABB() {
+  return AABB{GetTransform().WorldPosFromLocalPos(center),
+              radius * 2 * Math::Vector3::one * (1 + fatFactor)};
+}
+
 AABB SphereCollider::GetAABB() {
-  return AABB{GetTransform().WorldPosFromLocalPos(center), radius * 2 * Math::Vector3::one};
+  return AABB{GetTransform().WorldPosFromLocalPos(center),
+              radius * 2 * Math::Vector3::one};
 }
 }  // namespace Isetta

@@ -12,6 +12,8 @@
 
 namespace Isetta {
 CollisionsModule* Collider::collisionsModule{nullptr};
+float Collider::fatFactor = 0.f;
+
 void Collider::OnEnable() {
   // CollisionsModule->tree.Add(bounding);
   // TODO(Jacob) remove
@@ -20,7 +22,7 @@ void Collider::OnEnable() {
 }
 
 void Collider::AddToBVTree() {
-  collisionsModule->bvTree.Add(this);
+  collisionsModule->bvTree.AddCollider(this);
 }
 
 void Collider::OnDisable() {
