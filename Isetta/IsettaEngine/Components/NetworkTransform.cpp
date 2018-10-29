@@ -9,10 +9,11 @@
 
 namespace Isetta {
 
-bool NetworkTransform::registeredCallback = false;
+bool NetworkTransform::registeredCallbacks = false;
+std::unordered_map<int, float> NetworkTransform::updateTimes;
 
 void NetworkTransform::Start() {
-  if (!registeredCallback) {
+  if (!registeredCallbacks) {
     NetworkManager::Instance().RegisterClientCallback<TransformMessage>(
         [&](yojimbo::Message* message) {
           TransformMessage* transformMessage =
@@ -27,6 +28,10 @@ void NetworkTransform::Start() {
           Entity* entity = netId->GetEntity();
           NetworkTransform* nt = entity->GetComponent<NetworkTransform>();
 
+          if (transformMessage->updateTime < nt->lastUpdateTime) {
+            return;
+          }
+
           if (entity) {
             Transform& t = entity->GetTransform();
             nt->targetPos =
@@ -39,6 +44,7 @@ void NetworkTransform::Start() {
 
             // Currently converting the local pos to world pos, might want a
             // different way to do this
+            float l = (t.GetWorldPos() - nt->targetPos).SqrMagnitude();
             if ((t.GetWorldPos() - nt->targetPos).SqrMagnitude() >=
                 nt->snapDistance * nt->snapDistance) {
               t.SetLocalPos(transformMessage->localPos);
@@ -51,19 +57,27 @@ void NetworkTransform::Start() {
             nt->prevPos = t.GetWorldPos();
             nt->prevRot = t.GetWorldRot();
             nt->prevScale = t.GetLocalScale();
+
+            nt->lastUpdateTime = transformMessage->updateTime;
           }
         });
 
     NetworkManager::Instance().RegisterServerCallback<TransformMessage>(
-        [](int clientIdx, yojimbo::Message* message) {
+        [&](int clientIdx, yojimbo::Message* message) {
           TransformMessage* transformMessage =
               reinterpret_cast<TransformMessage*>(message);
 
-          NetworkManager::Instance().SendAllMessageFromServer<TransformMessage>(
-              transformMessage);
+          if (updateTimes.find(transformMessage->netId) ==
+              updateTimes.end()) {
+            updateTimes[transformMessage->netId] = transformMessage->updateTime;
+          } else if (updateTimes[transformMessage->netId] <=
+                     transformMessage->updateTime) {
+            NetworkManager::Instance()
+                .SendAllMessageFromServer<TransformMessage>(transformMessage);
+          }
         });
 
-    NetworkTransform::registeredCallback = true;
+    NetworkTransform::registeredCallbacks = true;
   }
   netId = entity->GetComponent<NetworkId>();
   targetPos = entity->GetTransform().GetWorldPos();
@@ -72,6 +86,8 @@ void NetworkTransform::Start() {
   prevRot = targetRot;
   targetScale = entity->GetTransform().GetLocalScale();
   prevScale = targetScale;
+
+  lastUpdateTime = 0;
 }
 
 void NetworkTransform::FixedUpdate() {
@@ -87,6 +103,7 @@ void NetworkTransform::FixedUpdate() {
         TransformMessage* message =
             NetworkManager::Instance()
                 .GenerateMessageFromClient<TransformMessage>();
+        targetPos = t.GetWorldPos();
         message->localPos = t.GetLocalPos();
         message->localScale = t.GetLocalScale();
         message->localRot = t.GetLocalRot();

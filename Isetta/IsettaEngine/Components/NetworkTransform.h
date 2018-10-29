@@ -15,10 +15,11 @@ void Start() override;
 void FixedUpdate() override;
 
 float updateDistance = .01;
-float snapDistance = 100;
+float snapDistance = 5;
 
 private:
 int updateCounter = 0;
+float lastUpdateTime = 0;
 float interpolation = 1;
 Math::Vector3 targetPos;
 Math::Vector3 prevPos;
@@ -26,7 +27,8 @@ Math::Quaternion targetRot;
 Math::Quaternion prevRot;
 Math::Vector3 targetScale;
 Math::Vector3 prevScale;
-static bool registeredCallback;
+static bool registeredCallbacks;
+static std::unordered_map<int, float> updateTimes;
 class NetworkId* netId;
 friend class NetworkTransform;
 CREATE_COMPONENT_END(NetworkTransform, Component)
@@ -35,6 +37,8 @@ RPC_MESSAGE_DEFINE(TransformMessage)
 template <typename Stream>
 bool Serialize(Stream* stream) {
   serialize_int(stream, netId, 0, Config::Instance().networkConfig.maxNetID.GetVal());
+
+  serialize_float(stream, updateTime);
 
   serialize_float(stream, localPos.x);
   serialize_float(stream, localPos.y);
@@ -56,13 +60,15 @@ void Copy(const yojimbo::Message* otherMessage) override {
       reinterpret_cast<const TransformMessage*>(otherMessage);
 
   netId = message->netId;
+  updateTime = message->updateTime;
   localPos = message->localPos;
   localScale = message->localScale;
   localRot = message->localRot;
 }
 
 public:
-int netId;
+int netId = 0;
+float updateTime = 0;
 Math::Vector3 localPos;
 Math::Vector3 localScale;
 Math::Quaternion localRot;
