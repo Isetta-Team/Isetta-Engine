@@ -54,8 +54,10 @@ class CollisionsModule {
   CollisionUtil::ColliderPairSet collidingPairs;
 
   // TODO(Jacob) only for color as of now
+   std::unordered_set<std::pair<int, int>> collisionPairs;
   std::unordered_map<void *, int> collisions{};
   BVTree bvTree;
+  void CollisionDetectionBVTree();
 
   void StartUp();
   void Update(float deltaTime);
@@ -113,5 +115,6 @@ class CollisionsModule {
   static Math::Vector3 ClosestPtSegmentOBB(const Math::Vector3 &,
                                            const Math::Vector3 &,
                                            const class BoxCollider &);
+
 };
 }  // namespace Isetta

@@ -53,10 +53,10 @@ void BVHLevel::LoadLevel() {
     count++;
     Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
     auto col = sphere->AddComponent<SphereCollider>();
-    const float size = 10;
-    sphere->SetTransform(size * Math::Vector3{Math::Random::GetRandom01(),
+    const float size = 20;
+    sphere->SetTransform(size * Math::Vector3{Math::Random::GetRandom01() - 0.5f,
                                        Math::Random::GetRandom01(),
-                                       Math::Random::GetRandom01()});
+                                       Math::Random::GetRandom01() - 0.5f});
     col->AddToBVTree();
   });
 }

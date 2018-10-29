@@ -485,9 +485,10 @@ float CollisionsModule::ClosestPtRaySegment(
   Math::Vector3 r = p0 - ray.GetOrigin();
   float a = Math::Vector3::Dot(
       d, d);  // Squared length of segment S1, always nonnegative
-  float e = Math::Vector3::Dot(
-      ray.GetDirection(),
-      ray.GetDirection());  // Squared length of segment S2, always nonnegative
+  float e =
+      Math::Vector3::Dot(ray.GetDirection(),
+                         ray.GetDirection());  // Squared length of segment
+                                               // S2, always nonnegative
   float f = Math::Vector3::Dot(ray.GetDirection(), r);
 
   if (a <= Math::Util::EPSILON) {

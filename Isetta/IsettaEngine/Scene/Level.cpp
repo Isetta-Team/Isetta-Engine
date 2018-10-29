@@ -67,7 +67,7 @@ void Level::GUIUpdate() {
   }
 
 #if _DEBUG
-  static RectTransform rectTrans{{20, 50, 250, 500}};
+  static RectTransform rectTrans{{20, 100, 250, 500}};
   bool isOpen = true;
   GUI::Window(
       rectTrans, "Hierarchy",
@@ -107,9 +107,7 @@ void Level::GUIUpdate() {
         if (transform != nullptr) {
           transform->InspectorGUI();
         }
-      },
-      NULL, GUI::WindowStyle{},
-      GUI::WindowFlags::NoMove | GUI::WindowFlags::NoResize);
+      });
 #endif
 }
 
