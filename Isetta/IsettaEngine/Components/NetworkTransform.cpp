@@ -32,8 +32,9 @@ void NetworkTransform::Start() {
                 t.GetParent()->GetWorldPos() + transformMessage->localPos;
             targetRot =
                 t.GetParent()->GetWorldRot() * transformMessage->localRot;
-            targetScale = Math::Vector3::Scale(t.GetParent()->GetWorldScale(),
-                                               transformMessage->localScale);
+            targetScale = transformMessage->localScale;
+
+            interpolation = 0;
 
             // Currently converting the local pos to world pos, might want a
             // different way to do this
@@ -42,11 +43,13 @@ void NetworkTransform::Start() {
               t.SetLocalPos(transformMessage->localPos);
               t.SetLocalRot(transformMessage->localRot);
               t.SetLocalScale(transformMessage->localScale);
+
+              interpolation = 1;
             }
 
             prevPos = t.GetWorldPos();
             prevRot = t.GetWorldRot();
-            prevScale = t.GetWorldScale();
+            prevScale = t.GetLocalScale();
           }
         });
 
@@ -66,7 +69,7 @@ void NetworkTransform::Start() {
   prevPos = targetPos;
   targetRot = entity->GetTransform().GetWorldRot();
   prevRot = targetRot;
-  targetScale = entity->GetTransform().GetWorldScale();
+  targetScale = entity->GetTransform().GetLocalScale();
   prevScale = targetScale;
 }
 
@@ -77,7 +80,7 @@ void NetworkTransform::FixedUpdate() {
     if (updateCounter >= netId->updateInterval) {
       updateCounter = 0;
 
-      Transform t = entity->GetTransform();
+      Transform& t = entity->GetTransform();
       if ((t.GetWorldPos() - targetPos).SqrMagnitude() >=
           updateDistance * updateDistance) {
         TransformMessage* message =
@@ -91,10 +94,10 @@ void NetworkTransform::FixedUpdate() {
       }
     }
   } else if (interpolation < 1) {
-    Transform t = entity->GetTransform();
-    interpolation = max(interpolation + 1.0 / netId->updateInterval, 1);
-    t.SetLocalPos(Math::Vector3::Lerp(prevPos, targetPos, interpolation));
-    t.SetLocalRot(Math::Quaternion::Slerp(prevRot, targetRot, interpolation));
+    Transform& t = entity->GetTransform();
+    interpolation = min(interpolation + 1.0 / netId->updateInterval, 1);
+    t.SetWorldPos(Math::Vector3::Lerp(prevPos, targetPos, interpolation));
+    //t.SetWorldRot(Math::Quaternion::Slerp(prevRot, targetRot, interpolation));
     t.SetLocalScale(Math::Vector3::Lerp(prevScale, targetScale, interpolation));
   }
 }

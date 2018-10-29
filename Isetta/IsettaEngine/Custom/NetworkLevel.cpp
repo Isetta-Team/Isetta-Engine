@@ -16,6 +16,7 @@
 #include "Input/Input.h"
 #include "Networking/NetworkId.h"
 #include "Scene/Entity.h"
+#include "Components/GridComponent.h"
 
 using namespace Isetta;
 
@@ -96,7 +97,9 @@ void RegisterExampleMessageFunctions() {
                   e->AddComponent<AnimationComponent, true>(mesh);
               animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
               e->GetComponent<AnimationComponent>()->Play();
-              e->AddComponent<KeyTransform>();
+              if (netId->HasClientAuthority()) {
+                e->AddComponent<KeyTransform>();
+              }
               e->AddComponent<NetworkTransform>();
             }
           });
@@ -111,10 +114,10 @@ void RegisterExampleMessageFunctions() {
             if (!spawnMessage->netId) {
               Entity* e = LevelManager::Instance().currentLevel->AddEntity(
                   Util::StrFormat("NetworkEntity%d", count++));
-              NetworkId* netIdentity = e->AddComponent<NetworkId>();
-              netIdentity->clientAuthorityId = clientIdx;
+              NetworkId* netId = e->AddComponent<NetworkId>();
+              netId->clientAuthorityId = clientIdx;
               spawnedEntities.push_back(e);
-              spawnMessage->netId = netIdentity->id;
+              spawnMessage->netId = netId->id;
               spawnMessage->clientAuthorityId = clientIdx;
 
               // Zomble
@@ -125,7 +128,9 @@ void RegisterExampleMessageFunctions() {
                   e->AddComponent<AnimationComponent, true>(mesh);
               animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
               e->GetComponent<AnimationComponent>()->Play();
-              e->AddComponent<KeyTransform>();
+              if (netId->HasClientAuthority()) {
+                e->AddComponent<KeyTransform>();
+              }
               e->AddComponent<NetworkTransform>();
             }
 
@@ -287,6 +292,7 @@ void NetworkLevel::LoadLevel() {
   lightComp->SetProperty<LightProperty::COLOR_MULTIPLIER>(1.0f);
   lightComp->SetProperty<LightProperty::SHADOW_MAP_COUNT>(1);
   lightComp->SetProperty<LightProperty::SHADOW_MAP_BIAS>(0.01f);
+  lightEntity->AddComponent<GridComponent>();
 }
 
 void NetworkLevel::UnloadLevel() { RegisterExampleMessageFunctions(); }

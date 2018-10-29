@@ -45,6 +45,8 @@ class NetworkingModule {
     /// Number of messages the server can have in its send queue to an
     /// individual client before messages will be overwritten.
     CVar<int> serverQueueSizePerClient{"server_queue_size_per_client", 256};
+    /// Number of possible networked IDs
+    CVar<int> maxNetID{"max_network_id", 65000};
   };
 
  private:
