@@ -115,7 +115,7 @@ void NetworkTransform::FixedUpdate() {
     Transform& t = entity->GetTransform();
     interpolation = min(interpolation + 1.0 / netId->updateInterval, 1);
     t.SetWorldPos(Math::Vector3::Lerp(prevPos, targetPos, interpolation));
-    //t.SetWorldRot(Math::Quaternion::Slerp(prevRot, targetRot, interpolation));
+    t.SetWorldRot(Math::Quaternion::Lerp(prevRot, targetRot, interpolation));
     t.SetLocalScale(Math::Vector3::Lerp(prevScale, targetScale, interpolation));
   }
 }
