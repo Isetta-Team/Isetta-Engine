@@ -47,6 +47,8 @@ class NetworkingModule {
     CVar<int> serverQueueSizePerClient{"server_queue_size_per_client", 256};
     /// Number of possible networked IDs
     CVar<int> maxNetID{"max_network_id", 65000};
+    /// Timeout for client disconnect
+    CVar<int> timeout{"network_timeout", 20};
   };
 
  private:

@@ -25,31 +25,32 @@ void NetworkTransform::Start() {
           }
 
           Entity* entity = netId->GetEntity();
+          NetworkTransform* nt = entity->GetComponent<NetworkTransform>();
 
           if (entity) {
             Transform& t = entity->GetTransform();
-            targetPos =
+            nt->targetPos =
                 t.GetParent()->GetWorldPos() + transformMessage->localPos;
-            targetRot =
+            nt->targetRot =
                 t.GetParent()->GetWorldRot() * transformMessage->localRot;
-            targetScale = transformMessage->localScale;
+            nt->targetScale = transformMessage->localScale;
 
-            interpolation = 0;
+            nt->interpolation = 0;
 
             // Currently converting the local pos to world pos, might want a
             // different way to do this
-            if ((t.GetWorldPos() - targetPos).SqrMagnitude() >=
-                snapDistance * snapDistance) {
+            if ((t.GetWorldPos() - nt->targetPos).SqrMagnitude() >=
+                nt->snapDistance * nt->snapDistance) {
               t.SetLocalPos(transformMessage->localPos);
               t.SetLocalRot(transformMessage->localRot);
               t.SetLocalScale(transformMessage->localScale);
 
-              interpolation = 1;
+              nt->interpolation = 1;
             }
 
-            prevPos = t.GetWorldPos();
-            prevRot = t.GetWorldRot();
-            prevScale = t.GetLocalScale();
+            nt->prevPos = t.GetWorldPos();
+            nt->prevRot = t.GetWorldRot();
+            nt->prevScale = t.GetLocalScale();
           }
         });
 

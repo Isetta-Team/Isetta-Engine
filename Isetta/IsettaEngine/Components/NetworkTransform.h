@@ -15,7 +15,7 @@ void Start() override;
 void FixedUpdate() override;
 
 float updateDistance = .01;
-float snapDistance = 5;
+float snapDistance = 100;
 
 private:
 int updateCounter = 0;
