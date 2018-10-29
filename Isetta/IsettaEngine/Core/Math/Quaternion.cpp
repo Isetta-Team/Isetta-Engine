@@ -57,37 +57,37 @@ Quaternion Quaternion::FromLookRotation(const Vector3& forwardDirection,
 }
 
 Quaternion::Quaternion(const Quaternion& inQuaternion)
-    : w{inQuaternion.w},
-      x{inQuaternion.x},
+    : x{inQuaternion.x},
       y{inQuaternion.y},
-      z{inQuaternion.z} {}
+      z{inQuaternion.z},
+      w{inQuaternion.w} {}
 
 Quaternion::Quaternion(Quaternion&& inQuaternion) noexcept
-    : w{inQuaternion.w},
-      x{inQuaternion.x},
+    : x{inQuaternion.x},
       y{inQuaternion.y},
-      z{inQuaternion.z} {}
+      z{inQuaternion.z},
+      w{inQuaternion.w} {}
 
 Quaternion& Quaternion::operator=(const Quaternion& inQuaternion) {
-  w = inQuaternion.w;
   x = inQuaternion.x;
   y = inQuaternion.y;
   z = inQuaternion.z;
+  w = inQuaternion.w;
 
   return *this;
 }
 
 Quaternion& Quaternion::operator=(Quaternion&& inQuaternion) noexcept {
-  w = inQuaternion.w;
   x = inQuaternion.x;
   y = inQuaternion.y;
   z = inQuaternion.z;
+  w = inQuaternion.w;
 
   return *this;
 }
 
 bool Quaternion::operator==(const Quaternion& rhs) const {
-  return w == rhs.w && x == rhs.x && y == rhs.y && z == rhs.z;
+  return x == rhs.x && y == rhs.y && z == rhs.z && w == rhs.w;
 }
 
 bool Quaternion::operator!=(const Quaternion& rhs) const {
@@ -95,26 +95,26 @@ bool Quaternion::operator!=(const Quaternion& rhs) const {
 }
 
 Quaternion Quaternion::operator+(const Quaternion& rhs) const {
-  return Quaternion(w + rhs.w, x + rhs.x, y + rhs.y, z + rhs.z);
+  return Quaternion(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w);
 }
 
 Quaternion& Quaternion::operator+=(const Quaternion& rhs) {
-  w += rhs.w;
   x += rhs.x;
   y += rhs.y;
   z += rhs.z;
+  w += rhs.w;
   return *this;
 }
 
 Quaternion Quaternion::operator-(const Quaternion& rhs) const {
-  return Quaternion(w - rhs.w, x - rhs.x, y - rhs.y, z - rhs.z);
+  return Quaternion(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w);
 }
 
 Quaternion& Quaternion::operator-=(const Quaternion& rhs) {
-  w -= rhs.w;
   x -= rhs.x;
   y -= rhs.y;
   z -= rhs.z;
+  w -= rhs.w;
   return *this;
 }
 
@@ -298,7 +298,7 @@ Quaternion Quaternion::Inverse(const Quaternion& quaternion) {
 
 Quaternion Quaternion::Lerp(const Quaternion& aQuaternion,
                             const Quaternion& bQuaternion, const float t) {
-  return Quaternion{aQuaternion * (1.f - t) + bQuaternion * t}.Normalized();
+  return (aQuaternion * (1.f - t) + bQuaternion * t).Normalized();
 }
 
 Quaternion Quaternion::Slerp(const Quaternion& aQuaternion,
