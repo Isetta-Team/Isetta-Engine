@@ -18,6 +18,11 @@ void Collider::OnEnable() {
   // if (!isStatic) CollisionsModule->dynamicColliders.push_back(this);
   collisionsModule->colliders.push_back(this);
 }
+
+void Collider::AddToBVTree() {
+  collisionsModule->bvTree.Add(this);
+}
+
 void Collider::OnDisable() {
   // TODO(Jacob) remove this element
   /*CollisionsModule->colliders.erase();*/

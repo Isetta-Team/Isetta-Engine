@@ -51,19 +51,23 @@ inline Math::Vector3 GetWorldCenter() const {
 void OnDisable() override;
 void OnEnable() override;
 
- private:
-  std::bitset<2> attributes;
-  class CollisionHandler* handler{nullptr};
+// TODO(YIDI): Actually implement this for each collider
+virtual AABB GetAABB() {return AABB{Math::Vector3::zero, Math::Vector3::one};};
+  // TODO(YIDI): DebugOnly
+void AddToBVTree();
+private:
+std::bitset<2> attributes;
+class CollisionHandler* handler{nullptr};
 
-  inline class CollisionHandler* GetHandler() { return handler; }
-  inline void SetHandler(class CollisionHandler* const h) { handler = h; }
+inline class CollisionHandler* GetHandler() { return handler; }
+inline void SetHandler(class CollisionHandler* const h) { handler = h; }
 
-  static class CollisionsModule* collisionsModule;
-  friend class CollisionsModule;
-  friend class CollisionHandler;
+static class CollisionsModule* collisionsModule;
+friend class CollisionsModule;
+friend class CollisionHandler;
 
 protected:
-AABB* bounding;
+AABB* aabb;
 
 Color debugColor = Color::green;
 
@@ -85,8 +89,8 @@ friend class SphereCollider;
 friend class CapsuleCollider;
 virtual const ColliderType GetType() const = 0;
 
-  virtual bool Intersection(Collider* const other) = 0;
-  void RaycastHitCtor(class RaycastHit* const hitInfo, float distance,
-                      const Math::Vector3& point, const Math::Vector3& normal);
+virtual bool Intersection(Collider* const other) = 0;
+void RaycastHitCtor(class RaycastHit* const hitInfo, float distance,
+                    const Math::Vector3& point, const Math::Vector3& normal);
 CREATE_COMPONENT_END(Collider, Component)
 }  // namespace Isetta

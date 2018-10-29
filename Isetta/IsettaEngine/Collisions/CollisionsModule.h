@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include "BVTree.h"
 #include "Util.h"
 
 namespace Isetta::Math {
@@ -46,13 +47,15 @@ class CollisionsModule {
   CollisionsModule() = default;
   ~CollisionsModule() = default;
 
-  // BVTree tree;
   // TODO(Jacob) remove
   std::vector<class Collider *> colliders;
 
-  std::unordered_set<std::pair<int, int>> collisionPairs;
+  // probably mark them as "still colliding"
+  CollisionUtil::ColliderPairSet collidingPairs;
+
   // TODO(Jacob) only for color as of now
-  std::unordered_map<int, int> collisions{};
+  std::unordered_map<void *, int> collisions{};
+  BVTree bvTree;
 
   void StartUp();
   void Update(float deltaTime);
@@ -110,12 +113,5 @@ class CollisionsModule {
   static Math::Vector3 ClosestPtSegmentOBB(const Math::Vector3 &,
                                            const Math::Vector3 &,
                                            const class BoxCollider &);
-  inline std::pair<int, int> CollisionPair(int i, int j) {
-    if (i < j) {
-      return std::make_pair(i, j);
-    } else {
-      return std::make_pair(j, i);
-    }
-  }
 };
 }  // namespace Isetta

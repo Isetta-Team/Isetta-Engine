@@ -145,6 +145,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Audio\AudioModule.cpp" />
     <ClCompile Include="Audio\AudioSource.cpp" />
+    <ClCompile Include="Collisions\BVTree.cpp" />
     <ClCompile Include="Collisions\CollisionHandler.cpp" />
     <ClCompile Include="Collisions\Collisions.cpp" />
     <ClCompile Include="Components\GridComponent.cpp" />
@@ -162,6 +163,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Time\Clock.cpp" />
     <ClCompile Include="Core\Time\StopWatch.cpp" />
     <ClCompile Include="Custom\AxisDrawer.cpp" />
+    <ClCompile Include="Custom\BVHLevel.cpp" />
     <ClCompile Include="Custom\EmptyLevel\EmptyLevel.cpp" />
     <ClCompile Include="Custom\FrameReporter.cpp" />
     <ClCompile Include="Custom\InEngineTestLevel.cpp" />
@@ -218,8 +220,10 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Audio\AudioModule.h" />
     <ClInclude Include="Audio\AudioSource.h" />
+    <ClInclude Include="Collisions\BVTree.h" />
     <ClInclude Include="Collisions\CollisionHandler.h" />
     <ClInclude Include="Collisions\Collisions.h" />
+    <ClInclude Include="CollisionUtil.h" />
     <ClInclude Include="Components\GridComponent.h" />
     <ClInclude Include="Components\FlyController.h" />
     <ClInclude Include="Core\Config\Config.h" />
@@ -259,6 +263,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Time\StopWatch.h" />
     <ClInclude Include="Core\Time\Time.h" />
     <ClInclude Include="Custom\AxisDrawer.h" />
+    <ClInclude Include="Custom\BVHLevel.h" />
     <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h" />
     <ClInclude Include="Custom\FrameReporter.h" />
     <ClInclude Include="Custom\InEngineTestLevel.h" />
@@ -308,6 +313,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
+    <None Include="cpp.hint" />
     <None Include="Resources\test\Low-Poly-Racing-Car.geo" />
     <None Include="user.cfg" />
   </ItemGroup>

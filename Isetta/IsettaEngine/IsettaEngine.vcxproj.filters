@@ -250,6 +250,12 @@
     <ClCompile Include="Custom\FrameReporter.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
+    <ClCompile Include="Custom\BVHLevel.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Collisions\BVTree.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -531,6 +537,15 @@
     <ClInclude Include="Custom\FrameReporter.h">
       <Filter>Custom</Filter>
     </ClInclude>
+    <ClInclude Include="Custom\BVHLevel.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\BVTree.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionUtil.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -602,6 +617,7 @@
     </None>
     <None Include="config.cfg" />
     <None Include="user.cfg" />
+    <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Resources\test\Low-Poly-Racing-Car.scene.xml">

@@ -8,9 +8,9 @@ namespace Isetta {
 
 void FrameReporter::GuiUpdate() {
   count++;
-  totalFrameCount++;
+  float dt = Time::GetDeltaTime();
+
   if (count >= reportInterval) {
-    float dt = Time::GetDeltaTime();
     fps = 1.0f / dt;
     frameTime = dt * 1000;
     count = 0;
@@ -24,9 +24,16 @@ void FrameReporter::GuiUpdate() {
   GUI::Text(RectTransform{Math::Rect{5, 15, 50, 5}},
             Util::StrFormat("Time: %.1f ms", frameTime), style);
 
+  frameDurations.push(dt);
+  timeSumForAvg += dt;
+  if (frameDurations.size() > frameCountForAvg) {
+    timeSumForAvg -= frameDurations.front();
+    frameDurations.pop();
+  }
+
   GUI::Text(
       RectTransform{Math::Rect{5, 25, 50, 5}},
-      Util::StrFormat("Avg: %.1f ms", Time::GetElapsedTime() * 1000 / totalFrameCount),
+      Util::StrFormat("Avg: %.1f ms", timeSumForAvg * 1000 / frameCountForAvg),
       style);
 }
 }  // namespace Isetta

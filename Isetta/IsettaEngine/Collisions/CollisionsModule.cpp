@@ -26,6 +26,7 @@ void CollisionsModule::StartUp() {
 }
 
 void CollisionsModule::Update(float deltaTime) {
+  bvTree.DebugDraw();
   /*
    * TODO(Yidi)Broadphase check
    */
@@ -41,55 +42,78 @@ void CollisionsModule::Update(float deltaTime) {
   //    obj2.owner->OnCollision(Collider::EntityKey{}, &obj1);
   //  }
   //}
-  for (int i = 0; i < colliders.size(); i++) {
-    if (colliders[i]->GetAttribute(Collider::Attributes::IS_STATIC)) continue;
-    for (int j = 0; j < colliders.size(); j++) {
-      if (colliders[i] == colliders[j]) continue;
-      CollisionHandler *handlerI = colliders[i]->GetHandler();
-      CollisionHandler *handlerJ = colliders[j]->GetHandler();
-      if (handlerI && handlerJ && handlerI == handlerJ) continue;
-      if (colliders[i]->Intersection(colliders[j])) {
-        if (collisionPairs.find(CollisionPair(i, j)) != collisionPairs.end()) {
-          // TODO(Jacob) Collision Stay
-          if (handlerI) handlerI->OnCollisionStay(colliders[j]);
-          if (handlerJ) handlerJ->OnCollisionStay(colliders[i]);
+
+  // By the end of the checking loop, pairs left in the lastFramePairs
+  // are those who are no longer colliding
+  auto lastFramePairs = collidingPairs;
+
+  collidingPairs.clear();
+
+  for (const auto &pair : bvTree.GetCollisionPairs()) {
+    Collider *collider1 = pair.first;
+    Collider *collider2 = pair.second;
+
+    CollisionHandler *handlerI = collider1->GetHandler();
+    CollisionHandler *handlerJ = collider2->GetHandler();
+
+    // things under the same handler don't collide
+    if (handlerI && handlerJ && handlerI == handlerJ) continue;
+
+    if (collider1->Intersection(collider2)) {
+      // if they do collide
+
+      auto it = lastFramePairs.find(pair);
+
+      if (it != lastFramePairs.end()) {
+        // pair was colliding last frame
+        // TODO(Jacob) Collision Stay
+        if (handlerI) handlerI->OnCollisionStay(collider2);
+        if (handlerJ) handlerJ->OnCollisionStay(collider1);
+        lastFramePairs.erase(it);
+      } else {
+        // pair is new
+        // TODO(Jacob) Collision Enter
+        if (handlerI) handlerI->OnCollisionEnter(collider2);
+        if (handlerJ) handlerJ->OnCollisionEnter(collider1);
+
+        // TODO(Jacob) remove. This is only for colors
+        if (collisions.find(collider1) != collisions.end()) {
+          collisions[collider1]++;
         } else {
-          // TODO(Jacob) Collision Enter
-          if (handlerI) handlerI->OnCollisionEnter(colliders[j]);
-          if (handlerJ) handlerJ->OnCollisionEnter(colliders[i]);
-          collisionPairs.insert(CollisionPair(i, j));
-          // TODO(Jacob) remove
-          if (collisions.find(i) != collisions.end()) {
-            collisions[i]++;
-          } else {
-            collisions.insert(std::make_pair(i, 1));
-          }
-          if (collisions.find(j) != collisions.end()) {
-            collisions[j]++;
-          } else {
-            collisions.insert(std::make_pair(j, 1));
-          }
-          //
+          collisions.insert(std::make_pair(collider1, 1));
         }
-        colliders[i]->debugColor = Color::red;
-        colliders[j]->debugColor = Color::red;
-      } else if (collisionPairs.find(CollisionPair(i, j)) !=
-                 collisionPairs.end()) {
-        // TODO(Jacob) Collision Exit
-        if (handlerI) handlerI->OnCollisionExit(colliders[j]);
-        if (handlerJ) handlerJ->OnCollisionExit(colliders[i]);
-        collisionPairs.erase(CollisionPair(i, j));
-        // TODO(Jacob) remove
-        collisions[i]--;
-        collisions[j]--;
-        if (collisions[i] == 0) {
-          colliders[i]->debugColor = Color::green;
+        if (collisions.find(collider2) != collisions.end()) {
+          collisions[collider2]++;
+        } else {
+          collisions.insert(std::make_pair(collider2, 1));
         }
-        if (collisions[j] == 0) {
-          colliders[j]->debugColor = Color::green;
-        }
-        //
       }
+
+      collidingPairs.insert(pair);
+      collider1->debugColor = Color::red;
+      collider2->debugColor = Color::red;
+    }
+  }
+
+  for (const auto &pair : lastFramePairs) {
+    // TODO(Jacob) Collision Exit
+    Collider *collider1 = pair.first;
+    Collider *collider2 = pair.second;
+
+    CollisionHandler *handlerI = collider1->GetHandler();
+    CollisionHandler *handlerJ = collider2->GetHandler();
+
+    if (handlerI) handlerI->OnCollisionExit(collider2);
+    if (handlerJ) handlerJ->OnCollisionExit(collider1);
+
+    // TODO(Jacob) remove
+    collisions[collider1]--;
+    collisions[collider2]--;
+    if (collisions[collider1] == 0) {
+      collider1->debugColor = Color::green;
+    }
+    if (collisions[collider2] == 0) {
+      collider2->debugColor = Color::green;
     }
   }
 }

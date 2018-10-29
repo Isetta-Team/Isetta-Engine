@@ -11,14 +11,16 @@ void Update() override;
 
 protected:
 const ColliderType GetType() const override {
-  return Collider::ColliderType::SPHERE;
+  return ColliderType::SPHERE;
 }
 
 public:
 float radius;
 
-explicit SphereCollider(float radius = 0.5) : Collider{}, radius{radius} {}
-SphereCollider(const Math::Vector3& center, float radius = 0.5)
+explicit SphereCollider(const float radius = 0.5)
+    : Collider{}, radius{radius}{}
+
+explicit SphereCollider(const Math::Vector3& center, const float radius = 0.5)
     : Collider{center}, radius{radius} {}
 SphereCollider(bool isStatic, bool isTrigger, const Math::Vector3& center,
                float radius = 0.5)
@@ -27,9 +29,11 @@ SphereCollider(bool isStatic, bool isTrigger, const Math::Vector3& center,
 bool Raycast(const Ray& ray, RaycastHit* const hitInfo,
              float maxDistance = 0) override;
 
-inline float GetWorldRadius() const {
+float GetWorldRadius() const {
   return radius * GetTransform().GetWorldScale().Max();
 }
+
 bool Intersection(Collider* const other) override;
+AABB GetAABB() final;
 CREATE_COMPONENT_END(SphereCollider, Collider)
 }  // namespace Isetta
