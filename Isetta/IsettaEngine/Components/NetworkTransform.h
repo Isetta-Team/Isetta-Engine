@@ -6,6 +6,7 @@
 #include "ISETTA_API.h"
 #include "Networking/Messages.h"
 #include "Scene/Component.h"
+#include "Core/Config/Config.h"
 
 namespace Isetta {
 CREATE_COMPONENT_BEGIN(NetworkTransform, Component, true)
