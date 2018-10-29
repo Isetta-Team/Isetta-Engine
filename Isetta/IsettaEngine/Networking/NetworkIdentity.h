@@ -7,18 +7,15 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(NetworkId, Component, true)
+BEGIN_COMPONENT(NetworkIdentity, Component, true)
 public:
-NetworkId();
-NetworkId(U32 id);
-
-bool HasClientAuthority() const;
+NetworkIdentity();
+NetworkIdentity(U32 id);
 
 U32 id = 0;
-int clientAuthorityId = 0;
+U8 clientAuthority = -1;
 int updateInterval = 5;
-float interpolationFactor = 1;
 
 friend class NetworkManager;
-END_COMPONENT(NetworkId, Component)
+END_COMPONENT(NetworkIdentity, Component)
 }  // namespace Isetta

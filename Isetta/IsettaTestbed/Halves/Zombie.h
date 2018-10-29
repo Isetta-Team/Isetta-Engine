@@ -6,7 +6,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(Zombie, Component, true)
+BEGIN_COMPONENT(Zombie, Component, true)
 public:
 void OnEnable() override;
 void Update() override;
@@ -17,5 +17,5 @@ private:
 float health = 100;
 bool isInitialized = false;
 AudioSource audio;
-CREATE_COMPONENT_END(Zombie, Component)
+END_COMPONENT(Zombie, Component)
 }  // namespace Isetta

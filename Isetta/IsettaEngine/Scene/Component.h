@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include "ISETTA_API.h"
 
-#define CREATE_COMPONENT_BEGIN(NAME, BASE, EXCLUDE)             \
+#define BEGIN_COMPONENT(NAME, BASE, EXCLUDE)                    \
   template <bool Exclude>                                       \
   class ISETTA_API_DECLARE                                      \
       Isetta::ComponentRegistry<class NAME, BASE, Exclude> {    \
@@ -23,7 +23,7 @@
                                                                 \
    private:
 
-#define CREATE_COMPONENT_END(NAME, BASE)                                  \
+#define END_COMPONENT(NAME, BASE)                                         \
   }                                                                       \
   ;                                                                       \
   template <bool Exclude>                                                 \

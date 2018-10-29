@@ -9,7 +9,7 @@
 #include "Core/Config/Config.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(NetworkTransform, Component, true)
+BEGIN_COMPONENT(NetworkTransform, Component, true)
 public:
 void Start() override;
 void FixedUpdate() override;
@@ -46,7 +46,7 @@ static std::unordered_map<int, float> rotUpdateTimes;
 static std::unordered_map<int, float> scaleUpdateTimes;
 class NetworkId* netId;
 friend class NetworkTransform;
-CREATE_COMPONENT_END(NetworkTransform, Component)
+END_COMPONENT(NetworkTransform, Component)
 
 RPC_MESSAGE_DEFINE(PositionMessage)
 template <typename Stream>

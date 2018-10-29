@@ -7,7 +7,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(CollisionHandler, Component, true)
+BEGIN_COMPONENT(CollisionHandler, Component, true)
 private : std::unordered_map<U16, Action<class Collider*>> onEnter,
           onStay,
           onExit;
@@ -39,5 +39,5 @@ U16 handles;
   void UnregisterOnStay(U16 handle);
   U16 RegisterOnExit(const Action<class Collider* const>& action);
   void UnregisterOnExit(U16 handle);
-CREATE_COMPONENT_END(CollisionHandler, Component)
+END_COMPONENT(CollisionHandler, Component)
 }  // namespace Isetta

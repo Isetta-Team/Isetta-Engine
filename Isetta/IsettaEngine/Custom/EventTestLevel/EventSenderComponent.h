@@ -4,6 +4,6 @@
 #pragma once
 #include "Scene/Component.h"
 
-CREATE_COMPONENT_BEGIN(EventSenderComponent, Isetta::Component, true)
+BEGIN_COMPONENT(EventSenderComponent, Isetta::Component, true)
 void Start() override;
-CREATE_COMPONENT_END(EventSenderComponent, Isetta::Component)
+END_COMPONENT(EventSenderComponent, Isetta::Component)

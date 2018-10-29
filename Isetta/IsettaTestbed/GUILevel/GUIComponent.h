@@ -5,11 +5,11 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(GUIComponent, Component, false)
+BEGIN_COMPONENT(GUIComponent, Component, false)
 private:
 static bool checkbox;
 
 public:
 void GuiUpdate() override;
-CREATE_COMPONENT_END(GUIComponent, Component)
+END_COMPONENT(GUIComponent, Component)
 }  // namespace Isetta

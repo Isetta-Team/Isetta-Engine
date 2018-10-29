@@ -8,7 +8,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(PlayerController, Component, true)
+BEGIN_COMPONENT(PlayerController, Component, true)
 public : void OnEnable() override;
 void Start() override;
 void Update() override;
@@ -29,5 +29,5 @@ int poolSize = 100;
 AnimationComponent* animationComp;
 bool isMoving;
 std::vector<Entity*> bullets;
-CREATE_COMPONENT_END(PlayerController, Component)
+END_COMPONENT(PlayerController, Component)
 }  // namespace Isetta

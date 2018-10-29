@@ -5,7 +5,7 @@
 #include "Collisions/Collider.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(BoxCollider, Collider, false)
+BEGIN_COMPONENT(BoxCollider, Collider, false)
 protected:
 const ColliderType GetType() const override {
   return Collider::ColliderType::BOX;
@@ -33,5 +33,5 @@ inline Math::Vector3 GetWorldSize() const {
 }
 inline Math::Vector3 GetWorldExtents() const { return 0.5f * GetWorldSize(); }
 bool Intersection(Collider* const other) override;
-CREATE_COMPONENT_END(BoxCollider, Collider)
+END_COMPONENT(BoxCollider, Collider)
 }  // namespace Isetta

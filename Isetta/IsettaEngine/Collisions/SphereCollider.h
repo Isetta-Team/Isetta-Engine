@@ -5,7 +5,7 @@
 #include "Collisions/Collider.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(SphereCollider, Collider, false)
+BEGIN_COMPONENT(SphereCollider, Collider, false)
 private:
 void Update() override;
 
@@ -31,5 +31,5 @@ inline float GetWorldRadius() const {
   return radius * GetTransform()->GetWorldScale().Max();
 }
 bool Intersection(Collider* const other) override;
-CREATE_COMPONENT_END(SphereCollider, Collider)
+END_COMPONENT(SphereCollider, Collider)
 }  // namespace Isetta

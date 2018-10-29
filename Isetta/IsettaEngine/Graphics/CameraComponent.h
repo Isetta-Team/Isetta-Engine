@@ -13,7 +13,7 @@ class Vector3;
 class Vector2;
 }  // namespace Math
 
-CREATE_COMPONENT_BEGIN(CameraComponent, Component, true)
+BEGIN_COMPONENT(CameraComponent, Component, true)
  public:
   enum class Property {
     FOV,
@@ -69,7 +69,7 @@ CREATE_COMPONENT_BEGIN(CameraComponent, Component, true)
   H3DNode renderNode;
   H3DRes renderResource;
   int resizeHandle;
-CREATE_COMPONENT_END(CameraComponent, Component)
+END_COMPONENT(CameraComponent, Component)
 
 template <CameraComponent::Property Attr, typename T>
 void CameraComponent::SetProperty(T value) {
