@@ -4,6 +4,7 @@
 #include "Core/Debug/DebugDraw.h"
 #include "Core/Time/Time.h"
 #include "Util.h"
+#include "Scene/Entity.h"
 
 namespace Isetta {
 
@@ -21,24 +22,109 @@ BVTree::~BVTree() {
   }
 }
 
-void BVTree::Add(Collider* collider) {
+void BVTree::AddCollider(Collider* collider) {
   colliders.push_back(collider);
+  AddNode(new BVNode{collider});
+}
 
-  BVNode* newNode = new BVNode{collider};
-  AABB& newAABB = newNode->aabb;
+void BVTree::Remove(BVNode* node, bool deleteNode) {
+  ASSERT(node->IsLeaf());
+
+  if (node == root) {
+    root = nullptr;
+  } else if (node->parent == root) {
+    BVNode* newRoot;
+
+    if (node == root->left) {
+      newRoot = root->right;
+    } else {
+      newRoot = root->left;
+    }
+
+    delete root;
+    root = newRoot;
+    root->parent = nullptr;
+  } else {
+    BVNode* parent = node->parent;
+    
+    if (parent->left == node) {
+      BVNode* right = parent->right;
+      parent->collider = right->collider;
+      parent->left = right->left;
+      parent->right = right->right;
+      delete right;
+    } else {
+      BVNode* left = parent->left;
+      parent->collider = left->collider;
+      parent->right = left->right;
+      parent->left = left->left;
+      delete left;
+    }
+
+    parent = parent->parent;
+    while (parent != nullptr) {
+      parent->UpdateBranchAABB();
+      parent = parent->parent;
+    }
+  }
+
+  if (deleteNode) {
+    delete node;
+  }
+}
+
+void BVTree::Update() {
+  std::vector<BVNode*> toReInsert;
+
+  std::queue<BVNode*> q;
+  if (root != nullptr) {
+    q.push(root);  
+  }
+  
+  while (!q.empty()) {
+    BVNode* cur = q.front();
+    q.pop();
+
+    if (cur->left != nullptr) q.push(cur->left);
+    if (cur->right != nullptr) q.push(cur->right);
+
+    if (cur->IsLeaf() && !cur->IsInFatAABB()) {
+      toReInsert.push_back(cur);
+    }
+  }
+
+  for (auto node : toReInsert) {
+    Remove(node, false);
+    LOG_INFO(Debug::Channel::General, "Removing %s", node->collider->GetEntity()->GetName().c_str());
+  }
+
+  for (auto node : toReInsert) {
+    node->UpdateLeafAABB();
+    AddNode(node);
+    LOG_INFO(Debug::Channel::General, "Adding %s", node->collider->GetEntity()->GetName().c_str());
+  }
+
+  DebugDraw();
+}
+
+void BVTree::AddNode(BVNode* newNode) {
+  AABB newAABB = newNode->GetAABB();
 
   if (root == nullptr) {
     root = newNode;
+    root->parent = nullptr;
   } else {
     BVNode* cur = root;
 
     while (!cur->IsLeaf()) {
       float leftIncrease =
-          AABB::Encapsulate(cur->left->aabb, newAABB).SurfaceArea() -
-          cur->left->aabb.SurfaceArea();
+          AABB::Encapsulate(cur->left->GetAABB(), newAABB).SurfaceArea() -
+          cur->left->GetAABB().SurfaceArea();
+
       float rightIncrease =
-          AABB::Encapsulate(cur->right->aabb, newAABB).SurfaceArea() -
-          cur->right->aabb.SurfaceArea();
+          AABB::Encapsulate(cur->right->GetAABB(), newAABB).SurfaceArea() -
+          cur->right->GetAABB().SurfaceArea();
+
       if (leftIncrease > rightIncrease) {
         cur = cur->right;
       } else {
@@ -46,28 +132,30 @@ void BVTree::Add(Collider* collider) {
       }
     }
 
-    if (cur->parent == nullptr) {
+    if (cur == root) {
       // cur is root
-      root = new BVNode(AABB::Encapsulate(cur->aabb, newAABB));
+      root = new BVNode(AABB::Encapsulate(cur->GetAABB(), newAABB));
       cur->parent = root;
       newNode->parent = root;
       root->left = cur;
       root->right = newNode;
     } else {
+      // TODO(YIDI): Sometimes parent is delete but still referenced
+
       // cur is actual leaf, convert cur to branch
       BVNode* newLeaf = new BVNode{cur->collider};
+      cur->collider = nullptr;
       cur->left = newLeaf;
       cur->right = newNode;
-      cur->aabb = AABB::Encapsulate(newLeaf->aabb, newNode->aabb);
-      cur->collider = nullptr;
       newLeaf->parent = cur;
       newNode->parent = cur;
+
+      cur->UpdateBranchAABB();
       BVNode* parent = cur->parent;
 
       while (parent != nullptr) {
-        parent->aabb = AABB::Encapsulate(parent->aabb, cur->aabb);
-        cur = parent;
-        parent = cur->parent;
+        parent->UpdateBranchAABB();
+        parent = parent->parent;
       }
     }
   }
@@ -86,6 +174,9 @@ void BVTree::DebugDraw() const {
     Color color;
     if (cur->IsLeaf()) {
       color = Color::green;
+      DebugDraw::WireCube(Math::Matrix4::Translate(cur->GetAABB().GetCenter()) *
+                              Math::Matrix4::Scale({cur->GetAABB().GetSize()}),
+                          color, 1, .05);
     } else {
       int depth = 0;
       auto parent = cur->parent;
@@ -95,9 +186,9 @@ void BVTree::DebugDraw() const {
       }
       color = Color::Lerp(Color::white, Color::black,
                           static_cast<float>(depth) / 10);
-      DebugDraw::WireCube(Math::Matrix4::Translate(cur->aabb.GetCenter()) *
-                              Math::Matrix4::Scale({cur->aabb.GetSize()}),
-                          color, 1, .1);
+      DebugDraw::WireCube(Math::Matrix4::Translate(cur->GetAABB().GetCenter()) *
+                              Math::Matrix4::Scale({cur->GetAABB().GetSize()}),
+                          color, 1, .05);
     }
 
     q.pop();
@@ -114,7 +205,7 @@ const CollisionUtil::ColliderPairSet& BVTree::GetCollisionPairs() {
   colliderPairSet.clear();
 
   for (const auto& curCollider : colliders) {
-    AABB aabb = curCollider->GetAABB();
+    AABB aabb = curCollider->GetFatAABB();
     std::queue<BVNode*> q;
 
     if (root != nullptr) {
@@ -130,10 +221,10 @@ const CollisionUtil::ColliderPairSet& BVTree::GetCollisionPairs() {
           colliderPairSet.insert({curCollider, curNode->collider});
         }
       } else {
-        if (curNode->left->aabb.Intersect(aabb)) {
+        if (curNode->left->GetAABB().Intersect(aabb)) {
           q.push(curNode->left);
         }
-        if (curNode->right->aabb.Intersect(aabb)) {
+        if (curNode->right->GetAABB().Intersect(aabb)) {
           q.push(curNode->right);
         }
       }

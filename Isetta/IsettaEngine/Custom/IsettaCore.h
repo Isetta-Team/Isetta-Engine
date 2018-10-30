@@ -5,6 +5,7 @@
 #include "Audio/AudioSource.h"
 #include "Core/Debug/DebugDraw.h"
 #include "Core/Debug/Logger.h"
+#include "Core/Math/Random.h"
 #include "Core/Time/Clock.h"
 #include "Core/Time/Time.h"
 #include "EngineLoop.h"

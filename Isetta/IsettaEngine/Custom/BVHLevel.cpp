@@ -9,6 +9,7 @@
 #include "Core/Math/Random.h"
 #include "IsettaCore.h"
 #include "FrameReporter.h"
+#include "Components/RandomMover.h"
 
 namespace Isetta {
 
@@ -52,6 +53,7 @@ void BVHLevel::LoadLevel() {
     static int count = 0;
     count++;
     Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
+    sphere->AddComponent<RandomMover>();
     auto col = sphere->AddComponent<SphereCollider>();
     const float size = 20;
     sphere->SetTransform(size * Math::Vector3{Math::Random::GetRandom01() - 0.5f,

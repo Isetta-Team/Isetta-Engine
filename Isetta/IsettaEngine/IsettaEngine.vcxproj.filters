@@ -256,6 +256,12 @@
     <ClCompile Include="Collisions\BVTree.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
+    <ClCompile Include="Components\DebugComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\RandomMover.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -545,6 +551,12 @@
     </ClInclude>
     <ClInclude Include="CollisionUtil.h">
       <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\DebugComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\RandomMover.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -37,6 +37,10 @@ class AABB {
            (point.z >= min.z && point.z <= max.z);
   }
 
+  bool Contains(const AABB& aabb) const {
+    return Contains(aabb.min) && Contains(aabb.max);
+  }
+
   inline bool Intersect(const AABB& other) const {
     return (min.x <= other.max.x && max.x >= other.min.x) &&
            (min.y <= other.max.y && max.x >= other.min.x) &&
