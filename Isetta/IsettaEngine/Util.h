@@ -22,11 +22,11 @@ inline const char* StrFormat(const char* format, ...) {
   return charBuffer;
 }
 
-inline int FormatStringV(char* buf, size_t buf_size, const char* format,
+inline int FormatStringV(char* buf, size_t size, const char* format,
                          va_list args) {
-  int w = vsnprintf(buf, buf_size, format, args);
+  int w = vsnprintf(buf, size, format, args);
   if (buf == NULL) return w;
-  if (w == -1 || w >= (int)buf_size) w = (int)buf_size - 1;
+  if (w == -1 || w >= (int)size) w = (int)size - 1;
   buf[w] = 0;
   return w;
 }
@@ -75,13 +75,11 @@ inline unsigned int CountSetBits(int N) {
   return cnt;
 }
 
-}  // namespace Isetta::Util
-
-namespace std {
 struct UnorderedPairHash {
   template <typename T>
   std::size_t operator()(std::pair<T, T> const& p) const {
     return (std::hash<T>()(p.first) ^ std::hash<T>()(p.second));
   }
 };
-}  // namespace std
+
+}  // namespace Isetta::Util
