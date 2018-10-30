@@ -67,7 +67,7 @@ class NetworkingModule {
   yojimbo::Server* server;
   /// Configuration data for both the network and the client. This should
   /// probably stay the same among connected clients and servers.
-  yojimbo::ClientServerConfig networkConfig;
+  yojimbo::ClientServerConfig yojimboConfig;
   /// TODO(Caleb): Figure out how to allocate server at runtime instead of at
   /// startup
   NetworkAllocator* clientAllocator;

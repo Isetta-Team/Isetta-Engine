@@ -37,10 +37,10 @@ void NetworkingModule::StartUp() {
   srand((unsigned int)time(NULL));
 
   // TODO(Caleb): Figure out some more robust channel settings
-  networkConfig.numChannels = 2;
-  networkConfig.channel[0].type = yojimbo::CHANNEL_TYPE_UNRELIABLE_UNORDERED;
-  networkConfig.channel[1].type = yojimbo::CHANNEL_TYPE_RELIABLE_ORDERED;
-  networkConfig.timeout = Config::Instance().networkConfig.timeout.GetVal();
+  yojimboConfig.numChannels = 2;
+  yojimboConfig.channel[0].type = yojimbo::CHANNEL_TYPE_UNRELIABLE_UNORDERED;
+  yojimboConfig.channel[1].type = yojimbo::CHANNEL_TYPE_RELIABLE_ORDERED;
+  yojimboConfig.timeout = Config::Instance().networkConfig.timeout.GetVal();
 
   privateKey = new (MemoryManager::AllocOnStack(
       sizeof(U8) * Config::Instance().networkConfig.keyBytes.GetVal()))
@@ -53,14 +53,14 @@ void NetworkingModule::StartUp() {
   yojimbo::random_bytes(reinterpret_cast<U8*>(&clientId), 8);
 
   void* memPointer =
-      MemoryManager::AllocOnStack(networkConfig.clientMemory + 1_MB);
+      MemoryManager::AllocOnStack(yojimboConfig.clientMemory + 1_MB);
   clientAllocator = new (MemoryManager::AllocOnStack(sizeof(NetworkAllocator)))
-      NetworkAllocator(memPointer, (Size)networkConfig.clientMemory + 1_MB);
+      NetworkAllocator(memPointer, (Size)yojimboConfig.clientMemory + 1_MB);
 
   if (Config::Instance().networkConfig.runServer.GetVal()) {
     Size serverMemorySize =
-        (networkConfig.serverPerClientMemory +
-         networkConfig.serverGlobalMemory) *
+        (yojimboConfig.serverPerClientMemory +
+         yojimboConfig.serverGlobalMemory) *
         (Config::Instance().networkConfig.maxClients.GetVal() + 1);
 
     memPointer = MemoryManager::AllocOnStack(serverMemorySize);
@@ -75,7 +75,7 @@ void NetworkingModule::StartUp() {
           yojimbo::Address(
               Config::Instance().networkConfig.defaultClientIP.GetVal().c_str(),
               Config::Instance().networkConfig.clientPort.GetVal()),
-          networkConfig, NetworkAdapter, clock.GetElapsedTime());
+          yojimboConfig, NetworkAdapter, clock.GetElapsedTime());
 
   clientSendBuffer =
       MemoryManager::NewArrOnFreeList<RingBuffer<yojimbo::Message*>>(
@@ -272,7 +272,7 @@ void NetworkingModule::CreateServer(const char* address, int port) {
 
   serverAddress = yojimbo::Address(address, port);
   server = MemoryManager::NewOnFreeList<yojimbo::Server>(
-      serverAllocator, privateKey, serverAddress, networkConfig,
+      serverAllocator, privateKey, serverAddress, yojimboConfig,
       &NetworkingModule::NetworkAdapter, clock.GetElapsedTime());
   server->Start(Config::Instance().networkConfig.maxClients.GetVal());
 
