@@ -154,6 +154,8 @@
     <ClCompile Include="Halves\Level1.cpp" />
     <ClCompile Include="Halves\PlayerController.cpp" />
     <ClCompile Include="Halves\Zombie.cpp" />
+    <ClCompile Include="InputLevel\InputLevel.cpp" />
+    <ClCompile Include="InputLevel\InputTestComponent.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -173,6 +175,8 @@
     <ClInclude Include="Halves\Level1.h" />
     <ClInclude Include="Halves\PlayerController.h" />
     <ClInclude Include="Halves\Zombie.h" />
+    <ClInclude Include="InputLevel\InputLevel.h" />
+    <ClInclude Include="InputLevel\InputTestComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

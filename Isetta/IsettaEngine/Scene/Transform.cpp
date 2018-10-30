@@ -155,7 +155,7 @@ void Transform::SetLocalScale(const Math::Vector3& newScale) {
 }
 
 // TODO(YIDI): Test this
-void Transform::SetParent(Transform* transform) {
+void Transform::SetParent(Transform* const transform) {
   if (parent == transform) {
     LOG_ERROR(Debug::Channel::Graphics,
               "You are trying to set (%s)'s parent to (%s), whose is already "

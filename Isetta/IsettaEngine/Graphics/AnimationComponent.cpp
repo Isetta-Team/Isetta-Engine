@@ -19,19 +19,19 @@ AnimationComponent::AnimationComponent(MeshComponent* model)
   renderModule->animationComponents.push_back(this);
 }
 
-int AnimationComponent::AddAnimation(std::string animationFilename, int layer,
-                                     std::string startNode, bool additive) {
+int AnimationComponent::AddAnimation(std::string_view animationFilename, int layer,
+                                     std::string_view startNode, bool additive) {
   totalStates++;
   return AddAnimation(animationFilename, layer, startNode, additive,
                       totalStates - 1);
 }
 
-int AnimationComponent::AddAnimation(std::string animationFilename, int layer,
-                                     std::string startNode, bool additive,
+int AnimationComponent::AddAnimation(std::string_view animationFilename, int layer,
+                                     std::string_view startNode, bool additive,
                                      int stateIndex) {
   H3DRes res = LoadResourceFromFile(animationFilename);
   h3dSetupModelAnimStage(animatedModel->renderNode, stateIndex, res, layer,
-                         startNode.c_str(), additive);
+                         startNode.data(), additive);
   return stateIndex;
 }
 
@@ -75,12 +75,12 @@ void AnimationComponent::OnEnable() {
 }
 void AnimationComponent::OnDisable() { isPlaying = false; }
 
-H3DRes AnimationComponent::LoadResourceFromFile(std::string resourceName) {
-  H3DRes res = h3dAddResource(H3DResTypes::Animation, resourceName.c_str(), 0);
+H3DRes AnimationComponent::LoadResourceFromFile(std::string_view resourceName) {
+  H3DRes res = h3dAddResource(H3DResTypes::Animation, resourceName.data(), 0);
   RenderModule::LoadResourceFromDisk(
       res, Util::StrFormat("AnimationComponent::LoadResourceFromFile => Cannot "
                            "load the resource from %s",
-                           resourceName.c_str()));
+                           resourceName.data()));
   return res;
 }
 }  // namespace Isetta

@@ -55,7 +55,7 @@ void Component::FlattenHelper(std::type_index parent, std::type_index curr) {
   }
 }
 
-Component::Component() : attributes{0b1001}, entity{nullptr} {
+Component::Component() : attributes{0b10001}, entity{nullptr} {
   if (!isFlattened) {
     FlattenComponentList();
   }
@@ -73,6 +73,10 @@ void Component::SetActive(bool value) {
   bool isActive = GetAttribute(ComponentAttributes::IS_ACTIVE);
   SetAttribute(ComponentAttributes::IS_ACTIVE, value);
   if (!isActive && value) {
+    if (!GetAttribute(ComponentAttributes::HAS_AWAKEN)) {
+      Awake();
+      SetAttribute(ComponentAttributes::HAS_AWAKEN, true);
+    }
     OnEnable();
   } else if (isActive && !value) {
     OnDisable();
@@ -83,7 +87,7 @@ bool Component::GetActive() const {
   return GetAttribute(ComponentAttributes::IS_ACTIVE);
 }
 
-Transform& Component::GetTransform() const { return entity->GetTransform(); }
+Transform* Component::GetTransform() const { return entity->GetTransform(); }
 
 Entity* Component::GetEntity() const { return entity; }
 }  // namespace Isetta

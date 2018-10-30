@@ -14,10 +14,10 @@
 namespace Isetta {
 void BoxCollider::Update() {
   DebugDraw::WireCube(
-      Math::Matrix4::Translate(GetTransform().GetWorldPos() + center) *
+      Math::Matrix4::Translate(GetTransform()->GetWorldPos() + center) *
           Math::Matrix4::Scale(
-              Math::Vector3::Scale(GetTransform().GetWorldScale(), size)) *
-          (Math::Matrix4)GetTransform().GetWorldRot(),
+              Math::Vector3::Scale(GetTransform()->GetWorldScale(), size)) *
+          (Math::Matrix4)GetTransform()->GetWorldRot(),
       debugColor);
 }
 
@@ -25,8 +25,8 @@ bool BoxCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
                           float maxDistance) {
   float tmin = -INFINITY, tmax = maxDistance > 0 ? maxDistance : INFINITY;
   Math::Vector3 e = GetWorldExtents();
-  Math::Vector3 o = GetTransform().LocalPosFromWorldPos(ray.GetOrigin());
-  Math::Vector3 d = GetTransform().LocalDirFromWorldDir(ray.GetDirection());
+  Math::Vector3 o = GetTransform()->LocalPosFromWorldPos(ray.GetOrigin());
+  Math::Vector3 d = GetTransform()->LocalDirFromWorldDir(ray.GetDirection());
   Math::Vector3 invD = 1.0f / d;
 
   float t[6];
@@ -45,8 +45,8 @@ bool BoxCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
 
   Math::Vector3 n;  // TODO (normal)
   RaycastHitCtor(hitInfo, tmin,
-                 GetTransform().WorldPosFromLocalPos(o) +
-                     GetTransform().WorldDirFromLocalDir(d) * tmin,
+                 GetTransform()->WorldPosFromLocalPos(o) +
+                     GetTransform()->WorldDirFromLocalDir(d) * tmin,
                  n);
   return true;
 }

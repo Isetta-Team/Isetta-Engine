@@ -324,7 +324,7 @@ Matrix4 Matrix4::Inverse() const {
 
   Matrix4 ret{m11, m12, m13, m14, m21, m22, m23, m24,
               m31, m32, m33, m34, m41, m42, m43, m44};
-  return ret * (1.f * det);
+  return ret * (1.f / det);
 }
 
 Matrix4 Matrix4::Transpose() const {

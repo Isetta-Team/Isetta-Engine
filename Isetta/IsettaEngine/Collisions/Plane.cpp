@@ -40,12 +40,14 @@ bool Plane::SameSide(const Math::Vector3& pt0, const Math::Vector3& pt1) {
   Math::Vector3 pt = distance * normal;
   return Math::Vector3::Dot(pt - pt0, pt - pt1) >= 0;
 }
-bool Plane::Raycast(const Ray& ray, float* const t) {
+bool Plane::Raycast(const Ray& ray, RaycastHit* const hitInfo,
+                    float maxDistance) {
   float denom = Math::Vector3::Dot(normal, ray.GetDirection());
   if (Math::Util::Abs(denom) > Math::Util::EPSILON) {
-    *t =
+    float t =
         Math::Vector3::Dot(normal * distance - ray.GetOrigin(), normal) / denom;
-    if (*t >= 0) {
+    if (t >= 0) {
+      *hitInfo = std::move(RaycastHit{nullptr, t, ray.GetPoint(t), normal});
       return true;
     }
   }
