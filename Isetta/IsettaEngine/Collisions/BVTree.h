@@ -16,10 +16,9 @@ struct BVNode {
   BVNode(Collider* collider)
       : collider(collider), aabb(collider->GetFatAABB()) {}
 
-  // TODO(YIDI): update code to use this
   void UpdateBranchAABB() {
     ASSERT(collider == nullptr && !IsLeaf());
-    aabb = AABB::Encapsulate(left->GetAABB(), right->GetAABB());
+    aabb = AABB::Encapsulate(left->aabb, right->aabb);
   }
 
   void UpdateLeafAABB() {
@@ -27,14 +26,19 @@ struct BVNode {
     aabb = collider->GetFatAABB();
   }
 
-  void SetAABB(const AABB& newAABB) { aabb = newAABB; }
-
-  AABB GetAABB() const {
-    return aabb;
+  void SwapOutChild(BVNode* oldChild, BVNode* newChild) {
+    ASSERT(oldChild == left || oldChild == right);
+    if (oldChild == left) {
+      left = newChild;
+      left->parent = this;
+    } else {
+      right = newChild;
+      right->parent = this;
+    }
+    delete oldChild;
   }
 
   bool IsLeaf() const { return left == nullptr; }
-
   bool IsInFatAABB() const { return aabb.Contains(collider->GetAABB()); }
 
   BVNode* parent{nullptr};

@@ -46,25 +46,21 @@ void BVTree::Remove(BVNode* node, bool deleteNode) {
     root->parent = nullptr;
   } else {
     BVNode* parent = node->parent;
-    
-    if (parent->left == node) {
-      BVNode* right = parent->right;
-      parent->collider = right->collider;
-      parent->left = right->left;
-      parent->right = right->right;
-      delete right;
+    BVNode* grandParent = parent->parent;
+
+    ASSERT(grandParent != nullptr);
+    ASSERT(node == parent->left || node == parent->right);
+
+    if (node == parent->left) {
+      grandParent->SwapOutChild(parent, parent->right);
     } else {
-      BVNode* left = parent->left;
-      parent->collider = left->collider;
-      parent->right = left->right;
-      parent->left = left->left;
-      delete left;
+      grandParent->SwapOutChild(parent, parent->left);
     }
 
-    parent = parent->parent;
-    while (parent != nullptr) {
-      parent->UpdateBranchAABB();
-      parent = parent->parent;
+    BVNode* cur = grandParent;
+    while (cur != nullptr) {
+      cur->UpdateBranchAABB();
+      cur = cur->parent;
     }
   }
 
@@ -108,7 +104,7 @@ void BVTree::Update() {
 }
 
 void BVTree::AddNode(BVNode* newNode) {
-  AABB newAABB = newNode->GetAABB();
+  AABB newAABB = newNode->aabb;
 
   if (root == nullptr) {
     root = newNode;
@@ -118,12 +114,12 @@ void BVTree::AddNode(BVNode* newNode) {
 
     while (!cur->IsLeaf()) {
       float leftIncrease =
-          AABB::Encapsulate(cur->left->GetAABB(), newAABB).SurfaceArea() -
-          cur->left->GetAABB().SurfaceArea();
+          AABB::Encapsulate(cur->left->aabb, newAABB).SurfaceArea() -
+          cur->left->aabb.SurfaceArea();
 
       float rightIncrease =
-          AABB::Encapsulate(cur->right->GetAABB(), newAABB).SurfaceArea() -
-          cur->right->GetAABB().SurfaceArea();
+          AABB::Encapsulate(cur->right->aabb, newAABB).SurfaceArea() -
+          cur->right->aabb.SurfaceArea();
 
       if (leftIncrease > rightIncrease) {
         cur = cur->right;
@@ -134,7 +130,7 @@ void BVTree::AddNode(BVNode* newNode) {
 
     if (cur == root) {
       // cur is root
-      root = new BVNode(AABB::Encapsulate(cur->GetAABB(), newAABB));
+      root = new BVNode(AABB::Encapsulate(cur->aabb, newAABB));
       cur->parent = root;
       newNode->parent = root;
       root->left = cur;
@@ -174,8 +170,8 @@ void BVTree::DebugDraw() const {
     Color color;
     if (cur->IsLeaf()) {
       color = Color::green;
-      DebugDraw::WireCube(Math::Matrix4::Translate(cur->GetAABB().GetCenter()) *
-                              Math::Matrix4::Scale({cur->GetAABB().GetSize()}),
+      DebugDraw::WireCube(Math::Matrix4::Translate(cur->aabb.GetCenter()) *
+                              Math::Matrix4::Scale({cur->aabb.GetSize()}),
                           color, 1, .05);
     } else {
       int depth = 0;
@@ -186,8 +182,8 @@ void BVTree::DebugDraw() const {
       }
       color = Color::Lerp(Color::white, Color::black,
                           static_cast<float>(depth) / 10);
-      DebugDraw::WireCube(Math::Matrix4::Translate(cur->GetAABB().GetCenter()) *
-                              Math::Matrix4::Scale({cur->GetAABB().GetSize()}),
+      DebugDraw::WireCube(Math::Matrix4::Translate(cur->aabb.GetCenter()) *
+                              Math::Matrix4::Scale({cur->aabb.GetSize()}),
                           color, 1, .05);
     }
 
@@ -221,10 +217,10 @@ const CollisionUtil::ColliderPairSet& BVTree::GetCollisionPairs() {
           colliderPairSet.insert({curCollider, curNode->collider});
         }
       } else {
-        if (curNode->left->GetAABB().Intersect(aabb)) {
+        if (curNode->left->aabb.Intersect(aabb)) {
           q.push(curNode->left);
         }
-        if (curNode->right->GetAABB().Intersect(aabb)) {
+        if (curNode->right->aabb.Intersect(aabb)) {
           q.push(curNode->right);
         }
       }
