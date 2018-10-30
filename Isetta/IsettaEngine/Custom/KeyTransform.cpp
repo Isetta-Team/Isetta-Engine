@@ -103,43 +103,47 @@ void KeyTransform::Update() {
   }
 
   // Rotation
-  if (Input::IsKeyPressed(KeyCode::NUM1)) {
-    this->GetTransform().RotateLocal(Math::Vector3::right, 10 * step * EngineLoop::GetGameClock().GetDeltaTime());
+  if (Input::IsKeyPressed(KeyCode::KP_8)) {
+    this->GetTransform().RotateLocal(
+        Math::Vector3::right,
+        50 * step * EngineLoop::GetGameClock().GetDeltaTime());
   };
-  if (Input::IsKeyPressed(KeyCode::NUM2)) {
+  if (Input::IsKeyPressed(KeyCode::KP_2)) {
     this->GetTransform().RotateLocal(
         Math::Vector3::left,
-        10 * step * EngineLoop::GetGameClock().GetDeltaTime());
+        50 * step * EngineLoop::GetGameClock().GetDeltaTime());
   }
-  if (Input::IsKeyPressed(KeyCode::NUM3)) {
+  if (Input::IsKeyPressed(KeyCode::KP_4)) {
     this->GetTransform().RotateLocal(
         Math::Vector3::down,
-        10 * step * EngineLoop::GetGameClock().GetDeltaTime());
+        50 * step * EngineLoop::GetGameClock().GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::KP_6)) {
     this->GetTransform().RotateLocal(
         Math::Vector3::up,
-        10 * step * EngineLoop::GetGameClock().GetDeltaTime());
+        50 * step * EngineLoop::GetGameClock().GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::KP_7)) {
     this->GetTransform().RotateLocal(
         Math::Vector3::back,
-        10 * step * EngineLoop::GetGameClock().GetDeltaTime());
+        50 * step * EngineLoop::GetGameClock().GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::KP_9)) {
     this->GetTransform().RotateLocal(
         Math::Vector3::forward,
-        10 * step * EngineLoop::GetGameClock().GetDeltaTime());
+        50 * step * EngineLoop::GetGameClock().GetDeltaTime());
   }
 
   // Scale
   if (Input::IsKeyPressed(KeyCode::KP_1)) {
-    this->GetTransform().SetLocalScale(this->GetTransform().GetLocalScale() *
-                                       (1 + .1 * EngineLoop::GetGameClock().GetDeltaTime()));
+    this->GetTransform().SetLocalScale(
+        this->GetTransform().GetLocalScale() *
+        (1 + .25 * EngineLoop::GetGameClock().GetDeltaTime()));
   }
   if (Input::IsKeyPressed(KeyCode::KP_3)) {
-    this->GetTransform().SetLocalScale(this->GetTransform().GetLocalScale() *
-                                       (1 - .1 * EngineLoop::GetGameClock().GetDeltaTime()));
+    this->GetTransform().SetLocalScale(
+        this->GetTransform().GetLocalScale() *
+        (1 - .25 * EngineLoop::GetGameClock().GetDeltaTime()));
   }
 }
 }  // namespace Isetta

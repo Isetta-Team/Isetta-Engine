@@ -44,11 +44,12 @@ void NetworkTransform::Start() {
             nt->targetPos =
                 t.GetParent()->GetWorldPos() + positionMessage->localPos;
 
-            nt->interpolation = 0;
+            nt->posInterpolation = 0;
 
             if ((t.GetWorldPos() - nt->targetPos).SqrMagnitude() >=
                 nt->snapDistance * nt->snapDistance) {
               t.SetLocalPos(positionMessage->localPos);
+              nt->posInterpolation = 1;
             }
 
             nt->prevPos = t.GetWorldPos();
@@ -96,11 +97,12 @@ void NetworkTransform::Start() {
             nt->targetRot =
                 t.GetParent()->GetWorldRot() * rotationMessage->localRot;
 
-            nt->interpolation = 0;
+            nt->rotInterpolation = 0;
 
             if (abs(Math::Quaternion::AngleDeg(
                     t.GetWorldRot(), nt->targetRot)) >= nt->snapRotation) {
               t.SetLocalRot(rotationMessage->localRot);
+              nt->rotInterpolation = 1;
             }
 
             nt->prevRot = t.GetWorldRot();
@@ -146,11 +148,12 @@ void NetworkTransform::Start() {
             Transform& t = entity->GetTransform();
             nt->targetScale = scaleMessage->localScale;
 
-            nt->interpolation = 0;
+            nt->scaleInterpolation = 0;
 
-            if ((t.GetLocalScale(), nt->targetScale).SqrMagnitude() >=
+            if ((t.GetLocalScale() - nt->targetScale).SqrMagnitude() >=
                 nt->snapScale * nt->snapScale) {
               t.SetLocalScale(scaleMessage->localScale);
+              nt->scaleInterpolation = 1;
             }
 
             nt->prevScale = t.GetLocalScale();
@@ -199,7 +202,7 @@ void NetworkTransform::Start() {
                 t.GetParent()->GetWorldRot() * transformMessage->localRot;
             nt->targetScale = transformMessage->localScale;
 
-            nt->interpolation = 0;
+            nt->transformInterpolation = 0;
 
             // Currently converting the local pos to world pos, might want a
             // different way to do this
@@ -209,7 +212,7 @@ void NetworkTransform::Start() {
               t.SetLocalRot(transformMessage->localRot);
               t.SetLocalScale(transformMessage->localScale);
 
-              nt->interpolation = 1;
+              nt->transformInterpolation = 1;
             }
 
             nt->prevPos = t.GetWorldPos();
@@ -304,13 +307,33 @@ void NetworkTransform::FixedUpdate() {
         NetworkManager::Instance().SendMessageFromClient(message);
       }
     }
-  } else if (interpolation < 1) {
+  } else {
     Transform& t = entity->GetTransform();
-    interpolation = min(interpolation + 1.0 / netId->updateInterval, 1);
+    float netIdLerp = 1.0 / netId->updateInterval;
 
-    t.SetWorldPos(Math::Vector3::Lerp(prevPos, targetPos, interpolation));
-    t.SetWorldRot(Math::Quaternion::Slerp(prevRot, targetRot, interpolation));
-    t.SetLocalScale(Math::Vector3::Lerp(prevScale, targetScale, interpolation));
+    // Translation
+    posInterpolation = min(posInterpolation + netIdLerp, 1);
+    t.SetWorldPos(Math::Vector3::Lerp(prevPos, targetPos, posInterpolation));
+    // Rotation
+    rotInterpolation = min(rotInterpolation + netIdLerp, 1);
+    t.SetWorldRot(Math::Quaternion::Lerp(prevRot, targetRot, rotInterpolation));
+    // Scale
+    scaleInterpolation = min(scaleInterpolation + netIdLerp, 1);
+    t.SetLocalScale(
+        Math::Vector3::Lerp(prevScale, targetScale, scaleInterpolation));
+
+    return;  // Cutting out total transform message for now
+    if (transformInterpolation < 1) {
+      transformInterpolation =
+          min(transformInterpolation + 1.0 / netId->updateInterval, 1);
+
+      t.SetWorldPos(
+          Math::Vector3::Lerp(prevPos, targetPos, transformInterpolation));
+      t.SetWorldRot(
+          Math::Quaternion::Lerp(prevRot, targetRot, transformInterpolation));
+      t.SetLocalScale(
+          Math::Vector3::Lerp(prevScale, targetScale, transformInterpolation));
+    }
   }
 }
 

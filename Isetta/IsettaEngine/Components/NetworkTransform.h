@@ -18,7 +18,7 @@ void SnapTransform();
 
 float updateDistance = .01;
 float updateRotation = 5;
-float updateScale = .05;
+float updateScale = .005;
 float snapDistance = 5;
 float snapRotation = 30;
 float snapScale = 1;
@@ -30,7 +30,10 @@ float lastPosMessage = 0;
 float lastRotMessage = 0;
 float lastScaleMessage = 0;
 
-float interpolation = 1;
+float transformInterpolation = 1;
+float posInterpolation = 1;
+float rotInterpolation = 1;
+float scaleInterpolation = 1;
 
 Math::Vector3 targetPos;
 Math::Vector3 prevPos;
