@@ -280,7 +280,7 @@ float Quaternion::AngleRad(const Quaternion& aQuaternion,
 
 float Quaternion::AngleDeg(const Quaternion& aQuaternion,
                            const Quaternion& bQuaternion) {
-  return AngleDeg(aQuaternion, bQuaternion) * Util::RAD2DEG;
+  return AngleRad(aQuaternion, bQuaternion) * Util::RAD2DEG;
 }
 
 float Quaternion::Dot(const Quaternion& aQuaternion,
