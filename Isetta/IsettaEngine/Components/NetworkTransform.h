@@ -107,8 +107,8 @@ bool Serialize(Stream* stream) {
 }
 
 void Copy(const yojimbo::Message* otherMessage) override {
-  const TransformMessage* message =
-      reinterpret_cast<const TransformMessage*>(otherMessage);
+  const PositionMessage* message =
+      reinterpret_cast<const PositionMessage*>(otherMessage);
 
   netId = message->netId;
   updateTime = message->updateTime;
@@ -137,8 +137,8 @@ bool Serialize(Stream* stream) {
 }
 
 void Copy(const yojimbo::Message* otherMessage) override {
-  const TransformMessage* message =
-      reinterpret_cast<const TransformMessage*>(otherMessage);
+  const RotationMessage* message =
+      reinterpret_cast<const RotationMessage*>(otherMessage);
 
   netId = message->netId;
   updateTime = message->updateTime;
@@ -166,8 +166,8 @@ bool Serialize(Stream* stream) {
 }
 
 void Copy(const yojimbo::Message* otherMessage) override {
-  const TransformMessage* message =
-      reinterpret_cast<const TransformMessage*>(otherMessage);
+  const ScaleMessage* message =
+      reinterpret_cast<const ScaleMessage*>(otherMessage);
 
   netId = message->netId;
   updateTime = message->updateTime;

@@ -261,33 +261,33 @@ void NetworkTransform::FixedUpdate() {
 
       Transform& t = entity->GetTransform();
       // Position
-      if ((t.GetWorldPos() - targetPos).SqrMagnitude() >=
+      if ((t.GetWorldPos() - prevPos).SqrMagnitude() >=
           updateDistance * updateDistance) {
         PositionMessage* message =
             NetworkManager::Instance()
                 .GenerateMessageFromClient<PositionMessage>();
-        targetPos = t.GetWorldPos();
+        prevPos = t.GetWorldPos();
         message->localPos = t.GetLocalPos();
         message->netId = netId->id;
         NetworkManager::Instance().SendMessageFromClient(message);
       }
       // Rotation
-      if (Math::Quaternion::AngleDeg(t.GetWorldRot(), targetRot) >=
+      if (Math::Quaternion::AngleDeg(t.GetWorldRot(), prevRot) >=
           updateRotation) {
         RotationMessage* message =
             NetworkManager::Instance()
                 .GenerateMessageFromClient<RotationMessage>();
-        targetRot = t.GetWorldRot();
+        prevRot = t.GetWorldRot();
         message->localRot = t.GetLocalRot();
         message->netId = netId->id;
         NetworkManager::Instance().SendMessageFromClient(message);
       }
       // Scale
-      if ((t.GetLocalScale() - targetScale).SqrMagnitude() >=
+      if ((t.GetLocalScale() - prevScale).SqrMagnitude() >=
           updateScale * updateScale) {
         ScaleMessage* message = NetworkManager::Instance()
                                     .GenerateMessageFromClient<ScaleMessage>();
-        targetPos = t.GetWorldPos();
+        prevScale = t.GetLocalScale();
         message->localScale = t.GetLocalScale();
         message->netId = netId->id;
         NetworkManager::Instance().SendMessageFromClient(message);
