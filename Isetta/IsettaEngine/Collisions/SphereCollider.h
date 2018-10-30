@@ -10,7 +10,7 @@ private:
 void Update() override;
 
 protected:
-const ColliderType GetType() const override {
+ColliderType GetType() const override {
   return ColliderType::SPHERE;
 }
 

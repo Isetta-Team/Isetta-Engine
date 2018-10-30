@@ -56,17 +56,16 @@ virtual AABB GetFatAABB() {
   return AABB{Math::Vector3::zero, Math::Vector3::one * (1 + fatFactor)};
 }
 
-virtual AABB GetAABB() {
-  return AABB{Math::Vector3::zero, Math::Vector3::one};
-}
+virtual AABB GetAABB() { return AABB{Math::Vector3::zero, Math::Vector3::one}; }
 
-  // TODO(YIDI): DebugOnly
+// TODO(YIDI): DebugOnly
 void AddToBVTree();
+
 private:
 std::bitset<2> attributes;
 class CollisionHandler* handler{nullptr};
 
-inline class CollisionHandler* GetHandler() { return handler; }
+inline class CollisionHandler* GetHandler() const { return handler; }
 inline void SetHandler(class CollisionHandler* const h) { handler = h; }
 
 static class CollisionsModule* collisionsModule;
@@ -79,14 +78,14 @@ static float fatFactor;
 Color debugColor = Color::green;
 
 Collider(const Math::Vector3& center) : center{center} {
-  attributes[(int)Attributes::IS_STATIC] = 0;
-  attributes[(int)Attributes::IS_TRIGGER] = 0;
+  attributes[static_cast<int>(Attributes::IS_STATIC)] = false;
+  attributes[static_cast<int>(Attributes::IS_TRIGGER)] = false;
 }
-Collider(bool isStatic = false, bool isTrigger = false,
+Collider(const bool isStatic = false, const bool isTrigger = false,
          const Math::Vector3& center = Math::Vector3::zero)
     : center{center} {
-  attributes[(int)Attributes::IS_STATIC] = isStatic;
-  attributes[(int)Attributes::IS_TRIGGER] = isTrigger;
+  attributes[static_cast<int>(Attributes::IS_STATIC)] = isStatic;
+  attributes[static_cast<int>(Attributes::IS_TRIGGER)] = isTrigger;
 }
 virtual ~Collider() = default;
 
@@ -94,7 +93,7 @@ enum class ColliderType { BOX, SPHERE, CAPSULE };
 friend class BoxCollider;
 friend class SphereCollider;
 friend class CapsuleCollider;
-virtual const ColliderType GetType() const = 0;
+virtual ColliderType GetType() const = 0;
 
 virtual bool Intersection(Collider* const other) = 0;
 void RaycastHitCtor(class RaycastHit* const hitInfo, float distance,

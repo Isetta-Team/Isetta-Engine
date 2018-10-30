@@ -7,8 +7,8 @@
 namespace Isetta {
 CREATE_COMPONENT_BEGIN(BoxCollider, Collider)
 protected:
-const ColliderType GetType() const override {
-  return Collider::ColliderType::BOX;
+ColliderType GetType() const override {
+  return ColliderType::BOX;
 }
 
 public:

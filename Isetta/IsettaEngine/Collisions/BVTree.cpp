@@ -91,13 +91,11 @@ void BVTree::Update() {
 
   for (auto node : toReInsert) {
     Remove(node, false);
-    LOG_INFO(Debug::Channel::General, "Removing %s", node->collider->GetEntity()->GetName().c_str());
   }
 
   for (auto node : toReInsert) {
     node->UpdateLeafAABB();
     AddNode(node);
-    LOG_INFO(Debug::Channel::General, "Adding %s", node->collider->GetEntity()->GetName().c_str());
   }
 
   DebugDraw();

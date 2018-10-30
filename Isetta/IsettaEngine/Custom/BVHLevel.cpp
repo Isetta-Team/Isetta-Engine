@@ -5,11 +5,11 @@
 #include "Collisions/SphereCollider.h"
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
+#include "Components/RandomMover.h"
 #include "Core/Config/Config.h"
 #include "Core/Math/Random.h"
-#include "IsettaCore.h"
 #include "FrameReporter.h"
-#include "Components/RandomMover.h"
+#include "IsettaCore.h"
 
 namespace Isetta {
 
@@ -48,18 +48,20 @@ void BVHLevel::LoadLevel() {
   Entity* debug{ADD_ENTITY("Debug")};
   debug->AddComponent<GridComponent>();
   debug->AddComponent<FrameReporter>();
-
   Input::RegisterKeyPressCallback(KeyCode::KP_5, []() {
-    static int count = 0;
-    count++;
-    Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
-    sphere->AddComponent<RandomMover>();
-    auto col = sphere->AddComponent<SphereCollider>();
-    const float size = 20;
-    sphere->SetTransform(size * Math::Vector3{Math::Random::GetRandom01() - 0.5f,
-                                       Math::Random::GetRandom01(),
-                                       Math::Random::GetRandom01() - 0.5f});
-    col->AddToBVTree();
+    for (int i = 0; i < 100; i++) {
+      static int count = 0;
+      count++;
+      Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
+      sphere->AddComponent<RandomMover>();
+      auto col = sphere->AddComponent<SphereCollider>();
+      const float size = 20;
+      sphere->SetTransform(size *
+                           Math::Vector3{Math::Random::GetRandom01() - 0.5f,
+                                         Math::Random::GetRandom01(),
+                                         Math::Random::GetRandom01() - 0.5f});
+      col->AddToBVTree();
+    }
   });
 }
 }  // namespace Isetta
