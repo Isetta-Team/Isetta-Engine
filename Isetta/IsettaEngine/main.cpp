@@ -24,7 +24,6 @@ Between our own hands-on process and sage advice from veteran engineers, we hope
 to give newcomers a clearer representation of the engine-building process.
 */
 int main() {
-   // _CrtSetBreakAlloc(3645);
   Application::Start();
   return 0;
 }

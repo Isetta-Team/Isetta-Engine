@@ -44,6 +44,18 @@
     <ClCompile Include="InputLevel\InputTestComponent.cpp">
       <Filter>Input Level</Filter>
     </ClCompile>
+    <ClCompile Include="GUILevel\GUIComponent.cpp">
+      <Filter>GUI Level</Filter>
+    </ClCompile>
+    <ClCompile Include="GUILevel\GUILevel.cpp">
+      <Filter>GUI Level</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugLevel\DebugComponent.cpp">
+      <Filter>Debug Level</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugLevel\DebugLevel.cpp">
+      <Filter>Debug Level</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
@@ -63,7 +75,13 @@
       <UniqueIdentifier>{ed8f8d87-125f-4dc1-9db0-ef26e043470d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Input Level">
+    </Filter>
       <UniqueIdentifier>{b2aa16a6-0583-4fa7-8226-452f3aaeeb72}</UniqueIdentifier>
+    <Filter Include="GUI Level">
+      <UniqueIdentifier>{f2d9fe62-d581-4bf4-97ba-e5aec5129198}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debug Level">
+      <UniqueIdentifier>{c701d3fd-d9ec-4002-8464-cf2fc751dc78}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

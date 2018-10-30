@@ -17,7 +17,6 @@ class ISETTA_API EngineLoop {
   ~EngineLoop();
 
   static EngineLoop& Instance();
-  void Stop();
   static class Clock& GetGameClock();
 
  private:

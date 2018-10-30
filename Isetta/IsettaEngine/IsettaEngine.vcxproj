@@ -149,6 +149,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Collisions\Collisions.cpp" />
     <ClCompile Include="Components\GridComponent.cpp" />
     <ClCompile Include="Components\FlyController.cpp" />
+    <ClCompile Include="Components\NetworkTransform.cpp" />
     <ClCompile Include="Core\Config\Config.cpp" />
     <ClCompile Include="Core\Color.cpp" />
     <ClCompile Include="Core\Config\CVar.cpp" />
@@ -204,7 +205,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Memory\PoolAllocator.cpp" />
     <ClCompile Include="Graphics\Window.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Networking\NetworkIdentity.cpp" />
+    <ClCompile Include="Networking\NetworkId.cpp" />
     <ClCompile Include="Networking\NetworkingModule.cpp" />
     <ClCompile Include="Networking\NetworkManager.cpp" />
     <ClCompile Include="Collisions\AABB.cpp" />
@@ -229,6 +230,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Collisions\Collisions.h" />
     <ClInclude Include="Components\GridComponent.h" />
     <ClInclude Include="Components\FlyController.h" />
+    <ClInclude Include="Components\NetworkTransform.h" />
     <ClInclude Include="Core\Config\Config.h" />
     <ClInclude Include="Core\Color.h" />
     <ClInclude Include="Core\Config\ICVar.h" />
@@ -294,7 +296,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Graphics\Window.h" />
     <ClInclude Include="ISETTA_API.h" />
     <ClInclude Include="Networking\Messages.h" />
-    <ClInclude Include="Networking\NetworkIdentity.h" />
+    <ClInclude Include="Networking\NetworkId.h" />
     <ClInclude Include="Networking\NetworkingModule.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Input\InputEnum.h" />

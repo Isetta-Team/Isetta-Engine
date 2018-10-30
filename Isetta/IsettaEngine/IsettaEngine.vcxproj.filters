@@ -201,9 +201,6 @@
     <ClInclude Include="Custom\CollisionsLevel.h">
       <Filter>Custom</Filter>
     </ClInclude>
-    <ClCompile Include="Networking\NetworkIdentity.cpp">
-      <Filter>Networking</Filter>
-    </ClCompile>
     <ClCompile Include="Components\FlyController.cpp">
       <Filter>Components</Filter>
     </ClCompile>
@@ -270,6 +267,12 @@
     </ClCompile>
     <ClCompile Include="Custom\EventTestLevel\EventListenerComponent.cpp">
       <Filter>Custom\EventTestLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Networking\NetworkId.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\NetworkTransform.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -524,9 +527,6 @@
     <ClInclude Include="Custom\IsettaCore.h">
       <Filter>Custom</Filter>
     </ClInclude>
-    <ClInclude Include="Networking\NetworkIdentity.h">
-      <Filter>Networking</Filter>
-    </ClInclude>
     <ClInclude Include="Components\FlyController.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -591,6 +591,12 @@
     </ClInclude>
     <ClInclude Include="Custom\EventTestLevel\EventListenerComponent.h">
       <Filter>Custom\EventTestLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Networking\NetworkId.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\NetworkTransform.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

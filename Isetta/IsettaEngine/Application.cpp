@@ -15,6 +15,6 @@ void Application::Start() {
   EngineLoop::Instance().Run();
 }
 
-void Application::Exit() { EngineLoop::Instance().Stop(); }
+void Application::Exit() { EngineLoop::Instance().isGameRunning = false; }
 
 }  // namespace Isetta

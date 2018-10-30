@@ -15,16 +15,6 @@ void Entity::OnEnable() {
   }
 }
 
-void Entity::CheckStart() {
-  for (auto& comp : components) {
-    if (comp->GetActive() &&
-        !comp->GetAttribute(Component::ComponentAttributes::HAS_STARTED)) {
-      comp->SetAttribute(Component::ComponentAttributes::HAS_STARTED, true);
-      comp->Start();
-    }
-  }
-}
-
 void Entity::GuiUpdate() {
   for (auto& comp : components) {
     if (comp->GetActive() &&
@@ -35,7 +25,6 @@ void Entity::GuiUpdate() {
 }
 
 void Entity::Update() {
-  CheckStart();
   for (auto& comp : components) {
     if (comp->GetActive() &&
         comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
@@ -60,8 +49,6 @@ void Entity::LateUpdate() {
       comp->LateUpdate();
     }
   }
-  // SetAttribute(EntityAttributes::IS_TRANSFORM_DIRTY, false);
-  CheckDestroy();
 }
 
 void Entity::CheckDestroy() {

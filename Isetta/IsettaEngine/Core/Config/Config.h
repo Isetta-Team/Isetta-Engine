@@ -20,6 +20,7 @@
 
 namespace Isetta {
 #define CONFIG_VAL(expr) Isetta::Config::Instance().expr.GetVal()
+#define CONFIG_M_VAL(mod, expr) Isetta::Config::Instance().mod.expr.GetVal()
 /**
  * @brief Test module to demonstrate CVar config struct.
  *

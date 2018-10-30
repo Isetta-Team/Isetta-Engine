@@ -3,6 +3,9 @@
  */
 #pragma once
 #include <list>
+#include <set>
+#include <stack>
+#include <string>
 #include "ISETTA_API.h"
 
 #define CREATE_LEVEL(NAME)                                                \
@@ -23,12 +26,16 @@
 namespace Isetta {
 class ISETTA_API Level {
   std::list<class Entity*> entitiesToRemove;
+  void AddComponentToStart(class Component* component);
+  void StartComponents();
 
  protected:
   std::list<class Entity*> entities;
+  std::stack<class Component*> componentsToStart;
+  std::set<class Component*> componentsToDestroy;
 
  public:
-  class Entity* const levelRoot;
+  class Entity* levelRoot;
   Level();
   virtual ~Level() = default;
   class Entity* GetEntityByName(const std::string&);
@@ -41,7 +48,10 @@ class ISETTA_API Level {
   class Entity* AddEntity(std::string name, class Entity* parent);
 
   void Update();
+  void FixedUpdate();
   void GUIUpdate();
   void LateUpdate();
+
+  friend class Entity;
 };
 }  // namespace Isetta

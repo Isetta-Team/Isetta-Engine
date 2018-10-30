@@ -57,7 +57,7 @@ class ISETTA_API Component {
   static void FlattenHelper(std::type_index parent, std::type_index curr);
   static bool isFlattened;
 
-protected:
+ protected:
   class Entity* entity;
 
   enum class ComponentAttributes {
