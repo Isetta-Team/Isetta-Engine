@@ -17,6 +17,7 @@ class ISETTA_API Clock {
   double deltaTime;
   double elapsedTime;
   double elapsedUnscaledTime;
+  U64 timeFrame;
 
  public:
   Clock();
@@ -52,6 +53,8 @@ class ISETTA_API Clock {
    * \brief Get unscaled elapsed time since clock started
    */
   double GetElapsedUnscaledTime() const;
+
+  U64 GetTimeFrame() const;
 
   /**
    * \brief Get the real timestamp

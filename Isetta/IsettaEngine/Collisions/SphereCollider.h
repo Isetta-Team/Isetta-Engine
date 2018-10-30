@@ -5,7 +5,7 @@
 #include "Collisions/Collider.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(SphereCollider, Collider)
+CREATE_COMPONENT_BEGIN(SphereCollider, Collider, false)
 private:
 void Update() override;
 
@@ -30,7 +30,7 @@ bool Raycast(const Ray& ray, RaycastHit* const hitInfo,
              float maxDistance = 0) override;
 
 float GetWorldRadius() const {
-  return radius * GetTransform().GetWorldScale().Max();
+  return radius * GetTransform()->GetWorldScale().Max();
 }
 
 bool Intersection(Collider* const other) override;

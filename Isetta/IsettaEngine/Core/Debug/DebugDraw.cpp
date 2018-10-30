@@ -391,7 +391,7 @@ void DebugDraw::OpenGLDraw(const Math::Matrix4& transformation,
   glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
                      CameraComponent::Main()
                          ->GetTransform()
-                         .GetLocalToWorldMatrix()
+                         ->GetLocalToWorldMatrix()
                          .Inverse()
                          .Transpose()
                          .data);
@@ -459,7 +459,7 @@ void DebugDraw::DrawPoint(const Math::Vector3 point, const Color& color,
   glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
                      CameraComponent::Main()
                          ->GetTransform()
-                         .GetLocalToWorldMatrix()
+                         ->GetLocalToWorldMatrix()
                          .Inverse()
                          .Transpose()
                          .data);
@@ -505,7 +505,7 @@ void DebugDraw::DrawLine(const Math::Vector3& start, const Math::Vector3& end,
   glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
                      CameraComponent::Main()
                          ->GetTransform()
-                         .GetLocalToWorldMatrix()
+                         ->GetLocalToWorldMatrix()
                          .Inverse()
                          .Transpose()
                          .data);
@@ -682,7 +682,7 @@ void DebugDraw::DrawGrid(const Math::Matrix4& transformation,
           ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
           .data);
   Math::Matrix4 viewMat =
-      CameraComponent::Main()->GetTransform().GetLocalToWorldMatrix();
+      CameraComponent::Main()->GetTransform()->GetLocalToWorldMatrix();
   // TODO(Jacob) replace with world to local call
   glUniformMatrix4fv(viewLoc, 1, GL_FALSE, viewMat.Inverse().Transpose().data);
   Math::Matrix4 model = transformation;

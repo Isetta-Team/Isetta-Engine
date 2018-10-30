@@ -10,7 +10,12 @@ void Isetta::WindowModule::StartUp() {
   InitRenderConfig();
   InitWindow();
 }
-void WindowModule::Update(float deltaTime) { glfwSwapBuffers(winHandle); }
+void WindowModule::Update(float deltaTime) {
+  if (glfwWindowShouldClose(winHandle)) {
+    Application::Exit();
+  }
+  glfwSwapBuffers(winHandle);
+}
 
 void WindowModule::ShutDown() {
   glfwDestroyWindow(winHandle);
@@ -71,4 +76,5 @@ void WindowModule::InitRenderConfig() {
   winFullScreen = Config::Instance().windowConfig.windowFullScreen.GetVal();
   winShowCursor = Config::Instance().windowConfig.windowShowCursor.GetVal();
 }
+
 }  // namespace Isetta

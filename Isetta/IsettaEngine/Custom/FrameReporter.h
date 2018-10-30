@@ -7,7 +7,7 @@
 #include <queue>
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(FrameReporter, Component)
+CREATE_COMPONENT_BEGIN(FrameReporter, Component, false)
 public:
 void GuiUpdate() override;
 

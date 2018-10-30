@@ -5,8 +5,8 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-class AxisDrawer : public Component {
- public:
-  void Update() override;
-};
+CREATE_COMPONENT_BEGIN(AxisDrawer, Component, true)
+public:
+void Update() override;
+CREATE_COMPONENT_END(AxisDrawer, Component)
 }  // namespace Isetta

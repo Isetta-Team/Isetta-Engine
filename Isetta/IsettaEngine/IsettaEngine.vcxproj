@@ -148,10 +148,10 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Collisions\BVTree.cpp" />
     <ClCompile Include="Collisions\CollisionHandler.cpp" />
     <ClCompile Include="Collisions\Collisions.cpp" />
-    <ClCompile Include="Components\DebugComponent.cpp" />
     <ClCompile Include="Components\GridComponent.cpp" />
     <ClCompile Include="Components\FlyController.cpp" />
     <ClCompile Include="Components\RandomMover.cpp" />
+    <ClCompile Include="Components\NetworkTransform.cpp" />
     <ClCompile Include="Core\Config\Config.cpp" />
     <ClCompile Include="Core\Color.cpp" />
     <ClCompile Include="Core\Config\CVar.cpp" />
@@ -168,6 +168,11 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Custom\BVHLevel.cpp" />
     <ClCompile Include="Custom\EmptyLevel\EmptyLevel.cpp" />
     <ClCompile Include="Custom\FrameReporter.cpp" />
+    <ClCompile Include="Custom\Console.cpp" />
+    <ClCompile Include="Custom\EventTestLevel\EventListenerComponent.cpp" />
+    <ClCompile Include="Custom\DebugCollision.cpp" />
+    <ClCompile Include="Custom\EventTestLevel\EventSenderComponent.cpp" />
+    <ClCompile Include="Custom\EventTestLevel\EventTestLevel.cpp" />
     <ClCompile Include="Custom\InEngineTestLevel.cpp" />
     <ClCompile Include="Custom\KeyTransform.cpp" />
     <ClCompile Include="Custom\NetworkLevel.cpp" />
@@ -175,6 +180,8 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Custom\CollisionsLevel.cpp" />
     <ClCompile Include="Custom\RaycastClick.cpp" />
     <ClCompile Include="EngineLoop.cpp" />
+    <ClCompile Include="Events\EventObject.cpp" />
+    <ClCompile Include="Events\Events.cpp" />
     <ClCompile Include="Graphics\AnimationComponent.cpp" />
     <ClCompile Include="Graphics\CameraComponent.cpp" />
     <ClCompile Include="Graphics\GUI.cpp" />
@@ -183,6 +190,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Graphics\LightComponent.cpp" />
     <ClCompile Include="Graphics\MeshComponent.cpp" />
     <ClCompile Include="Graphics\RenderModule.cpp" />
+    <ClCompile Include="Graphics\Texture.cpp" />
     <ClCompile Include="Input\InputModule.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="Core\Math\Matrix4.cpp" />
@@ -202,7 +210,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Memory\PoolAllocator.cpp" />
     <ClCompile Include="Graphics\Window.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Networking\NetworkIdentity.cpp" />
+    <ClCompile Include="Networking\NetworkId.cpp" />
     <ClCompile Include="Networking\NetworkingModule.cpp" />
     <ClCompile Include="Networking\NetworkManager.cpp" />
     <ClCompile Include="Collisions\AABB.cpp" />
@@ -214,6 +222,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Collisions\SphereCollider.cpp" />
     <ClCompile Include="Scene\Component.cpp" />
     <ClCompile Include="Scene\Entity.cpp" />
+    <ClCompile Include="Scene\Layers.cpp" />
     <ClCompile Include="Scene\Level.cpp" />
     <ClCompile Include="Scene\LevelManager.cpp" />
     <ClCompile Include="Scene\Transform.cpp" />
@@ -226,10 +235,10 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Collisions\CollisionHandler.h" />
     <ClInclude Include="Collisions\Collisions.h" />
     <ClInclude Include="CollisionUtil.h" />
-    <ClInclude Include="Components\DebugComponent.h" />
     <ClInclude Include="Components\GridComponent.h" />
     <ClInclude Include="Components\FlyController.h" />
     <ClInclude Include="Components\RandomMover.h" />
+    <ClInclude Include="Components\NetworkTransform.h" />
     <ClInclude Include="Core\Config\Config.h" />
     <ClInclude Include="Core\Color.h" />
     <ClInclude Include="Core\Config\ICVar.h" />
@@ -270,6 +279,11 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Custom\BVHLevel.h" />
     <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h" />
     <ClInclude Include="Custom\FrameReporter.h" />
+    <ClInclude Include="Custom\DebugCollision.h" />
+    <ClInclude Include="Custom\Console.h" />
+    <ClInclude Include="Custom\EventTestLevel\EventListenerComponent.h" />
+    <ClInclude Include="Custom\EventTestLevel\EventSenderComponent.h" />
+    <ClInclude Include="Custom\EventTestLevel\EventTestLevel.h" />
     <ClInclude Include="Custom\InEngineTestLevel.h" />
     <ClInclude Include="Custom\IsettaCore.h" />
     <ClInclude Include="Custom\KeyTransform.h" />
@@ -278,6 +292,8 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Custom\CollisionsLevel.h" />
     <ClInclude Include="Custom\RaycastClick.h" />
     <ClInclude Include="EngineLoop.h" />
+    <ClInclude Include="Events\EventObject.h" />
+    <ClInclude Include="Events\Events.h" />
     <ClInclude Include="Graphics\AnimationComponent.h" />
     <ClInclude Include="Graphics\CameraComponent.h" />
     <ClInclude Include="Graphics\GUI.h" />
@@ -287,10 +303,11 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Graphics\MeshComponent.h" />
     <ClInclude Include="Graphics\RectTransform.h" />
     <ClInclude Include="Graphics\RenderModule.h" />
+    <ClInclude Include="Graphics\Texture.h" />
     <ClInclude Include="Graphics\Window.h" />
     <ClInclude Include="ISETTA_API.h" />
     <ClInclude Include="Networking\Messages.h" />
-    <ClInclude Include="Networking\NetworkIdentity.h" />
+    <ClInclude Include="Networking\NetworkId.h" />
     <ClInclude Include="Networking\NetworkingModule.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Input\InputEnum.h" />
@@ -307,6 +324,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Scene\Component.h" />
     <ClInclude Include="Scene\Entity.h" />
     <ClInclude Include="Scene\IsettaLevel.h" />
+    <ClInclude Include="Scene\Layers.h" />
     <ClInclude Include="Scene\Level.h" />
     <ClInclude Include="Scene\LevelManager.h" />
     <ClInclude Include="Scene\Transform.h" />

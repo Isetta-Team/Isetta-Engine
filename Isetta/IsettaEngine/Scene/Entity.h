@@ -3,15 +3,17 @@
  */
 #pragma once
 #include <bitset>
+#include <execution>
 #include <typeindex>
 #include <typeinfo>
 #include <vector>
+#include "Component.h"
 #include "Core/Memory/MemoryManager.h"
 #include "Scene/Transform.h"
 #include "Util.h"
 
 namespace Isetta {
-class ISETTA_API Entity {
+class ISETTA_API_DECLARE Entity {
  private:
   enum class EntityAttributes { IS_ACTIVE, NEED_DESTROY, IS_TRANSFORM_DIRTY };
 
@@ -35,6 +37,7 @@ class ISETTA_API Entity {
 
   StringId entityID;
   std::string entityName;
+  int layer;
 
   void SetAttribute(EntityAttributes attr, bool value);
   bool GetAttribute(EntityAttributes attr) const;
@@ -75,12 +78,18 @@ class ISETTA_API Entity {
   void SetTransform(const Math::Vector3& worldPos = Math::Vector3::zero,
                     const Math::Vector3& worldEulerAngles = Math::Vector3::zero,
                     const Math::Vector3& localScale = Math::Vector3::one);
-  Transform& GetTransform() { return transform; }
+  Transform* const GetTransform() { return &transform; }
   //#if _DEBUG
   // TODO(YIDI): Delete this! This is used for in game editor
   // TODO(Jacob) no don't this is good
-  std::vector<class Component*> GetComponents() { return components; }
+  std::vector<class Component*> GetComponents() const { return components; }
+  // TODO(Chaojie): You can use GetComponents<Component> now
   //#endif
+
+  void SetLayer(int layer);
+  void SetLayer(std::string layer);
+  int GetLayerIndex() const;
+  std::string GetLayerName() const;
 };
 
 template <typename T, typename... Args>
@@ -95,22 +104,45 @@ T* Entity::AddComponent(Args&&... args) {
     throw std::logic_error(Util::StrFormat(
         "%s is not a derived class from Component class", typeid(T).name));
   } else {
+    std::type_index typeIndex{typeid(T)};
+    if (std::any_of(
+            std::execution::par, Component::excludeComponents().begin(),
+            Component::excludeComponents().end(),
+            [typeIndex](std::type_index type) { return type == typeIndex; }) &&
+        std::any_of(
+            std::execution::par, componentTypes.begin(), componentTypes.end(),
+            [typeIndex](std::type_index type) { return type == typeIndex; })) {
+      throw std::logic_error(Util::StrFormat(
+          "Adding multiple excluded components %s", typeIndex.name()));
+      return nullptr;
+    }
     T* component = MemoryManager::NewOnFreeList<T>(std::forward<Args>(args)...);
     component->SetActive(IsActive);
     component->entity = this;
     if (IsActive) {
+      component->Awake();
+      component->SetAttribute(Component::ComponentAttributes::HAS_AWAKEN, true);
       component->OnEnable();
     }
-    componentTypes.emplace_back(std::type_index(typeid(T)));
+    componentTypes.emplace_back(typeIndex);
     components.emplace_back(component);
+
+    LevelManager::Instance().currentLevel->AddComponentToStart(component);
     return component;
   }
 }
 
 template <typename T>
 T* Entity::GetComponent() {
+  auto types = Component::childrenTypes();
+  std::list<std::type_index> availableTypes =
+      types.at(std::type_index(typeid(T)));
   for (int i = 0; i < componentTypes.size(); i++) {
-    if (std::type_index(typeid(T)) == componentTypes[i]) {
+    std::type_index componentType = componentTypes[i];
+    if (std::any_of(std::execution::par, availableTypes.begin(),
+                    availableTypes.end(), [componentType](std::type_index x) {
+                      return x == componentType;
+                    })) {
       return static_cast<T*>(components[i]);
     }
   }
@@ -119,10 +151,16 @@ T* Entity::GetComponent() {
 
 template <typename T>
 std::vector<T*> Entity::GetComponents() {
+  std::list<std::type_index> availableTypes =
+      Component::childrenTypes().at(std::type_index(typeid(T)));
   std::vector<T*> returnValue;
   returnValue.reserve(componentTypes.size());
   for (int i = 0; i < componentTypes.size(); i++) {
-    if (std::type_index(typeid(T)) == componentTypes[i]) {
+    std::type_index componentType = componentTypes[i];
+    if (std::any_of(std::execution::par, availableTypes.begin(),
+                    availableTypes.end(), [componentType](std::type_index x) {
+                      return x == componentType;
+                    })) {
       returnValue.emplace_back(static_cast<T*>(components[i]));
     }
   }

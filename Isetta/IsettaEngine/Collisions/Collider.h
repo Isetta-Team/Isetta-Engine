@@ -27,29 +27,31 @@ namespace Isetta {
     };                                                      \
   }
 
-CREATE_COMPONENT_BEGIN(Collider, Component)
+CREATE_COMPONENT_BEGIN(Collider, Component, false)
 public:
-enum class Attributes { IS_STATIC, IS_TRIGGER };
-inline void SetAttribute(Attributes attr, bool value) {
-  attributes.set(static_cast<int>(attr), value);
+enum class Properties { IS_STATIC, IS_TRIGGER };
+inline void SetProperties(Properties attr, bool value) {
+  properties.set(static_cast<int>(attr), value);
 }
-inline bool GetAttribute(Attributes attr) const {
-  return attributes.test(static_cast<int>(attr));
+inline bool GetProperties(Properties attr) const {
+  return properties.test(static_cast<int>(attr));
 }
 
-Math::Vector3 center;  // TODO(JACOB) remove
+  Math::Vector3 center;
+  Color debugColor = Color::green;
 
-// virtual Math::Vector3 ClosestPoint(Math::Vector3 point) = 0;
-// Math::Vector3 ClosestPointOnAABB(Math::Vector3 point);
+  // TODO(Jacob) virtual Math::Vector3 ClosestPoint(Math::Vector3 point) = 0;
+  // TODO(Jacob) Math::Vector3 ClosestPointOnAABB(Math::Vector3 point);
 virtual bool Raycast(const class Ray& ray, class RaycastHit* const hitInfo,
                      float maxDistance = 0) = 0;
 
 inline Math::Vector3 GetWorldCenter() const {
-  return center + GetTransform().GetWorldPos();
+  return center + GetTransform()->GetWorldPos();
 }
 
-void OnDisable() override;
+  void Start() override;
 void OnEnable() override;
+  void OnDisable() override;
 
 // TODO(YIDI): Actually implement this for each collider
 virtual AABB GetFatAABB() {
@@ -62,11 +64,13 @@ virtual AABB GetAABB() { return AABB{Math::Vector3::zero, Math::Vector3::one}; }
 void AddToBVTree();
 
 private:
-std::bitset<2> attributes;
-class CollisionHandler* handler{nullptr};
+std::bitset<2> properties;
+  int hierchyHandle;
+  class CollisionHandler* handler{nullptr};
 
-inline class CollisionHandler* GetHandler() const { return handler; }
-inline void SetHandler(class CollisionHandler* const h) { handler = h; }
+  inline class CollisionHandler* GetHandler() { return handler; }
+  inline void SetHandler(class CollisionHandler* const h) { handler = h; }
+  void FindHandler();
 
 static class CollisionsModule* collisionsModule;
 friend class CollisionsModule;
@@ -75,17 +79,12 @@ friend class CollisionHandler;
 protected:
 static float fatFactor;
 
-Color debugColor = Color::green;
-
-Collider(const Math::Vector3& center) : center{center} {
-  attributes[static_cast<int>(Attributes::IS_STATIC)] = false;
-  attributes[static_cast<int>(Attributes::IS_TRIGGER)] = false;
-}
-Collider(const bool isStatic = false, const bool isTrigger = false,
+Collider(const Math::Vector3& center) : center{center}, properties{0b00} {}
+Collider(bool isStatic = false, bool isTrigger = false,
          const Math::Vector3& center = Math::Vector3::zero)
     : center{center} {
-  attributes[static_cast<int>(Attributes::IS_STATIC)] = isStatic;
-  attributes[static_cast<int>(Attributes::IS_TRIGGER)] = isTrigger;
+  properties[(int)Properties::IS_STATIC] = isStatic;
+  properties[(int)Properties::IS_TRIGGER] = isTrigger;
 }
 virtual ~Collider() = default;
 

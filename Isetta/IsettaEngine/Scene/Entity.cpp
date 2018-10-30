@@ -5,22 +5,13 @@
 #include "Level.h"
 #include "LevelManager.h"
 #include "Scene/Component.h"
+#include "Scene/Layers.h"
 
 namespace Isetta {
 
 void Entity::OnEnable() {
   for (auto& comp : components) {
     comp->OnEnable();
-  }
-}
-
-void Entity::CheckStart() {
-  for (auto& comp : components) {
-    if (comp->GetActive() &&
-        !comp->GetAttribute(Component::ComponentAttributes::HAS_STARTED)) {
-      comp->SetAttribute(Component::ComponentAttributes::HAS_STARTED, true);
-      comp->Start();
-    }
   }
 }
 
@@ -34,7 +25,6 @@ void Entity::GuiUpdate() {
 }
 
 void Entity::Update() {
-  CheckStart();
   for (auto& comp : components) {
     if (comp->GetActive() &&
         comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
@@ -59,8 +49,6 @@ void Entity::LateUpdate() {
       comp->LateUpdate();
     }
   }
-  // SetAttribute(EntityAttributes::IS_TRANSFORM_DIRTY, false);
-  CheckDestroy();
 }
 
 void Entity::CheckDestroy() {
@@ -155,4 +143,10 @@ void Entity::SetTransform(const Math::Vector3& worldPos,
   // TODO(YIDI): Test this
   transform.SetWorldTransform(worldPos, worldEulerAngles, localScale);
 }
+void Entity::SetLayer(int layer) { this->layer = Layers::CheckLayer(layer); }
+void Entity::SetLayer(std::string layer) {
+  this->layer = Layers::NameToLayer(layer);
+}
+int Entity::GetLayerIndex() const { return layer; }
+std::string Entity::GetLayerName() const { return Layers::LayerToName(layer); }
 }  // namespace Isetta

@@ -11,8 +11,8 @@
 #include "Core/Filesystem.h"
 
 namespace Isetta {
-void Config::Read(const std::string& filePath) {
-  const char* contents = Filesystem::Instance().Read(filePath);
+void Config::Read(const std::string_view& filePath) {
+  const char* contents = Filesystem::Instance().Read(filePath.data());
   ProcessFile(contents);
   delete contents;
 }
@@ -32,13 +32,21 @@ void Config::ProcessFile(const char* contentBuffer) {
     std::string key, value;
     ExtractKey(&key, sepPos, line);
     ExtractValue(&value, sepPos, line);
-    StringId keySid = SID(key.c_str());
-    ICVar* cvar = cvarsRegistry.Find(keySid);
-    if (cvar != nullptr) {
-      cvar->SetVal(value);
-    }
+    SetVal(key, value);
     lines = strtok_s(NULL, "\n", &nextToken);
   }
+}
+
+void Config::SetVal(const std::string& key, const std::string_view& value) {
+  StringId keySid = SID(key.c_str());
+  ICVar* cvar = cvarsRegistry.Find(keySid);
+  if (cvar != nullptr) {
+    cvar->SetVal(value.data());
+  }
+}
+
+std::vector<std::string_view> Config::GetCommands() const {
+  return cvarsRegistry.GetKeys();
 }
 
 void Config::RemoveComments(std::string* line) const {
@@ -52,12 +60,12 @@ void Config::RemoveComments(std::string* line) const {
   }
 }
 
-bool Config::OnlyWhitespace(const std::string& line) const {
+bool Config::OnlyWhitespace(const std::string_view& line) const {
   return (line.find_first_not_of(' ') == std::string::npos);
 }
 
-bool Config::ValidLine(const std::string& line) const {
-  std::string tmp = line;
+bool Config::ValidLine(const std::string_view& line) const {
+  std::string tmp = line.data();
   tmp.erase(0, tmp.find_first_not_of("\t "));
   if (tmp[0] == '=') {
     return false;
@@ -73,7 +81,7 @@ bool Config::ValidLine(const std::string& line) const {
   return false;
 }
 void Config::ExtractKey(std::string* key, const Size& sepPos,
-                        const std::string line) {
+                        const std::string_view line) {
   *key = line.substr(0, sepPos);
   Size pos = key->find_first_of("\t ");
   if (pos != std::string::npos) {
@@ -82,7 +90,7 @@ void Config::ExtractKey(std::string* key, const Size& sepPos,
 }
 
 void Config::ExtractValue(std::string* value, const Size& sepPos,
-                          const std::string line) {
+                          const std::string_view line) {
   *value = line.substr(sepPos + 1);
   value->erase(0, value->find_first_not_of("\t "));
   value->erase(value->find_last_not_of("\t ") + 1);

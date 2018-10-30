@@ -7,7 +7,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(Bullet, Component)
+CREATE_COMPONENT_BEGIN(Bullet, Component, true)
 public:
 void Initialize(const Math::Vector3& pos, const Math::Vector3& flyDir);
 void OnEnable() override;

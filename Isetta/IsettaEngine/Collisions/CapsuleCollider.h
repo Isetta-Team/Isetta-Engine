@@ -9,7 +9,7 @@ class Matrix4;
 }
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(CapsuleCollider, Collider)
+CREATE_COMPONENT_BEGIN(CapsuleCollider, Collider, false)
  private:
   void Update() override;
   // TODO(Jacob) duplicate code
@@ -53,24 +53,24 @@ CREATE_COMPONENT_BEGIN(CapsuleCollider, Collider)
   inline float GetWorldRadius() const {
     switch (direction) {
       case Direction::X_AXIS:
-        return Math::Util::Max(GetTransform().GetWorldScale().y,
-                               GetTransform().GetWorldScale().z);
+        return Math::Util::Max(GetTransform()->GetWorldScale().y,
+                               GetTransform()->GetWorldScale().z);
       case Direction::Y_AXIS:
-        return Math::Util::Max(GetTransform().GetWorldScale().x,
-                               GetTransform().GetWorldScale().z);
+        return Math::Util::Max(GetTransform()->GetWorldScale().x,
+                               GetTransform()->GetWorldScale().z);
       case Direction::Z_AXIS:
-        return Math::Util::Max(GetTransform().GetWorldScale().x,
-                               GetTransform().GetWorldScale().y);
+        return Math::Util::Max(GetTransform()->GetWorldScale().x,
+                               GetTransform()->GetWorldScale().y);
     }
   }
   inline float GetWorldHeight() const {
     switch (direction) {
       case Direction::X_AXIS:
-        return GetTransform().GetWorldScale().x;
+        return GetTransform()->GetWorldScale().x;
       case Direction::Y_AXIS:
-        return GetTransform().GetWorldScale().y;
+        return GetTransform()->GetWorldScale().y;
       case Direction::Z_AXIS:
-        return GetTransform().GetWorldScale().z;
+        return GetTransform()->GetWorldScale().z;
     }
   }
   bool Intersection(Collider* const other) override;

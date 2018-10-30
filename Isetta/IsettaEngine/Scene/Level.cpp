@@ -43,6 +43,17 @@ void Level::UnloadLevel() {
   MemoryManager::FreeOnFreeList(levelRoot);
 }
 
+void Level::AddComponentToStart(Component* component) {
+  componentsToStart.push(component);
+}
+
+void Level::StartComponents() {
+  while (!componentsToStart.empty()) {
+    componentsToStart.top()->Start();
+    componentsToStart.pop();
+  }
+}
+
 Entity* Level::AddEntity(std::string name) {
   return AddEntity(name, levelRoot);
 }
@@ -56,8 +67,16 @@ Entity* Level::AddEntity(std::string name, Entity* parent) {
 }
 
 void Level::Update() {
+  StartComponents();
   for (const auto& entity : entities) {
     entity->Update();
+  }
+}
+
+void Level::FixedUpdate() {
+  StartComponents();
+  for (const auto& entity : entities) {
+    entity->FixedUpdate();
   }
 }
 
@@ -80,28 +99,27 @@ void Level::GUIUpdate() {
         static Transform* transform = nullptr;
 
         for (const auto& entity : entities) {
-          Func<int, Transform*> countLevel = [](Transform* trans) -> int {
+          Func<int, Transform*> countLevel = [](Transform* t) -> int {
             int i = 0;
-            while (trans->GetParent() != nullptr) {
-              trans = trans->GetParent();
+            while (t->GetParent() != nullptr) {
+              t = t->GetParent();
               i++;
             }
             return i;
           };
 
-          Action<Transform*> action = [&](Transform* tran) {
-            int level = countLevel(tran);
+          Action<Transform*> action = [&](Transform* t) {
+            int level = countLevel(t);
             if (GUI::Button(RectTransform{Math::Rect{
                                 left + level * padding, height,
                                 buttonWidth - level * padding, buttonHeight}},
-                            tran->GetName())) {
-              transform = transform == tran ? nullptr : tran;
+                            t->GetName())) {
+              transform = transform == t ? nullptr : t;
             }
             height += 1.25f * buttonHeight;
           };
-
-          action(&entity->GetTransform());
-          entity->GetTransform().ForDescendants(action);
+          action(entity->GetTransform());
+          entity->GetTransform()->ForDescendants(action);
         }
 
         if (transform != nullptr) {
@@ -120,8 +138,5 @@ void Level::LateUpdate() {
   });
 }
 
-Level::Level() {
-  Entity* entity = MemoryManager::NewOnFreeList<Entity>("Root");
-  levelRoot = entity;
-}
+Level::Level() : levelRoot{MemoryManager::NewOnFreeList<Entity>("Root")} {}
 }  // namespace Isetta

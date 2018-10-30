@@ -1,11 +1,13 @@
 /*
  * Copyright (c) 2018 Isetta
  */
+#include "Custom/EmptyLevel/EmptyLevel.h"
 #include "Application.h"
 #include "Core/Config/Config.h"
-#include "Custom/EmptyLevel/EmptyLevel.h"
 #include "Custom/IsettaCore.h"
 #include "Graphics/CameraComponent.h"
+
+#include "Custom/Console.h"
 
 namespace Isetta {
 
@@ -23,7 +25,8 @@ void EmptyLevel::LoadLevel() {
       CONFIG_VAL(renderConfig.nearClippingPlane));
   camComp->SetProperty<CameraProperty::FAR_PLANE>(
       CONFIG_VAL(renderConfig.farClippingPlane));
-  
-  Application::Exit();
+
+  // Application::Exit();
+  cameraEntity->AddComponent<Console>("Console", true);
 }
 }  // namespace Isetta

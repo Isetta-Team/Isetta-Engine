@@ -8,13 +8,17 @@
 #include "Core/Config/Config.h"
 #include "Core/Debug/Assert.h"
 #include "Core/Filesystem.h"
-#include "Core/Time/Clock.h"
+#include "Core/Time/Time.h"
 
 namespace Isetta {
 std::string Logger::engineFileName;
 std::string Logger::channelFileName;
 std::ostringstream Logger::engineStream;
 std::ostringstream Logger::channelStream;
+
+std::bitset<(int)Debug::Channel::All> Logger::channelMask;
+std::bitset<(int)Debug::Verbosity::All> Logger::verbosityMask;
+Action<const char*> Logger::outputCallback;
 
 void Logger::NewSession() {
   std::string folder = "";
@@ -37,7 +41,7 @@ int Logger::VDebugPrintF(const Debug::Channel channel,
   std::ostringstream stream;
   stream << "["
          << Util::StrFormat("%.3f",
-                            EngineLoop::GetGameClock().GetElapsedUnscaledTime())
+                            Time::GetElapsedUnscaledTime())
          << "][" << ToString(verbosity) << "][" << ToString(channel) << "] "
          << inFormat << '\n';
   int charsWritten =
@@ -53,6 +57,7 @@ int Logger::VDebugPrintF(const Debug::Channel channel,
   }
 
   BufferWrite(engineFileName, &engineStream, sBuffer);
+  if (outputCallback) outputCallback(sBuffer);
 
   if (Config::Instance().logger.breakOnError.GetVal() &&
       verbosity == Debug::Verbosity::Error &&
@@ -76,15 +81,17 @@ int Logger::DebugPrintF(const std::string file, const int line,
 }
 
 bool Logger::CheckChannelMask(const Debug::Channel channel) {
-  typedef std::underlying_type<Debug::Channel>::type utype;
-  return (Config::Instance().logger.channelMask.GetVal() &
-          static_cast<utype>(channel)) == static_cast<utype>(channel);
+  // typedef std::underlying_type<Debug::Channel>::type utype;
+  // return (Config::Instance().logger.channelMask.GetVal() &
+  //        static_cast<utype>(channel)) == static_cast<utype>(channel);
+  return channelMask.test((int)channel);
 }
 
 bool Logger::CheckVerbosity(const Debug::Verbosity verbosity) {
-  typedef std::underlying_type<Debug::Verbosity>::type utype;
-  return (Config::Instance().logger.verbosityMask.GetVal() &
-          static_cast<utype>(verbosity)) == static_cast<utype>(verbosity);
+  // typedef std::underlying_type<Debug::Verbosity>::type utype;
+  // return (Config::Instance().logger.verbosityMask.GetVal() &
+  //        static_cast<utype>(verbosity)) == static_cast<utype>(verbosity);
+  return verbosityMask.test((int)verbosity);
 }
 
 void Logger::BufferWrite(const std::string fileName, std::ostringstream* stream,

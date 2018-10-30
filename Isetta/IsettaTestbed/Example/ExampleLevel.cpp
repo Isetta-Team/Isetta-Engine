@@ -3,10 +3,9 @@
  */
 #include "ExampleLevel.h"
 
-#include "Components/ExampleComponent.h"
+#include "ExampleComponent.h"
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
-#include "Components/PlayerController.h"
 #include "Core/Color.h"
 #include "Core/Config/Config.h"
 #include "Graphics/AnimationComponent.h"

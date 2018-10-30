@@ -6,6 +6,7 @@
 #include <unordered_set>
 #include <vector>
 #include "BVTree.h"
+#include "Scene/Layers.h"
 #include "Util.h"
 
 namespace Isetta::Math {
@@ -52,16 +53,19 @@ class CollisionsModule {
   ~CollisionsModule() = default;
 
   // TODO(Jacob) remove
-  std::vector<class Collider *> colliders;
+  std::unordered_set<class Collider *> colliders;
 
   // probably mark them as "still colliding"
   CollisionUtil::ColliderPairSet collidingPairs;
 
   // TODO(Jacob) only for color as of now
-  std::unordered_set<std::pair<int, int>> collisionPairs;
   std::unordered_map<void *, int> collisions{};
   BVTree bvTree;
-  void CollisionDetectionBVTree();
+  std::unordered_set<std::pair<Collider *, Collider *>, std::UnorderedPairHash>
+      ignoreCollisions;
+  std::bitset<(int)(0.5f * Layers::LAYERS_CAPACITY *
+                    (Layers::LAYERS_CAPACITY + 1))>
+      collisionMatrix;
 
   void StartUp();
   void Update(float deltaTime);
@@ -72,6 +76,10 @@ class CollisionsModule {
   friend class Collisions;
 
   // Utilities
+
+  bool GetIgnoreLayerCollision(int layer1, int layer2) const;
+  void SetIgnoreLayerCollision(int layer1, int layer2, bool ignoreLayer = true);
+
   static bool Intersection(const Math::Vector3 &, const Math::Vector3 &,
                            const class AABB &);
   static float SqDistPointSegment(const Math::Vector3 &, const Math::Vector3 &,

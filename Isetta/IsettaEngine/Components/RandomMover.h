@@ -6,7 +6,7 @@
 #include "Core/Math/Vector3.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(RandomMover, Component)
+CREATE_COMPONENT_BEGIN(RandomMover, Component, false)
 public:
 void Update() override;
 
