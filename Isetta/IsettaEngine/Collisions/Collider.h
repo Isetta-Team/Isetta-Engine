@@ -27,14 +27,14 @@ namespace Isetta {
     };                                                      \
   }
 
-CREATE_COMPONENT_BEGIN(Collider, Component)
+CREATE_COMPONENT_BEGIN(Collider, Component, false)
 public:
-enum class Attributes { IS_STATIC, IS_TRIGGER };
-inline void SetAttribute(Attributes attr, bool value) {
-  attributes.set(static_cast<int>(attr), value);
+enum class Properties { IS_STATIC, IS_TRIGGER };
+inline void SetProperties(Properties attr, bool value) {
+  properties.set(static_cast<int>(attr), value);
 }
-inline bool GetAttribute(Attributes attr) const {
-  return attributes.test(static_cast<int>(attr));
+inline bool GetProperties(Properties attr) const {
+  return properties.test(static_cast<int>(attr));
 }
 
   Math::Vector3 center;
@@ -42,19 +42,19 @@ inline bool GetAttribute(Attributes attr) const {
 
   // TODO(Jacob) virtual Math::Vector3 ClosestPoint(Math::Vector3 point) = 0;
   // TODO(Jacob) Math::Vector3 ClosestPointOnAABB(Math::Vector3 point);
-  virtual bool Raycast(const class Ray& ray, class RaycastHit* const hitInfo,
-                       float maxDistance = 0) = 0;
+virtual bool Raycast(const class Ray& ray, class RaycastHit* const hitInfo,
+                     float maxDistance = 0) = 0;
 
 inline Math::Vector3 GetWorldCenter() const {
   return center + GetTransform()->GetWorldPos();
 }
 
   void Start() override;
-  void OnEnable() override;
+void OnEnable() override;
   void OnDisable() override;
 
- private:
-  std::bitset<2> attributes;
+private:
+std::bitset<2> properties;
   int hierchyHandle;
   class CollisionHandler* handler{nullptr};
 
@@ -69,17 +69,14 @@ inline Math::Vector3 GetWorldCenter() const {
 protected:
 AABB* bounding;
 
-  Collider(const Math::Vector3& center) : center{center} {
-    attributes[(int)Attributes::IS_STATIC] = 0;
-    attributes[(int)Attributes::IS_TRIGGER] = 0;
-  }
-  Collider(bool isStatic = false, bool isTrigger = false,
-           const Math::Vector3& center = Math::Vector3::zero)
-      : center{center} {
-    attributes[(int)Attributes::IS_STATIC] = isStatic;
-    attributes[(int)Attributes::IS_TRIGGER] = isTrigger;
-  }
-  virtual ~Collider() = default;
+Collider(const Math::Vector3& center) : center{center}, properties{0b00} {}
+Collider(bool isStatic = false, bool isTrigger = false,
+         const Math::Vector3& center = Math::Vector3::zero)
+    : center{center} {
+  properties[(int)Properties::IS_STATIC] = isStatic;
+  properties[(int)Properties::IS_TRIGGER] = isTrigger;
+}
+virtual ~Collider() = default;
 
 enum class ColliderType { BOX, SPHERE, CAPSULE };
 friend class BoxCollider;
@@ -87,8 +84,8 @@ friend class SphereCollider;
 friend class CapsuleCollider;
 virtual const ColliderType GetType() const = 0;
 
-  virtual bool Intersection(Collider* const other) = 0;
-  void RaycastHitCtor(class RaycastHit* const hitInfo, float distance,
-                      const Math::Vector3& point, const Math::Vector3& normal);
+virtual bool Intersection(Collider* const other) = 0;
+void RaycastHitCtor(class RaycastHit* const hitInfo, float distance,
+                    const Math::Vector3& point, const Math::Vector3& normal);
 CREATE_COMPONENT_END(Collider, Component)
 }  // namespace Isetta

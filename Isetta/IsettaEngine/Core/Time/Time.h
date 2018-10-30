@@ -14,6 +14,9 @@ class Time {
   static double GetElapsedUnscaledTime() {
     return EngineLoop::GetGameClock().GetElapsedUnscaledTime();
   }
+  static U64 GetTimeFrame() {
+    return EngineLoop::GetGameClock().GetTimeFrame();
+  }
   static U64 GetTimestamp() {
     return EngineLoop::GetGameClock().GetTimestamp();
   }

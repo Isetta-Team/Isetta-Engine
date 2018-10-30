@@ -201,9 +201,6 @@
     <ClInclude Include="Custom\CollisionsLevel.h">
       <Filter>Custom</Filter>
     </ClInclude>
-    <ClCompile Include="Networking\NetworkIdentity.cpp">
-      <Filter>Networking</Filter>
-    </ClCompile>
     <ClCompile Include="Components\FlyController.cpp">
       <Filter>Components</Filter>
     </ClCompile>
@@ -247,10 +244,37 @@
     <ClCompile Include="Collisions\CollisionHandler.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Texture.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
     <ClCompile Include="Scene\Layers.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Events\EventObject.cpp">
+      <Filter>Events</Filter>
+    </ClCompile>
     <ClCompile Include="Custom\DebugCollision.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Events\Events.cpp">
+      <Filter>Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\EventTestLevel\EventTestLevel.cpp">
+      <Filter>Custom\EventTestLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\EventTestLevel\EventSenderComponent.cpp">
+      <Filter>Custom\EventTestLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\EventTestLevel\EventListenerComponent.cpp">
+      <Filter>Custom\EventTestLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Networking\NetworkId.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\NetworkTransform.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\Console.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
   </ItemGroup>
@@ -320,6 +344,12 @@
     </Filter>
     <Filter Include="Custom\EmptyLevel">
       <UniqueIdentifier>{41a303ff-7dcc-4225-b47b-6d0aae3ea40f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{34d6b88a-6954-4a27-b89f-3559dfd83508}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\EventTestLevel">
+      <UniqueIdentifier>{c9dcfdd8-b385-4b0e-ab14-7ab7792fc31d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -500,9 +530,6 @@
     <ClInclude Include="Custom\IsettaCore.h">
       <Filter>Custom</Filter>
     </ClInclude>
-    <ClInclude Include="Networking\NetworkIdentity.h">
-      <Filter>Networking</Filter>
-    </ClInclude>
     <ClInclude Include="Components\FlyController.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -535,6 +562,46 @@
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Custom\DebugCollision.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h">
+      <Filter>Custom\EmptyLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="Custom\RaycastClick.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\Collisions.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\CollisionHandler.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Texture.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\EventObject.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\Events.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\EventTestLevel\EventTestLevel.h">
+      <Filter>Custom\EventTestLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\EventTestLevel\EventSenderComponent.h">
+      <Filter>Custom\EventTestLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\EventTestLevel\EventListenerComponent.h">
+      <Filter>Custom\EventTestLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Networking\NetworkId.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\NetworkTransform.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\Console.h">
       <Filter>Custom</Filter>
     </ClInclude>
   </ItemGroup>

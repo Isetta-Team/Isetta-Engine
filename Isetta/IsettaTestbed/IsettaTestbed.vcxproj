@@ -142,18 +142,20 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Components\Bullet.cpp" />
-    <ClCompile Include="Components\CameraController.cpp" />
-    <ClCompile Include="Components\ExampleComponent.cpp" />
-    <ClCompile Include="Components\GameManager.cpp" />
-    <ClCompile Include="Components\PlayerController.cpp" />
-    <ClCompile Include="Components\Zombie.cpp" />
     <ClCompile Include="DebugLevel\DebugComponent.cpp" />
     <ClCompile Include="DebugLevel\DebugLevel.cpp" />
+    <ClCompile Include="Example\ExampleComponent.cpp" />
+    <ClCompile Include="Example\ExampleLevel.cpp" />
     <ClCompile Include="GUILevel\GUILevel.cpp" />
     <ClCompile Include="GUILevel\GUIComponent.cpp" />
-    <ClCompile Include="Level\ExampleLevel.cpp" />
-    <ClCompile Include="Level\Level1.cpp" />
+    <ClCompile Include="Halves\Bullet.cpp" />
+    <ClCompile Include="Halves\CameraController.cpp" />
+    <ClCompile Include="Halves\GameManager.cpp" />
+    <ClCompile Include="Halves\Level1.cpp" />
+    <ClCompile Include="Halves\PlayerController.cpp" />
+    <ClCompile Include="Halves\Zombie.cpp" />
+    <ClCompile Include="InputLevel\InputLevel.cpp" />
+    <ClCompile Include="InputLevel\InputTestComponent.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -161,18 +163,20 @@
     <None Include="user.cfg" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Components\Bullet.h" />
-    <ClInclude Include="Components\CameraController.h" />
-    <ClInclude Include="Components\ExampleComponent.h" />
-    <ClInclude Include="Components\GameManager.h" />
-    <ClInclude Include="Components\PlayerController.h" />
-    <ClInclude Include="Components\Zombie.h" />
     <ClInclude Include="DebugLevel\DebugComponent.h" />
     <ClInclude Include="DebugLevel\DebugLevel.h" />
+    <ClInclude Include="Example\ExampleComponent.h" />
+    <ClInclude Include="Example\ExampleLevel.h" />
     <ClInclude Include="GUILevel\GUILevel.h" />
     <ClInclude Include="GUILevel\GUIComponent.h" />
-    <ClInclude Include="Level\ExampleLevel.h" />
-    <ClInclude Include="Level\Level1.h" />
+    <ClInclude Include="Halves\Bullet.h" />
+    <ClInclude Include="Halves\CameraController.h" />
+    <ClInclude Include="Halves\GameManager.h" />
+    <ClInclude Include="Halves\Level1.h" />
+    <ClInclude Include="Halves\PlayerController.h" />
+    <ClInclude Include="Halves\Zombie.h" />
+    <ClInclude Include="InputLevel\InputLevel.h" />
+    <ClInclude Include="InputLevel\InputTestComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

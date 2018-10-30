@@ -14,7 +14,7 @@
 namespace Isetta {
 
 class Entity;
-class NetworkIdentity;
+class NetworkId;
 
 /**
  * @brief Wrapper class for NetworkingModule so that other engine components can
@@ -48,7 +48,7 @@ class NetworkManager {
       int, std::list<std::pair<U16, Action<int, yojimbo::Message*>>>>
       serverCallbacks;
 
-  std::unordered_map<U32, NetworkIdentity*> networkIdToComponentMap;
+  std::unordered_map<U32, NetworkId*> networkIdToComponentMap;
 
  public:
   static NetworkManager& Instance();
@@ -77,9 +77,10 @@ class NetworkManager {
   void UnregisterClientCallback(int handle);
 
   Entity* GetNetworkEntity(const U32 id);
-  U32 CreateNetworkId(NetworkIdentity* networkIdentity);
-  U32 AssignNetworkId(U32 netId, NetworkIdentity* networkIdentity);
-  void RemoveNetworkId(NetworkIdentity* networkIdentity);
+  NetworkId* GetNetworkId(const U32 id);
+  U32 CreateNetworkId(NetworkId* NetworkId);
+  U32 AssignNetworkId(U32 netId, NetworkId* NetworkId);
+  void RemoveNetworkId(NetworkId* NetworkId);
 
   /**
    * @brief Connects the local Client to a server at the given address.
@@ -113,6 +114,7 @@ class NetworkManager {
   bool ClientIsConnected(int clientIdx);
   bool ServerIsRunning();
   int GetMaxClients();
+  int GetClientIndex();
 
   NetworkManager() = default;
   ~NetworkManager() = default;

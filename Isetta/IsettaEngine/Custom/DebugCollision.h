@@ -6,7 +6,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(DebugCollision, Component)
+CREATE_COMPONENT_BEGIN(DebugCollision, Component, true)
 private:
 int collisions = 0;
 int enterHandle, exitHandle;

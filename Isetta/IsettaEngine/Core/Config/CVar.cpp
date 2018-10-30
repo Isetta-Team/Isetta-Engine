@@ -11,6 +11,7 @@ namespace Isetta {
 template class ISETTA_API CVar<float>;
 
 std::unordered_map<StringId, ICVar*> CVarRegistry::registry;
+std::vector<std::string_view> CVarRegistry::keys;
 
 CVarString::CVarString(const std::string& name, const std::string& defaultValue)
     : ICVar(name), sVal{defaultValue} {

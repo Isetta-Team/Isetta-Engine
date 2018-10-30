@@ -128,7 +128,6 @@ bool CapsuleCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
   if (tmin > tmax) std::swap(tmin, tmax);
 
   float tkMin = tmin * m + n;
-  RaycastHit hitMin;
   if (tkMin < 0.f) {
     return RaycastSphere(p0, radius * radiusScale, ray, hitInfo, maxDistance);
   } else if (tkMin > 1.f) {

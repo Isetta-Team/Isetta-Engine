@@ -10,7 +10,7 @@
 namespace Isetta {
 RenderModule* MeshComponent::renderModule{nullptr};
 
-MeshComponent::MeshComponent(const std::string& resourceName) : Component() {
+MeshComponent::MeshComponent(std::string_view resourceName) : Component() {
   // SetAttribute(ComponentAttributes::NEED_UPDATE, false);
   ASSERT(renderModule != nullptr);
   renderModule->meshComponents.push_back(this);
@@ -26,14 +26,14 @@ void MeshComponent::UpdateTransform() const {
   Transform::SetH3DNodeTransform(renderNode, *GetTransform());
 }
 
-H3DRes MeshComponent::LoadResourceFromFile(const std::string& resourceName) {
+H3DRes MeshComponent::LoadResourceFromFile(std::string_view resourceName) {
   H3DRes renderResource =
-      h3dAddResource(H3DResTypes::SceneGraph, resourceName.c_str(), 0);
+      h3dAddResource(H3DResTypes::SceneGraph, resourceName.data(), 0);
 
   RenderModule::LoadResourceFromDisk(
       renderResource, Util::StrFormat("MeshComponent::LoadResourceFromFile => "
                                       "Cannot load the resource from %s",
-                                      resourceName.c_str()));
+                                      resourceName.data()));
 
   return renderResource;
 }

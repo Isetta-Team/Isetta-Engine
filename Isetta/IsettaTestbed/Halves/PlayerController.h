@@ -8,7 +8,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(PlayerController, Component)
+CREATE_COMPONENT_BEGIN(PlayerController, Component, true)
 public : void OnEnable() override;
 void Start() override;
 void Update() override;

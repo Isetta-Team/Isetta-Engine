@@ -41,7 +41,7 @@ void CollisionsModule::Update(float deltaTime) {
   //  }
   //}
   for (auto &colA : colliders) {
-    if (colA->GetAttribute(Collider::Attributes::IS_STATIC)) continue;
+    if (colA->GetProperties(Collider::Properties::IS_STATIC)) continue;
     for (auto &colB : colliders) {
       if (colA == colB || ignoreCollisions.find(std::make_pair(colA, colB)) !=
                               ignoreCollisions.end())
@@ -633,6 +633,7 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
           pt = ptSeg;
           distSq = dist;
         }
+
       }
       t /= line.GetDirection().Magnitude();
       return box.GetTransform()->WorldPosFromLocalPos(pt);

@@ -9,7 +9,7 @@ class Matrix4;
 }
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(CapsuleCollider, Collider)
+CREATE_COMPONENT_BEGIN(CapsuleCollider, Collider, false)
  private:
   void Update() override;
   // TODO(Jacob) duplicate code

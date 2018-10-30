@@ -7,10 +7,11 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-class CollisionHandler : public Component {
- private:
-  std::unordered_map<U16, Action<class Collider*>> onEnter, onStay, onExit;
-  U16 handles = 0;
+CREATE_COMPONENT_BEGIN(CollisionHandler, Component, true)
+private : std::unordered_map<U16, Action<class Collider*>> onEnter,
+          onStay,
+          onExit;
+U16 handles;
 
   static void SetColliderHandler(Transform* transform,
                                  const Action<Collider* const>& action);
@@ -38,5 +39,5 @@ class CollisionHandler : public Component {
   void UnregisterOnStay(U16 handle);
   U16 RegisterOnExit(const Action<class Collider* const>& action);
   void UnregisterOnExit(U16 handle);
-};
+CREATE_COMPONENT_END(CollisionHandler, Component)
 }  // namespace Isetta
