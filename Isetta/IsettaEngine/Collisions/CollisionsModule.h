@@ -50,9 +50,9 @@ class CollisionsModule {
   // TODO(Jacob) remove
   std::unordered_set<class Collider *> colliders;
 
-  std::unordered_set<std::pair<Collider *, Collider *>, std::UnorderedPairHash>
+  std::unordered_set<std::pair<Collider *, Collider *>, Util::UnorderedPairHash>
       collisionPairs;
-  std::unordered_set<std::pair<Collider *, Collider *>, std::UnorderedPairHash>
+  std::unordered_set<std::pair<Collider *, Collider *>, Util::UnorderedPairHash>
       ignoreCollisions;
   std::bitset<(int)(0.5f * Layers::LAYERS_CAPACITY *
                     (Layers::LAYERS_CAPACITY + 1))>
