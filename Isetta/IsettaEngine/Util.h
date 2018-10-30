@@ -22,6 +22,15 @@ inline const char* StrFormat(const char* format, ...) {
   return charBuffer;
 }
 
+inline int FormatStringV(char* buf, size_t buf_size, const char* format,
+                         va_list args) {
+  int w = vsnprintf(buf, buf_size, format, args);
+  if (buf == NULL) return w;
+  if (w == -1 || w >= (int)buf_size) w = (int)buf_size - 1;
+  buf[w] = 0;
+  return w;
+}
+
 inline void StrRemoveSpaces(std::string* str) {
   str->erase(std::remove_if(str->begin(), str->end(), isspace), str->end());
 }

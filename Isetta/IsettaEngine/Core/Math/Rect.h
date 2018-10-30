@@ -68,6 +68,16 @@ class ISETTA_API_DECLARE Rect {
     height = inHeight;
   }
 
+  inline void SetPosition(float inX, float inY) {
+    x = inX;
+    y = inY;
+  }
+
+  inline void SetSize(float inWidth, float inHeight) {
+    width = inWidth;
+    height = inHeight;
+  }
+
   /**
    * \brief Get the position of the left-top point
    */
