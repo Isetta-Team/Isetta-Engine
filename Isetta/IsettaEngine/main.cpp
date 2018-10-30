@@ -2,9 +2,9 @@
  * Copyright (c) 2018 Isetta
  */
 #define _CRTDBG_MAP_ALLOC
+#include "Application.h"
 #include <crtdbg.h>
 #include <stdlib.h>
-#include "EngineLoop.h"
 
 using namespace Isetta;
 
@@ -24,7 +24,7 @@ Between our own hands-on process and sage advice from veteran engineers, we hope
 to give newcomers a clearer representation of the engine-building process.
 */
 int main() {
-   // _CrtSetBreakAlloc(3645);  
-  EngineLoop::Instance().Run();
+   // _CrtSetBreakAlloc(3645);
+  Application::Start();
   return 0;
 }

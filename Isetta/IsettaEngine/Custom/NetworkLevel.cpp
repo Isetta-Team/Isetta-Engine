@@ -82,7 +82,7 @@ void RegisterExampleMessageFunctions() {
           spawnedEntities.push_back(e);
 
           // Zomble
-          e->GetTransform().SetLocalScale(Math::Vector3::one * .01);
+          e->GetTransform()->SetLocalScale(Math::Vector3::one * .01);
           MeshComponent* mesh = e->AddComponent<MeshComponent, true>(
               "Zombie/Zombie.scene.xml");
           AnimationComponent* animation =
@@ -106,7 +106,7 @@ void RegisterExampleMessageFunctions() {
           spawnMessage->netId = netIdentity->id;
 
           // Zomble
-          e->GetTransform().SetLocalScale(Math::Vector3::one * .01);
+          e->GetTransform()->SetLocalScale(Math::Vector3::one * .01);
           MeshComponent* mesh =
               e->AddComponent<MeshComponent, true>("Zombie/Zombie.scene.xml");
           AnimationComponent* animation =

@@ -30,6 +30,7 @@ class Plane {
   float GetDistanceToPoint(const Math::Vector3& point);
   int GetSide(const Math::Vector3& point);
   bool SameSide(const Math::Vector3& pt0, const Math::Vector3& pt1);
-  bool Raycast(const class Ray& ray, float* const t);
+  bool Raycast(const class Ray& ray, class RaycastHit* const hitInfo,
+               float maxDistance = 0);
 };
 }  // namespace Isetta

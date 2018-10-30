@@ -37,6 +37,7 @@ class ISETTA_API_DECLARE Entity {
 
   StringId entityID;
   std::string entityName;
+  int layer;
 
   void SetAttribute(EntityAttributes attr, bool value);
   bool GetAttribute(EntityAttributes attr) const;
@@ -77,13 +78,18 @@ class ISETTA_API_DECLARE Entity {
   void SetTransform(const Math::Vector3& worldPos = Math::Vector3::zero,
                     const Math::Vector3& worldEulerAngles = Math::Vector3::zero,
                     const Math::Vector3& localScale = Math::Vector3::one);
-  Transform& GetTransform() { return transform; }
+  Transform* const GetTransform() { return &transform; }
   //#if _DEBUG
   // TODO(YIDI): Delete this! This is used for in game editor
   // TODO(Jacob) no don't this is good
+  std::vector<class Component*> GetComponents() const { return components; }
   // TODO(Chaojie): You can use GetComponents<Component> now
-  std::vector<class Component*> GetComponents() { return components; }
   //#endif
+
+  void SetLayer(int layer);
+  void SetLayer(std::string layer);
+  int GetLayerIndex() const;
+  std::string GetLayerName() const;
 };
 
 template <typename T, typename... Args>

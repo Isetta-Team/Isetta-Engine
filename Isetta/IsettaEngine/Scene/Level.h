@@ -16,8 +16,8 @@
                                                                           \
    private:
 
-#define CREATE_LEVEL_END \
-  }                      \
+#define CREATE_LEVEL_END };
+
   ;
 
 namespace Isetta {
@@ -28,7 +28,7 @@ class ISETTA_API Level {
   std::list<class Entity*> entities;
 
  public:
-  class Entity* levelRoot;
+  class Entity* const levelRoot;
   Level();
   virtual ~Level() = default;
   class Entity* GetEntityByName(const std::string&);

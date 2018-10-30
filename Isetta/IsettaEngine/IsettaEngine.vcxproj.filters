@@ -250,8 +250,14 @@
     <ClCompile Include="Graphics\Texture.cpp">
       <Filter>Graphics\Render</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\Layers.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
     <ClCompile Include="Events\EventObject.cpp">
       <Filter>Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\DebugCollision.cpp">
+      <Filter>Custom</Filter>
     </ClCompile>
     <ClCompile Include="Events\Events.cpp">
       <Filter>Events</Filter>
@@ -534,6 +540,25 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="Custom\NetworkLevel.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h">
+      <Filter>Custom\EmptyLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="Custom\RaycastClick.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\Collisions.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\CollisionHandler.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Layers.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\DebugCollision.h">
       <Filter>Custom</Filter>
     </ClInclude>
     <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h">

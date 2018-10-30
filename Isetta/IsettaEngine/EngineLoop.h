@@ -2,6 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include "Application.h"
 #include "Core/Config/CVar.h"
 
 namespace Isetta {
@@ -15,10 +16,8 @@ class ISETTA_API EngineLoop {
   EngineLoop();
   ~EngineLoop();
 
-  void Run();
-  void Stop();
-
   static EngineLoop& Instance();
+  void Stop();
   static class Clock& GetGameClock();
 
  private:
@@ -36,6 +35,7 @@ class ISETTA_API EngineLoop {
   class NetworkingModule* networkingModule;
   class CollisionsModule* collisionsModule;
 
+  void Run();
   void StartUp();
   void Update();
   void FixedUpdate(float deltaTime);
@@ -46,5 +46,6 @@ class ISETTA_API EngineLoop {
 
   class TestInitalization;
   friend class TestInitialization;
+  friend class Application;
 };
 }  // namespace Isetta

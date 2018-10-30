@@ -164,6 +164,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Custom\AxisDrawer.cpp" />
     <ClCompile Include="Custom\EmptyLevel\EmptyLevel.cpp" />
     <ClCompile Include="Custom\EventTestLevel\EventListenerComponent.cpp" />
+    <ClCompile Include="Custom\DebugCollision.cpp" />
     <ClCompile Include="Custom\EventTestLevel\EventSenderComponent.cpp" />
     <ClCompile Include="Custom\EventTestLevel\EventTestLevel.cpp" />
     <ClCompile Include="Custom\InEngineTestLevel.cpp" />
@@ -215,6 +216,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Collisions\SphereCollider.cpp" />
     <ClCompile Include="Scene\Component.cpp" />
     <ClCompile Include="Scene\Entity.cpp" />
+    <ClCompile Include="Scene\Layers.cpp" />
     <ClCompile Include="Scene\Level.cpp" />
     <ClCompile Include="Scene\LevelManager.cpp" />
     <ClCompile Include="Scene\Transform.cpp" />
@@ -264,6 +266,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Time\StopWatch.h" />
     <ClInclude Include="Core\Time\Time.h" />
     <ClInclude Include="Custom\AxisDrawer.h" />
+    <ClInclude Include="Custom\DebugCollision.h" />
     <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h" />
     <ClInclude Include="Custom\EventTestLevel\EventListenerComponent.h" />
     <ClInclude Include="Custom\EventTestLevel\EventSenderComponent.h" />
@@ -308,6 +311,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Scene\Component.h" />
     <ClInclude Include="Scene\Entity.h" />
     <ClInclude Include="Scene\IsettaLevel.h" />
+    <ClInclude Include="Scene\Layers.h" />
     <ClInclude Include="Scene\Level.h" />
     <ClInclude Include="Scene\LevelManager.h" />
     <ClInclude Include="Scene\Transform.h" />

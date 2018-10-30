@@ -11,7 +11,6 @@
 #include "Graphics/Window.h"
 #include "Input/InputModule.h"
 #include "Networking/NetworkingModule.h"
-#include "Collisions/CollisionsModule.h"
 
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"

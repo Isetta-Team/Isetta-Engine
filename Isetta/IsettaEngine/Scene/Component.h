@@ -57,7 +57,7 @@ class ISETTA_API Component {
   static void FlattenHelper(std::type_index parent, std::type_index curr);
   static bool isFlattened;
 
- protected:
+protected:
   class Entity* entity;
 
   enum class ComponentAttributes {
@@ -78,34 +78,8 @@ class ISETTA_API Component {
   virtual ~Component() = default;
   void SetActive(bool value);
   bool GetActive() const;
-  class Transform& GetTransform() const;
+  class Transform* GetTransform() const;
   class Entity* GetEntity() const;
-  // TODO(Jacob) possibly remove?
-  template <typename CheckType, typename InstanceType>
-  bool IsInstanceOf(const InstanceType& instance) {
-    return (dynamic_cast<CheckType*>(&instance) != NULL);
-  }
-
-  // TODO(Jacob) do we want?
-  // template <typename T>
-  // T* GetComponent();
-  // template <typename T>
-  // std::vector<T*> GetComponents();
-  // template <typename T>
-  // T* GetComponentInParent();
-  // template <typename T>
-  // std::vector<T*> GetComponentsInParent();
-  // template <typename T>
-  // T* GetComponentInChildren();
-  // template <typename T>
-  // std::vector<T*> GetComponentsInChildren();
-  // template <typename T>
-  // T* GetComponentInDescendant();
-  // template <typename T>
-  // std::vector<T*> GetComponentsInDescendant();
-
-  static bool RegisterComponent(std::type_index curr, std::type_index base,
-                                bool isExclude);
 
   virtual void OnEnable() {}
   virtual void Awake() {}
@@ -116,6 +90,9 @@ class ISETTA_API Component {
   virtual void FixedUpdate() {}
   virtual void OnDestroy() {}
   virtual void OnDisable() {}
+
+  static bool RegisterComponent(std::type_index curr, std::type_index base, bool isExclude);
+
 };
 
 }  // namespace Isetta

@@ -3,6 +3,6 @@
 #include "EngineLoop.h"
 
 int main() {
-  Isetta::EngineLoop::Instance().Run();
+  Isetta::Application::Start();
   return 0;
 }

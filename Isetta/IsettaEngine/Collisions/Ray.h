@@ -50,5 +50,6 @@ class RaycastHit {
 
   RaycastHit() = default;
   friend class Collider;
+  friend class Plane;
 };
 }  // namespace Isetta

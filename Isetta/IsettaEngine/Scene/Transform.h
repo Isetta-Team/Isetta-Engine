@@ -6,12 +6,12 @@
 #include "Core/Math/Matrix4.h"
 #include "Core/Math/Quaternion.h"
 #include "Core/Math/Vector3.h"
-#include "Core/Math/Vector4.h"
 #include "Horde3D.h"
 
 namespace Isetta {
 class ISETTA_API_DECLARE Transform {
   friend class Entity;
+
  public:
   // constructors
   Transform() = delete;
@@ -49,7 +49,7 @@ class ISETTA_API_DECLARE Transform {
   void SetLocalScale(const Math::Vector3& newScale);
 
   // hierarchy
-  void SetParent(Transform* transform);
+  void SetParent(Transform* const transform);
   Transform* GetParent() const { return parent; }
   Transform* GetRoot() const;
 
@@ -131,5 +131,8 @@ class ISETTA_API_DECLARE Transform {
   std::vector<Transform*> children;
 
   Math::Vector3 axis[3];
+  Math::Vector3& left = axis[0];
+  Math::Vector3& up = axis[1];
+  Math::Vector3& forward = axis[2];
 };
 }  // namespace Isetta
