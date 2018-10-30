@@ -303,10 +303,15 @@ Quaternion Quaternion::Lerp(const Quaternion& aQuaternion,
 
 Quaternion Quaternion::Slerp(const Quaternion& aQuaternion,
                              const Quaternion& bQuaternion, float t) {
+  if (aQuaternion == bQuaternion) {
+    return aQuaternion.Normalized();
+  }
   float theta{Util::Acos(Dot(aQuaternion, bQuaternion))};
-  float wp = Util::Sin(1 - t) * theta / Util::Sin(theta);
-  float wq = Util::Sin(t) * theta / Util::Sin(theta);
-  return aQuaternion * wp + bQuaternion * wq;
+  theta = abs(theta);
+
+  float wp = Util::Sin((1 - t) * theta) / Util::Sin(theta);
+  float wq = Util::Sin(t * theta) / Util::Sin(theta);
+  return (aQuaternion * wp + bQuaternion * wq).Normalized();
 }
 
 bool Quaternion::FuzzyEqual(const Quaternion& lhs, const Quaternion& rhs) {
