@@ -22,7 +22,7 @@ BVTree::~BVTree() {
 }
 
 void BVTree::AddCollider(Collider* collider) {
-  BVNode* newNode = new BVNode{collider};
+  BVNode* newNode = MemoryManager::NewOnFreeList<BVNode>(collider);
   colNodeMap.insert({collider, newNode});
   AddNode(newNode);
 }
@@ -93,15 +93,16 @@ void BVTree::AddNode(BVNode* newNode) {
 
     if (cur == root) {
       // cur is root
-      root = new BVNode(AABB::Encapsulate(cur->aabb, newAABB));
+      root = MemoryManager::NewOnFreeList<BVNode>(
+          AABB::Encapsulate(cur->aabb, newAABB));
       cur->parent = root;
       newNode->parent = root;
       root->left = cur;
       root->right = newNode;
     } else {
       // cur is actual leaf, convert cur to branch
-      BVNode* newBranch =
-          new BVNode{AABB::Encapsulate(cur->aabb, newNode->aabb)};
+      BVNode* newBranch = MemoryManager::NewOnFreeList<BVNode>(
+          AABB::Encapsulate(cur->aabb, newNode->aabb));
       newBranch->parent = cur->parent;
       cur->parent->SwapOutChild(cur, newBranch);
       cur->parent = newBranch;
@@ -133,7 +134,7 @@ void BVTree::RemoveNode(BVNode* node, const bool deleteNode) {
       newRoot = root->left;
     }
 
-    delete root;
+    MemoryManager::DeleteOnFreeList<BVNode>(root);
     root = newRoot;
     root->parent = nullptr;
   } else {
@@ -149,7 +150,7 @@ void BVTree::RemoveNode(BVNode* node, const bool deleteNode) {
       grandParent->SwapOutChild(parent, parent->left);
     }
 
-    delete parent;
+    MemoryManager::DeleteOnFreeList<BVNode>(parent);
 
     BVNode* cur = grandParent;
     while (cur != nullptr) {
@@ -159,7 +160,7 @@ void BVTree::RemoveNode(BVNode* node, const bool deleteNode) {
   }
 
   if (deleteNode) {
-    delete node;
+    MemoryManager::DeleteOnFreeList<BVNode>(node);
   }
 }
 

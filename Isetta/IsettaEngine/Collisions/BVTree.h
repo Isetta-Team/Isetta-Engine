@@ -9,46 +9,45 @@
 
 namespace Isetta {
 
-// BVNode serves two purposes: leaf and branch
-struct BVNode {
- public:
-  BVNode(AABB aabb) : aabb(aabb) {}
-  BVNode(Collider* collider)
-      : collider(collider), aabb(collider->GetFatAABB()) {}
-
-  void UpdateBranchAABB() {
-    ASSERT(collider == nullptr && !IsLeaf());
-    aabb = AABB::Encapsulate(left->aabb, right->aabb);
-  }
-
-  void UpdateLeafAABB() {
-    ASSERT(IsLeaf() && collider != nullptr);
-    aabb = collider->GetFatAABB();
-  }
-
-  void SwapOutChild(BVNode* oldChild, BVNode* newChild) {
-    ASSERT(oldChild == left || oldChild == right);
-    if (oldChild == left) {
-      left = newChild;
-      left->parent = this;
-    } else {
-      right = newChild;
-      right->parent = this;
-    }
-  }
-
-  bool IsLeaf() const { return left == nullptr; }
-  bool IsInFatAABB() const { return aabb.Contains(collider->GetAABB()); }
-
-  BVNode* parent{nullptr};
-  BVNode* left{nullptr};
-  BVNode* right{nullptr};
-
-  Collider* const collider{nullptr};
-  AABB aabb;
-};
-
 class BVTree {
+  // BVNode serves two purposes: leaf and branch
+  struct BVNode {
+    explicit BVNode(AABB aabb) : aabb(std::move(aabb)) {}
+    explicit BVNode(Collider* collider)
+        : collider(collider), aabb(collider->GetFatAABB()) {}
+
+    void UpdateBranchAABB() {
+      ASSERT(collider == nullptr && !IsLeaf());
+      aabb = AABB::Encapsulate(left->aabb, right->aabb);
+    }
+
+    void UpdateLeafAABB() {
+      ASSERT(IsLeaf() && collider != nullptr);
+      aabb = collider->GetFatAABB();
+    }
+
+    void SwapOutChild(BVNode* oldChild, BVNode* newChild) {
+      ASSERT(oldChild == left || oldChild == right);
+      if (oldChild == left) {
+        left = newChild;
+        left->parent = this;
+      } else {
+        right = newChild;
+        right->parent = this;
+      }
+    }
+
+    bool IsLeaf() const { return left == nullptr; }
+    bool IsInFatAABB() const { return aabb.Contains(collider->GetAABB()); }
+
+    BVNode* parent{nullptr};
+    BVNode* left{nullptr};
+    BVNode* right{nullptr};
+
+    Collider* const collider{nullptr};
+    AABB aabb;
+  };
+
  public:
   BVTree() = default;
   ~BVTree();
