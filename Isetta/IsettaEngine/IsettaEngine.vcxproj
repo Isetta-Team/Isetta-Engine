@@ -169,7 +169,6 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Custom\BVHLevel.cpp" />
     <ClCompile Include="Custom\EmptyLevel\EmptyLevel.cpp" />
     <ClCompile Include="Custom\FrameReporter.cpp" />
-    <ClCompile Include="Custom\Console.cpp" />
     <ClCompile Include="Custom\EscapeExit.cpp" />
     <ClCompile Include="Custom\EventTestLevel\EventListenerComponent.cpp" />
     <ClCompile Include="Custom\DebugCollision.cpp" />
@@ -284,7 +283,6 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h" />
     <ClInclude Include="Custom\FrameReporter.h" />
     <ClInclude Include="Custom\DebugCollision.h" />
-    <ClInclude Include="Custom\Console.h" />
     <ClInclude Include="Custom\EscapeExit.h" />
     <ClInclude Include="Custom\EventTestLevel\EventListenerComponent.h" />
     <ClInclude Include="Custom\EventTestLevel\EventSenderComponent.h" />

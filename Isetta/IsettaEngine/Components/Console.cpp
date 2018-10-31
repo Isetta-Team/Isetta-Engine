@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Custom/Console.h"
+#include "Components/Console.h"
 
 #include <utility>
 #include "imgui/imgui.h"
