@@ -29,9 +29,7 @@ class Layers {
 
  public:
   static void NameLayer(int layer, std::string layerName);
-  static void UnnameLayer(int layer);
-  static int NameToLayer(std::string layerName) noexcept;
-  static int NameToLayerExcept(std::string layerName);
+  static int NameToLayer(std::string layerName);
   static std::string LayerToName(int layer);
   static int CheckLayer(int layer);
 

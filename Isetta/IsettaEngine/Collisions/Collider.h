@@ -27,7 +27,7 @@ namespace Isetta {
     };                                                      \
   }
 
-CREATE_COMPONENT_BEGIN(Collider, Component, false)
+BEGIN_COMPONENT(Collider, Component, false)
 public:
 enum class Properties { IS_STATIC, IS_TRIGGER };
 inline void SetProperties(Properties attr, bool value) {
@@ -87,5 +87,5 @@ virtual const ColliderType GetType() const = 0;
 virtual bool Intersection(Collider* const other) = 0;
 void RaycastHitCtor(class RaycastHit* const hitInfo, float distance,
                     const Math::Vector3& point, const Math::Vector3& normal);
-CREATE_COMPONENT_END(Collider, Component)
+END_COMPONENT(Collider, Component)
 }  // namespace Isetta

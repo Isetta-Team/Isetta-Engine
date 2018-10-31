@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include "ISETTA_API.h"
 
-#define CREATE_COMPONENT_BEGIN(NAME, BASE, EXCLUDE)             \
+#define BEGIN_COMPONENT(NAME, BASE, EXCLUDE)                    \
   template <bool Exclude>                                       \
   class ISETTA_API_DECLARE                                      \
       Isetta::ComponentRegistry<class NAME, BASE, Exclude> {    \
@@ -23,7 +23,7 @@
                                                                 \
    private:
 
-#define CREATE_COMPONENT_END(NAME, BASE)                                  \
+#define END_COMPONENT(NAME, BASE)                                         \
   }                                                                       \
   ;                                                                       \
   template <bool Exclude>                                                 \
@@ -40,22 +40,6 @@ class ISETTA_API Component {
   friend class Entity;
 
   std::bitset<5> attributes;
-
-  static std::unordered_map<std::type_index, std::list<std::type_index>>&
-  childrenTypes() {
-    static std::unordered_map<std::type_index, std::list<std::type_index>>
-        children{};
-    return children;
-  }
-
-  static std::set<std::type_index>& excludeComponents() {
-    static std::set<std::type_index> excludes{};
-    return excludes;
-  }
-
-  static void FlattenComponentList();
-  static void FlattenHelper(std::type_index parent, std::type_index curr);
-  static bool isFlattened;
 
   static std::unordered_map<std::type_index, std::list<std::type_index>>&
   childrenTypes() {

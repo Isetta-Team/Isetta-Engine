@@ -4,7 +4,7 @@
 #pragma once
 #include "Scene/Component.h"
 
-CREATE_COMPONENT_BEGIN(InputTestComponent, Isetta::Component, false)
+BEGIN_COMPONENT(InputTestComponent, Isetta::Component, false)
 void Start() override;
 void Update() override;
-CREATE_COMPONENT_END(InputTestComponent, Isetta::Component)
+END_COMPONENT(InputTestComponent, Isetta::Component)

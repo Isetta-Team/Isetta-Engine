@@ -6,7 +6,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(GameManager, Component, true)
+BEGIN_COMPONENT(GameManager, Component, true)
 public : void OnEnable() override;
 void Update() override;
 void GuiUpdate() override;
@@ -20,5 +20,5 @@ float spawnRadius{10};
 float spawnInterval{2};
 float cooldown{3};
 int poolSize = 100;
-CREATE_COMPONENT_END(GameManager, Component)
+END_COMPONENT(GameManager, Component)
 }  // namespace Isetta

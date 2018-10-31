@@ -8,7 +8,7 @@
 #include <string_view>
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(MeshComponent, Component, false)
+BEGIN_COMPONENT(MeshComponent, Component, false)
   H3DNode renderNode{0};
   H3DRes renderResource{0};
 
@@ -31,5 +31,5 @@ CREATE_COMPONENT_BEGIN(MeshComponent, Component, false)
   friend class RenderModule;
 
   static class RenderModule* renderModule;
-CREATE_COMPONENT_END(MeshComponent, Component)
+END_COMPONENT(MeshComponent, Component)
 }  // namespace Isetta

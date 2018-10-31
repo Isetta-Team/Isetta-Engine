@@ -7,7 +7,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(Bullet, Component, true)
+BEGIN_COMPONENT(Bullet, Component, true)
 public:
 void Initialize(const Math::Vector3& pos, const Math::Vector3& flyDir);
 void OnEnable() override;
@@ -23,5 +23,5 @@ float damage{35};
 Math::Vector3 dir{};
 bool initialized = false;
 AudioSource audio;
-CREATE_COMPONENT_END(Bullet, Component)
+END_COMPONENT(Bullet, Component)
 }  // namespace Isetta

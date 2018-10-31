@@ -274,6 +274,9 @@
     <ClCompile Include="Components\NetworkTransform.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="Custom\Console.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -597,6 +600,9 @@
     </ClInclude>
     <ClInclude Include="Components\NetworkTransform.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\Console.h">
+      <Filter>Custom</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

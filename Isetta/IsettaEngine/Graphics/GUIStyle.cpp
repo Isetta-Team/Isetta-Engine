@@ -103,4 +103,8 @@ GUI::WindowStyle::WindowStyle() {
   background = GetStyle().Colors[(int)ColorStyles::WindowBg];
   constraints = Math::Rect{};
 }
+GUI::WindowStyle::WindowStyle(const Math::Rect& constraints)
+    : constraints{constraints} {
+  background = GetStyle().Colors[(int)ColorStyles::WindowBg];
+}
 }  // namespace Isetta

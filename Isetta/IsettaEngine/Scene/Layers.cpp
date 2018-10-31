@@ -27,17 +27,7 @@ void Layers::NameLayer(int layer, std::string layerName) {
   layerIndex.insert(std::make_pair(SID(layers[layer].c_str()), layer));
 }
 
-void Layers::UnnameLayer(int layer) {
-  if (layer >= LAYERS_CAPACITY)
-    throw std::out_of_range(
-        "Layer::UnnameLayer => Layer must not be larger than "
-        "LAYERS_CAPACITY(" +
-        std::to_string(LAYERS_CAPACITY) + ")");
-  layerIndex.erase(SID(layers[layer].c_str()));
-  layers[layer].clear();
-}
-
-int Layers::NameToLayerExcept(std::string layerName) {
+int Layers::NameToLayer(std::string layerName) {
   auto it = layerIndex.find(SID(layerName.c_str()));
   if (it == layerIndex.end())
     throw std::out_of_range("Layer::StringToIndex => Layer name(" + layerName +
@@ -63,11 +53,6 @@ int Layers::CheckLayer(int layer) {
   return layer;
 }
 
-int Layers::NameToLayer(std::string layerName) noexcept {
-  auto it = layerIndex.find(SID(layerName.c_str()));
-  if (it == layerIndex.end()) return 0;
-  return it->second;
-}
 std::bitset<Layers::LAYERS_CAPACITY> Layers::LayerMask(
     std::initializer_list<int> mask) {
   std::bitset<LAYERS_CAPACITY> bits;

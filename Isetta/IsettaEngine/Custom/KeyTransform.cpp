@@ -66,44 +66,6 @@ void KeyTransform::OnEnable() {
                                        .9);
   });
 
-  // Rotation
-  Input::RegisterKeyPressCallback(KeyCode::NUM1, [&]() {
-    if (pressed) return;
-    this->GetTransform().RotateLocal(Math::Vector3::right, step);
-  });
-  Input::RegisterKeyPressCallback(KeyCode::NUM2, [&]() {
-    if (pressed) return;
-    this->GetTransform().RotateLocal(Math::Vector3::left, step);
-  });
-  Input::RegisterKeyPressCallback(KeyCode::NUM3, [&]() {
-    if (pressed) return;
-    this->GetTransform().RotateLocal(Math::Vector3::down, step);
-  });
-  Input::RegisterKeyPressCallback(KeyCode::KP_6, [&]() {
-    if (pressed) return;
-    this->GetTransform().RotateLocal(Math::Vector3::up, step);
-  });
-  Input::RegisterKeyPressCallback(KeyCode::KP_7, [&]() {
-    if (pressed) return;
-    this->GetTransform().RotateLocal(Math::Vector3::back, step);
-  });
-  Input::RegisterKeyPressCallback(KeyCode::KP_9, [&]() {
-    if (pressed) return;
-    this->GetTransform().RotateLocal(Math::Vector3::forward, step);
-  });
-
-  // Scale
-  Input::RegisterKeyPressCallback(KeyCode::KP_1, [&]() {
-    if (pressed) return;
-    this->GetTransform().SetLocalScale(this->GetTransform().GetLocalScale() *
-                                       1.1);
-  });
-  Input::RegisterKeyPressCallback(KeyCode::KP_3, [&]() {
-    if (pressed) return;
-    this->GetTransform().SetLocalScale(this->GetTransform().GetLocalScale() *
-                                       .9);
-  });
-
   Input::RegisterKeyPressCallback(KeyCode::M, [&]() { pressed = !pressed; });
 }
 void KeyTransform::Update() {
@@ -182,58 +144,53 @@ void KeyTransform::Update() {
         this->GetTransform()->GetLocalScale() *
         (1 - .25 * Time::GetDeltaTime()));
   }
-  if (Input::IsKeyPressed(KeyCode::PAGE_UP)) {
-    this->GetTransform().TranslateLocal(
-        10 * step * Math::Vector3::up *
-        EngineLoop::GetGameClock().GetDeltaTime());
-  }
   if (Input::IsKeyPressed(KeyCode::PAGE_DOWN)) {
-    this->GetTransform().TranslateLocal(
+    this->GetTransform()->TranslateLocal(
         10 * step * Math::Vector3::down *
         EngineLoop::GetGameClock().GetDeltaTime());
   }
 
   // Rotation
   if (Input::IsKeyPressed(KeyCode::KP_8)) {
-    this->GetTransform().RotateLocal(
+    this->GetTransform()->RotateLocal(
         Math::Vector3::right,
         50 * step * EngineLoop::GetGameClock().GetDeltaTime());
   };
   if (Input::IsKeyPressed(KeyCode::KP_2)) {
-    this->GetTransform().RotateLocal(
+    this->GetTransform()->RotateLocal(
         Math::Vector3::left,
         50 * step * EngineLoop::GetGameClock().GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::KP_4)) {
-    this->GetTransform().RotateLocal(
+    this->GetTransform()->RotateLocal(
         Math::Vector3::down,
         50 * step * EngineLoop::GetGameClock().GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::KP_6)) {
-    this->GetTransform().RotateLocal(
+    this->GetTransform()->RotateLocal(
         Math::Vector3::up,
         50 * step * EngineLoop::GetGameClock().GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::KP_7)) {
-    this->GetTransform().RotateLocal(
+    this->GetTransform()->RotateLocal(
         Math::Vector3::back,
         50 * step * EngineLoop::GetGameClock().GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::KP_9)) {
-    this->GetTransform().RotateLocal(
+    this->GetTransform()->RotateLocal(
         Math::Vector3::forward,
         50 * step * EngineLoop::GetGameClock().GetDeltaTime());
   }
 
   // Scale
   if (Input::IsKeyPressed(KeyCode::KP_1)) {
-    this->GetTransform().SetLocalScale(
-        this->GetTransform().GetLocalScale() *
+    this->GetTransform()->SetLocalScale(
+        this->GetTransform()->GetLocalScale() *
         (1 + .25 * EngineLoop::GetGameClock().GetDeltaTime()));
   }
   if (Input::IsKeyPressed(KeyCode::KP_3)) {
-    this->GetTransform().SetLocalScale(
-        this->GetTransform().GetLocalScale() *
+    this->GetTransform()->SetLocalScale(
+        this->GetTransform()->GetLocalScale() *
         (1 - .25 * EngineLoop::GetGameClock().GetDeltaTime()));
   }
 }
