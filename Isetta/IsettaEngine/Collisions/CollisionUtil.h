@@ -4,5 +4,5 @@
 
 namespace Isetta::CollisionUtil {
 using CollisionPair = std::pair<Collider*, Collider*>;
-using ColliderPairSet = std::unordered_set<CollisionPair, std::UnorderedPairHash>;
+using ColliderPairSet = std::unordered_set<CollisionPair, Util::UnorderedPairHash>;
 }

@@ -7,7 +7,7 @@
 #include <queue>
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(FrameReporter, Component, false)
+BEGIN_COMPONENT(FrameReporter, Component, false)
 public:
 void GuiUpdate() override;
 
@@ -21,5 +21,5 @@ float timeSumForAvg{0.f};
 Size frameCountForAvg{60};
 std::queue<float> frameDurations;
 
-CREATE_COMPONENT_END(FrameReporter, Component)
+END_COMPONENT(FrameReporter, Component)
 }  // namespace Isetta

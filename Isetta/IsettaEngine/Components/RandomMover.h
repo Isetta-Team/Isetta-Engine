@@ -6,7 +6,7 @@
 #include "Core/Math/Vector3.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(RandomMover, Component, false)
+BEGIN_COMPONENT(RandomMover, Component, false)
 public:
 void Update() override;
 
@@ -18,5 +18,5 @@ float coolDown{0.f};
 float interval{3.f};
 
 
-CREATE_COMPONENT_END(RandomMover, Component)
+END_COMPONENT(RandomMover, Component)
 }  // namespace Isetta

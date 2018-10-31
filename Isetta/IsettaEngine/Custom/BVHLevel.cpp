@@ -37,7 +37,7 @@ void BVHLevel::LoadLevel() {
       cameraEntity->AddComponent<CameraComponent, true>("Camera");
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
-  cameraEntity->AddComponent<FlyController, true>();
+  cameraEntity->AddComponent<FlyController>();
   camComp->SetProperty<CameraProperty::FOV>(
       CONFIG_VAL(renderConfig.fieldOfView));
   camComp->SetProperty<CameraProperty::NEAR_PLANE>(
