@@ -10,7 +10,7 @@
 
 namespace Isetta {
 using EventParam =
-    std::variant<bool, int, float, const char*, Math::Vector3, void*>;
+    std::variant<bool, int, float, std::string, Math::Vector3, void*>;
 
 enum class EventPriority {
   LOW = 3000,

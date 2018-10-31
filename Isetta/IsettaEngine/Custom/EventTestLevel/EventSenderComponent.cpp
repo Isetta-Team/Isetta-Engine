@@ -9,25 +9,25 @@
 
 void EventSenderComponent::Start() {
   Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::A, []() {
-    Isetta::EventParam param{"RaiseEvent In Queue"};
+    Isetta::EventParam param{std::string{"RaiseEvent In Queue"}};
     Isetta::EventObject eventObject{"RaiseEvent",
                                     Isetta::Time::GetTimeFrame(),
                                     Isetta::EventPriority::MEDIUM,
                                     {param}};
-    Isetta::Events::Instance().RaiseEventQueue(eventObject);
+    Isetta::Events::Instance().RaiseQueuedEvent(eventObject);
   });
   Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::S, []() {
-    Isetta::EventParam param{"RaiseEvent Immediately"};
+    Isetta::EventParam param{std::string{"RaiseEvent Immediately"}};
     Isetta::EventObject eventObject{"RaiseEvent",
                                     Isetta::Time::GetTimeFrame(),
                                     Isetta::EventPriority::MEDIUM,
                                     {param}};
-    Isetta::Events::Instance().RaiseEventImmediate(eventObject);
+    Isetta::Events::Instance().RaiseImmediateEvent(eventObject);
   });
   Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::D, []() {
-    Isetta::EventParam param1{"RaiseEvent High"};
-    Isetta::EventParam param2{"RaiseEvent Low"};
-    Isetta::EventParam param3{"RaiseEvent Late"};
+    Isetta::EventParam param1{std::string{"RaiseEvent High"}};
+    Isetta::EventParam param2{std::string{"RaiseEvent Low"}};
+    Isetta::EventParam param3{std::string{"RaiseEvent Late"}};
 
     Isetta::EventObject eventObject1{"RaiseEvent",
                                      Isetta::Time::GetTimeFrame(),
@@ -42,8 +42,8 @@ void EventSenderComponent::Start() {
                                      Isetta::EventPriority::HIGH,
                                      {param3}};
 
-    Isetta::Events::Instance().RaiseEventQueue(eventObject1);
-    Isetta::Events::Instance().RaiseEventQueue(eventObject2);
-    Isetta::Events::Instance().RaiseEventQueue(eventObject3);
+    Isetta::Events::Instance().RaiseQueuedEvent(eventObject1);
+    Isetta::Events::Instance().RaiseQueuedEvent(eventObject2);
+    Isetta::Events::Instance().RaiseQueuedEvent(eventObject3);
   });
 }

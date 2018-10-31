@@ -10,15 +10,15 @@
 
 namespace Isetta {
 using CallbackPair = std::pair<U16, Action<EventObject>>;
-class Events {
+class ISETTA_API Events {
  public:
   static Events& Instance() {
     static Events instance{};
     return instance;
   }
 
-  void RaiseEventQueue(const EventObject& eventObject);
-  void RaiseEventImmediate(const EventObject& eventObject);
+  void RaiseQueuedEvent(const EventObject& eventObject);
+  void RaiseImmediateEvent(const EventObject& eventObject);
 
   U16 RegisterEventListener(std::string_view eventName,
                             const Action<EventObject>& callback);

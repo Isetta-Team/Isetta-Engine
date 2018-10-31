@@ -9,11 +9,11 @@
 using namespace Isetta;
 U16 Events::totalListeners = 0;
 
-void Events::RaiseEventQueue(const EventObject& eventObject) {
+void Events::RaiseQueuedEvent(const EventObject& eventObject) {
   eventQueue.push(eventObject);
 }
 
-void Events::RaiseEventImmediate(const EventObject& eventObject) {
+void Events::RaiseImmediateEvent(const EventObject& eventObject) {
   StringId eventNameId{SID(eventObject.eventName.c_str())};
   if (callbackMap.count(eventNameId) > 0) {
     // prevent unregistering the callback from screwing up the range-based for
@@ -67,6 +67,6 @@ void Events::Update() {
       break;
     }
     eventQueue.pop();
-    RaiseEventImmediate(currEvent);
+    RaiseImmediateEvent(currEvent);
   }
 }

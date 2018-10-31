@@ -69,7 +69,8 @@ Entity* Level::AddEntity(std::string name, Entity* parent) {
 void Level::Update() {
   StartComponents();
   for (const auto& entity : entities) {
-    entity->Update();
+    if (entity->GetActive())
+      entity->Update();
   }
 }
 

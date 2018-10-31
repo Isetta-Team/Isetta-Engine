@@ -8,28 +8,28 @@
 #include <unordered_map>
 #include "ISETTA_API.h"
 
-#define BEGIN_COMPONENT(NAME, BASE, EXCLUDE)                    \
-  template <bool Exclude>                                       \
-  class ISETTA_API_DECLARE                                      \
-      Isetta::ComponentRegistry<class NAME, BASE, Exclude> {    \
-   protected:                                                   \
-    static bool NAME##Registered;                               \
-  };                                                            \
-  class ISETTA_API_DECLARE NAME                                 \
-      : public BASE,                                            \
-        public Isetta::ComponentRegistry<NAME, BASE, EXCLUDE> { \
-   protected:                                                   \
-    static bool isRegistered() { return NAME##Registered; }     \
-                                                                \
+#define BEGIN_COMPONENT(NAME, BASE, UNIQUE)                    \
+  template <bool Unique>                                       \
+  class ISETTA_API_DECLARE                                     \
+      Isetta::ComponentRegistry<class NAME, BASE, Unique> {    \
+   protected:                                                  \
+    static bool NAME##Registered;                              \
+  };                                                           \
+  class ISETTA_API_DECLARE NAME                                \
+      : public BASE,                                           \
+        public Isetta::ComponentRegistry<NAME, BASE, UNIQUE> { \
+   protected:                                                  \
+    static bool isRegistered() { return NAME##Registered; }    \
+                                                               \
    private:
 
-#define END_COMPONENT(NAME, BASE)                                         \
-  }                                                                       \
-  ;                                                                       \
-  template <bool Exclude>                                                 \
-  bool Isetta::ComponentRegistry<NAME, BASE, Exclude>::NAME##Registered = \
-      Component::RegisterComponent(std::type_index(typeid(NAME)),         \
-                                   std::type_index(typeid(BASE)), Exclude);
+#define END_COMPONENT(NAME, BASE)                                        \
+  }                                                                      \
+  ;                                                                      \
+  template <bool Unique>                                                 \
+  bool Isetta::ComponentRegistry<NAME, BASE, Unique>::NAME##Registered = \
+      Component::RegisterComponent(std::type_index(typeid(NAME)),        \
+                                   std::type_index(typeid(BASE)), Unique);
 
 namespace Isetta {
 
@@ -91,8 +91,8 @@ class ISETTA_API Component {
   virtual void OnDestroy() {}
   virtual void OnDisable() {}
 
-  static bool RegisterComponent(std::type_index curr, std::type_index base, bool isExclude);
-
+  static bool RegisterComponent(std::type_index curr, std::type_index base,
+                                bool isExclude);
 };
 
 }  // namespace Isetta

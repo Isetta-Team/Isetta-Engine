@@ -102,7 +102,7 @@ template <typename T, bool IsActive, typename... Args>
 T* Entity::AddComponent(Args&&... args) {
   if constexpr (!std::is_base_of<class Component, T>::value) {
     throw std::logic_error(Util::StrFormat(
-        "%s is not a derived class from Component class", typeid(T).name));
+        "Entity::AddComponent => %s is not a derived class from Component class", typeid(T).name));
   } else {
     std::type_index typeIndex{typeid(T)};
     if (std::any_of(
@@ -113,7 +113,7 @@ T* Entity::AddComponent(Args&&... args) {
             std::execution::par, componentTypes.begin(), componentTypes.end(),
             [typeIndex](std::type_index type) { return type == typeIndex; })) {
       throw std::logic_error(Util::StrFormat(
-          "Adding multiple excluded components %s", typeIndex.name()));
+          "Entity::AddComponent => Adding multiple excluded components %s", typeIndex.name()));
       return nullptr;
     }
     T* component = MemoryManager::NewOnFreeList<T>(std::forward<Args>(args)...);

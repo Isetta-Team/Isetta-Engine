@@ -16,8 +16,8 @@ std::string Logger::channelFileName;
 std::ostringstream Logger::engineStream;
 std::ostringstream Logger::channelStream;
 
-std::bitset<(int)Debug::Channel::All> Logger::channelMask;
-std::bitset<(int)Debug::Verbosity::All> Logger::verbosityMask;
+std::bitset<(int)Debug::Channel::All> Logger::channelMask = ~0;
+std::bitset<(int)Debug::Verbosity::All> Logger::verbosityMask = ~0;
 Action<const char*> Logger::outputCallback;
 
 void Logger::NewSession() {
