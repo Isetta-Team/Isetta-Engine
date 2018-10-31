@@ -8,7 +8,6 @@
 namespace Isetta {
 
 BVTree::~BVTree() {
-  auto hi = colNodeMap.size();
   std::queue<BVNode*> q;
   q.push(root);
   while (!q.empty()) {

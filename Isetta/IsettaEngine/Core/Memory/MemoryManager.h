@@ -90,13 +90,15 @@ class ISETTA_API MemoryManager {
   // TODO(YIDI): Use different freelist allocators for different stage
   static void* AllocOnFreeList(Size size, U8 alignment = MemUtil::ALIGNMENT);
 
+  static void FreeOnFreeList(void* memPtr);
+
   template <typename T, typename... args>
   static T* NewOnFreeList(args... argList);
+  template <typename T>
+  static void DeleteOnFreeList(T* ptrToDelete);
 
   template <typename T>
   static T* NewArrOnFreeList(Size length, U8 alignment = MemUtil::ALIGNMENT);
-
-  static void FreeOnFreeList(void* memPtr);
 
   /**
    * \brief Create an object that will sit on the dynamic memory area. You need
@@ -199,6 +201,12 @@ T* MemoryManager::NewArrOnStack(const Size length, const U8 alignment) {
 template <typename T, typename... args>
 T* MemoryManager::NewOnFreeList(args... argList) {
   return GetInstance()->freeListAllocator.New<T>(argList...);
+}
+
+template <typename T>
+void MemoryManager::DeleteOnFreeList(T* ptrToDelete) {
+  ptrToDelete->~T();
+  FreeOnFreeList(ptrToDelete);
 }
 
 template <typename T>

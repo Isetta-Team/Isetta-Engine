@@ -36,11 +36,9 @@ std::list<Entity*> Level::GetEntitiesByName(const std::string& name) {
 
 void Level::UnloadLevel() {
   for (auto& entity : entities) {
-    entity->~Entity();
-    MemoryManager::FreeOnFreeList(entity);
+    MemoryManager::DeleteOnFreeList<Entity>(entity);
   }
-  levelRoot->~Entity();
-  MemoryManager::FreeOnFreeList(levelRoot);
+  MemoryManager::DeleteOnFreeList<Entity>(levelRoot);
 }
 
 void Level::AddComponentToStart(Component* component) {
@@ -134,8 +132,7 @@ void Level::LateUpdate() {
 
   for (auto& entity : entities) {
     if (entity->GetAttribute(Entity::EntityAttributes::NEED_DESTROY)) {
-      entity->~Entity();
-      MemoryManager::FreeOnFreeList(entity);
+      MemoryManager::DeleteOnFreeList(entity);
       entity = nullptr;
     }
   }

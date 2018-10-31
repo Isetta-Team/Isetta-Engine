@@ -58,8 +58,7 @@ void Entity::CheckDestroy() {
       comp->OnDestroy();
     }
     for (auto& comp : components) {
-      comp->~Component();
-      MemoryManager::FreeOnFreeList(comp);
+      MemoryManager::DeleteOnFreeList<Component>(comp);
     }
     // TODO(Chaojie): delete child
   } else {
@@ -69,9 +68,8 @@ void Entity::CheckDestroy() {
     while (typeIter != componentTypes.end() && compIter != components.end()) {
       Component* comp = *compIter;
       if (comp->GetAttribute(Component::ComponentAttributes::NEED_DESTROY)) {
-        comp->~Component();
         comp->OnDestroy();
-        MemoryManager::FreeOnFreeList(comp);
+        MemoryManager::DeleteOnFreeList<Component>(comp);
         components.erase(compIter);
         componentTypes.erase(typeIter);
       } else {
