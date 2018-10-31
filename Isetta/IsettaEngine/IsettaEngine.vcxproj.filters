@@ -244,6 +244,18 @@
     <ClCompile Include="Collisions\CollisionHandler.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
+    <ClCompile Include="Custom\FrameReporter.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\BVHLevel.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Collisions\BVTree.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\RandomMover.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
     <ClCompile Include="Graphics\Texture.cpp">
       <Filter>Graphics\Render</Filter>
     </ClCompile>
@@ -558,6 +570,18 @@
     <ClInclude Include="Collisions\CollisionHandler.h">
       <Filter>Collisions</Filter>
     </ClInclude>
+    <ClInclude Include="Custom\FrameReporter.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\BVHLevel.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\BVTree.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\RandomMover.h">
+      <Filter>Components</Filter>
+    </ClInclude>
     <ClInclude Include="Scene\Layers.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -603,6 +627,9 @@
     </ClInclude>
     <ClInclude Include="Custom\Console.h">
       <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\CollisionUtil.h">
+      <Filter>Collisions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -675,6 +702,7 @@
     </None>
     <None Include="config.cfg" />
     <None Include="user.cfg" />
+    <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Resources\test\Low-Poly-Racing-Car.scene.xml">

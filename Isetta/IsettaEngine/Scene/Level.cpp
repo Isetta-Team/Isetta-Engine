@@ -87,10 +87,10 @@ void Level::GUIUpdate() {
   }
 
 #if _DEBUG
-  static RectTransform rectTrans{{0, 20, 200, 500}};
+  static RectTransform rectTrans{{20, 100, 250, 500}};
   bool isOpen = true;
   GUI::Window(
-      rectTrans, "Heirarchy",
+      rectTrans, "Hierarchy",
       [&]() {
         float buttonHeight = 20;
         float buttonWidth = 200;
@@ -126,9 +126,7 @@ void Level::GUIUpdate() {
         if (transform != nullptr) {
           transform->InspectorGUI();
         }
-      },
-      NULL, GUI::WindowStyle{},
-      GUI::WindowFlags::NoMove | GUI::WindowFlags::NoResize);
+      });
 #endif
 }
 

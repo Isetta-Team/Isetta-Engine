@@ -8,13 +8,11 @@
 #include "Core/Math/Vector3.h"
 #include "Horde3D.h"
 
-namespace Isetta
-{
-class ISETTA_API_DECLARE Transform
-{
+namespace Isetta {
+class ISETTA_API_DECLARE Transform {
   friend class Entity;
 
-public:
+ public:
   // constructors
   Transform() = delete;
   explicit Transform(class Entity *entity);
@@ -66,8 +64,7 @@ public:
               const Math::Vector3 &worldUp = Math::Vector3::up);
   void LookAt(Transform &target,
               const Math::Vector3 &worldUp = Math::Vector3::up);
-  class Entity *GetEntity() const
-  {
+  class Entity *GetEntity() const {
     return entity;
   }
   Size GetChildCount() const { return children.size(); }
@@ -106,21 +103,21 @@ public:
   inline iterator end() { return children.end(); }
   inline const_iterator end() const { return children.end(); }
 
-private:
+ private:
   void RecalculateLocalToWorldMatrix();
 
   // both called by SetParent
   void AddChild(Transform *transform);
   void RemoveChild(Transform *transform);
 
-  Math::Quaternion worldRot; // only for query
+  Math::Quaternion worldRot;  // only for query
 
   Math::Matrix4 localToWorldMatrix{};
   Math::Matrix4 worldToLocalMatrix{};
-  Math::Vector3 localPos{Math::Vector3::zero}; // part of local storage
+  Math::Vector3 localPos{Math::Vector3::zero};  // part of local storage
   Math::Quaternion localRot{
-      Math::Quaternion::identity};              // part of local storage
-  Math::Vector3 localScale{Math::Vector3::one}; // part of local storage
+      Math::Quaternion::identity};               // part of local storage
+  Math::Vector3 localScale{Math::Vector3::one};  // part of local storage
 
   // marked when anything local changed
   // cleared when matrix recalculated
@@ -139,4 +136,4 @@ private:
   Math::Vector3 &up = axis[1];
   Math::Vector3 &forward = axis[2];
 };
-} // namespace Isetta
+}  // namespace Isetta

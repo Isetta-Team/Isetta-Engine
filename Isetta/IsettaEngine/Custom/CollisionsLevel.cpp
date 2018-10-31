@@ -17,11 +17,14 @@
 #include "Graphics/LightComponent.h"
 #include "Scene/Entity.h"
 
+#include "Application.h"
 #include "Collisions/BoxCollider.h"
 #include "Collisions/CapsuleCollider.h"
 #include "Collisions/Collider.h"
 #include "Collisions/CollisionHandler.h"
 #include "Collisions/SphereCollider.h"
+#include "IsettaCore.h"
+#include "FrameReporter.h"
 
 namespace Isetta {
 
@@ -30,6 +33,9 @@ using CameraProperty = CameraComponent::Property;
 using ColliderAttribute = Collider::Properties;
 
 void CollisionsLevel::LoadLevel() {
+  Entity* debugEntity{AddEntity("Debug")};
+  debugEntity->AddComponent<FrameReporter>();
+
   // Camera
   Entity* cameraEntity{AddEntity("Camera")};
   CameraComponent* camComp =
@@ -115,6 +121,9 @@ void CollisionsLevel::LoadLevel() {
       CapsuleCollider* col = capsule->AddComponent<CapsuleCollider>(
           0.5, 2, static_cast<CapsuleCollider::Direction>(j));
     }
+
+    Input::RegisterKeyPressCallback(KeyCode::ESCAPE,
+                                    []() { Application::Exit(); });
   }
 }
 }  // namespace Isetta

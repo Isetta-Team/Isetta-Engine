@@ -17,7 +17,7 @@ BEGIN_COMPONENT(CapsuleCollider, Collider, false)
                      RaycastHit* const hitInfo, float maxDistance);
 
  protected:
-  const ColliderType GetType() const override {
+  ColliderType GetType() const override {
     return Collider::ColliderType::CAPSULE;
   }
 

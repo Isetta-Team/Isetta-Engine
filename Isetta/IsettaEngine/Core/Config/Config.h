@@ -17,6 +17,7 @@
 #include "Graphics/Window.h"
 #include "Networking/NetworkingModule.h"
 #include "Scene/LevelManager.h"
+#include "Collisions/CollisionsModule.h"
 
 namespace Isetta
 {
@@ -56,6 +57,7 @@ public:
   /// AudioModule configuration CVars
   AudioModule::AudioConfig audioConfig;
   LevelManager::LevelConfig levelConfig;
+  CollisionsModule::CollisionConfig collisionConfig;
 
   /// Max FPS of the engine
   CVar<int> maxFps = {"max_fps", 16};

@@ -145,10 +145,12 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Audio\AudioModule.cpp" />
     <ClCompile Include="Audio\AudioSource.cpp" />
+    <ClCompile Include="Collisions\BVTree.cpp" />
     <ClCompile Include="Collisions\CollisionHandler.cpp" />
     <ClCompile Include="Collisions\Collisions.cpp" />
     <ClCompile Include="Components\GridComponent.cpp" />
     <ClCompile Include="Components\FlyController.cpp" />
+    <ClCompile Include="Components\RandomMover.cpp" />
     <ClCompile Include="Components\NetworkTransform.cpp" />
     <ClCompile Include="Core\Config\Config.cpp" />
     <ClCompile Include="Core\Color.cpp" />
@@ -163,8 +165,10 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\Time\Clock.cpp" />
     <ClCompile Include="Core\Time\StopWatch.cpp" />
     <ClCompile Include="Custom\AxisDrawer.cpp" />
-    <ClCompile Include="Custom\Console.cpp" />
+    <ClCompile Include="Custom\BVHLevel.cpp" />
     <ClCompile Include="Custom\EmptyLevel\EmptyLevel.cpp" />
+    <ClCompile Include="Custom\FrameReporter.cpp" />
+    <ClCompile Include="Custom\Console.cpp" />
     <ClCompile Include="Custom\EventTestLevel\EventListenerComponent.cpp" />
     <ClCompile Include="Custom\DebugCollision.cpp" />
     <ClCompile Include="Custom\EventTestLevel\EventSenderComponent.cpp" />
@@ -227,10 +231,13 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Audio\AudioModule.h" />
     <ClInclude Include="Audio\AudioSource.h" />
+    <ClInclude Include="Collisions\BVTree.h" />
     <ClInclude Include="Collisions\CollisionHandler.h" />
     <ClInclude Include="Collisions\Collisions.h" />
+    <ClInclude Include="Collisions\CollisionUtil.h" />
     <ClInclude Include="Components\GridComponent.h" />
     <ClInclude Include="Components\FlyController.h" />
+    <ClInclude Include="Components\RandomMover.h" />
     <ClInclude Include="Components\NetworkTransform.h" />
     <ClInclude Include="Core\Config\Config.h" />
     <ClInclude Include="Core\Color.h" />
@@ -269,9 +276,11 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\Time\StopWatch.h" />
     <ClInclude Include="Core\Time\Time.h" />
     <ClInclude Include="Custom\AxisDrawer.h" />
+    <ClInclude Include="Custom\BVHLevel.h" />
+    <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h" />
+    <ClInclude Include="Custom\FrameReporter.h" />
     <ClInclude Include="Custom\DebugCollision.h" />
     <ClInclude Include="Custom\Console.h" />
-    <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h" />
     <ClInclude Include="Custom\EventTestLevel\EventListenerComponent.h" />
     <ClInclude Include="Custom\EventTestLevel\EventSenderComponent.h" />
     <ClInclude Include="Custom\EventTestLevel\EventTestLevel.h" />
@@ -326,6 +335,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
+    <None Include="cpp.hint" />
     <None Include="Resources\test\Low-Poly-Racing-Car.geo" />
     <None Include="user.cfg" />
   </ItemGroup>

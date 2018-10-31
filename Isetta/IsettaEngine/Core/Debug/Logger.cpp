@@ -39,8 +39,11 @@ int Logger::VDebugPrintF(const Debug::Channel channel,
   static char sBuffer[MAX_CHARS + 1];
   // TODO(Jacob) elapsed or unscaled time?
   std::ostringstream stream;
-  stream << "[" << Time::GetElapsedUnscaledTime() << "][" << ToString(verbosity)
-         << "][" << ToString(channel) << "] " << inFormat << '\n';
+  stream << "["
+         << Util::StrFormat("%.3f",
+                            Time::GetElapsedUnscaledTime())
+         << "][" << ToString(verbosity) << "][" << ToString(channel) << "] "
+         << inFormat << '\n';
   int charsWritten =
       vsnprintf(sBuffer, MAX_CHARS, stream.str().c_str(), argList);
 
