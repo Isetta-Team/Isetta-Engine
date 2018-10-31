@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <utility>
 
+#include "ISETTA_API.h"
 #include "Core/IsettaAlias.h"
 #include "yojimbo/yojimbo.h"
 
@@ -20,7 +21,7 @@ class NetworkId;
  * @brief Wrapper class for NetworkingModule so that other engine components can
  * use networking features.
  */
-class NetworkManager {
+class ISETTA_API_DECLARE NetworkManager {
  private:
   yojimbo::Message* CreateClientMessage(int messageId);
   yojimbo::Message* CreateServerMessage(int clientIdx, int messageId);

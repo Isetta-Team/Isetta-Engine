@@ -14,9 +14,6 @@
 namespace Isetta {
 CREATE_LEVEL(NetworkLevel)
 void LoadLevel() override;
-void UnloadLevel() override;
-
-std::list<Entity*> zombies;
 };
 
 /**
