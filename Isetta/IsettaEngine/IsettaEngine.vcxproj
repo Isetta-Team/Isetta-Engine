@@ -152,6 +152,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Components\FlyController.cpp" />
     <ClCompile Include="Components\RandomMover.cpp" />
     <ClCompile Include="Components\NetworkTransform.cpp" />
+    <ClCompile Include="Components\Console.cpp" />
     <ClCompile Include="Core\Config\Config.cpp" />
     <ClCompile Include="Core\Color.cpp" />
     <ClCompile Include="Core\Config\CVar.cpp" />
@@ -240,6 +241,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Components\FlyController.h" />
     <ClInclude Include="Components\RandomMover.h" />
     <ClInclude Include="Components\NetworkTransform.h" />
+    <ClInclude Include="Components\Console.h" />
     <ClInclude Include="Core\Config\Config.h" />
     <ClInclude Include="Core\Color.h" />
     <ClInclude Include="Core\Config\ICVar.h" />

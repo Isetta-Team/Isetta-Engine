@@ -7,7 +7,6 @@
 #include "Custom/IsettaCore.h"
 #include "Graphics/CameraComponent.h"
 
-#include "Custom/Console.h"
 #include "Custom/EscapeExit.h"
 
 namespace Isetta {
@@ -28,7 +27,6 @@ void EmptyLevel::LoadLevel() {
       CONFIG_VAL(renderConfig.farClippingPlane));
 
   // Application::Exit();
-  cameraEntity->AddComponent<Console>("Console", true);
   cameraEntity->AddComponent<EscapeExit>();
 }
 }  // namespace Isetta

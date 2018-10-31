@@ -286,8 +286,8 @@
     <ClCompile Include="Components\NetworkTransform.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="Custom\Console.cpp">
-      <Filter>Custom</Filter>
+    <ClCompile Include="Components\Console.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="Custom\EscapeExit.cpp">
       <Filter>Custom</Filter>
@@ -625,8 +625,8 @@
     <ClInclude Include="Components\NetworkTransform.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="Custom\Console.h">
-      <Filter>Custom</Filter>
+    <ClInclude Include="Components\Console.h">
+      <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="Collisions\CollisionUtil.h">
       <Filter>Collisions</Filter>
