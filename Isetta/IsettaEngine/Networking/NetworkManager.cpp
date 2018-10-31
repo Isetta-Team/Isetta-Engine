@@ -6,6 +6,7 @@
 #include "Core/Config/Config.h"
 #include "Networking/NetworkId.h"
 #include "Networking/NetworkingModule.h"
+#include "Components/NetworkTransform.h"
 #include "Scene/Entity.h"
 
 namespace Isetta {
@@ -101,6 +102,9 @@ U32 NetworkManager::CreateNetworkId(NetworkId* NetworkId) {
   U32 netId = nextNetworkId++;
   NetworkId->id = netId;
   networkIdToComponentMap[netId] = NetworkId;
+  NetworkTransform::serverPosTimestamps[netId] = 0;
+  NetworkTransform::serverRotTimestamps[netId] = 0;
+  NetworkTransform::serverScaleTimestamps[netId] = 0;
 }
 
 U32 NetworkManager::AssignNetworkId(U32 netId,

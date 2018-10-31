@@ -41,11 +41,11 @@ Math::Vector3 targetScale;
 Math::Vector3 prevScale;
 
 static bool registeredCallbacks;
-static std::unordered_map<int, float> posUpdateTimes;
-static std::unordered_map<int, float> rotUpdateTimes;
-static std::unordered_map<int, float> scaleUpdateTimes;
+static std::unordered_map<int, float> serverPosTimestamps;
+static std::unordered_map<int, float> serverRotTimestamps;
+static std::unordered_map<int, float> serverScaleTimestamps;
 class NetworkId* netId;
-friend class NetworkTransform;
+friend class NetworkManager;
 END_COMPONENT(NetworkTransform, Component)
 
 RPC_MESSAGE_DEFINE(PositionMessage)
@@ -54,11 +54,11 @@ bool Serialize(Stream* stream) {
   serialize_int(stream, netId, 0,
                 Config::Instance().networkConfig.maxNetID.GetVal());
 
-  serialize_float(stream, updateTime);
+  serialize_float(stream, timestamp);
 
-  serialize_float(stream, localPos.x);
-  serialize_float(stream, localPos.y);
-  serialize_float(stream, localPos.z);
+  serialize_float(stream, worldPos.x);
+  serialize_float(stream, worldPos.y);
+  serialize_float(stream, worldPos.z);
   return true;
 }
 
@@ -67,14 +67,14 @@ void Copy(const yojimbo::Message* otherMessage) override {
       reinterpret_cast<const PositionMessage*>(otherMessage);
 
   netId = message->netId;
-  updateTime = message->updateTime;
-  localPos = message->localPos;
+  timestamp = message->timestamp;
+  worldPos = message->worldPos;
 }
 
 public:
 int netId = 0;
-float updateTime = 0;
-Math::Vector3 localPos;
+float timestamp = 0;
+Math::Vector3 worldPos;
 RPC_MESSAGE_FINISH
 
 RPC_MESSAGE_DEFINE(RotationMessage)
@@ -83,12 +83,12 @@ bool Serialize(Stream* stream) {
   serialize_int(stream, netId, 0,
                 Config::Instance().networkConfig.maxNetID.GetVal());
 
-  serialize_float(stream, updateTime);
+  serialize_float(stream, timestamp);
 
-  serialize_float(stream, localRot.x);
-  serialize_float(stream, localRot.y);
-  serialize_float(stream, localRot.z);
-  serialize_float(stream, localRot.w);
+  serialize_float(stream, worldRot.x);
+  serialize_float(stream, worldRot.y);
+  serialize_float(stream, worldRot.z);
+  serialize_float(stream, worldRot.w);
   return true;
 }
 
@@ -97,14 +97,14 @@ void Copy(const yojimbo::Message* otherMessage) override {
       reinterpret_cast<const RotationMessage*>(otherMessage);
 
   netId = message->netId;
-  updateTime = message->updateTime;
-  localRot = message->localRot;
+  timestamp = message->timestamp;
+  worldRot = message->worldRot;
 }
 
 public:
 int netId = 0;
-float updateTime = 0;
-Math::Quaternion localRot;
+float timestamp = 0;
+Math::Quaternion worldRot;
 RPC_MESSAGE_FINISH
 
 RPC_MESSAGE_DEFINE(ScaleMessage)
@@ -113,7 +113,7 @@ bool Serialize(Stream* stream) {
   serialize_int(stream, netId, 0,
                 Config::Instance().networkConfig.maxNetID.GetVal());
 
-  serialize_float(stream, updateTime);
+  serialize_float(stream, timestamp);
 
   serialize_float(stream, localScale.x);
   serialize_float(stream, localScale.y);
@@ -126,13 +126,13 @@ void Copy(const yojimbo::Message* otherMessage) override {
       reinterpret_cast<const ScaleMessage*>(otherMessage);
 
   netId = message->netId;
-  updateTime = message->updateTime;
+  timestamp = message->timestamp;
   localScale = message->localScale;
 }
 
 public:
 int netId = 0;
-float updateTime = 0;
+float timestamp = 0;
 Math::Vector3 localScale;
 RPC_MESSAGE_FINISH
 
