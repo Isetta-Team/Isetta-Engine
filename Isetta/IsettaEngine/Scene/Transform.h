@@ -98,10 +98,10 @@ class ISETTA_API_DECLARE Transform {
   typedef std::vector<Transform *>::iterator iterator;
   typedef std::vector<Transform *>::const_iterator const_iterator;
 
-  inline iterator begin() { return children.begin(); }
-  inline const_iterator begin() const { return children.begin(); }
-  inline iterator end() { return children.end(); }
-  inline const_iterator end() const { return children.end(); }
+  iterator begin() { return children.begin(); }
+  const_iterator begin() const { return children.begin(); }
+  iterator end() { return children.end(); }
+  const_iterator end() const { return children.end(); }
 
  private:
   void RecalculateLocalToWorldMatrix();
@@ -126,7 +126,6 @@ class ISETTA_API_DECLARE Transform {
   bool isWorldToLocalDirty{true};
 
   class Entity *entity{nullptr};
-  Transform *root{nullptr};
   Transform *parent{nullptr};
   std::vector<Transform *> children;
 
