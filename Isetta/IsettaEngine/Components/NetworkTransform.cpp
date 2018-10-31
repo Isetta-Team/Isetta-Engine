@@ -226,9 +226,9 @@ void NetworkTransform::FixedUpdate() {
         NetworkManager::Instance().SendMessageFromClient(message);
       }
     }
-  } else {
+  } else if (posInterpolation < 1 || rotInterpolation < 1 || scaleInterpolation < 1) {
     Transform* t = entity->GetTransform();
-    float netIdLerp = 1.0 / netId->updateInterval;
+    float netIdLerp = netId->interpolationFactor / netId->updateInterval;
 
     // Translation
     posInterpolation = min(posInterpolation + netIdLerp, 1);
@@ -236,7 +236,7 @@ void NetworkTransform::FixedUpdate() {
     // Rotation
     rotInterpolation = min(rotInterpolation + netIdLerp, 1);
     t->SetWorldRot(
-        Math::Quaternion::Lerp(prevRot, targetRot, rotInterpolation));
+        Math::Quaternion::Slerp(prevRot, targetRot, rotInterpolation));
     // Scale
     scaleInterpolation = min(scaleInterpolation + netIdLerp, 1);
     t->SetLocalScale(
