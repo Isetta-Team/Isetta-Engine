@@ -2,13 +2,13 @@
 #include <queue>
 #include <unordered_set>
 #include "Core/Debug/DebugDraw.h"
-#include "Core/Time/Time.h"
-#include "Util.h"
 #include "Scene/Entity.h"
+#include "Util.h"
 
 namespace Isetta {
 
 BVTree::~BVTree() {
+  auto hi = colNodeMap.size();
   std::queue<BVNode*> q;
   q.push(root);
   while (!q.empty()) {
@@ -23,50 +23,16 @@ BVTree::~BVTree() {
 }
 
 void BVTree::AddCollider(Collider* collider) {
-  colliders.push_back(collider);
-  AddNode(new BVNode{collider});
+  BVNode* newNode = new BVNode{collider};
+  colNodeMap.insert({collider, newNode});
+  AddNode(newNode);
 }
 
-void BVTree::Remove(BVNode* node, bool deleteNode) {
-  ASSERT(node->IsLeaf());
-
-  if (node == root) {
-    root = nullptr;
-  } else if (node->parent == root) {
-    BVNode* newRoot;
-
-    if (node == root->left) {
-      newRoot = root->right;
-    } else {
-      newRoot = root->left;
-    }
-
-    delete root;
-    root = newRoot;
-    root->parent = nullptr;
-  } else {
-    BVNode* parent = node->parent;
-    BVNode* grandParent = parent->parent;
-
-    ASSERT(grandParent != nullptr);
-    ASSERT(node == parent->left || node == parent->right);
-
-    if (node == parent->left) {
-      grandParent->SwapOutChild(parent, parent->right);
-    } else {
-      grandParent->SwapOutChild(parent, parent->left);
-    }
-
-    BVNode* cur = grandParent;
-    while (cur != nullptr) {
-      cur->UpdateBranchAABB();
-      cur = cur->parent;
-    }
-  }
-
-  if (deleteNode) {
-    delete node;
-  }
+void BVTree::RemoveCollider(Collider* collider) {
+  auto it = colNodeMap.find(collider);
+  ASSERT(it != colNodeMap.end());
+  RemoveNode(it->second, true);
+  colNodeMap.erase(it);
 }
 
 void BVTree::Update() {
@@ -74,9 +40,9 @@ void BVTree::Update() {
 
   std::queue<BVNode*> q;
   if (root != nullptr) {
-    q.push(root);  
+    q.push(root);
   }
-  
+
   while (!q.empty()) {
     BVNode* cur = q.front();
     q.pop();
@@ -90,7 +56,7 @@ void BVTree::Update() {
   }
 
   for (auto node : toReInsert) {
-    Remove(node, false);
+    RemoveNode(node, false);
   }
 
   for (auto node : toReInsert) {
@@ -134,24 +100,67 @@ void BVTree::AddNode(BVNode* newNode) {
       root->left = cur;
       root->right = newNode;
     } else {
-      // TODO(YIDI): Sometimes parent is delete but still referenced
-
       // cur is actual leaf, convert cur to branch
-      BVNode* newLeaf = new BVNode{cur->collider};
-      cur->collider = nullptr;
-      cur->left = newLeaf;
-      cur->right = newNode;
-      newLeaf->parent = cur;
-      newNode->parent = cur;
+      BVNode* newBranch =
+          new BVNode{AABB::Encapsulate(cur->aabb, newNode->aabb)};
+      newBranch->parent = cur->parent;
+      cur->parent->SwapOutChild(cur, newBranch);
+      cur->parent = newBranch;
+      newNode->parent = newBranch;
+      newBranch->left = cur;
+      newBranch->right = newNode;
 
-      cur->UpdateBranchAABB();
-      BVNode* parent = cur->parent;
+      BVNode* parent = newBranch->parent;
 
       while (parent != nullptr) {
         parent->UpdateBranchAABB();
         parent = parent->parent;
       }
     }
+  }
+}
+
+void BVTree::RemoveNode(BVNode* node, const bool deleteNode) {
+  ASSERT(node->IsLeaf());
+
+  if (node == root) {
+    root = nullptr;
+  } else if (node->parent == root) {
+    BVNode* newRoot;
+
+    if (node == root->left) {
+      newRoot = root->right;
+    } else {
+      newRoot = root->left;
+    }
+
+    delete root;
+    root = newRoot;
+    root->parent = nullptr;
+  } else {
+    BVNode* parent = node->parent;
+    BVNode* grandParent = parent->parent;
+
+    ASSERT(grandParent != nullptr);
+    ASSERT(node == parent->left || node == parent->right);
+
+    if (node == parent->left) {
+      grandParent->SwapOutChild(parent, parent->right);
+    } else {
+      grandParent->SwapOutChild(parent, parent->left);
+    }
+
+    delete parent;
+
+    BVNode* cur = grandParent;
+    while (cur != nullptr) {
+      cur->UpdateBranchAABB();
+      cur = cur->parent;
+    }
+  }
+
+  if (deleteNode) {
+    delete node;
   }
 }
 
@@ -198,7 +207,8 @@ void BVTree::DebugDraw() const {
 const CollisionUtil::ColliderPairSet& BVTree::GetCollisionPairs() {
   colliderPairSet.clear();
 
-  for (const auto& curCollider : colliders) {
+  for (const auto& pair : colNodeMap) {
+    auto curCollider = pair.first;
     AABB aabb = curCollider->GetFatAABB();
     std::queue<BVNode*> q;
 

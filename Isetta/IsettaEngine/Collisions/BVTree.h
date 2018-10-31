@@ -35,7 +35,6 @@ struct BVNode {
       right = newChild;
       right->parent = this;
     }
-    delete oldChild;
   }
 
   bool IsLeaf() const { return left == nullptr; }
@@ -45,7 +44,7 @@ struct BVNode {
   BVNode* left{nullptr};
   BVNode* right{nullptr};
 
-  Collider* collider{nullptr};
+  Collider* const collider{nullptr};
   AABB aabb;
 };
 
@@ -55,20 +54,20 @@ class BVTree {
   ~BVTree();
 
   void AddCollider(Collider* collider);
-  void Remove(BVNode* node, bool deleteNode);
+  void RemoveCollider(Collider* collider);
   void Update();
 
   RaycastHit RayCast(const Ray& ray);
-
   const CollisionUtil::ColliderPairSet& GetCollisionPairs();
-  BVNode* root = nullptr;
 
  private:
   void AddNode(BVNode* newNode);
+  void RemoveNode(BVNode* node, bool deleteNode);
   void DebugDraw() const;
 
-  std::vector<Collider*> colliders;
   CollisionUtil::ColliderPairSet colliderPairSet;
+  std::unordered_map<Collider*, BVNode*> colNodeMap;
+  BVNode* root = nullptr;
 };
 
 }  // namespace Isetta

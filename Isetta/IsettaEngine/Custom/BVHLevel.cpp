@@ -48,9 +48,9 @@ void BVHLevel::LoadLevel() {
   Entity* debug{ADD_ENTITY("Debug")};
   debug->AddComponent<GridComponent>();
   debug->AddComponent<FrameReporter>();
-  Input::RegisterKeyPressCallback(KeyCode::KP_5, []() {
+
+  Input::RegisterKeyPressCallback(KeyCode::KP_5, [&]() {
     for (int i = 0; i < 100; i++) {
-      static int count = 0;
       count++;
       Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
       sphere->AddComponent<RandomMover>();
@@ -60,7 +60,28 @@ void BVHLevel::LoadLevel() {
                            Math::Vector3{Math::Random::GetRandom01() - 0.5f,
                                          Math::Random::GetRandom01(),
                                          Math::Random::GetRandom01() - 0.5f});
-      col->AddToBVTree();
+    }
+  });
+
+  Input::RegisterKeyPressCallback(KeyCode::KP_6, [&]() {
+    count++;
+    Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
+    sphere->AddComponent<RandomMover>();
+    auto col = sphere->AddComponent<SphereCollider>();
+    const float size = 20;
+    sphere->SetTransform(size *
+                         Math::Vector3{Math::Random::GetRandom01() - 0.5f,
+                                       Math::Random::GetRandom01(),
+                                       Math::Random::GetRandom01() - 0.5f});
+    spheres.push(sphere);
+  });
+
+  Input::RegisterKeyPressCallback(KeyCode::KP_4, [&]() {
+    if (!spheres.empty()) {
+      count--;
+      Entity* sphere = spheres.front();
+      spheres.pop();
+      Entity::Destroy(sphere);
     }
   });
 }

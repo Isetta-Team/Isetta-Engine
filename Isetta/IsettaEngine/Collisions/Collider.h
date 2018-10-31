@@ -62,9 +62,6 @@ virtual AABB GetFatAABB() {
 
 virtual AABB GetAABB() { return AABB{Math::Vector3::zero, Math::Vector3::one}; }
 
-// TODO(YIDI): DebugOnly
-void AddToBVTree();
-
 private:
 std::bitset<2> properties;
 int hierarchyHandle;
@@ -81,7 +78,7 @@ friend class CollisionsModule;
 friend class CollisionHandler;
 
 protected:
-static float fatFactor;
+inline static float fatFactor = 0.2f;
 
 Collider(const Math::Vector3& center) : center{center}, properties{0b00} {}
 Collider(const bool isStatic = false, const bool isTrigger = false,

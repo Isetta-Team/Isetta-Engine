@@ -10,7 +10,6 @@
 
 namespace Isetta {
 CollisionsModule* Collider::collisionsModule{nullptr};
-float Collider::fatFactor = 0.f;
 
 void Collider::Start() {
   if (!handler) FindHandler();
@@ -22,17 +21,15 @@ void Collider::Start() {
 void Collider::OnEnable() {
   // TODO(Yidi) add AABB
   collisionsModule->colliders.insert(this);
+  collisionsModule->bvTree.AddCollider(this);
   // TODO(Yidi + Jacob)
   // entity->OnHierarchyChange.Unregister(hierarchyHandle);
-}
-
-void Collider::AddToBVTree() {
-  collisionsModule->bvTree.AddCollider(this);
 }
 
 void Collider::OnDisable() {
   // TODO(Yidi) remove AABB
   collisionsModule->colliders.erase(this);
+  collisionsModule->bvTree.RemoveCollider(this);
 }
 void Collider::FindHandler() {
   handler = entity->GetComponent<CollisionHandler>();
