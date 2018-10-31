@@ -12,16 +12,14 @@
   class NAME : public Isetta::Level, public Isetta::LevelRegistry<NAME> { \
    public:                                                                \
     bool IsRegisteredInLevelManager() const { return registered; }        \
-    static inline Isetta::Func<NAME*> CreateMethod = []() {                       \
-      return Isetta::MemoryManager::NewOnStack<NAME>();                           \
+    static inline Isetta::Func<NAME*> CreateMethod = []() {               \
+      return Isetta::MemoryManager::NewOnStack<NAME>();                   \
     };                                                                    \
     static std::string GetLevelName() { return #NAME; }                   \
                                                                           \
    private:
 
 #define CREATE_LEVEL_END };
-
-  ;
 
 namespace Isetta {
 class ISETTA_API Level {
