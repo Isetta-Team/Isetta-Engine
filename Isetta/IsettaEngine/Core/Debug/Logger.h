@@ -53,8 +53,8 @@ class ISETTA_API_DECLARE Logger {
     CVarString logFolder{"logger_folder", "Logs"};
   };
 
-  static std::bitset<(int)Debug::Channel::All> channelMask;
-  static std::bitset<(int)Debug::Verbosity::All> verbosityMask;
+  static std::bitset<static_cast<int>(Debug::Channel::All)> channelMask;
+  static std::bitset<static_cast<int>(Debug::Verbosity::All) - 1> verbosityMask;
 
   static Action<const char*> outputCallback;
   /**
@@ -82,6 +82,8 @@ class ISETTA_API_DECLARE Logger {
    *
    */
   static void NewSession();
+
+  static void ShutDown();
   /**
    * @brief The function which parses the input parameters, then calls
    * VDebugPrintF for the actual output. Should default to LOG macros rather

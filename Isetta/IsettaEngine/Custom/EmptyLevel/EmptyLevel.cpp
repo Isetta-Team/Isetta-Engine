@@ -8,6 +8,7 @@
 #include "Graphics/CameraComponent.h"
 
 #include "Custom/Console.h"
+#include "Custom/EscapeExit.h"
 
 namespace Isetta {
 
@@ -28,5 +29,6 @@ void EmptyLevel::LoadLevel() {
 
   // Application::Exit();
   cameraEntity->AddComponent<Console>("Console", true);
+  cameraEntity->AddComponent<EscapeExit>();
 }
 }  // namespace Isetta

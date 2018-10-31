@@ -229,61 +229,56 @@ void GUI::ComboBox(const RectTransform& transform,
 
 void GUI::ComboBox(const RectTransform& transform,
                    const std::string_view& label, int* current,
-                   const std::vector<std::string_view>& items,
+                   const std::vector<std::string>& items,
                    const ComboStyle& style) {
   // Style
-  // ImGui::SetCursorPos((ImVec2)SetPosition(transform));
-  // ImGui::PushItemWidth(transform.rect.width);
-  // struct FuncHolder {
-  //  static bool ItemGetter(void* data, int idx, const char** outStr) {
-  //    const std::vector<std::string_view>* vec =
-  //        static_cast<const std::vector<std::string_view>*>(data);
-  //    *outStr = vec->at(idx).data();
-  //    return true;
-  //  }
-  //};
-  // ImGui::Combo(label.data(), current, &FuncHolder::ItemGetter, &items,
-  //             items.size(), style.maxHeight);
+  ImGui::SetCursorPos((ImVec2)SetPosition(transform));
+  ImGui::PushItemWidth(transform.rect.width);
+
+  int& idx = *current;
+  if (ImGui::BeginCombo(label.data(), items[idx].c_str())) {
+    for (int i = 0; i < items.size(); i++) {
+      ImGui::Selectable(items[i].c_str(), idx == i);
+    }
+    ImGui::EndCombo();
+  }
 }
 
-template <int bits>
-void GUI::ComboBox(const RectTransform& transform,
-                   const std::string_view& label, std::bitset<bits>* current,
-                   const std::string_view* items[], const int length,
-                   const ComboStyle& style) {
-  // ImGui::SetCursorPos((ImVec2)SetPosition(transform));
-  // ImGui::PushItemWidth(transform.rect.width);
-  // std::string_view currentStr = "";
-  // for (int i = 0; i < length; i++)
-  //  if (current->test(i)) current += items[i];
+bool GUI::ButtonDropDown(const RectTransform& transform,
+                         const std::string_view& label,
+                         const Math::Vector2& btnSize, const Action<>& ui) {
+  ImGui::SetCursorPos((ImVec2)SetPosition(transform));
 
-  // if (ImGui::BeginCombo(label.data(), currentStr.data())) {
-  //  for (int i = 0; i < length; i++) {
-  //    bool c = ImGui::Selectable(items[i].data(), current->test(i));
-  //    current->set(i, c);
-  //  }
-  //  ImGui::EndCombo();
-  //}
-}
+  ImGuiWindow* window = ImGui::GetCurrentWindow();
 
-template <int bits>
-void GUI::ComboBox(const RectTransform& transform,
-                   const std::string_view& label, std::bitset<bits>* current,
-                   const std::vector<std::string_view>& items,
-                   const ComboStyle& style) {
-  // ImGui::SetCursorPos((ImVec2)SetPosition(transform));
-  // ImGui::PushItemWidth(transform.rect.width);
-  // std::string_view currentStr = "";
-  // for (int i = 0; i < items.size(); i++)
-  //  if (current->test(i)) current += items[i];
+  float x = ImGui::GetCursorPosX();
+  float y = ImGui::GetCursorPosY();
+  Math::Vector2 size{btnSize.x, btnSize.y};
+  bool pressed = ImGui::Button("##", (ImVec2)size);
 
-  // if (ImGui::BeginCombo(label.data(), currentStr.data())) {
-  //  for (int i = 0; i < items.size(); i++) {
-  //    bool c = ImGui::Selectable(items[i].data(), current->test(i));
-  //    current->set(i, c);
-  //  }
-  //  ImGui::EndCombo();
-  //}
+  // Arrow
+  Math::Vector2 center(window->Pos.x + x + 0.5f * btnSize.x,
+                       window->Pos.y + y + 0.5f * btnSize.y);
+  float r = 8.f;
+  center.y -= r * 0.25f;
+  Math::Vector2 a = center + Math::Vector2{0, r};
+  Math::Vector2 b = center + Math::Vector2{-0.866f, -0.5f} * r;
+  Math::Vector2 c = center + Math::Vector2{0.866f, -0.5f} * r;
+  window->DrawList->AddTriangleFilled((ImVec2)a, (ImVec2)b, (ImVec2)c,
+                                      ImGui::GetColorU32(ImGuiCol_Text));
+
+  // Popup
+  Math::Vector2 popupPos{window->Pos.x + x, window->Pos.y + y + btnSize.y};
+  ImGui::SetNextWindowPos((ImVec2)popupPos);
+  const char* labelC = label.data();
+  if (pressed) ImGui::OpenPopup(labelC);
+
+  if (ImGui::BeginPopup(labelC)) {
+    ui();
+    ImGui::EndPopup();
+    return true;
+  }
+  return false;
 }
 
 // WINDOWS

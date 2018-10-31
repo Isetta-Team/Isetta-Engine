@@ -9,7 +9,7 @@
 #include <unordered_map>
 #include <utility>
 #include "Core/IsettaAlias.h"
-#include "Input/InputEnum.h"
+#include "Input/KeyCode.h"
 
 namespace Isetta::Math {
 class Vector2;

@@ -289,6 +289,9 @@
     <ClCompile Include="Custom\Console.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
+    <ClCompile Include="Custom\EscapeExit.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -426,9 +429,6 @@
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Input\Input.h">
-      <Filter>Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Input\InputEnum.h">
       <Filter>Input</Filter>
     </ClInclude>
     <ClInclude Include="Input\InputModule.h">
@@ -630,6 +630,14 @@
     </ClInclude>
     <ClInclude Include="Collisions\CollisionUtil.h">
       <Filter>Collisions</Filter>
+    <ClInclude Include="Input\KeyCode.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\Trie.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\EscapeExit.h">
+      <Filter>Custom</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

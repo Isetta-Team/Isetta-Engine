@@ -6,7 +6,7 @@
 #include <GLFW/glfw3.h>
 #include "Core/IsettaAlias.h"
 #include "Core/Math/Vector2.h"
-#include "Input/InputEnum.h"
+#include "Input/KeyCode.h"
 
 namespace Isetta {
 class ISETTA_API_DECLARE Input {

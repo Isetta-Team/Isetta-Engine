@@ -16,11 +16,11 @@
 #include "Core/Debug/Logger.h"
 #include "Core/Filesystem.h"
 #include "Core/Time/Clock.h"
+#include "Events/Events.h"
 #include "Input/Input.h"
-#include "Input/InputEnum.h"
+#include "Input/KeyCode.h"
 #include "Networking/NetworkManager.h"
 #include "Scene/Level.h"
-#include "Events/Events.h"
 
 #include "Scene/Entity.h"
 #include "Scene/LevelManager.h"
@@ -136,6 +136,7 @@ void EngineLoop::ShutDown() {
   renderModule->ShutDown();
   windowModule->ShutDown();
   memoryManager->ShutDown();
+  Logger::ShutDown();
 }
 
 void EngineLoop::StartGameClock() const { GetGameClock(); }

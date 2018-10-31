@@ -767,21 +767,11 @@ class ISETTA_API GUI {
                        const ComboStyle& style = {});
   static void ComboBox(const RectTransform& transform,
                        const std::string_view& label, int* current,
-                       const std::vector<std::string_view>& items,
+                       const std::vector<std::string>& items,
                        const ComboStyle& style = {});
-  // Multi-select
-  template <int bits>
-  static void ComboBox(const RectTransform& transform,
-                       const std::string_view& label,
-                       std::bitset<bits>* current,
-                       const std::string_view* items[], const int length,
-                       const ComboStyle& style = {});
-  template <int bits>
-  static void ComboBox(const RectTransform& transform,
-                       const std::string_view& label,
-                       std::bitset<bits>* current,
-                       const std::vector<std::string_view>& items,
-                       const ComboStyle& style = {});
+  static bool ButtonDropDown(const RectTransform& transform,
+                             const std::string_view& label,
+                             const Math::Vector2& btnSize, const Action<>& ui);
 
   // LAYOUT/SPACING
   ////////////////////////////////////////
