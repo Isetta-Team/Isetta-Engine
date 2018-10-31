@@ -103,21 +103,21 @@ class ISETTA_API_DECLARE Transform {
   iterator end() { return children.end(); }
   const_iterator end() const { return children.end(); }
 
- private:
+private:
   void RecalculateLocalToWorldMatrix();
 
   // both called by SetParent
   void AddChild(Transform *transform);
   void RemoveChild(Transform *transform);
 
-  Math::Quaternion worldRot;  // only for query
+  Math::Quaternion worldRot; // only for query
 
   Math::Matrix4 localToWorldMatrix{};
   Math::Matrix4 worldToLocalMatrix{};
-  Math::Vector3 localPos{Math::Vector3::zero};  // part of local storage
+  Math::Vector3 localPos{Math::Vector3::zero}; // part of local storage
   Math::Quaternion localRot{
-      Math::Quaternion::identity};               // part of local storage
-  Math::Vector3 localScale{Math::Vector3::one};  // part of local storage
+      Math::Quaternion::identity};              // part of local storage
+  Math::Vector3 localScale{Math::Vector3::one}; // part of local storage
 
   // marked when anything local changed
   // cleared when matrix recalculated
@@ -135,4 +135,4 @@ class ISETTA_API_DECLARE Transform {
   Math::Vector3 &up = axis[1];
   Math::Vector3 &forward = axis[2];
 };
-}  // namespace Isetta
+} // namespace Isetta

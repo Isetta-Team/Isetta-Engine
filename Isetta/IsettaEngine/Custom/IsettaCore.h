@@ -14,6 +14,7 @@
 #include "Graphics/GUI.h"
 #include "Graphics/LightComponent.h"
 #include "Graphics/RectTransform.h"
+#include "Graphics/AnimationComponent.h"
 #include "Input/Input.h"
 #include "Scene/Entity.h"
 #include "Scene/Level.h"

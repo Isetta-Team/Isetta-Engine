@@ -245,14 +245,15 @@ void NetworkingModule::Connect(const char* serverAddress, int serverPort,
 }
 
 void NetworkingModule::Disconnect() {
-  if (!client->IsConnecting()) {
+  if (client->IsConnected()) {
+    client->Disconnect();
+  } else if (!client->IsConnecting()) {
     return;
-  } else if (!client->IsConnected()) {
+  } else {
     throw std::exception(
         "NetworkingModule::Disconnect => Cannot disconnect the client if it is "
         "not already connected.");
   }
-  client->Disconnect();
 }
 
 void NetworkingModule::CreateServer(const char* address, int port) {

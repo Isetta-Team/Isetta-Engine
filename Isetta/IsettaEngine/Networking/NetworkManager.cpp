@@ -6,6 +6,7 @@
 #include "Core/Config/Config.h"
 #include "Networking/NetworkId.h"
 #include "Networking/NetworkingModule.h"
+#include "Components/NetworkTransform.h"
 #include "Scene/Entity.h"
 
 namespace Isetta {

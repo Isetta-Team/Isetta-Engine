@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <utility>
 
+#include "ISETTA_API.h"
 #include "Core/IsettaAlias.h"
 #include "yojimbo/yojimbo.h"
 
@@ -20,7 +21,7 @@ class NetworkId;
  * @brief Wrapper class for NetworkingModule so that other engine components can
  * use networking features.
  */
-class NetworkManager {
+class ISETTA_API_DECLARE NetworkManager {
  private:
   yojimbo::Message* CreateClientMessage(int messageId);
   yojimbo::Message* CreateServerMessage(int clientIdx, int messageId);
@@ -62,6 +63,9 @@ class NetworkManager {
   void SendMessageFromServer(int clientIdx, yojimbo::Message* message);
   template <typename T>
   void SendAllMessageFromServer(yojimbo::Message* message);
+  template <typename T>
+  void SendAllButClientMessageFromServer(int clinetIdx,
+                                         yojimbo::Message* message);
 
   U16 GetMessageTypeCount() { return messageTypeCount; }
   template <typename T>
@@ -139,6 +143,18 @@ template <typename T>
 void NetworkManager::SendAllMessageFromServer(yojimbo::Message* refMessage) {
   for (int i = 0; i < GetMaxClients(); ++i) {
     if (!ClientIsConnected(i)) {
+      continue;
+    }
+
+    yojimbo::Message* newMessage = GenerateMessageFromServer<T>(i);
+    newMessage->Copy(refMessage);
+    SendMessageFromServer(i, newMessage);
+  }
+}
+template <typename T>
+void NetworkManager::SendAllButClientMessageFromServer(int clientIdx, yojimbo::Message* refMessage) {
+  for (int i = 0; i < GetMaxClients(); ++i) {
+    if (!ClientIsConnected(i) || i == clientIdx) {
       continue;
     }
 

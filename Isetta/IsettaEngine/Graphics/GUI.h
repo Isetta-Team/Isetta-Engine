@@ -533,7 +533,8 @@ class ISETTA_API GUI {
     // bool isBulleted;
     Color text;
     TextStyle();
-    TextStyle(const Color& text) : text{text} {}
+    TextStyle(const Color& text)
+        : text{text}, isWrapped{false}, isDisabled{false} {}
     TextStyle(bool wrapped, bool disabled, const Color& text)
         : isWrapped{wrapped},
           isDisabled{disabled},

@@ -68,6 +68,7 @@ void Entity::CheckDestroy() {
     while (typeIter != componentTypes.end() && compIter != components.end()) {
       Component* comp = *compIter;
       if (comp->GetAttribute(Component::ComponentAttributes::NEED_DESTROY)) {
+        comp->~Component();
         comp->OnDestroy();
         MemoryManager::DeleteOnFreeList<Component>(comp);
         components.erase(compIter);

@@ -294,5 +294,3 @@ void NetworkLevel::LoadLevel() {
   lightComp->SetProperty<LightProperty::SHADOW_MAP_BIAS>(0.01f);
   lightEntity->AddComponent<GridComponent>();
 }
-
-void NetworkLevel::UnloadLevel() { RegisterExampleMessageFunctions(); }

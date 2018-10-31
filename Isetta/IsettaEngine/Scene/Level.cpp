@@ -39,6 +39,8 @@ void Level::UnloadLevel() {
     MemoryManager::DeleteOnFreeList<Entity>(entity);
   }
   MemoryManager::DeleteOnFreeList<Entity>(levelRoot);
+  levelRoot->~Entity();
+  MemoryManager::FreeOnFreeList(levelRoot);
 }
 
 void Level::AddComponentToStart(Component* component) {
