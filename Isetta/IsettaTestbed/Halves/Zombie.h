@@ -16,6 +16,6 @@ static float speed;
 private:
 float health = 100;
 bool isInitialized = false;
-AudioSource audio;
+AudioSource* audio{nullptr};
 END_COMPONENT(Zombie, Component)
 }  // namespace Isetta

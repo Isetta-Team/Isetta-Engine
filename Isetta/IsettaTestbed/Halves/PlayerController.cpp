@@ -10,11 +10,16 @@ PlayerController* PlayerController::instance;
 
 void PlayerController::OnEnable() {
   instance = this;
-  shootAudio.SetAudioClip("gunshot.aiff");
-  bullets.reserve(poolSize);
-  for (int i = 0; i < poolSize; i++) {
+  if (shootAudio == nullptr) {
+    shootAudio = GetEntity()->AddComponent<AudioSource>();
+  }
+
+  shootAudio->SetAudioClip("gunshot.aiff");
+  bullets.reserve(bulletPoolSize);
+
+  for (int i = 0; i < bulletPoolSize; i++) {
     Entity* bullet{ADD_ENTITY(Util::StrFormat("Bullet (%d)", i))};
-    auto bulletComp = bullet->AddComponent<Bullet, true>();
+    bullet->AddComponent<Bullet>();
     bullet->SetActive(false);
     bullets.push_back(bullet);
   }
@@ -103,19 +108,19 @@ void PlayerController::GuiUpdate() {
 PlayerController* PlayerController::Instance() { return instance; }
 
 void PlayerController::Shoot() {
-  shootAudio.Play(false, .75f);
+  shootAudio->Play(false, .75f);
   Entity* bullet = nullptr;
 
-  for (Size i = 0; i < bullets.size(); ++i) {
-    if (!bullets[i]->GetActive()) {
-      bullet = bullets[i];
+  for (auto& bul : bullets) {
+    if (!bul->GetActive()) {
+      bullet = bul;
       break;
     }
   }
 
   bullet->SetActive(true);
   if (bullet != nullptr) {
-    bullet->GetComponent<Bullet>()->Initialize(
+    bullet->GetComponent<Bullet>()->Reactivate(
         GetTransform()->GetWorldPos() + GetTransform()->GetForward() * 0.7 -
             GetTransform()->GetLeft() * 0.1 + GetTransform()->GetUp() * 1.5,
         GetTransform()->GetForward());

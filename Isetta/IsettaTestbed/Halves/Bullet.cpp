@@ -12,7 +12,7 @@ class MeshComponent;
 
 float Bullet::flySpeed = 50;
 
-void Bullet::Initialize(const Math::Vector3& pos, const Math::Vector3& flyDir) {
+void Bullet::Reactivate(const Math::Vector3& pos, const Math::Vector3& flyDir) {
   dir = flyDir.Normalized();
   GetTransform()->SetWorldPos(pos);
   GetTransform()->LookAt(GetTransform()->GetWorldPos() + dir);
@@ -22,7 +22,8 @@ void Bullet::OnEnable() {
   if (!initialized) {
     entity->AddComponent<MeshComponent, true>("Bullet/Bullet.scene.xml");
     initialized = true;
-    audio.SetAudioClip("bullet-impact.wav");
+    audio = GetEntity()->AddComponent<AudioSource>();
+    audio->SetAudioClip("bullet-impact.wav");
   }
   elapsedTime = 0.f;
 }
@@ -42,8 +43,7 @@ void Bullet::Update() {
     if (disSqrd < 1.f) {
       zombie->GetComponent<Zombie>()->TakeDamage(damage);
       entity->SetActive(false);
-      LOG_INFO(Debug::Channel::Gameplay, "Zombie %s hit!", zombie->GetName().c_str());
-      audio.Play(false, 1.0f);
+      audio->Play(false, 1.0f);
     }
   }
 }

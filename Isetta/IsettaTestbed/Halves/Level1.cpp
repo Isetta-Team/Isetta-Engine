@@ -12,6 +12,7 @@
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
 #include "Scene/Entity.h"
+#include "Custom/EscapeExit.h"
 
 namespace Isetta {
 
@@ -20,12 +21,12 @@ using CameraProperty = CameraComponent::Property;
 
 void Level1::LoadLevel() {
   Entity* cameraEntity{AddEntity("Camera")};
-  cameraEntity->AddComponent<CameraController, true>();
+  cameraEntity->AddComponent<CameraController>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
 
   CameraComponent* camComp =
-      cameraEntity->AddComponent<CameraComponent, true>("Camera");
+      cameraEntity->AddComponent<CameraComponent>("Camera");
   camComp->SetProperty<CameraProperty::FOV>(
       CONFIG_VAL(renderConfig.fieldOfView));
   camComp->SetProperty<CameraProperty::NEAR_PLANE>(
@@ -34,7 +35,7 @@ void Level1::LoadLevel() {
       CONFIG_VAL(renderConfig.farClippingPlane));
 
   Entity* lightEntity{AddEntity("Light")};
-  LightComponent* lightComp = lightEntity->AddComponent<LightComponent, true>(
+  LightComponent* lightComp = lightEntity->AddComponent<LightComponent>(
       "materials/light.material.xml", "LIGHT_1");
   lightEntity->SetTransform(Math::Vector3{0, 200, 600},
                             Math::Vector3{-30, 0, 0});
@@ -49,8 +50,8 @@ void Level1::LoadLevel() {
   player->SetTransform(Math::Vector3{0, 0, 0}, Math::Vector3{0, 90, 0},
                        0.03f * Math::Vector3::one);
   MeshComponent* playerMesh =
-      player->AddComponent<MeshComponent, true>("Soldier/Soldier.scene.xml");
-  player->AddComponent<PlayerController, true>();
+      player->AddComponent<MeshComponent>("Soldier/Soldier.scene.xml");
+  player->AddComponent<PlayerController>();
 
   AnimationComponent* ani =
       player->AddComponent<AnimationComponent, true>(playerMesh);
@@ -58,10 +59,11 @@ void Level1::LoadLevel() {
   ani->AddAnimation("Soldier/Soldier.anim", 0, "", false);
 
   Entity* ground{AddEntity("Ground")};
-  ground->AddComponent<MeshComponent, true>("Ground/Level.scene.xml");
+  ground->AddComponent<MeshComponent>("Ground/Level.scene.xml");
 
   Entity* gameManager{AddEntity("Game Manager")};
-  gameManager->AddComponent<GameManager, true>();
+  gameManager->AddComponent<GameManager>();
+  gameManager->AddComponent<EscapeExit>();
 
   // for (int i = 0; i < 10; i++) {
   // Entity* zombie {AddEntity("Zombie")};

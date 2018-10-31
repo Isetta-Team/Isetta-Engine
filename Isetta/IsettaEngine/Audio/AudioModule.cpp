@@ -39,7 +39,7 @@ void AudioModule::StartUp() {
   soundFilesRoot = config.resourcePath.GetVal() + R"(\)" +
                    config.audioConfig.pathUnderResource.GetVal() + R"(\)";
   LoadAllAudioClips();
-  AudioSource::audioSystem = this;
+  AudioSource::audioModule = this;
 }
 
 void AudioModule::Update(float deltaTime) const { fmodSystem->update(); }
