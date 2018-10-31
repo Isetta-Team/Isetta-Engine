@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+        <ClCompile Include="main.cpp" />
     <ClCompile Include="Core\Math\Matrix3.cpp">
       <Filter>Core\Math</Filter>
     </ClCompile>
@@ -560,14 +560,10 @@
     <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h">
       <Filter>Custom\EmptyLevel</Filter>
     </ClInclude>
-    <ClInclude Include="Application.h" />
     <ClInclude Include="Custom\RaycastClick.h">
       <Filter>Custom</Filter>
     </ClInclude>
     <ClInclude Include="Collisions\Collisions.h">
-      <Filter>Collisions</Filter>
-    </ClInclude>
-    <ClInclude Include="Collisions\CollisionHandler.h">
       <Filter>Collisions</Filter>
     </ClInclude>
     <ClInclude Include="Custom\FrameReporter.h">
@@ -588,16 +584,7 @@
     <ClInclude Include="Custom\DebugCollision.h">
       <Filter>Custom</Filter>
     </ClInclude>
-    <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h">
-      <Filter>Custom\EmptyLevel</Filter>
-    </ClInclude>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="Custom\RaycastClick.h">
-      <Filter>Custom</Filter>
-    </ClInclude>
-    <ClInclude Include="Collisions\Collisions.h">
-      <Filter>Collisions</Filter>
-    </ClInclude>
     <ClInclude Include="Collisions\CollisionHandler.h">
       <Filter>Collisions</Filter>
     </ClInclude>
@@ -630,6 +617,7 @@
     </ClInclude>
     <ClInclude Include="Collisions\CollisionUtil.h">
       <Filter>Collisions</Filter>
+    </ClInclude>
     <ClInclude Include="Input\KeyCode.h">
       <Filter>Input</Filter>
     </ClInclude>
