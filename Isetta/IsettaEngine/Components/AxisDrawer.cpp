@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Custom/AxisDrawer.h"
+#include "Components/AxisDrawer.h"
 #include "Core/Debug/DebugDraw.h"
 #include "Scene/Transform.h"
 

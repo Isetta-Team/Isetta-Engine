@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-        <ClCompile Include="main.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Core\Math\Matrix3.cpp">
       <Filter>Core\Math</Filter>
     </ClCompile>
@@ -147,9 +147,6 @@
     <ClCompile Include="Core\Filesystem.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Custom\AxisDrawer.cpp">
-      <Filter>Custom</Filter>
-    </ClCompile>
     <ClCompile Include="Custom\InEngineTestLevel.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
@@ -247,14 +244,8 @@
     <ClCompile Include="Custom\FrameReporter.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
-    <ClCompile Include="Custom\BVHLevel.cpp">
-      <Filter>Custom</Filter>
-    </ClCompile>
     <ClCompile Include="Collisions\BVTree.cpp">
       <Filter>Collisions</Filter>
-    </ClCompile>
-    <ClCompile Include="Components\RandomMover.cpp">
-      <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\Texture.cpp">
       <Filter>Graphics\Render</Filter>
@@ -291,6 +282,15 @@
     </ClCompile>
     <ClCompile Include="Custom\EscapeExit.cpp">
       <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\BVHTestLevel\RandomMover.cpp">
+      <Filter>Custom\BVHTestLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\BVHTestLevel\BVHLevel.cpp">
+      <Filter>Custom\BVHTestLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\AxisDrawer.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -365,6 +365,9 @@
     </Filter>
     <Filter Include="Custom\EventTestLevel">
       <UniqueIdentifier>{c9dcfdd8-b385-4b0e-ab14-7ab7792fc31d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\BVHTestLevel">
+      <UniqueIdentifier>{d6dd3b2a-276f-4d5e-8016-f458080f209b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -536,9 +539,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="ISETTA_API.h" />
-    <ClInclude Include="Custom\AxisDrawer.h">
-      <Filter>Custom</Filter>
-    </ClInclude>
     <ClInclude Include="Custom\IsettaCore.h">
       <Filter>Custom</Filter>
     </ClInclude>
@@ -569,14 +569,8 @@
     <ClInclude Include="Custom\FrameReporter.h">
       <Filter>Custom</Filter>
     </ClInclude>
-    <ClInclude Include="Custom\BVHLevel.h">
-      <Filter>Custom</Filter>
-    </ClInclude>
     <ClInclude Include="Collisions\BVTree.h">
       <Filter>Collisions</Filter>
-    </ClInclude>
-    <ClInclude Include="Components\RandomMover.h">
-      <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="Scene\Layers.h">
       <Filter>Scene</Filter>
@@ -626,6 +620,15 @@
     </ClInclude>
     <ClInclude Include="Custom\EscapeExit.h">
       <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\BVHTestLevel\RandomMover.h">
+      <Filter>Custom\BVHTestLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\BVHTestLevel\BVHLevel.h">
+      <Filter>Custom\BVHTestLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\AxisDrawer.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

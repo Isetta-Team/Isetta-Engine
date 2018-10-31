@@ -1,15 +1,15 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Custom/BVHLevel.h"
+#include "Custom/BVHTestLevel/BVHLevel.h"
 #include "Collisions/SphereCollider.h"
-#include "Components/FlyController.h"
-#include "Components/GridComponent.h"
-#include "Components/RandomMover.h"
 #include "Core/Config/Config.h"
 #include "Core/Math/Random.h"
-#include "FrameReporter.h"
-#include "IsettaCore.h"
+#include "Custom/BVHTestLevel/RandomMover.h"
+#include "Custom/IsettaCore.h"
+#include "Custom/FrameReporter.h"
+#include "Components/FlyController.h"
+#include "Components/GridComponent.h"
 
 namespace Isetta {
 

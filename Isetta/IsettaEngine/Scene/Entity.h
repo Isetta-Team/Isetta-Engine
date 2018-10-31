@@ -114,7 +114,6 @@ T* Entity::AddComponent(Args&&... args) {
             [typeIndex](std::type_index type) { return type == typeIndex; })) {
       throw std::logic_error(Util::StrFormat(
           "Entity::AddComponent => Adding multiple excluded components %s", typeIndex.name()));
-      return nullptr;
     }
     T* component = MemoryManager::NewOnFreeList<T>(std::forward<Args>(args)...);
     component->SetActive(IsActive);
