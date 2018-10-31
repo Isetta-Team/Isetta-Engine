@@ -234,7 +234,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Collisions\BVTree.h" />
     <ClInclude Include="Collisions\CollisionHandler.h" />
     <ClInclude Include="Collisions\Collisions.h" />
-    <ClInclude Include="CollisionUtil.h" />
+    <ClInclude Include="Collisions\CollisionUtil.h" />
     <ClInclude Include="Components\GridComponent.h" />
     <ClInclude Include="Components\FlyController.h" />
     <ClInclude Include="Components\RandomMover.h" />

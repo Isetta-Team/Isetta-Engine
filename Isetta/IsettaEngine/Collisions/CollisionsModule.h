@@ -4,7 +4,6 @@
 #pragma once
 #include <unordered_map>
 #include <unordered_set>
-#include <vector>
 #include "BVTree.h"
 #include "Scene/Layers.h"
 #include "Util.h"
@@ -58,13 +57,10 @@ class CollisionsModule {
   // probably mark them as "still colliding"
   CollisionUtil::ColliderPairSet collidingPairs;
 
-  // TODO(Jacob) only for color as of now
-  std::unordered_map<void *, int> collisions{};
   BVTree bvTree;
-  std::unordered_set<std::pair<Collider *, Collider *>, std::UnorderedPairHash>
-      ignoreCollisions;
-  std::bitset<(int)(0.5f * Layers::LAYERS_CAPACITY *
-                    (Layers::LAYERS_CAPACITY + 1))>
+  CollisionUtil::ColliderPairSet ignoreCollisions;
+  std::bitset<static_cast<int>(0.5f * Layers::LAYERS_CAPACITY *
+                               (Layers::LAYERS_CAPACITY + 1))>
       collisionMatrix;
 
   void StartUp();
@@ -76,7 +72,6 @@ class CollisionsModule {
   friend class Collisions;
 
   // Utilities
-
   bool GetIgnoreLayerCollision(int layer1, int layer2) const;
   void SetIgnoreLayerCollision(int layer1, int layer2, bool ignoreLayer = true);
 
@@ -101,7 +96,7 @@ class CollisionsModule {
                                        const Math::Vector3 &, float *const,
                                        float *const, Math::Vector3 *const,
                                        Math::Vector3 *const);
-  static Math::Vector3 ClossetPtPointAABB(const Math::Vector3 &,
+  static Math::Vector3 ClosestPtPointAABB(const Math::Vector3 &,
                                           const class AABB &);
   static Math::Vector3 ClosestPtPointOBB(const Math::Vector3 &,
                                          const class BoxCollider &);

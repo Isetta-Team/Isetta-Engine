@@ -28,9 +28,6 @@ void CollisionsModule::StartUp() {
 
 void CollisionsModule::Update(float deltaTime) {
   bvTree.Update();
-  /*
-   * TODO(Yidi)Broadphase check
-   */
   // Collider obj1, obj2;
   // if (obj1.isTrigger && obj2.isTrigger) {
   //}  // TODO
@@ -54,70 +51,42 @@ void CollisionsModule::Update(float deltaTime) {
     Collider *collider1 = pair.first;
     Collider *collider2 = pair.second;
 
-    CollisionHandler *handlerI = collider1->GetHandler();
-    CollisionHandler *handlerJ = collider2->GetHandler();
+    CollisionHandler *handler1 = collider1->GetHandler();
+    CollisionHandler *handler2 = collider2->GetHandler();
 
     // things under the same handler don't collide
-    if (handlerI && handlerJ && handlerI == handlerJ
-      || ignoreCollisions.find(std::make_pair(collider1, collider2)) !=
-                              ignoreCollisions.end()) continue;
+    if (handler1 && handler2 && handler1 == handler2 ||
+        ignoreCollisions.find(pair) != ignoreCollisions.end())
+      continue;
 
     if (collider1->Intersection(collider2)) {
       // if they do collide
-
       auto it = lastFramePairs.find(pair);
 
       if (it != lastFramePairs.end()) {
         // pair was colliding last frame
-        // TODO(Jacob) Collision Stay
-        if (handlerI) handlerI->OnCollisionStay(collider2);
-        if (handlerJ) handlerJ->OnCollisionStay(collider1);
+        if (handler1) handler1->OnCollisionStay(collider2);
+        if (handler2) handler2->OnCollisionStay(collider1);
         lastFramePairs.erase(it);
       } else {
         // pair is new
-        // TODO(Jacob) Collision Enter
-        if (handlerI) handlerI->OnCollisionEnter(collider2);
-        if (handlerJ) handlerJ->OnCollisionEnter(collider1);
-
-        // TODO(Jacob) remove. This is only for colors
-        if (collisions.find(collider1) != collisions.end()) {
-          collisions[collider1]++;
-        } else {
-          collisions.insert(std::make_pair(collider1, 1));
-        }
-        if (collisions.find(collider2) != collisions.end()) {
-          collisions[collider2]++;
-        } else {
-          collisions.insert(std::make_pair(collider2, 1));
-        }
+        if (handler1) handler1->OnCollisionEnter(collider2);
+        if (handler2) handler2->OnCollisionEnter(collider1);
       }
 
       collidingPairs.insert(pair);
-      collider1->debugColor = Color::red;
-      collider2->debugColor = Color::red;
     }
   }
 
   for (const auto &pair : lastFramePairs) {
-    // TODO(Jacob) Collision Exit
     Collider *collider1 = pair.first;
     Collider *collider2 = pair.second;
 
-    CollisionHandler *handlerI = collider1->GetHandler();
-    CollisionHandler *handlerJ = collider2->GetHandler();
+    CollisionHandler *handler1 = collider1->GetHandler();
+    CollisionHandler *handler2 = collider2->GetHandler();
 
-    if (handlerI) handlerI->OnCollisionExit(collider2);
-    if (handlerJ) handlerJ->OnCollisionExit(collider1);
-
-    // TODO(Jacob) remove
-    collisions[collider1]--;
-    collisions[collider2]--;
-    if (collisions[collider1] == 0) {
-      collider1->debugColor = Color::green;
-    }
-    if (collisions[collider2] == 0) {
-      collider2->debugColor = Color::green;
-    }
+    if (handler1) handler1->OnCollisionExit(collider2);
+    if (handler2) handler2->OnCollisionExit(collider1);
   }
 }
 
@@ -543,7 +512,7 @@ float CollisionsModule::ClosestPtRaySegment(
   cSeg = p0 + d * tSeg;
   return Math::Vector3::Dot(cRay - cSeg, cRay - cSeg);
 }
-Math::Vector3 CollisionsModule::ClossetPtPointAABB(const Math::Vector3 &point,
+Math::Vector3 CollisionsModule::ClosestPtPointAABB(const Math::Vector3 &point,
                                                    const AABB &aabb) {
   Math::Vector3 pt;
   pt.x = Math::Util::Min(Math::Util::Max(point.x, aabb.GetMin().x),
@@ -686,7 +655,6 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
           pt = ptSeg;
           distSq = dist;
         }
-
       }
       t /= line.GetDirection().Magnitude();
       return box.GetTransform()->WorldPosFromLocalPos(pt);

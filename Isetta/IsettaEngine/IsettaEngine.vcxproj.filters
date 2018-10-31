@@ -579,9 +579,6 @@
     <ClInclude Include="Collisions\BVTree.h">
       <Filter>Collisions</Filter>
     </ClInclude>
-    <ClInclude Include="CollisionUtil.h">
-      <Filter>Collisions</Filter>
-    </ClInclude>
     <ClInclude Include="Components\RandomMover.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -630,6 +627,9 @@
     </ClInclude>
     <ClInclude Include="Custom\Console.h">
       <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\CollisionUtil.h">
+      <Filter>Collisions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

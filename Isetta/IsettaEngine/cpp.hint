@@ -1,0 +1,8 @@
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define INTERSECTION_TEST(TYPE) bool TYPE::Intersection(Collider* const other) { switch (other->GetType()) { case Collider::ColliderType::BOX: return collisionsModule->Intersection( *this, dynamic_cast<BoxCollider&>(*other)); break; case Collider::ColliderType::SPHERE: return collisionsModule->Intersection( *this, dynamic_cast<SphereCollider&>(*other)); break; case Collider::ColliderType::CAPSULE: return collisionsModule->Intersection( *this, dynamic_cast<CapsuleCollider&>(*other)); break; }; }
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define CREATE_COMPONENT_BEGIN(NAME, BASE, EXCLUDE) template <bool Exclude> class ISETTA_API_DECLARE Isetta::ComponentRegistry<class NAME, BASE, Exclude> { protected: static bool NAME##Registered; }; class ISETTA_API_DECLARE NAME : public BASE, public Isetta::ComponentRegistry<NAME, BASE, EXCLUDE> { protected: static bool isRegistered() { return NAME##Registered; } private:
