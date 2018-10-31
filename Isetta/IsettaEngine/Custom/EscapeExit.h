@@ -5,12 +5,12 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(EscapeExit, Component, true)
+BEGIN_COMPONENT(EscapeExit, Component, true)
 private:
 int handle;
 
 public:
 void OnEnable() override;
 void OnDisable() override;
-CREATE_COMPONENT_END(EscapeExit, Component)
+END_COMPONENT(EscapeExit, Component)
 }  // namespace Isetta
