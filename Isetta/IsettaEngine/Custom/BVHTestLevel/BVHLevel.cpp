@@ -10,6 +10,7 @@
 #include "Custom/FrameReporter.h"
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
+#include "Collisions/BoxCollider.h"
 
 namespace Isetta {
 
@@ -67,7 +68,7 @@ void BVHLevel::LoadLevel() {
     count++;
     Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
     sphere->AddComponent<RandomMover>();
-    auto col = sphere->AddComponent<SphereCollider>();
+    auto col = sphere->AddComponent<BoxCollider>();
     const float size = 20;
     sphere->SetTransform(size *
                          Math::Vector3{Math::Random::GetRandom01() - 0.5f,
