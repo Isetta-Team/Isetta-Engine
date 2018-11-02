@@ -15,16 +15,6 @@ void Entity::OnEnable() {
   }
 }
 
-void Entity::CheckStart() {
-  for (auto& comp : components) {
-    if (comp->GetActive() &&
-        !comp->GetAttribute(Component::ComponentAttributes::HAS_STARTED)) {
-      comp->SetAttribute(Component::ComponentAttributes::HAS_STARTED, true);
-      comp->Start();
-    }
-  }
-}
-
 void Entity::GuiUpdate() {
   for (auto& comp : components) {
     if (comp->GetActive() &&
@@ -35,7 +25,6 @@ void Entity::GuiUpdate() {
 }
 
 void Entity::Update() {
-  CheckStart();
   for (auto& comp : components) {
     if (comp->GetActive() &&
         comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
@@ -60,8 +49,6 @@ void Entity::LateUpdate() {
       comp->LateUpdate();
     }
   }
-  // SetAttribute(EntityAttributes::IS_TRANSFORM_DIRTY, false);
-  CheckDestroy();
 }
 
 void Entity::CheckDestroy() {
@@ -71,8 +58,7 @@ void Entity::CheckDestroy() {
       comp->OnDestroy();
     }
     for (auto& comp : components) {
-      comp->~Component();
-      MemoryManager::FreeOnFreeList(comp);
+      MemoryManager::DeleteOnFreeList<Component>(comp);
     }
     // TODO(Chaojie): delete child
   } else {
@@ -84,7 +70,7 @@ void Entity::CheckDestroy() {
       if (comp->GetAttribute(Component::ComponentAttributes::NEED_DESTROY)) {
         comp->~Component();
         comp->OnDestroy();
-        MemoryManager::FreeOnFreeList(comp);
+        MemoryManager::DeleteOnFreeList<Component>(comp);
         components.erase(compIter);
         componentTypes.erase(typeIter);
       } else {

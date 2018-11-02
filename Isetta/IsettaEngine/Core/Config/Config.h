@@ -17,46 +17,31 @@
 #include "Graphics/Window.h"
 #include "Networking/NetworkingModule.h"
 #include "Scene/LevelManager.h"
+#include "Collisions/CollisionsModule.h"
 
-namespace Isetta {
+namespace Isetta
+{
 #define CONFIG_VAL(expr) Isetta::Config::Instance().expr.GetVal()
-/**
- * @brief Test module to demonstrate CVar config struct.
- *
- */
-class TestModule {
- public:
-  /**
-   * @brief Test configuration CVar struct. Demonstrates templated paramters,
-   * string, vector, and default value parameter.
-   */
-  struct TestConfig {
-    CVar<int> integerVar{"integer", 10};
-    CVar<float> floatVar{"float", 1.12};
-    CVarString stringVar{"string", "test"};
-    CVarVector3 vector3Var{"vec3", Math::Vector3::one};
-    CVar<int> defaultValue{"default"};
-  };
-};
+#define CONFIG_M_VAL(mod, expr) Isetta::Config::Instance().mod.expr.GetVal()
 
 /**
  * @brief [Singleton] Handles parsing configuration file
  * and storing all the CVars that are read from the configuration file for the
  * game. CVars not in this class will not be set by the configuration file.
  */
-class ISETTA_API Config {
- public:
+class ISETTA_API Config
+{
+public:
   /**
    * @brief Singleton class instance
    *
    */
-  static Config &Instance() {
+  static Config &Instance()
+  {
     static Config instance;
     return instance;
   }
 
-  /// TestModule configuration CVars
-  TestModule::TestConfig test;
   /// Logger configuartion CVars
   Logger::LoggerConfig logger;
   /// WindowModule configuration CVars
@@ -72,6 +57,7 @@ class ISETTA_API Config {
   /// AudioModule configuration CVars
   AudioModule::AudioConfig audioConfig;
   LevelManager::LevelConfig levelConfig;
+  CollisionsModule::CollisionConfig collisionConfig;
 
   /// Max FPS of the engine
   CVar<int> maxFps = {"max_fps", 16};
@@ -86,7 +72,7 @@ class ISETTA_API Config {
    *
    * @param filePath of the configuration file
    */
-  void Read(const std::string &filePath);
+  void Read(const std::string_view &filePath);
   /**
    * @brief Process the content passed in by removing the comments, ignoring
    * whitespace (keeps string whitespace in values, not keys), check for valid
@@ -96,7 +82,10 @@ class ISETTA_API Config {
    */
   void ProcessFile(const char *contentBuffer);
 
- private:
+  void SetVal(const std::string &key, const std::string_view &value);
+  std::vector<std::string_view> GetCommands() const;
+
+private:
   Config() = default;
   class CVarRegistry cvarsRegistry;
 
@@ -115,7 +104,7 @@ class ISETTA_API Config {
    * @return true if it is only whitespace
    * @return false if it has more than just whitespace
    */
-  bool OnlyWhitespace(const std::string &line) const;
+  bool OnlyWhitespace(const std::string_view &line) const;
   /**
    * @brief Checks if the line is valid, doesn't have multiple equal signs
    *
@@ -123,7 +112,7 @@ class ISETTA_API Config {
    * @return true if the line is valid
    * @return false if the line has errors
    */
-  bool ValidLine(const std::string &line) const;
+  bool ValidLine(const std::string_view &line) const;
   /**
    * @brief Extracts the key from the string (key is before the '=')
    *
@@ -131,7 +120,8 @@ class ISETTA_API Config {
    * @param sepPos position of the '=' in the line
    * @param line the string which holds key/value pair
    */
-  void ExtractKey(std::string *key, const Size &sepPos, const std::string line);
+  void ExtractKey(std::string *key, const Size &sepPos,
+                  const std::string_view line);
   /**
    * @brief Extracts the value from the string (value is after the '=')
    *
@@ -140,6 +130,6 @@ class ISETTA_API Config {
    * @param line the string which holds key/value pair
    */
   void ExtractValue(std::string *value, const Size &sepPos,
-                    const std::string line);
+                    const std::string_view line);
 };
-}  // namespace Isetta
+} // namespace Isetta

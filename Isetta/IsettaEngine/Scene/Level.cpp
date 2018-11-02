@@ -36,11 +36,22 @@ std::list<Entity*> Level::GetEntitiesByName(const std::string& name) {
 
 void Level::UnloadLevel() {
   for (auto& entity : entities) {
-    entity->~Entity();
-    MemoryManager::FreeOnFreeList(entity);
+    MemoryManager::DeleteOnFreeList<Entity>(entity);
   }
+  MemoryManager::DeleteOnFreeList<Entity>(levelRoot);
   levelRoot->~Entity();
   MemoryManager::FreeOnFreeList(levelRoot);
+}
+
+void Level::AddComponentToStart(Component* component) {
+  componentsToStart.push(component);
+}
+
+void Level::StartComponents() {
+  while (!componentsToStart.empty()) {
+    componentsToStart.top()->Start();
+    componentsToStart.pop();
+  }
 }
 
 Entity* Level::AddEntity(std::string name) {
@@ -56,8 +67,16 @@ Entity* Level::AddEntity(std::string name, Entity* parent) {
 }
 
 void Level::Update() {
+  StartComponents();
   for (const auto& entity : entities) {
-    entity->Update();
+    if (entity->GetActive()) entity->Update();
+  }
+}
+
+void Level::FixedUpdate() {
+  StartComponents();
+  for (const auto& entity : entities) {
+    entity->FixedUpdate();
   }
 }
 
@@ -67,48 +86,44 @@ void Level::GUIUpdate() {
   }
 
 #if _DEBUG
-  static RectTransform rectTrans{{0, 20, 200, 500}};
+  static RectTransform rectTrans{{20, 100, 250, 500}};
   bool isOpen = true;
-  GUI::Window(
-      rectTrans, "Heirarchy",
-      [&]() {
-        float buttonHeight = 20;
-        float buttonWidth = 200;
-        float height = 10;
-        float left = 5;
-        float padding = 20;
-        static Transform* transform = nullptr;
+  GUI::Window(rectTrans, "Hierarchy", [&]() {
+    float buttonHeight = 20;
+    float buttonWidth = 200;
+    float height = 10;
+    float left = 5;
+    float padding = 20;
+    static Transform* transform = nullptr;
 
-        for (const auto& entity : entities) {
-          Func<int, Transform*> countLevel = [](Transform* t) -> int {
-            int i = 0;
-            while (t->GetParent() != nullptr) {
-              t = t->GetParent();
-              i++;
-            }
-            return i;
-          };
-
-          Action<Transform*> action = [&](Transform* t) {
-            int level = countLevel(t);
-            if (GUI::Button(RectTransform{Math::Rect{
-                                left + level * padding, height,
-                                buttonWidth - level * padding, buttonHeight}},
-                            t->GetName())) {
-              transform = transform == t ? nullptr : t;
-            }
-            height += 1.25f * buttonHeight;
-          };
-          action(entity->GetTransform());
-          entity->GetTransform()->ForDescendants(action);
+    for (const auto& entity : entities) {
+      Func<int, Transform*> countLevel = [](Transform* t) -> int {
+        int i = 0;
+        while (t->GetParent() != nullptr) {
+          t = t->GetParent();
+          i++;
         }
+        return i;
+      };
 
-        if (transform != nullptr) {
-          transform->InspectorGUI();
+      Action<Transform*> action = [&](Transform* t) {
+        int level = countLevel(t);
+        if (GUI::Button(RectTransform{Math::Rect{left + level * padding, height,
+                                                 buttonWidth - level * padding,
+                                                 buttonHeight}},
+                        t->GetName())) {
+          transform = transform == t ? nullptr : t;
         }
-      },
-      NULL, GUI::WindowStyle{},
-      GUI::WindowFlags::NoMove | GUI::WindowFlags::NoResize);
+        height += 1.25f * buttonHeight;
+      };
+      action(entity->GetTransform());
+      entity->GetTransform()->ForDescendants(action);
+    }
+
+    if (transform != nullptr) {
+      transform->InspectorGUI();
+    }
+  });
 #endif
 }
 
@@ -116,8 +131,16 @@ void Level::LateUpdate() {
   for (const auto& entity : entities) {
     entity->LateUpdate();
   }
+
+  for (auto& entity : entities) {
+    if (entity->GetAttribute(Entity::EntityAttributes::NEED_DESTROY)) {
+      MemoryManager::DeleteOnFreeList(entity);
+      entity = nullptr;
+    }
+  }
+
   entities.remove_if([](Entity*& entity) {
-    return entity->GetAttribute(Entity::EntityAttributes::NEED_DESTROY);
+    return entity == nullptr;
   });
 }
 

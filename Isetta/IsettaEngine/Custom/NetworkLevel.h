@@ -14,9 +14,6 @@
 namespace Isetta {
 CREATE_LEVEL(NetworkLevel)
 void LoadLevel() override;
-void UnloadLevel() override;
-
-std::list<Entity*> zombies;
 };
 
 /**
@@ -47,11 +44,11 @@ RPC_MESSAGE_FINISH
 // Spawn
 RPC_MESSAGE_DEFINE(SpawnMessage)
 
-SpawnMessage() { netId = a = b = c = 0; }
-
 template <typename Stream>
 bool Serialize(Stream* stream) {
   serialize_int(stream, netId, 0, 256);
+  serialize_int(stream, clientAuthorityId, 0,
+                NetworkManager::Instance().GetMaxClients());
   serialize_float(stream, a);
   serialize_float(stream, b);
   serialize_float(stream, c);
@@ -63,13 +60,14 @@ void Copy(const yojimbo::Message* otherMessage) override {
   const SpawnMessage* message =
       reinterpret_cast<const SpawnMessage*>(otherMessage);
   netId = message->netId;
+  clientAuthorityId = message->clientAuthorityId;
   a = message->a;
   b = message->b;
   c = message->c;
 }
 
-int netId;
-float a, b, c;
+int netId = 0, clientAuthorityId = 0;
+float a = 0, b = 0, c = 0;
 
 RPC_MESSAGE_FINISH
 

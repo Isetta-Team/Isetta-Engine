@@ -12,6 +12,7 @@
 #include "Graphics/GUI.h"
 #include "Graphics/RectTransform.h"
 #include "imgui/imgui.h"
+#include <string>
 #endif
 
 namespace Isetta {

@@ -8,19 +8,20 @@
 #include <unordered_map>
 #include <utility>
 
+#include "ISETTA_API.h"
 #include "Core/IsettaAlias.h"
 #include "yojimbo/yojimbo.h"
 
 namespace Isetta {
 
 class Entity;
-class NetworkIdentity;
+class NetworkId;
 
 /**
  * @brief Wrapper class for NetworkingModule so that other engine components can
  * use networking features.
  */
-class NetworkManager {
+class ISETTA_API_DECLARE NetworkManager {
  private:
   yojimbo::Message* CreateClientMessage(int messageId);
   yojimbo::Message* CreateServerMessage(int clientIdx, int messageId);
@@ -48,7 +49,7 @@ class NetworkManager {
       int, std::list<std::pair<U16, Action<int, yojimbo::Message*>>>>
       serverCallbacks;
 
-  std::unordered_map<U32, NetworkIdentity*> networkIdToComponentMap;
+  std::unordered_map<U32, NetworkId*> networkIdToComponentMap;
 
  public:
   static NetworkManager& Instance();
@@ -62,6 +63,9 @@ class NetworkManager {
   void SendMessageFromServer(int clientIdx, yojimbo::Message* message);
   template <typename T>
   void SendAllMessageFromServer(yojimbo::Message* message);
+  template <typename T>
+  void SendAllButClientMessageFromServer(int clinetIdx,
+                                         yojimbo::Message* message);
 
   U16 GetMessageTypeCount() { return messageTypeCount; }
   template <typename T>
@@ -77,9 +81,10 @@ class NetworkManager {
   void UnregisterClientCallback(int handle);
 
   Entity* GetNetworkEntity(const U32 id);
-  U32 CreateNetworkId(NetworkIdentity* networkIdentity);
-  U32 AssignNetworkId(U32 netId, NetworkIdentity* networkIdentity);
-  void RemoveNetworkId(NetworkIdentity* networkIdentity);
+  NetworkId* GetNetworkId(const U32 id);
+  U32 CreateNetworkId(NetworkId* NetworkId);
+  U32 AssignNetworkId(U32 netId, NetworkId* NetworkId);
+  void RemoveNetworkId(NetworkId* NetworkId);
 
   /**
    * @brief Connects the local Client to a server at the given address.
@@ -113,6 +118,7 @@ class NetworkManager {
   bool ClientIsConnected(int clientIdx);
   bool ServerIsRunning();
   int GetMaxClients();
+  int GetClientIndex();
 
   NetworkManager() = default;
   ~NetworkManager() = default;
@@ -137,6 +143,18 @@ template <typename T>
 void NetworkManager::SendAllMessageFromServer(yojimbo::Message* refMessage) {
   for (int i = 0; i < GetMaxClients(); ++i) {
     if (!ClientIsConnected(i)) {
+      continue;
+    }
+
+    yojimbo::Message* newMessage = GenerateMessageFromServer<T>(i);
+    newMessage->Copy(refMessage);
+    SendMessageFromServer(i, newMessage);
+  }
+}
+template <typename T>
+void NetworkManager::SendAllButClientMessageFromServer(int clientIdx, yojimbo::Message* refMessage) {
+  for (int i = 0; i < GetMaxClients(); ++i) {
+    if (!ClientIsConnected(i) || i == clientIdx) {
       continue;
     }
 

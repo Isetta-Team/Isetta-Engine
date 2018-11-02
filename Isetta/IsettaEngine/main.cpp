@@ -1,7 +1,10 @@
 /*
  * Copyright (c) 2018 Isetta
  */
+#define _CRTDBG_MAP_ALLOC
 #include "Application.h"
+#include <crtdbg.h>
+#include <stdlib.h>
 
 using namespace Isetta;
 

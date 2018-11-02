@@ -9,7 +9,7 @@ class Matrix4;
 }
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(CapsuleCollider, Collider)
+BEGIN_COMPONENT(CapsuleCollider, Collider, false)
  private:
   void Update() override;
   // TODO(Jacob) duplicate code
@@ -17,7 +17,7 @@ CREATE_COMPONENT_BEGIN(CapsuleCollider, Collider)
                      RaycastHit* const hitInfo, float maxDistance);
 
  protected:
-  const ColliderType GetType() const override {
+  ColliderType GetType() const override {
     return Collider::ColliderType::CAPSULE;
   }
 
@@ -74,5 +74,5 @@ CREATE_COMPONENT_BEGIN(CapsuleCollider, Collider)
     }
   }
   bool Intersection(Collider* const other) override;
-CREATE_COMPONENT_END(CapsuleCollider, Collider)
+END_COMPONENT(CapsuleCollider, Collider)
 }  // namespace Isetta

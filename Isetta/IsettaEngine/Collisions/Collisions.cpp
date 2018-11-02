@@ -3,7 +3,6 @@
  */
 #include "Collisions/Collisions.h"
 
-#include "Collisions.h"
 #include "Collisions/CollisionsModule.h"
 
 namespace Isetta {

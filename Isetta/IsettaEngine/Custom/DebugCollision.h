@@ -6,7 +6,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(DebugCollision, Component)
+BEGIN_COMPONENT(DebugCollision, Component, true)
 private:
 int collisions = 0;
 int enterHandle, exitHandle;
@@ -18,5 +18,5 @@ void OnEnable() override;
 void OnDisable() override;
 void OnCollisionEnter(class Collider* const other);
 void OnCollisionExit(class Collider* const other);
-CREATE_COMPONENT_END(DebugCollision, Component)
+END_COMPONENT(DebugCollision, Component)
 }  // namespace Isetta

@@ -17,17 +17,17 @@
 #include "Collisions/CollisionHandler.h"
 #include "Collisions/Collisions.h"
 #include "Collisions/SphereCollider.h"
+#include "Core/Config/Config.h"
 
 namespace Isetta {
 void CollisionsModule::StartUp() {
   Collider::collisionsModule = this;
+  Collider::fatFactor = CONFIG_VAL(collisionConfig.fatFactor);
   Collisions::collisionsModule = this;
 }
 
 void CollisionsModule::Update(float deltaTime) {
-  /*
-   * TODO(Yidi)Broadphase check
-   */
+  bvTree.Update();
   // Collider obj1, obj2;
   // if (obj1.isTrigger && obj2.isTrigger) {
   //}  // TODO
@@ -40,32 +40,53 @@ void CollisionsModule::Update(float deltaTime) {
   //    obj2.owner->OnCollision(Collider::EntityKey{}, &obj1);
   //  }
   //}
-  for (auto &colA : colliders) {
-    if (colA->GetAttribute(Collider::Attributes::IS_STATIC)) continue;
-    for (auto &colB : colliders) {
-      if (colA == colB || ignoreCollisions.find(std::make_pair(colA, colB)) !=
-                              ignoreCollisions.end())
-        continue;
-      CollisionHandler *handlerA = colA->GetHandler();
-      CollisionHandler *handlerB = colB->GetHandler();
-      if (handlerA && handlerB && handlerA == handlerB) continue;
-      if (colA->Intersection(colB)) {
-        if (collisionPairs.find(std::make_pair(colA, colB)) !=
-            collisionPairs.end()) {
-          if (handlerA) handlerA->OnCollisionStay(colB);
-          if (handlerB) handlerB->OnCollisionStay(colA);
-        } else {
-          if (handlerA) handlerA->OnCollisionEnter(colB);
-          if (handlerB) handlerB->OnCollisionEnter(colA);
-          collisionPairs.insert(std::make_pair(colA, colB));
-        }
-      } else if (collisionPairs.find(std::make_pair(colA, colB)) !=
-                 collisionPairs.end()) {
-        if (handlerA) handlerA->OnCollisionExit(colB);
-        if (handlerB) handlerB->OnCollisionExit(colA);
-        collisionPairs.erase(std::make_pair(colA, colB));
+
+  // By the end of the checking loop, pairs left in the lastFramePairs
+  // are those who are no longer colliding
+  auto lastFramePairs = collidingPairs;
+
+  collidingPairs.clear();
+
+  for (const auto &pair : bvTree.GetCollisionPairs()) {
+    Collider *collider1 = pair.first;
+    Collider *collider2 = pair.second;
+
+    CollisionHandler *handler1 = collider1->GetHandler();
+    CollisionHandler *handler2 = collider2->GetHandler();
+
+    // things under the same handler don't collide
+    if (handler1 && handler2 && handler1 == handler2 ||
+        ignoreCollisions.find(pair) != ignoreCollisions.end())
+      continue;
+
+    if (collider1->Intersection(collider2)) {
+      // if they do collide
+      auto it = lastFramePairs.find(pair);
+
+      if (it != lastFramePairs.end()) {
+        // pair was colliding last frame
+        if (handler1) handler1->OnCollisionStay(collider2);
+        if (handler2) handler2->OnCollisionStay(collider1);
+        lastFramePairs.erase(it);
+      } else {
+        // pair is new
+        if (handler1) handler1->OnCollisionEnter(collider2);
+        if (handler2) handler2->OnCollisionEnter(collider1);
       }
+
+      collidingPairs.insert(pair);
     }
+  }
+
+  for (const auto &pair : lastFramePairs) {
+    Collider *collider1 = pair.first;
+    Collider *collider2 = pair.second;
+
+    CollisionHandler *handler1 = collider1->GetHandler();
+    CollisionHandler *handler2 = collider2->GetHandler();
+
+    if (handler1) handler1->OnCollisionExit(collider2);
+    if (handler2) handler2->OnCollisionExit(collider1);
   }
 }
 
@@ -452,9 +473,10 @@ float CollisionsModule::ClosestPtRaySegment(
   Math::Vector3 r = p0 - ray.GetOrigin();
   float a = Math::Vector3::Dot(
       d, d);  // Squared length of segment S1, always nonnegative
-  float e = Math::Vector3::Dot(
-      ray.GetDirection(),
-      ray.GetDirection());  // Squared length of segment S2, always nonnegative
+  float e =
+      Math::Vector3::Dot(ray.GetDirection(),
+                         ray.GetDirection());  // Squared length of segment
+                                               // S2, always nonnegative
   float f = Math::Vector3::Dot(ray.GetDirection(), r);
 
   if (a <= Math::Util::EPSILON) {
@@ -490,7 +512,7 @@ float CollisionsModule::ClosestPtRaySegment(
   cSeg = p0 + d * tSeg;
   return Math::Vector3::Dot(cRay - cSeg, cRay - cSeg);
 }
-Math::Vector3 CollisionsModule::ClossetPtPointAABB(const Math::Vector3 &point,
+Math::Vector3 CollisionsModule::ClosestPtPointAABB(const Math::Vector3 &point,
                                                    const AABB &aabb) {
   Math::Vector3 pt;
   pt.x = Math::Util::Min(Math::Util::Max(point.x, aabb.GetMin().x),

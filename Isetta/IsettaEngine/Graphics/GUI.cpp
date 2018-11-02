@@ -129,7 +129,7 @@ void GUI::Toggle(const RectTransform& transform, const std::string& label,
 }
 
 // TEXT
-void GUI::Text(const RectTransform& transform, const std::string format,
+void GUI::Text(const RectTransform& transform, const std::string& format,
                const TextStyle& style) {
   ImGui::SetCursorPos((ImVec2)SetPosition(transform));
   ImGui::PushItemWidth(transform.rect.width);
@@ -137,7 +137,7 @@ void GUI::Text(const RectTransform& transform, const std::string format,
   ImGuiContext* context = ImGui::GetCurrentContext();
   ImGui::PushStyleColor(ImGuiCol_Text,
                         !style.isDisabled
-                            ? ImVec4(style.text)
+                            ? (ImVec4)style.text
                             : context->Style.Colors[ImGuiCol_TextDisabled]);
   bool need_wrap = style.isWrapped &&
                    (context->CurrentWindow->DC.TextWrapPos <
@@ -150,7 +150,7 @@ void GUI::Text(const RectTransform& transform, const std::string format,
   ImGui::PopItemWidth();
 }
 void GUI::Label(const RectTransform& transform, const std::string& label,
-                const std::string format, const LabelStyle& style) {
+                const std::string& format, const LabelStyle& style) {
   ImGui::SetCursorPos((ImVec2)SetPosition(transform));
   ImGui::PushItemWidth(transform.rect.width);
 
@@ -162,10 +162,10 @@ void GUI::Label(const RectTransform& transform, const std::string& label,
 }
 
 // INPUT
-void GUI::InputText(const RectTransform& transform, const std::string& label,
+bool GUI::InputText(const RectTransform& transform, const std::string& label,
                     char* buffer, int bufferSize, const InputStyle& style,
-                    InputTextFlags flags,
-                    const GUIInputTextCallback& callback) {
+                    InputTextFlags flags, InputTextCallback callback,
+                    void* userData) {
   ImGui::SetCursorPos((ImVec2)SetPosition(transform));
   ImGui::PushItemWidth(transform.rect.width);
 
@@ -173,10 +173,11 @@ void GUI::InputText(const RectTransform& transform, const std::string& label,
   ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)style.hovered);
   ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)style.active);
   ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)style.text);
-  ImGui::InputText(label.c_str(), buffer, bufferSize,
-                   ImGuiInputTextFlags(flags), callback, NULL);
+  bool input = ImGui::InputText(label.c_str(), buffer, bufferSize,
+                                ImGuiInputTextFlags(flags), callback, userData);
   ImGui::PopItemWidth();
   ImGui::PopStyleColor(4);
+  return input;
 }
 void GUI::InputInt(const RectTransform& transform, const std::string& label,
                    int* value, const InputStyle& style, int step, int stepFast,
@@ -209,6 +210,77 @@ void GUI::SliderFloat(const RectTransform& transform, const std::string& label,
   ImGui::PopStyleColor(4);
 }
 
+void GUI::ComboBox(const RectTransform& transform,
+                   const std::string_view& label, int* current,
+                   const std::string_view* items[], const int length,
+                   const ComboStyle& style) {
+  // Style
+  ImGui::SetCursorPos((ImVec2)SetPosition(transform));
+  ImGui::PushItemWidth(transform.rect.width);
+  struct FuncHolder {
+    static bool ItemGetter(void* data, int idx, const char** outStr) {
+      *outStr = ((const std::string_view*)data)[idx].data();
+      return true;
+    }
+  };
+  ImGui::Combo(label.data(), current, &FuncHolder::ItemGetter, items, length,
+               style.maxHeight);
+}
+
+void GUI::ComboBox(const RectTransform& transform,
+                   const std::string_view& label, int* current,
+                   const std::vector<std::string>& items,
+                   const ComboStyle& style) {
+  // Style
+  ImGui::SetCursorPos((ImVec2)SetPosition(transform));
+  ImGui::PushItemWidth(transform.rect.width);
+
+  int& idx = *current;
+  if (ImGui::BeginCombo(label.data(), items[idx].c_str())) {
+    for (int i = 0; i < items.size(); i++) {
+      ImGui::Selectable(items[i].c_str(), idx == i);
+    }
+    ImGui::EndCombo();
+  }
+}
+
+bool GUI::ButtonDropDown(const RectTransform& transform,
+                         const std::string_view& label,
+                         const Math::Vector2& btnSize, const Action<>& ui) {
+  ImGui::SetCursorPos((ImVec2)SetPosition(transform));
+
+  ImGuiWindow* window = ImGui::GetCurrentWindow();
+
+  float x = ImGui::GetCursorPosX();
+  float y = ImGui::GetCursorPosY();
+  Math::Vector2 size{btnSize.x, btnSize.y};
+  bool pressed = ImGui::Button("##", (ImVec2)size);
+
+  // Arrow
+  Math::Vector2 center(window->Pos.x + x + 0.5f * btnSize.x,
+                       window->Pos.y + y + 0.5f * btnSize.y);
+  float r = 8.f;
+  center.y -= r * 0.25f;
+  Math::Vector2 a = center + Math::Vector2{0, r};
+  Math::Vector2 b = center + Math::Vector2{-0.866f, -0.5f} * r;
+  Math::Vector2 c = center + Math::Vector2{0.866f, -0.5f} * r;
+  window->DrawList->AddTriangleFilled((ImVec2)a, (ImVec2)b, (ImVec2)c,
+                                      ImGui::GetColorU32(ImGuiCol_Text));
+
+  // Popup
+  Math::Vector2 popupPos{window->Pos.x + x, window->Pos.y + y + btnSize.y};
+  ImGui::SetNextWindowPos((ImVec2)popupPos);
+  const char* labelC = label.data();
+  if (pressed) ImGui::OpenPopup(labelC);
+
+  if (ImGui::BeginPopup(labelC)) {
+    ui();
+    ImGui::EndPopup();
+    return true;
+  }
+  return false;
+}
+
 // WINDOWS
 bool GUI::Window(const RectTransform& transform, const std::string& name,
                  const Action<>& ui, bool* isOpen, const WindowStyle& style,
@@ -219,17 +291,25 @@ bool GUI::Window(const RectTransform& transform, const std::string& name,
   if (transform.rect.Size() != Math::Vector2::zero) {
     ImGui::SetNextWindowSize((ImVec2)transform.rect.Size(), ImGuiCond_Once);
   }
-  if (style.constraints.Min() != style.constraints.Max()) {
+  if (style.constraints.Position() != style.constraints.Size()) {
     ImGui::SetNextWindowSizeConstraints((ImVec2)style.constraints.Min(),
                                         (ImVec2)style.constraints.Max());
   }
-  bool collapsed = ImGui::Begin(name.c_str(), isOpen, ImGuiWindowFlags(flags));
+  bool collapsed = ImGui::Begin(name.c_str(), isOpen, (ImGuiWindowFlags)flags);
   if (collapsed) {
     ui();
   }
   ImGui::End();
   ImGui::PopStyleColor();
   return collapsed;
+}
+void GUI::Child(const RectTransform& transform, const std::string& id,
+                const Action<>& ui, bool border, WindowFlags flags) {
+  ImGui::SetCursorPos((ImVec2)SetPosition(transform));
+  ImGui::BeginChild(id.c_str(), (ImVec2)transform.rect.Size(), border,
+                    (ImGuiWindowFlags)flags);
+  ui();
+  ImGui::EndChild();
 }
 bool GUI::MenuBar(const Action<>& ui, bool main, const BackgroundStyle& style) {
   if (style.enabled) {

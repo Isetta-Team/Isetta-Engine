@@ -3,6 +3,7 @@
  */
 #pragma once
 
+#include <bitset>
 #include <string>
 #include "Core/Color.h"
 #include "Core/IsettaAlias.h"
@@ -12,13 +13,15 @@
 typedef void* TextureID;
 class ImGuiInputTextCallbackData;
 class ImFont;
+class ImGuiTextFilter;
 
 namespace Isetta {
 class RectTransform;
 class GUIStyle;
 using Font = ImFont;
-using GUIInputTextCallbackData = ImGuiInputTextCallbackData;
-using GUIInputTextCallback = int (*)(GUIInputTextCallbackData*);
+using TextFilter = ImGuiTextFilter;
+using InputTextCallbackData = ImGuiInputTextCallbackData;
+using InputTextCallback = int (*)(InputTextCallbackData*);
 namespace Math {
 class Rect;
 }
@@ -445,6 +448,11 @@ class ISETTA_API GUI {
     ButtonStyle(Color background, Color hover, Color active)
         : background{background}, hover{hover}, active{active} {}
   };
+  struct ISETTA_API ComboStyle {
+    int maxHeight = -1;
+    // ComboStyle() {}
+    ComboStyle(int maxHeight = -1) : maxHeight{maxHeight} {}
+  };
   struct ISETTA_API ImageStyle {
     Color tint = Color::white;
     Color frame = Color::clear;
@@ -519,8 +527,8 @@ class ISETTA_API GUI {
   };
   // TODO(Jacob) refactor
   struct ISETTA_API TextStyle {
-    bool isWrapped;
-    bool isDisabled;
+    bool isWrapped = false;
+    bool isDisabled = false;
     // TODO(Jacob) Not worth implementing now
     // bool isBulleted;
     Color text;
@@ -536,6 +544,10 @@ class ISETTA_API GUI {
     Color background;
     Math::Rect constraints;
     WindowStyle();
+    WindowStyle(const Color& background) : background{background} {
+      constraints = Math::Rect{};
+    }
+    WindowStyle(const Math::Rect& constraints);
     WindowStyle(const Color& background, const Math::Rect& constraints)
         : background{background}, constraints{constraints} {}
   };
@@ -604,7 +616,7 @@ class ISETTA_API GUI {
   */
 
   // TEXT
-  static void Text(const RectTransform& transform, const std::string format,
+  static void Text(const RectTransform& transform, const std::string& format,
                    const TextStyle& style = {});
   ////////////////////////////////////////
   // TODO(Jacob) NOT PART OF GAME NEEDS //
@@ -614,7 +626,7 @@ class ISETTA_API GUI {
   */
   // TODO(Jacob) styling
   static void Label(const RectTransform& transform, const std::string& label,
-                    const std::string format, const LabelStyle& style);
+                    const std::string& format, const LabelStyle& style);
   ////////////////////////////////////////
   // TODO(Jacob) NOT PART OF GAME NEEDS //
   ////////////////////////////////////////
@@ -651,11 +663,12 @@ class ISETTA_API GUI {
   //  Math::Vector2Int selection;
   //  InputTextCallbackData();
   //};
-  static void InputText(const RectTransform& transform,
+  static bool InputText(const RectTransform& transform,
                         const std::string& label, char* buffer, int bufferSize,
                         const InputStyle& style = {},
                         InputTextFlags flags = InputTextFlags::None,
-                        const GUIInputTextCallback& callback = NULL);
+                        InputTextCallback callback = NULL,
+                        void* userData = NULL);
   static void InputInt(const RectTransform& transform, const std::string& label,
                        int* value, const InputStyle& style = {}, int step = 1,
                        int stepFast = 100,
@@ -744,11 +757,22 @@ class ISETTA_API GUI {
   label,
                           Color* color,
                           ColorEditFlags flags = ColorEditFlags::NoAlpha);
-  static void ComboBox(const RectTransform& transform, const std::string& label,
-                       int* current, const std::string* items[], int length);
+
   static void ListBox(const RectTransform& transform, const std::string& label,
                       int* value, const std::string* items[], int length);
   */
+  // Single Select
+  static void ComboBox(const RectTransform& transform,
+                       const std::string_view& label, int* current,
+                       const std::string_view* items[], const int length,
+                       const ComboStyle& style = {});
+  static void ComboBox(const RectTransform& transform,
+                       const std::string_view& label, int* current,
+                       const std::vector<std::string>& items,
+                       const ComboStyle& style = {});
+  static bool ButtonDropDown(const RectTransform& transform,
+                             const std::string_view& label,
+                             const Math::Vector2& btnSize, const Action<>& ui);
 
   // LAYOUT/SPACING
   ////////////////////////////////////////
@@ -769,9 +793,7 @@ class ISETTA_API GUI {
                       bool border = true);
   static void NextColumn();
   static void HorizontalGroup(const RectTransform& transform, const Action<>&
-  ui); static void Child(const RectTransform& transform, const std::string& id,
-                    const Action<>& ui, bool border = false,
-                    GUIWindowFlags flags = GUIWindowFlags::None);
+  ui);
   */
 
   // WINDOWS
@@ -779,6 +801,9 @@ class ISETTA_API GUI {
                      const Action<>& ui, bool* isOpen = NULL,
                      const WindowStyle& style = {},
                      const WindowFlags flags = WindowFlags::None);
+  static void Child(const RectTransform& transform, const std::string& id,
+                    const Action<>& ui, bool border = false,
+                    WindowFlags flags = WindowFlags::None);
   static bool MenuBar(const Action<>& ui, bool main = false,
                       const BackgroundStyle& style = {});
   static bool Menu(const std::string& label, const Action<>& ui,

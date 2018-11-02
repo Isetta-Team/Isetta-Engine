@@ -7,6 +7,7 @@
   (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
 
 #include <Windows.h>
+#include <bitset>
 #include <cstdint>
 #include <initializer_list>
 #include <string>
@@ -37,11 +38,13 @@ class ISETTA_API_DECLARE Logger {
    *
    */
   struct LoggerConfig {
-    /// Determines the severity needed for what output messages are shown
-    CVar<U8> verbosityMask{"verbosity_mask", ~0u};
-    /// Determines the channels which get output and which are written to the
-    /// channel file
-    CVar<U32> channelMask{"channel_mask", ~0u};
+    /*
+  /// Determines the severity needed for what output messages are shown
+  CVar<U8> verbosityMask{"verbosity_mask", ~0u};
+  /// Determines the channels which get output and which are written to the
+  /// channel file
+  CVar<U32> channelMask{"channel_mask", ~0u};
+  */
     /// If the engine breaks into a breakpoint with LOG_ERROR
     CVar<int> breakOnError{"break_on_error", 1};
     /// Number of characters/bytes to write before flushing to the output buffer
@@ -50,12 +53,37 @@ class ISETTA_API_DECLARE Logger {
     CVarString logFolder{"logger_folder", "Logs"};
   };
 
+  static std::bitset<static_cast<int>(Debug::Channel::All)> channelMask;
+  static std::bitset<static_cast<int>(Debug::Verbosity::All) - 1> verbosityMask;
+
+  static Action<const char*> outputCallback;
+  /**
+   * @brief Checks if the given channel enum is part of the channel mask,
+   * masking non-marked channels
+   *
+   * @param channel of the input message
+   * @return true if the channel enum is included in the channel mask
+   * @return false if the channel enum is not part of the channel mask
+   */
+  static bool CheckChannelMask(const Debug::Channel channel);
+  /**
+   * @brief Checks if the given verbosity enum is part of the verbosity mask,
+   * masking non-marked verbosity
+   *
+   * @param verbosity of the input message
+   * @return true if the verbosity enum is included in the verbosity mask
+   * @return false if the verbosity enum is not part of the verbosity mask
+   */
+  static bool CheckVerbosity(const Debug::Verbosity verbosity);
+
   /**
    * @brief Creates a new session of the logger, which attempts to create a new
    * engine and channel log file in log folder with timestamp.
    *
    */
   static void NewSession();
+
+  static void ShutDown();
   /**
    * @brief The function which parses the input parameters, then calls
    * VDebugPrintF for the actual output. Should default to LOG macros rather
@@ -110,24 +138,6 @@ class ISETTA_API_DECLARE Logger {
   /// the channel file
   static std::ostringstream channelStream;
 
-  /**
-   * @brief Checks if the given channel enum is part of the channel mask,
-   * masking non-marked channels
-   *
-   * @param channel of the input message
-   * @return true if the channel enum is included in the channel mask
-   * @return false if the channel enum is not part of the channel mask
-   */
-  static bool CheckChannelMask(const Debug::Channel channel);
-  /**
-   * @brief Checks if the given verbosity enum is part of the verbosity mask,
-   * masking non-marked verbosity
-   *
-   * @param verbosity of the input message
-   * @return true if the verbosity enum is included in the verbosity mask
-   * @return false if the verbosity enum is not part of the verbosity mask
-   */
-  static bool CheckVerbosity(const Debug::Verbosity verbosity);
   /**
    * @brief Adds the buffer to the stream if it passes the verbosity and channel
    * checks, then writes to the file.
@@ -239,8 +249,7 @@ struct ISETTA_API LogObject {
    * @param inFormat the format string similar to printf
    * @param ... input arguments to fill the formats
    */
-  void operator()(const char* inFormat,
-                  ...) const;
+  void operator()(const char* inFormat, ...) const;
   /**
    * @brief Call to DebugPrintF to output a log message,
    * verbosity set in constructor

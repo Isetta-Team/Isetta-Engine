@@ -5,19 +5,20 @@
 #include <Horde3D.h>
 #include <string>
 #include "Scene/Component.h"
+#include <string_view>
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(MeshComponent, Component)
+BEGIN_COMPONENT(MeshComponent, Component, false)
   H3DNode renderNode{0};
   H3DRes renderResource{0};
 
-  explicit MeshComponent(const std::string& resourceName);
+  explicit MeshComponent(std::string_view resourceName);
   ~MeshComponent();
 
   void UpdateTransform() const; 
 
  protected:
-  static H3DRes LoadResourceFromFile(const std::string& resourceName);
+  static H3DRes LoadResourceFromFile(std::string_view resourceName);
 
   void OnEnable() override;
   void OnDisable() override;
@@ -30,5 +31,5 @@ CREATE_COMPONENT_BEGIN(MeshComponent, Component)
   friend class RenderModule;
 
   static class RenderModule* renderModule;
-CREATE_COMPONENT_END(MeshComponent, Component)
+END_COMPONENT(MeshComponent, Component)
 }  // namespace Isetta

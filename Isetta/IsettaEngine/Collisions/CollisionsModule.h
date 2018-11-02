@@ -4,6 +4,7 @@
 #pragma once
 #include <unordered_map>
 #include <unordered_set>
+#include "BVTree.h"
 #include "Scene/Layers.h"
 #include "Util.h"
 
@@ -14,6 +15,10 @@ class Vector3;
 namespace Isetta {
 class CollisionsModule {
  public:
+  struct CollisionConfig {
+    CVar<float> fatFactor{"collision_fat_factor", 0.2f};
+  };
+
   static bool Intersection(const class BoxCollider &,
                            const class BoxCollider &);
   static bool Intersection(const class BoxCollider &,
@@ -46,16 +51,16 @@ class CollisionsModule {
   CollisionsModule() = default;
   ~CollisionsModule() = default;
 
-  // BVTree tree;
   // TODO(Jacob) remove
   std::unordered_set<class Collider *> colliders;
 
-  std::unordered_set<std::pair<Collider *, Collider *>, std::UnorderedPairHash>
-      collisionPairs;
-  std::unordered_set<std::pair<Collider *, Collider *>, std::UnorderedPairHash>
-      ignoreCollisions;
-  std::bitset<(int)(0.5f * Layers::LAYERS_CAPACITY *
-                    (Layers::LAYERS_CAPACITY + 1))>
+  // probably mark them as "still colliding"
+  CollisionUtil::ColliderPairSet collidingPairs;
+  CollisionUtil::ColliderPairSet ignoreCollisions;
+
+  BVTree bvTree;
+  std::bitset<static_cast<int>(0.5f * Layers::LAYERS_CAPACITY *
+                               (Layers::LAYERS_CAPACITY + 1))>
       collisionMatrix;
 
   void StartUp();
@@ -67,7 +72,6 @@ class CollisionsModule {
   friend class Collisions;
 
   // Utilities
-
   bool GetIgnoreLayerCollision(int layer1, int layer2) const;
   void SetIgnoreLayerCollision(int layer1, int layer2, bool ignoreLayer = true);
 
@@ -92,7 +96,7 @@ class CollisionsModule {
                                        const Math::Vector3 &, float *const,
                                        float *const, Math::Vector3 *const,
                                        Math::Vector3 *const);
-  static Math::Vector3 ClossetPtPointAABB(const Math::Vector3 &,
+  static Math::Vector3 ClosestPtPointAABB(const Math::Vector3 &,
                                           const class AABB &);
   static Math::Vector3 ClosestPtPointOBB(const Math::Vector3 &,
                                          const class BoxCollider &);

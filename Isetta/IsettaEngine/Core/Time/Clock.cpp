@@ -3,8 +3,8 @@
  */
 
 #include "Core/Time/Clock.h"
-#include "Core/Debug/Logger.h"
 #include <ctime>
+#include "Core/Debug/Logger.h"
 
 namespace Isetta {
 Clock::Clock()
@@ -13,15 +13,17 @@ Clock::Clock()
       deltaTime{},
       elapsedTime(0),
       elapsedUnscaledTime(0),
+      timeFrame{0},
       timeScale{1.f},
       isPause{false} {}
 
 Clock::Clock(const Clock& inClock)
     : startTime{inClock.startTime},
       currentTime{inClock.currentTime},
-      deltaTime(inClock.deltaTime),
+      deltaTime{inClock.deltaTime},
       elapsedTime{inClock.elapsedTime},
       elapsedUnscaledTime{inClock.elapsedUnscaledTime},
+      timeFrame(inClock.timeFrame),
       timeScale{inClock.timeScale},
       isPause{inClock.isPause} {}
 
@@ -31,10 +33,12 @@ Clock::Clock(Clock&& inClock) noexcept
       deltaTime{inClock.deltaTime},
       elapsedTime{inClock.elapsedTime},
       elapsedUnscaledTime{inClock.elapsedUnscaledTime},
+      timeFrame{inClock.timeFrame},
       timeScale{inClock.timeScale},
       isPause{inClock.isPause} {}
 
 void Clock::UpdateTime() {
+  timeFrame++;
   deltaTime = 0.0;
   if (!isPause) {
     TimePoint newTime = HighResClock::now();
@@ -53,6 +57,8 @@ void Clock::UpdateTime() {
 double Clock::GetDeltaTime() const { return deltaTime; }
 double Clock::GetElapsedTime() const { return elapsedTime; }
 double Clock::GetElapsedUnscaledTime() const { return elapsedUnscaledTime; }
+U64 Clock::GetTimeFrame() const { return timeFrame; }
+
 U64 Clock::GetTimestamp() {
   U64 unixTimestamp = std::chrono::seconds(std::time(nullptr)).count();
   return unixTimestamp;

@@ -39,4 +39,14 @@ bool SphereCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
 }
 
 INTERSECTION_TEST(SphereCollider)
+
+AABB SphereCollider::GetFatAABB() {
+  return AABB{GetTransform()->WorldPosFromLocalPos(center),
+              radius * 2 * Math::Vector3::one * (1 + fatFactor)};
+}
+
+AABB SphereCollider::GetAABB() {
+  return AABB{GetTransform()->WorldPosFromLocalPos(center),
+              radius * 2 * Math::Vector3::one};
+}
 }  // namespace Isetta

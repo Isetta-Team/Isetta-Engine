@@ -3,19 +3,18 @@
  */
 #include "Audio/AudioSource.h"
 #include "Audio/AudioModule.h"
-#include "Core/Debug/Logger.h"
 
 namespace Isetta {
 
-AudioModule* AudioSource::audioSystem;
+AudioModule* AudioSource::audioModule;
 
 void AudioSource::SetAudioClip(const char* soundName) {
-  fmodSound = audioSystem->FindSound(soundName);
+  fmodSound = audioModule->FindSound(soundName);
 }
 
 void AudioSource::Play(const bool loop, const float volume) {
   if (isSoundValid()) {
-    fmodChannel = audioSystem->Play(fmodSound, loop, volume);
+    fmodChannel = audioModule->Play(fmodSound, loop, volume);
   }
 }
 

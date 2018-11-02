@@ -5,8 +5,8 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(RaycastClick, Component)
+BEGIN_COMPONENT(RaycastClick, Component, true)
 public:
-void OnEnable() override;
-CREATE_COMPONENT_END(RaycastClick, Component)
+  void OnEnable() override;
+END_COMPONENT(RaycastClick, Component)
 }  // namespace Isetta

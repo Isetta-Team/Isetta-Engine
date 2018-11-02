@@ -16,10 +16,12 @@
 #include "Core/Debug/Logger.h"
 #include "Core/Filesystem.h"
 #include "Core/Time/Clock.h"
+#include "Events/Events.h"
 #include "Input/Input.h"
-#include "Input/InputEnum.h"
+#include "Input/KeyCode.h"
 #include "Networking/NetworkManager.h"
 #include "Scene/Level.h"
+#include "Events/Events.h"
 
 #include "Scene/Entity.h"
 #include "Scene/LevelManager.h"
@@ -27,8 +29,6 @@
 #include "Core/Debug/DebugDraw.h"
 
 namespace Isetta {
-
-void InputDemo();
 
 EngineLoop& EngineLoop::Instance() {
   static EngineLoop instance;
@@ -81,9 +81,6 @@ void EngineLoop::StartUp() {
   LevelManager::Instance().LoadStartupLevel();
 
   StartGameClock();
-
-  // InputDemo();
-  // RunYidiTest();
 }
 
 void EngineLoop::Update() {
@@ -114,10 +111,12 @@ void EngineLoop::Update() {
 void EngineLoop::FixedUpdate(float deltaTime) {
   networkingModule->Update(deltaTime);
   collisionsModule->Update(deltaTime);
+  LevelManager::Instance().currentLevel->FixedUpdate();
 }
 void EngineLoop::VariableUpdate(float deltaTime) {
   inputModule->Update(deltaTime);
   LevelManager::Instance().currentLevel->Update();
+  Events::Instance().Update();
   LevelManager::Instance().currentLevel->LateUpdate();
   audioModule->Update(deltaTime);
   renderModule->Update(deltaTime);
@@ -138,6 +137,7 @@ void EngineLoop::ShutDown() {
   renderModule->ShutDown();
   windowModule->ShutDown();
   memoryManager->ShutDown();
+  Logger::ShutDown();
 }
 
 void EngineLoop::StartGameClock() const { GetGameClock(); }
@@ -155,27 +155,4 @@ Clock& EngineLoop::GetGameClock() {
   static Clock gameTime{};
   return gameTime;
 }
-
-void InputDemo() {
-  // TODO(Chaojie) remove later into game logic
-
-  // Register Input callback from player script
-  U64 handleA, handleB, handleC;
-  handleA = Input::RegisterKeyPressCallback(KeyCode::NUM1, [&handleA]() {
-    LOG_INFO(Debug::Channel::General, "A pressed");
-    Input::UnregisterKeyPressCallback(KeyCode::A, handleA);
-  });
-  handleB = Input::RegisterKeyReleaseCallback(KeyCode::A, [&handleB]() {
-    LOG_INFO(Debug::Channel::General, "A released");
-    Input::UnregisterKeyReleaseCallback(KeyCode::A, handleB);
-  });
-  handleC = Input::RegisterMousePressCallback(
-      MouseButtonCode::MOUSE_LEFT, [&handleC]() {
-        LOG_INFO(Debug::Channel::General,
-                 {"Left pressed at: " + Input::GetMousePosition().ToString()});
-        Input::UnregisterMousePressCallback(MouseButtonCode::MOUSE_LEFT,
-                                            handleC);
-      });
-}
-
 }  // namespace Isetta

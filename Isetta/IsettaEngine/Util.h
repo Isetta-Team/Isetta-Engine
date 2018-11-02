@@ -22,6 +22,15 @@ inline const char* StrFormat(const char* format, ...) {
   return charBuffer;
 }
 
+inline int FormatStringV(char* buf, size_t size, const char* format,
+                         va_list args) {
+  int w = vsnprintf(buf, size, format, args);
+  if (buf == NULL) return w;
+  if (w == -1 || w >= (int)size) w = (int)size - 1;
+  buf[w] = 0;
+  return w;
+}
+
 inline void StrRemoveSpaces(std::string* str) {
   str->erase(std::remove_if(str->begin(), str->end(), isspace), str->end());
 }
@@ -66,13 +75,11 @@ inline unsigned int CountSetBits(int N) {
   return cnt;
 }
 
-}  // namespace Isetta::Util
-
-namespace std {
 struct UnorderedPairHash {
   template <typename T>
   std::size_t operator()(std::pair<T, T> const& p) const {
     return (std::hash<T>()(p.first) ^ std::hash<T>()(p.second));
   }
 };
-}  // namespace std
+
+}  // namespace Isetta::Util
