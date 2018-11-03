@@ -31,6 +31,10 @@ Console::Console(std::string title, bool isOpen)
     for (const auto& cmd : userCmds)
       console->AddLog("- " + std::string{cmd.first.data()} + "\n");
   });
+  AddCommand("history", []((Console* const console, std::string_view) {
+    for (const auto& cmd : history)
+      console->AddLog("- " + cmd + "\n");
+  });
 
   verbosityColor[static_cast<int>(Debug::Verbosity::Info)] = Color::white;
   verbosityColor[static_cast<int>(Debug::Verbosity::Warning)] = Color::orange;
@@ -80,12 +84,11 @@ int Console::CommandCallback(InputTextCallbackData* data) {
         int matchLen = len;
         if (cfgCandidates.size() > 0)
           word = cfgCandidates[0];
-        else if (userCandidates.size() > 0)
+        else
           word = userCandidates[0];
         for (;;) {
           int c = 0;
           bool allMatch = true;
-          std::string_view word;
           c = word[matchLen];
           for (const auto& cmd : cfgCandidates) {
             if (c == 0 || c != cmd[matchLen]) {
