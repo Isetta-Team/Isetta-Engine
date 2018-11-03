@@ -169,29 +169,18 @@ void Console::GuiUpdate() {
         bool copy = GUI::Button(rect, "Copy");
         rect.rect.x += width + padding;
 
-        static bool displayVerbosity[static_cast<int>(Debug::Verbosity::All)];
+        static bool displayVerbosity[static_cast<int>(Debug::Verbosity::All) - 1];
         for (int verbosity = static_cast<int>(Debug::Verbosity::All) - 1;
              verbosity > static_cast<int>(Debug::Verbosity::Off); verbosity--) {
-          displayVerbosity[verbosity] =
+          displayVerbosity[verbosity - 1] =
               Logger::verbosityMask.test(verbosity - 1);
           std::string label =
               Debug::ToString(static_cast<Debug::Verbosity>(verbosity));
-          GUI::Toggle(rect, label, &displayVerbosity[verbosity]);
-          Logger::verbosityMask.set(verbosity - 1, displayVerbosity[verbosity]);
-
-          if (verbosity == static_cast<int>(Debug::Verbosity::All) - 1)
-            displayVerbosity[0] = true;
-          else
-            displayVerbosity[0] =
-                displayVerbosity[0] &&
-                displayVerbosity[verbosity] == displayVerbosity[verbosity + 1];
+          GUI::Toggle(rect, label, &displayVerbosity[verbosity - 1]);
+          Logger::verbosityMask.set(verbosity - 1, displayVerbosity[verbosity - 1]);
 
           rect.rect.x +=
               padding + 0.4f * width + ImGui::CalcTextSize(label.c_str()).x;
-        }
-        if (displayVerbosity[0]) {
-          displayVerbosity[0] = displayVerbosity[1];
-          Logger::verbosityMask = displayVerbosity[0] ? ~0 : 0;
         }
 
         static bool displayChannel[static_cast<int>(Debug::Channel::All) + 1];
@@ -200,9 +189,7 @@ void Console::GuiUpdate() {
         displayChannel[allChannel] = Logger::channelMask.all();
 
         // OTHERS
-        displayChannel[allChannel] = true;
-        for (int channel = 0; channel < static_cast<int>(Debug::Channel::All);
-             channel++) {
+        for (int channel = 0; channel < allChannel; channel++) {
           displayChannel[channel] = Logger::channelMask.test(channel);
         }
         GUI::ButtonDropDown(rect, "Channel", Math::Vector2{30, 20}, [&]() {
@@ -216,7 +203,6 @@ void Console::GuiUpdate() {
           rect.rect.y += height + padding;
 
           // OTHERS
-          displayChannel[allChannel] = true;
           for (int channel = 0; channel < static_cast<int>(Debug::Channel::All);
                channel++) {
             displayChannel[channel] = Logger::channelMask.test(channel);
@@ -225,12 +211,8 @@ void Console::GuiUpdate() {
             GUI::Toggle(rect, label, &displayChannel[channel]);
             Logger::channelMask.set(channel, displayChannel[channel]);
 
-            displayChannel[allChannel] =
-                displayChannel[allChannel] && displayChannel[channel];
-
             rect.rect.y += height + padding;
           }
-          if (displayChannel[allChannel]) Logger::channelMask = ~0;
         });
 
         rect.anchor = GUI::Pivot::TopRight;
@@ -256,7 +238,7 @@ void Console::GuiUpdate() {
                          static_cast<int>(Debug::Verbosity::Off) + 1;
                      verbosity < static_cast<int>(Debug::Verbosity::All);
                      verbosity++) {
-                  if (displayVerbosity[verbosity] &&
+                  if (//displayVerbosity[verbosity] &&
                       line.find("[" +
                                 Debug::ToString(
                                     static_cast<Debug::Verbosity>(verbosity)) +
@@ -268,7 +250,7 @@ void Console::GuiUpdate() {
                 for (int channel = 0;
                      channel < static_cast<int>(Debug::Channel::All);
                      channel++) {
-                  if (displayChannel[channel] &&
+                  if (//displayChannel[channel] &&
                       line.find("[" +
                                 Debug::ToString(
                                     static_cast<Debug::Channel>(channel)) +
@@ -277,18 +259,16 @@ void Console::GuiUpdate() {
                     break;
                   }
                 }
-                if ((displayVerbosity[0] || textVerbosity != -1) &&
-                    (displayChannel[allChannel] || textChannel != -1)) {
-                  GUI::Text(lineRect, line.data(),
-                            GUI::TextStyle{verbosityColor[textVerbosity]});
-                  lineRect.rect.y += height;
-                } else if (textVerbosity == -1 && textChannel == -1) {
+                if (textVerbosity == -1 && textChannel == -1) {
                   GUI::Text(lineRect, line.data(),
                             GUI::TextStyle{defaultTextColor});
                   lineRect.rect.y += height;
-                }
-              }
-              if (scrollToBottom) ImGui::SetScrollHere(1.0f);
+                } else if (displayVerbosity[textVerbosity] && displayChannel[textChannel]) {
+                  GUI::Text(lineRect, line.data(),
+                            GUI::TextStyle{verbosityColor[textVerbosity]});
+                  lineRect.rect.y += height;
+                } 
+                if (scrollToBottom) ImGui::SetScrollHere(1.0f);
             },
             false, GUI::WindowFlags::HorizontalScrollbar);
         ImGui::Separator();
