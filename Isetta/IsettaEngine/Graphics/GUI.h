@@ -688,18 +688,15 @@ class ISETTA_API GUI {
                            float stepFast = 0.0f,
                            const std::string& format = "%.3f",
                            InputTextFlags flags = InputTextFlags::None);
-  static void InputVector3(const RectTransform& transform, const std::string&
-  label,
-                           Math::Vector3* value, float step = 0.0f,
-                           float stepFast = 0.0f,
-                           const std::string& format = "%.3f",
-                           InputTextFlags flags = InputTextFlags::None);
   static void InputVector4(const RectTransform& transform, const std::string&
   label, Math::Vector4* value, float step = 0.0f, float stepFast = 0.0f, const
   std::string& format = "%.3f", GUIInputTextFlags flags =
   GUIInputTextFlags::None);
   // TODO(Jacob) InputVector2/3/4Int
   */
+  static void InputVector3(const RectTransform& transform, const std::string_view& label,
+                           Math::Vector3* value, float step = 0.0f,                           float stepFast = 0.0f,
+                           const std::string_view& format = "%.3f", InputTextFlags flags = InputTextFlags::None);
 
   // SLIDER
   ////////////////////////////////////////

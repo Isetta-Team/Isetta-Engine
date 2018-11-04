@@ -194,6 +194,21 @@ void GUI::InputInt(const RectTransform& transform, const std::string& label,
   ImGui::PopItemWidth();
   ImGui::PopStyleColor(4);
 }
+void GUI::InputVector3(const RectTransform& transform, const std::string_view& label,
+                           Math::Vector3* value, float step, const std::string_view& format, InputTextFlags flags) {
+  ImGui::SetCursorPos((ImVec2)SetPosition(transform));
+  ImGui::PushItemWidth(transform.rect.width);
+
+  ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)style.background);
+  ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)style.hovered);
+  ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)style.active);
+  ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)style.text);
+  // TODO(Jacob) wrong, need to check imgui
+  ImGui::InputFloat3(label.data(), value, step, stepFast,
+                  ImGuiInputTextFlags(flags));
+  ImGui::PopItemWidth();
+  ImGui::PopStyleColor(4);
+}
 
 void GUI::SliderFloat(const RectTransform& transform, const std::string& label,
                       float* value, float min, float max, float power,

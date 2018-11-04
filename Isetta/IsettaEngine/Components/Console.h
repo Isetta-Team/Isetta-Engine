@@ -52,3 +52,4 @@ static void AddCommand(
     const Action<Console* const, std::string_view>& callback);
 END_COMPONENT(Console, Component)
 }  // namespace Isetta
+
