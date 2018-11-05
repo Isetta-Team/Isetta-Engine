@@ -93,7 +93,7 @@ void Level::LateUpdate() {
 
   for (auto& entity : entities) {
     if (entity->GetAttribute(Entity::EntityAttributes::NEED_DESTROY)) {
-      MemoryManager::DeleteOnFreeList(entity);
+      MemoryManager::DeleteOnFreeList<Entity>(entity);
       entity = nullptr;
     }
   }
