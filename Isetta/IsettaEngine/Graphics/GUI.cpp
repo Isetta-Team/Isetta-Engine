@@ -149,23 +149,27 @@ void GUI::Text(const RectTransform& transform, const std::string& format,
   ImGui::PopStyleColor();
   ImGui::PopItemWidth();
 }
-void GUI::Label(const RectTransform& transform, const std::string& label,
-                const std::string& format, const LabelStyle& style) {
+void GUI::Label(const RectTransform& transform, const std::string_view& label,
+                const std::string_view& format, const LabelStyle& style) {
   ImGui::SetCursorPos((ImVec2)SetPosition(transform));
   ImGui::PushItemWidth(transform.rect.width);
 
   ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)style.text);
   ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)style.background);
-  ImGui::LabelText(label.c_str(), format.c_str());
+  ImGui::PushID(label.data());
+  ImGui::Text(label.data());
+  ImGui::SameLine();
+  ImGui::LabelText("##label", format.data());
+  ImGui::PopID();
   ImGui::PopStyleColor(2);
   ImGui::PopItemWidth();
 }
 
 // INPUT
-bool GUI::InputText(const RectTransform& transform, const std::string& label,
-                    char* buffer, int bufferSize, const InputStyle& style,
-                    InputTextFlags flags, InputTextCallback callback,
-                    void* userData) {
+bool GUI::InputText(const RectTransform& transform,
+                    const std::string_view& label, char* buffer, int bufferSize,
+                    const InputStyle& style, InputTextFlags flags,
+                    InputTextCallback callback, void* userData) {
   ImGui::SetCursorPos((ImVec2)SetPosition(transform));
   ImGui::PushItemWidth(transform.rect.width);
 
@@ -173,14 +177,19 @@ bool GUI::InputText(const RectTransform& transform, const std::string& label,
   ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)style.hovered);
   ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)style.active);
   ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)style.text);
-  bool input = ImGui::InputText(label.c_str(), buffer, bufferSize,
+  ImGui::PushID(label.data());
+  ImGui::Text(label.data());
+  ImGui::SameLine();
+  bool input = ImGui::InputText("##input_text", buffer, bufferSize,
                                 ImGuiInputTextFlags(flags), callback, userData);
+  ImGui::PopID();
   ImGui::PopItemWidth();
   ImGui::PopStyleColor(4);
   return input;
 }
-void GUI::InputInt(const RectTransform& transform, const std::string& label,
-                   int* value, const InputStyle& style, int step, int stepFast,
+void GUI::InputInt(const RectTransform& transform,
+                   const std::string_view& label, int* value,
+                   const InputStyle& style, int step, int stepFast,
                    InputTextFlags flags) {
   ImGui::SetCursorPos((ImVec2)SetPosition(transform));
   ImGui::PushItemWidth(transform.rect.width);
@@ -189,13 +198,19 @@ void GUI::InputInt(const RectTransform& transform, const std::string& label,
   ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)style.hovered);
   ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)style.active);
   ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)style.text);
-  ImGui::InputInt(label.c_str(), value, step, stepFast,
+  ImGui::PushID(label.data());
+  ImGui::Text(label.data());
+  ImGui::SameLine();
+  ImGui::InputInt("##input_int", value, step, stepFast,
                   ImGuiInputTextFlags(flags));
+  ImGui::PopID();
   ImGui::PopItemWidth();
   ImGui::PopStyleColor(4);
 }
-void GUI::InputVector3(const RectTransform& transform, const std::string_view& label,
-                           Math::Vector3* value, float step, const std::string_view& format, InputTextFlags flags) {
+void GUI::InputVector3(const RectTransform& transform,
+                       const std::string_view& label, Math::Vector3* value,
+                       float step, const InputStyle& style,
+                       const std::string_view& format, InputTextFlags flags) {
   ImGui::SetCursorPos((ImVec2)SetPosition(transform));
   ImGui::PushItemWidth(transform.rect.width);
 
@@ -203,16 +218,20 @@ void GUI::InputVector3(const RectTransform& transform, const std::string_view& l
   ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)style.hovered);
   ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)style.active);
   ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)style.text);
-  // TODO(Jacob) wrong, need to check imgui
-  ImGui::InputFloat3(label.data(), value, step, stepFast,
-                  ImGuiInputTextFlags(flags));
+  ImGui::PushID(label.data());
+  ImGui::Text(label.data());
+  ImGui::SameLine();
+  ImGui::InputFloat3("##input_vector3", value->xyz, step,
+                     (ImGuiInputTextFlags)flags);
+  ImGui::PopID();
   ImGui::PopItemWidth();
   ImGui::PopStyleColor(4);
 }
 
-void GUI::SliderFloat(const RectTransform& transform, const std::string& label,
-                      float* value, float min, float max, float power,
-                      const char* format, const InputStyle& style) {
+void GUI::SliderFloat(const RectTransform& transform,
+                      const std::string_view& label, float* value, float min,
+                      float max, float power, const char* format,
+                      const InputStyle& style) {
   ImGui::SetCursorPos((ImVec2)SetPosition(transform));
   ImGui::PushItemWidth(transform.rect.width);
 
@@ -220,7 +239,11 @@ void GUI::SliderFloat(const RectTransform& transform, const std::string& label,
   ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)style.hovered);
   ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)style.active);
   ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)style.text);
-  ImGui::SliderFloat(label.c_str(), value, min, max, format, power);
+  ImGui::PushID(label.data());
+  ImGui::Text(label.data());
+  ImGui::SameLine();
+  ImGui::SliderFloat("##slider_float", value, min, max, format, power);
+  ImGui::PopID();
   ImGui::PopItemWidth();
   ImGui::PopStyleColor(4);
 }
@@ -300,6 +323,7 @@ bool GUI::ButtonDropDown(const RectTransform& transform,
 bool GUI::Window(const RectTransform& transform, const std::string& name,
                  const Action<>& ui, bool* isOpen, const WindowStyle& style,
                  const WindowFlags flags) {
+  if (isOpen && !*isOpen) return false;
   ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)style.background);
   ImGui::SetNextWindowBgAlpha(style.background.a);
   ImGui::SetNextWindowPos((ImVec2)SetPosition(transform), ImGuiCond_Once);

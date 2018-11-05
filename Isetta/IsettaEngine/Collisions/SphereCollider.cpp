@@ -12,6 +12,7 @@
 #include "Scene/Transform.h"
 
 namespace Isetta {
+#if _EDITOR
 void SphereCollider::Update() {
   DebugDraw::AxisSphere(
       Math::Matrix4::Translate(GetTransform()->GetWorldPos() + center) *
@@ -19,6 +20,7 @@ void SphereCollider::Update() {
               Math::Vector3{radius * GetTransform()->GetWorldScale().Max()}),
       debugColor, debugColor, debugColor);
 }
+#endif
 
 bool SphereCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
                              float maxDistance) {

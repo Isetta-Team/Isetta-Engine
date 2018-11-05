@@ -28,7 +28,7 @@ std::string title;
 bool isOpen;
 RectTransform rectTransform{{100, 10, 520, 400}};
 
-Color defaultTextColor = Color::grey;
+// Color defaultTextColor = Color::grey;
 Color verbosityColor[(int)Debug::Verbosity::All];
 
 static int CommandCallbackStub(InputTextCallbackData* data);
@@ -50,6 +50,8 @@ void AddLog(const std::string_view& format);
 static void AddCommand(
     const std::string_view& cmd,
     const Action<Console* const, std::string_view>& callback);
+
+inline std::vector<std::string> GetHistory() { return history; }
+inline void Open() { isOpen = true; }
 END_COMPONENT(Console, Component)
 }  // namespace Isetta
-

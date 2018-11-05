@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Components/Console.h"
+#include "Components/Editor/Console.h"
 
 #include <utility>
 #include "imgui/imgui.h"
@@ -31,11 +31,12 @@ Console::Console(std::string title, bool isOpen)
     for (const auto& cmd : userCmds)
       console->AddLog("- " + std::string{cmd.first.data()} + "\n");
   });
-  AddCommand("history", []((Console* const console, std::string_view) {
-    for (const auto& cmd : history)
+  AddCommand("history", [](Console* const console, std::string_view) {
+    for (const auto& cmd : console->GetHistory())
       console->AddLog("- " + cmd + "\n");
   });
 
+  verbosityColor[static_cast<int>(Debug::Verbosity::Off)] = Color::grey;
   verbosityColor[static_cast<int>(Debug::Verbosity::Info)] = Color::white;
   verbosityColor[static_cast<int>(Debug::Verbosity::Warning)] = Color::orange;
   verbosityColor[static_cast<int>(Debug::Verbosity::Error)] = Color::red;
@@ -169,7 +170,8 @@ void Console::GuiUpdate() {
         bool copy = GUI::Button(rect, "Copy");
         rect.rect.x += width + padding;
 
-        static bool displayVerbosity[static_cast<int>(Debug::Verbosity::All) - 1];
+        static bool
+            displayVerbosity[static_cast<int>(Debug::Verbosity::All) - 1];
         for (int verbosity = static_cast<int>(Debug::Verbosity::All) - 1;
              verbosity > static_cast<int>(Debug::Verbosity::Off); verbosity--) {
           displayVerbosity[verbosity - 1] =
@@ -177,7 +179,8 @@ void Console::GuiUpdate() {
           std::string label =
               Debug::ToString(static_cast<Debug::Verbosity>(verbosity));
           GUI::Toggle(rect, label, &displayVerbosity[verbosity - 1]);
-          Logger::verbosityMask.set(verbosity - 1, displayVerbosity[verbosity - 1]);
+          Logger::verbosityMask.set(verbosity - 1,
+                                    displayVerbosity[verbosity - 1]);
 
           rect.rect.x +=
               padding + 0.4f * width + ImGui::CalcTextSize(label.c_str()).x;
@@ -238,19 +241,19 @@ void Console::GuiUpdate() {
                          static_cast<int>(Debug::Verbosity::Off) + 1;
                      verbosity < static_cast<int>(Debug::Verbosity::All);
                      verbosity++) {
-                  if (//displayVerbosity[verbosity] &&
+                  if (  // displayVerbosity[verbosity] &&
                       line.find("[" +
                                 Debug::ToString(
                                     static_cast<Debug::Verbosity>(verbosity)) +
                                 "]") != std::string::npos) {
-                    textVerbosity = verbosity;
+                    textVerbosity = verbosity - 1;
                     break;
                   }
                 }
                 for (int channel = 0;
                      channel < static_cast<int>(Debug::Channel::All);
                      channel++) {
-                  if (//displayChannel[channel] &&
+                  if (  // displayChannel[channel] &&
                       line.find("[" +
                                 Debug::ToString(
                                     static_cast<Debug::Channel>(channel)) +
@@ -259,16 +262,20 @@ void Console::GuiUpdate() {
                     break;
                   }
                 }
+                bool t = displayVerbosity[textVerbosity] &&
+                         displayChannel[textChannel];
                 if (textVerbosity == -1 && textChannel == -1) {
                   GUI::Text(lineRect, line.data(),
-                            GUI::TextStyle{defaultTextColor});
+                            GUI::TextStyle{verbosityColor[0]});
                   lineRect.rect.y += height;
-                } else if (displayVerbosity[textVerbosity] && displayChannel[textChannel]) {
+                } else if (displayVerbosity[textVerbosity] &&
+                           displayChannel[textChannel]) {
                   GUI::Text(lineRect, line.data(),
-                            GUI::TextStyle{verbosityColor[textVerbosity]});
+                            GUI::TextStyle{verbosityColor[textVerbosity + 1]});
                   lineRect.rect.y += height;
-                } 
+                }
                 if (scrollToBottom) ImGui::SetScrollHere(1.0f);
+              }
             },
             false, GUI::WindowFlags::HorizontalScrollbar);
         ImGui::Separator();
@@ -307,7 +314,7 @@ void Console::GuiUpdate() {
         }
       },
       &isOpen, GUI::WindowStyle{Math::Rect{600, 150, 1000, 900}});
-}  // namespace Isetta
+}
 void Console::Clear() { log.clear(); }
 void Console::AddLog(const std::string_view& format) {
   log.push_back(format.data());

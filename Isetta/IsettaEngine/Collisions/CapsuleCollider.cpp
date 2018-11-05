@@ -13,6 +13,7 @@
 #include "Scene/Transform.h"
 
 namespace Isetta {
+#if _EDITOR
 void CapsuleCollider::Update() {
   Math::Matrix4 scale;
   Math::Matrix4 rotation;
@@ -30,6 +31,8 @@ void CapsuleCollider::Update() {
    Math::Vector3 P1 = GetTransform()->GetWorldPos() + center + dir;*/
   // DebugDraw::Line(P0, P1, Color::blue);
 }
+#endif
+
 bool CapsuleCollider::RaycastSphere(const Math::Vector3& center, float radius,
                                     const Ray& ray, RaycastHit* const hitInfo,
                                     float maxDistance) {

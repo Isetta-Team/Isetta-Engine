@@ -7,18 +7,18 @@
 namespace Isetta {
 BEGIN_COMPONENT(SphereCollider, Collider, false)
 private:
+#if _EDITOR
 void Update() override;
+#endif
 
 protected:
-ColliderType GetType() const override {
-  return ColliderType::SPHERE;
-}
+ColliderType GetType() const override { return ColliderType::SPHERE; }
 
 public:
 float radius;
 
 explicit SphereCollider(const float radius = 0.5)
-    : Collider{}, radius{radius}{}
+    : Collider{}, radius{radius} {}
 
 explicit SphereCollider(const Math::Vector3& center, const float radius = 0.5)
     : Collider{center}, radius{radius} {}

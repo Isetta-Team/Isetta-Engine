@@ -9,13 +9,17 @@
 #include "Input/Input.h"
 
 namespace Isetta {
-using CBMap = std::unordered_map<int, std::list<std::pair<U16, Action<>>>>;
+// using CBMap = std::unordered_map<int, std::list<std::pair<U16, Action<>>>>;
+using KeyMap =
+    std::unordered_map<std::pair<int, ModifierKeys>,
+                       std::list<std::pair<U16, Action<>>>, Util::PairHash>;
+using MouseMap = std::unordered_map<int, std::list<std::pair<U16, Action<>>>>;
 
 std::list<Action<>> InputModule::windowCloseCallbacks{};
-CBMap InputModule::keyPressCallbacks{};
-CBMap InputModule::keyReleaseCallbacks{};
-CBMap InputModule::mousePressCallbacks{};
-CBMap InputModule::mouseReleaseCallbacks{};
+KeyMap InputModule::keyPressCallbacks{};
+KeyMap InputModule::keyReleaseCallbacks{};
+MouseMap InputModule::mousePressCallbacks{};
+MouseMap InputModule::mouseReleaseCallbacks{};
 
 std::unordered_map<U16, Action<GLFWwindow*, int, int, int>>
     InputModule::mouseButtonGLFWCallbacks;
@@ -50,23 +54,24 @@ bool InputModule::IsKeyPressed(KeyCode key) const {
   return glfwGetKey(winHandle, glfwKey) == GLFW_PRESS;
 }
 
-U16 InputModule::RegisterKeyPressCallback(KeyCode key,
+U16 InputModule::RegisterKeyPressCallback(KeyCode key, ModifierKeys mods,
                                           const Action<>& callback) {
-  return RegisterCallback(KeyCodeToGlfwKey(key), callback, &keyPressCallbacks);
+  return RegisterCallback(KeyCodeToGlfwKey(key), mods, callback,
+                          &keyPressCallbacks);
+}
+void InputModule::UnregisterKeyPressCallback(KeyCode key, ModifierKeys mods,
+                                             U16 handle) {
+  UnregisterCallback(KeyCodeToGlfwKey(key), mods, handle, &keyPressCallbacks);
 }
 
-void InputModule::UnregisterKeyPressCallback(KeyCode key, U16 handle) {
-  UnregisterCallback(KeyCodeToGlfwKey(key), handle, &keyPressCallbacks);
-}
-
-U16 InputModule::RegisterKeyReleaseCallback(KeyCode key,
+U16 InputModule::RegisterKeyReleaseCallback(KeyCode key, ModifierKeys mods,
                                             const Action<>& callback) {
-  return RegisterCallback(KeyCodeToGlfwKey(key), callback,
+  return RegisterCallback(KeyCodeToGlfwKey(key), mods, callback,
                           &keyReleaseCallbacks);
 }
-
-void InputModule::UnregisterKeyReleaseCallback(KeyCode key, U16 handle) {
-  UnregisterCallback(KeyCodeToGlfwKey(key), handle, &keyReleaseCallbacks);
+void InputModule::UnregisterKeyReleaseCallback(KeyCode key, ModifierKeys mods,
+                                               U16 handle) {
+  UnregisterCallback(KeyCodeToGlfwKey(key), mods, handle, &keyReleaseCallbacks);
 }
 
 Math::Vector2 InputModule::GetMousePosition() const {
@@ -184,15 +189,30 @@ void InputModule::Update(float deltaTime) {
 
 void InputModule::ShutDown() {}
 
+U16 InputModule::RegisterCallback(int key, ModifierKeys mods,
+                                  const Action<>& callback,
+                                  KeyMap* callbackMap) {
+  auto& callbackList = (*callbackMap)[std::make_pair(key, mods)];
+  U16 handle = totalHandle++;
+  callbackList.push_back(std::make_pair(handle, callback));
+  return handle;
+}
+void InputModule::UnregisterCallback(int key, ModifierKeys mods, U16 handle,
+                                     KeyMap* callbackMap) {
+  auto& callbackList = (*callbackMap)[std::make_pair(key, mods)];
+  callbackList.remove_if(
+      [handle](std::pair<U16, Action<>> item) { return item.first == handle; });
+}
+
 U16 InputModule::RegisterCallback(int key, const Action<>& callback,
-                                  CBMap* callbackMap) {
+                                  MouseMap* callbackMap) {
   auto& callbackList = (*callbackMap)[key];
   U16 handle = totalHandle++;
   callbackList.push_back(std::make_pair(handle, callback));
   return handle;
 }
-
-void InputModule::UnregisterCallback(int key, U16 handle, CBMap* callbackMap) {
+void InputModule::UnregisterCallback(int key, U16 handle,
+                                     MouseMap* callbackMap) {
   auto& callbackList = (*callbackMap)[key];
   callbackList.remove_if(
       [handle](std::pair<U16, Action<>> item) { return item.first == handle; });
@@ -208,12 +228,14 @@ void InputModule::KeyEventListener(GLFWwindow* win, int key, int scancode,
                                    int action, int mods) {
   // static std::list<Action<)>> currCallbacks;
   if (action == GLFW_PRESS) {
-    for (const auto& handleCallback : keyPressCallbacks[key]) {
+    for (const auto& handleCallback :
+         keyPressCallbacks[std::make_pair(key, (ModifierKeys)mods)]) {
       // currCallbacks.push_back(callback.second);
       handleCallback.second();
     }
   } else if (action == GLFW_RELEASE) {
-    for (const auto& handleCallback : keyReleaseCallbacks[key]) {
+    for (const auto& handleCallback :
+         keyReleaseCallbacks[std::make_pair(key, (ModifierKeys)mods)]) {
       // currCallbacks.push_back(callback.second);
       handleCallback.second();
     }

@@ -20,20 +20,38 @@ void Input::UnegisterWindowSizeCallback(U16 handle) {
   inputModule->UnegisterWindowSizeCallback(handle);
 }
 bool Input::IsKeyPressed(KeyCode key) { return inputModule->IsKeyPressed(key); }
+
 U16 Input::RegisterKeyPressCallback(KeyCode key, const Action<>& callback) {
-  return inputModule->RegisterKeyPressCallback(key, callback);
+  return inputModule->RegisterKeyPressCallback(key, (ModifierKeys)0, callback);
+}
+U16 Input::RegisterKeyPressCallback(KeyCode key, ModifierKeys mods,
+                                    const Action<>& callback) {
+  return inputModule->RegisterKeyPressCallback(key, mods, callback);
 }
 
 void Input::UnregisterKeyPressCallback(KeyCode key, U16 handle) {
-  inputModule->UnregisterKeyPressCallback(key, handle);
+  inputModule->UnregisterKeyPressCallback(key, (ModifierKeys)0, handle);
+}
+void Input::UnregisterKeyPressCallback(KeyCode key, ModifierKeys mods,
+                                       U16 handle) {
+  inputModule->UnregisterKeyPressCallback(key, mods, handle);
 }
 
 U16 Input::RegisterKeyReleaseCallback(KeyCode key, const Action<>& callback) {
-  return inputModule->RegisterKeyReleaseCallback(key, callback);
+  return inputModule->RegisterKeyReleaseCallback(key, (ModifierKeys)0,
+                                                 callback);
+}
+U16 Input::RegisterKeyReleaseCallback(KeyCode key, ModifierKeys mods,
+                                      const Action<>& callback) {
+  return inputModule->RegisterKeyReleaseCallback(key, mods, callback);
 }
 
 void Input::UnregisterKeyReleaseCallback(KeyCode key, U16 handle) {
-  inputModule->UnregisterKeyReleaseCallback(key, handle);
+  inputModule->UnregisterKeyReleaseCallback(key, (ModifierKeys)0, handle);
+}
+void Input::UnregisterKeyReleaseCallback(KeyCode key, ModifierKeys mods,
+                                         U16 handle) {
+  inputModule->UnregisterKeyReleaseCallback(key, mods, handle);
 }
 
 Math::Vector2 Input::GetMousePosition() {

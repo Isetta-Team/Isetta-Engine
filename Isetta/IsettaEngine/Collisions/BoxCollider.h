@@ -6,10 +6,13 @@
 
 namespace Isetta {
 BEGIN_COMPONENT(BoxCollider, Collider, false)
+private:
+#if _EDITOR
+void Update() override;
+#endif
+
 protected:
-ColliderType GetType() const override {
-  return ColliderType::BOX;
-}
+ColliderType GetType() const override { return ColliderType::BOX; }
 
 public:
 Math::Vector3 size;
@@ -22,8 +25,6 @@ BoxCollider(const Math::Vector3& center,
 BoxCollider(bool isStatic, bool isTrigger, const Math::Vector3& center,
             const Math::Vector3& size = Math::Vector3::one)
     : Collider{isStatic, isTrigger, center}, size{size} {}
-
-void Update() override;
 
 bool Raycast(const Ray& ray, RaycastHit* const hitInfo,
              float maxDistance = 0) override;

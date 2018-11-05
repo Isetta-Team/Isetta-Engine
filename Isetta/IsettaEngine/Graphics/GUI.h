@@ -24,7 +24,8 @@ using InputTextCallbackData = ImGuiInputTextCallbackData;
 using InputTextCallback = int (*)(InputTextCallbackData*);
 namespace Math {
 class Rect;
-}
+class Vector3;
+}  // namespace Math
 }  // namespace Isetta
 
 namespace Isetta {
@@ -625,8 +626,9 @@ class ISETTA_API GUI {
   static void Bullet();
   */
   // TODO(Jacob) styling
-  static void Label(const RectTransform& transform, const std::string& label,
-                    const std::string& format, const LabelStyle& style);
+  static void Label(const RectTransform& transform,
+                    const std::string_view& label,
+                    const std::string_view& format, const LabelStyle& style);
   ////////////////////////////////////////
   // TODO(Jacob) NOT PART OF GAME NEEDS //
   ////////////////////////////////////////
@@ -664,13 +666,14 @@ class ISETTA_API GUI {
   //  InputTextCallbackData();
   //};
   static bool InputText(const RectTransform& transform,
-                        const std::string& label, char* buffer, int bufferSize,
-                        const InputStyle& style = {},
+                        const std::string_view& label, char* buffer,
+                        int bufferSize, const InputStyle& style = {},
                         InputTextFlags flags = InputTextFlags::None,
                         InputTextCallback callback = NULL,
                         void* userData = NULL);
-  static void InputInt(const RectTransform& transform, const std::string& label,
-                       int* value, const InputStyle& style = {}, int step = 1,
+  static void InputInt(const RectTransform& transform,
+                       const std::string_view& label, int* value,
+                       const InputStyle& style = {}, int step = 1,
                        int stepFast = 100,
                        InputTextFlags flags = InputTextFlags::None);
   ////////////////////////////////////////
@@ -694,17 +697,19 @@ class ISETTA_API GUI {
   GUIInputTextFlags::None);
   // TODO(Jacob) InputVector2/3/4Int
   */
-  static void InputVector3(const RectTransform& transform, const std::string_view& label,
-                           Math::Vector3* value, float step = 0.0f,                           float stepFast = 0.0f,
-                           const std::string_view& format = "%.3f", InputTextFlags flags = InputTextFlags::None);
+  static void InputVector3(const RectTransform& transform,
+                           const std::string_view& label, Math::Vector3* value,
+                           float step = 0.0f, const InputStyle& style = {},
+                           const std::string_view& format = "%.3f",
+                           InputTextFlags flags = InputTextFlags::None);
 
   // SLIDER
   ////////////////////////////////////////
   // TODO(Jacob) NOT PART OF GAME NEEDS //
   ////////////////////////////////////////
   static void SliderFloat(const RectTransform& transform,
-                          const std::string& label, float* value, float min,
-                          float max, float power = 1,
+                          const std::string_view& label, float* value,
+                          float min, float max, float power = 1,
                           const char* format = "%.3f",
                           const InputStyle& style = {});
   /*
