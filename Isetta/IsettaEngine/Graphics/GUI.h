@@ -10,7 +10,6 @@
 #include "Core/Math/Rect.h"
 #include "Core/Math/Vector2.h"
 
-typedef void* TextureID;
 class ImGuiInputTextCallbackData;
 class ImFont;
 class ImGuiTextFilter;
@@ -560,12 +559,13 @@ class ISETTA_API GUI {
                      const Action<>& callback, const ButtonStyle& style = {},
                      bool repeating = false);
   static bool ButtonImage(const RectTransform& transform, const std::string& id,
-                          const TextureID& textureId,
+                          const class Texture& texture,
                           const ButtonStyle& style = {},
                           const ImageStyle& imgStyle = {},
                           bool repeating = false);
   static bool ButtonImage(const RectTransform& transform, const std::string& id,
-                          const TextureID& textureId, const Action<>& callback,
+                          const class Texture& texture,
+                          const Action<>& callback,
                           const ButtonStyle& btnStyle = {},
                           const ImageStyle& imgStyle = {},
                           bool repeating = false, int framePadding = -1);
@@ -884,8 +884,8 @@ class ISETTA_API GUI {
     // TODO(Jacob) Do we allow DrawLine? 3017
   };
 
-  static void Image(const RectTransform& transform, const TextureID& textureId,
-                    const ImageStyle& style = {});
+  static void Image(const RectTransform& transform,
+                    const class Texture& texture, const ImageStyle& style = {});
 
   static void ProgressBar(const RectTransform& transform, float fraction,
                           const std::string& overlay = "",

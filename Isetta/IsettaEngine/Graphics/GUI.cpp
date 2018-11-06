@@ -13,6 +13,7 @@
 #include "Graphics/GUIModule.h"
 #include "Graphics/GUIStyle.h"
 #include "Graphics/RectTransform.h"
+#include "Graphics/Texture.h"
 #include "Util.h"
 
 #include "imgui/imgui.h"
@@ -51,21 +52,22 @@ bool GUI::Button(const RectTransform& transform, const std::string& label,
   return false;
 }
 bool GUI::ButtonImage(const RectTransform& transform, const std::string& id,
-                      const TextureID& textureId, const ButtonStyle& btnStyle,
+                      const Texture& texture, const ButtonStyle& btnStyle,
                       const ImageStyle& imgStyle, bool repeating) {
   ButtonStyle style =
       ButtonStyle{imgStyle.frame, btnStyle.hover, btnStyle.active};
-  Func<bool> btn = std::bind(
-      ImGui::ImageButton, textureId, (ImVec2)transform.rect.Size(),
-      (ImVec2)imgStyle.offset, (ImVec2)imgStyle.tiling, imgStyle.framePadding,
-      (ImVec4)btnStyle.background, (ImVec4)imgStyle.tint);
+  Func<bool> btn =
+      std::bind(ImGui::ImageButton, (void*)(intptr_t)texture.GetTexture(),
+                (ImVec2)transform.rect.Size(), (ImVec2)imgStyle.offset,
+                (ImVec2)imgStyle.tiling, imgStyle.framePadding,
+                (ImVec4)btnStyle.background, (ImVec4)imgStyle.tint);
   return Button(btn, transform, style, repeating);
 }
 bool GUI::ButtonImage(const RectTransform& transform, const std::string& id,
-                      const TextureID& textureId, const Action<>& callback,
+                      const Texture& texture, const Action<>& callback,
                       const ButtonStyle& btnStyle, const ImageStyle& imgStyle,
                       bool repeating, int framePadding) {
-  if (ButtonImage(transform, id, textureId, btnStyle, imgStyle, repeating)) {
+  if (ButtonImage(transform, id, texture, btnStyle, imgStyle, repeating)) {
     callback();
     return true;
   }
@@ -477,7 +479,7 @@ void GUI::Draw::CircleFilled(const RectTransform& transform, float radius,
   ImGui::GetWindowDrawList()->AddCircleFilled(
       (ImVec2)position, radius, ImGui::GetColorU32((ImVec4)color), segments);
 }
-void GUI::Image(const RectTransform& transform, const TextureID& textureId,
+void GUI::Image(const RectTransform& transform, const Texture& texture,
                 const ImageStyle& style) {
   ImGui::SetCursorPos((ImVec2)SetPosition(transform));
   if (style.framePadding > 0) {
@@ -488,7 +490,8 @@ void GUI::Image(const RectTransform& transform, const TextureID& textureId,
                       transform.anchor, transform.pivot},
         style.frame);
   }
-  ImGui::Image(textureId, (ImVec2)transform.rect.Size(), (ImVec2)style.offset,
+  ImGui::Image((void*)(intptr_t)(texture.GetTexture()),
+               (ImVec2)transform.rect.Size(), (ImVec2)style.offset,
                (ImVec2)style.tiling, (ImVec4)style.tint, (ImVec4)style.frame);
 }
 void GUI::ProgressBar(const RectTransform& transform, float fraction,
