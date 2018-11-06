@@ -150,10 +150,6 @@ void Console::OnEnable() {
   Logger::outputCallback =
       std::bind(&Console::AddLog, this, std::placeholders::_1);
   consolesOpen.push_back(this);
-  LOG_INFO("info");
-  LOG_WARNING("warning");
-  LOG_INFO(Debug::Channel::Gameplay, "info");
-  LOG_INFO(Debug::Channel::Memory, "info");
 }
 void Console::OnDisable() {
   consolesOpen.remove(this);
