@@ -28,8 +28,10 @@ namespace Isetta {
 #define CUBE_WIRE_INDICIES 24
 #define CUBE_VERTICIES 8
 #define CIRCLE CUBE + CUBE_VERTICIES
-#define CIRCLE_INDICIES 25
-#define CIRCLE_VERTICIES 25
+#define CIRCLE_INDICIES 13
+//#define CIRCLE_INDICIES 25
+#define CIRCLE_VERTICIES 13
+//#define CIRCLE_VERTICIES 25
 #define SPHERE_SEGMENTS 4
 
 #define RIGHT CIRCLE
@@ -51,33 +53,33 @@ const float DebugDraw::verticies[] = {
     0.5f, 0.5f, -0.5f,    // top-back-right
     -0.5f, -0.5f, -0.5f,  // bot-back-left
     -0.5f, 0.5f, -0.5f,   // top-back-left
-    // CIRCLE - 25
-    1.0f, 0.0f, 0.0f,        // right
-    0.966f, 0.259f, 0.0f,    //
-    0.866f, 0.5f, 0.0f,      //
-    0.707f, 0.707f, 0.0f,    //
-    0.5f, 0.866f, 0.0f,      //
-    0.259f, 0.966f, 0.0f,    //
-    0.0f, 1.0f, 0.0f,        // up
-    -0.259f, 0.966f, 0.0f,   //
-    -0.5f, 0.866f, 0.0f,     //
-    -0.707f, 0.707f, 0.0f,   //
-    -0.866f, 0.5f, 0.0f,     //
-    -0.966f, 0.259f, 0.0f,   //
-    -1.0f, 0.0f, 0.0f,       // left
-    -0.966f, -0.259f, 0.0f,  //
-    -0.866f, -0.5f, 0.0f,    //
-    -0.707f, -0.707f, 0.0f,  //
-    -0.5f, -0.866f, 0.0f,    //
-    -0.259f, -0.966f, 0.0f,  //
-    0.0f, -1.0f, 0.0f,       // down
-    0.259f, -0.966f, 0.0f,   //
-    0.5f, -0.866f, 0.0f,     //
-    0.707f, -0.707f, 0.0f,   //
-    0.866f, -0.5f, 0.0f,     //
-    0.966f, -0.259f, 0.0f,   //
-    1.0f, 0.0f, 0.0f,        //
-    0.0f, 0.0f, 1.0f,        // forward
+    // CIRCLE - 13 (deprecated 25)
+    1.0f, 0.0f, 0.0f,  // right
+    // 0.966f, 0.259f, 0.0f,    //
+    0.866f, 0.5f, 0.0f,  //
+                         // 0.707f, 0.707f, 0.0f,    //
+    0.5f, 0.866f, 0.0f,  //
+    // 0.259f, 0.966f, 0.0f,    //
+    0.0f, 1.0f, 0.0f,  // up
+    //-0.259f, 0.966f, 0.0f,   //
+    -0.5f, 0.866f, 0.0f,  //
+    //-0.707f, 0.707f, 0.0f,   //
+    -0.866f, 0.5f, 0.0f,  //
+    //-0.966f, 0.259f, 0.0f,   //
+    -1.0f, 0.0f, 0.0f,  // left
+    //-0.966f, -0.259f, 0.0f,  //
+    -0.866f, -0.5f, 0.0f,  //
+    //-0.707f, -0.707f, 0.0f,  //
+    -0.5f, -0.866f, 0.0f,  //
+    //-0.259f, -0.966f, 0.0f,  //
+    0.0f, -1.0f, 0.0f,  // down
+    // 0.259f, -0.966f, 0.0f,   //
+    0.5f, -0.866f, 0.0f,  //
+                          // 0.707f, -0.707f, 0.0f,   //
+    0.866f, -0.5f, 0.0f,  //
+    // 0.966f, -0.259f, 0.0f,   //
+    1.0f, 0.0f, 0.0f,  //
+    0.0f, 0.0f, 1.0f,  // forward
 };
 const int DebugDraw::indices[] = {
     // PLANE
@@ -109,16 +111,17 @@ const int DebugDraw::indices[] = {
     7 + CUBE, 6 + CUBE, 6 + CUBE, 4 + CUBE,  // Back - 2
     0 + CUBE, 5 + CUBE, 1 + CUBE, 4 + CUBE,  // other
     2 + CUBE, 6 + CUBE, 3 + CUBE, 7 + CUBE,  //
-    // CIRCLE - 24
-    0 + CIRCLE, 1 + CIRCLE,                 //
-    2 + CIRCLE, 3 + CIRCLE, 4 + CIRCLE,     //
-    5 + CIRCLE, 6 + CIRCLE, 7 + CIRCLE,     //
-    8 + CIRCLE, 9 + CIRCLE, 10 + CIRCLE,    //
-    11 + CIRCLE, 12 + CIRCLE, 13 + CIRCLE,  //
-    14 + CIRCLE, 15 + CIRCLE, 16 + CIRCLE,  //
-    17 + CIRCLE, 18 + CIRCLE, 19 + CIRCLE,  //
-    20 + CIRCLE, 21 + CIRCLE, 22 + CIRCLE,  //
-    23 + CIRCLE, 0 + CIRCLE,                //
+    // CIRCLE - 25
+    0 + CIRCLE, 1 + CIRCLE,               //
+    2 + CIRCLE, 3 + CIRCLE, 4 + CIRCLE,   //
+    5 + CIRCLE, 6 + CIRCLE, 7 + CIRCLE,   //
+    8 + CIRCLE, 9 + CIRCLE, 10 + CIRCLE,  //
+    11 + CIRCLE, 0 + CIRCLE,
+    // 12 + CIRCLE, 13 + CIRCLE,  //
+    // 14 + CIRCLE, 15 + CIRCLE, 16 + CIRCLE,  //
+    // 17 + CIRCLE, 18 + CIRCLE, 19 + CIRCLE,  //
+    // 20 + CIRCLE, 21 + CIRCLE, 22 + CIRCLE,  //
+    // 23 + CIRCLE, 0 + CIRCLE,                //
     // LINES
     0, RIGHT,    //
     0, UP,       //
