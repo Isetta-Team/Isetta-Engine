@@ -47,9 +47,19 @@
     <ClCompile Include="Week10MiniGame\Week10Level.cpp">
       <Filter>Week10MiniGame</Filter>
     </ClCompile>
+    <ClCompile Include="Week10MiniGame\W10Player.cpp">
+      <Filter>Week10MiniGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Week10MiniGame\W10NetworkManager.cpp">
+      <Filter>Week10MiniGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Week10MiniGame\W10GameManager.cpp">
+      <Filter>Week10MiniGame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
+    <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="GUI Level">
@@ -115,6 +125,15 @@
       <Filter>Input Level</Filter>
     </ClInclude>
     <ClInclude Include="Week10MiniGame\Week10Level.h">
+      <Filter>Week10MiniGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Week10MiniGame\W10Player.h">
+      <Filter>Week10MiniGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Week10MiniGame\W10NetworkManager.h">
+      <Filter>Week10MiniGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Week10MiniGame\W10GameManager.h">
       <Filter>Week10MiniGame</Filter>
     </ClInclude>
   </ItemGroup>

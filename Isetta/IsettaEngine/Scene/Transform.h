@@ -44,9 +44,10 @@ class ISETTA_API_DECLARE Transform {
   void RotateLocal(const Math::Quaternion &rotation);
 
   // scale
-  Math::Vector3 GetWorldScale() const;
+  Math::Vector3 GetWorldScale();
   Math::Vector3 GetLocalScale() const;
   void SetLocalScale(const Math::Vector3 &newScale);
+  void SetWorldScale(const Math::Vector3 &newScale);
 
   // hierarchy
   void SetParent(Transform *const transform);
@@ -108,6 +109,7 @@ class ISETTA_API_DECLARE Transform {
   void RemoveChild(Transform *transform);
 
   Math::Quaternion worldRot;  // only for query
+  Math::Vector3 worldScale; // only for query
 
   Math::Matrix4 localToWorldMatrix{};
   Math::Matrix4 worldToLocalMatrix{};

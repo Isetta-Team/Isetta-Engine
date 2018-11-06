@@ -86,6 +86,7 @@ class ISETTA_API_DECLARE NetworkManager {
   U32 CreateNetworkId(NetworkId* NetworkId);
   U32 AssignNetworkId(U32 netId, NetworkId* NetworkId);
   void RemoveNetworkId(NetworkId* NetworkId);
+  U32 CreateNetId();
 
   /**
    * @brief Connects the local Client to a server at the given address.

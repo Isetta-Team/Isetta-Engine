@@ -127,4 +127,8 @@ void NetworkManager::RemoveNetworkId(NetworkId* NetworkId) {
   networkIdToComponentMap.erase(NetworkId->id);
   NetworkId->id = NULL;
 }
+
+U32 NetworkManager::CreateNetId() {
+  return nextNetworkId++;
+}
 }  // namespace Isetta

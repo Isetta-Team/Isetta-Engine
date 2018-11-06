@@ -8,6 +8,8 @@
 #include "Core/Math/Vector4.h"
 #include "Scene/Component.h"
 #include "Scene/Entity.h"
+#include "Scene/Level.h"
+#include "Scene/LevelManager.h"
 #include "Util.h"
 
 namespace Isetta {
@@ -137,9 +139,17 @@ void Transform::RotateLocal(const Math::Quaternion &rotation) {
   SetLocalRot(rotation * localRot);
 }
 
-Math::Vector3 Transform::GetWorldScale() const {
+Math::Vector3 Transform::GetWorldScale() {
   // TODO(YIDI):  implement this
-  return localScale;
+  // Potential reading:
+  // https://math.stackexchange.com/questions/237369/given-this-transformation-matrix-how-do-i-decompose-it-into-translation-rotati
+  if (parent == nullptr) {
+    worldScale = localScale;
+  } else {
+    worldScale = Math::Vector3::Scale(parent->GetWorldScale(), localScale);
+  }
+
+  return worldScale;
 }
 
 Math::Vector3 Transform::GetLocalScale() const { return localScale; }
@@ -149,27 +159,46 @@ void Transform::SetLocalScale(const Math::Vector3 &newScale) {
   SetDirty();
 }
 
+void Transform::SetWorldScale(const Math::Vector3 &newWorldScale) {
+  worldScale = newWorldScale;
+  SetDirty();
+
+  if (parent == nullptr) {
+    localScale = worldScale;
+  } else {
+    localScale =
+        Math::Vector3::ReverseScale(worldScale, parent->GetWorldScale());
+  }
+}
+
 // TODO(YIDI): Test this
 void Transform::SetParent(Transform *const transform) {
-  if (parent == transform) {
+  Transform *targetTransform = transform;
+  if (transform == nullptr) {
+    targetTransform =
+        LevelManager::Instance().currentLevel->levelRoot->GetTransform();
+  }
+  if (parent == targetTransform) {
     LOG_ERROR(Debug::Channel::Graphics,
               "You are trying to set (%s)'s parent to (%s), whose is already "
               "their parent",
-              GetName().c_str(), transform->GetName().c_str());
+              GetName().c_str(), targetTransform->GetName().c_str());
     return;
   }
   Math::Vector3 originalPos = GetWorldPos();
   Math::Quaternion originalRot = GetWorldRot();
+   Math::Vector3 originalScale = GetWorldScale();
 
   if (parent != nullptr) {
     parent->RemoveChild(this);
   }
-  if (transform != nullptr) {
-    transform->AddChild(this);
+  if (targetTransform != nullptr) {
+    targetTransform->AddChild(this);
   }
-  parent = transform;
+  parent = targetTransform;
   SetWorldPos(originalPos);
   SetWorldRot(originalRot);
+   SetWorldScale(originalScale);
   SetDirty();
 }
 

@@ -12,14 +12,14 @@ namespace Isetta {
 using EventParam =
     std::variant<bool, int, float, std::string, Math::Vector3, void*>;
 
-enum class EventPriority {
+enum class ISETTA_API EventPriority {
   LOW = 3000,
   MEDIUM = 2000,
   HIGH = 1000,
   EMERGENT = 0
 };
 
-struct EventObject {
+struct ISETTA_API EventObject {
   std::string eventName;
   U64 timeFrame;
   EventPriority eventPriority;
