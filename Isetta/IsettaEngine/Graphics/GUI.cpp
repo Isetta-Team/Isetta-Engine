@@ -223,7 +223,7 @@ void GUI::InputVector3(const RectTransform& transform,
   ImGui::PushID(label.data());
   ImGui::Text(label.data());
   ImGui::SameLine();
-  ImGui::InputFloat3("##input_vector3", value->xyz, step,
+  ImGui::InputFloat3("##input_vector3", value->xyz, format.data(),
                      (ImGuiInputTextFlags)flags);
   ImGui::PopID();
   ImGui::PopItemWidth();
