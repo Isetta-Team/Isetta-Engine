@@ -12,6 +12,7 @@
 #include "Scene/Transform.h"
 
 namespace Isetta {
+#if _EDITOR
 void BoxCollider::Update() {
   DebugDraw::WireCube(
       Math::Matrix4::Translate(GetTransform()->GetWorldPos() + center) *
@@ -20,6 +21,7 @@ void BoxCollider::Update() {
           (Math::Matrix4)GetTransform()->GetWorldRot(),
       debugColor);
 }
+#endif
 
 bool BoxCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
                           float maxDistance) {

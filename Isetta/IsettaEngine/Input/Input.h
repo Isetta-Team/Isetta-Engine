@@ -30,12 +30,16 @@ class ISETTA_API_DECLARE Input {
    * \param callback The callback function
    */
   static U16 RegisterKeyPressCallback(KeyCode key, const Action<>& callback);
+  static U16 RegisterKeyPressCallback(KeyCode key, ModifierKeys mods,
+                                      const Action<>& callback);
   /**
    * \brief Unregister a callback by the key and handle
    * \param key The key to detect
    * \param handle The handle to unregister
    */
   static void UnregisterKeyPressCallback(KeyCode key, U16 handle);
+  static void UnregisterKeyPressCallback(KeyCode key, ModifierKeys mods,
+                                         U16 handle);
   /**
    * \brief Register a callback function to the key release event and return its
    * handle
@@ -43,12 +47,16 @@ class ISETTA_API_DECLARE Input {
    * \param callback The callback function
    */
   static U16 RegisterKeyReleaseCallback(KeyCode key, const Action<>& callback);
+  static U16 RegisterKeyReleaseCallback(KeyCode key, ModifierKeys mods,
+                                        const Action<>& callback);
   /**
    * \brief Unregister a callback by the key and handle
    * \param key The key to detect
    * \param handle The handle to unregister
    */
   static void UnregisterKeyReleaseCallback(KeyCode key, U16 handle);
+  static void UnregisterKeyReleaseCallback(KeyCode key, ModifierKeys mods,
+                                           U16 handle);
   /**
    * \brief Get the position of the mouse
    */

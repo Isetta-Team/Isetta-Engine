@@ -79,7 +79,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)IsettaEngine;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(SolutionDir)External\imgui\examples\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>IN_ENGINE;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>IN_ENGINE;_EDITOR;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
@@ -102,7 +102,7 @@ XCOPY  /Y /R "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)IsettaEngine;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(SolutionDir)External\imgui\examples\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>ISETTA_EXPORTS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ISETTA_EXPORTS;_EDITOR;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);EDITOR</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
@@ -128,7 +128,7 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)IsettaEngine;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(SolutionDir)External\imgui\examples\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <PreprocessorDefinitions>IN_ENGINE;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>IN_ENGINE;_EDITOR;_MBCS;%(PreprocessorDefinitions);EDITOR</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -150,10 +150,14 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Collisions\CollisionHandler.cpp" />
     <ClCompile Include="Collisions\Collisions.cpp" />
     <ClCompile Include="Components\AxisDrawer.cpp" />
+    <ClCompile Include="Components\Editor\Editor.cpp" />
+    <ClCompile Include="Components\Editor\Hierarchy.cpp" />
+    <ClCompile Include="Custom\EditorLevel\EditorLevel.cpp" />
     <ClCompile Include="Components\GridComponent.cpp" />
     <ClCompile Include="Components\FlyController.cpp" />
+    <ClCompile Include="Components\Editor\Inspector.cpp" />
     <ClCompile Include="Components\NetworkTransform.cpp" />
-    <ClCompile Include="Components\Console.cpp" />
+    <ClCompile Include="Components\Editor\Console.cpp" />
     <ClCompile Include="Core\Config\Config.cpp" />
     <ClCompile Include="Core\Color.cpp" />
     <ClCompile Include="Core\Config\CVar.cpp" />
@@ -238,10 +242,14 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Collisions\Collisions.h" />
     <ClInclude Include="Collisions\CollisionUtil.h" />
     <ClInclude Include="Components\AxisDrawer.h" />
+    <ClInclude Include="Components\Editor\Editor.h" />
+    <ClInclude Include="Components\Editor\Hierarchy.h" />
+    <ClInclude Include="Custom\EditorLevel\EditorLevel.h" />
     <ClInclude Include="Components\GridComponent.h" />
     <ClInclude Include="Components\FlyController.h" />
+    <ClInclude Include="Components\Editor\Inspector.h" />
     <ClInclude Include="Components\NetworkTransform.h" />
-    <ClInclude Include="Components\Console.h" />
+    <ClInclude Include="Components\Editor\Console.h" />
     <ClInclude Include="Core\Config\Config.h" />
     <ClInclude Include="Core\Color.h" />
     <ClInclude Include="Core\Config\ICVar.h" />
@@ -341,6 +349,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <None Include="config.cfg" />
     <None Include="cpp.hint" />
     <None Include="Resources\test\Low-Poly-Racing-Car.geo" />
+    <None Include="user.cfg" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Resources\materials\compute.material.xml" />

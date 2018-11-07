@@ -277,9 +277,6 @@
     <ClCompile Include="Components\NetworkTransform.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="Components\Console.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="Custom\EscapeExit.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
@@ -291,6 +288,21 @@
     </ClCompile>
     <ClCompile Include="Components\AxisDrawer.cpp">
       <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\EditorLevel\EditorLevel.cpp">
+      <Filter>Custom\EditorLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Editor\Editor.cpp">
+      <Filter>Components\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Editor\Inspector.cpp">
+      <Filter>Components\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Editor\Console.cpp">
+      <Filter>Components\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Editor\Hierarchy.cpp">
+      <Filter>Components\Editor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -368,6 +380,12 @@
     </Filter>
     <Filter Include="Custom\BVHTestLevel">
       <UniqueIdentifier>{d6dd3b2a-276f-4d5e-8016-f458080f209b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\EditorLevel">
+      <UniqueIdentifier>{48eaf7c9-0b50-4561-bbca-2c68a5456570}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Editor">
+      <UniqueIdentifier>{810b8627-00c8-4ae3-9a0d-ba5ac1948eb3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -606,9 +624,6 @@
     <ClInclude Include="Components\NetworkTransform.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="Components\Console.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="Collisions\CollisionUtil.h">
       <Filter>Collisions</Filter>
     </ClInclude>
@@ -629,6 +644,21 @@
     </ClInclude>
     <ClInclude Include="Components\AxisDrawer.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\EditorLevel\EditorLevel.h">
+      <Filter>Custom\EditorLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Editor\Editor.h">
+      <Filter>Components\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Editor\Hierarchy.h">
+      <Filter>Components\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Editor\Inspector.h">
+      <Filter>Components\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Editor\Console.h">
+      <Filter>Components\Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -700,8 +730,8 @@
       <Filter>Resources\test</Filter>
     </None>
     <None Include="config.cfg" />
-    <None Include="user.cfg" />
     <None Include="cpp.hint" />
+    <None Include="user.cfg" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Resources\test\Low-Poly-Racing-Car.scene.xml">

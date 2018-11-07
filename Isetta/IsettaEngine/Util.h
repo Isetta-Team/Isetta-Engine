@@ -81,5 +81,12 @@ struct UnorderedPairHash {
     return (std::hash<T>()(p.first) ^ std::hash<T>()(p.second));
   }
 };
+struct PairHash {
+  template <typename T, typename S>
+  std::size_t operator()(std::pair<T, S> const& p) const {
+    return (std::hash<T>()(p.first) ^
+            (std::hash<S>()(p.second) << sizeof(p.first)));
+  }
+};
 
 }  // namespace Isetta::Util

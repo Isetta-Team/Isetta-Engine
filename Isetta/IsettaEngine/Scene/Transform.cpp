@@ -5,19 +5,13 @@
 #include "Core/Debug/DebugDraw.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Math/Matrix3.h"
+#include "Core/Math/Vector4.h"
 #include "Scene/Component.h"
 #include "Scene/Entity.h"
 #include "Util.h"
-#if _DEBUG
-#include "Graphics/GUI.h"
-#include "Graphics/RectTransform.h"
-#include "imgui/imgui.h"
-#include <string>
-#endif
 
 namespace Isetta {
-
-Transform::Transform(Entity *entity) : entity(entity) {}
+Transform::Transform(Entity *const entity) : entity(entity) {}
 
 Math::Vector3 Transform::GetWorldPos() {
   return GetLocalToWorldMatrix().GetCol(3).GetVector3();
@@ -283,70 +277,6 @@ void Transform::SetWorldTransform(const Math::Vector3 &inPosition,
 void Transform::SetH3DNodeTransform(const H3DNode node, Transform &transform) {
   h3dSetNodeTransMat(node, transform.GetLocalToWorldMatrix().Transpose().data);
 }
-#if _DEBUG
-void Transform::InspectorGUI() {
-  static RectTransform rectTrans{{0, 0, 350, 300}, GUI::Pivot::TopRight};
-  static bool isOpen = true;
-  GUI::Window(
-      rectTrans, "Inspector",
-      [&]() {
-        std::string parentName = parent == nullptr ? "null" : parent->GetName();
-
-        float height = 5;
-        float padding = 15;
-        GUI::Text(RectTransform{Math::Rect{padding, height, 300, 100}},
-                  GetName(), GUI::TextStyle{Color::white});
-        height += 15;
-
-        std::string content =
-            "World Position: " + GetWorldPos().ToString() + "\n" +
-            "Local Position: " + GetLocalPos().ToString() + "\n" +
-            "World Rotation: " + GetWorldEulerAngles().ToString() + "\n" +
-            "Local Rotation: " + GetLocalEulerAngles().ToString() + "\n" +
-            "Local Scale: " + GetLocalScale().ToString() + "\n" +
-            "Parent: " + parentName;
-
-        GUI::Text(RectTransform{Math::Rect{padding, height, 300, 100}},
-                  content);
-
-        height += 90;
-
-        if (GUI::Button(RectTransform{Math::Rect{padding, height, 300, 30}},
-                        "Reset")) {
-          // if (ImGui::Button("Reset", (ImVec2)Math::Vector2{300, 30})) {
-          SetLocalRot(Math::Quaternion::identity);
-          SetLocalPos(Math::Vector3::zero);
-          SetLocalScale(Math::Vector3::one);
-        }
-
-        height += 50;
-
-        GUI::Text(RectTransform{Math::Rect{padding, height, 300, 100}},
-                  "Components", GUI::TextStyle{Color::white});
-
-        height += padding;
-
-        for (const auto &component : entity->GetComponents()) {
-          Component &comp = *component;
-          GUI::Text(RectTransform{Math::Rect{padding, height, 300, 100}},
-                    typeid(comp).name());
-          height += padding;
-        }
-      },
-      &isOpen);
-
-  Math::Matrix4 temp{};
-  temp.SetTopLeftMatrix3(localRot.GetMatrix3());  // rotation
-  temp.SetCol(3, localPos, 1);
-
-  if (parent != nullptr) {
-    temp = parent->GetLocalToWorldMatrix() * temp;
-  }
-
-  DebugDraw::Axis(temp);
-  DebugDraw::AxisSphere(temp);
-}
-#endif
 
 const Math::Matrix4 &Transform::GetLocalToWorldMatrix() {
   if (isDirty) {

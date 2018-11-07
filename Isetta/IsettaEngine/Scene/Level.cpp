@@ -34,13 +34,13 @@ std::list<Entity*> Level::GetEntitiesByName(const std::string& name) {
   return returnEntities;
 }
 
+std::list<class Entity*> Level::GetEntities() const { return entities; }
+
 void Level::UnloadLevel() {
   for (auto& entity : entities) {
     MemoryManager::DeleteOnFreeList<Entity>(entity);
   }
   MemoryManager::DeleteOnFreeList<Entity>(levelRoot);
-  levelRoot->~Entity();
-  MemoryManager::FreeOnFreeList(levelRoot);
 }
 
 void Level::AddComponentToStart(Component* component) {
@@ -84,47 +84,6 @@ void Level::GUIUpdate() {
   for (const auto& entity : entities) {
     entity->GuiUpdate();
   }
-
-#if _DEBUG
-  static RectTransform rectTrans{{20, 100, 250, 500}};
-  bool isOpen = true;
-  GUI::Window(rectTrans, "Hierarchy", [&]() {
-    float buttonHeight = 20;
-    float buttonWidth = 200;
-    float height = 10;
-    float left = 5;
-    float padding = 20;
-    static Transform* transform = nullptr;
-
-    for (const auto& entity : entities) {
-      Func<int, Transform*> countLevel = [](Transform* t) -> int {
-        int i = 0;
-        while (t->GetParent() != nullptr) {
-          t = t->GetParent();
-          i++;
-        }
-        return i;
-      };
-
-      Action<Transform*> action = [&](Transform* t) {
-        int level = countLevel(t);
-        if (GUI::Button(RectTransform{Math::Rect{left + level * padding, height,
-                                                 buttonWidth - level * padding,
-                                                 buttonHeight}},
-                        t->GetName())) {
-          transform = transform == t ? nullptr : t;
-        }
-        height += 1.25f * buttonHeight;
-      };
-      action(entity->GetTransform());
-      entity->GetTransform()->ForDescendants(action);
-    }
-
-    if (transform != nullptr) {
-      transform->InspectorGUI();
-    }
-  });
-#endif
 }
 
 void Level::LateUpdate() {
@@ -134,14 +93,12 @@ void Level::LateUpdate() {
 
   for (auto& entity : entities) {
     if (entity->GetAttribute(Entity::EntityAttributes::NEED_DESTROY)) {
-      MemoryManager::DeleteOnFreeList(entity);
+      MemoryManager::DeleteOnFreeList<Entity>(entity);
       entity = nullptr;
     }
   }
 
-  entities.remove_if([](Entity*& entity) {
-    return entity == nullptr;
-  });
+  entities.remove_if([](Entity*& entity) { return entity == nullptr; });
 }
 
 Level::Level() : levelRoot{MemoryManager::NewOnFreeList<Entity>("Root")} {}

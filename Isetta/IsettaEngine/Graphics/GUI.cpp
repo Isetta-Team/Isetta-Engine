@@ -13,6 +13,7 @@
 #include "Graphics/GUIModule.h"
 #include "Graphics/GUIStyle.h"
 #include "Graphics/RectTransform.h"
+#include "Graphics/Texture.h"
 #include "Util.h"
 
 #include "imgui/imgui.h"
@@ -51,21 +52,22 @@ bool GUI::Button(const RectTransform& transform, const std::string& label,
   return false;
 }
 bool GUI::ButtonImage(const RectTransform& transform, const std::string& id,
-                      const TextureID& textureId, const ButtonStyle& btnStyle,
+                      const Texture& texture, const ButtonStyle& btnStyle,
                       const ImageStyle& imgStyle, bool repeating) {
   ButtonStyle style =
       ButtonStyle{imgStyle.frame, btnStyle.hover, btnStyle.active};
-  Func<bool> btn = std::bind(
-      ImGui::ImageButton, textureId, (ImVec2)transform.rect.Size(),
-      (ImVec2)imgStyle.offset, (ImVec2)imgStyle.tiling, imgStyle.framePadding,
-      (ImVec4)btnStyle.background, (ImVec4)imgStyle.tint);
+  Func<bool> btn =
+      std::bind(ImGui::ImageButton, (void*)(intptr_t)texture.GetTexture(),
+                (ImVec2)transform.rect.Size(), (ImVec2)imgStyle.offset,
+                (ImVec2)imgStyle.tiling, imgStyle.framePadding,
+                (ImVec4)btnStyle.background, (ImVec4)imgStyle.tint);
   return Button(btn, transform, style, repeating);
 }
 bool GUI::ButtonImage(const RectTransform& transform, const std::string& id,
-                      const TextureID& textureId, const Action<>& callback,
+                      const Texture& texture, const Action<>& callback,
                       const ButtonStyle& btnStyle, const ImageStyle& imgStyle,
                       bool repeating, int framePadding) {
-  if (ButtonImage(transform, id, textureId, btnStyle, imgStyle, repeating)) {
+  if (ButtonImage(transform, id, texture, btnStyle, imgStyle, repeating)) {
     callback();
     return true;
   }
@@ -149,23 +151,27 @@ void GUI::Text(const RectTransform& transform, const std::string& format,
   ImGui::PopStyleColor();
   ImGui::PopItemWidth();
 }
-void GUI::Label(const RectTransform& transform, const std::string& label,
-                const std::string& format, const LabelStyle& style) {
+void GUI::Label(const RectTransform& transform, const std::string_view& label,
+                const std::string_view& format, const LabelStyle& style) {
   ImGui::SetCursorPos((ImVec2)SetPosition(transform));
   ImGui::PushItemWidth(transform.rect.width);
 
   ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)style.text);
   ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)style.background);
-  ImGui::LabelText(label.c_str(), format.c_str());
+  ImGui::PushID(label.data());
+  ImGui::Text(label.data());
+  ImGui::SameLine();
+  ImGui::LabelText("##label", format.data());
+  ImGui::PopID();
   ImGui::PopStyleColor(2);
   ImGui::PopItemWidth();
 }
 
 // INPUT
-bool GUI::InputText(const RectTransform& transform, const std::string& label,
-                    char* buffer, int bufferSize, const InputStyle& style,
-                    InputTextFlags flags, InputTextCallback callback,
-                    void* userData) {
+bool GUI::InputText(const RectTransform& transform,
+                    const std::string_view& label, char* buffer, int bufferSize,
+                    const InputStyle& style, InputTextFlags flags,
+                    InputTextCallback callback, void* userData) {
   ImGui::SetCursorPos((ImVec2)SetPosition(transform));
   ImGui::PushItemWidth(transform.rect.width);
 
@@ -173,14 +179,19 @@ bool GUI::InputText(const RectTransform& transform, const std::string& label,
   ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)style.hovered);
   ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)style.active);
   ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)style.text);
-  bool input = ImGui::InputText(label.c_str(), buffer, bufferSize,
+  ImGui::PushID(label.data());
+  ImGui::Text(label.data());
+  ImGui::SameLine();
+  bool input = ImGui::InputText("##input_text", buffer, bufferSize,
                                 ImGuiInputTextFlags(flags), callback, userData);
+  ImGui::PopID();
   ImGui::PopItemWidth();
   ImGui::PopStyleColor(4);
   return input;
 }
-void GUI::InputInt(const RectTransform& transform, const std::string& label,
-                   int* value, const InputStyle& style, int step, int stepFast,
+void GUI::InputInt(const RectTransform& transform,
+                   const std::string_view& label, int* value,
+                   const InputStyle& style, int step, int stepFast,
                    InputTextFlags flags) {
   ImGui::SetCursorPos((ImVec2)SetPosition(transform));
   ImGui::PushItemWidth(transform.rect.width);
@@ -189,15 +200,19 @@ void GUI::InputInt(const RectTransform& transform, const std::string& label,
   ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)style.hovered);
   ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)style.active);
   ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)style.text);
-  ImGui::InputInt(label.c_str(), value, step, stepFast,
+  ImGui::PushID(label.data());
+  ImGui::Text(label.data());
+  ImGui::SameLine();
+  ImGui::InputInt("##input_int", value, step, stepFast,
                   ImGuiInputTextFlags(flags));
+  ImGui::PopID();
   ImGui::PopItemWidth();
   ImGui::PopStyleColor(4);
 }
-
-void GUI::SliderFloat(const RectTransform& transform, const std::string& label,
-                      float* value, float min, float max, float power,
-                      const char* format, const InputStyle& style) {
+void GUI::InputVector3(const RectTransform& transform,
+                       const std::string_view& label, Math::Vector3* value,
+                       float step, const InputStyle& style,
+                       const std::string_view& format, InputTextFlags flags) {
   ImGui::SetCursorPos((ImVec2)SetPosition(transform));
   ImGui::PushItemWidth(transform.rect.width);
 
@@ -205,7 +220,32 @@ void GUI::SliderFloat(const RectTransform& transform, const std::string& label,
   ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)style.hovered);
   ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)style.active);
   ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)style.text);
-  ImGui::SliderFloat(label.c_str(), value, min, max, format, power);
+  ImGui::PushID(label.data());
+  ImGui::Text(label.data());
+  ImGui::SameLine();
+  ImGui::InputFloat3("##input_vector3", value->xyz, format.data(),
+                     (ImGuiInputTextFlags)flags);
+  ImGui::PopID();
+  ImGui::PopItemWidth();
+  ImGui::PopStyleColor(4);
+}
+
+void GUI::SliderFloat(const RectTransform& transform,
+                      const std::string_view& label, float* value, float min,
+                      float max, float power, const char* format,
+                      const InputStyle& style) {
+  ImGui::SetCursorPos((ImVec2)SetPosition(transform));
+  ImGui::PushItemWidth(transform.rect.width);
+
+  ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)style.background);
+  ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)style.hovered);
+  ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)style.active);
+  ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)style.text);
+  ImGui::PushID(label.data());
+  ImGui::Text(label.data());
+  ImGui::SameLine();
+  ImGui::SliderFloat("##slider_float", value, min, max, format, power);
+  ImGui::PopID();
   ImGui::PopItemWidth();
   ImGui::PopStyleColor(4);
 }
@@ -285,6 +325,7 @@ bool GUI::ButtonDropDown(const RectTransform& transform,
 bool GUI::Window(const RectTransform& transform, const std::string& name,
                  const Action<>& ui, bool* isOpen, const WindowStyle& style,
                  const WindowFlags flags) {
+  if (isOpen && !*isOpen) return false;
   ImGui::PushStyleColor(ImGuiCol_WindowBg, (ImVec4)style.background);
   ImGui::SetNextWindowBgAlpha(style.background.a);
   ImGui::SetNextWindowPos((ImVec2)SetPosition(transform), ImGuiCond_Once);
@@ -438,7 +479,7 @@ void GUI::Draw::CircleFilled(const RectTransform& transform, float radius,
   ImGui::GetWindowDrawList()->AddCircleFilled(
       (ImVec2)position, radius, ImGui::GetColorU32((ImVec4)color), segments);
 }
-void GUI::Image(const RectTransform& transform, const TextureID& textureId,
+void GUI::Image(const RectTransform& transform, const Texture& texture,
                 const ImageStyle& style) {
   ImGui::SetCursorPos((ImVec2)SetPosition(transform));
   if (style.framePadding > 0) {
@@ -449,7 +490,8 @@ void GUI::Image(const RectTransform& transform, const TextureID& textureId,
                       transform.anchor, transform.pivot},
         style.frame);
   }
-  ImGui::Image(textureId, (ImVec2)transform.rect.Size(), (ImVec2)style.offset,
+  ImGui::Image((void*)(intptr_t)(texture.GetTexture()),
+               (ImVec2)transform.rect.Size(), (ImVec2)style.offset,
                (ImVec2)style.tiling, (ImVec4)style.tint, (ImVec4)style.frame);
 }
 void GUI::ProgressBar(const RectTransform& transform, float fraction,
