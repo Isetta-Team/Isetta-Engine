@@ -17,7 +17,7 @@ void W10NetworkManager::HandleReadyMessage(int clientIdx,
     clientSwordPos.insert({clientIdx, 0});
   }
 
-  if (clientCount == 1) {
+  if (clientCount == 2) {
     for (const auto& swordPair : clientSwordPos) {
       int potentialClient = swordPair.first;
       W10SpawnMessage* spawn =
@@ -25,7 +25,7 @@ void W10NetworkManager::HandleReadyMessage(int clientIdx,
               .GenerateMessageFromServer<W10SpawnMessage>(potentialClient);
       spawn->netId = Isetta::NetworkManager::Instance().CreateNetId();
       spawn->clientAuthorityId = potentialClient;
-      spawn->isOnRight = true;
+      spawn->isOnRight = potentialClient % 2;
       spawn->swordNetId = Isetta::NetworkManager::Instance().CreateNetId();
 
       Isetta::NetworkManager::Instance()
@@ -104,7 +104,10 @@ void W10NetworkManager::HandlePositionReport(int clientIdx,
   const W10PositionReportMessage* posMessage{
       reinterpret_cast<const W10PositionReportMessage*>(message)};
   clientPosX.insert_or_assign(clientIdx, posMessage->positionX);
-  if (clientPosX.size() == 1) {
+  if (clientPosX.size() == 2) {
+    auto distance = Isetta::Math::Util::Abs(clientPosX.at(0) - clientPosX.at(1));
+    LOG_INFO(Isetta::Debug::Channel::General, "Distance %f", distance);
+
     // for test
     int attackSwordPos = clientSwordPos.at(lastAttemptClient);
     for (const auto& swordPos : clientSwordPos) {
@@ -226,19 +229,19 @@ void W10NetworkManager::Awake() {
     Isetta::NetworkManager::Instance().SendMessageFromClient(m);
   });
 
-  // For debug use
-  Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::NUM1, [&]() {
-    clientSwordPos.insert_or_assign(2, 1);
-    LOG_INFO(Isetta::Debug::Channel::General, "Test Sword is on 1");
-  });
-  Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::NUM2, [&]() {
-    clientSwordPos.insert_or_assign(2, 0);
-    LOG_INFO(Isetta::Debug::Channel::General, "Test Sword is on 0");
-  });
-  Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::NUM3, [&]() {
-    clientSwordPos.insert_or_assign(2, -1);
-    LOG_INFO(Isetta::Debug::Channel::General, "Test Sword is on -1");
-  });
+  // // For debug use
+  // Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::NUM1, [&]() {
+  //   clientSwordPos.insert_or_assign(2, 1);
+  //   LOG_INFO(Isetta::Debug::Channel::General, "Test Sword is on 1");
+  // });
+  // Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::NUM2, [&]() {
+  //   clientSwordPos.insert_or_assign(2, 0);
+  //   LOG_INFO(Isetta::Debug::Channel::General, "Test Sword is on 0");
+  // });
+  // Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::NUM3, [&]() {
+  //   clientSwordPos.insert_or_assign(2, -1);
+  //   LOG_INFO(Isetta::Debug::Channel::General, "Test Sword is on -1");
+  // });
 }
 
 void W10NetworkManager::Start() {

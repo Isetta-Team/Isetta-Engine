@@ -25,7 +25,7 @@ Isetta::U16 resultHandle;
 // std::vector<int> clientIDs;
 int clientCount;
 int lastAttemptClient;
-std::unordered_map<int, int> clientPosX;
+std::unordered_map<int, float> clientPosX;
 std::unordered_map<int, int> clientSwordPos;
 W10GameManager* gameManager;
 
