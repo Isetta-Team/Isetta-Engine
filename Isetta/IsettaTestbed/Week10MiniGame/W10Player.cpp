@@ -8,6 +8,7 @@
 #include "Networking/NetworkId.h"
 #include "Networking/NetworkManager.h"
 #include "W10NetworkManager.h"
+#include "Components/NetworkTransform.h"
 
 W10Player::W10Player(bool isRight, int swordNetID, int clientAuthorityID)
     : isOnRight{isRight},
@@ -41,7 +42,7 @@ void W10Player::Awake() {
   swordEntity->AddComponent<Isetta::MeshComponent>("primitive/cube.scene.xml");
   auto networkId = swordEntity->AddComponent<Isetta::NetworkId>(swordNetId);
   networkId->clientAuthorityId = clientAuthorityId;
-
+  swordEntity->AddComponent<Isetta::NetworkTransform>();
   Isetta::Events::Instance().RegisterEventListener(
       "Blocked",
       [&](const Isetta::EventObject& eventObject) { SwordBlocked(); });

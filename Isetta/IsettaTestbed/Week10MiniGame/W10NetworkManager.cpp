@@ -12,19 +12,25 @@
 
 void W10NetworkManager::HandleReadyMessage(int clientIdx,
                                            yojimbo::Message* message) {
-  clientCount++;
-  if (clientCount == 1) {
-    W10SpawnMessage* spawn = Isetta::NetworkManager::Instance()
-                                 .GenerateMessageFromServer<W10SpawnMessage>(0);
-    spawn->netId = Isetta::NetworkManager::Instance().CreateNetId();
-    spawn->clientAuthorityId = clientIdx;
-    spawn->isOnRight = true;
-    spawn->netId = Isetta::NetworkManager::Instance().CreateNetId();
-
+  if (clientSwordPos.count(clientIdx) == 0) {
+    clientCount++;
     clientSwordPos.insert({clientIdx, 0});
+  }
 
-    Isetta::NetworkManager::Instance()
-        .SendAllMessageFromServer<W10SpawnMessage>(spawn);
+  if (clientCount == 1) {
+    for (const auto& swordPair : clientSwordPos) {
+      int potentialClient = swordPair.first;
+      W10SpawnMessage* spawn =
+          Isetta::NetworkManager::Instance()
+              .GenerateMessageFromServer<W10SpawnMessage>(potentialClient);
+      spawn->netId = Isetta::NetworkManager::Instance().CreateNetId();
+      spawn->clientAuthorityId = potentialClient;
+      spawn->isOnRight = true;
+      spawn->swordNetId = Isetta::NetworkManager::Instance().CreateNetId();
+
+      Isetta::NetworkManager::Instance()
+          .SendAllMessageFromServer<W10SpawnMessage>(spawn);
+    }
   }
 }
 
@@ -52,8 +58,12 @@ void W10NetworkManager::HandleSpawnMessage(yojimbo::Message* message) {
       gameManager->player = w10Player;
     } else {
       auto swordEntity = ADD_ENTITY("Sword");
+      LOG_INFO(Isetta::Debug::Channel::General, "Sword network id: %d",
+               spawnMessage->swordNetId);
       swordEntity->GetTransform()->SetParent(e->GetTransform());
-      swordEntity->AddComponent<Isetta::NetworkId>(spawnMessage->swordNetId);
+      auto networkId = swordEntity->AddComponent<Isetta::NetworkId>(
+          spawnMessage->swordNetId);
+      networkId->clientAuthorityId = spawnMessage->clientAuthorityId;
       swordEntity->AddComponent<Isetta::NetworkTransform>();
     }
     e->AddComponent<Isetta::NetworkTransform>();
