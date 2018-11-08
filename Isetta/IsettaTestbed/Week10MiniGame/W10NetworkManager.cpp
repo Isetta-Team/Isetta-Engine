@@ -3,7 +3,6 @@
  */
 
 #include "Week10MiniGame/W10NetworkManager.h"
-// #include "Components/NetworkTransform.h"
 #include "Components/NetworkTransform.h"
 #include "Core/Config/Config.h"
 #include "Custom/IsettaCore.h"
@@ -20,6 +19,7 @@ void W10NetworkManager::HandleReadyMessage(int clientIdx,
     spawn->netId = Isetta::NetworkManager::Instance().CreateNetId();
     spawn->clientAuthorityId = clientIdx;
     spawn->isOnRight = true;
+    spawn->netId = Isetta::NetworkManager::Instance().CreateNetId();
 
     clientSwordPos.insert({clientIdx, 0});
 
@@ -41,13 +41,20 @@ void W10NetworkManager::HandleSpawnMessage(yojimbo::Message* message) {
     networkId->clientAuthorityId = spawnMessage->clientAuthorityId;
 
     e->AddComponent<Isetta::MeshComponent>("primitive/cube.scene.xml");
-    e->SetTransform(Isetta::Math::Vector3{-1, 0, 0},
-                    Isetta::Math::Vector3::zero,
-                    Isetta::Math::Vector3{0.25, 0.5, 0.25});
+    e->SetTransform(
+        Isetta::Math::Vector3{spawnMessage->isOnRight ? -1.f : 1.f, 0, 0},
+        Isetta::Math::Vector3::zero, Isetta::Math::Vector3{0.25, 0.5, 0.25});
 
     if (networkId->HasClientAuthority()) {
-      auto w10Player = e->AddComponent<W10Player>(true);
+      auto w10Player = e->AddComponent<W10Player>(
+          spawnMessage->isOnRight, spawnMessage->swordNetId,
+          spawnMessage->clientAuthorityId);
       gameManager->player = w10Player;
+    } else {
+      auto swordEntity = ADD_ENTITY("Sword");
+      swordEntity->GetTransform()->SetParent(e->GetTransform());
+      swordEntity->AddComponent<Isetta::NetworkId>(spawnMessage->swordNetId);
+      swordEntity->AddComponent<Isetta::NetworkTransform>();
     }
     e->AddComponent<Isetta::NetworkTransform>();
   }
@@ -67,8 +74,11 @@ void W10NetworkManager::ClientHandleAttackAttemptMessage(
   W10PositionReportMessage* posMessage =
       Isetta::NetworkManager::Instance()
           .GenerateMessageFromClient<W10PositionReportMessage>();
-  posMessage->positionX = gameManager->player->GetTransform()->GetWorldPos().x;
-  Isetta::NetworkManager::Instance().SendMessageFromClient(posMessage);
+  if (gameManager->player != nullptr) {
+    posMessage->positionX =
+        gameManager->player->GetTransform()->GetWorldPos().x;
+    Isetta::NetworkManager::Instance().SendMessageFromClient(posMessage);
+  }
 }
 
 void W10NetworkManager::ServerHandleAttackAttemptMessage(
@@ -199,8 +209,6 @@ void W10NetworkManager::Awake() {
                    "Client connection state: %d", b);
         });
   }
-  LOG_INFO(Isetta::Debug::Channel::Networking, "Server running: %d",
-           Isetta::NetworkManager::Instance().ServerIsRunning());
 
   Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::Y, []() {
     W10ReadyMessage* m = Isetta::NetworkManager::Instance()

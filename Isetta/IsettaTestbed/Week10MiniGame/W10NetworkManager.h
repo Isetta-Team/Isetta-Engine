@@ -49,7 +49,7 @@ bool Serialize(Stream* stream) {
   serialize_int(stream, netId, 0, 256);
   serialize_int(stream, clientAuthorityId, 0,
                 Isetta::NetworkManager::Instance().GetMaxClients());
-
+  serialize_int(stream, swordNetId, 0, 256);
   serialize_bool(stream, isOnRight);
   return true;
 }
@@ -60,9 +60,10 @@ void Copy(const yojimbo::Message* otherMessage) override {
   netId = message->netId;
   clientAuthorityId = message->clientAuthorityId;
   isOnRight = message->isOnRight;
+  swordNetId = message->swordNetId;
 }
 
-int netId = 0, clientAuthorityId = 0;
+int netId = 0, clientAuthorityId = 0, swordNetId = 0;
 bool isOnRight;
 RPC_MESSAGE_FINISH
 

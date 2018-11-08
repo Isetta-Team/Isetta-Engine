@@ -6,7 +6,7 @@
 
 BEGIN_COMPONENT(W10Player, Isetta::Component, true)
 public:
-W10Player(bool isRight);
+W10Player(bool isRight, int swordNetID, int clientAuthorityID);
 void Awake() override;
 void Start() override;
 void Update() override;
@@ -33,8 +33,10 @@ float originY;
 float v0x;
 float v0y;
 bool isSwordFlying;
+int clientAuthorityId;
+  int swordNetId;
 
-void ChangeSwordVerticlePosition(int direction);
+  void ChangeSwordVerticlePosition(int direction);
 void ChangeSwordHorizontalPosition(float deltaTime);
 void SwordBlocked();
 

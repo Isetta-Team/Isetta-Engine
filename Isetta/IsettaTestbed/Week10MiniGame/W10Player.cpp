@@ -5,10 +5,11 @@
 #include "Core/Math/Matrix3.h"
 #include "Custom/IsettaCore.h"
 #include "Events/Events.h"
+#include "Networking/NetworkId.h"
 #include "Networking/NetworkManager.h"
 #include "W10NetworkManager.h"
 
-W10Player::W10Player(bool isRight)
+W10Player::W10Player(bool isRight, int swordNetID, int clientAuthorityID)
     : isOnRight{isRight},
       horizontalSpeed{0.85},
       swordEntity{nullptr},
@@ -18,9 +19,16 @@ W10Player::W10Player(bool isRight)
       stabSpeed{7},
       swordStabStatus{0},
       gravity(9.8),
-      v0x{isRight ? -2.f : 2.f},
+      flyDuration{0},
+      totalFlyDuration(0),
+      targetX(0),
       targetY(-0.25),
-      isSwordFlying(false) {}
+      originY(0),
+      v0x{isRight ? -2.f : 2.f},
+      v0y(0),
+      isSwordFlying(false),
+      clientAuthorityId(clientAuthorityID),
+      swordNetId(swordNetID) {}
 
 void W10Player::Awake() {
   swordEntity = ADD_ENTITY("Sword");
@@ -28,11 +36,11 @@ void W10Player::Awake() {
   swordEntity->GetTransform()->SetLocalPos(
       Isetta::Math::Vector3((isOnRight ? 1 : -1) * 0.75f, 0, 0.5f));
 
-  // swordEntity->GetTransform()->SetLocalPos(Isetta::Math::Vector3{0.75, 0,
-  // 1});
   swordEntity->GetTransform()->SetLocalScale(
       Isetta::Math::Vector3{1.5, 0.1, 0.1});
   swordEntity->AddComponent<Isetta::MeshComponent>("primitive/cube.scene.xml");
+  auto networkId = swordEntity->AddComponent<Isetta::NetworkId>(swordNetId);
+  networkId->clientAuthorityId = clientAuthorityId;
 
   Isetta::Events::Instance().RegisterEventListener(
       "Blocked",
