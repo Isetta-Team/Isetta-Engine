@@ -2,13 +2,13 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Week10MiniGame/W10Player.h"
+#include "Components/NetworkTransform.h"
 #include "Core/Math/Matrix3.h"
 #include "Custom/IsettaCore.h"
 #include "Events/Events.h"
 #include "Networking/NetworkId.h"
 #include "Networking/NetworkManager.h"
 #include "W10NetworkManager.h"
-#include "Components/NetworkTransform.h"
 
 W10Player::W10Player(bool isRight, int swordNetID, int clientAuthorityID)
     : isOnRight{isRight},
@@ -126,8 +126,9 @@ void W10Player::ChangeSwordHorizontalPosition(float deltaTime) {
   swordXProgress += sign * stabSpeed * deltaTime;
   swordXProgress = Isetta::Math::Util::Clamp01(swordXProgress);
   auto swordLocalPos = swordEntity->GetTransform()->GetLocalPos();
-  swordLocalPos.x =
-      Isetta::Math::Util::Lerp(0.75, swordTargetX, swordXProgress);
+  swordLocalPos.x = Isetta::Math::Util::Lerp(
+      (isOnRight ? 1 : -1) * 0.75, (isOnRight ? 1 : -1) * swordTargetX,
+      swordXProgress);
   swordEntity->GetTransform()->SetLocalPos(swordLocalPos);
 
   if (swordXProgress == 1) {
@@ -149,9 +150,11 @@ void W10Player::SwordBlocked() {
   float randomX;
   float currentX{GetTransform()->GetWorldPos().x};
   if (isOnRight) {
-    randomX = -2 + Isetta::Math::Random::GetRandom01() * (currentX - -2);
+    randomX = -2 + Isetta::Math::Random::GetRandom01() * (currentX - -2) / 2 +
+              (currentX - -2) / 2;
   } else {
-    randomX = 2 + Isetta::Math::Random::GetRandom01() * (currentX - 2);
+    randomX = 2 + Isetta::Math::Random::GetRandom01() * (currentX - 2) / 2 +
+              (currentX - 2) / 2;
   }
 
   swordEntity->GetTransform()->SetParent(nullptr);

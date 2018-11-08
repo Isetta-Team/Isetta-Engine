@@ -116,7 +116,7 @@ void W10NetworkManager::HandlePositionReport(int clientIdx,
           W10AttackResultMessage* resultMessage1{
               Isetta::NetworkManager::Instance()
                   .GenerateMessageFromServer<W10AttackResultMessage>(
-                      clientIdx)};
+                      lastAttemptClient)};
           W10AttackResultMessage* resultMessage2{
               Isetta::NetworkManager::Instance()
                   .GenerateMessageFromServer<W10AttackResultMessage>(
@@ -124,7 +124,7 @@ void W10NetworkManager::HandlePositionReport(int clientIdx,
           resultMessage1->result = 0;
           resultMessage2->result = 1;
           Isetta::NetworkManager::Instance().SendMessageFromServer(
-              clientIdx, resultMessage1);
+              lastAttemptClient, resultMessage1);
           Isetta::NetworkManager::Instance().SendMessageFromServer(
               swordPos.first, resultMessage2);
           LOG_INFO(Isetta::Debug::Channel::General, "Server: HIT!");
@@ -132,10 +132,10 @@ void W10NetworkManager::HandlePositionReport(int clientIdx,
           W10AttackResultMessage* resultMessage{
               Isetta::NetworkManager::Instance()
                   .GenerateMessageFromServer<W10AttackResultMessage>(
-                      clientIdx)};
+                      lastAttemptClient)};
           resultMessage->result = 2;
           Isetta::NetworkManager::Instance().SendMessageFromServer(
-              clientIdx, resultMessage);
+              lastAttemptClient, resultMessage);
           LOG_INFO(Isetta::Debug::Channel::General, "Server: Not HIT!");
         }
       }
