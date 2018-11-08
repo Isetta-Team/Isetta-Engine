@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cstdarg>
 #include <cstdio>
+#include "Core/DataStructures/Vector.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Time/StopWatch.h"
 
@@ -35,17 +36,17 @@ inline void StrRemoveSpaces(std::string* str) {
   str->erase(std::remove_if(str->begin(), str->end(), isspace), str->end());
 }
 
-inline std::vector<std::string> StrSplit(const std::string& inStr,
+inline Vector<std::string_view> StrSplit(const std::string_view& inStr,
                                          const char separator) {
-  std::vector<std::string> results;
+  Vector<std::string_view> results;
   Size lastPos = -1;
   Size sepPos = inStr.find(separator);
   while (sepPos != std::string::npos) {
-    results.push_back(inStr.substr(lastPos + 1, sepPos - lastPos - 1));
+    results.PushBack(inStr.substr(lastPos + 1, sepPos - lastPos - 1));
     lastPos = sepPos;
     sepPos = inStr.find(separator, sepPos + 1);
   }
-  results.push_back(inStr.substr(lastPos + 1, inStr.length() - lastPos - 1));
+  results.PushBack(inStr.substr(lastPos + 1, inStr.length() - lastPos - 1));
   return results;
 }
 

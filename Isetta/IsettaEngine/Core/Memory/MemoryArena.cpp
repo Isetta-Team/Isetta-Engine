@@ -2,12 +2,12 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Core/Memory/MemoryArena.h"
-#include <vector>
+#include "Core/DataStructures/Vector.h"
+#include "Core/Debug/Assert.h"
 #include "Core/Debug/Logger.h"
+#include "Core/Memory/MemUtil.h"
 #include "Core/Memory/ObjectHandle.h"
 #include "Input/Input.h"
-#include "Core/Debug/Assert.h"
-#include "Core/Memory/MemUtil.h"
 
 namespace Isetta {
 
@@ -53,7 +53,7 @@ void MemoryArena::Defragment() {
       curIndex = 0;
     }
     MoveLeft(curIndex);
-    //LOG_INFO(Debug::Channel::Memory, "Cur size: %I64u", GetUsedSize());
+    // LOG_INFO(Debug::Channel::Memory, "Cur size: %I64u", GetUsedSize());
   }
 }
 
@@ -71,10 +71,10 @@ void MemoryArena::MoveLeft(const U32 index) {
   ASSERT(index <= addressIndexMap.size() - 1);
   // LOG_INFO(Debug::Channel::Memory, "Trying to align %d", index);
 
-  std::vector<int> arr;
-  arr.reserve(addressIndexMap.size());
+  Vector<int> arr;
+  arr.Reserve(addressIndexMap.size());
   for (const auto& pair : addressIndexMap) {
-    arr.push_back(pair.second);
+    arr.PushBack(pair.second);
   }
 
   const auto& entry = entryArr[arr[index]];
@@ -87,7 +87,8 @@ void MemoryArena::MoveLeft(const U32 index) {
     lastAvailableAddress = lastEntry.GetAddress() + lastEntry.size;
   }
 
-  lastAvailableAddress = NextMultiplyOfBase(lastAvailableAddress, MemUtil::ALIGNMENT);
+  lastAvailableAddress =
+      NextMultiplyOfBase(lastAvailableAddress, MemUtil::ALIGNMENT);
 
   if (lastAvailableAddress < entry.GetAddress()) {
     void* newAdd = reinterpret_cast<void*>(lastAvailableAddress);

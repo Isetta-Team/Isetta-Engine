@@ -8,6 +8,7 @@
 #include <algorithm>
 #include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
+#include "Core/DataStructures/Vector.h"
 #include "Core/Debug/Logger.h"
 #include "Util.h"
 
@@ -76,15 +77,15 @@ FMOD::Channel* AudioModule::Play(FMOD::Sound* sound, const bool loop,
 void AudioModule::LoadAllAudioClips() {
   std::string clipNames = CONFIG_VAL(audioConfig.audioClips);
   Util::StrRemoveSpaces(&clipNames);
-  std::vector<std::string> clips = Util::StrSplit(clipNames, ',');
-  
+  Vector<std::string_view>& clips = Util::StrSplit(clipNames, ',');
+
   for (const auto& file : clips) {
     FMOD::Sound* sound = nullptr;
-    std::string path = soundFilesRoot + file;
+    std::string path = soundFilesRoot + file.data();
     CheckStatus(
         fmodSystem->createSound(path.c_str(), FMOD_LOWMEM, nullptr, &sound));
 
-    soundMap.insert({SID(file.c_str()), sound});
+    soundMap.insert({SID(file.data()), sound});
   }
 }
 

@@ -6,8 +6,8 @@
 #include <execution>
 #include <typeindex>
 #include <typeinfo>
-#include <vector>
 #include "Component.h"
+#include "Core/DataStructures/Vector.h"
 #include "Core/Memory/MemoryManager.h"
 #include "Scene/Transform.h"
 #include "Util.h"
@@ -21,11 +21,10 @@ class ISETTA_API_DECLARE Entity {
   friend class Level;
 
   std::vector<std::type_index> componentTypes;
-  std::vector<class Component*> components;
+  Vector<class Component*> components;
   Transform transform;
 
   void OnEnable();
-  void CheckStart();
   void GuiUpdate();
   void Update();
   void FixedUpdate();
@@ -61,19 +60,19 @@ class ISETTA_API_DECLARE Entity {
   template <typename T>
   T* GetComponent();
   template <typename T>
-  std::vector<T*> GetComponents();
+  Vector<T*> GetComponents();
   template <typename T>
   T* GetComponentInParent();
   template <typename T>
-  std::vector<T*> GetComponentsInParent();
+  Vector<T*> GetComponentsInParent();
   template <typename T>
   T* GetComponentInChildren();
   template <typename T>
-  std::vector<T*> GetComponentsInChildren();
+  Vector<T*> GetComponentsInChildren();
   template <typename T>
   T* GetComponentInDescendant();
   template <typename T>
-  std::vector<T*> GetComponentsInDescendant();
+  Vector<T*> GetComponentsInDescendant();
 
   void SetTransform(const Math::Vector3& worldPos = Math::Vector3::zero,
                     const Math::Vector3& worldEulerAngles = Math::Vector3::zero,
@@ -82,7 +81,7 @@ class ISETTA_API_DECLARE Entity {
   //#if _DEBUG
   // TODO(YIDI): Delete this! This is used for in game editor
   // TODO(Jacob) no don't this is good
-  std::vector<class Component*> GetComponents() const { return components; }
+  Vector<class Component*> GetComponents() const { return components; }
   // TODO(Chaojie): You can use GetComponents<Component> now
   //#endif
 
@@ -101,8 +100,10 @@ T* Entity::AddComponent(Args&&... args) {
 template <typename T, bool IsActive, typename... Args>
 T* Entity::AddComponent(Args&&... args) {
   if constexpr (!std::is_base_of<class Component, T>::value) {
-    throw std::logic_error(Util::StrFormat(
-        "Entity::AddComponent => %s is not a derived class from Component class", typeid(T).name));
+    throw std::logic_error(
+        Util::StrFormat("Entity::AddComponent => %s is not a derived class "
+                        "from Component class",
+                        typeid(T).name));
   } else {
     std::type_index typeIndex{typeid(T)};
     if (std::any_of(
@@ -113,7 +114,8 @@ T* Entity::AddComponent(Args&&... args) {
             std::execution::par, componentTypes.begin(), componentTypes.end(),
             [typeIndex](std::type_index type) { return type == typeIndex; })) {
       throw std::logic_error(Util::StrFormat(
-          "Entity::AddComponent => Adding multiple excluded components %s", typeIndex.name()));
+          "Entity::AddComponent => Adding multiple excluded components %s",
+          typeIndex.name()));
     }
     T* component = MemoryManager::NewOnFreeList<T>(std::forward<Args>(args)...);
     component->SetActive(IsActive);
@@ -124,7 +126,7 @@ T* Entity::AddComponent(Args&&... args) {
       component->OnEnable();
     }
     componentTypes.emplace_back(typeIndex);
-    components.emplace_back(component);
+    components.EmplaceBack(component);
 
     LevelManager::Instance().currentLevel->AddComponentToStart(component);
     return component;
@@ -149,18 +151,18 @@ T* Entity::GetComponent() {
 }
 
 template <typename T>
-std::vector<T*> Entity::GetComponents() {
+Vector<T*> Entity::GetComponents() {
   std::list<std::type_index> availableTypes =
       Component::childrenTypes().at(std::type_index(typeid(T)));
-  std::vector<T*> returnValue;
-  returnValue.reserve(componentTypes.size());
+  Vector<T*> returnValue;
+  returnValue.Reserve(componentTypes.size());
   for (int i = 0; i < componentTypes.size(); i++) {
     std::type_index componentType = componentTypes[i];
     if (std::any_of(std::execution::par, availableTypes.begin(),
                     availableTypes.end(), [componentType](std::type_index x) {
                       return x == componentType;
                     })) {
-      returnValue.emplace_back(static_cast<T*>(components[i]));
+      returnValue.EmplaceBack(static_cast<T*>(components[i]));
     }
   }
   return returnValue;
@@ -170,7 +172,7 @@ inline T* Entity::GetComponentInParent() {
   return transform.parent->entity->GetComponent<T>();
 }
 template <typename T>
-inline std::vector<T*> Entity::GetComponentsInParent() {
+inline Vector<T*> Entity::GetComponentsInParent() {
   return transform.parent->entity->GetComponents<T>();
 }
 template <typename T>
@@ -183,11 +185,11 @@ inline T* Entity::GetComponentInChildren() {
   return component;
 }
 template <typename T>
-inline std::vector<T*> Entity::GetComponentsInChildren() {
-  std::vector<T*> components;
+inline Vector<T*> Entity::GetComponentsInChildren() {
+  Vector<T*> components;
   for (auto it = transform.begin(); it != transform.end(); it++) {
     // TODO Calling getcomponent on iterator could break
-    std::vector<T*> c;
+    Vector<T*> c;
     c = it->GetComponents<T>();
     components.insert(components.end(), c.begin(), c.end());
   }
@@ -204,11 +206,11 @@ inline T* Entity::GetComponentInDescendant() {
   return component;
 }
 template <typename T>
-inline std::vector<T*> Entity::GetComponentsInDescendant() {
-  std::vector<T*> components;
+inline Vector<T*> Entity::GetComponentsInDescendant() {
+  Vector<T*> components;
   for (auto it = transform.begin(); it != transform.end(); it++) {
     // TODO Calling getcomponent on iterator could break
-    std::vector<T*> c;
+    Vector<T*> c;
     c = it->GetComponents<T>();
     components.insert(components.end(), c.begin(), c.end());
     c = it->GetComponentsInDescendant<T>();

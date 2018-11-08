@@ -7,6 +7,7 @@
 #include "imgui/imgui.h"
 
 #include "Core/Config/Config.h"
+#include "Core/DataStructures/Vector.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Math/Vector2.h"
 #include "Core/Time/Time.h"
@@ -15,7 +16,7 @@
 #include "Util.h"
 
 namespace Isetta {
-std::vector<std::string_view> Console::cfgCmds;
+Vector<std::string_view> Console::cfgCmds;
 std::unordered_map<std::string_view, Action<Console* const, std::string_view>>
     Console::userCmds;
 std::list<Console*> Console::consolesOpen;
@@ -42,6 +43,12 @@ Console::Console(std::string title, bool isOpen)
   verbosityColor[static_cast<int>(Debug::Verbosity::Error)] = Color::red;
 }
 
+Console::~Console() {
+  if (consolesOpen.size() == 0) {
+    cfgCmds.~Vector();
+  }
+}
+
 int Console::CommandCallbackStub(InputTextCallbackData* data) {
   Console* console = static_cast<Console*>(data->UserData);
   return console->CommandCallback(data);
@@ -59,31 +66,31 @@ int Console::CommandCallback(InputTextCallbackData* data) {
 
       int len = wordEnd - wordStart;
       std::string_view word{wordStart, (size_t)len};
-      std::vector<std::string_view> cfgCandidates, userCandidates;
+      Vector<std::string_view> cfgCandidates, userCandidates;
       for (const auto& cmd : cfgCmds) {
-        if (cmd.compare(0, len, word) == 0) cfgCandidates.push_back(cmd);
+        if (cmd.compare(0, len, word) == 0) cfgCandidates.PushBack(cmd);
       }
       for (const auto& cmd : userCmds) {
         if (cmd.first.compare(0, len, word) == 0)
-          userCandidates.push_back(cmd.first);
+          userCandidates.PushBack(cmd.first);
       }
-      if (cfgCandidates.size() + userCandidates.size() == 0) {
+      if (cfgCandidates.Size() + userCandidates.Size() == 0) {
         AddLog(Util::StrFormat("CMD\\> No match for \"%.*s\"!\n",
                                static_cast<int>(wordEnd - wordStart),
                                wordStart));
-      } else if (cfgCandidates.size() == 1) {
+      } else if (cfgCandidates.Size() == 1) {
         data->DeleteChars(static_cast<int>(wordStart - data->Buf),
                           static_cast<int>(wordEnd - wordStart));
         data->InsertChars(data->CursorPos, cfgCandidates[0].data());
         data->InsertChars(data->CursorPos, "=");
-      } else if (userCandidates.size() == 1) {
+      } else if (userCandidates.Size() == 1) {
         data->DeleteChars(static_cast<int>(wordStart - data->Buf),
                           static_cast<int>(wordEnd - wordStart));
         data->InsertChars(data->CursorPos, userCandidates[0].data());
         data->InsertChars(data->CursorPos, "|");
       } else {
         int matchLen = len;
-        if (cfgCandidates.size() > 0)
+        if (cfgCandidates.Size() > 0)
           word = cfgCandidates[0];
         else
           word = userCandidates[0];
@@ -126,12 +133,12 @@ int Console::CommandCallback(InputTextCallbackData* data) {
       const int prevHistoryPos = historyPos;
       if (data->EventKey == ImGuiKey_UpArrow) {
         if (historyPos == -1)
-          historyPos = history.size() - 1;
+          historyPos = history.Size() - 1;
         else if (historyPos > 0)
           historyPos--;
       } else if (data->EventKey == ImGuiKey_DownArrow) {
         if (historyPos != -1)
-          if (++historyPos >= history.size()) historyPos = -1;
+          if (++historyPos >= history.Size()) historyPos = -1;
       }
 
       if (prevHistoryPos != historyPos) {
@@ -285,7 +292,7 @@ void Console::GuiUpdate() {
                                GUI::InputTextFlags::CallbackHistory,
                            &CommandCallbackStub, static_cast<void*>(this))) {
           std::string cmdStr{command};
-          history.push_back(cmdStr);
+          history.PushBack(cmdStr);
           historyPos = -1;
           AddLog("CMD\\> " + cmdStr);
           // TODO(Jacob) this signifies a user command?
@@ -311,9 +318,9 @@ void Console::GuiUpdate() {
       },
       &isOpen, GUI::WindowStyle{Math::Rect{600, 150, 1000, 900}});
 }
-void Console::Clear() { log.clear(); }
+void Console::Clear() { log.Clear(); }
 void Console::AddLog(const std::string_view& format) {
-  log.push_back(format.data());
+  log.PushBack(format.data());
   // scrollToBottom = true;
 }
 void Console::AddCommand(

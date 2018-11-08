@@ -1,6 +1,7 @@
 #include "BVTree.h"
 #include <queue>
 #include <unordered_set>
+#include "Core/DataStructures/Vector.h"
 #include "Core/Debug/DebugDraw.h"
 #include "Scene/Entity.h"
 #include "Util.h"
@@ -35,7 +36,7 @@ void BVTree::RemoveCollider(Collider* collider) {
 }
 
 void BVTree::Update() {
-  std::vector<BVNode*> toReInsert;
+  Vector<BVNode*> toReInsert;
 
   std::queue<BVNode*> q;
   if (root != nullptr) {
@@ -50,7 +51,7 @@ void BVTree::Update() {
     if (cur->right != nullptr) q.push(cur->right);
 
     if (cur->IsLeaf() && !cur->IsInFatAABB()) {
-      toReInsert.push_back(cur);
+      toReInsert.PushBack(cur);
     }
   }
 

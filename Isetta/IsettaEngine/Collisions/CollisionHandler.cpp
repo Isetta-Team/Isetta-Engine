@@ -4,14 +4,15 @@
 #include "Collisions/CollisionHandler.h"
 
 #include "Collisions/Collider.h"
+#include "Core/DataStructures/Vector.h"
 #include "Scene/Component.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 
 namespace Isetta {
 void CollisionHandler::OnEnable() {
-  std::vector<Collider*> colliders = entity->GetComponents<Collider>();
-  for (int i = 0; i < colliders.size(); i++) {
+  Vector<Collider*> colliders = entity->GetComponents<Collider>();
+  for (int i = 0; i < colliders.Size(); i++) {
     colliders[i]->SetHandler(this);
   }
   Action<Collider*> action = [&](Collider* c) { c->SetHandler(this); };
@@ -26,8 +27,8 @@ void CollisionHandler::OnDisable() {
     handler = parent->GetEntity()->GetComponent<CollisionHandler>();
     parent = parent->GetParent();
   }
-  std::vector<Collider*> colliders = entity->GetComponents<Collider>();
-  for (int i = 0; i < colliders.size(); i++) {
+  Vector<Collider*> colliders = entity->GetComponents<Collider>();
+  for (int i = 0; i < colliders.Size(); i++) {
     colliders[i]->SetHandler(this);
   }
   Action<Collider*> action = [&](Collider* c) { c->SetHandler(handler); };

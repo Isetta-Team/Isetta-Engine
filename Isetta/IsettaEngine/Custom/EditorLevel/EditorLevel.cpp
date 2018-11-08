@@ -33,7 +33,7 @@ void EditorLevel::LoadLevel() {
   cameraEntity->AddComponent<EscapeExit>();
 
   Entity* editor{AddEntity("Editor")};
-  editor->AddComponent<Editor>(true);
+  editor->AddComponent<Editor>();
   // editor->AddComponent<Console>("Console", true);
   // Inspector* inspector = editor->AddComponent<Inspector>("Inspector", false);
   // editor->AddComponent<Hierarchy>("Hierarchy", true, inspector);

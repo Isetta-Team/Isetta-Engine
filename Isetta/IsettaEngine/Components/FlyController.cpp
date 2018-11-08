@@ -11,7 +11,7 @@ void FlyController::OnEnable() {
   lastFrameMousePos = Input::GetMousePosition();
   Input::RegisterKeyPressCallback(KeyCode::F,
                                   [&]() { enableLook = !enableLook; });
-  Input::RegisterKeyPressCallback(KeyCode::KP_0, [&]() {
+  Input::RegisterKeyPressCallback(KeyCode::KP_0, ModifierKeys::CTRL, [&]() {
     GetTransform()->SetWorldPos(Math::Vector3::zero);
   });
   Input::RegisterScrollCallback([&](double xOffset, double yOffset) {
@@ -30,11 +30,13 @@ void FlyController::Update() {
   }
 
   if (Input::IsKeyPressed(KeyCode::W)) {
-    GetTransform()->TranslateWorld(-GetTransform()->GetForward() * dt * flySpeed);
+    GetTransform()->TranslateWorld(-GetTransform()->GetForward() * dt *
+                                   flySpeed);
   }
 
   if (Input::IsKeyPressed(KeyCode::S)) {
-    GetTransform()->TranslateWorld(GetTransform()->GetForward() * dt * flySpeed);
+    GetTransform()->TranslateWorld(GetTransform()->GetForward() * dt *
+                                   flySpeed);
   }
 
   if (Input::IsKeyPressed(KeyCode::D)) {

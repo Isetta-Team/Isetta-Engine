@@ -165,11 +165,14 @@ class ISETTA_API MemoryManager {
   FreeListAllocator freeListAllocator{};
 
   friend class EngineLoop;
+
+  friend class TestInitialization;
 };
 
 template <typename T, typename... Args>
 T* MemoryManager::NewOnSingleFrame(Args&&... argList) {
-  return GetInstance()->singleFrameAllocator.New<T>(std::forward<Args>(argList)...);
+  return GetInstance()->singleFrameAllocator.New<T>(
+      std::forward<Args>(argList)...);
 }
 
 template <typename T>
@@ -179,7 +182,8 @@ T* MemoryManager::NewArrOnSingleFrame(const Size length, const U8 alignment) {
 
 template <typename T, typename... Args>
 T* MemoryManager::NewOnDoubleBuffered(Args&&... argList) {
-  return GetInstance()->doubleBufferedAllocator.New<T>(std::forward<Args>(argList)...);
+  return GetInstance()->doubleBufferedAllocator.New<T>(
+      std::forward<Args>(argList)...);
 }
 
 template <typename T>
@@ -190,7 +194,8 @@ T* MemoryManager::NewArrOnDoubleBuffered(const Size length,
 
 template <typename T, typename... Args>
 T* MemoryManager::NewOnStack(Args&&... argList) {
-  return GetInstance()->lsrAndLevelAllocator.New<T>(std::forward<Args>(argList)...);
+  return GetInstance()->lsrAndLevelAllocator.New<T>(
+      std::forward<Args>(argList)...);
 }
 
 template <typename T>
@@ -200,7 +205,8 @@ T* MemoryManager::NewArrOnStack(const Size length, const U8 alignment) {
 
 template <typename T, typename... Args>
 T* MemoryManager::NewOnFreeList(Args&&... argList) {
-  return GetInstance()->freeListAllocator.New<T>(std::forward<Args>(argList)...);
+  return GetInstance()->freeListAllocator.New<T>(
+      std::forward<Args>(argList)...);
 }
 
 template <typename T>
@@ -216,7 +222,8 @@ T* MemoryManager::NewArrOnFreeList(const Size length, const U8 alignment) {
 
 template <typename T, typename... Args>
 ObjectHandle<T> MemoryManager::NewDynamic(Args&&... argList) {
-  return GetInstance()->dynamicArena.NewDynamic<T>(std::forward<Args>(argList)...);
+  return GetInstance()->dynamicArena.NewDynamic<T>(
+      std::forward<Args>(argList)...);
 }
 
 template <typename T>

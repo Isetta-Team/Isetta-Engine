@@ -99,7 +99,7 @@ void FreeListAllocator::Free(void* memPtr) {
   } else {
     Node* last = nullptr;
     Node* cur = head;
-    while (reinterpret_cast<PtrInt>(cur) < nodeAddress) {
+    while (reinterpret_cast<PtrInt>(cur) < nodeAddress && cur != nullptr) {
       last = cur;
       cur = cur->next;
     }

@@ -4,7 +4,6 @@
 #pragma once
 #include <cmath>
 #include <initializer_list>
-#include <stdexcept>
 #include "Core/Memory/MemoryManager.h"
 #include "ISETTA_API.h"
 

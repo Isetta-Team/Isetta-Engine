@@ -3,8 +3,8 @@
  */
 #pragma once
 #include "Core/IsettaAlias.h"
-#include "MemUtil.h"
 #include "ISETTA_API.h"
+#include "MemUtil.h"
 
 namespace Isetta {
 /*
@@ -17,7 +17,8 @@ namespace Isetta {
  * 3. Satisfy alignment requirement
  */
 // TODO(YIDI): Add expansion functionality
-// TODO(YIDI): Optimize to use a tree as underlying structure to reduce time complexity
+// TODO(YIDI): Optimize to use a tree as underlying structure to reduce time
+// complexity
 class ISETTA_API FreeListAllocator {
  public:
   // This class is using RAII

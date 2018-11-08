@@ -8,6 +8,7 @@
 #include <sstream>
 #include <type_traits>
 #include "Core/Config/ICVar.h"
+#include "Core/DataStructures/Vector.h"
 #include "Core/Filesystem.h"
 
 namespace Isetta {
@@ -45,8 +46,8 @@ void Config::SetVal(const std::string& key, const std::string_view& value) {
   }
 }
 
-std::vector<std::string_view> Config::GetCommands() const {
-  return cvarsRegistry.GetKeys();
+Vector<std::string_view> Config::GetCommands() const {
+  return Vector<std::string_view>(cvarsRegistry.GetKeys());
 }
 
 void Config::RemoveComments(std::string* line) const {

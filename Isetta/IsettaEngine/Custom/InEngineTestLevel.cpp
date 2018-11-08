@@ -2,6 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Custom/InEngineTestLevel.h"
+#include "Components/Editor/Editor.h"
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
 #include "Core/Config/Config.h"
@@ -43,6 +44,7 @@ void InEngineTestLevel::LoadLevel() {
 
   Entity* grid{ADD_ENTITY("Grid")};
   grid->AddComponent<GridComponent>();
+  grid->AddComponent<Editor>();
 
   Entity* zombie{ADD_ENTITY("Zombie")};
   AnimationComponent* animation = zombie->AddComponent<AnimationComponent>(
