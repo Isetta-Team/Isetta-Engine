@@ -9,8 +9,9 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace Isetta;
 
 namespace DataStructuresTest {
-TEST_CLASS(VectorTest){private : public :  //
-                           TEST_METHOD(Constructors){{Vector<int> vec;
+TEST_CLASS(VectorTest){private :     //
+                           public :  //
+                               TEST_METHOD(Constructors){{Vector<int> vec;
 Assert::AreEqual(0, (int)vec.Size());
 Assert::AreEqual(0, (int)vec.Capacity());
 }  // namespace DataStructuresTest

@@ -152,6 +152,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Components\AxisDrawer.cpp" />
     <ClCompile Include="Components\Editor\Editor.cpp" />
     <ClCompile Include="Components\Editor\Hierarchy.cpp" />
+    <ClCompile Include="Core\DataStructures\Trie.cpp" />
     <ClCompile Include="Custom\EditorLevel\EditorLevel.cpp" />
     <ClCompile Include="Components\GridComponent.cpp" />
     <ClCompile Include="Components\FlyController.cpp" />
@@ -244,7 +245,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Components\AxisDrawer.h" />
     <ClInclude Include="Components\Editor\Editor.h" />
     <ClInclude Include="Components\Editor\Hierarchy.h" />
-    <ClInclude Include="Core\DataStructures\Vector.h" />
+    <ClInclude Include="Core\DataStructures\Array.h" />
     <ClInclude Include="Custom\EditorLevel\EditorLevel.h" />
     <ClInclude Include="Components\GridComponent.h" />
     <ClInclude Include="Components\FlyController.h" />

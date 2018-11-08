@@ -4,7 +4,7 @@
 #include "Graphics/GUI.h"
 
 #include "Core/Color.h"
-#include "Core/DataStructures/Vector.h"
+#include "Core/DataStructures/Array.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Math/Rect.h"
 #include "Core/Math/Util.h"
@@ -270,7 +270,7 @@ void GUI::ComboBox(const RectTransform& transform,
 
 void GUI::ComboBox(const RectTransform& transform,
                    const std::string_view& label, int* current,
-                   const Vector<std::string>& items, const ComboStyle& style) {
+                   const Array<std::string>& items, const ComboStyle& style) {
   // Style
   ImGui::SetCursorPos((ImVec2)SetPosition(transform));
   ImGui::PushItemWidth(transform.rect.width);

@@ -3,7 +3,7 @@
  */
 #pragma once
 #include <queue>
-#include "Core/DataStructures/Vector.h"
+#include "Core/DataStructures/Array.h"
 #include "Core/IsettaAlias.h"
 #include "EventObject.h"
 #include "SID/sid.h"
@@ -27,10 +27,10 @@ class ISETTA_API Events {
 
  private:
   Events() = default;
-  std::priority_queue<EventObject, Vector<EventObject>,
+  std::priority_queue<EventObject, Array<EventObject>,
                       std::greater<EventObject>>
       eventQueue;
-  std::unordered_map<StringId, Vector<CallbackPair>> callbackMap;
+  std::unordered_map<StringId, Array<CallbackPair>> callbackMap;
 
   void Update();
 

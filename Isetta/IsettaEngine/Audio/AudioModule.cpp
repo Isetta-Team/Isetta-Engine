@@ -8,7 +8,7 @@
 #include <algorithm>
 #include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
-#include "Core/DataStructures/Vector.h"
+#include "Core/DataStructures/Array.h"
 #include "Core/Debug/Logger.h"
 #include "Util.h"
 
@@ -20,7 +20,7 @@ FMOD_RESULT F_CALLBACK LogAudioModule(FMOD_DEBUG_FLAGS flags, const char* file,
   char msg[1024];
   strcpy_s(msg, 1024, message);
   std::remove(std::begin(msg), std::end(msg), '\n');
-  LOG_INFO(Debug::Channel::Sound, msg);
+  // LOG_INFO(Debug::Channel::Sound, msg);
   return FMOD_OK;
 }
 
@@ -77,7 +77,7 @@ FMOD::Channel* AudioModule::Play(FMOD::Sound* sound, const bool loop,
 void AudioModule::LoadAllAudioClips() {
   std::string clipNames = CONFIG_VAL(audioConfig.audioClips);
   Util::StrRemoveSpaces(&clipNames);
-  Vector<std::string_view>& clips = Util::StrSplit(clipNames, ',');
+  Array<std::string_view>& clips = Util::StrSplit(clipNames, ',');
 
   for (const auto& file : clips) {
     FMOD::Sound* sound = nullptr;

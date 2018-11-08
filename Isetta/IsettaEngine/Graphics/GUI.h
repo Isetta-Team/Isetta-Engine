@@ -22,7 +22,7 @@ using TextFilter = ImGuiTextFilter;
 using InputTextCallbackData = ImGuiInputTextCallbackData;
 using InputTextCallback = int (*)(InputTextCallbackData*);
 template <typename T>
-class Vector;
+class Array;
 namespace Math {
 class Rect;
 class Vector3;
@@ -772,7 +772,7 @@ class ISETTA_API GUI {
                        const ComboStyle& style = {});
   static void ComboBox(const RectTransform& transform,
                        const std::string_view& label, int* current,
-                       const Vector<std::string>& items,
+                       const Array<std::string>& items,
                        const ComboStyle& style = {});
   static bool ButtonDropDown(const RectTransform& transform,
                              const std::string_view& label,

@@ -3,7 +3,7 @@
  */
 #include "Core/Memory/MemoryManager.h"
 #include "Core/Config/Config.h"
-#include "Core/DataStructures/Vector.h"
+#include "Core/DataStructures/Array.h"
 #include "Core/Math/Random.h"
 #include "Core/Memory/ObjectHandle.h"
 #include "Util.h"
@@ -88,7 +88,7 @@ MemoryManager* MemoryManager::GetInstance() {
 
 void MemoryManager::DefragmentTest() {
   const U32 count = 1024;
-  Vector<ObjectHandle<U64>> arr;
+  Array<ObjectHandle<U64>> arr;
 
   for (U32 i = 0; i < count; i++) {
     auto ref = NewDynamic<U64>();

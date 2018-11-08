@@ -322,6 +322,7 @@
     <ClCompile Include="..\IsettaEngine\Scene\Transform.cpp" />
     <ClCompile Include="Core\ColorTest.cpp" />
     <ClCompile Include="Core\DataStructures\RingBufferTest.cpp" />
+    <ClCompile Include="Core\DataStructures\TrieTest.cpp" />
     <ClCompile Include="Core\DataStructures\VectorTest.cpp" />
     <ClCompile Include="Core\Math\Matrix3Test.cpp" />
     <ClCompile Include="Core\Math\UtilTest.cpp" />

@@ -12,7 +12,7 @@
 
 namespace Isetta {
 template <typename T>
-class Vector {
+class Array {
  public:
   class iterator {
    public:
@@ -122,52 +122,54 @@ class Vector {
   void ReservePow2(int capacity);
 
  public:
-  Vector() : size_{0}, capacity{0}, data{nullptr} {}
-  explicit Vector(size_type capacity) : size_{0}, capacity{capacity} {
+  Array() : size_{0}, capacity{0}, data{nullptr} {}
+  explicit Array(size_type capacity) : size_{0}, capacity{capacity} {
     data = MemoryManager::NewArrOnFreeList<T>(capacity);
   }
-  Vector(size_type capacity, const value_type &val)
+  Array(size_type capacity, const value_type &val)
       : size_{capacity}, capacity{capacity} {
     data = MemoryManager::NewArrOnFreeList<T>(capacity);
     for (int i = 0; i < size_; i++) data[i] = val;
   }
-  Vector(std::initializer_list<T> list) : size_{0}, capacity{list.size()} {
+  Array(std::initializer_list<T> list) : size_{0}, capacity{list.size()} {
     data = MemoryManager::NewArrOnFreeList<T>(capacity);
     Insert(begin(), list.begin(), list.end());
   }
-  Vector(iterator beginIter, iterator endIter)
+  Array(iterator beginIter, iterator endIter)
       : size_{0}, capacity{static_cast<size_type>(endIter - beginIter)} {
     data = MemoryManager::NewArrOnFreeList<T>(capacity);
     Insert(begin(), beginIter, endIter);
   }
-  ~Vector();
+  ~Array();
 
-  explicit Vector(const std::vector<T> &inVector);
+  explicit Array(const std::vector<T> &inVector);
   // explicit operator std::vector<T>();
 
-  Vector(const Vector &inVector)
+  Array(const Array &inVector)
       : size_{inVector.size_}, capacity{inVector.capacity} {
     data = MemoryManager::NewArrOnFreeList<T>(capacity);
     for (int i = 0; i < size_; i++) data[i] = inVector[i];
   }
-  Vector(Vector &&inVector) noexcept
+  Array(Array &&inVector) noexcept
       : data{inVector.data},
         size_{inVector.size_},
         capacity{inVector.capacity} {
     inVector.size_ = inVector.capacity = 0;
+    inVector.data = nullptr;
   }
-  inline Vector &operator=(const Vector &inVector) {
+  inline Array &operator=(const Array &inVector) {
     size_ = inVector.size_;
     capacity = inVector.capacity;
     data = MemoryManager::NewArrOnFreeList<T>(capacity);
     for (int i = 0; i < size_; i++) data[i] = inVector[i];
     return *this;
   }
-  inline Vector &operator=(Vector &&inVector) noexcept {
+  inline Array &operator=(Array &&inVector) noexcept {
     capacity = inVector.capacity;
     size_ = inVector.size_;
-    inVector.size_ = inVector.capacity = 0;
     data = inVector.data;
+    inVector.size_ = inVector.capacity = 0;
+    inVector.data = nullptr;
     return *this;
   }
 
@@ -188,7 +190,7 @@ class Vector {
     return reverse_iterator(data + size_);
   }
 
-  inline bool operator==(const Vector &rhs) const;
+  inline bool operator==(const Array &rhs) const;
 
   inline size_type Size() const { return size_; }
   inline size_type MaxSize() const { return std::numeric_limits<U64>::max(); }
@@ -223,7 +225,7 @@ class Vector {
   inline iterator Insert(iterator position, std::initializer_list<T> list);
   inline iterator Erase(iterator position);
   inline iterator Erase(iterator begin, iterator end);
-  inline void Swap(Vector &x);
+  inline void Swap(Array &x);
   inline void Clear();
   template <typename... Args>
   inline iterator Emplace(iterator position, Args &&... args);
@@ -238,17 +240,21 @@ class Vector {
   inline const_reference front() const { return data[0]; }
   inline void push_back(const value_type &val) { PushBack(val); }
   inline void pop_back() { PopBack(); }
+
+  //  template<typename A, typename B>
+  // friend std::priority_queue<
 };
 
 template <typename T>
-inline Vector<T>::~Vector() {
+inline Array<T>::~Array() {
   for (int i = 0; i < size_; i++) data[i].~T();
   if (capacity > 0) MemoryManager::FreeOnFreeList(data);
+  data = nullptr;
   size_ = capacity = 0;
 }
 
 template <typename T>
-inline Vector<T>::Vector(const std::vector<T> &inVector) {
+inline Array<T>::Array(const std::vector<T> &inVector) {
   size_ = inVector.size();
   capacity = inVector.capacity();
   data = MemoryManager::NewArrOnFreeList<T>(capacity);
@@ -256,7 +262,7 @@ inline Vector<T>::Vector(const std::vector<T> &inVector) {
 }
 
 template <typename T>
-inline bool Vector<T>::operator==(const Vector &rhs) const {
+inline bool Array<T>::operator==(const Array &rhs) const {
   if (size_ != rhs.size_) return false;
   for (const_iterator lhsIt = begin(), rhsIt = rhs.begin();
        lhsIt != end(), rhsIt != rhs.end(); lhsIt++, rhsIt++) {
@@ -266,7 +272,7 @@ inline bool Vector<T>::operator==(const Vector &rhs) const {
 }
 
 template <typename T>
-inline void Vector<T>::Resize(int inSize, value_type val) {
+inline void Array<T>::Resize(int inSize, value_type val) {
   if (inSize > capacity) ReservePow2(inSize);
   for (int i = inSize; i < size_; i++) data[i].~T();
   for (int i = size_; i < inSize; i++) data[i] = val;
@@ -274,7 +280,7 @@ inline void Vector<T>::Resize(int inSize, value_type val) {
 }
 
 template <typename T>
-inline void Vector<T>::ReservePow2(int inCapacity) {
+inline void Array<T>::ReservePow2(int inCapacity) {
   inCapacity = Math::Util::NextPowerOfTwo(inCapacity);
   if (inCapacity < capacity) return;
   T *tmpData = MemoryManager::NewArrOnFreeList<T>(inCapacity);
@@ -285,86 +291,82 @@ inline void Vector<T>::ReservePow2(int inCapacity) {
 }
 
 template <typename T>
-inline void Vector<T>::Reserve(int inCapacity) {
+inline void Array<T>::Reserve(int inCapacity) {
   if (inCapacity < capacity) return;
   T *tmpData = MemoryManager::NewArrOnFreeList<T>(inCapacity);
-  for (int i = 0; i < size_; i++) {
-    tmpData[i] = data[i];
-  }
+  for (int i = 0; i < size_; i++) tmpData[i] = data[i];
   if (capacity > 0) MemoryManager::FreeOnFreeList(data);
   capacity = inCapacity;
   data = tmpData;
 }
 template <typename T>
-inline void Vector<T>::Shrink() {
+inline void Array<T>::Shrink() {
   if (size_ == capacity) return;
   // TODO(Jacob) + TODO(Yidi) + TODO(Caleb) can I just shift the pointer?
   // realloc free list
   // MemoryManager::FreeOnFreeList(data + size * sizeof(T));
   T *tmpData = MemoryManager::NewArrOnFreeList<T>(size_);
-  for (int i = 0; i < size_; i++) {
-    tmpData[i] = data[i];
-  }
+  for (int i = 0; i < size_; i++) tmpData[i] = data[i];
   if (capacity > 0) MemoryManager::FreeOnFreeList(data);
   capacity = size_;
   data = tmpData;
 }
 template <typename T>
-inline typename Vector<T>::reference Vector<T>::operator[](size_type i) {
+inline typename Array<T>::reference Array<T>::operator[](size_type i) {
   ASSERT(i < size_);
   return data[i];
 }
 template <typename T>
-inline typename Vector<T>::const_reference Vector<T>::operator[](
-    size_type i) const {
+inline
+    typename Array<T>::const_reference Array<T>::operator[](size_type i) const {
   ASSERT(i < size_);
   return data[i];
 }
 template <typename T>
-inline typename Vector<T>::reference Vector<T>::At(size_type i) {
+inline typename Array<T>::reference Array<T>::At(size_type i) {
   if (i >= size_)
     throw new std::out_of_range("Vector::At => index must be less than size");
   return data[i];
 }
 template <typename T>
-inline typename Vector<T>::const_reference Vector<T>::At(size_type i) const {
+inline typename Array<T>::const_reference Array<T>::At(size_type i) const {
   if (i >= size_)
     throw new std::out_of_range("Vector::At => index must be less than size");
   return data[i];
 }
 template <typename T>
-inline typename Vector<T>::reference Vector<T>::Front() {
+inline typename Array<T>::reference Array<T>::Front() {
   if (size_ == 0)
     throw new std::out_of_range("Vector::Front => size must be greater than 0");
   return data[0];
 }
 template <typename T>
-inline typename Vector<T>::const_reference Vector<T>::Front() const {
+inline typename Array<T>::const_reference Array<T>::Front() const {
   if (size_ == 0)
     throw new std::out_of_range("Vector::Front => size must be greater than 0");
   return data[0];
 }
 template <typename T>
-inline typename Vector<T>::reference Vector<T>::Back() {
+inline typename Array<T>::reference Array<T>::Back() {
   if (size_ == 0)
     throw new std::out_of_range("Vector::Back => size must be greater than 0");
   return data[size_ - 1];
 }
 template <typename T>
-inline typename Vector<T>::const_reference Vector<T>::Back() const {
+inline typename Array<T>::const_reference Array<T>::Back() const {
   if (size_ == 0)
     throw new std::out_of_range("Vector::Back => size must be greater than 0");
   return data[size_ - 1];
 }
 template <typename T>
-inline void Vector<T>::Assign(size_type cnt, const value_type &val) {
+inline void Array<T>::Assign(size_type cnt, const value_type &val) {
   if (cnt > capacity) ReservePow2(cnt);
   for (int i = 0; i < size_; i++) data[i].~T();
   for (int i = 0; i < cnt; i++) data[i] = val;
   size_ = cnt;
 }
 template <typename T>
-inline void Vector<T>::Assign(iterator beginIter, iterator endIter) {
+inline void Array<T>::Assign(iterator beginIter, iterator endIter) {
   if (endIter - beginIter > capacity) ReservePow2(endIter - beginIter);
   size_ = endIter - beginIter;
   iterator itThis = begin();
@@ -375,7 +377,7 @@ inline void Vector<T>::Assign(iterator beginIter, iterator endIter) {
   for (; itThis != end(); itThis++) itThis->~T();
 }
 template <typename T>
-inline void Vector<T>::Assign(const T *beginPtr, const T *endPtr) {
+inline void Array<T>::Assign(const T *beginPtr, const T *endPtr) {
   if (endPtr - beginPtr > capacity) ReservePow2(endPtr - beginPtr);
   size_ = endPtr - beginPtr;
   iterator itThis = begin();
@@ -386,7 +388,7 @@ inline void Vector<T>::Assign(const T *beginPtr, const T *endPtr) {
   for (; itThis != end(); itThis++) (*itThis).~T();
 }
 template <typename T>
-inline void Vector<T>::Assign(std::initializer_list<T> list) {
+inline void Array<T>::Assign(std::initializer_list<T> list) {
   if (list.size() > capacity) ReservePow2(list.size());
   size_ = list.size();
   iterator itThis = begin();
@@ -397,20 +399,20 @@ inline void Vector<T>::Assign(std::initializer_list<T> list) {
   for (; itThis != end(); itThis++) (*itThis).~T();
 }
 template <typename T>
-inline void Vector<T>::PushBack(const value_type &val) {
+inline void Array<T>::PushBack(const value_type &val) {
   if (size_ + 1 > capacity) ReservePow2(size_ + 1);
   data[size_++] = val;
 }
 template <typename T>
-inline void Vector<T>::PopBack() {
+inline void Array<T>::PopBack() {
   if (size_ == 0)
     throw new std::out_of_range(
         "Vector::PopBack => size must be greater than 0");
   data[size_--].~T();
 }
 template <typename T>
-inline typename Vector<T>::iterator Vector<T>::Insert(iterator position,
-                                                      const value_type &val) {
+inline typename Array<T>::iterator Array<T>::Insert(iterator position,
+                                                    const value_type &val) {
   iterator ret{nullptr};
   int newSize = size_ + 1;
   if (newSize > capacity) {
@@ -435,9 +437,9 @@ inline typename Vector<T>::iterator Vector<T>::Insert(iterator position,
   return ret;
 }
 template <typename T>
-inline typename Vector<T>::iterator Vector<T>::Insert(iterator position,
-                                                      size_type cnt,
-                                                      const value_type &val) {
+inline typename Array<T>::iterator Array<T>::Insert(iterator position,
+                                                    size_type cnt,
+                                                    const value_type &val) {
   iterator ret{nullptr};
   int newSize = size_ + cnt;
   if (newSize > capacity) {
@@ -461,9 +463,9 @@ inline typename Vector<T>::iterator Vector<T>::Insert(iterator position,
   return ret;
 }
 template <typename T>
-inline typename Vector<T>::iterator Vector<T>::Insert(iterator position,
-                                                      iterator beginIter,
-                                                      iterator endIter) {
+inline typename Array<T>::iterator Array<T>::Insert(iterator position,
+                                                    iterator beginIter,
+                                                    iterator endIter) {
   iterator ret{nullptr};
   int newSize = size_ + (endIter - beginIter);
   if (newSize > capacity) {
@@ -488,9 +490,9 @@ inline typename Vector<T>::iterator Vector<T>::Insert(iterator position,
   return ret;
 }
 template <typename T>
-inline typename Vector<T>::iterator Vector<T>::Insert(iterator position,
-                                                      const T *beginPtr,
-                                                      const T *endPtr) {
+inline typename Array<T>::iterator Array<T>::Insert(iterator position,
+                                                    const T *beginPtr,
+                                                    const T *endPtr) {
   iterator ret{nullptr};
   int newSize = size_ + (endPtr - beginPtr);
   if (newSize > capacity) {
@@ -515,12 +517,12 @@ inline typename Vector<T>::iterator Vector<T>::Insert(iterator position,
   return ret;
 }
 template <typename T>
-inline typename Vector<T>::iterator Vector<T>::Insert(
+inline typename Array<T>::iterator Array<T>::Insert(
     iterator position, std::initializer_list<T> list) {
   return Insert(position, list.begin(), list.end());
 }
 template <typename T>
-inline typename Vector<T>::iterator Vector<T>::Erase(iterator position) {
+inline typename Array<T>::iterator Array<T>::Erase(iterator position) {
   iterator ret = position + 1;
   (*position).~T();
   for (iterator it = position; it != end() - 1; it++) *it = *(it + 1);
@@ -528,8 +530,8 @@ inline typename Vector<T>::iterator Vector<T>::Erase(iterator position) {
   return ret;
 }
 template <typename T>
-inline typename Vector<T>::iterator Vector<T>::Erase(iterator beginIter,
-                                                     iterator endIter) {
+inline typename Array<T>::iterator Array<T>::Erase(iterator beginIter,
+                                                   iterator endIter) {
   for (iterator it = beginIter; it != endIter; it++) (*it).~T();
   iterator itEnd = endIter;
   for (iterator itBeg = beginIter; itEnd != end(); itBeg++, itEnd++)
@@ -538,20 +540,20 @@ inline typename Vector<T>::iterator Vector<T>::Erase(iterator beginIter,
   return itEnd;
 }
 template <typename T>
-inline void Vector<T>::Swap(Vector &x) {
+inline void Array<T>::Swap(Array &x) {
   std::swap(data, x.data);
   std::swap(size_, x.size_);
   std::swap(capacity, x.capacity);
 }
 template <typename T>
-inline void Vector<T>::Clear() {
+inline void Array<T>::Clear() {
   for (int i = 0; i < size_; i++) data[i].~T();
   size_ = 0;
 }
 template <typename T>
 template <typename... Args>
-inline typename Vector<T>::iterator Vector<T>::Emplace(iterator position,
-                                                       Args &&... args) {
+inline typename Array<T>::iterator Array<T>::Emplace(iterator position,
+                                                     Args &&... args) {
   iterator ret{nullptr};
   int newSize = size_ + 1;
   if (newSize > capacity) {
@@ -577,8 +579,8 @@ inline typename Vector<T>::iterator Vector<T>::Emplace(iterator position,
 }
 template <typename T>
 template <typename... Args>
-inline typename Vector<T>::iterator Vector<T>::Emplace(const_iterator position,
-                                                       Args &&... args) {
+inline typename Array<T>::iterator Array<T>::Emplace(const_iterator position,
+                                                     Args &&... args) {
   iterator ret{nullptr};
   int newSize = size_ + 1;
   if (newSize > capacity) {
@@ -604,7 +606,7 @@ inline typename Vector<T>::iterator Vector<T>::Emplace(const_iterator position,
 }
 template <typename T>
 template <typename... Args>
-inline void Vector<T>::EmplaceBack(Args &&... args) {
+inline void Array<T>::EmplaceBack(Args &&... args) {
   if (size_ + 1 > capacity) ReservePow2(size_ + 1);
   data[size_++] = T(std::forward<Args>(args)...);
 }

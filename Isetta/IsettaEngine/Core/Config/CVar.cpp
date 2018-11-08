@@ -5,7 +5,7 @@
 
 #include <unordered_map>
 #include "Core/Config/CVarRegistry.h"
-#include "Core/DataStructures/Vector.h"
+#include "Core/DataStructures/Array.h"
 
 namespace Isetta {
 // added explicit declarations so they can export correctly

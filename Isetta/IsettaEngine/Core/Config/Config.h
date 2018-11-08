@@ -9,7 +9,7 @@
 #include "Collisions/CollisionsModule.h"
 #include "Core/Config/CVar.h"
 #include "Core/Config/CVarRegistry.h"
-#include "Core/DataStructures/Vector.h"
+#include "Core/DataStructures/Array.h"
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Math/Vector3.h"
@@ -81,7 +81,7 @@ class ISETTA_API Config {
   void ProcessFile(const char *contentBuffer);
 
   void SetVal(const std::string &key, const std::string_view &value);
-  Vector<std::string_view> GetCommands() const;
+  Array<std::string_view> GetCommands() const;
 
  private:
   Config() = default;

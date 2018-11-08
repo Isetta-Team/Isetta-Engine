@@ -4,7 +4,7 @@
 #pragma once
 #include <functional>
 #include <variant>
-#include "Core/DataStructures/Vector.h"
+#include "Core/DataStructures/Array.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Math/Vector3.h"
 
@@ -23,12 +23,12 @@ struct EventObject {
   std::string eventName;
   U64 timeFrame;
   EventPriority eventPriority;
-  Vector<EventParam> eventParams;
+  Array<EventParam> eventParams;
 
   EventObject() = default;
   EventObject(std::string name, U64 frame, EventPriority priority,
-              Vector<EventParam> params);
-  EventObject(std::string name, Vector<EventParam> params);
+              Array<EventParam> params);
+  EventObject(std::string name, Array<EventParam> params);
   EventObject(const EventObject& other);
   EventObject(EventObject&& other) noexcept;
   EventObject& operator=(const EventObject& other);

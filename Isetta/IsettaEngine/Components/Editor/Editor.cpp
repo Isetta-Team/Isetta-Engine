@@ -58,5 +58,4 @@ void Editor::GuiUpdate() {
       },
       true);
 }
-
 }  // namespace Isetta

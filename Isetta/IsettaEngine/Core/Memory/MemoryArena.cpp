@@ -2,7 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Core/Memory/MemoryArena.h"
-#include "Core/DataStructures/Vector.h"
+#include "Core/DataStructures/Array.h"
 #include "Core/Debug/Assert.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Memory/MemUtil.h"
@@ -71,7 +71,7 @@ void MemoryArena::MoveLeft(const U32 index) {
   ASSERT(index <= addressIndexMap.size() - 1);
   // LOG_INFO(Debug::Channel::Memory, "Trying to align %d", index);
 
-  Vector<int> arr;
+  Array<int> arr;
   arr.Reserve(addressIndexMap.size());
   for (const auto& pair : addressIndexMap) {
     arr.PushBack(pair.second);

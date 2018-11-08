@@ -3,7 +3,7 @@
  */
 #include <Events/Events.h>
 #include <execution>
-#include "Core/DataStructures/Vector.h"
+#include "Core/DataStructures/Array.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Time/Time.h"
 
@@ -19,7 +19,7 @@ void Events::RaiseImmediateEvent(const EventObject& eventObject) {
   if (callbackMap.count(eventNameId) > 0) {
     // prevent unregistering the callback from screwing up the range-based for
     // loop
-    Vector<std::pair<U16, Action<EventObject>>> callbacks{
+    Array<std::pair<U16, Action<EventObject>>> callbacks{
         callbackMap.at(eventNameId)};
     for (const auto& callbackPair : callbacks) {
       callbackPair.second(eventObject);
@@ -38,7 +38,7 @@ U16 Events::RegisterEventListener(std::string_view eventName,
     callbackMap.at(eventNameId).EmplaceBack(std::make_pair(handle, callback));
   } else {
     callbackMap.insert(std::make_pair(
-        eventNameId, Vector<CallbackPair>{std::make_pair(handle, callback)}));
+        eventNameId, Array<CallbackPair>{std::make_pair(handle, callback)}));
   }
   return handle;
 }
@@ -47,7 +47,7 @@ void Events::UnregisterEventListener(std::string_view eventName,
                                      U16 eventListenerHandle) {
   StringId eventNameId{SID(eventName.data())};
   if (callbackMap.count(eventNameId) > 0) {
-    Vector<CallbackPair>& callbacks = callbackMap.at(eventNameId);
+    Array<CallbackPair>& callbacks = callbackMap.at(eventNameId);
     callbacks.Erase(
         std::remove_if(std::begin(callbacks), std::end(callbacks),
                        [eventListenerHandle](const CallbackPair& pair) {

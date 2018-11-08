@@ -10,7 +10,7 @@ BEGIN_COMPONENT(Hierarchy, Component, true)
 private:
 std::string title;
 bool isOpen = true;
-RectTransform rectTrans{{100, 10, 140, 300}};
+RectTransform rectTransform{{30, 30, 140, 300}};
 
 public:
 class Inspector* inspector;
@@ -18,6 +18,6 @@ class Inspector* inspector;
 Hierarchy(std::string title, bool isOpen, class Inspector* inspector = nullptr);
 void GuiUpdate() override;
 
-inline void Open() { isOpen = true; }
+void Open();
 END_COMPONENT(Hierarchy, Component)
 }  // namespace Isetta

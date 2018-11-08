@@ -57,6 +57,8 @@ void Vector3::Normalize() noexcept {
 
 std::string Vector3::ToString() const {
   std::ostringstream oss;
+  oss.precision(3);
+  oss << std::fixed;
   oss << "(" << x << ", " << y << ", " << z << ")";
   return oss.str();
 }

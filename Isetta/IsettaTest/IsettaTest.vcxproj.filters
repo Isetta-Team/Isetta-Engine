@@ -485,6 +485,9 @@
     <ClCompile Include="..\IsettaEngine\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Core\DataStructures\TrieTest.cpp">
+      <Filter>Core\DataStructures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

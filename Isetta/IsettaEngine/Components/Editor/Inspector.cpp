@@ -18,7 +18,7 @@ void Inspector::GuiUpdate() {
   if (!target) return;
 
   GUI::Window(
-      rectTrans, title.c_str(),
+      rectTransform, title.c_str(),
       [&]() {
         std::string parentName =
             target->GetParent() ? target->GetParent()->GetName() : "null";
@@ -89,4 +89,6 @@ void Inspector::GuiUpdate() {
   DebugDraw::Axis(temp);
   DebugDraw::AxisSphere(temp);
 }
+
+void Inspector::Open() { isOpen = true; }
 }  // namespace Isetta

@@ -2,7 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Core/DataStructures/Vector.h"
+#include "Core/DataStructures/Array.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Math/Matrix4.h"
 #include "Core/Math/Quaternion.h"
@@ -93,8 +93,8 @@ class ISETTA_API_DECLARE Transform {
   const Math::Matrix4 &GetWorldToLocalMatrix();
 
   // iterator
-  typedef Vector<Transform *>::iterator iterator;
-  typedef Vector<Transform *>::const_iterator const_iterator;
+  typedef Array<Transform *>::iterator iterator;
+  typedef Array<Transform *>::const_iterator const_iterator;
 
   iterator begin() { return children.begin(); }
   const_iterator begin() const { return children.begin(); }
@@ -125,7 +125,7 @@ class ISETTA_API_DECLARE Transform {
 
   class Entity *const entity{nullptr};
   Transform *parent{nullptr};
-  Vector<Transform *> children;
+  Array<Transform *> children;
 
   // union {
   Math::Vector3 axis[3];

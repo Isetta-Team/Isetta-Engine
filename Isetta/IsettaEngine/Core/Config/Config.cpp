@@ -8,7 +8,7 @@
 #include <sstream>
 #include <type_traits>
 #include "Core/Config/ICVar.h"
-#include "Core/DataStructures/Vector.h"
+#include "Core/DataStructures/Array.h"
 #include "Core/Filesystem.h"
 
 namespace Isetta {
@@ -20,9 +20,8 @@ void Config::Read(const std::string_view& filePath) {
 
 void Config::ProcessFile(const char* contentBuffer) {
   char* nextToken;
-  char* lines = strtok_s(const_cast<char*>(contentBuffer), "\n", &nextToken);
+  char* lines = strtok_s(const_cast<char*>(contentBuffer), "\n\r", &nextToken);
   while (lines != NULL) {
-    // printf("%s\n", lines);
     std::string line(lines);
     RemoveComments(&line);
     if (OnlyWhitespace(line) || !ValidLine(line)) {
@@ -46,8 +45,8 @@ void Config::SetVal(const std::string& key, const std::string_view& value) {
   }
 }
 
-Vector<std::string_view> Config::GetCommands() const {
-  return Vector<std::string_view>(cvarsRegistry.GetKeys());
+Array<std::string_view> Config::GetCommands() const {
+  return Array<std::string_view>(cvarsRegistry.GetKeys());
 }
 
 void Config::RemoveComments(std::string* line) const {
