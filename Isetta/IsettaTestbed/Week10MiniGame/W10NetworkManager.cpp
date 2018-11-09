@@ -8,6 +8,7 @@
 #include "Custom/IsettaCore.h"
 #include "Events/Events.h"
 #include "Networking/NetworkId.h"
+#include "Week10MiniGame/W10NetworkPlayer.h"
 #include "Week10MiniGame/W10Player.h"
 
 void W10NetworkManager::HandleReadyMessage(int clientIdx,
@@ -40,6 +41,8 @@ void W10NetworkManager::HandleSpawnMessage(yojimbo::Message* message) {
   const Isetta::Entity* entity =
       Isetta::NetworkManager::Instance().GetNetworkEntity(spawnMessage->netId);
   if (!entity) {
+    Isetta::Events::Instance().RaiseImmediateEvent(
+        Isetta::EventObject{"UITextChange", {"Game Started!"}});
     Isetta::Entity* e =
         ADD_ENTITY(Isetta::Util::StrFormat("Player%d", spawnMessage->netId));
     Isetta::NetworkId* networkId =
@@ -57,21 +60,9 @@ void W10NetworkManager::HandleSpawnMessage(yojimbo::Message* message) {
           spawnMessage->clientAuthorityId);
       gameManager->player = w10Player;
     } else {
-      auto swordEntity = ADD_ENTITY("Sword");
-      LOG_INFO(Isetta::Debug::Channel::General, "Sword network id: %d",
-               spawnMessage->swordNetId);
-      swordEntity->GetTransform()->SetParent(e->GetTransform());
-      auto networkId = swordEntity->AddComponent<Isetta::NetworkId>(
-          spawnMessage->swordNetId);
-      networkId->clientAuthorityId = spawnMessage->clientAuthorityId;
-      swordEntity->AddComponent<Isetta::NetworkTransform>();
-      swordEntity->AddComponent<Isetta::MeshComponent>(
-          "primitive/cube.scene.xml");
-      swordEntity->GetTransform()->SetLocalPos(
-          Isetta::Math::Vector3((spawnMessage->isOnRight ? 1 : -1) * 0.25f, 0, 0.25f));
-
-      swordEntity->GetTransform()->SetLocalScale(
-          Isetta::Math::Vector3{0.375, 0.025, 0.025});
+      e->AddComponent<W10NetworkPlayer>(spawnMessage->isOnRight,
+                                        spawnMessage->swordNetId,
+                                        spawnMessage->clientAuthorityId);
     }
     e->AddComponent<Isetta::NetworkTransform>();
   }
@@ -141,15 +132,21 @@ void W10NetworkManager::HandlePositionReport(int clientIdx,
           if (distance > blockDistance) {
             return;
           }
-
-          W10AttackResultMessage* resultMessage{
+          W10AttackResultMessage* resultMessage1{
               Isetta::NetworkManager::Instance()
                   .GenerateMessageFromServer<W10AttackResultMessage>(
                       lastAttemptClient)};
-          resultMessage->result = 2;
+          resultMessage1->result = 2;
+          W10AttackResultMessage* resultMessage2{
+              Isetta::NetworkManager::Instance()
+                  .GenerateMessageFromServer<W10AttackResultMessage>(
+                      swordPos.first)};
+          resultMessage2->result = 3;
           clientSwordPos.insert_or_assign(lastAttemptClient, 0);
           Isetta::NetworkManager::Instance().SendMessageFromServer(
-              lastAttemptClient, resultMessage);
+              lastAttemptClient, resultMessage1);
+          Isetta::NetworkManager::Instance().SendMessageFromServer(
+              swordPos.first, resultMessage2);
           LOG_INFO(Isetta::Debug::Channel::General, "Server: Not HIT!");
         }
       }
@@ -172,6 +169,11 @@ void W10NetworkManager::HandleAttackResultMessage(yojimbo::Message* message) {
       Isetta::Events::Instance().RaiseImmediateEvent(
           Isetta::EventObject{"Blocked", {}});
       break;
+    case 3:
+      LOG_INFO(Isetta::Debug::Channel::General,
+               "Client: I blocked the other :P");
+      Isetta::Events::Instance().RaiseImmediateEvent(
+          Isetta::EventObject{"Block", {}});
     default:
       LOG_WARNING(Isetta::Debug::Channel::General,
                   "Wrong attack result message!");
@@ -237,6 +239,8 @@ void W10NetworkManager::Awake() {
   }
 
   Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::R, []() {
+    Isetta::Events::Instance().RaiseImmediateEvent(
+        Isetta::EventObject{"UITextChange", {"Ready!"}});
     W10ReadyMessage* m = Isetta::NetworkManager::Instance()
                              .GenerateMessageFromClient<W10ReadyMessage>();
     Isetta::NetworkManager::Instance().SendMessageFromClient(m);

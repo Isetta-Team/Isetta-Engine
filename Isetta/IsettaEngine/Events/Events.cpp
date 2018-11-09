@@ -60,6 +60,12 @@ void Events::UnregisterEventListener(std::string_view eventName,
   }
 }
 
+void Events::Clear() {
+  eventQueue = std::priority_queue<EventObject, Array<EventObject>,
+                                   std::greater<EventObject>>();
+  callbackMap.clear();
+}
+
 void Events::Update() {
   while (!eventQueue.empty()) {
     EventObject currEvent = eventQueue.top();

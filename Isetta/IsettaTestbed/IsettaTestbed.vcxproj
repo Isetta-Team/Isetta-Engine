@@ -159,6 +159,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Week10MiniGame\W10GameManager.cpp" />
     <ClCompile Include="Week10MiniGame\W10NetworkManager.cpp" />
+    <ClCompile Include="Week10MiniGame\W10NetworkPlayer.cpp" />
     <ClCompile Include="Week10MiniGame\W10Player.cpp" />
     <ClCompile Include="Week10MiniGame\W10UIManager.cpp" />
     <ClCompile Include="Week10MiniGame\Week10Level.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="InputLevel\InputTestComponent.h" />
     <ClInclude Include="Week10MiniGame\W10GameManager.h" />
     <ClInclude Include="Week10MiniGame\W10NetworkManager.h" />
+    <ClInclude Include="Week10MiniGame\W10NetworkPlayer.h" />
     <ClInclude Include="Week10MiniGame\W10Player.h" />
     <ClInclude Include="Week10MiniGame\W10UIManager.h" />
     <ClInclude Include="Week10MiniGame\Week10Level.h" />

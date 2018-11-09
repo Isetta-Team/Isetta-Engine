@@ -125,5 +125,5 @@ void Copy(const yojimbo::Message* otherMessage) override {
   result = message->result;
 }
 
-int result = 0; // 0 - Win, 1 - Lose, 2 - Blocked
+int result = 0; // 0 - Win, 1 - Lose, 2 - Blocked, 3 - Block Other
 RPC_MESSAGE_FINISH

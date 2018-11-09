@@ -9,8 +9,9 @@
 
 void W10UIManager::Awake() {
   Isetta::Events::Instance().RegisterEventListener(
-      "Spawn",
-      [&](const Isetta::EventObject obj) { displayText = "Start game!"; });
+      "UITextChange", [&](const Isetta::EventObject obj) {
+        displayText = std::get<std::string>(obj.eventParams[0]);
+      });
 }
 
 void W10UIManager::GuiUpdate() {
