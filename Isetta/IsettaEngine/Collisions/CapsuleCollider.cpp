@@ -8,6 +8,7 @@
 
 #include "Collisions/Ray.h"
 #include "Core/Debug/DebugDraw.h"
+#include "Core/Math/Matrix3.h"
 #include "Core/Math/Matrix4.h"
 #include "Core/Math/Vector4.h"
 #include "Scene/Transform.h"
@@ -147,21 +148,17 @@ bool CapsuleCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
 }
 
 AABB CapsuleCollider::GetFatAABB() {
-  return AABB{
-      GetWorldCenter(),
-      2.f *
-          (GetWorldHeight() *
-               GetTransform()->GetLocalToWorldMatrix().GetTopLeftMatrix3() +
-           radius * Math::Vector3::one) *
-          (1 + fatFactor)};
+  return AABB{GetWorldCenter(),
+              2.f *
+                  (GetWorldHeight() * GetTransform()->GetUp() +
+                   radius * Math::Vector3::one) *
+                  (1 + fatFactor)};
 }
 AABB CapsuleCollider::GetAABB() {
   // TODO(Yidi) + TODO(Jacob) not a tight AABB
-  return AABB{
-      GetWorldCenter(),
-      2.f * (GetWorldHeight() *
-                 GetTransform()->GetLocalToWorldMatrix().GetTopLeftMatrix3() +
-             radius * Math::Vector3::one)};
+  return AABB{GetWorldCenter(),
+              2.f * (GetWorldHeight() * GetTransform()->GetUp() +
+                     radius * Math::Vector3::one)};
 }
 
 INTERSECTION_TEST(CapsuleCollider)

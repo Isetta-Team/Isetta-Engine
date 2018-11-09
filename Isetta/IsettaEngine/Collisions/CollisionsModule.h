@@ -51,9 +51,6 @@ class CollisionsModule {
   CollisionsModule() = default;
   ~CollisionsModule() = default;
 
-  // TODO(Jacob) remove
-  std::unordered_set<class Collider *> colliders;
-
   // probably mark them as "still colliding"
   CollisionUtil::ColliderPairSet collidingPairs;
   CollisionUtil::ColliderPairSet ignoreCollisions;

@@ -22,24 +22,13 @@
 namespace Isetta {
 void CollisionsModule::StartUp() {
   Collider::collisionsModule = this;
+  // TODO(Yidi) if you do this then you can change it at runtime....
   Collider::fatFactor = CONFIG_VAL(collisionConfig.fatFactor);
   Collisions::collisionsModule = this;
 }
 
 void CollisionsModule::Update(float deltaTime) {
   bvTree.Update();
-  // Collider obj1, obj2;
-  // if (obj1.isTrigger && obj2.isTrigger) {
-  //}  // TODO
-  // else if (Intersection(obj1, obj2)) {
-  //  if (obj1.isTrigger || obj2.isTrigger) {
-  //    obj1.owner->OnTrigger(Collider::EntityKey{}, &obj2);
-  //    obj2.owner->OnTrigger(Collider::EntityKey{}, &obj1);
-  //  } else {
-  //    obj1.owner->OnCollision(Collider::EntityKey{}, &obj2);
-  //    obj2.owner->OnCollision(Collider::EntityKey{}, &obj1);
-  //  }
-  //}
 
   // By the end of the checking loop, pairs left in the lastFramePairs
   // are those who are no longer colliding
@@ -50,14 +39,18 @@ void CollisionsModule::Update(float deltaTime) {
   for (const auto &pair : bvTree.GetCollisionPairs()) {
     Collider *collider1 = pair.first;
     Collider *collider2 = pair.second;
+    // Ignore Single/Layer Collisions continue
+    if (ignoreCollisions.find(pair) != ignoreCollisions.end() ||
+        GetIgnoreLayerCollision(collider1->GetEntity()->GetLayerIndex(),
+                                collider2->GetEntity()->GetLayerIndex()))
+      continue;
 
     CollisionHandler *handler1 = collider1->GetHandler();
     CollisionHandler *handler2 = collider2->GetHandler();
 
-    // things under the same handler don't collide
-    if (handler1 && handler2 && handler1 == handler2 ||
-        ignoreCollisions.find(pair) != ignoreCollisions.end())
-      continue;
+    // No Handler, Same Handler continue
+    // TODO(Caleb) Will need to change for solving
+    if (handler1 && handler2 && handler1 == handler2) continue;
 
     if (collider1->Intersection(collider2)) {
       // if they do collide
@@ -282,15 +275,17 @@ bool CollisionsModule::Intersection(const CapsuleCollider &capsule,
 }
 bool CollisionsModule::Raycast(const Ray &ray, RaycastHit *const hitInfo,
                                float maxDistance) {
-  for (auto &col : colliders) {
-    RaycastHit hit{};
-    if (col->Raycast(ray, &hit, maxDistance)) {
-      if (hit.GetDistance() < hitInfo->GetDistance()) {
-        *hitInfo = hit;
-      }
-    }
-  }
-  return hitInfo->GetDistance() < INFINITY;
+  // TODO(YIDI) + TODO(JACOB) raycast bvtree
+  // for (auto &col : colliders) {
+  //  RaycastHit hit{};
+  //  if (col->Raycast(ray, &hit, maxDistance)) {
+  //    if (hit.GetDistance() < hitInfo->GetDistance()) {
+  //      *hitInfo = hit;
+  //    }
+  //  }
+  //}
+  // return hitInfo->GetDistance() < INFINITY;
+  return false;
 }
 bool CollisionsModule::GetIgnoreLayerCollision(int layer1, int layer2) const {
   Layers::CheckLayer(layer1);

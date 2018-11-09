@@ -3,70 +3,58 @@
  */
 #pragma once
 #include <unordered_set>
+#include "AABB.h"
 #include "Collider.h"
 #include "CollisionUtil.h"
-#include "Core/Debug/Assert.h"
 
 namespace Isetta {
 
 class BVTree {
+ private:
   // BVNode serves two purposes: leaf and branch
-  struct BVNode {
-    explicit BVNode(AABB aabb) : aabb(std::move(aabb)) {}
-    explicit BVNode(Collider* collider)
+  struct Node {
+    explicit Node(AABB aabb) : aabb(std::move(aabb)) {}
+    explicit Node(class Collider* const collider)
         : collider(collider), aabb(collider->GetFatAABB()) {}
 
-    void UpdateBranchAABB() {
-      ASSERT(collider == nullptr && !IsLeaf());
-      aabb = AABB::Encapsulate(left->aabb, right->aabb);
+    void UpdateBranchAABB();
+    void UpdateLeafAABB();
+    void SwapOutChild(Node* const oldChild, Node* const newChild);
+
+    inline bool IsLeaf() const { return left == nullptr; }
+    inline bool IsInFatAABB() const {
+      return aabb.Contains(collider->GetAABB());
     }
 
-    void UpdateLeafAABB() {
-      ASSERT(IsLeaf() && collider != nullptr);
-      aabb = collider->GetFatAABB();
-    }
+    Node* parent{nullptr};
+    Node* left{nullptr};
+    Node* right{nullptr};
 
-    void SwapOutChild(BVNode* oldChild, BVNode* newChild) {
-      ASSERT(oldChild == left || oldChild == right);
-      if (oldChild == left) {
-        left = newChild;
-        left->parent = this;
-      } else {
-        right = newChild;
-        right->parent = this;
-      }
-    }
-
-    bool IsLeaf() const { return left == nullptr; }
-    bool IsInFatAABB() const { return aabb.Contains(collider->GetAABB()); }
-
-    BVNode* parent{nullptr};
-    BVNode* left{nullptr};
-    BVNode* right{nullptr};
-
-    Collider* const collider{nullptr};
+    class Collider* collider{nullptr};
     AABB aabb;
   };
 
- public:
   BVTree() = default;
+  friend class CollisionsModule;
+
+ public:
   ~BVTree();
 
-  void AddCollider(Collider* collider);
-  void RemoveCollider(Collider* collider);
+  void AddCollider(class Collider* const collider);
+  void RemoveCollider(class Collider* const collider);
   void Update();
 
   RaycastHit RayCast(const Ray& ray);
   const CollisionUtil::ColliderPairSet& GetCollisionPairs();
 
  private:
-  void AddNode(BVNode* newNode);
-  void RemoveNode(BVNode* node, bool deleteNode);
+  void AddNode(Node* const newNode);
+  void RemoveNode(Node* const node, bool deleteNode);
   void DebugDraw() const;
 
   CollisionUtil::ColliderPairSet colliderPairSet;
-  std::unordered_map<Collider*, BVNode*> colNodeMap;
-  BVNode* root = nullptr;
+  std::unordered_map<class Collider*, Node*> colNodeMap;
+  Node* root = nullptr;
 };
 
 }  // namespace Isetta
