@@ -9,6 +9,8 @@
 #include "Networking/NetworkId.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
+#include "Scene/Level.h";
+#include "Scene/LevelManager.h"
 
 namespace Isetta {
 
@@ -44,8 +46,9 @@ void NetworkTransform::Start() {
 
             nt->posInterpolation = 0;
 
-            if ((Math::Vector3::Scale(t->GetWorldScale(), t->GetLocalPos() - nt->targetPos)).SqrMagnitude() >=
-                nt->snapDistance * nt->snapDistance) {
+            if ((Math::Vector3::Scale(t->GetWorldScale(),
+                                      t->GetLocalPos() - nt->targetPos))
+                    .SqrMagnitude() >= nt->snapDistance * nt->snapDistance) {
               t->SetLocalPos(positionMessage->localPos);
               nt->posInterpolation = 1;
             }
@@ -196,8 +199,9 @@ void NetworkTransform::FixedUpdate() {
 
       Transform* t = entity->GetTransform();
       // Position
-      if (Math::Vector3::Scale(t->GetParent()->GetWorldScale(), t->GetLocalPos() - prevPos).SqrMagnitude() >=
-          updateDistance * updateDistance) {
+      if (Math::Vector3::Scale(t->GetParent()->GetWorldScale(),
+                               t->GetLocalPos() - prevPos)
+              .SqrMagnitude() >= updateDistance * updateDistance) {
         PositionMessage* message =
             NetworkManager::Instance()
                 .GenerateMessageFromClient<PositionMessage>();
@@ -237,12 +241,40 @@ void NetworkTransform::FixedUpdate() {
     t->SetLocalPos(Math::Vector3::Lerp(prevPos, targetPos, posInterpolation));
     // Rotation
     rotInterpolation = min(rotInterpolation + netIdLerp, 1);
-    t->SetLocalRot(Math::Quaternion::Lerp(prevRot, targetRot, rotInterpolation));
+    t->SetLocalRot(
+        Math::Quaternion::Lerp(prevRot, targetRot, rotInterpolation));
     // Scale
     scaleInterpolation = min(scaleInterpolation + netIdLerp, 1);
     t->SetLocalScale(
         Math::Vector3::Lerp(prevScale, targetScale, scaleInterpolation));
   }
+}
+
+void NetworkTransform::ForceUpdateOverNetwork() {
+  Transform* t = entity->GetTransform();
+  // Position
+  PositionMessage* pMessage =
+      NetworkManager::Instance().GenerateMessageFromClient<PositionMessage>();
+  prevPos = t->GetLocalPos();
+  pMessage->localPos = t->GetLocalPos();
+  pMessage->netId = netId->id;
+  NetworkManager::Instance().SendMessageFromClient(pMessage);
+
+  // Rotation
+  RotationMessage* rMessage =
+      NetworkManager::Instance().GenerateMessageFromClient<RotationMessage>();
+  prevRot = t->GetLocalRot();
+  rMessage->localRot = t->GetLocalRot();
+  rMessage->netId = netId->id;
+  NetworkManager::Instance().SendMessageFromClient(rMessage);
+
+  // Scale
+  ScaleMessage* sMessage =
+      NetworkManager::Instance().GenerateMessageFromClient<ScaleMessage>();
+  prevScale = t->GetLocalScale();
+  sMessage->localScale = t->GetLocalScale();
+  sMessage->netId = netId->id;
+  NetworkManager::Instance().SendMessageFromClient(sMessage);
 }
 
 void NetworkTransform::SnapTransform() {
@@ -255,4 +287,18 @@ void NetworkTransform::SnapTransform() {
   t->SetLocalScale(targetScale);
 }
 
+void NetworkTransform::SetNetworkedParentToRoot() {
+  entity->GetTransform()->SetParent(
+      LevelManager::Instance().currentLevel->levelRoot->GetTransform());
+}
+
+bool NetworkTransform::SetNetworkedParent(int networkId) {
+  NetworkId* parentNetId = NetworkManager::Instance().GetNetworkId(networkId);
+  if (!parentNetId) {
+    return false;
+  }
+
+  entity->GetTransform()->SetParent(parentNetId->GetEntity()->GetTransform());
+  return true;
+}
 }  // namespace Isetta
