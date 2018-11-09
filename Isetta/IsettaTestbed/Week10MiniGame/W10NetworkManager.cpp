@@ -65,7 +65,13 @@ void W10NetworkManager::HandleSpawnMessage(yojimbo::Message* message) {
           spawnMessage->swordNetId);
       networkId->clientAuthorityId = spawnMessage->clientAuthorityId;
       swordEntity->AddComponent<Isetta::NetworkTransform>();
-      swordEntity->AddComponent<Isetta::MeshComponent>("primitive/cube.scene.xml");
+      swordEntity->AddComponent<Isetta::MeshComponent>(
+          "primitive/cube.scene.xml");
+      swordEntity->GetTransform()->SetLocalPos(
+          Isetta::Math::Vector3((spawnMessage->isOnRight ? 1 : -1) * 0.25f, 0, 0.25f));
+
+      swordEntity->GetTransform()->SetLocalScale(
+          Isetta::Math::Vector3{0.375, 0.025, 0.025});
     }
     e->AddComponent<Isetta::NetworkTransform>();
   }
