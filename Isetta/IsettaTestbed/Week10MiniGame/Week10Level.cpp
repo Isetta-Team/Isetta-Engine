@@ -9,6 +9,7 @@
 #include "Graphics/CameraComponent.h"
 #include "Scene/Entity.h"
 #include "Week10MiniGame/W10NetworkManager.h"
+#include "Week10MiniGame/W10UIManager.h"
 
 using namespace Isetta;
 
@@ -47,4 +48,5 @@ void Week10Level::LoadLevel() {
   Entity* networkManager{ADD_ENTITY("GameManager")};
   networkManager->AddComponent<W10NetworkManager>();
   networkManager->AddComponent<W10GameManager>();
+  networkManager->AddComponent<W10UIManager>();
 }

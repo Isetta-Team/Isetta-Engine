@@ -56,6 +56,9 @@
     <ClCompile Include="Week10MiniGame\W10GameManager.cpp">
       <Filter>Week10MiniGame</Filter>
     </ClCompile>
+    <ClCompile Include="Week10MiniGame\W10UIManager.cpp">
+      <Filter>Week10MiniGame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
@@ -134,6 +137,9 @@
       <Filter>Week10MiniGame</Filter>
     </ClInclude>
     <ClInclude Include="Week10MiniGame\W10GameManager.h">
+      <Filter>Week10MiniGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Week10MiniGame\W10UIManager.h">
       <Filter>Week10MiniGame</Filter>
     </ClInclude>
   </ItemGroup>
