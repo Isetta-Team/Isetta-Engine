@@ -27,7 +27,7 @@ void W10NetworkPlayer::Awake() {
   networkId->clientAuthorityId = clientAuthorityId;
   swordEntity->AddComponent<Isetta::NetworkTransform>();
   Isetta::Events::Instance().RegisterEventListener(
-      "Blocked",
+      "Block",
       [&](const Isetta::EventObject& eventObject) { SwordBlocked(); });
 }
 

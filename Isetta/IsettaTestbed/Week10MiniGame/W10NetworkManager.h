@@ -115,7 +115,7 @@ RPC_MESSAGE_FINISH
 RPC_MESSAGE_DEFINE(W10AttackResultMessage)
 template <typename Stream>
 bool Serialize(Stream* stream) {
-  serialize_int(stream, result, 0, 2);
+  serialize_int(stream, result, 0, 3);
   return true;
 }
 

@@ -179,7 +179,7 @@ void Transform::SetParent(Transform *const transform) {
         LevelManager::Instance().currentLevel->levelRoot->GetTransform();
   }
   if (parent == targetTransform) {
-    LOG_ERROR(Debug::Channel::Graphics,
+    LOG_WARNING(Debug::Channel::Graphics,
               "You are trying to set (%s)'s parent to (%s), whose is already "
               "their parent",
               GetName().c_str(), targetTransform->GetName().c_str());
