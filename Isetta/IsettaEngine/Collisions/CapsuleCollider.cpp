@@ -146,5 +146,23 @@ bool CapsuleCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
   return false;
 }
 
+AABB CapsuleCollider::GetFatAABB() {
+  return AABB{
+      GetWorldCenter(),
+      2.f *
+          (GetWorldHeight() *
+               GetTransform()->GetLocalToWorldMatrix().GetTopLeftMatrix3() +
+           radius * Math::Vector3::one) *
+          (1 + fatFactor)};
+}
+AABB CapsuleCollider::GetAABB() {
+  // TODO(Yidi) + TODO(Jacob) not a tight AABB
+  return AABB{
+      GetWorldCenter(),
+      2.f * (GetWorldHeight() *
+                 GetTransform()->GetLocalToWorldMatrix().GetTopLeftMatrix3() +
+             radius * Math::Vector3::one)};
+}
+
 INTERSECTION_TEST(CapsuleCollider)
 }  // namespace Isetta
