@@ -40,7 +40,7 @@ void Week10Level::LoadLevel() {
   debug->AddComponent<Editor>(true);
 
   Entity* ground{ADD_ENTITY("Ground")};
-  ground->AddComponent<MeshComponent>("primitive/cube.scene.xml");
+  ground->AddComponent<MeshComponent>("blockFencing/Ground.scene.xml");
   ground->SetTransform(Math::Vector3{0, -5.25, 0}, Math::Vector3::zero,
                        Math::Vector3{4.0f, 10.0f, 1});
 

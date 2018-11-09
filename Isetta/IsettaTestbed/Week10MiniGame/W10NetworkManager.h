@@ -23,6 +23,10 @@ Isetta::U16 positionHandle;
 Isetta::U16 resultHandle;
 
 // std::vector<int> clientIDs;
+
+float killDistance = 0.6;
+float blockDistance = 0.85;
+
 int clientCount;
 int lastAttemptClient;
 std::unordered_map<int, float> clientPosX;

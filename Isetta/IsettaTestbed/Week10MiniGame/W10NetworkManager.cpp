@@ -17,7 +17,7 @@ void W10NetworkManager::HandleReadyMessage(int clientIdx,
     clientSwordPos.insert({clientIdx, 0});
   }
 
-  if (clientCount == 2) {
+  if (clientCount == 1) {
     for (const auto& swordPair : clientSwordPos) {
       int potentialClient = swordPair.first;
       W10SpawnMessage* spawn =
@@ -46,10 +46,10 @@ void W10NetworkManager::HandleSpawnMessage(yojimbo::Message* message) {
         e->AddComponent<Isetta::NetworkId>(spawnMessage->netId);
     networkId->clientAuthorityId = spawnMessage->clientAuthorityId;
 
-    e->AddComponent<Isetta::MeshComponent>("primitive/cube.scene.xml");
+    e->AddComponent<Isetta::MeshComponent>("blockFencing/Player.scene.xml");
     e->SetTransform(
         Isetta::Math::Vector3{spawnMessage->isOnRight ? -1.f : 1.f, 0, 0},
-        Isetta::Math::Vector3::zero, Isetta::Math::Vector3{0.25, 0.5, 0.25});
+        Isetta::Math::Vector3::zero, Isetta::Math::Vector3{1, 1, 1});
 
     if (networkId->HasClientAuthority()) {
       auto w10Player = e->AddComponent<W10Player>(
@@ -65,6 +65,7 @@ void W10NetworkManager::HandleSpawnMessage(yojimbo::Message* message) {
           spawnMessage->swordNetId);
       networkId->clientAuthorityId = spawnMessage->clientAuthorityId;
       swordEntity->AddComponent<Isetta::NetworkTransform>();
+      // swordEntity->AddComponent<Isetta::MeshComponent>("primitive/cube.scene.xml");
     }
     e->AddComponent<Isetta::NetworkTransform>();
   }
@@ -105,14 +106,17 @@ void W10NetworkManager::HandlePositionReport(int clientIdx,
       reinterpret_cast<const W10PositionReportMessage*>(message)};
   clientPosX.insert_or_assign(clientIdx, posMessage->positionX);
   if (clientPosX.size() == 2) {
-    auto distance = Isetta::Math::Util::Abs(clientPosX.at(0) - clientPosX.at(1));
+    auto distance =
+        Isetta::Math::Util::Abs(clientPosX.at(0) - clientPosX.at(1));
     LOG_INFO(Isetta::Debug::Channel::General, "Distance %f", distance);
-
     // for test
     int attackSwordPos = clientSwordPos.at(lastAttemptClient);
     for (const auto& swordPos : clientSwordPos) {
       if (swordPos.first != lastAttemptClient) {
         if (swordPos.second != attackSwordPos) {
+          if (distance > killDistance) {
+            return;
+          }
           W10AttackResultMessage* resultMessage1{
               Isetta::NetworkManager::Instance()
                   .GenerateMessageFromServer<W10AttackResultMessage>(
@@ -129,11 +133,16 @@ void W10NetworkManager::HandlePositionReport(int clientIdx,
               swordPos.first, resultMessage2);
           LOG_INFO(Isetta::Debug::Channel::General, "Server: HIT!");
         } else {
+          if (distance > blockDistance) {
+            return;
+          }
+
           W10AttackResultMessage* resultMessage{
               Isetta::NetworkManager::Instance()
                   .GenerateMessageFromServer<W10AttackResultMessage>(
                       lastAttemptClient)};
           resultMessage->result = 2;
+          clientSwordPos.insert_or_assign(lastAttemptClient, 0);
           Isetta::NetworkManager::Instance().SendMessageFromServer(
               lastAttemptClient, resultMessage);
           LOG_INFO(Isetta::Debug::Channel::General, "Server: Not HIT!");
