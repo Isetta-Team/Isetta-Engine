@@ -53,12 +53,12 @@ class CollisionsModule {
 
   // probably mark them as "still colliding"
   CollisionUtil::ColliderPairSet collidingPairs;
-  CollisionUtil::ColliderPairSet ignoreCollisions;
+  CollisionUtil::ColliderPairSet ignoreColliderPairs;
 
   BVTree bvTree;
   std::bitset<static_cast<int>(0.5f * Layers::LAYERS_CAPACITY *
                                (Layers::LAYERS_CAPACITY + 1))>
-      collisionMatrix;
+      ignoreCollisionLayer = 0;
 
   void StartUp();
   void Update(float deltaTime);

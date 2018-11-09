@@ -40,7 +40,7 @@ void CollisionsModule::Update(float deltaTime) {
     Collider *collider1 = pair.first;
     Collider *collider2 = pair.second;
     // Ignore Single/Layer Collisions continue
-    if (ignoreCollisions.find(pair) != ignoreCollisions.end() ||
+    if (ignoreColliderPairs.find(pair) != ignoreColliderPairs.end() ||
         GetIgnoreLayerCollision(collider1->GetEntity()->GetLayerIndex(),
                                 collider2->GetEntity()->GetLayerIndex()))
       continue;
@@ -291,16 +291,18 @@ bool CollisionsModule::GetIgnoreLayerCollision(int layer1, int layer2) const {
   Layers::CheckLayer(layer1);
   Layers::CheckLayer(layer2);
   if (layer1 < layer2)
-    return collisionMatrix.test(layer1 * Layers::LAYERS_CAPACITY + layer2);
+    return ignoreCollisionLayer.test(layer1 * Layers::LAYERS_CAPACITY + layer2);
   else
-    return collisionMatrix.test(layer2 * Layers::LAYERS_CAPACITY + layer1);
+    return ignoreCollisionLayer.test(layer2 * Layers::LAYERS_CAPACITY + layer1);
 }
 void CollisionsModule::SetIgnoreLayerCollision(int layer1, int layer2,
                                                bool ignoreLayer) {
   if (layer1 < layer2)
-    collisionMatrix.set(layer1 * Layers::LAYERS_CAPACITY + layer2, ignoreLayer);
+    ignoreCollisionLayer.set(layer1 * Layers::LAYERS_CAPACITY + layer2,
+                             ignoreLayer);
   else
-    collisionMatrix.set(layer2 * Layers::LAYERS_CAPACITY + layer1, ignoreLayer);
+    ignoreCollisionLayer.set(layer2 * Layers::LAYERS_CAPACITY + layer1,
+                             ignoreLayer);
 }
 bool CollisionsModule::Intersection(const Math::Vector3 &p0,
                                     const Math::Vector3 &p1, const AABB &aabb) {
