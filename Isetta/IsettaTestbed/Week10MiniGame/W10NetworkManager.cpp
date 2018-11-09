@@ -17,7 +17,7 @@ void W10NetworkManager::HandleReadyMessage(int clientIdx,
     clientSwordPos.insert({clientIdx, 0});
   }
 
-  if (clientCount == 1) {
+  if (clientCount == 2) {
     for (const auto& swordPair : clientSwordPos) {
       int potentialClient = swordPair.first;
       W10SpawnMessage* spawn =
