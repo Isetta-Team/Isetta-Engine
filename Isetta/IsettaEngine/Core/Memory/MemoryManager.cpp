@@ -29,6 +29,11 @@ void* MemoryManager::AllocOnFreeList(const Size size, const U8 alignment) {
   return GetInstance()->freeListAllocator.Alloc(size, alignment);
 }
 
+void* MemoryManager::ReallocOnFreeList(void* memPtr, const Size size,
+                                       const U8 alignment) {
+  return GetInstance()->freeListAllocator.Realloc(memPtr, size, alignment);
+}
+
 void MemoryManager::FreeOnFreeList(void* memPtr) {
   GetInstance()->freeListAllocator.Free(memPtr);
 }
