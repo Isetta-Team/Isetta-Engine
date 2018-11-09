@@ -89,7 +89,7 @@ class ISETTA_API MemoryManager {
 
   // TODO(YIDI): Use different freelist allocators for different stage
   static void* AllocOnFreeList(Size size, U8 alignment = MemUtil::ALIGNMENT);
-
+  static void* ReallocOnFreeList(void* memPtr, Size size, U8 alignment = MemUtil::ALIGNMENT);
   static void FreeOnFreeList(void* memPtr);
 
   template <typename T, typename... Args>
