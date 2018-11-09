@@ -17,6 +17,7 @@
 #include "Networking/NetworkId.h"
 #include "Scene/Entity.h"
 #include "Components/GridComponent.h"
+#include "Components/Editor/Editor.h"
 
 using namespace Isetta;
 
@@ -293,4 +294,5 @@ void NetworkLevel::LoadLevel() {
   lightComp->SetProperty<LightProperty::SHADOW_MAP_COUNT>(1);
   lightComp->SetProperty<LightProperty::SHADOW_MAP_BIAS>(0.01f);
   lightEntity->AddComponent<GridComponent>();
+  lightEntity->AddComponent<Editor>();
 }
