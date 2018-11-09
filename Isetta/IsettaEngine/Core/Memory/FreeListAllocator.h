@@ -3,8 +3,8 @@
  */
 #pragma once
 #include "Core/IsettaAlias.h"
-#include "MemUtil.h"
 #include "ISETTA_API.h"
+#include "MemUtil.h"
 
 namespace Isetta {
 /*
@@ -17,7 +17,8 @@ namespace Isetta {
  * 3. Satisfy alignment requirement
  */
 // TODO(YIDI): Add expansion functionality
-// TODO(YIDI): Optimize to use a tree as underlying structure to reduce time complexity
+// TODO(YIDI): Optimize to use a tree as underlying structure to reduce time
+// complexity
 class ISETTA_API FreeListAllocator {
  public:
   // This class is using RAII
@@ -28,6 +29,7 @@ class ISETTA_API FreeListAllocator {
 
   void* Alloc(Size size, U8 alignment);
   void Free(void* memPtr);
+  void* Realloc(void* memPtr, Size size, U8 alignment);
 
   template <typename T, typename... args>
   T* New(args... argList);
@@ -77,7 +79,10 @@ T* FreeListAllocator::New(args... argList) {
 
 template <typename T>
 T* FreeListAllocator::NewArr(Size length, const U8 alignment) {
-  return new (Alloc(sizeof(T) * length, alignment)) T[length];
+  void* alloc = Alloc(sizeof(T) * length + 8, alignment);
+  char* allocAddress = static_cast<char*>(alloc);
+  for (int i = 0; i < length; i++) new (allocAddress + i * sizeof(T)) T;
+  return static_cast<T*>(alloc);
 }
 
 }  // namespace Isetta

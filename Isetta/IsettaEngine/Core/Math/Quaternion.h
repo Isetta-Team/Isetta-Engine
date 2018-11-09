@@ -25,8 +25,8 @@ class ISETTA_API Quaternion {
    * \param inZ Z value of the quaternion
    * \param inW W value of the quaternion
    */
-  Quaternion(const float inX, const float inY, const float inZ, const float inW)
-      : w{inW}, x{inX}, y{inY}, z{inZ} {}
+  Quaternion(const float inX, const float inY, const float inZ,
+             const float inW);
   /**
    * \brief Create a quaternion from euler angles
    * \param eulerX Euler angle in degree around X axis

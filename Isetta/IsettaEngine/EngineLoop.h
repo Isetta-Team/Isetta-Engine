@@ -43,8 +43,6 @@ class ISETTA_API EngineLoop {
 
   void StartGameClock() const;
 
-  class TestInitalization;
-  friend class TestInitialization;
   friend class Application;
 };
 }  // namespace Isetta

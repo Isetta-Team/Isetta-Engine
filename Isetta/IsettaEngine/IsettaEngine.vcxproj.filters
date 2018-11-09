@@ -304,6 +304,9 @@
     <ClCompile Include="Components\Editor\Hierarchy.cpp">
       <Filter>Components\Editor</Filter>
     </ClCompile>
+    <ClCompile Include="Core\DataStructures\Trie.cpp">
+      <Filter>Core\DataStructures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -659,6 +662,9 @@
     </ClInclude>
     <ClInclude Include="Components\Editor\Console.h">
       <Filter>Components\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\Array.h">
+      <Filter>Core\DataStructures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

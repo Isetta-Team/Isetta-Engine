@@ -99,7 +99,7 @@ void FreeListAllocator::Free(void* memPtr) {
   } else {
     Node* last = nullptr;
     Node* cur = head;
-    while (reinterpret_cast<PtrInt>(cur) < nodeAddress) {
+    while (reinterpret_cast<PtrInt>(cur) < nodeAddress && cur != nullptr) {
       last = cur;
       cur = cur->next;
     }
@@ -108,6 +108,73 @@ void FreeListAllocator::Free(void* memPtr) {
     TryMergeWithNext(newNode);
     TryMergeWithNext(last);
   }
+}
+
+void* FreeListAllocator::Realloc(void* memPtr, Size size, U8 alignment) {
+  PtrInt headerAddress = reinterpret_cast<PtrInt>(memPtr) - headerSize;
+  auto* header = reinterpret_cast<AllocHeader*>(headerAddress);
+
+  void* newPtr = memPtr;
+
+  PtrInt s = size;
+
+  if (header->size >= size) {
+    // If it's smaller than what we had, just shrink our node's size and make a
+    // new one
+
+    // TODO(YIDI): the node can be overriden
+    PtrInt rawAddress =
+        reinterpret_cast<PtrInt>(memPtr) + s;
+    rawAddress += headerSize;  // leave size for header
+    PtrInt misAlignment = rawAddress & (alignment - 1);
+    U64 adjustment = alignment - misAlignment;
+    adjustment += ((~alignment & adjustment) << 1);
+    PtrInt alignedAddress = rawAddress + adjustment;
+
+    Size occupiedSize = headerSize + adjustment + (header->size - size);
+    PtrInt headerAddress = alignedAddress - headerSize;
+
+    PtrInt nodeAddress =
+        reinterpret_cast<PtrInt>(memPtr) + size - header->adjustment;
+    auto* newNode =
+        new (reinterpret_cast<void*>(nodeAddress)) Node(header->size);
+
+    // TODO(YIDI): Take care of double deletion, in that situation, memPtr is
+    // the same as head
+    if (head == nullptr) {
+      head = newNode;
+      return newPtr;
+    }
+
+    // find last and next node, try to merge them
+    if (nodeAddress < reinterpret_cast<PtrInt>(head)) {
+      newNode->next = head;
+      head = newNode;
+      // TODO(YIDI): Go through this with a test case (make sure there won't be
+      // gaps anywhere in this list)
+      TryMergeWithNext(head);
+    } else {
+      Node* last = nullptr;
+      Node* cur = head;
+      while (reinterpret_cast<PtrInt>(cur) < nodeAddress) {
+        last = cur;
+        cur = cur->next;
+      }
+      last->next = newNode;
+      newNode->next = cur;
+      TryMergeWithNext(newNode);
+      TryMergeWithNext(last);
+    }
+
+  } else {
+    // If it's bigger than what we had, grab a whole new chunk of memory and
+    // free the old one
+    newPtr = Alloc(size, alignment);
+    memcpy(newPtr, memPtr, header->size);
+    Free(memPtr);
+  }
+
+  return newPtr;
 }
 
 void FreeListAllocator::Erase() const {

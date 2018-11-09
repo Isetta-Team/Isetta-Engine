@@ -2,18 +2,19 @@
  * Copyright (c) 2018 Isetta
  */
 #include <Events/EventObject.h>
+#include "Core/DataStructures/Array.h"
 #include "Core/Time/Time.h"
 
 namespace Isetta {
 
 EventObject::EventObject(std::string name, U64 frame, EventPriority priority,
-                         std::vector<EventParam> params)
+                         Array<EventParam> params)
     : eventName{name},
       timeFrame{frame},
       eventPriority{priority},
       eventParams{params} {}
 
-EventObject::EventObject(std::string name, std::vector<EventParam> params)
+EventObject::EventObject(std::string name, Array<EventParam> params)
     : eventName{name},
       timeFrame{Time::GetTimeFrame()},
       eventPriority{EventPriority::MEDIUM},

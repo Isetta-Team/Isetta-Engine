@@ -13,7 +13,7 @@ namespace Isetta {
 Hierarchy::Hierarchy(std::string title, bool isOpen, Inspector* inspector)
     : title{title}, isOpen{isOpen}, inspector{inspector} {}
 void Hierarchy::GuiUpdate() {
-  GUI::Window(rectTrans, title.c_str(),
+  GUI::Window(rectTransform, title.c_str(),
               [&]() {
                 float buttonHeight = 20;
                 float buttonWidth = 125;
@@ -55,4 +55,6 @@ void Hierarchy::GuiUpdate() {
               },
               &isOpen, {}, GUI::WindowFlags::HorizontalScrollbar);
 }
+
+void Hierarchy::Open() { isOpen = true; }
 }  // namespace Isetta

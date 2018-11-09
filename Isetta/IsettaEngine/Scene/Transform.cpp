@@ -342,13 +342,13 @@ void Transform::RecalculateLocalToWorldMatrix() {
 
 void Transform::AddChild(Transform *transform) {
   // duplicate child check is in SetParent
-  children.push_back(transform);
+  children.PushBack(transform);
 }
 
 void Transform::RemoveChild(Transform *transform) {
   for (auto it = children.begin(); it != children.end(); ++it) {
     if (*it == transform) {
-      children.erase(it);
+      children.Erase(it);
       return;
     }
   }

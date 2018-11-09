@@ -79,9 +79,9 @@
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
-    <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)</TargetName>
-    <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\intermediate</IntDir>
+    <IntDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)\intermediate</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -109,7 +109,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(SolutionDir)\IsettaEngine\$(Platform)\$(ConfigurationName) DLL\;$(SolutionDir)External\FMOD\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\$(Configuration)*\*.lib;$(SolutionDir)External\GLFW\Build\src\$(ConfigurationName)\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\imgui\$(Platform)\$(Configuration)\imgui.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\$(Configuration)*\*.lib;$(SolutionDir)External\GLFW\Build\src\$(ConfigurationName)\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\imgui\lib\$(Configuration)\imgui.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>
       </AdditionalOptions>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -118,6 +118,9 @@
       <Command>
       </Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(ConfigurationName)\Horde3D.dll" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -174,12 +177,28 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\External\SID\sid.h" />
+    <ClInclude Include="..\IsettaEngine\Application.h" />
     <ClInclude Include="..\IsettaEngine\Audio\AudioModule.h" />
     <ClInclude Include="..\IsettaEngine\Audio\AudioSource.h" />
+    <ClInclude Include="..\IsettaEngine\Collisions\AABB.h" />
+    <ClInclude Include="..\IsettaEngine\Collisions\BoxCollider.h" />
+    <ClInclude Include="..\IsettaEngine\Collisions\BVTree.h" />
+    <ClInclude Include="..\IsettaEngine\Collisions\CapsuleCollider.h" />
+    <ClInclude Include="..\IsettaEngine\Collisions\Collider.h" />
+    <ClInclude Include="..\IsettaEngine\Collisions\CollisionHandler.h" />
+    <ClInclude Include="..\IsettaEngine\Collisions\Collisions.h" />
+    <ClInclude Include="..\IsettaEngine\Collisions\CollisionsModule.h" />
+    <ClInclude Include="..\IsettaEngine\Collisions\CollisionUtil.h" />
+    <ClInclude Include="..\IsettaEngine\Collisions\Plane.h" />
+    <ClInclude Include="..\IsettaEngine\Collisions\Ray.h" />
+    <ClInclude Include="..\IsettaEngine\Collisions\SphereCollider.h" />
     <ClInclude Include="..\IsettaEngine\Core\Color.h" />
+    <ClInclude Include="..\IsettaEngine\Core\Config\Config.h" />
+    <ClInclude Include="..\IsettaEngine\Core\Config\CVar.h" />
     <ClInclude Include="..\IsettaEngine\Core\Config\CVarRegistry.h" />
     <ClInclude Include="..\IsettaEngine\Core\Config\ICVar.h" />
     <ClInclude Include="..\IsettaEngine\Core\DataStructures\RingBuffer.h" />
+    <ClInclude Include="..\IsettaEngine\Core\DataStructures\Vector.h" />
     <ClInclude Include="..\IsettaEngine\Core\Debug\Assert.h" />
     <ClInclude Include="..\IsettaEngine\Core\Debug\Debug.h" />
     <ClInclude Include="..\IsettaEngine\Core\Debug\DebugDraw.h" />
@@ -202,12 +221,10 @@
     <ClInclude Include="..\IsettaEngine\Core\Memory\TemplatePoolAllocator.h" />
     <ClInclude Include="..\IsettaEngine\Core\Time\Clock.h" />
     <ClInclude Include="..\IsettaEngine\Core\Time\StopWatch.h" />
-    <ClInclude Include="..\IsettaEngine\Custom\AxisDrawer.h" />
-    <ClInclude Include="..\IsettaEngine\Custom\ExampleComponent.h" />
-    <ClInclude Include="..\IsettaEngine\Custom\ExampleLevel.h" />
-    <ClInclude Include="..\IsettaEngine\Custom\FlyController.h" />
-    <ClInclude Include="..\IsettaEngine\Custom\PlayerController.h" />
+    <ClInclude Include="..\IsettaEngine\Core\Time\Time.h" />
     <ClInclude Include="..\IsettaEngine\EngineLoop.h" />
+    <ClInclude Include="..\IsettaEngine\Events\EventObject.h" />
+    <ClInclude Include="..\IsettaEngine\Events\Events.h" />
     <ClInclude Include="..\IsettaEngine\Graphics\AnimationComponent.h" />
     <ClInclude Include="..\IsettaEngine\Graphics\CameraComponent.h" />
     <ClInclude Include="..\IsettaEngine\Graphics\GUI.h" />
@@ -218,17 +235,19 @@
     <ClInclude Include="..\IsettaEngine\Graphics\RectTransform.h" />
     <ClInclude Include="..\IsettaEngine\Graphics\RenderModule.h" />
     <ClInclude Include="..\IsettaEngine\Graphics\RenderNode.h" />
+    <ClInclude Include="..\IsettaEngine\Graphics\Texture.h" />
     <ClInclude Include="..\IsettaEngine\Graphics\Window.h" />
     <ClInclude Include="..\IsettaEngine\Input\Input.h" />
-    <ClInclude Include="..\IsettaEngine\Input\InputEnum.h" />
     <ClInclude Include="..\IsettaEngine\Input\InputModule.h" />
-    <ClInclude Include="..\IsettaEngine\ISETTA_API.h" />
-    <ClInclude Include="..\IsettaEngine\Networking\ExampleMessages.h" />
+    <ClInclude Include="..\IsettaEngine\Input\KeyCode.h" />
     <ClInclude Include="..\IsettaEngine\Networking\Messages.h" />
+    <ClInclude Include="..\IsettaEngine\Networking\NetworkId.h" />
     <ClInclude Include="..\IsettaEngine\Networking\NetworkingModule.h" />
     <ClInclude Include="..\IsettaEngine\Networking\NetworkManager.h" />
     <ClInclude Include="..\IsettaEngine\Scene\Component.h" />
     <ClInclude Include="..\IsettaEngine\Scene\Entity.h" />
+    <ClInclude Include="..\IsettaEngine\Scene\IsettaLevel.h" />
+    <ClInclude Include="..\IsettaEngine\Scene\Layers.h" />
     <ClInclude Include="..\IsettaEngine\Scene\Level.h" />
     <ClInclude Include="..\IsettaEngine\Scene\LevelManager.h" />
     <ClInclude Include="..\IsettaEngine\Scene\Transform.h" />
@@ -236,8 +255,19 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\IsettaEngine\Application.cpp" />
     <ClCompile Include="..\IsettaEngine\Audio\AudioModule.cpp" />
     <ClCompile Include="..\IsettaEngine\Audio\AudioSource.cpp" />
+    <ClCompile Include="..\IsettaEngine\Collisions\AABB.cpp" />
+    <ClCompile Include="..\IsettaEngine\Collisions\BoxCollider.cpp" />
+    <ClCompile Include="..\IsettaEngine\Collisions\BVTree.cpp" />
+    <ClCompile Include="..\IsettaEngine\Collisions\CapsuleCollider.cpp" />
+    <ClCompile Include="..\IsettaEngine\Collisions\Collider.cpp" />
+    <ClCompile Include="..\IsettaEngine\Collisions\CollisionHandler.cpp" />
+    <ClCompile Include="..\IsettaEngine\Collisions\Collisions.cpp" />
+    <ClCompile Include="..\IsettaEngine\Collisions\CollisionsModule.cpp" />
+    <ClCompile Include="..\IsettaEngine\Collisions\Plane.cpp" />
+    <ClCompile Include="..\IsettaEngine\Collisions\SphereCollider.cpp" />
     <ClCompile Include="..\IsettaEngine\Core\Color.cpp" />
     <ClCompile Include="..\IsettaEngine\Core\Config\Config.cpp" />
     <ClCompile Include="..\IsettaEngine\Core\Config\CVar.cpp" />
@@ -265,12 +295,9 @@
     <ClCompile Include="..\IsettaEngine\Core\Memory\StackAllocator.cpp" />
     <ClCompile Include="..\IsettaEngine\Core\Time\Clock.cpp" />
     <ClCompile Include="..\IsettaEngine\Core\Time\StopWatch.cpp" />
-    <ClCompile Include="..\IsettaEngine\Custom\AxisDrawer.cpp" />
-    <ClCompile Include="..\IsettaEngine\Custom\ExampleComponent.cpp" />
-    <ClCompile Include="..\IsettaEngine\Custom\ExampleLevel.cpp" />
-    <ClCompile Include="..\IsettaEngine\Custom\FlyController.cpp" />
-    <ClCompile Include="..\IsettaEngine\Custom\PlayerController.cpp" />
     <ClCompile Include="..\IsettaEngine\EngineLoop.cpp" />
+    <ClCompile Include="..\IsettaEngine\Events\EventObject.cpp" />
+    <ClCompile Include="..\IsettaEngine\Events\Events.cpp" />
     <ClCompile Include="..\IsettaEngine\Graphics\AnimationComponent.cpp" />
     <ClCompile Include="..\IsettaEngine\Graphics\CameraComponent.cpp" />
     <ClCompile Include="..\IsettaEngine\Graphics\GUI.cpp" />
@@ -279,18 +306,24 @@
     <ClCompile Include="..\IsettaEngine\Graphics\LightComponent.cpp" />
     <ClCompile Include="..\IsettaEngine\Graphics\MeshComponent.cpp" />
     <ClCompile Include="..\IsettaEngine\Graphics\RenderModule.cpp" />
+    <ClCompile Include="..\IsettaEngine\Graphics\RenderNode.cpp" />
+    <ClCompile Include="..\IsettaEngine\Graphics\Texture.cpp" />
     <ClCompile Include="..\IsettaEngine\Graphics\Window.cpp" />
     <ClCompile Include="..\IsettaEngine\Input\Input.cpp" />
     <ClCompile Include="..\IsettaEngine\Input\InputModule.cpp" />
+    <ClCompile Include="..\IsettaEngine\Networking\NetworkId.cpp" />
     <ClCompile Include="..\IsettaEngine\Networking\NetworkingModule.cpp" />
     <ClCompile Include="..\IsettaEngine\Networking\NetworkManager.cpp" />
     <ClCompile Include="..\IsettaEngine\Scene\Component.cpp" />
     <ClCompile Include="..\IsettaEngine\Scene\Entity.cpp" />
+    <ClCompile Include="..\IsettaEngine\Scene\Layers.cpp" />
     <ClCompile Include="..\IsettaEngine\Scene\Level.cpp" />
     <ClCompile Include="..\IsettaEngine\Scene\LevelManager.cpp" />
     <ClCompile Include="..\IsettaEngine\Scene\Transform.cpp" />
     <ClCompile Include="Core\ColorTest.cpp" />
     <ClCompile Include="Core\DataStructures\RingBufferTest.cpp" />
+    <ClCompile Include="Core\DataStructures\TrieTest.cpp" />
+    <ClCompile Include="Core\DataStructures\VectorTest.cpp" />
     <ClCompile Include="Core\Math\Matrix3Test.cpp" />
     <ClCompile Include="Core\Math\UtilTest.cpp" />
     <ClCompile Include="Core\Math\Vector2IntTest.cpp" />

@@ -6,8 +6,10 @@
 #include <Windows.h>
 #include <string>
 #include "Audio/AudioModule.h"
+#include "Collisions/CollisionsModule.h"
 #include "Core/Config/CVar.h"
 #include "Core/Config/CVarRegistry.h"
+#include "Core/DataStructures/Array.h"
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Math/Vector3.h"
@@ -17,10 +19,8 @@
 #include "Graphics/Window.h"
 #include "Networking/NetworkingModule.h"
 #include "Scene/LevelManager.h"
-#include "Collisions/CollisionsModule.h"
 
-namespace Isetta
-{
+namespace Isetta {
 #define CONFIG_VAL(expr) Isetta::Config::Instance().expr.GetVal()
 #define CONFIG_M_VAL(mod, expr) Isetta::Config::Instance().mod.expr.GetVal()
 
@@ -29,15 +29,13 @@ namespace Isetta
  * and storing all the CVars that are read from the configuration file for the
  * game. CVars not in this class will not be set by the configuration file.
  */
-class ISETTA_API Config
-{
-public:
+class ISETTA_API Config {
+ public:
   /**
    * @brief Singleton class instance
    *
    */
-  static Config &Instance()
-  {
+  static Config &Instance() {
     static Config instance;
     return instance;
   }
@@ -83,9 +81,9 @@ public:
   void ProcessFile(const char *contentBuffer);
 
   void SetVal(const std::string &key, const std::string_view &value);
-  std::vector<std::string_view> GetCommands() const;
+  Array<std::string_view> GetCommands() const;
 
-private:
+ private:
   Config() = default;
   class CVarRegistry cvarsRegistry;
 
@@ -132,4 +130,4 @@ private:
   void ExtractValue(std::string *value, const Size &sepPos,
                     const std::string_view line);
 };
-} // namespace Isetta
+}  // namespace Isetta

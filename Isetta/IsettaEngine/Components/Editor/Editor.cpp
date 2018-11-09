@@ -7,23 +7,20 @@
 #include "Input/Input.h"
 #include "Input/KeyCode.h"
 #include "Scene/Entity.h"
+#include "Scene/Level.h"
+#include "Scene/LevelManager.h"
 
 #include "Components/Editor/Console.h"
 #include "Components/Editor/Hierarchy.h"
 #include "Components/Editor/Inspector.h"
 
 namespace Isetta {
-Editor::Editor(bool isOpen) {
-  console = new Console("Console", isOpen);
-  inspector = new Inspector("Inspector", false);
-  hierarchy = new Hierarchy("Hierarchy", isOpen, inspector);
+void Editor::Awake() {
+  console = entity->AddComponent<Console>("Console", true);
+  inspector = entity->AddComponent<Inspector>("Inspector", false);
+  hierarchy = entity->AddComponent<Hierarchy>("Hierarchy", true, inspector);
 }
-
 void Editor::OnEnable() {
-  console->OnEnable();
-  inspector->OnEnable();
-  hierarchy->OnEnable();
-
   menuHandle = Input::RegisterKeyPressCallback(
       KeyCode::M, ModifierKeys::CTRL | ModifierKeys::SHIFT,
       [&]() { menuOpen = !menuOpen; });
@@ -38,10 +35,6 @@ void Editor::OnEnable() {
       [&]() { hierarchy->Open(); });
 }
 void Editor::OnDisable() {
-  console->OnDisable();
-  inspector->OnDisable();
-  hierarchy->OnDisable();
-
   Input::UnregisterKeyPressCallback(
       KeyCode::M, ModifierKeys::CTRL | ModifierKeys::SHIFT, consoleHandle);
   Input::UnregisterKeyPressCallback(
@@ -53,9 +46,6 @@ void Editor::OnDisable() {
 }
 
 void Editor::GuiUpdate() {
-  console->GuiUpdate();
-  inspector->GuiUpdate();
-  hierarchy->GuiUpdate();
   if (!menuOpen) return;
 
   GUI::MenuBar(
@@ -68,5 +58,4 @@ void Editor::GuiUpdate() {
       },
       true);
 }
-
 }  // namespace Isetta

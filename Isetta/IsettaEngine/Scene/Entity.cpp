@@ -71,7 +71,7 @@ void Entity::CheckDestroy() {
         comp->~Component();
         comp->OnDestroy();
         MemoryManager::DeleteOnFreeList<Component>(comp);
-        components.erase(compIter);
+        components.Erase(compIter);
         componentTypes.erase(typeIter);
       } else {
         ++compIter;

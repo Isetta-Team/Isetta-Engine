@@ -2,6 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include "Core/DataStructures/Array.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Math/Matrix4.h"
 #include "Core/Math/Quaternion.h"
@@ -68,7 +69,7 @@ class ISETTA_API_DECLARE Transform {
   class Entity *GetEntity() const {
     return entity;
   }
-  Size GetChildCount() const { return children.size(); }
+  inline Size GetChildCount() const { return children.Size(); }
   Transform *GetChild(U16 childIndex);
   inline std::string GetName() const;
 
@@ -93,8 +94,8 @@ class ISETTA_API_DECLARE Transform {
   const Math::Matrix4 &GetWorldToLocalMatrix();
 
   // iterator
-  typedef std::vector<Transform *>::iterator iterator;
-  typedef std::vector<Transform *>::const_iterator const_iterator;
+  typedef Array<Transform *>::iterator iterator;
+  typedef Array<Transform *>::const_iterator const_iterator;
 
   iterator begin() { return children.begin(); }
   const_iterator begin() const { return children.begin(); }
@@ -126,7 +127,7 @@ class ISETTA_API_DECLARE Transform {
 
   class Entity *const entity{nullptr};
   Transform *parent{nullptr};
-  std::vector<Transform *> children;
+  Array<Transform *> children;
 
   // union {
   Math::Vector3 axis[3];

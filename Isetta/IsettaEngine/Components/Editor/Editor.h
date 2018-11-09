@@ -18,8 +18,9 @@ void OnDisable() override;
 void GuiUpdate() override;
 
 public:
-Editor(bool isOpen);
+Editor() = default;
 
+void Awake() override;
 void OnEnable() override;
 END_COMPONENT(Editor, Component)
 }  // namespace Isetta
