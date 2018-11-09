@@ -170,8 +170,7 @@ void RegisterExampleMessageFunctions() {
             if (!entity) {
               return;
             }
-            NetworkManager::Instance().RemoveNetworkId(
-                entity->GetComponent<NetworkId>());
+
             spawnedEntities.remove(entity);
             Entity::Destroy(entity);
           });
@@ -195,8 +194,6 @@ void RegisterExampleMessageFunctions() {
               return;
             }
 
-            NetworkManager::Instance().RemoveNetworkId(
-                entity->GetComponent<NetworkId>());
             spawnedEntities.remove(entity);
             Entity::Destroy(entity);
           });
