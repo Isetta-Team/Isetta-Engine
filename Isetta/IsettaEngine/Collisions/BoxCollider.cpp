@@ -53,5 +53,20 @@ bool BoxCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
   return true;
 }
 
+AABB BoxCollider::GetFatAABB() {
+  AABB aabb = GetAABB();
+  aabb.Expand(1.f + fatFactor);
+  return aabb;
+}
+AABB BoxCollider::GetAABB() {
+  const Math::Vector3 size = GetWorldSize();
+  Math::Vector3 aabbSize = size;
+  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++)
+    aabbSize[i] = Math::Util::Abs(GetTransform()->GetLeft()[i]) * size.x +
+                  Math::Util::Abs(GetTransform()->GetUp()[i]) * size.y +
+                  Math::Util::Abs(GetTransform()->GetForward()[i]) * size.z;
+  return AABB{GetWorldCenter(), aabbSize};
+}
+
 INTERSECTION_TEST(BoxCollider)
 }  // namespace Isetta

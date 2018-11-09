@@ -12,7 +12,7 @@ void Update() override;
 #endif
 
 protected:
-ColliderType GetType() const override { return ColliderType::BOX; }
+ColliderType GetType() const final { return ColliderType::BOX; }
 
 public:
 Math::Vector3 size;
@@ -27,12 +27,16 @@ BoxCollider(bool isStatic, bool isTrigger, const Math::Vector3& center,
     : Collider{isStatic, isTrigger, center}, size{size} {}
 
 bool Raycast(const Ray& ray, RaycastHit* const hitInfo,
-             float maxDistance = 0) override;
+             float maxDistance = 0) final;
 
 inline Math::Vector3 GetWorldSize() const {
   return Math::Vector3::Scale(size, GetTransform()->GetWorldScale());
 }
 inline Math::Vector3 GetWorldExtents() const { return 0.5f * GetWorldSize(); }
-bool Intersection(Collider* const other) override;
+
+AABB GetFatAABB() final;
+AABB GetAABB() final;
+
+bool Intersection(Collider* const other) final;
 END_COMPONENT(BoxCollider, Collider)
 }  // namespace Isetta

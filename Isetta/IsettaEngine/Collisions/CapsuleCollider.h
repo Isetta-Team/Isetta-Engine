@@ -19,9 +19,7 @@ bool RaycastSphere(const Math::Vector3& center, float radius, const Ray& ray,
                    RaycastHit* const hitInfo, float maxDistance);
 
 protected:
-ColliderType GetType() const override {
-  return Collider::ColliderType::CAPSULE;
-}
+ColliderType GetType() const final { return Collider::ColliderType::CAPSULE; }
 
 public:
 // TODO(Jacob) refactor into an outside enum class
@@ -47,7 +45,7 @@ CapsuleCollider(bool isStatic, bool isTrigger, const Math::Vector3& center,
 float GetWorldCapsule(Math::Matrix4* rotation, Math::Matrix4* scale) const;
 
 bool Raycast(const Ray& ray, RaycastHit* const hitInfo,
-             float maxDistance = 0) override;
+             float maxDistance = 0) final;
 
 inline float GetWorldRadius() const {
   switch (direction) {
@@ -72,6 +70,10 @@ inline float GetWorldHeight() const {
       return GetTransform()->GetWorldScale().z;
   }
 }
-bool Intersection(Collider* const other) override;
+
+AABB GetFatAABB() final;
+AABB GetAABB() final;
+
+bool Intersection(Collider* const other) final;
 END_COMPONENT(CapsuleCollider, Collider)
 }  // namespace Isetta

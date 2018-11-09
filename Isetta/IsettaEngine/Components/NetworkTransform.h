@@ -14,7 +14,10 @@ public:
 void Start() override;
 void FixedUpdate() override;
 
+void ForceUpdateOverNetwork();
 void SnapTransform();
+bool SetNetworkedParent(int netId);
+void SetNetworkedParentToRoot();
 
 float updateDistance = .01;
 float updateRotation = 5;

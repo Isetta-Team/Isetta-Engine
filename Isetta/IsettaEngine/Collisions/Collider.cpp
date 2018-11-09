@@ -13,23 +13,19 @@ CollisionsModule* Collider::collisionsModule{nullptr};
 
 void Collider::Start() {
   if (!handler) FindHandler();
-  // TODO(Yidi + Jacob)
+}
+
+void Collider::OnEnable() {
+  collisionsModule->bvTree.AddCollider(this);
+  // TODO(Yidi) + TODO(Jacob)
   // hierarchyHandle =
   // entity->OnHierarchyChange.Register(std::bind(&Collider::FindHandler,this));
 }
 
-void Collider::OnEnable() {
-  // TODO(Yidi) add AABB
-  collisionsModule->colliders.insert(this);
-  collisionsModule->bvTree.AddCollider(this);
-  // TODO(Yidi + Jacob)
-  // entity->OnHierarchyChange.Unregister(hierarchyHandle);
-}
-
 void Collider::OnDisable() {
-  // TODO(Yidi) remove AABB
-  collisionsModule->colliders.erase(this);
   collisionsModule->bvTree.RemoveCollider(this);
+  // TODO(Yidi) + TODO(Jacob)
+  // entity->OnHierarchyChange.Unregister(hierarchyHandle);
 }
 void Collider::FindHandler() {
   handler = entity->GetComponent<CollisionHandler>();

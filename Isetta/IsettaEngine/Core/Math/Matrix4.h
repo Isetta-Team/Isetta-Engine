@@ -113,6 +113,8 @@ class ISETTA_API Matrix4 {
    * \param col Column Index
    */
   class Vector4 GetCol(int col) const;
+
+  class Matrix3 GetTopLeftMatrix3() const;
   /**
    * \brief Set the values of a specific column
    * \param col Column index

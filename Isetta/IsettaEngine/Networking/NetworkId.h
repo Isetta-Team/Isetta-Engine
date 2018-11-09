@@ -12,6 +12,8 @@ public:
 NetworkId();
 NetworkId(U32 id);
 
+void OnDestroy() override;
+
 bool HasClientAuthority() const;
 
 U32 id = 0;

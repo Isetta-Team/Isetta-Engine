@@ -36,7 +36,7 @@ class ISETTA_API_DECLARE Entity {
 
   StringId entityID;
   std::string entityName;
-  int layer;
+  int layer{0};
 
   void SetAttribute(EntityAttributes attr, bool value);
   bool GetAttribute(EntityAttributes attr) const;
