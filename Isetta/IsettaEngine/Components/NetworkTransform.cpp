@@ -196,7 +196,7 @@ void NetworkTransform::FixedUpdate() {
 
       Transform* t = entity->GetTransform();
       // Position
-      if ((Math::Vector3::Scale(t->GetWorldScale(), t->GetLocalPos() - prevPos)).SqrMagnitude() >=
+      if (Math::Vector3::Scale(t->GetParent()->GetWorldScale(), t->GetLocalPos() - prevPos).SqrMagnitude() >=
           updateDistance * updateDistance) {
         PositionMessage* message =
             NetworkManager::Instance()
