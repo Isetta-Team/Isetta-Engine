@@ -76,7 +76,9 @@ void W10Player::Update() {
     if (Isetta::Math::Util::Abs(GetTransform()->GetWorldPos().x -
                                 swordEntity->GetTransform()->GetWorldPos().x) <
         0.1f) {
-      swordEntity->GetTransform()->SetParent(GetTransform());
+      swordEntity->GetComponent<Isetta::NetworkTransform>()->SetNetworkedParent(
+          GetEntity()->GetComponent<Isetta::NetworkId>()->id);
+      // swordEntity->GetTransform()->SetParent(GetTransform());
       swordEntity->GetTransform()->SetLocalPos(
           Isetta::Math::Vector3((isOnRight ? 1 : -1) * 0.25f, 0, 0.25f));
       swordStabStatus = 0;
@@ -150,14 +152,16 @@ void W10Player::SwordBlocked() {
   float randomX;
   float currentX{GetTransform()->GetWorldPos().x};
   if (isOnRight) {
-    randomX = -2 + Isetta::Math::Random::GetRandom01() * (currentX - -2) / 3 * 2 +
+    randomX = -2 +
+              Isetta::Math::Random::GetRandom01() * (currentX - -2) / 3 * 2 +
               (currentX - -2) / 3;
   } else {
     randomX = 2 + Isetta::Math::Random::GetRandom01() * (currentX - 2) / 3 * 2 +
               (currentX - 2) / 3;
   }
 
-  swordEntity->GetTransform()->SetParent(nullptr);
+  swordEntity->GetComponent<Isetta::NetworkTransform>()->SetNetworkedParentToRoot();
+  // swordEntity->GetTransform()->SetParent(nullptr);
   targetX = randomX;
   isSwordFlying = true;
   flyDuration = 0;
