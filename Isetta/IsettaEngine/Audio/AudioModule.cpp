@@ -77,7 +77,7 @@ FMOD::Channel* AudioModule::Play(FMOD::Sound* sound, const bool loop,
 void AudioModule::LoadAllAudioClips() {
   std::string clipNames = CONFIG_VAL(audioConfig.audioClips);
   Util::StrRemoveSpaces(&clipNames);
-  Array<std::string_view>& clips = Util::StrSplit(clipNames, ',');
+  Array<std::string>& clips = Util::StrSplit(clipNames, ',');
 
   for (const auto& file : clips) {
     FMOD::Sound* sound = nullptr;

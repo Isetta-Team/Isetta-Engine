@@ -65,7 +65,7 @@ void W10NetworkManager::HandleSpawnMessage(yojimbo::Message* message) {
           spawnMessage->swordNetId);
       networkId->clientAuthorityId = spawnMessage->clientAuthorityId;
       swordEntity->AddComponent<Isetta::NetworkTransform>();
-      // swordEntity->AddComponent<Isetta::MeshComponent>("primitive/cube.scene.xml");
+      swordEntity->AddComponent<Isetta::MeshComponent>("primitive/cube.scene.xml");
     }
     e->AddComponent<Isetta::NetworkTransform>();
   }
@@ -109,7 +109,6 @@ void W10NetworkManager::HandlePositionReport(int clientIdx,
     auto distance =
         Isetta::Math::Util::Abs(clientPosX.at(0) - clientPosX.at(1));
     LOG_INFO(Isetta::Debug::Channel::General, "Distance %f", distance);
-    // for test
     int attackSwordPos = clientSwordPos.at(lastAttemptClient);
     for (const auto& swordPos : clientSwordPos) {
       if (swordPos.first != lastAttemptClient) {
@@ -149,7 +148,6 @@ void W10NetworkManager::HandlePositionReport(int clientIdx,
         }
       }
     }
-    // TODO(Chaojie): real game logic
   }
 }
 
@@ -232,7 +230,7 @@ void W10NetworkManager::Awake() {
         });
   }
 
-  Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::Y, []() {
+  Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::R, []() {
     W10ReadyMessage* m = Isetta::NetworkManager::Instance()
                              .GenerateMessageFromClient<W10ReadyMessage>();
     Isetta::NetworkManager::Instance().SendMessageFromClient(m);

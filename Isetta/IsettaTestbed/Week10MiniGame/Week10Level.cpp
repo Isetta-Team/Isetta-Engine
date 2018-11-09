@@ -38,7 +38,7 @@ void Week10Level::LoadLevel() {
   lightComp->SetProperty<LightComponent::Property::SHADOW_MAP_BIAS>(0.01f);
 
   Entity* debug{ADD_ENTITY("Debug")};
-  debug->AddComponent<Editor>(true);
+  debug->AddComponent<Editor>();
 
   Entity* ground{ADD_ENTITY("Ground")};
   ground->AddComponent<MeshComponent>("blockFencing/Ground.scene.xml");
