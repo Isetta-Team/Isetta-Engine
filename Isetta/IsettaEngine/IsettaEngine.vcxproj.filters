@@ -1,0 +1,774 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Core\Math\Matrix3.cpp">
+      <Filter>Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Math\Matrix4.cpp">
+      <Filter>Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Math\Quaternion.cpp">
+      <Filter>Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Math\Random.cpp">
+      <Filter>Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Math\Rect.cpp">
+      <Filter>Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Math\Vector2.cpp">
+      <Filter>Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Math\Vector2Int.cpp">
+      <Filter>Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Math\Vector3.cpp">
+      <Filter>Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Math\Vector3Int.cpp">
+      <Filter>Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Math\Vector4.cpp">
+      <Filter>Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Color.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Debug\Logger.cpp">
+      <Filter>Core\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Debug\DebugDraw.cpp">
+      <Filter>Core\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Config\Config.cpp">
+      <Filter>Core\Config</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Config\CVar.cpp">
+      <Filter>Core\Config</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Debug\Assert.h">
+      <Filter>Core\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\InputModule.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\Input.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\AudioModule.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\AudioSource.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Window.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Networking\NetworkingModule.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Time\Clock.cpp">
+      <Filter>Core\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Time\StopWatch.cpp">
+      <Filter>Core\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\StackAllocator.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\PoolAllocator.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\MemoryManager.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\DoubleBufferedAllocator.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\ObjectHandle.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineLoop.cpp" />
+    <ClCompile Include="Core\Memory\MemoryArena.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Networking\NetworkManager.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GUIModule.cpp">
+      <Filter>Graphics\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\RenderModule.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GUI.cpp">
+      <Filter>Graphics\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GUIStyle.cpp">
+      <Filter>Graphics\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Math\Util.cpp">
+      <Filter>Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\FreeListAllocator.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory\MemUtil.cpp">
+      <Filter>Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Transform.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Entity.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Component.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\MeshComponent.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\AnimationComponent.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\LightComponent.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\CameraComponent.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Level.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\LevelManager.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Filesystem.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\InEngineTestLevel.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\OscillateMove.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\KeyTransform.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\CollisionsLevel.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClInclude Include="Core\Time\Time.h">
+      <Filter>Core\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\InEngineTestLevel.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\BoxCollider.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\CapsuleCollider.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\SphereCollider.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\Collider.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\AABB.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\AVLTree.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\Ray.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\OscillateMove.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\KeyTransform.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\Plane.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\CollisionsLevel.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClCompile Include="Components\FlyController.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\GridComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Collisions\Plane.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Collisions\SphereCollider.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Collisions\CollisionsModule.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Collisions\CapsuleCollider.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Collisions\Collider.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Collisions\BoxCollider.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Collisions\AABB.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\NetworkLevel.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\EmptyLevel\EmptyLevel.cpp">
+      <Filter>Custom\EmptyLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Custom\RaycastClick.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Collisions\Collisions.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Collisions\CollisionHandler.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\FrameReporter.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Collisions\BVTree.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Texture.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Layers.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Events\EventObject.cpp">
+      <Filter>Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\DebugCollision.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Events\Events.cpp">
+      <Filter>Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\EventTestLevel\EventTestLevel.cpp">
+      <Filter>Custom\EventTestLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\EventTestLevel\EventSenderComponent.cpp">
+      <Filter>Custom\EventTestLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\EventTestLevel\EventListenerComponent.cpp">
+      <Filter>Custom\EventTestLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Networking\NetworkId.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\NetworkTransform.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\EscapeExit.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\BVHTestLevel\RandomMover.cpp">
+      <Filter>Custom\BVHTestLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\BVHTestLevel\BVHLevel.cpp">
+      <Filter>Custom\BVHTestLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\AxisDrawer.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\EditorLevel\EditorLevel.cpp">
+      <Filter>Custom\EditorLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Editor\Editor.cpp">
+      <Filter>Components\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Editor\Inspector.cpp">
+      <Filter>Components\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Editor\Console.cpp">
+      <Filter>Components\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Editor\Hierarchy.cpp">
+      <Filter>Components\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DataStructures\Trie.cpp">
+      <Filter>Core\DataStructures</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{0e34fc14-89dc-421e-ac9d-f65ab81666c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Math">
+      <UniqueIdentifier>{9e7d04b8-ef4c-4b77-a27e-75dfc008d3a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{fd18d90e-c842-4f0a-abe6-d2e90e9093a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Sound">
+      <UniqueIdentifier>{3ba0afde-f615-4bc6-8d1c-7664d4d1b098}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Debug">
+      <UniqueIdentifier>{5d4f980d-9a8d-4d91-93c4-870cde0b8cb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Memory">
+      <UniqueIdentifier>{3c4c68c1-116d-471f-983d-eb27c2ad19f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\pipelines">
+      <UniqueIdentifier>{699798ff-ad5f-4318-af31-8a9533e02e91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\test">
+      <UniqueIdentifier>{5cc071fc-c36c-4764-9a4a-d63b2bc31c86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\materials">
+      <UniqueIdentifier>{8af1aad8-15c3-4b54-89a8-fddd75efab44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Config">
+      <UniqueIdentifier>{78b96f16-2074-4d8e-802c-ce826e96fe83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{37af25bc-07be-4d7a-90b9-15e1379adb9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{f0a11195-75f3-4f60-80f3-d029a639f5d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{4df4848a-1e54-4b90-8bad-773e71fa89de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Networking">
+      <UniqueIdentifier>{274cf1b7-0679-4c44-bef9-7e5e861ef39a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Time">
+      <UniqueIdentifier>{263ba415-8b0e-4871-b9e3-6779bb9b8489}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DataStructures">
+      <UniqueIdentifier>{1a6466d1-5cab-4f45-b3c8-992fde0119e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\GUI">
+      <UniqueIdentifier>{a35f375f-c200-4cd7-999c-aa84c0633ce0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Render">
+      <UniqueIdentifier>{45da4ca9-ea64-439d-bd6e-e2c9bf740508}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom">
+      <UniqueIdentifier>{795c60e4-6516-48a5-bfc1-c446a905bb3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{e5f06d6e-7bc1-4d7b-b063-c75a33bfbf4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collisions">
+      <UniqueIdentifier>{c15f9d47-86d9-41b5-a7ee-43b1cc1fee77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\EmptyLevel">
+      <UniqueIdentifier>{41a303ff-7dcc-4225-b47b-6d0aae3ea40f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{34d6b88a-6954-4a27-b89f-3559dfd83508}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\EventTestLevel">
+      <UniqueIdentifier>{c9dcfdd8-b385-4b0e-ab14-7ab7792fc31d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\BVHTestLevel">
+      <UniqueIdentifier>{d6dd3b2a-276f-4d5e-8016-f458080f209b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\EditorLevel">
+      <UniqueIdentifier>{48eaf7c9-0b50-4561-bbca-2c68a5456570}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Editor">
+      <UniqueIdentifier>{810b8627-00c8-4ae3-9a0d-ba5ac1948eb3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Core\Math\Matrix3.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Math\Matrix4.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Math\Quaternion.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Math\Random.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Math\Rect.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Math\Vector2.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Math\Vector2Int.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Math\Vector3.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Math\Vector3Int.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Math\Vector4.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Color.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Debug\Logger.h">
+      <Filter>Core\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Debug\DebugDraw.h">
+      <Filter>Core\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Config\Config.h">
+      <Filter>Core\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Config\CVar.h">
+      <Filter>Core\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Config\CVarRegistry.h">
+      <Filter>Core\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioModule.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioSource.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\StackAllocator.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Window.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\Input.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\InputModule.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Networking\NetworkingModule.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Time\Clock.h">
+      <Filter>Core\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Time\StopWatch.h">
+      <Filter>Core\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\MemoryManager.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\DoubleBufferedAllocator.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\PoolAllocator.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\TemplatePoolAllocator.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\ObjectHandle.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\RingBuffer.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineLoop.h" />
+    <ClInclude Include="Core\Debug\Debug.h">
+      <Filter>Core\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Networking\Messages.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\MemoryArena.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Config\ICVar.h">
+      <Filter>Core\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="Networking\NetworkManager.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IsettaAlias.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h" />
+    <ClInclude Include="Graphics\GUIModule.h">
+      <Filter>Graphics\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\RenderModule.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GUI.h">
+      <Filter>Graphics\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GUIStyle.h">
+      <Filter>Graphics\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\RectTransform.h">
+      <Filter>Graphics\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Math\Util.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\FreeListAllocator.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Memory\MemUtil.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Transform.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Entity.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Component.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\MeshComponent.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\AnimationComponent.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\LightComponent.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\CameraComponent.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Level.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\LevelManager.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Filesystem.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ISETTA_API.h" />
+    <ClInclude Include="Custom\IsettaCore.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\FlyController.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\IsettaLevel.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\CollisionsModule.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\GridComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\NetworkLevel.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h">
+      <Filter>Custom\EmptyLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\RaycastClick.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\Collisions.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\FrameReporter.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\BVTree.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Layers.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\DebugCollision.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="Collisions\CollisionHandler.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Texture.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\EventObject.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\Events.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\EventTestLevel\EventTestLevel.h">
+      <Filter>Custom\EventTestLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\EventTestLevel\EventSenderComponent.h">
+      <Filter>Custom\EventTestLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\EventTestLevel\EventListenerComponent.h">
+      <Filter>Custom\EventTestLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Networking\NetworkId.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\NetworkTransform.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\CollisionUtil.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\KeyCode.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\Trie.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\EscapeExit.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\BVHTestLevel\RandomMover.h">
+      <Filter>Custom\BVHTestLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\BVHTestLevel\BVHLevel.h">
+      <Filter>Custom\BVHTestLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\AxisDrawer.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\EditorLevel\EditorLevel.h">
+      <Filter>Custom\EditorLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Editor\Editor.h">
+      <Filter>Components\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Editor\Hierarchy.h">
+      <Filter>Components\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Editor\Inspector.h">
+      <Filter>Components\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Editor\Console.h">
+      <Filter>Components\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\Array.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{0e34fc14-89dc-421e-ac9d-f65ab81666c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Math">
+      <UniqueIdentifier>{9e7d04b8-ef4c-4b77-a27e-75dfc008d3a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{fd18d90e-c842-4f0a-abe6-d2e90e9093a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Sound">
+      <UniqueIdentifier>{3ba0afde-f615-4bc6-8d1c-7664d4d1b098}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Debug">
+      <UniqueIdentifier>{5d4f980d-9a8d-4d91-93c4-870cde0b8cb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Memory">
+      <UniqueIdentifier>{3c4c68c1-116d-471f-983d-eb27c2ad19f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\pipelines">
+      <UniqueIdentifier>{699798ff-ad5f-4318-af31-8a9533e02e91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\test">
+      <UniqueIdentifier>{5cc071fc-c36c-4764-9a4a-d63b2bc31c86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\materials">
+      <UniqueIdentifier>{8af1aad8-15c3-4b54-89a8-fddd75efab44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Config">
+      <UniqueIdentifier>{78b96f16-2074-4d8e-802c-ce826e96fe83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{37af25bc-07be-4d7a-90b9-15e1379adb9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{f0a11195-75f3-4f60-80f3-d029a639f5d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{4df4848a-1e54-4b90-8bad-773e71fa89de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Networking">
+      <UniqueIdentifier>{274cf1b7-0679-4c44-bef9-7e5e861ef39a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Time">
+      <UniqueIdentifier>{263ba415-8b0e-4871-b9e3-6779bb9b8489}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DataStructures">
+      <UniqueIdentifier>{1a6466d1-5cab-4f45-b3c8-992fde0119e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\GUI">
+      <UniqueIdentifier>{a35f375f-c200-4cd7-999c-aa84c0633ce0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Render">
+      <UniqueIdentifier>{45da4ca9-ea64-439d-bd6e-e2c9bf740508}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{0cfdc1ac-3c06-4975-97d5-3e79c567cba4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Resources\Sound\singing.wav">
+      <Filter>Resources\Sound</Filter>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\test\Low-Poly-Racing-Car.geo">
+      <Filter>Resources\test</Filter>
+    </None>
+    <None Include="config.cfg" />
+    <None Include="cpp.hint" />
+    <None Include="user.cfg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="Resources\test\Low-Poly-Racing-Car.scene.xml">
+      <Filter>Resources\test</Filter>
+    </Xml>
+    <Xml Include="Resources\test\m0DefaultMaterial.material.xml">
+      <Filter>Resources\test</Filter>
+    </Xml>
+    <Xml Include="Resources\pipelines\deferred.pipeline.xml">
+      <Filter>Resources\pipelines</Filter>
+    </Xml>
+    <Xml Include="Resources\pipelines\forward.pipeline.xml">
+      <Filter>Resources\pipelines</Filter>
+    </Xml>
+    <Xml Include="Resources\pipelines\globalSettings.material.xml">
+      <Filter>Resources\pipelines</Filter>
+    </Xml>
+    <Xml Include="Resources\pipelines\hdr.pipeline.xml">
+      <Filter>Resources\pipelines</Filter>
+    </Xml>
+    <Xml Include="Resources\pipelines\postHDR.material.xml">
+      <Filter>Resources\pipelines</Filter>
+    </Xml>
+    <Xml Include="Resources\materials\compute.material.xml">
+      <Filter>Resources\materials</Filter>
+    </Xml>
+    <Xml Include="Resources\materials\computeDraw.material.xml">
+      <Filter>Resources\materials</Filter>
+    </Xml>
+    <Xml Include="Resources\materials\light.material.xml">
+      <Filter>Resources\materials</Filter>
+    </Xml>
+  </ItemGroup>
+</Project>

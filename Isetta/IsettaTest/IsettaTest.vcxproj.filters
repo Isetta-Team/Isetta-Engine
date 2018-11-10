@@ -9,10 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{47cebb84-35cf-4f8d-a157-9df47d3b9dc6}</UniqueIdentifier>
     </Filter>
@@ -22,6 +18,10 @@
     <Filter Include="Core\DataStructures">
       <UniqueIdentifier>{dfaff1dd-ff3e-4495-ad9e-9aeeb8f226f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -30,149 +30,233 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Math\Math.h">
+    <ClInclude Include="..\IsettaEngine\Core\Math\Math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Math\Matrix3.h">
+    <ClInclude Include="..\IsettaEngine\Core\Math\Matrix3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Math\Matrix4.h">
+    <ClInclude Include="..\IsettaEngine\Core\Math\Matrix4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Math\Quaternion.h">
+    <ClInclude Include="..\IsettaEngine\Core\Math\Quaternion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Math\Random.h">
+    <ClInclude Include="..\IsettaEngine\Core\Math\Random.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Math\Rect.h">
+    <ClInclude Include="..\IsettaEngine\Core\Math\Rect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Math\Vector2.h">
+    <ClInclude Include="..\IsettaEngine\Core\Math\Vector2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Math\Vector2Int.h">
+    <ClInclude Include="..\IsettaEngine\Core\Math\Vector2Int.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Math\Vector3.h">
+    <ClInclude Include="..\IsettaEngine\Core\Math\Vector3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Math\Vector3Int.h">
+    <ClInclude Include="..\IsettaEngine\Core\Math\Vector3Int.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Math\Vector4.h">
+    <ClInclude Include="..\IsettaEngine\Core\Math\Vector4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Color.h">
+    <ClInclude Include="..\IsettaEngine\Core\Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Memory\Memory.h">
+    <ClInclude Include="..\IsettaEngine\Core\Memory\Memory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\DataStructures\RingBuffer.h">
+    <ClInclude Include="..\IsettaEngine\Core\DataStructures\RingBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Math\Util.h">
+    <ClInclude Include="..\IsettaEngine\Core\Math\Util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\External\SID\sid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Memory\TemplatePoolAllocator.h">
+    <ClInclude Include="..\IsettaEngine\Core\Memory\TemplatePoolAllocator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\IsettaAlias.h">
+    <ClInclude Include="..\IsettaEngine\Core\IsettaAlias.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Debug\Logger.h">
+    <ClInclude Include="..\IsettaEngine\Core\Debug\Assert.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\FileSystem.h">
+    <ClInclude Include="..\IsettaEngine\Core\DataStructures\Vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Time\Clock.h">
+    <ClInclude Include="..\IsettaEngine\Core\Debug\Logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\EngineLoop.h">
+    <ClInclude Include="..\IsettaEngine\Core\Config\CVar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Audio\AudioModule.h">
+    <ClInclude Include="..\IsettaEngine\EngineLoop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Audio\AudioSource.h">
+    <ClInclude Include="..\IsettaEngine\Scene\Component.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Graphics\AnimationNode.h">
+    <ClInclude Include="..\IsettaEngine\Core\Filesystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Graphics\GUI.h">
+    <ClInclude Include="..\IsettaEngine\Core\Time\Clock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Graphics\GUIModule.h">
+    <ClInclude Include="..\IsettaEngine\Core\Time\StopWatch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Graphics\GUIStyle.h">
+    <ClInclude Include="..\IsettaEngine\Core\Time\Time.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Graphics\LightNode.h">
+    <ClInclude Include="..\IsettaEngine\Audio\AudioModule.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Graphics\ModelNode.h">
+    <ClInclude Include="..\IsettaEngine\Audio\AudioSource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Graphics\RectTransform.h">
+    <ClInclude Include="..\IsettaEngine\Collisions\CollisionsModule.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Graphics\RenderModule.h">
+    <ClInclude Include="..\IsettaEngine\Collisions\AABB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Graphics\RenderNode.h">
+    <ClInclude Include="..\IsettaEngine\Collisions\BoxCollider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Graphics\Window.h">
+    <ClInclude Include="..\IsettaEngine\Collisions\BVTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Config\CVarRegistry.h">
+    <ClInclude Include="..\IsettaEngine\Collisions\CapsuleCollider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Config\ICVar.h">
+    <ClInclude Include="..\IsettaEngine\Collisions\Collider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Debug\Assert.h">
+    <ClInclude Include="..\IsettaEngine\Collisions\CollisionHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Debug\Debug.h">
+    <ClInclude Include="..\IsettaEngine\Collisions\Collisions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Debug\DebugDraw.h">
+    <ClInclude Include="..\IsettaEngine\Collisions\CollisionUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Core\Time\StopWatch.h">
+    <ClInclude Include="..\IsettaEngine\Collisions\Plane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Input\Input.h">
+    <ClInclude Include="..\IsettaEngine\Collisions\Ray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Input\InputEnum.h">
+    <ClInclude Include="..\IsettaEngine\Collisions\SphereCollider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Input\InputModule.h">
+    <ClInclude Include="..\IsettaEngine\Graphics\AnimationComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Networking\Messages.h">
+    <ClInclude Include="..\IsettaEngine\Graphics\CameraComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Networking\NetworkingModule.h">
+    <ClInclude Include="..\IsettaEngine\Graphics\GUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Isetta\Networking\NetworkManager.h">
+    <ClInclude Include="..\IsettaEngine\Graphics\GUIModule.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Graphics\GUIStyle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Graphics\LightComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Graphics\MeshComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Graphics\RectTransform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Graphics\RenderModule.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Graphics\RenderNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Graphics\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Graphics\Window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Scene\Entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Scene\IsettaLevel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Scene\Layers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Scene\Level.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Scene\LevelManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Scene\Transform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Core\Debug\Debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Core\Debug\DebugDraw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Input\Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Input\InputModule.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Input\KeyCode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Networking\Messages.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Networking\NetworkId.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Networking\NetworkingModule.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Networking\NetworkManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Core\Config\Config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Core\Config\CVarRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Core\Config\ICVar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Events\EventObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Events\Events.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Math\Matrix3Test.cpp">
       <Filter>Core\Math</Filter>
     </ClCompile>
@@ -194,44 +278,8 @@
     <ClCompile Include="Core\ColorTest.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Color.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Math\Matrix3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Math\Matrix4.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Math\Quaternion.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Math\Random.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Math\Rect.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Math\Vector2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Math\Vector2Int.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Math\Vector3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Math\Vector3Int.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Math\Vector4.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Core\DataStructures\RingBufferTest.cpp">
       <Filter>Core\DataStructures</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Math\Util.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Core\Math\UtilTest.cpp">
       <Filter>Core\Math</Filter>
@@ -239,98 +287,206 @@
     <ClCompile Include="TestInitialization.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Memory\MemoryManager.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Math\Matrix3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Memory\DoubleBufferedAllocator.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Math\Matrix4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Memory\FreeListAllocator.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Math\Quaternion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Memory\MemoryArena.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Math\Random.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Memory\MemUtil.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Math\Rect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Memory\ObjectHandle.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Math\Util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Memory\PoolAllocator.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Math\Vector2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Memory\StackAllocator.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Math\Vector2Int.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Debug\DebugDraw.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Math\Vector3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Debug\Logger.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Math\Vector3Int.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Config\Config.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Math\Vector4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Config\CVar.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Memory\DoubleBufferedAllocator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Core\FileSystem.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Memory\FreeListAllocator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Time\Clock.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Memory\MemoryArena.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\EngineLoop.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Memory\MemoryManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Audio\AudioModule.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Memory\MemUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Audio\AudioSource.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Memory\ObjectHandle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Graphics\AnimationNode.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Memory\PoolAllocator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Graphics\GUI.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Memory\StackAllocator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Graphics\GUIModule.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Color.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Graphics\GUIStyle.cpp">
+    <ClCompile Include="Core\DataStructures\VectorTest.cpp">
+      <Filter>Core\DataStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Core\Debug\Logger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Graphics\LightNode.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Config\CVar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Graphics\ModelNode.cpp">
+    <ClCompile Include="..\IsettaEngine\EngineLoop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Graphics\RenderModule.cpp">
+    <ClCompile Include="..\IsettaEngine\Scene\Component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Graphics\RenderNode.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Filesystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Graphics\Window.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Time\Clock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Core\Time\StopWatch.cpp">
+    <ClCompile Include="..\IsettaEngine\Core\Time\StopWatch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Input\Input.cpp">
+    <ClCompile Include="..\IsettaEngine\Audio\AudioModule.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Input\InputModule.cpp">
+    <ClCompile Include="..\IsettaEngine\Audio\AudioSource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Networking\NetworkingModule.cpp">
+    <ClCompile Include="..\IsettaEngine\Collisions\CollisionsModule.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Isetta\Networking\NetworkManager.cpp">
+    <ClCompile Include="..\IsettaEngine\Collisions\AABB.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Collisions\BoxCollider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Collisions\BVTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Collisions\CapsuleCollider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Collisions\Collider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Collisions\CollisionHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Collisions\Collisions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Collisions\Plane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Collisions\SphereCollider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Graphics\AnimationComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Graphics\CameraComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Graphics\GUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Graphics\GUIModule.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Graphics\GUIStyle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Graphics\LightComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Graphics\MeshComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Graphics\RenderModule.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Graphics\RenderNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Graphics\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Graphics\Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Scene\Entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Scene\Layers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Scene\Level.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Scene\LevelManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Scene\Transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Core\Debug\DebugDraw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Input\Input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Input\InputModule.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Networking\NetworkId.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Networking\NetworkingModule.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Networking\NetworkManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Core\Config\Config.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Events\EventObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Events\Events.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DataStructures\TrieTest.cpp">
+      <Filter>Core\DataStructures</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

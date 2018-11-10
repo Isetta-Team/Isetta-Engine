@@ -1,0 +1,30 @@
+#pragma once
+#include "Core/Time/Clock.h"
+#include "EngineLoop.h"
+
+namespace Isetta {
+class Time {
+ public:
+  static double GetElapsedTime() {
+    return EngineLoop::GetGameClock().GetElapsedTime();
+  }
+  static double GetDeltaTime() {
+    return EngineLoop::GetGameClock().GetDeltaTime();
+  }
+  static double GetElapsedUnscaledTime() {
+    return EngineLoop::GetGameClock().GetElapsedUnscaledTime();
+  }
+  static U64 GetTimeFrame() {
+    return EngineLoop::GetGameClock().GetTimeFrame();
+  }
+  static U64 GetTimestamp() {
+    return EngineLoop::GetGameClock().GetTimestamp();
+  }
+  static void SetGameScale(const float newTimeScale) {
+    EngineLoop::GetGameClock().timeScale = newTimeScale;
+  }
+  static float GetTimeScale() { return EngineLoop::GetGameClock().timeScale; }
+  static void Pause() { EngineLoop::GetGameClock().isPause = true; }
+  static void Resume() { EngineLoop::GetGameClock().isPause = false; }
+};
+}  // namespace Isetta
