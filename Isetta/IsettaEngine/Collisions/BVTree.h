@@ -44,7 +44,6 @@ class BVTree {
   void RemoveCollider(class Collider* const collider);
   void Update();
 
-  // RaycastHit RayCast(const Ray& ray);
   bool Raycast(const class Ray& ray, class RaycastHit* const hitInfo,
                float maxDistance);
   bool Raycast(Node* const node, const class Ray& ray,

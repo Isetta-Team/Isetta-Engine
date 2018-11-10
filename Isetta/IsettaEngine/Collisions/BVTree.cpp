@@ -212,8 +212,6 @@ void BVTree::DebugDraw() const {
   }
 }
 
-// RaycastHit BVTree::RayCast(const Ray& ray) { return nullptr; }
-
 bool BVTree::Raycast(const Ray& ray, RaycastHit* const hitInfo,
                      float maxDistance) {
   return Raycast(root, ray, hitInfo, maxDistance);

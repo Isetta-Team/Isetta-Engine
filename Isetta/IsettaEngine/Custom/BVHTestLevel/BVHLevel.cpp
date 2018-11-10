@@ -55,7 +55,7 @@ void BVHLevel::LoadLevel() {
     for (int i = 0; i < 100; i++) {
       count++;
       Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
-      // sphere->AddComponent<RandomMover>();
+      sphere->AddComponent<RandomMover>();
       SphereCollider* col = sphere->AddComponent<SphereCollider>();
       const float size = 20;
       sphere->SetTransform(size *
