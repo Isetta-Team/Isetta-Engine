@@ -49,7 +49,19 @@ class RaycastHit {
   inline Math::Vector3 GetNormal() { return normal; }
 
   RaycastHit() = default;
+  RaycastHit& operator=(RaycastHit&& inHit) noexcept {
+    collider = inHit.collider;
+    inHit.collider = nullptr;
+    distance = inHit.distance;
+    inHit.distance = INFINITY;
+    point = inHit.point;
+    normal = inHit.normal;
+    return *this;
+  }
+
   friend class Collider;
   friend class Plane;
+  friend class AABB;
+  friend class BVTree;
 };
 }  // namespace Isetta

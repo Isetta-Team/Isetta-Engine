@@ -8,6 +8,7 @@
 #include "Core/DataStructures/Array.h"
 #include "Core/Debug/Assert.h"
 #include "Core/Debug/DebugDraw.h"
+#include "Ray.h"
 #include "Scene/Entity.h"
 #include "Util.h"
 
@@ -208,6 +209,30 @@ void BVTree::DebugDraw() const {
     if (cur->right != nullptr) {
       q.push(cur->right);
     }
+  }
+}
+
+// RaycastHit BVTree::RayCast(const Ray& ray) { return nullptr; }
+
+bool BVTree::Raycast(const Ray& ray, RaycastHit* const hitInfo,
+                     float maxDistance) {
+  return Raycast(root, ray, hitInfo, maxDistance);
+}
+bool BVTree::Raycast(Node* const node, const Ray& ray,
+                     RaycastHit* const hitInfo, float maxDistance) {
+  if (node == nullptr || !node->aabb.Raycast(ray, nullptr, maxDistance))
+    return false;
+  if (node->IsLeaf()) {
+    RaycastHit hitTmp{};
+    if (node->collider->Raycast(ray, &hitTmp, maxDistance) &&
+        hitTmp.GetDistance() < hitInfo->GetDistance()) {
+      *hitInfo = std::move(hitTmp);
+      return true;
+    } else
+      return false;
+  } else {
+    return Raycast(node->left, ray, hitInfo, maxDistance) ||
+           Raycast(node->right, ray, hitInfo, maxDistance);
   }
 }
 

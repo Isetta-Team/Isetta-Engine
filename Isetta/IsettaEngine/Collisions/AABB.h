@@ -31,11 +31,13 @@ class AABB {
   inline Math::Vector3 GetMax() const { return max; }
 
   bool Contains(const Math::Vector3& point) const;
-
   bool Contains(const AABB& aabb) const;
 
   bool Intersect(const AABB& other) const;
   static bool Intersect(const AABB* a, const AABB* b);
+
+  bool Raycast(const class Ray& ray, class RaycastHit* const hitInfo,
+               float maxDistance = 0);
 
   void Expand(const float amount);
 
@@ -47,7 +49,6 @@ class AABB {
     return 2 * (size.x * size.y + size.y * size.z + size.x * size.z);
   }
   // Math::Vector3 ClosestPoint(Math::Vector3 point);
-  // void IntersectRay(Ray ray);
 };
 
 // class Sphere {

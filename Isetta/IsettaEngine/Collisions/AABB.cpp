@@ -4,6 +4,7 @@
 #include "AABB.h"
 
 #include "Core/Math/Util.h"
+#include "Ray.h"
 
 namespace Isetta {
 bool AABB::Contains(const Math::Vector3& point) const {
@@ -56,5 +57,33 @@ AABB AABB::Encapsulate(const AABB& a, const AABB& b) {
                        Math::Vector3{Math::Util::Max(a.max.x, b.max.x),
                                      Math::Util::Max(a.max.y, b.max.y),
                                      Math::Util::Max(a.max.z, b.max.z)});
+}
+
+bool AABB::Raycast(const Ray& ray, RaycastHit* const hitInfo,
+                   float maxDistance) {
+  float tmin = -INFINITY, tmax = maxDistance > 0 ? maxDistance : INFINITY;
+  Math::Vector3 e = extents;
+  Math::Vector3 o = ray.GetOrigin() - center;
+  Math::Vector3 d = ray.GetDirection();
+  Math::Vector3 invD = 1.0f / d;
+
+  float t[6];
+  for (int i = 0; i < 3; i++) {
+    t[2 * i] = -(e[i] + o[i]) * invD[i];
+    t[2 * i + 1] = (e[i] - o[i]) * invD[i];
+  }
+  tmin =
+      Math::Util::Max({Math::Util::Min(t[0], t[1]), Math::Util::Min(t[2], t[3]),
+                       Math::Util::Min(t[4], t[5])});
+  tmax =
+      Math::Util::Min({Math::Util::Max(t[0], t[1]), Math::Util::Max(t[2], t[3]),
+                       Math::Util::Max(t[4], t[5])});
+  if (tmax < 0 || tmin > tmax) return false;
+  if (tmin < 0) tmin = tmax;
+
+  // TODO(Jacob) normal
+  Math::Vector3 n;
+  if (hitInfo) *hitInfo = std::move(RaycastHit{nullptr, tmin, o + d * tmin, n});
+  return true;
 }
 }  // namespace Isetta

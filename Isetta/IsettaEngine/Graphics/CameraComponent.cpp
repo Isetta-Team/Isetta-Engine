@@ -53,13 +53,11 @@ Ray Isetta::CameraComponent::ScreenPointToRay(
   glfwGetWindowSize(renderModule->winHandle, &width, &height);
   float aspect = static_cast<float>(width) / height;
   float tan = Math::Util::Tan(0.5f * fov * Math::Util::DEG2RAD);
-  Math::Vector2 pt{(2.f * ((position.x + 0.5f) / width) - 1) * tan * aspect,
-                   (1.f - 2.f * ((position.y + 0.5f) / height)) * tan};
-  Math::Vector3 o{Math::Vector3::zero};
-  o = GetTransform()->WorldPosFromLocalPos(o);
+  float px = (2.f * ((position.x + 0.5f) / width) - 1) * tan * aspect;
+  float py = (1.f - 2.f * ((position.y + 0.5f) / height)) * tan;
+  Math::Vector3 o = GetTransform()->GetWorldPos();
   Math::Vector3 dir =
-      GetTransform()->WorldPosFromLocalPos(Math::Vector3{pt, -1});
-  dir -= o;
+      GetTransform()->WorldDirFromLocalDir(Math::Vector3{px, py, -1});
   return Ray{o, dir};
 }
 
