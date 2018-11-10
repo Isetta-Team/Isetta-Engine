@@ -15,6 +15,7 @@ Isetta::Entity* swordEntity;
 private:
 void InitPosition();
 bool isOnRight;
+bool canOperate;
 
 float horizontalSpeed;
 

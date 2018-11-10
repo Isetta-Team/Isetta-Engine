@@ -27,10 +27,10 @@ EventObject::EventObject(const EventObject& other)
       eventParams{other.eventParams} {}
 
 EventObject::EventObject(EventObject&& other) noexcept
-    : eventName{std::move(other.eventName)},
-      timeFrame{std::move(other.timeFrame)},
-      eventPriority{std::move(other.eventPriority)},
-      eventParams{std::move(other.eventParams)} {}
+    : eventName{other.eventName},
+      timeFrame{other.timeFrame},
+      eventPriority{other.eventPriority},
+      eventParams{other.eventParams} {}
 
 EventObject& EventObject::operator=(const EventObject& other) {
   if (other == *this) return *this;
@@ -43,10 +43,10 @@ EventObject& EventObject::operator=(const EventObject& other) {
 
 EventObject& EventObject::operator=(EventObject&& other) noexcept {
   if (other == *this) return *this;
-  eventName = std::move(other.eventName);
-  timeFrame = std::move(other.timeFrame);
-  eventPriority = std::move(other.eventPriority);
-  eventParams = std::move(other.eventParams);
+  eventName = other.eventName;
+  timeFrame = other.timeFrame;
+  eventPriority = other.eventPriority;
+  eventParams = other.eventParams;
   return *this;
 }
 

@@ -34,22 +34,22 @@ class Array {
     }
     difference_type operator-(iterator lhs) { return ptr_ - lhs.ptr_; }
     iterator operator++() {
-      iterator i = *this;
-      ptr_++;
-      return i;
+      ++ptr_;
+      return *this;
     }
     iterator operator++(int) {
-      ptr_++;
-      return *this;
-    }
-    iterator operator--() {
       iterator i = *this;
-      ptr_--;
+      ++ptr_;
       return i;
     }
-    iterator operator--(int) {
-      ptr_--;
+    iterator operator--() {
+      --ptr_;
       return *this;
+    }
+    iterator operator--(int) {
+      iterator i = *this;
+      --ptr_;
+      return i;
     }
     reference operator*() { return *ptr_; }
     pointer operator->() { return ptr_; }
@@ -79,22 +79,22 @@ class Array {
     }
     difference_type operator-(const_iterator lhs) { return ptr_ - lhs.ptr_; }
     const_iterator operator++() {
-      const_iterator i = *this;
-      ptr_++;
-      return i;
+      ++ptr_;
+      return *this;
     }
     const_iterator operator++(int) {
-      ptr_++;
-      return *this;
-    }
-    const_iterator operator--() {
       const_iterator i = *this;
-      ptr_--;
+      ++ptr_;
       return i;
     }
-    const_iterator operator--(int) {
-      ptr_--;
+    const_iterator operator--() {
+      --ptr_;
       return *this;
+    }
+    const_iterator operator--(int) {
+      const_iterator i = *this;
+      --ptr_;
+      return i;
     }
     const reference operator*() { return *ptr_; }
     const pointer operator->() { return ptr_; }
@@ -408,7 +408,7 @@ inline void Array<T>::PopBack() {
   if (size_ == 0)
     throw new std::out_of_range(
         "Vector::PopBack => size must be greater than 0");
-  data[size_--].~T();
+  data[--size_].~T();
 }
 template <typename T>
 inline typename Array<T>::iterator Array<T>::Insert(iterator position,

@@ -80,7 +80,9 @@ T* StackAllocator::New(args... argList) {
 
 template <typename T>
 T* StackAllocator::NewArr(Size length, const U8 alignment) {
-  void* mem = Alloc(sizeof(T) * length, alignment);
-  return new (mem) T[length];
+  void* alloc = Alloc(sizeof(T) * length + 8, alignment);
+  char* allocAddress = static_cast<char*>(alloc);
+  for (int i = 0; i < length; i++) new (allocAddress + i * sizeof(T)) T;
+  return static_cast<T*>(alloc);
 }
 }  // namespace Isetta

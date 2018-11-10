@@ -163,6 +163,8 @@ void W10NetworkManager::HandleAttackResultMessage(yojimbo::Message* message) {
       LOG_INFO(Isetta::Debug::Channel::General, "Client: I Win ^-^");
       Isetta::Events::Instance().RaiseImmediateEvent(
           Isetta::EventObject{"UITextChange", {std::string{"You Win!"}}});
+      Isetta::Events::Instance().RaiseQueuedEvent(
+          Isetta::EventObject{"Win", {}});
       Isetta::Events::Instance().RaiseImmediateEvent(
           Isetta::EventObject{"Respawn", {}});
       break;
@@ -170,6 +172,8 @@ void W10NetworkManager::HandleAttackResultMessage(yojimbo::Message* message) {
       LOG_INFO(Isetta::Debug::Channel::General, "Client: I Lose QAQ");
       Isetta::Events::Instance().RaiseImmediateEvent(
           Isetta::EventObject{"UITextChange", {std::string{"You Lose!"}}});
+      Isetta::Events::Instance().RaiseQueuedEvent(
+          Isetta::EventObject{"Lose", {}});
       Isetta::Events::Instance().RaiseImmediateEvent(
           Isetta::EventObject{"Respawn", {}});
       break;

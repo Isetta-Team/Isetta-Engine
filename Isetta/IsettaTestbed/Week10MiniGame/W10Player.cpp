@@ -11,9 +11,10 @@
 #include "W10NetworkManager.h"
 
 W10Player::W10Player(bool isRight, int swordNetID, int clientAuthorityID)
-    : isOnRight{isRight},
+    : swordEntity{nullptr},
+      isOnRight{isRight},
+      canOperate{true},
       horizontalSpeed{1},
-      swordEntity{nullptr},
       swordPos{0},
       swordTargetX{0.5},
       swordXProgress{0},
@@ -45,25 +46,29 @@ void W10Player::Awake() {
   Isetta::Events::Instance().RegisterEventListener(
       "Respawn",
       [&](const Isetta::EventObject& eventObject) { InitPosition(); });
+  Isetta::Events::Instance().RegisterEventListener(
+      "RegainInput",
+      [&](const Isetta::EventObject& eventObject) { canOperate = true; });
+
   InitPosition();
 }
 
 void W10Player::Start() {
   Isetta::Input::RegisterKeyPressCallback(
-      Isetta::KeyCode::W, [&]() { ChangeSwordVerticlePosition(1); });
+      Isetta::KeyCode::W, [&]() { if (canOperate) ChangeSwordVerticlePosition(1); });
   Isetta::Input::RegisterKeyPressCallback(
-      Isetta::KeyCode::S, [&]() { ChangeSwordVerticlePosition(-1); });
+      Isetta::KeyCode::S, [&]() { if (canOperate) ChangeSwordVerticlePosition(-1); });
   Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::SPACE, [&]() {
-    if (swordStabStatus == 0) swordStabStatus = 1;
+    if (canOperate && swordStabStatus == 0) swordStabStatus = 1;
   });
 }
 
 void W10Player::Update() {
   float direction{0};
-  if (Isetta::Input::IsKeyPressed(Isetta::KeyCode::A)) {
+  if (canOperate && Isetta::Input::IsKeyPressed(Isetta::KeyCode::A)) {
     direction -= 1;
   }
-  if (Isetta::Input::IsKeyPressed(Isetta::KeyCode::D)) {
+  if (canOperate && Isetta::Input::IsKeyPressed(Isetta::KeyCode::D)) {
     direction += 1;
   }
   GetTransform()->TranslateWorld(direction * horizontalSpeed *
@@ -118,6 +123,13 @@ void W10Player::InitPosition() {
 
   swordEntity->GetTransform()->SetLocalScale(
       Isetta::Math::Vector3{0.375, 0.025, 0.025});
+  swordStabStatus = 0;
+  canOperate = false;
+  Isetta::Events::Instance().RaiseQueuedEvent(
+      Isetta::EventObject{"RegainInput",
+                          Isetta::Time::GetTimeFrame() + 60,
+                          Isetta::EventPriority::MEDIUM,
+                          {}});
 }
 
 void W10Player::ChangeSwordVerticlePosition(int direction) {
