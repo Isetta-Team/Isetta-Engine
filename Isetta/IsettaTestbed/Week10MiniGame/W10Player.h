@@ -10,13 +10,14 @@ W10Player(bool isRight, int swordNetID, int clientAuthorityID);
 void Awake() override;
 void Start() override;
 void Update() override;
+Isetta::Entity* swordEntity;
 
 private:
+void InitPosition();
 bool isOnRight;
 
 float horizontalSpeed;
 
-Isetta::Entity* swordEntity;
 int swordPos;
 float swordTargetX;
 float swordXProgress;
@@ -34,9 +35,9 @@ float v0x;
 float v0y;
 bool isSwordFlying;
 int clientAuthorityId;
-  int swordNetId;
+int swordNetId;
 
-  void ChangeSwordVerticlePosition(int direction);
+void ChangeSwordVerticlePosition(int direction);
 void ChangeSwordHorizontalPosition(float deltaTime);
 void SwordBlocked();
 

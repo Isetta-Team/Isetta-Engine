@@ -6,14 +6,17 @@
 #include "Scene/Entity.h"
 
 BEGIN_COMPONENT(W10NetworkPlayer, Isetta::Component, true)
-Isetta::Entity* swordEntity;
 int swordNetId;
 bool isOnRight;
 int clientAuthorityId;
+void InitPosition();
+
 public:
 W10NetworkPlayer(bool isRight, int swordNetID, int clientAuthorityID);
 void Awake() override;
 void SwordBlocked();
 void SwordCollected();
 void Update() override;
+Isetta::Entity* swordEntity;
+
 END_COMPONENT(W10NetworkPlayer, Isetta::Component)

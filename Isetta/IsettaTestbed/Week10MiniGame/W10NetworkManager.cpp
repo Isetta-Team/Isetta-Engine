@@ -48,12 +48,6 @@ void W10NetworkManager::HandleSpawnMessage(yojimbo::Message* message) {
     Isetta::NetworkId* networkId =
         e->AddComponent<Isetta::NetworkId>(spawnMessage->netId);
     networkId->clientAuthorityId = spawnMessage->clientAuthorityId;
-
-    e->AddComponent<Isetta::MeshComponent>("blockFencing/Player.scene.xml");
-    e->SetTransform(
-        Isetta::Math::Vector3{spawnMessage->isOnRight ? -1.f : 1.f, 0, 0},
-        Isetta::Math::Vector3::zero, Isetta::Math::Vector3{1, 1, 1});
-
     if (networkId->HasClientAuthority()) {
       auto w10Player = e->AddComponent<W10Player>(
           spawnMessage->isOnRight, spawnMessage->swordNetId,
@@ -131,8 +125,8 @@ void W10NetworkManager::HandlePositionReport(int clientIdx,
               lastAttemptClient, resultMessage1);
           Isetta::NetworkManager::Instance().SendMessageFromServer(
               swordPos.first, resultMessage2);
-          clientCount = 0;
-          clientSwordPos.clear();
+          clientSwordPos.insert_or_assign(lastAttemptClient, 0);
+          clientSwordPos.insert_or_assign(swordPos.first, 0);
           LOG_INFO(Isetta::Debug::Channel::General, "Server: HIT!");
         } else {
           if (distance > blockDistance) {
@@ -167,17 +161,17 @@ void W10NetworkManager::HandleAttackResultMessage(yojimbo::Message* message) {
   switch (resultMessage->result) {
     case 0:
       LOG_INFO(Isetta::Debug::Channel::General, "Client: I Win ^-^");
-      Isetta::Events::Instance().RaiseQueuedEvent(
+      Isetta::Events::Instance().RaiseImmediateEvent(
           Isetta::EventObject{"UITextChange", {std::string{"You Win!"}}});
-      Isetta::Entity::Destroy(gameManager->player->GetEntity());
-      Isetta::Entity::Destroy(gameManager->enemy->GetEntity());
+      Isetta::Events::Instance().RaiseImmediateEvent(
+          Isetta::EventObject{"Respawn", {}});
       break;
     case 1:
       LOG_INFO(Isetta::Debug::Channel::General, "Client: I Lose QAQ");
-      Isetta::Events::Instance().RaiseQueuedEvent(
+      Isetta::Events::Instance().RaiseImmediateEvent(
           Isetta::EventObject{"UITextChange", {std::string{"You Lose!"}}});
-      Isetta::Entity::Destroy(gameManager->player->GetEntity());
-      Isetta::Entity::Destroy(gameManager->enemy->GetEntity());
+      Isetta::Events::Instance().RaiseImmediateEvent(
+          Isetta::EventObject{"Respawn", {}});
       break;
     case 2:
       LOG_INFO(Isetta::Debug::Channel::General, "Client: I am blocked -A-");

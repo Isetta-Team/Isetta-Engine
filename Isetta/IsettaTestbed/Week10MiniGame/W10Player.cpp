@@ -32,13 +32,9 @@ W10Player::W10Player(bool isRight, int swordNetID, int clientAuthorityID)
       swordNetId(swordNetID) {}
 
 void W10Player::Awake() {
+  GetEntity()->AddComponent<Isetta::MeshComponent>(
+      "blockFencing/Player.scene.xml");
   swordEntity = ADD_ENTITY("Sword");
-  swordEntity->GetTransform()->SetParent(GetTransform());
-  swordEntity->GetTransform()->SetLocalPos(
-      Isetta::Math::Vector3((isOnRight ? 1 : -1) * 0.25f, 0, 0.25f));
-
-  swordEntity->GetTransform()->SetLocalScale(
-      Isetta::Math::Vector3{0.375, 0.025, 0.025});
   swordEntity->AddComponent<Isetta::MeshComponent>("primitive/cube.scene.xml");
   auto networkId = swordEntity->AddComponent<Isetta::NetworkId>(swordNetId);
   networkId->clientAuthorityId = clientAuthorityId;
@@ -46,6 +42,10 @@ void W10Player::Awake() {
   Isetta::Events::Instance().RegisterEventListener(
       "Blocked",
       [&](const Isetta::EventObject& eventObject) { SwordBlocked(); });
+  Isetta::Events::Instance().RegisterEventListener(
+      "Respawn",
+      [&](const Isetta::EventObject& eventObject) { InitPosition(); });
+  InitPosition();
 }
 
 void W10Player::Start() {
@@ -105,6 +105,19 @@ void W10Player::Update() {
       swordEntity->GetTransform()->SetWorldPos(Isetta::Math::Vector3{x, y, 0});
     }
   }
+}
+
+void W10Player::InitPosition() {
+  GetEntity()->SetTransform(Isetta::Math::Vector3{isOnRight ? -1.f : 1.f, 0, 0},
+                            Isetta::Math::Vector3::zero,
+                            Isetta::Math::Vector3{1, 1, 1});
+
+  swordEntity->GetTransform()->SetParent(GetTransform());
+  swordEntity->GetTransform()->SetLocalPos(
+      Isetta::Math::Vector3((isOnRight ? 1 : -1) * 0.25f, 0, 0.25f));
+
+  swordEntity->GetTransform()->SetLocalScale(
+      Isetta::Math::Vector3{0.375, 0.025, 0.025});
 }
 
 void W10Player::ChangeSwordVerticlePosition(int direction) {

@@ -9,6 +9,19 @@
 #include "Networking/NetworkId.h"
 #include "W10NetworkManager.h"
 
+void W10NetworkPlayer::InitPosition() {
+  GetEntity()->SetTransform(Isetta::Math::Vector3{isOnRight ? -1.f : 1.f, 0, 0},
+                            Isetta::Math::Vector3::zero,
+                            Isetta::Math::Vector3{1, 1, 1});
+
+  swordEntity->GetTransform()->SetParent(GetTransform());
+  swordEntity->GetTransform()->SetLocalPos(
+      Isetta::Math::Vector3((isOnRight ? 1 : -1) * 0.25f, 0, 0.25f));
+
+  swordEntity->GetTransform()->SetLocalScale(
+      Isetta::Math::Vector3{0.375, 0.025, 0.025});
+}
+
 W10NetworkPlayer::W10NetworkPlayer(bool isRight, int swordNetID,
                                    int clientAuthorityID)
     : swordNetId{swordNetID},
@@ -16,13 +29,10 @@ W10NetworkPlayer::W10NetworkPlayer(bool isRight, int swordNetID,
       clientAuthorityId{clientAuthorityID} {}
 
 void W10NetworkPlayer::Awake() {
-  swordEntity = ADD_ENTITY("Sword");
-  swordEntity->GetTransform()->SetParent(GetTransform());
-  swordEntity->GetTransform()->SetLocalPos(
-      Isetta::Math::Vector3((isOnRight ? 1 : -1) * 0.25f, 0, 0.25f));
+  GetEntity()->AddComponent<Isetta::MeshComponent>(
+      "blockFencing/Enemy.scene.xml");
 
-  swordEntity->GetTransform()->SetLocalScale(
-      Isetta::Math::Vector3{0.375, 0.025, 0.025});
+  swordEntity = ADD_ENTITY("Sword2");
   swordEntity->AddComponent<Isetta::MeshComponent>("primitive/cube.scene.xml");
   auto networkId = swordEntity->AddComponent<Isetta::NetworkId>(swordNetId);
   networkId->clientAuthorityId = clientAuthorityId;
@@ -41,6 +51,10 @@ void W10NetworkPlayer::Awake() {
           SwordCollected();
         }
       });
+  Isetta::Events::Instance().RegisterEventListener(
+      "Respawn",
+      [&](const Isetta::EventObject& eventObject) { InitPosition(); });
+  InitPosition();
 }
 
 void W10NetworkPlayer::SwordBlocked() {
