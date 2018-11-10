@@ -164,14 +164,14 @@ void W10NetworkManager::HandleAttackResultMessage(yojimbo::Message* message) {
     case 0:
       LOG_INFO(Isetta::Debug::Channel::General, "Client: I Win ^-^");
       Isetta::Events::Instance().RaiseQueuedEvent(
-          Isetta::EventObject{"UITextChange", {"You Win!"}});
+          Isetta::EventObject{"UITextChange", {std::string{"You Win!"}}});
       Isetta::Entity::Destroy(gameManager->player->GetEntity());
       Isetta::Entity::Destroy(gameManager->enemy->GetEntity());
       break;
     case 1:
       LOG_INFO(Isetta::Debug::Channel::General, "Client: I Lose QAQ");
       Isetta::Events::Instance().RaiseQueuedEvent(
-          Isetta::EventObject{"UITextChange", {"You Lose!"}});
+          Isetta::EventObject{"UITextChange", {std::string{"You Lose!"}}});
       Isetta::Entity::Destroy(gameManager->player->GetEntity());
       Isetta::Entity::Destroy(gameManager->enemy->GetEntity());
       break;
