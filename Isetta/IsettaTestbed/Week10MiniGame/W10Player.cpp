@@ -128,6 +128,7 @@ void W10Player::InitPosition() {
   swordEntity->GetTransform()->SetLocalScale(
       Isetta::Math::Vector3{0.375, 0.025, 0.025});
   swordStabStatus = 0;
+  swordPos = 0;
   canOperate = false;
   Isetta::Events::Instance().RaiseQueuedEvent(
       Isetta::EventObject{"RegainInput",
