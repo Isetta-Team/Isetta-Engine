@@ -95,10 +95,6 @@ void RegisterExampleMessageFunctions() {
               e->GetTransform()->SetLocalScale(Math::Vector3::one * .01);
               MeshComponent* mesh = e->AddComponent<MeshComponent, true>(
                   "Zombie/Zombie.scene.xml");
-              AnimationComponent* animation =
-                  e->AddComponent<AnimationComponent, true>(mesh);
-              animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
-              e->GetComponent<AnimationComponent>()->Play();
               if (netId->HasClientAuthority()) {
                 e->AddComponent<KeyTransform>();
               }
@@ -134,10 +130,6 @@ void RegisterExampleMessageFunctions() {
               e->GetTransform()->SetLocalScale(Math::Vector3::one * .01);
               MeshComponent* mesh = e->AddComponent<MeshComponent, true>(
                   "Zombie/Zombie.scene.xml");
-              AnimationComponent* animation =
-                  e->AddComponent<AnimationComponent, true>(mesh);
-              animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
-              e->GetComponent<AnimationComponent>()->Play();
               if (netId->HasClientAuthority()) {
                 e->AddComponent<KeyTransform>();
               }

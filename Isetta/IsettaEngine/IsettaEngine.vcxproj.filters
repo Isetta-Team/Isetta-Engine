@@ -307,6 +307,9 @@
     <ClCompile Include="Networking\NetworkTransform.cpp">
       <Filter>Networking</Filter>
     </ClCompile>
+    <ClCompile Include="Core\DataStructures\HandleBin.cpp">
+      <Filter>Core\DataStructures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -665,6 +668,9 @@
     </ClInclude>
     <ClInclude Include="Networking\NetworkTransform.h">
       <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\HandleBin.h">
+      <Filter>Core\DataStructures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
