@@ -60,9 +60,10 @@ void W10NetworkManager::HandleSpawnMessage(yojimbo::Message* message) {
           spawnMessage->clientAuthorityId);
       gameManager->player = w10Player;
     } else {
-      e->AddComponent<W10NetworkPlayer>(spawnMessage->isOnRight,
-                                        spawnMessage->swordNetId,
-                                        spawnMessage->clientAuthorityId);
+      auto w10NetworkPlayer = e->AddComponent<W10NetworkPlayer>(
+          spawnMessage->isOnRight, spawnMessage->swordNetId,
+          spawnMessage->clientAuthorityId);
+      gameManager->enemy = w10NetworkPlayer;
     }
     e->AddComponent<Isetta::NetworkTransform>();
   }
@@ -113,6 +114,8 @@ void W10NetworkManager::HandlePositionReport(int clientIdx,
           if (distance > killDistance) {
             return;
           }
+          clientCount = 0;
+          clientSwordPos.clear();
           W10AttackResultMessage* resultMessage1{
               Isetta::NetworkManager::Instance()
                   .GenerateMessageFromServer<W10AttackResultMessage>(
@@ -160,9 +163,17 @@ void W10NetworkManager::HandleAttackResultMessage(yojimbo::Message* message) {
   switch (resultMessage->result) {
     case 0:
       LOG_INFO(Isetta::Debug::Channel::General, "Client: I Win ^-^");
+      Isetta::Events::Instance().RaiseQueuedEvent(
+          Isetta::EventObject{"UITextChange", {"You Win!"}});
+      Isetta::Entity::Destroy(gameManager->player->GetEntity());
+      Isetta::Entity::Destroy(gameManager->enemy->GetEntity());
       break;
     case 1:
       LOG_INFO(Isetta::Debug::Channel::General, "Client: I Lose QAQ");
+      Isetta::Events::Instance().RaiseQueuedEvent(
+          Isetta::EventObject{"UITextChange", {"You Lose!"}});
+      Isetta::Entity::Destroy(gameManager->player->GetEntity());
+      Isetta::Entity::Destroy(gameManager->enemy->GetEntity());
       break;
     case 2:
       LOG_INFO(Isetta::Debug::Channel::General, "Client: I am blocked -A-");
@@ -174,6 +185,7 @@ void W10NetworkManager::HandleAttackResultMessage(yojimbo::Message* message) {
                "Client: I blocked the other :P");
       Isetta::Events::Instance().RaiseImmediateEvent(
           Isetta::EventObject{"Block", {}});
+      break;
     default:
       LOG_WARNING(Isetta::Debug::Channel::General,
                   "Wrong attack result message!");
