@@ -117,9 +117,9 @@ bool CapsuleCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
         !RaycastSphere(p0, radius * radiusScale, ray, &aHit, maxDistance))
       return false;
     if (aHit.GetDistance() < bHit.GetDistance())
-      *hitInfo = aHit;
+      *hitInfo = std::move(aHit);
     else
-      *hitInfo = bHit;
+      *hitInfo = std::move(bHit);
     return true;
   }
 

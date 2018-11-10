@@ -45,11 +45,20 @@ bool BoxCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
   if (tmax < 0 || tmin > tmax) return false;
   if (tmin < 0) tmin = tmax;
 
-  Math::Vector3 n;  // TODO (normal)
-  RaycastHitCtor(hitInfo, tmin,
-                 GetTransform()->WorldPosFromLocalPos(o) +
-                     GetTransform()->WorldDirFromLocalDir(d) * tmin,
-                 n);
+  Math::Vector3 pt = GetTransform()->WorldPosFromLocalPos(o) +
+                     GetTransform()->WorldDirFromLocalDir(d) * tmin;
+  Math::Vector3 to = pt - GetWorldCenter();
+  Math::Vector3 n;
+  tmax = 0;
+  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
+    float tmp = Math::Vector3::Dot(to, GetTransform()->GetAxis(i));
+    if (tmp > tmax) {
+      tmax = tmp;
+      n = Math::Util::Sign(tmp) * GetTransform()->GetAxis(i);
+    }
+  }
+
+  RaycastHitCtor(hitInfo, tmin, pt, n);
   return true;
 }
 

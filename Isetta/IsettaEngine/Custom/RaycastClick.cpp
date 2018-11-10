@@ -6,25 +6,30 @@
 #include "Input/Input.h"
 #include "Scene/Transform.h"
 
+#include "Collisions/Collider.h"
 #include "Collisions/Collisions.h"
 #include "Collisions/Ray.h"
 #include "Core/Debug/Logger.h"
 #include "Graphics/CameraComponent.h"
+#include "Scene/Entity.h"
 
 namespace Isetta {
 
 void RaycastClick::OnEnable() {
   Input::RegisterMousePressCallback(MouseButtonCode::MOUSE_LEFT, []() {
-    LOG("CLICK");
     Ray r =
         CameraComponent::Main()->ScreenPointToRay(Input::GetMousePosition());
     RaycastHit hitInfo;
-    DebugDraw::Line(r.GetOrigin(), r.GetDirection() * 100.f, Color::red, 1.5f,
-                    10);
+    DebugDraw::Line(r.GetOrigin(), r.GetPoint(100.0f), Color::red, 1.5f, 5);
+    DebugDraw::Cube(
+        CameraComponent::Main()->GetTransform()->GetLocalToWorldMatrix(),
+        Color::red, 5);
     if (Collisions::Raycast(r, &hitInfo)) {
-      // DebugDraw::Line(hitInfo.GetPoint(), hitInfo.GetNormal(), Color::blue,
-      //                1.5f, 30);
-      DebugDraw::Point(hitInfo.GetPoint(), Color::red, 15, 30);
+      DebugDraw::Point(hitInfo.GetPoint(), Color::red, 5, 5);
+      LOG_INFO(Debug::Channel::Collisions, "Raycast Hit: %s",
+               hitInfo.GetCollider()->GetEntity()->GetName());
+    } else {
+      DebugDraw::Point(r.GetPoint(20), Color::brown, 5, 5);
     }
   });
 }
