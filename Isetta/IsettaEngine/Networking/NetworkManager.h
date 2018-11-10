@@ -30,8 +30,11 @@ class ISETTA_API_DECLARE NetworkManager {
   int GetMessageTypeId();
   std::list<std::pair<U16, Action<yojimbo::Message*>>>
   GetClientFunctions(int type);
-  std::list<std::pair<U16, Action<int, yojimbo::Message*>>>
-  GetServerFunctions(int type);
+  std::list<std::pair<U16, Action<int, yojimbo::Message*>>> GetServerFunctions(
+      int type);
+  U32 CreateNetworkId(NetworkId* NetworkId);
+  U32 AssignNetworkId(U32 netId, NetworkId* NetworkId);
+  void RemoveNetworkId(NetworkId* NetworkId);
 
   class NetworkingModule* networkingModule;
 
@@ -82,9 +85,6 @@ class ISETTA_API_DECLARE NetworkManager {
 
   Entity* GetNetworkEntity(const U32 id);
   NetworkId* GetNetworkId(const U32 id);
-  U32 CreateNetworkId(NetworkId* NetworkId);
-  U32 AssignNetworkId(U32 netId, NetworkId* NetworkId);
-  void RemoveNetworkId(NetworkId* NetworkId);
 
   /**
    * @brief Connects the local Client to a server at the given address.
@@ -123,6 +123,7 @@ class ISETTA_API_DECLARE NetworkManager {
   NetworkManager() = default;
   ~NetworkManager() = default;
 
+  friend class NetworkId;
   friend class NetworkingModule;
   friend class NetworkMessageFactory;
 };

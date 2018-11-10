@@ -274,9 +274,6 @@
     <ClCompile Include="Networking\NetworkId.cpp">
       <Filter>Networking</Filter>
     </ClCompile>
-    <ClCompile Include="Components\NetworkTransform.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="Custom\EscapeExit.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
@@ -306,6 +303,9 @@
     </ClCompile>
     <ClCompile Include="Core\DataStructures\Trie.cpp">
       <Filter>Core\DataStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="Networking\NetworkTransform.cpp">
+      <Filter>Networking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -624,9 +624,6 @@
     <ClInclude Include="Networking\NetworkId.h">
       <Filter>Networking</Filter>
     </ClInclude>
-    <ClInclude Include="Components\NetworkTransform.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="Collisions\CollisionUtil.h">
       <Filter>Collisions</Filter>
     </ClInclude>
@@ -665,6 +662,9 @@
     </ClInclude>
     <ClInclude Include="Core\DataStructures\Array.h">
       <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="Networking\NetworkTransform.h">
+      <Filter>Networking</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

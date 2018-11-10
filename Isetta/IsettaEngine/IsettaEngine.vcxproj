@@ -157,7 +157,6 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Components\GridComponent.cpp" />
     <ClCompile Include="Components\FlyController.cpp" />
     <ClCompile Include="Components\Editor\Inspector.cpp" />
-    <ClCompile Include="Components\NetworkTransform.cpp" />
     <ClCompile Include="Components\Editor\Console.cpp" />
     <ClCompile Include="Core\Config\Config.cpp" />
     <ClCompile Include="Core\Color.cpp" />
@@ -227,6 +226,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Collisions\CollisionsModule.cpp" />
     <ClCompile Include="Collisions\Plane.cpp" />
     <ClCompile Include="Collisions\SphereCollider.cpp" />
+    <ClCompile Include="Networking\NetworkTransform.cpp" />
     <ClCompile Include="Scene\Component.cpp" />
     <ClCompile Include="Scene\Entity.cpp" />
     <ClCompile Include="Scene\Layers.cpp" />
@@ -250,7 +250,6 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Components\GridComponent.h" />
     <ClInclude Include="Components\FlyController.h" />
     <ClInclude Include="Components\Editor\Inspector.h" />
-    <ClInclude Include="Components\NetworkTransform.h" />
     <ClInclude Include="Components\Editor\Console.h" />
     <ClInclude Include="Core\Config\Config.h" />
     <ClInclude Include="Core\Color.h" />
@@ -335,6 +334,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Collisions\Plane.h" />
     <ClInclude Include="Collisions\Ray.h" />
     <ClInclude Include="Collisions\SphereCollider.h" />
+    <ClInclude Include="Networking\NetworkTransform.h" />
     <ClInclude Include="Scene\Component.h" />
     <ClInclude Include="Scene\Entity.h" />
     <ClInclude Include="Scene\IsettaLevel.h" />

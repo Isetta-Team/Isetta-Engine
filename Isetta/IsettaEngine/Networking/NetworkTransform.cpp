@@ -2,7 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 
-#include "Components/NetworkTransform.h"
+#include "Networking/NetworkTransform.h"
 
 #include <algorithm>
 #include <unordered_map>
@@ -250,7 +250,7 @@ void NetworkTransform::FixedUpdate() {
   }
 }
 
-void NetworkTransform::ForceUpdateOverNetwork() {
+void NetworkTransform::ForceSendTransform() {
   Transform* t = entity->GetTransform();
   // Position
   PositionMessage* pMessage =
@@ -288,17 +288,16 @@ void NetworkTransform::SnapTransform() {
 }
 
 void NetworkTransform::SetNetworkedParentToRoot() {
-  entity->GetTransform()->SetParent(
-      LevelManager::Instance().currentLevel->levelRoot->GetTransform());
+  entity->GetTransform()->SetParent(nullptr);
 }
 
 bool NetworkTransform::SetNetworkedParent(int networkId) {
-  NetworkId* parentNetId = NetworkManager::Instance().GetNetworkId(networkId);
-  if (!parentNetId) {
+  Entity* parent = NetworkManager::Instance().GetNetworkEntity(networkId);
+  if (!parent) {
     return false;
   }
 
-  entity->GetTransform()->SetParent(parentNetId->GetEntity()->GetTransform());
+  entity->GetTransform()->SetParent(parent->GetTransform());
   return true;
 }
 }  // namespace Isetta

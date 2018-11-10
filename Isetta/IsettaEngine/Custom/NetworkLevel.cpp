@@ -3,7 +3,6 @@
  */
 #include "Custom/NetworkLevel.h"
 
-#include "Components/NetworkTransform.h"
 #include "Components/FlyController.h"
 #include "Core/Color.h"
 #include "Core/Config/Config.h"
@@ -15,6 +14,7 @@
 #include "Graphics/LightComponent.h"
 #include "Input/Input.h"
 #include "Networking/NetworkId.h"
+#include "Networking/NetworkTransform.h"
 #include "Scene/Entity.h"
 #include "Components/GridComponent.h"
 #include "Components/Editor/Editor.h"
