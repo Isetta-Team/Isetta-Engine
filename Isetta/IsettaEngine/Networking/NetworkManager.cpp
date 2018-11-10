@@ -104,6 +104,9 @@ U32 NetworkManager::CreateNetworkId(NetworkId* networkId) {
   U32 netId = networkIds.GetHandle();
   networkId->id = netId;
   networkIdToComponentMap[netId] = networkId;
+  NetworkTransform::serverPosTimestamps[netId] = 0;
+  NetworkTransform::serverRotTimestamps[netId] = 0;
+  NetworkTransform::serverScaleTimestamps[netId] = 0;
 }
 
 U32 NetworkManager::AssignNetworkId(U32 netId, NetworkId* networkId) {

@@ -6,18 +6,19 @@
 
 #include <algorithm>
 #include <unordered_map>
+#include "Core/Time/Time.h"
 #include "Networking/NetworkId.h"
 #include "Scene/Entity.h"
-#include "Scene/Transform.h"
 #include "Scene/Level.h";
 #include "Scene/LevelManager.h"
+#include "Scene/Transform.h"
 
 namespace Isetta {
 
 bool NetworkTransform::registeredCallbacks = false;
-std::unordered_map<int, float> NetworkTransform::posUpdateTimes;
-std::unordered_map<int, float> NetworkTransform::rotUpdateTimes;
-std::unordered_map<int, float> NetworkTransform::scaleUpdateTimes;
+std::unordered_map<int, float> NetworkTransform::serverPosTimestamps;
+std::unordered_map<int, float> NetworkTransform::serverRotTimestamps;
+std::unordered_map<int, float> NetworkTransform::serverScaleTimestamps;
 
 void NetworkTransform::Start() {
   if (!registeredCallbacks) {
@@ -36,7 +37,7 @@ void NetworkTransform::Start() {
           Entity* entity = netId->GetEntity();
           NetworkTransform* nt = entity->GetComponent<NetworkTransform>();
 
-          if (nt && positionMessage->updateTime < nt->lastPosMessage) {
+          if (nt && positionMessage->timestamp < nt->lastPosMessage) {
             return;
           }
 
@@ -54,7 +55,7 @@ void NetworkTransform::Start() {
             }
 
             nt->prevPos = t->GetLocalPos();
-            nt->lastPosMessage = positionMessage->updateTime;
+            nt->lastPosMessage = positionMessage->timestamp;
           }
         });
 
@@ -63,12 +64,10 @@ void NetworkTransform::Start() {
           PositionMessage* positionMessage =
               reinterpret_cast<PositionMessage*>(message);
 
-          if (posUpdateTimes.find(positionMessage->netId) ==
-              posUpdateTimes.end()) {
-            posUpdateTimes[positionMessage->netId] =
-                positionMessage->updateTime;
-          } else if (posUpdateTimes[positionMessage->netId] <=
-                     positionMessage->updateTime) {
+          if (serverScaleTimestamps[positionMessage->netId] <=
+              positionMessage->timestamp) {
+            serverScaleTimestamps[positionMessage->netId] =
+                positionMessage->timestamp;
             NetworkManager::Instance()
                 .SendAllMessageFromServer<PositionMessage>(positionMessage);
           }
@@ -89,7 +88,7 @@ void NetworkTransform::Start() {
           Entity* entity = netId->GetEntity();
           NetworkTransform* nt = entity->GetComponent<NetworkTransform>();
 
-          if (nt && rotationMessage->updateTime < nt->lastRotMessage) {
+          if (nt && rotationMessage->timestamp < nt->lastRotMessage) {
             return;
           }
 
@@ -106,7 +105,7 @@ void NetworkTransform::Start() {
             }
 
             nt->prevRot = t->GetLocalRot();
-            nt->lastRotMessage = rotationMessage->updateTime;
+            nt->lastRotMessage = rotationMessage->timestamp;
           }
         });
 
@@ -115,12 +114,10 @@ void NetworkTransform::Start() {
           RotationMessage* rotationMessage =
               reinterpret_cast<RotationMessage*>(message);
 
-          if (rotUpdateTimes.find(rotationMessage->netId) ==
-              rotUpdateTimes.end()) {
-            rotUpdateTimes[rotationMessage->netId] =
-                rotationMessage->updateTime;
-          } else if (rotUpdateTimes[rotationMessage->netId] <=
-                     rotationMessage->updateTime) {
+          if (serverScaleTimestamps[rotationMessage->netId] <=
+              rotationMessage->timestamp) {
+            serverScaleTimestamps[rotationMessage->netId] =
+                rotationMessage->timestamp;
             NetworkManager::Instance()
                 .SendAllMessageFromServer<RotationMessage>(rotationMessage);
           }
@@ -140,7 +137,7 @@ void NetworkTransform::Start() {
           Entity* entity = netId->GetEntity();
           NetworkTransform* nt = entity->GetComponent<NetworkTransform>();
 
-          if (nt && scaleMessage->updateTime < nt->lastScaleMessage) {
+          if (nt && scaleMessage->timestamp < nt->lastScaleMessage) {
             return;
           }
 
@@ -157,7 +154,7 @@ void NetworkTransform::Start() {
             }
 
             nt->prevScale = t->GetLocalScale();
-            nt->lastScaleMessage = scaleMessage->updateTime;
+            nt->lastScaleMessage = scaleMessage->timestamp;
           }
         });
 
@@ -165,14 +162,123 @@ void NetworkTransform::Start() {
         [](int clientIdx, yojimbo::Message* message) {
           ScaleMessage* scaleMessage = reinterpret_cast<ScaleMessage*>(message);
 
-          if (scaleUpdateTimes.find(scaleMessage->netId) ==
-              scaleUpdateTimes.end()) {
-            scaleUpdateTimes[scaleMessage->netId] = scaleMessage->updateTime;
-          } else if (scaleUpdateTimes[scaleMessage->netId] <=
-                     scaleMessage->updateTime) {
+          if (serverScaleTimestamps[scaleMessage->netId] <=
+              scaleMessage->timestamp) {
+            serverScaleTimestamps[scaleMessage->netId] =
+                scaleMessage->timestamp;
             NetworkManager::Instance().SendAllMessageFromServer<ScaleMessage>(
                 scaleMessage);
           }
+        });
+
+    // Transform callbacks
+    NetworkManager::Instance().RegisterClientCallback<TransformMessage>(
+        [&](yojimbo::Message* message) {
+          TransformMessage* transformMessage =
+              reinterpret_cast<TransformMessage*>(message);
+
+          NetworkId* netId =
+              NetworkManager::Instance().GetNetworkId(transformMessage->netId);
+          if (!netId || netId->HasClientAuthority()) {
+            return;
+          }
+
+          Entity* entity = netId->GetEntity();
+          NetworkTransform* nt = entity->GetComponent<NetworkTransform>();
+
+          if (!nt) {
+            return;
+          }
+
+          // Snapping
+          if (transformMessage->snap) {
+            Transform* t = entity->GetTransform();
+
+            // Position
+            if (transformMessage->timestamp >= nt->lastPosMessage) {
+              t->SetLocalPos(transformMessage->localPos);
+              nt->prevPos = t->GetLocalPos();
+              nt->lastPosMessage = transformMessage->timestamp;
+            }
+
+            // Rotation
+            if (transformMessage->timestamp >= nt->lastRotMessage) {
+              t->SetLocalRot(transformMessage->localRot);
+              nt->prevRot = t->GetLocalRot();
+              nt->lastRotMessage = transformMessage->timestamp;
+            }
+
+            // Scale
+            if (transformMessage->timestamp >= nt->lastScaleMessage) {
+              t->SetLocalScale(transformMessage->localScale);
+              nt->prevScale = t->GetLocalScale();
+              nt->lastScaleMessage = transformMessage->timestamp;
+            }
+
+            nt->posInterpolation = 1;
+            nt->rotInterpolation = 1;
+            nt->scaleInterpolation = 1;
+          } else {  // Not snapping
+            Transform* t = entity->GetTransform();
+
+            // Position
+            if (transformMessage->timestamp >= nt->lastPosMessage) {
+              nt->targetPos = transformMessage->localPos;
+
+              nt->posInterpolation = 0;
+
+              if ((Math::Vector3::Scale(t->GetWorldScale(),
+                                        t->GetLocalPos() - nt->targetPos))
+                      .SqrMagnitude() >= nt->snapDistance * nt->snapDistance) {
+                t->SetLocalPos(transformMessage->localPos);
+                nt->posInterpolation = 1;
+              }
+
+              nt->prevPos = t->GetLocalPos();
+              nt->lastPosMessage = transformMessage->timestamp;
+            }
+
+            // Rotation
+            if (transformMessage->timestamp >= nt->lastRotMessage) {
+              nt->targetRot = transformMessage->localRot;
+
+              nt->rotInterpolation = 0;
+
+              if (abs(Math::Quaternion::AngleDeg(
+                      t->GetLocalRot(), nt->targetRot)) >= nt->snapRotation) {
+                t->SetLocalRot(transformMessage->localRot);
+                nt->rotInterpolation = 1;
+              }
+
+              nt->prevRot = t->GetLocalRot();
+              nt->lastRotMessage = transformMessage->timestamp;
+            }
+
+            // Scale
+            if (transformMessage->timestamp >= nt->lastScaleMessage) {
+              nt->targetScale = transformMessage->localScale;
+
+              nt->scaleInterpolation = 0;
+
+              if ((t->GetLocalScale() - nt->targetScale).SqrMagnitude() >=
+                  nt->snapScale * nt->snapScale) {
+                t->SetLocalScale(transformMessage->localScale);
+                nt->scaleInterpolation = 1;
+              }
+
+              nt->prevScale = t->GetLocalScale();
+              nt->lastScaleMessage = transformMessage->timestamp;
+            }
+          }
+        });
+
+    NetworkManager::Instance().RegisterServerCallback<TransformMessage>(
+        [](int clientIdx, yojimbo::Message* message) {
+          TransformMessage* transformMessage =
+              reinterpret_cast<TransformMessage*>(message);
+
+          NetworkManager::Instance().SendAllMessageFromServer<TransformMessage>(
+              transformMessage);
         });
 
     NetworkTransform::registeredCallbacks = true;
@@ -206,6 +312,7 @@ void NetworkTransform::FixedUpdate() {
             NetworkManager::Instance()
                 .GenerateMessageFromClient<PositionMessage>();
         prevPos = t->GetLocalPos();
+        message->timestamp = Time::GetElapsedTime();
         message->localPos = t->GetLocalPos();
         message->netId = netId->id;
         NetworkManager::Instance().SendMessageFromClient(message);
@@ -217,6 +324,7 @@ void NetworkTransform::FixedUpdate() {
             NetworkManager::Instance()
                 .GenerateMessageFromClient<RotationMessage>();
         prevRot = t->GetLocalRot();
+        message->timestamp = Time::GetElapsedTime();
         message->localRot = t->GetLocalRot();
         message->netId = netId->id;
         NetworkManager::Instance().SendMessageFromClient(message);
@@ -227,6 +335,7 @@ void NetworkTransform::FixedUpdate() {
         ScaleMessage* message = NetworkManager::Instance()
                                     .GenerateMessageFromClient<ScaleMessage>();
         prevScale = t->GetLocalScale();
+        message->timestamp = Time::GetElapsedTime();
         message->localScale = t->GetLocalScale();
         message->netId = netId->id;
         NetworkManager::Instance().SendMessageFromClient(message);
@@ -242,7 +351,7 @@ void NetworkTransform::FixedUpdate() {
     // Rotation
     rotInterpolation = min(rotInterpolation + netIdLerp, 1);
     t->SetLocalRot(
-        Math::Quaternion::Lerp(prevRot, targetRot, rotInterpolation));
+        Math::Quaternion::Slerp(prevRot, targetRot, rotInterpolation));
     // Scale
     scaleInterpolation = min(scaleInterpolation + netIdLerp, 1);
     t->SetLocalScale(
@@ -250,41 +359,21 @@ void NetworkTransform::FixedUpdate() {
   }
 }
 
-void NetworkTransform::ForceSendTransform() {
+void NetworkTransform::ForceSendTransform(bool snap) {
   Transform* t = entity->GetTransform();
-  // Position
-  PositionMessage* pMessage =
-      NetworkManager::Instance().GenerateMessageFromClient<PositionMessage>();
+
+  TransformMessage* message =
+      NetworkManager::Instance().GenerateMessageFromClient<TransformMessage>();
   prevPos = t->GetLocalPos();
-  pMessage->localPos = t->GetLocalPos();
-  pMessage->netId = netId->id;
-  NetworkManager::Instance().SendMessageFromClient(pMessage);
-
-  // Rotation
-  RotationMessage* rMessage =
-      NetworkManager::Instance().GenerateMessageFromClient<RotationMessage>();
   prevRot = t->GetLocalRot();
-  rMessage->localRot = t->GetLocalRot();
-  rMessage->netId = netId->id;
-  NetworkManager::Instance().SendMessageFromClient(rMessage);
-
-  // Scale
-  ScaleMessage* sMessage =
-      NetworkManager::Instance().GenerateMessageFromClient<ScaleMessage>();
   prevScale = t->GetLocalScale();
-  sMessage->localScale = t->GetLocalScale();
-  sMessage->netId = netId->id;
-  NetworkManager::Instance().SendMessageFromClient(sMessage);
-}
 
-void NetworkTransform::SnapTransform() {
-  Transform* t = entity->GetTransform();
-  prevPos = targetPos;
-  prevRot = targetRot;
-  prevScale = targetScale;
-  t->SetLocalPos(targetPos);
-  t->SetLocalRot(targetRot);
-  t->SetLocalScale(targetScale);
+  message->timestamp = Time::GetElapsedTime();
+  message->localPos = t->GetLocalPos();
+  message->localRot = t->GetLocalRot();
+  message->localScale = t->GetLocalScale();
+
+  NetworkManager::Instance().SendMessageFromClient(message);
 }
 
 void NetworkTransform::SetNetworkedParentToRoot() {
