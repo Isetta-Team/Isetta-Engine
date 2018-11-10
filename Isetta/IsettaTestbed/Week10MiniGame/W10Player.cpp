@@ -47,17 +47,21 @@ void W10Player::Awake() {
       "Respawn",
       [&](const Isetta::EventObject& eventObject) { InitPosition(); });
   Isetta::Events::Instance().RegisterEventListener(
-      "RegainInput",
-      [&](const Isetta::EventObject& eventObject) { canOperate = true; });
+      "RegainInput", [&](const Isetta::EventObject& eventObject) {
+        LOG_INFO(Isetta::Debug::Channel::General, "Regain!");
+        canOperate = true;
+      });
 
   InitPosition();
 }
 
 void W10Player::Start() {
-  Isetta::Input::RegisterKeyPressCallback(
-      Isetta::KeyCode::W, [&]() { if (canOperate) ChangeSwordVerticlePosition(1); });
-  Isetta::Input::RegisterKeyPressCallback(
-      Isetta::KeyCode::S, [&]() { if (canOperate) ChangeSwordVerticlePosition(-1); });
+  Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::W, [&]() {
+    if (canOperate) ChangeSwordVerticlePosition(1);
+  });
+  Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::S, [&]() {
+    if (canOperate) ChangeSwordVerticlePosition(-1);
+  });
   Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::SPACE, [&]() {
     if (canOperate && swordStabStatus == 0) swordStabStatus = 1;
   });
@@ -127,7 +131,7 @@ void W10Player::InitPosition() {
   canOperate = false;
   Isetta::Events::Instance().RaiseQueuedEvent(
       Isetta::EventObject{"RegainInput",
-                          Isetta::Time::GetTimeFrame() + 60,
+                          Isetta::Time::GetTimeFrame() + 200,
                           Isetta::EventPriority::MEDIUM,
                           {}});
 }

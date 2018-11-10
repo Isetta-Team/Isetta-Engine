@@ -24,8 +24,8 @@ Isetta::U16 resultHandle;
 
 // std::vector<int> clientIDs;
 
-float killDistance = 0.8;
-float blockDistance = 1.1;
+float killDistance = 0.825;
+float blockDistance = 1.125;
 
 int clientCount;
 int lastAttemptClient;
