@@ -278,6 +278,9 @@ void NetworkTransform::ForceUpdateOverNetwork() {
 }
 
 void NetworkTransform::SnapTransform() {
+  posInterpolation = 1;
+  rotInterpolation = 1;
+  scaleInterpolation = 1;
   Transform* t = entity->GetTransform();
   prevPos = targetPos;
   prevRot = targetRot;

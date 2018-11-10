@@ -142,7 +142,7 @@ void W10NetworkManager::HandlePositionReport(int clientIdx,
                   .GenerateMessageFromServer<W10AttackResultMessage>(
                       swordPos.first)};
           resultMessage2->result = 3;
-          clientSwordPos.insert_or_assign(lastAttemptClient, 0);
+          clientSwordPos.insert_or_assign(lastAttemptClient, -1);
           Isetta::NetworkManager::Instance().SendMessageFromServer(
               lastAttemptClient, resultMessage1);
           Isetta::NetworkManager::Instance().SendMessageFromServer(
@@ -219,6 +219,7 @@ void W10NetworkManager::Awake() {
                          });
   Isetta::NetworkManager::Instance().RegisterServerCallback<W10CollectMessage>(
       [&](int clientId, yojimbo::Message* message) {
+        clientSwordPos.insert_or_assign(lastAttemptClient, 0);
         Isetta::NetworkManager::Instance()
             .SendAllButClientMessageFromServer<W10CollectMessage>(clientId,
                                                                   message);

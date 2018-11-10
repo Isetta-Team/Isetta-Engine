@@ -51,6 +51,9 @@ void W10NetworkPlayer::SwordBlocked() {
 
 void W10NetworkPlayer::SwordCollected() {
   swordEntity->GetTransform()->SetParent(GetTransform());
+  swordEntity->GetTransform()->SetLocalPos(
+      Isetta::Math::Vector3((isOnRight ? 1 : -1) * 0.25f, 0, 0.25f));
+  GetEntity()->GetComponent<Isetta::NetworkTransform>()->SnapTransform();
 }
 
 void W10NetworkPlayer::Update() {
