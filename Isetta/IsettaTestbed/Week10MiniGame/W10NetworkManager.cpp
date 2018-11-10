@@ -86,6 +86,7 @@ void W10NetworkManager::ClientHandleAttackAttemptMessage(
   if (gameManager->player != nullptr) {
     posMessage->positionX =
         gameManager->player->GetTransform()->GetWorldPos().x;
+    LOG_INFO(Isetta::Debug::Channel::General, "Client send position report");
     Isetta::NetworkManager::Instance().SendMessageFromClient(posMessage);
   }
 }
@@ -102,6 +103,8 @@ void W10NetworkManager::HandlePositionReport(int clientIdx,
                                              yojimbo::Message* message) {
   const W10PositionReportMessage* posMessage{
       reinterpret_cast<const W10PositionReportMessage*>(message)};
+  LOG_INFO(Isetta::Debug::Channel::General, "Handle position report");
+
   clientPosX.insert_or_assign(clientIdx, posMessage->positionX);
   if (clientPosX.size() == 2) {
     auto distance =
@@ -114,8 +117,6 @@ void W10NetworkManager::HandlePositionReport(int clientIdx,
           if (distance > killDistance) {
             return;
           }
-          clientCount = 0;
-          clientSwordPos.clear();
           W10AttackResultMessage* resultMessage1{
               Isetta::NetworkManager::Instance()
                   .GenerateMessageFromServer<W10AttackResultMessage>(
@@ -130,6 +131,8 @@ void W10NetworkManager::HandlePositionReport(int clientIdx,
               lastAttemptClient, resultMessage1);
           Isetta::NetworkManager::Instance().SendMessageFromServer(
               swordPos.first, resultMessage2);
+          clientCount = 0;
+          clientSwordPos.clear();
           LOG_INFO(Isetta::Debug::Channel::General, "Server: HIT!");
         } else {
           if (distance > blockDistance) {
@@ -152,6 +155,7 @@ void W10NetworkManager::HandlePositionReport(int clientIdx,
               swordPos.first, resultMessage2);
           LOG_INFO(Isetta::Debug::Channel::General, "Server: Not HIT!");
         }
+        break;
       }
     }
   }
