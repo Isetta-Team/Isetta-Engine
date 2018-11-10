@@ -48,7 +48,8 @@ void W10Player::Awake() {
       [&](const Isetta::EventObject& eventObject) { InitPosition(); });
   Isetta::Events::Instance().RegisterEventListener(
       "RegainInput", [&](const Isetta::EventObject& eventObject) {
-        LOG_INFO(Isetta::Debug::Channel::General, "Regain!");
+        Isetta::Events::Instance().RaiseQueuedEvent(Isetta::EventObject{
+            "UITextChange", {std::string{"Game Started!"}}});
         canOperate = true;
       });
 
