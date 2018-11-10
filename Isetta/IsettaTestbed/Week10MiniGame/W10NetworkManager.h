@@ -125,5 +125,21 @@ void Copy(const yojimbo::Message* otherMessage) override {
   result = message->result;
 }
 
-int result = 0; // 0 - Win, 1 - Lose, 2 - Blocked, 3 - Block Other
+int result = 0;  // 0 - Win, 1 - Lose, 2 - Blocked, 3 - Block Other
+RPC_MESSAGE_FINISH
+
+RPC_MESSAGE_DEFINE(W10CollectMessage)
+template <typename Stream>
+bool Serialize(Stream* stream) {
+  serialize_int(stream, swordNetId, 0, 256);
+  return true;
+}
+
+void Copy(const yojimbo::Message* otherMessage) override {
+  const W10CollectMessage* message =
+      reinterpret_cast<const W10CollectMessage*>(otherMessage);
+  swordNetId = message->swordNetId;
+}
+
+int swordNetId;
 RPC_MESSAGE_FINISH
