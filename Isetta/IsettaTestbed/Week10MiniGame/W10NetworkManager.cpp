@@ -217,6 +217,12 @@ void W10NetworkManager::Awake() {
                          [&](yojimbo::Message* message) {
                            HandleAttackResultMessage(message);
                          });
+  Isetta::NetworkManager::Instance().RegisterServerCallback<W10CollectMessage>(
+      [&](int clientId, yojimbo::Message* message) {
+        Isetta::NetworkManager::Instance()
+            .SendAllButClientMessageFromServer<W10CollectMessage>(clientId,
+                                                                  message);
+      });
 
   if (Isetta::Config::Instance().networkConfig.runServer.GetVal()) {
     Isetta::NetworkManager::Instance().CreateServer(

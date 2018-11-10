@@ -83,6 +83,11 @@ void W10Player::Update() {
           Isetta::Math::Vector3((isOnRight ? 1 : -1) * 0.25f, 0, 0.25f));
       swordStabStatus = 0;
       swordPos = 0;
+      W10CollectMessage* message =
+          Isetta::NetworkManager::Instance()
+              .GenerateMessageFromClient<W10CollectMessage>();
+      message->swordNetId = swordNetId;
+      Isetta::NetworkManager::Instance().SendMessageFromClient(message);
     }
   }
 
