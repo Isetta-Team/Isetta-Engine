@@ -57,10 +57,10 @@ void W10Player::Awake() {
 }
 
 void W10Player::Start() {
-  Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::W, [&]() {
+  Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::UP_ARROW, [&]() {
     if (canOperate) ChangeSwordVerticlePosition(1);
   });
-  Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::S, [&]() {
+  Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::DOWN_ARROW, [&]() {
     if (canOperate) ChangeSwordVerticlePosition(-1);
   });
   Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::SPACE, [&]() {
@@ -81,6 +81,7 @@ void W10Player::Update() {
                                  Isetta::Math::Vector3::left);
 
   ChangeSwordHorizontalPosition(Isetta::Time::GetDeltaTime());
+  if (swordStabStatus == 0) isSwordFlying = false;
 
   if (!isSwordFlying && swordStabStatus == 3) {
     if (Isetta::Math::Util::Abs(GetTransform()->GetWorldPos().x -
@@ -184,6 +185,7 @@ void W10Player::ChangeSwordHorizontalPosition(float deltaTime) {
 }
 
 void W10Player::SwordBlocked() {
+  if (swordStabStatus != 2) return;
   swordStabStatus = 3;
   float randomX;
   float currentX{GetTransform()->GetWorldPos().x};
