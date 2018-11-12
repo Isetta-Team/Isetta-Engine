@@ -4,6 +4,8 @@
 #include "Graphics/GUIStyle.h"
 
 #include "GUI.h"
+#include "Graphics/GUIModule.h"
+#include "imgui/imgui.h"
 
 namespace Isetta {
 GUIStyle::GUIStyle(bool imGuiStyle) {
@@ -98,6 +100,33 @@ GUI::ModalStyle::ModalStyle() {
 }
 GUI::TextStyle::TextStyle() {
   text = GetStyle().Colors[(int)ColorStyles::Text];
+  font = reinterpret_cast<Font*>(ImGui::GetIO().FontDefault);
+}
+GUI::TextStyle::TextStyle(float fontSize, const std::string_view& fontName) {
+  text = GetStyle().Colors[(int)ColorStyles::Text];
+  Font* f = guiModule->GetFont(fontName, fontSize);
+  if (font)
+    font = f;
+  else
+    font = reinterpret_cast<Font*>(ImGui::GetIO().FontDefault);
+}
+GUI::TextStyle::TextStyle(Font* const font) : font{font} {
+  text = GetStyle().Colors[(int)ColorStyles::Text];
+}
+GUI::TextStyle::TextStyle(const Color& text, int fontSize,
+                          const std::string_view& fontName)
+    : text{text} {
+  Font* f = guiModule->GetFont(fontName, fontSize);
+  if (font)
+    font = f;
+  else
+    font = reinterpret_cast<Font*>(ImGui::GetIO().FontDefault);
+}
+GUI::TextStyle::TextStyle(bool wrapped, bool disabled, const Color& text)
+    : isWrapped{wrapped},
+      isDisabled{disabled},
+      /*isBulleted{b},*/ text{text} {
+  font = reinterpret_cast<Font*>(ImGui::GetIO().FontDefault);
 }
 GUI::WindowStyle::WindowStyle() {
   background = GetStyle().Colors[(int)ColorStyles::WindowBg];

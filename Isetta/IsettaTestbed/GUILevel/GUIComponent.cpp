@@ -30,8 +30,8 @@ void GUIComponent::GuiUpdate() {
   GUI::Text(RectTransform{{100, 130, 40, 40}},
             Util::StrFormat("I am %s and I am %d", "Jake", 10),
             GUI::TextStyle{false, false, Color::grey});
-  GUI::Label(RectTransform{{100, 230, 40, 40}}, "labelthing", "text",
-             GUI::LabelStyle{Color::white, Color::clear});
+  // GUI::Label(RectTransform{{100, 230, 40, 40}}, "labelthing", "text",
+  //           GUI::LabelStyle{Color::white, Color::clear});
 
   static char buffer[1024];
   // struct TestCallback {

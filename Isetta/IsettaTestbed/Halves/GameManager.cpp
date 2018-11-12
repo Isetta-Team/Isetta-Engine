@@ -2,15 +2,21 @@
  * Copyright (c) 2018 Isetta
  */
 #include "GameManager.h"
+
 #include "Bullet.h"
 #include "Core/Math/Random.h"
 #include "Custom/IsettaCore.h"
+#include "Graphics/GUI.h"
 #include "PlayerController.h"
 #include "Zombie.h"
 
 namespace Isetta {
 std::vector<Entity*> GameManager::zombies;
 int GameManager::score = 0;
+
+void GameManager::Start() {
+  font = GUI::AddFontFromFile("Resources/Fonts/ZOMBIE.TTF", 48.0f);
+}
 
 void GameManager::OnEnable() {
   zombies.reserve(poolSize);
@@ -43,7 +49,8 @@ void GameManager::GuiUpdate() {
 
   GUI::Text(RectTransform{Math::Rect{50, 200, 300, 100}, GUI::Pivot::Top,
                           GUI::Pivot::Top},
-            Util::StrFormat("Score: %d!", score), GUI::TextStyle{Color::green});
+            Util::StrFormat("Score: %d!", score),
+            GUI::TextStyle{Color::green, font});
 }
 
 void GameManager::SpawnZombie() const {

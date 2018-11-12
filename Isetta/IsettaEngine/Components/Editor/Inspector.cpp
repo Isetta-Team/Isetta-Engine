@@ -41,11 +41,11 @@ void Inspector::GuiUpdate() {
         GUI::Text(rect,
                   "World Rotation " + target->GetWorldEulerAngles().ToString());
         rect.rect.y += 20;
-        //
-        // tmp = target->GetLocalEulerAngles();
-        // GUI::InputVector3(rect, "Local Rotation", &tmp);
-        // target->SetLocalRot(tmp);
-        // rect.rect.y += 25;
+
+        tmp = target->GetLocalEulerAngles();
+        GUI::InputVector3(rect, "Local Rotation", &tmp);
+        target->SetLocalRot(tmp);
+        rect.rect.y += 25;
 
         tmp = target->GetLocalScale();
         GUI::InputVector3(rect, "Local Scale", &tmp);

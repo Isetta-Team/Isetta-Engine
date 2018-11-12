@@ -6,6 +6,7 @@
 #include "Core/Debug/Debug.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Memory/MemoryManager.h"
+#include "Graphics/Font.h"
 #include "Graphics/GUI.h"
 #include "Input/Input.h"
 #include "Scene/Level.h"
@@ -32,6 +33,14 @@ void FreeAlloc(void* ptr, void* user_data) {
 }
 
 namespace Isetta {
+Font* GUIModule::GetFont(const std::string_view& fontName, float size) {
+  auto font = fonts.find({SID(fontName.data()), size});
+  return font == fonts.end() ? nullptr : font->second;
+}
+void GUIModule::AddFont(const std::string_view& fontName, float size,
+                        Font* const font) {
+  fonts.insert({{SID(fontName.data()), size}, font});
+}
 void GUIModule::StartUp(const GLFWwindow* win) {
   GUI::guiModule = this;
   winHandle = win;
@@ -50,7 +59,6 @@ void GUIModule::StartUp(const GLFWwindow* win) {
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
   ImGuiIO& io = ImGui::GetIO();
-  (void)io;
 
   // Setup Dear ImGui binding
   ImGui_ImplGlfw_InitForOpenGL(const_cast<GLFWwindow*>(winHandle), false);
@@ -66,10 +74,12 @@ void GUIModule::StartUp(const GLFWwindow* win) {
   // io.IniFilename = NULL;
   // Load Fonts
   // io.Fonts->AddFontDefault();
-  // io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
-  // io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
-  // io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
-  // io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
+  // io.Fonts->AddFontFromFileTTF("../External/imgui/misc/fonts/Roboto-Medium.ttf",
+  // 16.0f); io.Fonts->AddFontFromFileTTF(
+  //    "../External/imgui/misc/fonts/Cousine-Regular.ttf", 15.0f);
+  // io.Fonts->AddFontFromFileTTF(
+  //    "../External/imgui/misc/fonts/DroidSans.ttf", 72.0f);
+  // io.Fonts->AddFontFromFileTTF("../External/imgui/misc/fonts/ProggyTiny.ttf", 10.0f);
   // ImFont* font =
   // io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f,
   // NULL, io.Fonts->GetGlyphRangesJapanese());

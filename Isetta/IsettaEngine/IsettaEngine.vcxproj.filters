@@ -307,6 +307,9 @@
     <ClCompile Include="Components\Editor\EditorComponent.cpp">
       <Filter>Components\Editor</Filter>
     </ClCompile>
+    <ClCompile Include="Custom\FontExample.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -665,6 +668,12 @@
     </ClInclude>
     <ClInclude Include="Components\Editor\EditorComponent.h">
       <Filter>Components\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\FontExample.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Font.h">
+      <Filter>Graphics\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -11,6 +11,7 @@
 #include "Core/Math/Vector2.h"
 #include "Core/Math/Vector2Int.h"
 #include "Core/Math/Vector3.h"
+#include "Graphics/Font.h"
 #include "Graphics/GUIModule.h"
 #include "Graphics/GUIStyle.h"
 #include "Graphics/RectTransform.h"
@@ -58,7 +59,8 @@ bool GUI::ButtonImage(const RectTransform& transform, const std::string& id,
   ButtonStyle style =
       ButtonStyle{imgStyle.frame, btnStyle.hover, btnStyle.active};
   Func<bool> btn =
-      std::bind(ImGui::ImageButton, (void*)(intptr_t)texture.GetTexture(),
+      std::bind(ImGui::ImageButton,
+                reinterpret_cast<void*>((intptr_t)texture.GetTexture()),
                 (ImVec2)transform.rect.Size(), (ImVec2)imgStyle.offset,
                 (ImVec2)imgStyle.tiling, imgStyle.framePadding,
                 (ImVec4)btnStyle.background, (ImVec4)imgStyle.tint);
@@ -134,39 +136,49 @@ void GUI::Toggle(const RectTransform& transform, const std::string& label,
 // TEXT
 void GUI::Text(const RectTransform& transform, const std::string& format,
                const TextStyle& style) {
-  ImGui::SetCursorPos((ImVec2)SetPosition(transform));
-  ImGui::PushItemWidth(transform.rect.width);
+  const char* formatCStr = format.c_str();
+  RectTransform rectTransform{transform};
+  if (rectTransform.rect.width <= 0)
+    rectTransform.rect.width = ImGui::CalcTextSize(formatCStr).x;
+  if (rectTransform.rect.width <= 0)
+    rectTransform.rect.width = ImGui::CalcTextSize(formatCStr).x;
+  ImGui::SetCursorPos((ImVec2)SetPosition(rectTransform));
+  ImGui::PushItemWidth(rectTransform.rect.width);
 
   ImGuiContext* context = ImGui::GetCurrentContext();
   ImGui::PushStyleColor(ImGuiCol_Text,
                         !style.isDisabled
                             ? (ImVec4)style.text
                             : context->Style.Colors[ImGuiCol_TextDisabled]);
+  ImGui::PushFont(reinterpret_cast<ImFont*>(style.font));
   bool need_wrap = style.isWrapped &&
                    (context->CurrentWindow->DC.TextWrapPos <
                     0.0f);  // Keep existing wrap position is one ia already set
-  ImGui::Text(format.c_str());
+  ImGui::Text(formatCStr);
   if (need_wrap) {
     ImGui::PushTextWrapPos(0.0f);
   }
+  ImGui::PopFont();
   ImGui::PopStyleColor();
   ImGui::PopItemWidth();
 }
-void GUI::Label(const RectTransform& transform, const std::string_view& label,
-                const std::string_view& format, const LabelStyle& style) {
-  ImGui::SetCursorPos((ImVec2)SetPosition(transform));
-  ImGui::PushItemWidth(transform.rect.width);
-
-  ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)style.text);
-  ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)style.background);
-  ImGui::PushID(label.data());
-  ImGui::Text(label.data());
-  ImGui::SameLine();
-  ImGui::LabelText("##label", format.data());
-  ImGui::PopID();
-  ImGui::PopStyleColor(2);
-  ImGui::PopItemWidth();
-}
+// Doesn't seem like its needed
+// void GUI::Label(const RectTransform& transform, const std::string_view&
+// label,
+//                const std::string_view& format, const LabelStyle& style) {
+//  ImGui::SetCursorPos((ImVec2)SetPosition(transform));
+//  ImGui::PushItemWidth(transform.rect.width);
+//
+//  ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)style.text);
+//  ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)style.background);
+//  ImGui::PushID(label.data());
+//  ImGui::Text(label.data());
+//  ImGui::SameLine();
+//  ImGui::LabelText("##label", format.data());
+//  ImGui::PopID();
+//  ImGui::PopStyleColor(2);
+//  ImGui::PopItemWidth();
+//}
 
 // INPUT
 bool GUI::InputText(const RectTransform& transform,
@@ -490,7 +502,7 @@ void GUI::Image(const RectTransform& transform, const Texture& texture,
                       transform.anchor, transform.pivot},
         style.frame);
   }
-  ImGui::Image((void*)(intptr_t)(texture.GetTexture()),
+  ImGui::Image(reinterpret_cast<void*>((intptr_t)(texture.GetTexture())),
                (ImVec2)transform.rect.Size(), (ImVec2)style.offset,
                (ImVec2)style.tiling, (ImVec4)style.tint, (ImVec4)style.frame);
 }
@@ -512,15 +524,53 @@ void GUI::ProgressBar(const RectTransform& transform, float fraction,
   }
 }
 
-Font* GUI::GetDefaultFont() { return (Font*)ImGui::GetDefaultFont(); }
-Font* GUI::AddFontFromFile(const std::string& filename, int fontSize) {
-  return ImGui::GetIO().Fonts->AddFontFromFileTTF(filename.c_str(), fontSize);
+Font* GUI::GetDefaultFont() {
+  return reinterpret_cast<Font*>(ImGui::GetDefaultFont());
 }
-Font* GUI::AddFontFromMemory(void* fontBuffer, int fontSize, float pixels) {
-  return ImGui::GetIO().Fonts->AddFontFromMemoryTTF(fontBuffer, fontSize,
-                                                    pixels);
+void GUI::AddDefaultFont(const std::string_view& fontName, float size) {
+  Font* font = guiModule->GetFont(fontName, size);
+  if (font)
+    ImGui::GetIO().Fonts->AddFontDefault(
+        reinterpret_cast<ImFont*>(font)->ConfigData);
 }
-void GUI::PushFont(const Font*& font) { ImGui::PushFont((ImFont*)font); }
+void GUI::AddDefaultFont(Font* const font) {
+  ImGui::GetIO().FontDefault = reinterpret_cast<ImFont*>(font);
+}
+Font* GUI::GetFont(const std::string_view fontName, float size) {
+  return guiModule->GetFont(fontName, size);
+}
+Font* GUI::AddFontFromFile(const std::string& filename, float fontSize,
+                           const std::string_view& fontName) {
+  if (fontName.empty()) {
+    Font* font = guiModule->GetFont(filename, fontSize);
+    if (font) return font;
+    font = reinterpret_cast<Font*>(
+        ImGui::GetIO().Fonts->AddFontFromFileTTF(filename.c_str(), fontSize));
+    guiModule->AddFont(filename, fontSize, font);
+    return font;
+  } else {
+    Font* font = guiModule->GetFont(fontName, fontSize);
+    if (font) return font;
+    font = reinterpret_cast<Font*>(
+        ImGui::GetIO().Fonts->AddFontFromFileTTF(filename.c_str(), fontSize));
+    guiModule->AddFont(fontName, fontSize, font);
+    return font;
+  }
+}
+Font* GUI::AddFontFromMemory(void* fontBuffer, float fontSize, float pixels,
+                             const std::string_view& fontName) {
+  Font* font = reinterpret_cast<Font*>(
+      ImGui::GetIO().Fonts->AddFontFromMemoryTTF(fontBuffer, fontSize, pixels));
+  if (fontName.empty()) guiModule->AddFont(fontName, fontSize, font);
+  return font;
+}
+void GUI::PushFont(const std::string_view fontName, float fontSize) {
+  Font* font = guiModule->GetFont(fontName, fontSize);
+  if (font) ImGui::PushFont(reinterpret_cast<ImFont*>(font));
+}
+void GUI::PushFont(Font* const font) {
+  ImGui::PushFont(reinterpret_cast<ImFont*>(font));
+}
 void GUI::PopFont() { ImGui::PopFont(); }
 
 void GUI::PushStyleVar(StyleVar var, float val) {

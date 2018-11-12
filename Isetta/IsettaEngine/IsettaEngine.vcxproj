@@ -233,6 +233,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Scene\Level.cpp" />
     <ClCompile Include="Scene\LevelManager.cpp" />
     <ClCompile Include="Scene\Transform.cpp" />
+    <ClCompile Include="Custom\FontExample.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -310,6 +311,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Events\Events.h" />
     <ClInclude Include="Graphics\AnimationComponent.h" />
     <ClInclude Include="Graphics\CameraComponent.h" />
+    <ClInclude Include="Graphics\Font.h" />
     <ClInclude Include="Graphics\GUI.h" />
     <ClInclude Include="Graphics\GUIModule.h" />
     <ClInclude Include="Graphics\GUIStyle.h" />
@@ -342,6 +344,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Scene\Level.h" />
     <ClInclude Include="Scene\LevelManager.h" />
     <ClInclude Include="Scene\Transform.h" />
+    <ClInclude Include="Custom\FontExample.h" />
     <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>
