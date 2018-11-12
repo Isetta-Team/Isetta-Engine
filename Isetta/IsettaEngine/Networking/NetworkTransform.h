@@ -2,11 +2,11 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include "Core/Config/Config.h"
 #include "Core/Math/Math.h"
 #include "ISETTA_API.h"
 #include "Networking/Messages.h"
 #include "Scene/Component.h"
-#include "Core/Config/Config.h"
 
 namespace Isetta {
 BEGIN_COMPONENT(NetworkTransform, Component, true)
@@ -52,10 +52,30 @@ friend class NetworkManager;
 END_COMPONENT(NetworkTransform, Component)
 
 // TODO(Caleb): ParentMessage
-
-RPC_MESSAGE_DEFINE(PositionMessage)
+RPC_MESSAGE_DEFINE(ParentMessage)
 template <typename Stream>
 bool Serialize(Stream* stream) {
+  serialize_int(stream, netId, 0,
+                Config::Instance().networkConfig.maxNetID.GetVal());
+  serialize_int(stream, parentNetId, 0,
+                Config::Instance().networkConfig.maxNetID.GetVal());
+  return true;
+}
+
+void Copy(const yojimbo::Message* otherMessage) override {
+  const ParentMessage* message = reinterpret_cast<const ParentMessage*>(otherMessage);
+
+  netId = message->netId;
+  parentNetId = message->parentNetId;
+}
+
+int netId = 0;
+int parentNetId = 0;
+
+RPC_MESSAGE_FINISH
+
+RPC_MESSAGE_DEFINE(PositionMessage) template <typename Stream>
+  bool Serialize(Stream* stream) {
   serialize_int(stream, netId, 0,
                 Config::Instance().networkConfig.maxNetID.GetVal());
 

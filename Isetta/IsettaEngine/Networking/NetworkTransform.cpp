@@ -281,6 +281,38 @@ void NetworkTransform::Start() {
               transformMessage);
         });
 
+    // Parenting callbacks
+    NetworkManager::Instance().RegisterClientCallback<ParentMessage>(
+        [](yojimbo::Message* message) {
+          ParentMessage* parentMessage =
+              reinterpret_cast<ParentMessage*>(message);
+
+          NetworkId* netId =
+              NetworkManager::Instance().GetNetworkId(parentMessage->netId);
+          if (!netId) {
+            return;
+          }
+
+          Entity* entity = netId->GetEntity();
+
+          if (parentMessage->parentNetId == 0) {
+            entity->GetTransform()->SetParent(nullptr);
+          } else {
+            Entity* parentEntity = NetworkManager::Instance().GetNetworkEntity(
+                parentMessage->parentNetId);
+            entity->GetTransform()->SetParent(parentEntity->GetTransform());
+          }
+        });
+
+    NetworkManager::Instance().RegisterServerCallback<ParentMessage>(
+        [](int clientIdx, yojimbo::Message* message) {
+          ParentMessage* parentMessage =
+              reinterpret_cast<ParentMessage*>(message);
+
+          NetworkManager::Instance().SendAllMessageFromServer<ParentMessage>(
+              parentMessage);
+        });
+
     NetworkTransform::registeredCallbacks = true;
   }
   netId = entity->GetComponent<NetworkId>();
@@ -377,6 +409,12 @@ void NetworkTransform::ForceSendTransform(bool snap) {
 }
 
 void NetworkTransform::SetNetworkedParentToRoot() {
+  ParentMessage* message =
+      NetworkManager::Instance().GenerateMessageFromClient<ParentMessage>();
+  message->netId = netId->id;
+  message->parentNetId = 0;
+  NetworkManager::Instance().SendMessageFromClient(message);
+
   entity->GetTransform()->SetParent(nullptr);
 }
 
@@ -385,6 +423,12 @@ bool NetworkTransform::SetNetworkedParent(int networkId) {
   if (!parent) {
     return false;
   }
+
+  ParentMessage* message =
+      NetworkManager::Instance().GenerateMessageFromClient<ParentMessage>();
+  message->netId = netId->id;
+  message->parentNetId = networkId;
+  NetworkManager::Instance().SendMessageFromClient(message);
 
   entity->GetTransform()->SetParent(parent->GetTransform());
   return true;
