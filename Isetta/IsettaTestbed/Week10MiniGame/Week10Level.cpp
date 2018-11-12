@@ -2,7 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Week10MiniGame/Week10Level.h"
-#include "Components/Editor/Editor.h"
+#include "Components/Editor/EditorComponent.h"
 #include "Components/FlyController.h"
 #include "Core/Config/Config.h"
 #include "Custom/IsettaCore.h"
@@ -38,7 +38,7 @@ void Week10Level::LoadLevel() {
   lightComp->SetProperty<LightComponent::Property::SHADOW_MAP_BIAS>(0.01f);
 
   Entity* debug{ADD_ENTITY("Debug")};
-  debug->AddComponent<Editor>();
+  debug->AddComponent<EditorComponent>();
 
   Entity* ground{ADD_ENTITY("Ground")};
   ground->AddComponent<MeshComponent>("blockFencing/Ground.scene.xml");

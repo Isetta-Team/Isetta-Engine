@@ -9,6 +9,7 @@
 #include "Networking/NetworkId.h"
 #include "Networking/NetworkManager.h"
 #include "W10NetworkManager.h"
+#include "Core/Time/Time.h"
 
 W10Player::W10Player(bool isRight, int swordNetID, int clientAuthorityID)
     : swordEntity{nullptr},
