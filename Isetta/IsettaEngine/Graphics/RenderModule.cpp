@@ -14,6 +14,7 @@
 #include "Graphics/LightComponent.h"
 #include "Horde3DUtils.h"
 #include "Scene/Entity.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 // TODO(Chaojie) remove
@@ -32,6 +33,8 @@ void RenderModule::StartUp(GLFWwindow* win) {
 }
 
 void RenderModule::Update(float deltaTime) {
+  BROFILER_CATEGORY("Render Update", Profiler::Color::OliveDrab);
+
   for (const auto& mesh : meshComponents) {
     bool isTransformDirty = mesh->entity->GetAttribute(
         Entity::EntityAttributes::IS_TRANSFORM_DIRTY);
@@ -109,6 +112,7 @@ void RenderModule::InitResources() {  // 1. Add resources
 
 void RenderModule::LoadResourceFromDisk(H3DRes resource,
                                         std::string errorMessage) {
+  PROFILE
   // horde3d loading won't load all resource files, it only load current
   // resource and ad nested resources into the resource list as unloaded
   // resources. So here, I need to iteratively load all unloaded resources.

@@ -249,6 +249,7 @@ template <typename T>
 inline Array<T>::~Array() {
   for (int i = 0; i < size_; i++) data[i].~T();
   if (capacity > 0) MemoryManager::FreeOnFreeList(data);
+  // if (capacity > 0) MemoryManager::DeleteArrOnFreeList<T>(size_, data);
   data = nullptr;
   size_ = capacity = 0;
 }

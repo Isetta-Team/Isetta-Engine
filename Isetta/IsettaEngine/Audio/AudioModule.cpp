@@ -11,6 +11,7 @@
 #include "Core/DataStructures/Array.h"
 #include "Core/Debug/Logger.h"
 #include "Util.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 
@@ -43,7 +44,11 @@ void AudioModule::StartUp() {
   AudioSource::audioModule = this;
 }
 
-void AudioModule::Update(float deltaTime) const { fmodSystem->update(); }
+void AudioModule::Update(float deltaTime) const {
+  BROFILER_CATEGORY("Audio Update", Profiler::Color::Maroon);
+
+  fmodSystem->update();
+}
 
 void AudioModule::ShutDown() {
   for (const auto& it : soundMap) {
@@ -56,6 +61,7 @@ void AudioModule::ShutDown() {
 }
 
 FMOD::Sound* AudioModule::FindSound(const char* soundName) {
+  PROFILE
   const auto strId = SID(soundName);
   if (soundMap.find(strId) != soundMap.end()) {
     return soundMap[strId];
@@ -75,6 +81,7 @@ FMOD::Channel* AudioModule::Play(FMOD::Sound* sound, const bool loop,
 }
 
 void AudioModule::LoadAllAudioClips() {
+  PROFILE
   std::string clipNames = CONFIG_VAL(audioConfig.audioClips);
   Util::StrRemoveSpaces(&clipNames);
   Array<std::string>& clips = Util::StrSplit(clipNames, ',');

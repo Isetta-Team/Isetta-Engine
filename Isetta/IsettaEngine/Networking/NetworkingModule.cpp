@@ -16,6 +16,7 @@
 #include "Core/IsettaAlias.h"
 #include "Graphics/AnimationComponent.h"
 #include "Networking/NetworkManager.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 // F Windows
 #ifdef SendMessage
@@ -83,6 +84,8 @@ void NetworkingModule::StartUp() {
 }
 
 void NetworkingModule::Update(float deltaTime) {
+  BROFILER_CATEGORY("Network Update", Profiler::Color::Orange);
+
   clock.UpdateTime();
 
   // Check for new connections
@@ -156,6 +159,7 @@ void NetworkingModule::AddServerToClientMessage(int clientIdx,
 }
 
 void NetworkingModule::PumpClientServerUpdate(double time) {
+  PROFILE
   client->SendPackets();
   if (server) {
     server->SendPackets();

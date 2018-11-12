@@ -15,23 +15,24 @@
 #include "Util.h"
 
 namespace Isetta {
-
+Texture::Texture(std::string_view fileName, bool load) : fileName{fileName} {
+  if (load) LoadTexture();
+}
+Texture::~Texture() { UnloadTexture(); }
 void Texture::LoadTexture() {
-  H3DRes renderResource =
-      h3dAddResource(H3DResTypes::Texture, fileName.data(), 0);
+  if (!texture) return;
+  h3dres = h3dAddResource(H3DResTypes::Texture, fileName.data(), 0);
   RenderModule::LoadResourceFromDisk(
-      renderResource, Util::StrFormat("Texture::LoadResourceFromFile => "
-                                      "Cannot load the resource from %s",
-                                      fileName.data()));
-  // TODO(Chaojie) Look for way to free this memory before window close
-  U8* data =
-      static_cast<U8*>(h3dMapResStream(renderResource, H3DTexRes::ImageElem, 0,
-                                       H3DTexRes::ImgPixelStream, true, false));
-  size.x = h3dGetResParamI(renderResource, H3DTexRes::ImageElem, 0,
-                           H3DTexRes::ImgWidthI);
-  size.y = h3dGetResParamI(renderResource, H3DTexRes::ImageElem, 0,
-                           H3DTexRes::ImgHeightI);
-  h3dUnmapResStream(renderResource);
+      h3dres, Util::StrFormat("Texture::LoadResourceFromFile => "
+                              "Cannot load the resource from %s",
+                              fileName.data()));
+  U8* data = static_cast<U8*>(h3dMapResStream(
+      h3dres, H3DTexRes::ImageElem, 0, H3DTexRes::ImgPixelStream, true, false));
+  size.x =
+      h3dGetResParamI(h3dres, H3DTexRes::ImageElem, 0, H3DTexRes::ImgWidthI);
+  size.y =
+      h3dGetResParamI(h3dres, H3DTexRes::ImageElem, 0, H3DTexRes::ImgHeightI);
+  h3dUnmapResStream(h3dres);
 
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
@@ -39,5 +40,10 @@ void Texture::LoadTexture() {
   glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_BGRA,
                GL_UNSIGNED_BYTE, data);
+}
+void Texture::UnloadTexture() {
+  h3dRemoveResource(h3dres);
+  glDeleteTextures(1, &texture);
+  texture = 0;
 }
 }  // namespace Isetta

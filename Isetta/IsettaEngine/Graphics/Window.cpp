@@ -3,6 +3,7 @@
  */
 #include "Graphics/Window.h"
 #include "Core/Config/Config.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 void Isetta::WindowModule::StartUp() {
@@ -11,6 +12,8 @@ void Isetta::WindowModule::StartUp() {
   InitWindow();
 }
 void WindowModule::Update(float deltaTime) {
+  BROFILER_CATEGORY("Window Update", Profiler::Color::Silver);
+
   if (glfwWindowShouldClose(winHandle)) {
     Application::Exit();
   }

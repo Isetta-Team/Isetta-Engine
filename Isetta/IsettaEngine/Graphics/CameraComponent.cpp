@@ -10,6 +10,7 @@
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 #include "Util.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 #include "Collisions/Ray.h"
 #include "Core/Math/Util.h"
@@ -62,6 +63,7 @@ Ray Isetta::CameraComponent::ScreenPointToRay(
 }
 
 void CameraComponent::UpdateH3DTransform() const {
+  PROFILE
   Transform::SetH3DNodeTransform(renderNode, *GetTransform());
 }
 

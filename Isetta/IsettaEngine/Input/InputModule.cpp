@@ -7,6 +7,7 @@
 #include "Core/Debug/Logger.h"
 #include "Core/Math/Vector2.h"
 #include "Input/Input.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 // using CBMap = std::unordered_map<int, std::list<std::pair<U16, Action<>>>>;
@@ -183,6 +184,8 @@ void InputModule::StartUp(GLFWwindow* win) {
 }
 
 void InputModule::Update(float deltaTime) {
+  BROFILER_CATEGORY("Input Update", Profiler::Color::FireBrick);
+
   glfwPollEvents();
   UpdateGamepadState();
 }

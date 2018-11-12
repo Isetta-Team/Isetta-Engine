@@ -3,8 +3,10 @@
  */
 #include "Custom/NetworkLevel.h"
 
-#include "Components/NetworkTransform.h"
+#include "Components/Editor/EditorComponent.h"
 #include "Components/FlyController.h"
+#include "Components/GridComponent.h"
+#include "Components/NetworkTransform.h"
 #include "Core/Color.h"
 #include "Core/Config/Config.h"
 #include "Core/Math/Math.h"
@@ -16,8 +18,6 @@
 #include "Input/Input.h"
 #include "Networking/NetworkId.h"
 #include "Scene/Entity.h"
-#include "Components/GridComponent.h"
-#include "Components/Editor/Editor.h"
 
 using namespace Isetta;
 
@@ -87,7 +87,8 @@ void RegisterExampleMessageFunctions() {
             if (!entity) {
               Entity* e = LevelManager::Instance().currentLevel->AddEntity(
                   Util::StrFormat("NetworkEntity%d", spawnMessage->netId));
-              NetworkId* netId = e->AddComponent<NetworkId>(spawnMessage->netId);
+              NetworkId* netId =
+                  e->AddComponent<NetworkId>(spawnMessage->netId);
               netId->clientAuthorityId = spawnMessage->clientAuthorityId;
               spawnedEntities.push_back(e);
 
@@ -316,5 +317,5 @@ void NetworkLevel::LoadLevel() {
   lightComp->SetProperty<LightProperty::SHADOW_MAP_COUNT>(1);
   lightComp->SetProperty<LightProperty::SHADOW_MAP_BIAS>(0.01f);
   lightEntity->AddComponent<GridComponent>();
-  lightEntity->AddComponent<Editor>();
+  lightEntity->AddComponent<EditorComponent>();
 }

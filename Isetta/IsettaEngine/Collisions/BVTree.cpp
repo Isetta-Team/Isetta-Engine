@@ -11,6 +11,7 @@
 #include "Ray.h"
 #include "Scene/Entity.h"
 #include "Util.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 BVTree::~BVTree() {
@@ -41,6 +42,7 @@ void BVTree::RemoveCollider(Collider* const collider) {
 }
 
 void BVTree::Update() {
+  PROFILE
   Array<Node*> toReInsert;
 
   std::queue<Node*> q;

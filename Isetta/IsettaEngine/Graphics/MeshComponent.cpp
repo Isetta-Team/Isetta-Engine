@@ -2,10 +2,12 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Graphics/MeshComponent.h"
+
 #include "Core/Config/Config.h"
 #include "Core/Debug/Assert.h"
 #include "Scene/Transform.h"
 #include "Util.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 RenderModule* MeshComponent::renderModule{nullptr};
@@ -23,6 +25,7 @@ MeshComponent::~MeshComponent() {
 }
 
 void MeshComponent::UpdateTransform() const {
+  PROFILE
   Transform::SetH3DNodeTransform(renderNode, *GetTransform());
 }
 
@@ -50,8 +53,6 @@ void MeshComponent::OnDisable() {
   h3dSetNodeFlags(renderNode, H3DNodeFlags::Inactive, true);
 }
 
-void MeshComponent::OnDestroy() {
-  h3dRemoveNode(renderNode);
-}
+void MeshComponent::OnDestroy() { h3dRemoveNode(renderNode); }
 
 }  // namespace Isetta

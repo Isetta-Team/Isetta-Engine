@@ -8,9 +8,10 @@
 #include "Core/Memory/MemoryManager.h"
 #include "Graphics/GUI.h"
 #include "Input/Input.h"
-
 #include "Scene/Level.h"
 #include "Scene/LevelManager.h"
+
+#include "brofiler/ProfilerCore/Brofiler.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
@@ -81,6 +82,8 @@ void GUIModule::StartUp(const GLFWwindow* win) {
 }
 
 void GUIModule::Update(float deltaTime) {
+  BROFILER_CATEGORY("GUI Update", Profiler::Color::PowderBlue);
+
   // LOG_INFO(Isetta::Debug::Channel::GUI,
   //         "-------------GUI UPDATE 1-------------");
   ImGui_ImplOpenGL3_NewFrame();

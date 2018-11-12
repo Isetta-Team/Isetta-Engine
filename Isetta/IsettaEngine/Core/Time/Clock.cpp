@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-
 #include "Core/Time/Clock.h"
+
 #include <ctime>
 #include "Core/Debug/Logger.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 Clock::Clock()
@@ -38,6 +39,7 @@ Clock::Clock(Clock&& inClock) noexcept
       isPause{inClock.isPause} {}
 
 void Clock::UpdateTime() {
+  PROFILE
   timeFrame++;
   deltaTime = 0.0;
   if (!isPause) {

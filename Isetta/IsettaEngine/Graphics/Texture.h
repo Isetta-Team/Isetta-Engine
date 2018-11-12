@@ -5,18 +5,22 @@
 #include "Core/IsettaAlias.h"
 #include "Core/Math/Vector2Int.h"
 
+typedef int H3DRes;
+
 namespace Isetta {
 class Texture {
  private:
-  Math::Vector2Int size;
-  unsigned int texture;
   std::string_view fileName;
+  unsigned int texture = 0;
+  Math::Vector2Int size;
+  H3DRes h3dres;
 
  public:
-  Texture(std::string_view fileName) : fileName{fileName} {}
-  ~Texture() = default;
+  Texture(std::string_view fileName, bool load = true);
+  ~Texture();
 
   void LoadTexture();
+  void UnloadTexture();
 
   inline unsigned int GetTexture() const { return texture; }
   inline int GetWidth() const { return size.x; }

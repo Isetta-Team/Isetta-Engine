@@ -61,8 +61,10 @@ void Console::CommandsCmd(Console* const console, std::string_view params) {
 }
 
 void Console::HistoryCmd(Console* const console, std::string_view params) {
-  for (const auto& cmd : console->GetHistory())
-    console->AddLog("- " + cmd + "\n");
+  // for (const auto& cmd : console->GetHistory())
+  //  console->AddLog("- " + cmd + "\n");
+  console->log.pop_back();
+  console->log.pop_back();
 }
 
 void Console::HelpCmd(Console* const console, std::string_view params) {
@@ -323,7 +325,7 @@ void Console::GuiUpdate() {
           int userPos = cmdStr.find(USER_DELIM);
           if (userPos != std::string::npos) {
             std::string key = cmdStr.substr(0, userPos);
-            int start = cmdStr.find_first_not_of("\t ", userPos + 1);
+            int start = cmdStr.find_first_not_of("=\t ", userPos);
             int end = cmdStr.find_last_not_of("\t ", userPos + 1);
             std::string_view value = cmdStr.substr(start, end - start);
             auto it = userCmds.find(key);
@@ -332,7 +334,7 @@ void Console::GuiUpdate() {
             int equalPos = cmdStr.find(CFG_DELIM);
             if (equalPos != std::string::npos) {
               std::string key = cmdStr.substr(0, equalPos);
-              int start = cmdStr.find_first_not_of("\t ", equalPos + 1);
+              int start = cmdStr.find_first_not_of("=\t ", equalPos);
               int end = cmdStr.find_last_not_of("\t ", equalPos + 1);
               std::string_view value = cmdStr.substr(start, end - start);
               Config::Instance().SetVal(key, value.data());

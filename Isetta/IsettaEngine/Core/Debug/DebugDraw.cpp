@@ -17,6 +17,7 @@
 #include "Graphics/CameraComponent.h"
 #include "Graphics/RenderModule.h"
 #include "Scene/Transform.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 #define PLANE 1
@@ -237,6 +238,8 @@ void DebugDraw::StartUp() {
   glBindVertexArray(0);
 }
 void DebugDraw::Update() {
+  BROFILER_CATEGORY("Debug Draw Update", Profiler::Color::Peru);
+
   auto it = durationDraw.begin();
   while (it != durationDraw.end()) {
     if (it->first < 0) {

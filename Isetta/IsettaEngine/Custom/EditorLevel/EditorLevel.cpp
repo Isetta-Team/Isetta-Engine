@@ -9,10 +9,12 @@
 #include "Graphics/CameraComponent.h"
 
 #include "Components/Editor/Console.h"
-#include "Components/Editor/Editor.h"
+#include "Components/Editor/EditorComponent.h"
 #include "Components/Editor/Hierarchy.h"
 #include "Components/Editor/Inspector.h"
 #include "Custom/EscapeExit.h"
+
+#include "Core/DataStructures/Array.h"
 
 namespace Isetta {
 using CameraProperty = CameraComponent::Property;
@@ -33,7 +35,7 @@ void EditorLevel::LoadLevel() {
   cameraEntity->AddComponent<EscapeExit>();
 
   Entity* editor{AddEntity("Editor")};
-  editor->AddComponent<Editor>();
+  editor->AddComponent<EditorComponent>();
   // editor->AddComponent<Console>("Console", true);
   // Inspector* inspector = editor->AddComponent<Inspector>("Inspector", false);
   // editor->AddComponent<Hierarchy>("Hierarchy", true, inspector);

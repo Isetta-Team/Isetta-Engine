@@ -6,15 +6,18 @@
 #include "Core/DataStructures/Array.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Time/Time.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 using namespace Isetta;
 U16 Events::totalListeners = 0;
 
 void Events::RaiseQueuedEvent(const EventObject& eventObject) {
+  PROFILE
   eventQueue.push(eventObject);
 }
 
 void Events::RaiseImmediateEvent(const EventObject& eventObject) {
+  PROFILE
   StringId eventNameId{SID(eventObject.eventName.c_str())};
   if (callbackMap.count(eventNameId) > 0) {
     // prevent unregistering the callback from screwing up the range-based for
@@ -67,6 +70,8 @@ void Events::Clear() {
 }
 
 void Events::Update() {
+  BROFILER_CATEGORY("Event Update", Profiler::Color::Lavender);
+
   while (!eventQueue.empty()) {
     EventObject currEvent = eventQueue.top();
     if (currEvent.timeFrame > Time::GetTimeFrame()) {
