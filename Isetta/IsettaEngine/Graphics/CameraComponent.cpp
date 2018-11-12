@@ -75,6 +75,8 @@ void CameraComponent::ResizeViewport(int width, int height) {
   h3dSetNodeParamI(renderNode, H3DCamera::ViewportWidthI, width);
   h3dSetNodeParamI(renderNode, H3DCamera::ViewportHeightI, height);
   h3dResizePipelineBuffers(renderModule->pipelineRes, width, height);
+  h3dSetupCameraView(renderNode, fov, static_cast<float>(width) / height,
+                     nearPlane, farPlane);
 }
 
 void CameraComponent::SetupCameraViewport() const {
