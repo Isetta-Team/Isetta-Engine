@@ -7,14 +7,14 @@
 #include "ISETTA_API.h"
 
 namespace Isetta {
-// template <typename T>
-// struct Compare {
-//  static virtual bool operator()(const T& a, const T& b) = 0;
-//};
-
 template <typename T>
 struct Less {
   bool operator()(const T& a, const T& b) { return a < b; }
+};
+
+template <typename T>
+struct Greater {
+  bool operator()(const T& a, const T& b) { return a > b; }
 };
 
 template <typename T, template <typename> class compare = Less>
@@ -48,6 +48,7 @@ class PriorityQueue {
     elements = std::move(inQueue);
   }
 
+  inline void Clear();
   template <typename... Args>
   inline void Emplace(Args&&... args);
   inline bool IsEmpty() const { return elements.Size() == 0; }
@@ -81,6 +82,10 @@ inline void PriorityQueue<T, compare>::PushToTop(int i, int parent) {
     i = Parent(i);
     parent = Parent(i);
   }
+}
+template <typename T, template <typename> class compare>
+inline void PriorityQueue<T, compare>::Clear() {
+  elements.Clear();
 }
 template <typename T, template <typename> class compare>
 inline void PriorityQueue<T, compare>::Pop() {

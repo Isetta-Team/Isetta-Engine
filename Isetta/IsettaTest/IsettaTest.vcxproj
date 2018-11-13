@@ -197,6 +197,7 @@
     <ClInclude Include="..\IsettaEngine\Core\Config\CVar.h" />
     <ClInclude Include="..\IsettaEngine\Core\Config\CVarRegistry.h" />
     <ClInclude Include="..\IsettaEngine\Core\Config\ICVar.h" />
+    <ClInclude Include="..\IsettaEngine\Core\DataStructures\HandleBin.h" />
     <ClInclude Include="..\IsettaEngine\Core\DataStructures\RingBuffer.h" />
     <ClInclude Include="..\IsettaEngine\Core\DataStructures\Vector.h" />
     <ClInclude Include="..\IsettaEngine\Core\Debug\Assert.h" />
@@ -244,6 +245,7 @@
     <ClInclude Include="..\IsettaEngine\Networking\NetworkId.h" />
     <ClInclude Include="..\IsettaEngine\Networking\NetworkingModule.h" />
     <ClInclude Include="..\IsettaEngine\Networking\NetworkManager.h" />
+    <ClInclude Include="..\IsettaEngine\Networking\NetworkTransform.h" />
     <ClInclude Include="..\IsettaEngine\Scene\Component.h" />
     <ClInclude Include="..\IsettaEngine\Scene\Entity.h" />
     <ClInclude Include="..\IsettaEngine\Scene\IsettaLevel.h" />
@@ -271,6 +273,7 @@
     <ClCompile Include="..\IsettaEngine\Core\Color.cpp" />
     <ClCompile Include="..\IsettaEngine\Core\Config\Config.cpp" />
     <ClCompile Include="..\IsettaEngine\Core\Config\CVar.cpp" />
+    <ClCompile Include="..\IsettaEngine\Core\DataStructures\HandleBin.cpp" />
     <ClCompile Include="..\IsettaEngine\Core\Debug\DebugDraw.cpp" />
     <ClCompile Include="..\IsettaEngine\Core\Debug\Logger.cpp" />
     <ClCompile Include="..\IsettaEngine\Core\Filesystem.cpp" />
@@ -314,6 +317,7 @@
     <ClCompile Include="..\IsettaEngine\Networking\NetworkId.cpp" />
     <ClCompile Include="..\IsettaEngine\Networking\NetworkingModule.cpp" />
     <ClCompile Include="..\IsettaEngine\Networking\NetworkManager.cpp" />
+    <ClCompile Include="..\IsettaEngine\Networking\NetworkTransform.cpp" />
     <ClCompile Include="..\IsettaEngine\Scene\Component.cpp" />
     <ClCompile Include="..\IsettaEngine\Scene\Entity.cpp" />
     <ClCompile Include="..\IsettaEngine\Scene\Layers.cpp" />

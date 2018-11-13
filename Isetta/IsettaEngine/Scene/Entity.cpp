@@ -126,7 +126,7 @@ void Entity::DestroyHelper(Entity* entity) {
   Array<Transform*> removingChildren;
   entity->SetAttribute(EntityAttributes::NEED_DESTROY, true);
   for (Transform* child : entity->transform.children) {
-    removingChildren.push_back(child);
+    removingChildren.PushBack(child);
     DestroyHelper(child->GetEntity());
   }
   for (Transform* child : removingChildren) {

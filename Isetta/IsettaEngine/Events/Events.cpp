@@ -13,7 +13,7 @@ U16 Events::totalListeners = 0;
 
 void Events::RaiseQueuedEvent(const EventObject& eventObject) {
   PROFILE
-  eventQueue.push(eventObject);
+  eventQueue.Push(eventObject);
 }
 
 void Events::RaiseImmediateEvent(const EventObject& eventObject) {
@@ -64,20 +64,19 @@ void Events::UnregisterEventListener(std::string_view eventName,
 }
 
 void Events::Clear() {
-  eventQueue = std::priority_queue<EventObject, Array<EventObject>,
-                                   std::greater<EventObject>>();
+  eventQueue.Clear();
   callbackMap.clear();
 }
 
 void Events::Update() {
   BROFILER_CATEGORY("Event Update", Profiler::Color::Lavender);
 
-  while (!eventQueue.empty()) {
-    EventObject currEvent = eventQueue.top();
+  while (!eventQueue.IsEmpty()) {
+    EventObject currEvent = eventQueue.Top();
     if (currEvent.timeFrame > Time::GetTimeFrame()) {
       break;
     }
-    eventQueue.pop();
+    eventQueue.Pop();
     RaiseImmediateEvent(currEvent);
   }
 }

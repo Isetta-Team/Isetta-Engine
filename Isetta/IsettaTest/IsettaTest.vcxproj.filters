@@ -255,6 +255,12 @@
     <ClInclude Include="..\IsettaEngine\Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Core\DataStructures\HandleBin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IsettaEngine\Networking\NetworkTransform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Math\Matrix3Test.cpp">
@@ -490,6 +496,12 @@
     </ClCompile>
     <ClCompile Include="Core\DataStructures\PriorityQueueTest.cpp">
       <Filter>Core\DataStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Core\DataStructures\HandleBin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IsettaEngine\Networking\NetworkTransform.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

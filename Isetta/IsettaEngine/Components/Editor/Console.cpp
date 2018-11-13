@@ -61,10 +61,8 @@ void Console::CommandsCmd(Console* const console, std::string_view params) {
 }
 
 void Console::HistoryCmd(Console* const console, std::string_view params) {
-  // for (const auto& cmd : console->GetHistory())
-  //  console->AddLog("- " + cmd + "\n");
-  console->log.pop_back();
-  console->log.pop_back();
+  for (const auto& cmd : console->GetHistory())
+    console->AddLog("- " + cmd + "\n");
 }
 
 void Console::HelpCmd(Console* const console, std::string_view params) {

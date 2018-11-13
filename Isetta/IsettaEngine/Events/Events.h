@@ -2,10 +2,10 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include <queue>
 #include "Core/DataStructures/Array.h"
+#include "Core/DataStructures/PriorityQueue.h"
 #include "Core/IsettaAlias.h"
-#include "EventObject.h"
+#include "Events/EventObject.h"
 #include "SID/sid.h"
 
 namespace Isetta {
@@ -29,9 +29,7 @@ class ISETTA_API Events {
 
  private:
   Events() = default;
-  std::priority_queue<EventObject, Array<EventObject>,
-                      std::greater<EventObject>>
-      eventQueue;
+  PriorityQueue<EventObject, Greater> eventQueue;
   std::unordered_map<StringId, Array<CallbackPair>> callbackMap;
 
   void Update();
