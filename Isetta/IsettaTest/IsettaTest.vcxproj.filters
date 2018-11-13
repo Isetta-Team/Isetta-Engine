@@ -347,9 +347,6 @@
     <ClCompile Include="..\IsettaEngine\Core\Color.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core\DataStructures\VectorTest.cpp">
-      <Filter>Core\DataStructures</Filter>
-    </ClCompile>
     <ClCompile Include="..\IsettaEngine\Core\Debug\Logger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -486,6 +483,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Core\DataStructures\TrieTest.cpp">
+      <Filter>Core\DataStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DataStructures\ArrayTest.cpp">
+      <Filter>Core\DataStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DataStructures\PriorityQueueTest.cpp">
       <Filter>Core\DataStructures</Filter>
     </ClCompile>
   </ItemGroup>

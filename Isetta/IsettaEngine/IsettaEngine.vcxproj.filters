@@ -681,6 +681,9 @@
     <ClInclude Include="Graphics\Font.h">
       <Filter>Graphics\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Core\DataStructures\PriorityQueue.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
