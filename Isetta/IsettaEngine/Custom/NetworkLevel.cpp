@@ -6,7 +6,6 @@
 #include "Components/Editor/EditorComponent.h"
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
-#include "Components/NetworkTransform.h"
 #include "Core/Color.h"
 #include "Core/Config/Config.h"
 #include "Core/Math/Math.h"
@@ -17,6 +16,7 @@
 #include "Graphics/LightComponent.h"
 #include "Input/Input.h"
 #include "Networking/NetworkId.h"
+#include "Networking/NetworkTransform.h"
 #include "Scene/Entity.h"
 
 using namespace Isetta;
@@ -96,10 +96,6 @@ void RegisterExampleMessageFunctions() {
               e->GetTransform()->SetLocalScale(Math::Vector3::one * .01);
               MeshComponent* mesh = e->AddComponent<MeshComponent, true>(
                   "Zombie/Zombie.scene.xml");
-              AnimationComponent* animation =
-                  e->AddComponent<AnimationComponent, true>(mesh);
-              animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
-              e->GetComponent<AnimationComponent>()->Play();
               if (netId->HasClientAuthority()) {
                 e->AddComponent<KeyTransform>();
               }
@@ -135,10 +131,6 @@ void RegisterExampleMessageFunctions() {
               e->GetTransform()->SetLocalScale(Math::Vector3::one * .01);
               MeshComponent* mesh = e->AddComponent<MeshComponent, true>(
                   "Zombie/Zombie.scene.xml");
-              AnimationComponent* animation =
-                  e->AddComponent<AnimationComponent, true>(mesh);
-              animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
-              e->GetComponent<AnimationComponent>()->Play();
               if (netId->HasClientAuthority()) {
                 e->AddComponent<KeyTransform>();
               }
@@ -262,6 +254,24 @@ void NetworkLevel::LoadLevel() {
       NetworkManager::Instance().SendMessageFromClient(m);
 
       ++spawnCounter;
+    }
+  });
+  Input::RegisterKeyPressCallback(KeyCode::I, []() {
+    if (NetworkManager::Instance().LocalClientIsConnected()) {
+      auto it = spawnedEntities.end();
+      it = std::prev(it);
+      it = std::prev(it);
+      spawnedEntities.back()
+          ->GetComponent<NetworkTransform>()
+          ->SetNetworkedParent((*it)->GetComponent<NetworkId>()->id);
+    }
+  });
+  Input::RegisterKeyPressCallback(KeyCode::K, []() {
+    if (NetworkManager::Instance().LocalClientIsConnected()) {
+      spawnedEntities.back()
+          ->GetComponent<NetworkTransform>()
+          ->SetNetworkedParentToRoot();
+      spawnedEntities.back()->GetTransform()->SetLocalScale(Math::Vector3(.01, .01, .01));
     }
   });
 

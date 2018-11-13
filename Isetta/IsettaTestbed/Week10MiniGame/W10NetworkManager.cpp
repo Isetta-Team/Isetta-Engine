@@ -3,7 +3,7 @@
  */
 
 #include "Week10MiniGame/W10NetworkManager.h"
-#include "Components/NetworkTransform.h"
+#include "Networking/NetworkTransform.h"
 #include "Core/Config/Config.h"
 #include "Custom/IsettaCore.h"
 #include "Events/Events.h"
@@ -24,10 +24,10 @@ void W10NetworkManager::HandleReadyMessage(int clientIdx,
       W10SpawnMessage* spawn =
           Isetta::NetworkManager::Instance()
               .GenerateMessageFromServer<W10SpawnMessage>(potentialClient);
-      spawn->netId = Isetta::NetworkManager::Instance().CreateNetId();
+      spawn->netId = netIdBin.GetHandle();
       spawn->clientAuthorityId = potentialClient;
       spawn->isOnRight = potentialClient % 2;
-      spawn->swordNetId = Isetta::NetworkManager::Instance().CreateNetId();
+      spawn->swordNetId = netIdBin.GetHandle();
 
       Isetta::NetworkManager::Instance()
           .SendAllMessageFromServer<W10SpawnMessage>(spawn);

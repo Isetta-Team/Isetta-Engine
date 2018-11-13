@@ -66,6 +66,7 @@
   <ItemGroup>
     <None Include="config.cfg" />
     <None Include="cpp.hint" />
+    <None Include="user.cfg" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="GUI Level">

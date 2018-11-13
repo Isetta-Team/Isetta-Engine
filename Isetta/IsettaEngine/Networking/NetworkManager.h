@@ -8,8 +8,9 @@
 #include <unordered_map>
 #include <utility>
 
-#include "ISETTA_API.h"
+#include "Core/DataStructures/HandleBin.h"
 #include "Core/IsettaAlias.h"
+#include "ISETTA_API.h"
 #include "yojimbo/yojimbo.h"
 #include "ISETTA_API.h"
 
@@ -24,30 +25,34 @@ class NetworkId;
  */
 class ISETTA_API_DECLARE NetworkManager {
  private:
+  NetworkManager();
+
   yojimbo::Message* CreateClientMessage(int messageId);
   yojimbo::Message* CreateServerMessage(int clientIdx, int messageId);
 
   template <typename T>
   int GetMessageTypeId();
-  std::list<std::pair<U16, Action<yojimbo::Message*>>>
-  GetClientFunctions(int type);
-  std::list<std::pair<U16, Action<int, yojimbo::Message*>>>
-  GetServerFunctions(int type);
+  std::list<std::pair<U16, Action<yojimbo::Message*>>> GetClientFunctions(
+      int type);
+  std::list<std::pair<U16, Action<int, yojimbo::Message*>>> GetServerFunctions(
+      int type);
+  U32 CreateNetworkId(NetworkId* NetworkId);
+  U32 AssignNetworkId(U32 netId, NetworkId* NetworkId);
+  void RemoveNetworkId(NetworkId* NetworkId);
 
   class NetworkingModule* networkingModule;
 
   int messageTypeCount = 0;
   U16 functionCount = 0;
-  U32 nextNetworkId = 1;
+  HandleBin networkIds;
   std::unordered_map<int, std::pair<U64, Func<yojimbo::Message*, void*>>>
       factories;
   std::unordered_map<std::type_index, int> typeMap;
 
-  std::unordered_map<
-      int, std::list<std::pair<U16, Action<yojimbo::Message*>>>>
+  std::unordered_map<int, std::list<std::pair<U16, Action<yojimbo::Message*>>>>
       clientCallbacks;
-  std::unordered_map<
-      int, std::list<std::pair<U16, Action<int, yojimbo::Message*>>>>
+  std::unordered_map<int,
+                     std::list<std::pair<U16, Action<int, yojimbo::Message*>>>>
       serverCallbacks;
 
   std::unordered_map<U32, NetworkId*> networkIdToComponentMap;
@@ -70,8 +75,7 @@ class ISETTA_API_DECLARE NetworkManager {
 
   U16 GetMessageTypeCount() { return messageTypeCount; }
   template <typename T>
-  bool RegisterMessageType(U64 size,
-                                  Func<yojimbo::Message*, void*> factory);
+  bool RegisterMessageType(U64 size, Func<yojimbo::Message*, void*> factory);
   template <typename T>
   int RegisterServerCallback(Action<int, yojimbo::Message*> func);
   template <typename T>
@@ -83,10 +87,6 @@ class ISETTA_API_DECLARE NetworkManager {
 
   Entity* GetNetworkEntity(const U32 id);
   NetworkId* GetNetworkId(const U32 id);
-  U32 CreateNetworkId(NetworkId* NetworkId);
-  U32 AssignNetworkId(U32 netId, NetworkId* NetworkId);
-  void RemoveNetworkId(NetworkId* NetworkId);
-  U32 CreateNetId();
 
   /**
    * @brief Connects the local Client to a server at the given address.
@@ -97,7 +97,7 @@ class ISETTA_API_DECLARE NetworkManager {
    * connection.
    */
   void ConnectToServer(const char* serverAddress,
-                              Action<bool> callback = nullptr);
+                       Action<bool> callback = nullptr);
   /**
    * @brief Disconnects the local Client from the server it is connected to.
    *
@@ -122,9 +122,9 @@ class ISETTA_API_DECLARE NetworkManager {
   int GetMaxClients();
   int GetClientIndex();
 
-  NetworkManager() = default;
   ~NetworkManager() = default;
 
+  friend class NetworkId;
   friend class NetworkingModule;
   friend class NetworkMessageFactory;
 };
@@ -135,7 +135,8 @@ T* NetworkManager::GenerateMessageFromClient() {
 }
 template <typename T>
 T* NetworkManager::GenerateMessageFromServer(int clientIdx) {
-  return reinterpret_cast<T*>(CreateServerMessage(clientIdx, GetMessageTypeId<T>()));
+  return reinterpret_cast<T*>(
+      CreateServerMessage(clientIdx, GetMessageTypeId<T>()));
 }
 template <typename T>
 int NetworkManager::GetMessageTypeId() {
@@ -154,7 +155,8 @@ void NetworkManager::SendAllMessageFromServer(yojimbo::Message* refMessage) {
   }
 }
 template <typename T>
-void NetworkManager::SendAllButClientMessageFromServer(int clientIdx, yojimbo::Message* refMessage) {
+void NetworkManager::SendAllButClientMessageFromServer(
+    int clientIdx, yojimbo::Message* refMessage) {
   for (int i = 0; i < GetMaxClients(); ++i) {
     if (!ClientIsConnected(i) || i == clientIdx) {
       continue;
@@ -169,7 +171,9 @@ template <typename T>
 bool NetworkManager::RegisterMessageType(
     U64 size, Func<yojimbo::Message*, void*> factory) {
   factories[messageTypeCount] = std::pair(size, factory);
-  return typeMap.insert_or_assign(std::type_index(typeid(T)), messageTypeCount++).second;
+  return typeMap
+      .insert_or_assign(std::type_index(typeid(T)), messageTypeCount++)
+      .second;
 }
 template <typename T>
 int NetworkManager::RegisterServerCallback(

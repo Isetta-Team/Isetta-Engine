@@ -17,7 +17,7 @@ class ISETTA_API_DECLARE Transform {
   // constructors
   Transform() = delete;
   explicit Transform(class Entity *const entity);
-  ~Transform() = default;
+  ~Transform();
 
   // position
   Math::Vector3 GetWorldPos();
