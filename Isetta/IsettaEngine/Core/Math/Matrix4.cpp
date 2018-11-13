@@ -389,6 +389,14 @@ Vector4 Matrix4::GetCol(const int col) const {
                  row_col[3][col]};
 }
 
+Matrix3 Matrix4::GetTopLeftMatrix3() const {
+  Matrix3 mat3;
+  for (int i = 0; i < Vector3::ELEMENT_COUNT; i++) {
+    mat3.SetCol(i, static_cast<Vector3>(GetCol(i)));
+  }
+  return mat3;
+}
+
 void Matrix4::SetCol(const int col, const Vector4& colData) {
   if (col < 0 || col > ROW_COUNT)
     throw std::out_of_range{"Matrix4:SetCol => Column index out of range."};

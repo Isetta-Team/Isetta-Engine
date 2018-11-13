@@ -22,9 +22,9 @@ void Collisions::SetIgnoreLayerCollision(int layer1, int layer2,
 void Collisions::IgnoreCollisions(Collider* const a, Collider* const b,
                                   bool ignore) {
   if (ignore) {
-    collisionsModule->ignoreCollisions.insert(std::make_pair(a, b));
+    collisionsModule->ignoreColliderPairs.insert(std::make_pair(a, b));
   } else {
-    collisionsModule->ignoreCollisions.erase(std::make_pair(a, b));
+    collisionsModule->ignoreColliderPairs.erase(std::make_pair(a, b));
   }
 }
 }  // namespace Isetta
