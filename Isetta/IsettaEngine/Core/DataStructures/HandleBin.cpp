@@ -45,7 +45,7 @@ bool HandleBin::RemoveHandle(U64 handle) {
         "max allowed.");
   }
 
-  if (handles.find(handle) == handles.end()) {
+  if (topHandle > handle && handles.find(handle) == handles.end()) {
     return false;
   } else {
     while (topHandle <= handle) {
