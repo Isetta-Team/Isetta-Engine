@@ -249,6 +249,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Components\Editor\Hierarchy.h" />
     <ClInclude Include="Core\DataStructures\Array.h" />
     <ClInclude Include="Core\DataStructures\HandleBin.h" />
+    <ClInclude Include="Core\DataStructures\PriorityQueue.h" />
     <ClInclude Include="Custom\EditorLevel\EditorLevel.h" />
     <ClInclude Include="Components\GridComponent.h" />
     <ClInclude Include="Components\FlyController.h" />

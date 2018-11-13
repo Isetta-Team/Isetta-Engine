@@ -7,7 +7,10 @@
 #include "Custom/IsettaCore.h"
 #include "Graphics/CameraComponent.h"
 
+#include "Core/DataStructures/Array.h"
 #include "Custom/EscapeExit.h"
+
+#include <vector>
 
 namespace Isetta {
 
@@ -26,7 +29,28 @@ void EmptyLevel::LoadLevel() {
   camComp->SetProperty<CameraProperty::FAR_PLANE>(
       CONFIG_VAL(renderConfig.farClippingPlane));
 
-  // Application::Exit();
   cameraEntity->AddComponent<EscapeExit>();
+
+  Array<std::string> arr;
+  arr.PushBack("test");
+  arr.PushBack("test");
+  arr.~Array();
+
+  // struct TestStruct {
+  //  // std::vector<int> test;
+  //  uint8_t test[5];
+  //};
+  // Array<TestStruct> arr;
+  // arr.PushBack(TestStruct{});
+  // arr.PushBack(TestStruct{});
+  // arr.PushBack(TestStruct{});
+  // arr.PushBack(TestStruct{});
+  // arr.PushBack(TestStruct{});
+
+  Application::Exit();
+
+  // Array<int> arr;
+  // arr.PushBack(1);
+  // arr.PushBack(1);
 }
 }  // namespace Isetta

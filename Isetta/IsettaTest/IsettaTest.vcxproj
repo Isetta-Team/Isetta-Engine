@@ -109,7 +109,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(SolutionDir)\IsettaEngine\$(Platform)\$(ConfigurationName) DLL\;$(SolutionDir)External\FMOD\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\$(Configuration)*\*.lib;$(SolutionDir)External\GLFW\Build\src\$(ConfigurationName)\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\imgui\lib\$(Configuration)\imgui.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\Debug*\*.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\$(Configuration)*\*.lib;$(SolutionDir)External\GLFW\Build\src\$(ConfigurationName)\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\imgui\lib\$(Configuration)\imgui.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>
       </AdditionalOptions>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -321,9 +321,10 @@
     <ClCompile Include="..\IsettaEngine\Scene\LevelManager.cpp" />
     <ClCompile Include="..\IsettaEngine\Scene\Transform.cpp" />
     <ClCompile Include="Core\ColorTest.cpp" />
+    <ClCompile Include="Core\DataStructures\PriorityQueueTest.cpp" />
     <ClCompile Include="Core\DataStructures\RingBufferTest.cpp" />
     <ClCompile Include="Core\DataStructures\TrieTest.cpp" />
-    <ClCompile Include="Core\DataStructures\VectorTest.cpp" />
+    <ClCompile Include="Core\DataStructures\ArrayTest.cpp" />
     <ClCompile Include="Core\Math\Matrix3Test.cpp" />
     <ClCompile Include="Core\Math\UtilTest.cpp" />
     <ClCompile Include="Core\Math\Vector2IntTest.cpp" />
@@ -334,12 +335,15 @@
     <ClCompile Include="TestInitialization.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Isetta\Isetta.vcxproj">
-      <Project>{31a996d0-d906-4351-968c-8cf1b76fddaf}</Project>
-    </ProjectReference>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\External\brofiler\ProfilerCore\ProfilerCore.vcxproj">
+      <Project>{a8e32855-f506-4e07-aa39-9fff743cffe6}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\IsettaEngine\IsettaEngine.vcxproj">
+      <Project>{31a996d0-d906-4351-968c-8cf1b76fddaf}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
