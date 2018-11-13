@@ -88,9 +88,8 @@ void W10Player::Update() {
     if (Isetta::Math::Util::Abs(GetTransform()->GetWorldPos().x -
                                 swordEntity->GetTransform()->GetWorldPos().x) <
         0.1f) {
-      // swordEntity->GetComponent<Isetta::NetworkTransform>()->SetNetworkedParent(
-      //     GetEntity()->GetComponent<Isetta::NetworkId>()->id);
-      swordEntity->GetTransform()->SetParent(GetTransform());
+      swordEntity->GetComponent<Isetta::NetworkTransform>()->SetNetworkedParent(
+          GetEntity()->GetComponent<Isetta::NetworkId>()->id);
       swordEntity->GetTransform()->SetLocalPos(
           Isetta::Math::Vector3((isOnRight ? 1 : -1) * 0.25f, 0, 0.25f));
       swordStabStatus = 0;
@@ -100,8 +99,6 @@ void W10Player::Update() {
               .GenerateMessageFromClient<W10CollectMessage>();
       message->swordNetId = swordNetId;
       Isetta::NetworkManager::Instance().SendMessageFromClient(message);
-      swordEntity->GetComponent<Isetta::NetworkTransform>()
-          ->SetNetworkedParent(GetEntity()->GetComponent<Isetta::NetworkId>()->id);
       swordEntity->GetComponent<Isetta::NetworkTransform>()
           ->ForceSendTransform(true);
     }

@@ -374,7 +374,7 @@ void NetworkTransform::FixedUpdate() {
         NetworkManager::Instance().SendMessageFromClient(message);
       }
     }
-  } else {
+  } else if (posInterpolation < 1 || rotInterpolation < 1 || scaleInterpolation < 1) {
     Transform* t = entity->GetTransform();
     float netIdLerp = 1.0 / netId->updateInterval;
 
@@ -408,22 +408,24 @@ void NetworkTransform::SnapLocalTransform() {
 }
 
 void NetworkTransform::ForceSendTransform(bool snap) {
-  Transform* t = entity->GetTransform();
-  prevPos = t->GetLocalPos();
-  prevRot = t->GetLocalRot();
-  prevScale = t->GetLocalScale();
+  if (netId->HasClientAuthority()) {
+    Transform* t = entity->GetTransform();
+    prevPos = t->GetLocalPos();
+    prevRot = t->GetLocalRot();
+    prevScale = t->GetLocalScale();
 
-  TransformMessage* message =
-      NetworkManager::Instance().GenerateMessageFromClient<TransformMessage>();
+    TransformMessage* message =
+        NetworkManager::Instance().GenerateMessageFromClient<TransformMessage>();
 
-  message->timestamp = Time::GetElapsedTime();
-  message->snap = snap;
-  message->localPos = t->GetLocalPos();
-  message->localRot = t->GetLocalRot();
-  message->localScale = t->GetLocalScale();
-  message->netId = netId->id;
+    message->timestamp = Time::GetElapsedTime();
+    message->snap = snap;
+    message->localPos = t->GetLocalPos();
+    message->localRot = t->GetLocalRot();
+    message->localScale = t->GetLocalScale();
+    message->netId = netId->id;
 
-  NetworkManager::Instance().SendMessageFromClient(message);
+    NetworkManager::Instance().SendMessageFromClient(message);
+  }
 }
 
 void NetworkTransform::SetNetworkedParentToRoot() {
