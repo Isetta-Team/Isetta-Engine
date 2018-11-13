@@ -2,7 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Week10MiniGame/W10Player.h"
-#include "Components/NetworkTransform.h"
+#include "Networking/NetworkTransform.h"
 #include "Core/Math/Matrix3.h"
 #include "Custom/IsettaCore.h"
 #include "Events/Events.h"

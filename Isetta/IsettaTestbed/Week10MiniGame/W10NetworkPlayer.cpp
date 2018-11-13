@@ -2,7 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Week10MiniGame/W10NetworkPlayer.h"
-#include "Components/NetworkTransform.h"
+#include "Networking/NetworkTransform.h"
 #include "Custom/IsettaCore.h"
 #include "Events/EventObject.h"
 #include "Events/Events.h"
@@ -67,7 +67,7 @@ void W10NetworkPlayer::SwordCollected() {
   swordEntity->GetTransform()->SetParent(GetTransform());
   swordEntity->GetTransform()->SetLocalPos(
       Isetta::Math::Vector3((isOnRight ? 1 : -1) * 0.25f, 0, 0.25f));
-  GetEntity()->GetComponent<Isetta::NetworkTransform>()->SnapTransform();
+  GetEntity()->GetComponent<Isetta::NetworkTransform>()->ForceSendTransform(true);
 }
 
 void W10NetworkPlayer::Update() {

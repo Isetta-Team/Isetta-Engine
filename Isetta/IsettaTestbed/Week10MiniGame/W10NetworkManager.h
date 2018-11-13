@@ -5,6 +5,7 @@
 #include "Networking/Messages.h"
 #include "Scene/Component.h"
 #include "Week10MiniGame/W10GameManager.h"
+#include "Core/DataStructures/HandleBin.h"
 
 BEGIN_COMPONENT(W10NetworkManager, Isetta::Component, true)
 void HandleReadyMessage(int clientIdx, yojimbo::Message* message);
@@ -26,6 +27,8 @@ Isetta::U16 resultHandle;
 
 float killDistance = 0.825;
 float blockDistance = 1.125;
+
+Isetta::HandleBin netIdBin{1};
 
 int clientCount;
 int lastAttemptClient;
