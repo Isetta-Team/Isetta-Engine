@@ -17,7 +17,7 @@ class ISETTA_API_DECLARE Transform {
   // constructors
   Transform() = delete;
   explicit Transform(class Entity *const entity);
-  ~Transform();
+  ~Transform() = default;
 
   // position
   Math::Vector3 GetWorldPos();
@@ -102,15 +102,15 @@ class ISETTA_API_DECLARE Transform {
   iterator end() { return children.end(); }
   const_iterator end() const { return children.end(); }
 
- private:
-  void RecalculateLocalToWorldMatrix();
-
   // both called by SetParent
   void AddChild(Transform *transform);
   void RemoveChild(Transform *transform);
 
+ private:
+  void RecalculateLocalToWorldMatrix();
+
   Math::Quaternion worldRot;  // only for query
-  Math::Vector3 worldScale; // only for query
+  Math::Vector3 worldScale;   // only for query
 
   Math::Matrix4 localToWorldMatrix{};
   Math::Matrix4 worldToLocalMatrix{};

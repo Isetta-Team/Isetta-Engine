@@ -14,11 +14,6 @@
 
 namespace Isetta {
 Transform::Transform(Entity *const entity) : entity(entity) {}
-Transform::~Transform() {
-  // for (auto& child : children) {
-  //   Entity::Destroy(child->GetEntity());
-  // }
-}
 
 Math::Vector3 Transform::GetWorldPos() {
   return GetLocalToWorldMatrix().GetCol(3).GetVector3();

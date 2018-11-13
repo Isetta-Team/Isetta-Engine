@@ -39,10 +39,16 @@ std::list<class Entity*> Level::GetEntities() const { return entities; }
 
 void Level::UnloadLevel() {
   PROFILE
+  // for (auto& entity : entities) {
+  //   if (entity->GetTransform()->GetParent() == levelRootTransform) {
+  //     MemoryManager::DeleteOnFreeList<Entity>(entity);
+  //   }
+  // }
+  MemoryManager::DeleteOnFreeList<Entity>(levelRoot);
   for (auto& entity : entities) {
     MemoryManager::DeleteOnFreeList<Entity>(entity);
+    entity = nullptr;
   }
-  MemoryManager::DeleteOnFreeList<Entity>(levelRoot);
 }
 
 void Level::AddComponentToStart(Component* component) {

@@ -29,6 +29,7 @@ void Stop();
 
 void OnEnable() override;
 void OnDisable() override;
+void OnDestroy() override;
 
 protected:
 H3DRes LoadResourceFromFile(std::string_view resourceName);

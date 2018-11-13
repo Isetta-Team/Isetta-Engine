@@ -21,7 +21,7 @@ void Entity::OnEnable() {
 void Entity::GuiUpdate() {
   PROFILE
   for (auto& comp : components) {
-    if (comp->GetActive() &&
+    if (comp && comp->GetActive() &&
         comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
       comp->GuiUpdate();
     }
@@ -62,13 +62,7 @@ void Entity::CheckDestroy() {
   PROFILE
   if (GetAttribute(EntityAttributes::NEED_DESTROY)) {
     // Destroy itself
-    for (auto& comp : components) {
-      comp->OnDestroy();
-    }
-    for (auto& comp : components) {
-      MemoryManager::DeleteOnFreeList<Component>(comp);
-    }
-    // TODO(Chaojie): delete child
+    DestroyImmediately(this);
   } else {
     // Destroy components
     auto typeIter = componentTypes.begin();
@@ -119,7 +113,39 @@ Entity::~Entity() {
 }
 
 void Entity::Destroy(Entity* entity) {
+  if (entity->GetAttribute(EntityAttributes::NEED_DESTROY)) {
+    return;
+  }
+  if (entity->GetTransform()->GetParent()) {
+    entity->GetTransform()->GetParent()->RemoveChild(&entity->transform);
+  }
+  DestroyHelper(entity);
+}
+
+void Entity::DestroyHelper(Entity* entity) {
+  Array<Transform*> removingChildren;
   entity->SetAttribute(EntityAttributes::NEED_DESTROY, true);
+  for (Transform* child : entity->transform.children) {
+    removingChildren.push_back(child);
+    DestroyHelper(child->GetEntity());
+  }
+  for (Transform* child : removingChildren) {
+    entity->transform.RemoveChild(child);
+  }
+  entity->GetTransform()->parent = nullptr;
+}
+
+void Entity::DestroyImmediately(Entity* entity) {
+  for (auto& comp : entity->components) {
+    comp->OnDestroy();
+  }
+  for (auto& comp : entity->components) {
+    MemoryManager::DeleteOnFreeList<Component>(comp);
+  }
+  entity->components.Clear();
+  if (entity->GetTransform()->GetParent()) {
+    entity->GetTransform()->GetParent()->RemoveChild(&entity->transform);
+  }
 }
 
 Entity* Entity::GetEntityByName(const std::string& name) {
