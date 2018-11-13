@@ -6,7 +6,7 @@
 #include "Events/Events.h"
 
 
-void EventListenerComponent::Start() {
+void EventListenerComponent::Awake() {
   Isetta::Events::Instance().RegisterEventListener(
       "RaiseEvent", [](const Isetta::EventObject& eventObject) {
         std::string message{std::get<std::string>(eventObject.eventParams[0])};

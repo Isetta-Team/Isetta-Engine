@@ -85,7 +85,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)External\FMOD\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\$(Configuration)*\*.lib;$(SolutionDir)External\GLFW\Build\src\$(ConfigurationName)\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\imgui\lib\$(Configuration)\imgui.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\Debug*\*.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\$(Configuration)*\*.lib;$(SolutionDir)External\GLFW\Build\src\$(ConfigurationName)\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\imgui\lib\$(Configuration)\imgui.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>false</OptimizeReferences>
     </Link>
@@ -108,7 +108,7 @@ XCOPY  /Y /R "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)External\FMOD\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\Debug\Horde3DUtils.lib;$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\Debug\*.lib;$(SolutionDir)External\GLFW\Build\src\Debug\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\Debug\Horde3D.lib;$(SolutionDir)External\imgui\lib\Debug\imgui.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\Debug\yojimbo.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)External\brofiler\ProfilerCore\Debug*\*.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\Debug\Horde3DUtils.lib;$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\Debug\*.lib;$(SolutionDir)External\GLFW\Build\src\Debug\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\Debug\Horde3D.lib;$(SolutionDir)External\imgui\lib\Debug\imgui.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\Debug\yojimbo.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>false</OptimizeReferences>
     </Link>
@@ -134,7 +134,7 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)External\FMOD\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\$(Configuration)*\*.lib;$(SolutionDir)External\GLFW\Build\src\$(ConfigurationName)\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\imgui\lib\$(Configuration)\imgui.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)External\brofiler\ProfilerCore\$(ConfigurationName)*\ProfilerCore64.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\$(Configuration)*\*.lib;$(SolutionDir)External\GLFW\Build\src\$(ConfigurationName)\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\imgui\lib\$(Configuration)\imgui.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(ConfigurationName)\Horde3D.dll" "$(TargetDir)"
@@ -150,7 +150,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Collisions\CollisionHandler.cpp" />
     <ClCompile Include="Collisions\Collisions.cpp" />
     <ClCompile Include="Components\AxisDrawer.cpp" />
-    <ClCompile Include="Components\Editor\Editor.cpp" />
+    <ClCompile Include="Components\Editor\EditorComponent.cpp" />
     <ClCompile Include="Components\Editor\Hierarchy.cpp" />
     <ClCompile Include="Core\DataStructures\HandleBin.cpp" />
     <ClCompile Include="Core\DataStructures\Trie.cpp" />
@@ -234,6 +234,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Scene\Level.cpp" />
     <ClCompile Include="Scene\LevelManager.cpp" />
     <ClCompile Include="Scene\Transform.cpp" />
+    <ClCompile Include="Custom\FontExample.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -244,7 +245,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Collisions\Collisions.h" />
     <ClInclude Include="Collisions\CollisionUtil.h" />
     <ClInclude Include="Components\AxisDrawer.h" />
-    <ClInclude Include="Components\Editor\Editor.h" />
+    <ClInclude Include="Components\Editor\EditorComponent.h" />
     <ClInclude Include="Components\Editor\Hierarchy.h" />
     <ClInclude Include="Core\DataStructures\Array.h" />
     <ClInclude Include="Core\DataStructures\HandleBin.h" />
@@ -311,6 +312,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Events\Events.h" />
     <ClInclude Include="Graphics\AnimationComponent.h" />
     <ClInclude Include="Graphics\CameraComponent.h" />
+    <ClInclude Include="Graphics\Font.h" />
     <ClInclude Include="Graphics\GUI.h" />
     <ClInclude Include="Graphics\GUIModule.h" />
     <ClInclude Include="Graphics\GUIStyle.h" />
@@ -344,6 +346,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Scene\Level.h" />
     <ClInclude Include="Scene\LevelManager.h" />
     <ClInclude Include="Scene\Transform.h" />
+    <ClInclude Include="Custom\FontExample.h" />
     <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>
@@ -366,6 +369,11 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <Xml Include="Resources\pipelines\postHDR.material.xml" />
     <Xml Include="Resources\test\Low-Poly-Racing-Car.scene.xml" />
     <Xml Include="Resources\test\m0DefaultMaterial.material.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\External\brofiler\ProfilerCore\ProfilerCore.vcxproj">
+      <Project>{a8e32855-f506-4e07-aa39-9fff743cffe6}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

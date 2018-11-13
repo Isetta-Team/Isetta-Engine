@@ -2,12 +2,14 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Core/Memory/MemoryArena.h"
+
 #include "Core/DataStructures/Array.h"
 #include "Core/Debug/Assert.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Memory/MemUtil.h"
 #include "Core/Memory/ObjectHandle.h"
 #include "Input/Input.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 
@@ -45,6 +47,7 @@ void* MemoryArena::Alloc(const Size size, Size& outSize) {
 }
 
 void MemoryArena::Defragment() {
+  PROFILE
   if (addressIndexMap.empty()) return;
 
   for (int i = 0; i < 6; i++) {

@@ -7,7 +7,7 @@
 
 namespace Isetta::Math {
 class Matrix4;
-class ISETTA_API_DECLARE Quaternion {
+class ISETTA_API Quaternion {
  public:
   static const Quaternion identity;
 

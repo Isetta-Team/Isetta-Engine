@@ -289,9 +289,6 @@
     <ClCompile Include="Custom\EditorLevel\EditorLevel.cpp">
       <Filter>Custom\EditorLevel</Filter>
     </ClCompile>
-    <ClCompile Include="Components\Editor\Editor.cpp">
-      <Filter>Components\Editor</Filter>
-    </ClCompile>
     <ClCompile Include="Components\Editor\Inspector.cpp">
       <Filter>Components\Editor</Filter>
     </ClCompile>
@@ -309,6 +306,12 @@
     </ClCompile>
     <ClCompile Include="Core\DataStructures\HandleBin.cpp">
       <Filter>Core\DataStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Editor\EditorComponent.cpp">
+      <Filter>Components\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\FontExample.cpp">
+      <Filter>Custom</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -651,9 +654,6 @@
     <ClInclude Include="Custom\EditorLevel\EditorLevel.h">
       <Filter>Custom\EditorLevel</Filter>
     </ClInclude>
-    <ClInclude Include="Components\Editor\Editor.h">
-      <Filter>Components\Editor</Filter>
-    </ClInclude>
     <ClInclude Include="Components\Editor\Hierarchy.h">
       <Filter>Components\Editor</Filter>
     </ClInclude>
@@ -671,6 +671,15 @@
     </ClInclude>
     <ClInclude Include="Core\DataStructures\HandleBin.h">
       <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Editor\EditorComponent.h">
+      <Filter>Components\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\FontExample.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Font.h">
+      <Filter>Graphics\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

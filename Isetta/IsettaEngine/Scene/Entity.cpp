@@ -2,20 +2,24 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Scene/Entity.h"
+
 #include "Level.h"
 #include "LevelManager.h"
 #include "Scene/Component.h"
 #include "Scene/Layers.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 
 void Entity::OnEnable() {
+  PROFILE
   for (auto& comp : components) {
     comp->OnEnable();
   }
 }
 
 void Entity::GuiUpdate() {
+  PROFILE
   for (auto& comp : components) {
     if (comp->GetActive() &&
         comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
@@ -25,6 +29,7 @@ void Entity::GuiUpdate() {
 }
 
 void Entity::Update() {
+  PROFILE
   for (auto& comp : components) {
     if (comp->GetActive() &&
         comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
@@ -34,6 +39,7 @@ void Entity::Update() {
 }
 
 void Entity::FixedUpdate() {
+  PROFILE
   for (auto& comp : components) {
     if (comp->GetActive() &&
         comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
@@ -43,6 +49,7 @@ void Entity::FixedUpdate() {
 }
 
 void Entity::LateUpdate() {
+  PROFILE
   for (auto& comp : components) {
     if (comp->GetActive() &&
         comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
@@ -52,6 +59,7 @@ void Entity::LateUpdate() {
 }
 
 void Entity::CheckDestroy() {
+  PROFILE
   if (GetAttribute(EntityAttributes::NEED_DESTROY)) {
     // Destroy itself
     for (auto& comp : components) {
@@ -82,6 +90,7 @@ void Entity::CheckDestroy() {
 }
 
 void Entity::OnDisable() {
+  PROFILE
   for (auto& comp : components) {
     comp->OnDisable();
   }
@@ -138,6 +147,7 @@ bool Entity::GetActive() const {
 void Entity::SetTransform(const Math::Vector3& worldPos,
                           const Math::Vector3& worldEulerAngles,
                           const Math::Vector3& localScale) {
+  PROFILE
   SetAttribute(EntityAttributes::IS_TRANSFORM_DIRTY, true);
   // TODO(YIDI): Test this
   transform.SetWorldTransform(worldPos, worldEulerAngles, localScale);

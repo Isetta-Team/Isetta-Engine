@@ -10,15 +10,16 @@
 #include <list>
 #include <string>
 #include <unordered_map>
+#include <utility>
+#include "SID/sid.h"
 
+#include "Core/Color.h"
 #include "Core/Config/CVar.h"
 #include "Core/IsettaAlias.h"
+#include "Util.h"
 
-#include "imgui/imgui.h"
-
-class ImVec4;
 namespace Isetta::Math {
-class Vector2;
+class Vector2Int;
 }
 
 namespace Isetta {
@@ -70,9 +71,9 @@ class GUIModule {
     CVar<Color> ModalWindowDimBg{"modal_window_dim_bg_style", Color{}};
   };
 
-  inline Math::Vector2 GetWindowSize() const {
-    return Math::Vector2(winWidth, winHeight);
-  }
+  class Font* GetFont(const std::string_view& fontName, float size);
+  void AddFont(const std::string_view& fontName, float size,
+               class Font* const font);
 
  private:
   GUIModule() = default;
@@ -87,6 +88,8 @@ class GUIModule {
 
   const GLFWwindow* winHandle;
   int winWidth, winHeight;
+  std::unordered_map<std::pair<StringId, float>, class Font*, Util::PairHash>
+      fonts;
 
   friend class EngineLoop;
 };

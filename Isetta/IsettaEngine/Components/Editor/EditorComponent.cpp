@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Editor.h"
+#include "EditorComponent.h"
 
 #include "Graphics/GUI.h"
 #include "Input/Input.h"
@@ -15,12 +15,12 @@
 #include "Components/Editor/Inspector.h"
 
 namespace Isetta {
-void Editor::Awake() {
+void EditorComponent::Awake() {
   console = entity->AddComponent<Console>("Console", true);
   inspector = entity->AddComponent<Inspector>("Inspector", false);
   hierarchy = entity->AddComponent<Hierarchy>("Hierarchy", true, inspector);
 }
-void Editor::OnEnable() {
+void EditorComponent::OnEnable() {
   menuHandle = Input::RegisterKeyPressCallback(
       KeyCode::M, ModifierKeys::CTRL | ModifierKeys::SHIFT,
       [&]() { menuOpen = !menuOpen; });
@@ -34,7 +34,7 @@ void Editor::OnEnable() {
       KeyCode::H, ModifierKeys::CTRL | ModifierKeys::SHIFT,
       [&]() { hierarchy->Open(); });
 }
-void Editor::OnDisable() {
+void EditorComponent::OnDisable() {
   Input::UnregisterKeyPressCallback(
       KeyCode::M, ModifierKeys::CTRL | ModifierKeys::SHIFT, consoleHandle);
   Input::UnregisterKeyPressCallback(
@@ -45,7 +45,7 @@ void Editor::OnDisable() {
       KeyCode::H, ModifierKeys::CTRL | ModifierKeys::SHIFT, hierarchyHandle);
 }
 
-void Editor::GuiUpdate() {
+void EditorComponent::GuiUpdate() {
   if (!menuOpen) return;
 
   GUI::MenuBar(

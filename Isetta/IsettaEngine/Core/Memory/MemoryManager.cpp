@@ -7,6 +7,7 @@
 #include "Core/Math/Random.h"
 #include "Core/Memory/ObjectHandle.h"
 #include "Util.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 
@@ -60,6 +61,8 @@ void MemoryManager::StartUp() {
 // Memory Manager's update needs to be called after everything that need memory
 // allocation
 void MemoryManager::Update() {
+  BROFILER_CATEGORY("Memory Update", Profiler::Color::Teal);
+
   singleFrameAllocator.Clear();
   doubleBufferedAllocator.SwapBuffer();
   doubleBufferedAllocator.ClearCurrentBuffer();

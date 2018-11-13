@@ -21,4 +21,4 @@
 #include "Scene/LevelManager.h"
 #include "Scene/Transform.h"
 #include "Util.h"
-#define ADD_ENTITY(name) LevelManager::Instance().currentLevel->AddEntity(name)
+#define ADD_ENTITY(name) Isetta::LevelManager::Instance().currentLevel->AddEntity(name)

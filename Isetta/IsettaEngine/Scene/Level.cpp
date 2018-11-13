@@ -9,6 +9,7 @@
 #include "Graphics/RectTransform.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 
@@ -37,6 +38,7 @@ std::list<Entity*> Level::GetEntitiesByName(const std::string& name) {
 std::list<class Entity*> Level::GetEntities() const { return entities; }
 
 void Level::UnloadLevel() {
+  PROFILE
   for (auto& entity : entities) {
     MemoryManager::DeleteOnFreeList<Entity>(entity);
   }
@@ -48,6 +50,7 @@ void Level::AddComponentToStart(Component* component) {
 }
 
 void Level::StartComponents() {
+  PROFILE
   while (!componentsToStart.empty()) {
     componentsToStart.top()->Start();
     componentsToStart.pop();
@@ -59,6 +62,7 @@ Entity* Level::AddEntity(std::string name) {
 }
 
 Entity* Level::AddEntity(std::string name, Entity* parent) {
+  PROFILE
   Entity* entity = MemoryManager::NewOnFreeList<Entity>(name);
   entities.push_back(entity);
   // TODO(YIDI): Change it when transform returns pointer
@@ -67,6 +71,8 @@ Entity* Level::AddEntity(std::string name, Entity* parent) {
 }
 
 void Level::Update() {
+  BROFILER_CATEGORY("Level Update", Profiler::Color::GoldenRod);
+
   StartComponents();
   for (const auto& entity : entities) {
     if (entity->GetActive()) entity->Update();
@@ -74,6 +80,8 @@ void Level::Update() {
 }
 
 void Level::FixedUpdate() {
+  BROFILER_CATEGORY("Level Fixed Update", Profiler::Color::DarkSeaGreen);
+
   StartComponents();
   for (const auto& entity : entities) {
     entity->FixedUpdate();
@@ -81,12 +89,15 @@ void Level::FixedUpdate() {
 }
 
 void Level::GUIUpdate() {
+  PROFILE
   for (const auto& entity : entities) {
     entity->GuiUpdate();
   }
 }
 
 void Level::LateUpdate() {
+  BROFILER_CATEGORY("Level Late Update", Profiler::Color::LightCyan);
+
   for (const auto& entity : entities) {
     entity->LateUpdate();
   }

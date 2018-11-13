@@ -13,6 +13,7 @@
 #include "Networking/NetworkingModule.h"
 
 #include "Core/Config/Config.h"
+#include "Core/Debug/DebugDraw.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Filesystem.h"
 #include "Core/Time/Clock.h"
@@ -20,12 +21,10 @@
 #include "Input/Input.h"
 #include "Input/KeyCode.h"
 #include "Networking/NetworkManager.h"
-#include "Scene/Level.h"
-
 #include "Scene/Entity.h"
+#include "Scene/Level.h"
 #include "Scene/LevelManager.h"
-
-#include "Core/Debug/DebugDraw.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 
@@ -56,6 +55,8 @@ EngineLoop::~EngineLoop() {
 }
 
 void EngineLoop::StartUp() {
+  BROFILER_EVENT("Start Up");
+
   Logger::NewSession();
   Config::Instance().Read("config.cfg");
   if (Filesystem::Instance().FileExists("user.cfg")) {
@@ -83,6 +84,8 @@ void EngineLoop::StartUp() {
 }
 
 void EngineLoop::Update() {
+  BROFILER_FRAME("Main Thread");
+
   GetGameClock().UpdateTime();
 
   // TODO(All) Add networking update
@@ -108,11 +111,15 @@ void EngineLoop::Update() {
 }
 
 void EngineLoop::FixedUpdate(float deltaTime) {
+  BROFILER_CATEGORY("Fixed Update", Profiler::Color::IndianRed);
+
   networkingModule->Update(deltaTime);
   collisionsModule->Update(deltaTime);
   LevelManager::Instance().currentLevel->FixedUpdate();
 }
 void EngineLoop::VariableUpdate(float deltaTime) {
+  BROFILER_CATEGORY("Variable Update", Profiler::Color::SteelBlue);
+
   inputModule->Update(deltaTime);
   LevelManager::Instance().currentLevel->Update();
   Events::Instance().Update();
@@ -126,6 +133,8 @@ void EngineLoop::VariableUpdate(float deltaTime) {
 }
 
 void EngineLoop::ShutDown() {
+  BROFILER_EVENT("Shut Down");
+
   LevelManager::Instance().UnloadLevel();
   networkingModule->ShutDown();
   audioModule->ShutDown();

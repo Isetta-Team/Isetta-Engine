@@ -2,10 +2,12 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Graphics/LightComponent.h"
+
 #include <utility>
 #include "Core/Config/Config.h"
 #include "Scene/Transform.h"
 #include "Util.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 
@@ -45,11 +47,10 @@ void LightComponent::OnDisable() {
   h3dSetNodeFlags(renderNode, H3DNodeFlags::Inactive, true);
 }
 
-void LightComponent::OnDestroy() {
-  h3dRemoveNode(renderNode);
-}
+void LightComponent::OnDestroy() { h3dRemoveNode(renderNode); }
 
 void LightComponent::UpdateH3DTransform() const {
+  PROFILE
   Transform::SetH3DNodeTransform(renderNode, *GetTransform());
 }
 }  // namespace Isetta

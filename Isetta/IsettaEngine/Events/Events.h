@@ -25,6 +25,8 @@ class ISETTA_API Events {
   void UnregisterEventListener(std::string_view eventName,
                                U16 eventListenerHandle);
 
+  void Clear();
+
  private:
   Events() = default;
   std::priority_queue<EventObject, Array<EventObject>,

@@ -5,7 +5,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(Editor, Component, true)
+BEGIN_COMPONENT(EditorComponent, Component, true)
 private:
 class Console* console;
 class Inspector* inspector;
@@ -18,9 +18,9 @@ void OnDisable() override;
 void GuiUpdate() override;
 
 public:
-Editor() = default;
+EditorComponent() = default;
 
 void Awake() override;
 void OnEnable() override;
-END_COMPONENT(Editor, Component)
+END_COMPONENT(EditorComponent, Component)
 }  // namespace Isetta

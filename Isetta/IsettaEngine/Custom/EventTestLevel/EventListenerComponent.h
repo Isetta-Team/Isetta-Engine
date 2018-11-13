@@ -5,5 +5,6 @@
 #include "Scene/Component.h"
 
 BEGIN_COMPONENT(EventListenerComponent, Isetta::Component, true)
-void Start() override;
+public:
+void Awake() override;
 END_COMPONENT(EventListenerComponent, Isetta::Component)

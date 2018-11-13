@@ -201,6 +201,7 @@ class ISETTA_API Vector3 {
    * \param scalar The scalar vector
    */
   static Vector3 Scale(const Vector3& a, const Vector3& b);
+  static Vector3 ReverseScale(const Vector3& a, const Vector3& b);
   /**
    * \brief Spherically interpolates between two vectors
    * \param start The starting vector

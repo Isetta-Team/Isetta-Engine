@@ -2,9 +2,11 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Graphics/AnimationComponent.h"
+
 #include <Horde3D.h>
 #include "Core/Config/Config.h"
 #include "Util.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 RenderModule* AnimationComponent::renderModule{nullptr};
@@ -19,16 +21,17 @@ AnimationComponent::AnimationComponent(MeshComponent* model)
   renderModule->animationComponents.push_back(this);
 }
 
-int AnimationComponent::AddAnimation(std::string_view animationFilename, int layer,
-                                     std::string_view startNode, bool additive) {
+int AnimationComponent::AddAnimation(std::string_view animationFilename,
+                                     int layer, std::string_view startNode,
+                                     bool additive) {
   totalStates++;
   return AddAnimation(animationFilename, layer, startNode, additive,
                       totalStates - 1);
 }
 
-int AnimationComponent::AddAnimation(std::string_view animationFilename, int layer,
-                                     std::string_view startNode, bool additive,
-                                     int stateIndex) {
+int AnimationComponent::AddAnimation(std::string_view animationFilename,
+                                     int layer, std::string_view startNode,
+                                     bool additive, int stateIndex) {
   H3DRes res = LoadResourceFromFile(animationFilename);
   h3dSetupModelAnimStage(animatedModel->renderNode, stateIndex, res, layer,
                          startNode.data(), additive);
@@ -36,6 +39,7 @@ int AnimationComponent::AddAnimation(std::string_view animationFilename, int lay
 }
 
 void AnimationComponent::UpdateAnimation(float deltaTime) {
+  PROFILE
   if (isPlaying) {
     // TODO(Chaojie): Animation frame rate;
     animationTime += deltaTime * 30;

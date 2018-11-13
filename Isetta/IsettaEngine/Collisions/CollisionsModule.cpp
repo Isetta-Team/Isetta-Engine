@@ -10,6 +10,7 @@
 #include "Core/Math/Vector4.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 #include "Collisions/BoxCollider.h"
 #include "Collisions/CapsuleCollider.h"
@@ -28,6 +29,8 @@ void CollisionsModule::StartUp() {
 }
 
 void CollisionsModule::Update(float deltaTime) {
+  BROFILER_CATEGORY("Collision Update", Profiler::Color::Orchid);
+
   bvTree.Update();
 
   // By the end of the checking loop, pairs left in the lastFramePairs
@@ -87,6 +90,7 @@ void CollisionsModule::ShutDown() {}
 
 bool CollisionsModule::Intersection(const BoxCollider &a,
                                     const BoxCollider &b) {
+  PROFILE
   float ra, rb;
   Math::Matrix3 rot, absRot;
 
@@ -185,6 +189,7 @@ bool CollisionsModule::Intersection(const BoxCollider &a,
 
 bool CollisionsModule::Intersection(const BoxCollider &box,
                                     const SphereCollider &sphere) {
+  PROFILE
   Math::Vector3 center = sphere.GetWorldCenter();
   Math::Vector3 pt = ClosestPtPointOBB(center, box);
   Math::Vector3 to = pt - center;
@@ -193,6 +198,7 @@ bool CollisionsModule::Intersection(const BoxCollider &box,
 }
 bool CollisionsModule::Intersection(const BoxCollider &box,
                                     const CapsuleCollider &capsule) {
+  PROFILE
   Math::Matrix4 rot, scale;
   float radiusScale = capsule.GetWorldCapsule(&rot, &scale);
   Math::Vector3 dir = (Math::Vector3)(
@@ -220,15 +226,18 @@ bool CollisionsModule::Intersection(const BoxCollider &box,
 }
 bool CollisionsModule::Intersection(const SphereCollider &a,
                                     const SphereCollider &b) {
+  PROFILE
   return (a.GetWorldCenter() - b.GetWorldCenter()).SqrMagnitude() <=
          Math::Util::Square(a.GetWorldRadius() + b.GetWorldRadius());
 }
 bool CollisionsModule::Intersection(const SphereCollider &sphere,
                                     const BoxCollider &box) {
+  PROFILE
   return Intersection(box, sphere);
 }
 bool CollisionsModule::Intersection(const SphereCollider &sphere,
                                     const CapsuleCollider &capsule) {
+  PROFILE
   Math::Matrix4 rot, scale;
   float radiusScale = capsule.GetWorldCapsule(&rot, &scale);
   Math::Vector3 dir = (Math::Vector3)(
@@ -243,6 +252,7 @@ bool CollisionsModule::Intersection(const SphereCollider &sphere,
 }
 bool CollisionsModule::Intersection(const CapsuleCollider &a,
                                     const CapsuleCollider &b) {
+  PROFILE
   Math::Matrix4 aRot, aScale, bRot, bScale;
   float arScale = a.GetWorldCapsule(&aRot, &aScale);
   float brScale = b.GetWorldCapsule(&bRot, &bScale);
@@ -267,14 +277,17 @@ bool CollisionsModule::Intersection(const CapsuleCollider &a,
 }
 bool CollisionsModule::Intersection(const CapsuleCollider &capsule,
                                     const BoxCollider &box) {
+  PROFILE
   return Intersection(box, capsule);
 }
 bool CollisionsModule::Intersection(const CapsuleCollider &capsule,
                                     const SphereCollider &sphere) {
+  PROFILE
   return Intersection(sphere, capsule);
 }
 bool CollisionsModule::Raycast(const Ray &ray, RaycastHit *const hitInfo,
                                float maxDistance) {
+  PROFILE
   // TODO(YIDI) + TODO(JACOB) raycast bvtree
   // for (auto &col : colliders) {
   //  RaycastHit hit{};
@@ -285,6 +298,7 @@ bool CollisionsModule::Raycast(const Ray &ray, RaycastHit *const hitInfo,
   //  }
   //}
   // return hitInfo->GetDistance() < INFINITY;
+  return bvTree.Raycast(ray, hitInfo, maxDistance);
   return false;
 }
 bool CollisionsModule::GetIgnoreLayerCollision(int layer1, int layer2) const {

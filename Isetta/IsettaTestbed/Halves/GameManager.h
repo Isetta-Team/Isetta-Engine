@@ -7,7 +7,9 @@
 
 namespace Isetta {
 BEGIN_COMPONENT(GameManager, Component, true)
-public : void OnEnable() override;
+public:
+void Start() override;
+void OnEnable() override;
 void Update() override;
 void GuiUpdate() override;
 
@@ -15,6 +17,7 @@ static std::vector<Entity*> zombies;
 static int score;
 
 private:
+class Font* font;
 void SpawnZombie() const;
 float spawnRadius{10};
 float spawnInterval{2};

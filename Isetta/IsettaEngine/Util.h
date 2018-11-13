@@ -36,9 +36,9 @@ inline void StrRemoveSpaces(std::string* str) {
   str->erase(std::remove_if(str->begin(), str->end(), isspace), str->end());
 }
 
-inline Array<std::string_view> StrSplit(const std::string_view& inStr,
+inline Array<std::string> StrSplit(const std::string& inStr,
                                         const char separator) {
-  Array<std::string_view> results;
+  Array<std::string> results;
   Size lastPos = -1;
   Size sepPos = inStr.find(separator);
   while (sepPos != std::string::npos) {

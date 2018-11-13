@@ -3,7 +3,7 @@
  */
 #include "Custom/NetworkLevel.h"
 
-#include "Components/Editor/Editor.h"
+#include "Components/Editor/EditorComponent.h"
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
 #include "Core/Color.h"
@@ -264,8 +264,6 @@ void NetworkLevel::LoadLevel() {
       spawnedEntities.back()
           ->GetComponent<NetworkTransform>()
           ->SetNetworkedParent((*it)->GetComponent<NetworkId>()->id);
-      spawnedEntities.back()->GetTransform()->SetLocalScale(
-          spawnedEntities.back()->GetTransform()->GetLocalScale() * 100);
     }
   });
   Input::RegisterKeyPressCallback(KeyCode::K, []() {
@@ -329,5 +327,5 @@ void NetworkLevel::LoadLevel() {
   lightComp->SetProperty<LightProperty::SHADOW_MAP_COUNT>(1);
   lightComp->SetProperty<LightProperty::SHADOW_MAP_BIAS>(0.01f);
   lightEntity->AddComponent<GridComponent>();
-  lightEntity->AddComponent<Editor>();
+  lightEntity->AddComponent<EditorComponent>();
 }
