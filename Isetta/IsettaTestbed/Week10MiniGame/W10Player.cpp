@@ -100,6 +100,10 @@ void W10Player::Update() {
               .GenerateMessageFromClient<W10CollectMessage>();
       message->swordNetId = swordNetId;
       Isetta::NetworkManager::Instance().SendMessageFromClient(message);
+      swordEntity->GetComponent<Isetta::NetworkTransform>()
+          ->SetNetworkedParent(GetEntity()->GetComponent<Isetta::NetworkId>()->id);
+      swordEntity->GetComponent<Isetta::NetworkTransform>()
+          ->ForceSendTransform(true);
     }
   }
 

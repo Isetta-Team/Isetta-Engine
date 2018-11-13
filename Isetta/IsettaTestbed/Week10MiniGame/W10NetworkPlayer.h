@@ -15,7 +15,6 @@ public:
 W10NetworkPlayer(bool isRight, int swordNetID, int clientAuthorityID);
 void Awake() override;
 void SwordBlocked();
-void SwordCollected();
 void Update() override;
 Isetta::Entity* swordEntity;
 

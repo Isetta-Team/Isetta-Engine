@@ -15,6 +15,7 @@ void Start() override;
 void FixedUpdate() override;
 
 void ForceSendTransform(bool snap = false);
+void SnapLocalTransform();
 bool SetNetworkedParent(int netId);
 void SetNetworkedParentToRoot();
 

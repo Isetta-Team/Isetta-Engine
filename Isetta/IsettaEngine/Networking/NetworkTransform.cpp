@@ -392,19 +392,36 @@ void NetworkTransform::FixedUpdate() {
   }
 }
 
+void NetworkTransform::SnapLocalTransform() {
+  Transform* t = entity->GetTransform();
+  t->SetLocalPos(targetPos);
+  t->SetLocalRot(targetRot);
+  t->SetLocalScale(targetScale);
+
+  prevPos = targetPos;
+  prevRot = targetRot;
+  prevScale = targetScale;
+
+  posInterpolation = 1;
+  rotInterpolation = 1;
+  scaleInterpolation = 1;
+}
+
 void NetworkTransform::ForceSendTransform(bool snap) {
   Transform* t = entity->GetTransform();
-
-  TransformMessage* message =
-      NetworkManager::Instance().GenerateMessageFromClient<TransformMessage>();
   prevPos = t->GetLocalPos();
   prevRot = t->GetLocalRot();
   prevScale = t->GetLocalScale();
 
+  TransformMessage* message =
+      NetworkManager::Instance().GenerateMessageFromClient<TransformMessage>();
+
   message->timestamp = Time::GetElapsedTime();
+  message->snap = snap;
   message->localPos = t->GetLocalPos();
   message->localRot = t->GetLocalRot();
   message->localScale = t->GetLocalScale();
+  message->netId = netId->id;
 
   NetworkManager::Instance().SendMessageFromClient(message);
 }
