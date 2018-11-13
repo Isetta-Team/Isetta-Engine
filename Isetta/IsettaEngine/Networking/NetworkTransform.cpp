@@ -309,8 +309,9 @@ void NetworkTransform::Start() {
           ParentMessage* parentMessage =
               reinterpret_cast<ParentMessage*>(message);
 
-          NetworkManager::Instance().SendAllMessageFromServer<ParentMessage>(
-              parentMessage);
+          NetworkManager::Instance()
+              .SendAllButClientMessageFromServer<ParentMessage>(
+                  clientIdx, parentMessage);
         });
 
     NetworkTransform::registeredCallbacks = true;

@@ -3,7 +3,9 @@
  */
 #include "Custom/NetworkLevel.h"
 
+#include "Components/Editor/Editor.h"
 #include "Components/FlyController.h"
+#include "Components/GridComponent.h"
 #include "Core/Color.h"
 #include "Core/Config/Config.h"
 #include "Core/Math/Math.h"
@@ -16,8 +18,6 @@
 #include "Networking/NetworkId.h"
 #include "Networking/NetworkTransform.h"
 #include "Scene/Entity.h"
-#include "Components/GridComponent.h"
-#include "Components/Editor/Editor.h"
 
 using namespace Isetta;
 
@@ -87,7 +87,8 @@ void RegisterExampleMessageFunctions() {
             if (!entity) {
               Entity* e = LevelManager::Instance().currentLevel->AddEntity(
                   Util::StrFormat("NetworkEntity%d", spawnMessage->netId));
-              NetworkId* netId = e->AddComponent<NetworkId>(spawnMessage->netId);
+              NetworkId* netId =
+                  e->AddComponent<NetworkId>(spawnMessage->netId);
               netId->clientAuthorityId = spawnMessage->clientAuthorityId;
               spawnedEntities.push_back(e);
 
@@ -253,6 +254,26 @@ void NetworkLevel::LoadLevel() {
       NetworkManager::Instance().SendMessageFromClient(m);
 
       ++spawnCounter;
+    }
+  });
+  Input::RegisterKeyPressCallback(KeyCode::I, []() {
+    if (NetworkManager::Instance().LocalClientIsConnected()) {
+      auto it = spawnedEntities.end();
+      it = std::prev(it);
+      it = std::prev(it);
+      spawnedEntities.back()
+          ->GetComponent<NetworkTransform>()
+          ->SetNetworkedParent((*it)->GetComponent<NetworkId>()->id);
+      spawnedEntities.back()->GetTransform()->SetLocalScale(
+          spawnedEntities.back()->GetTransform()->GetLocalScale() * 100);
+    }
+  });
+  Input::RegisterKeyPressCallback(KeyCode::K, []() {
+    if (NetworkManager::Instance().LocalClientIsConnected()) {
+      spawnedEntities.back()
+          ->GetComponent<NetworkTransform>()
+          ->SetNetworkedParentToRoot();
+      spawnedEntities.back()->GetTransform()->SetLocalScale(Math::Vector3(.01, .01, .01));
     }
   });
 
