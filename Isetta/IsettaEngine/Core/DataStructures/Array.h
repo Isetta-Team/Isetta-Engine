@@ -305,7 +305,10 @@ template <typename T>
 inline void Array<T>::Reserve(int inCapacity) {
   if (inCapacity < capacity) return;
   T *tmpData = MemoryManager::NewArrOnFreeList<T>(inCapacity);
-  for (int i = 0; i < size_; i++) tmpData[i] = data[i];
+  for (int i = 0; i < size_; i++) {
+    tmpData[i] = std::move(data[i]);
+    data[i].~T();
+  }
   if (capacity > 0) MemoryManager::FreeOnFreeList(data);
   capacity = inCapacity;
   data = tmpData;
@@ -317,7 +320,10 @@ inline void Array<T>::Shrink() {
   // realloc free list
   // MemoryManager::FreeOnFreeList(data + size * sizeof(T));
   T *tmpData = MemoryManager::NewArrOnFreeList<T>(size_);
-  for (int i = 0; i < size_; i++) tmpData[i] = data[i];
+  for (int i = 0; i < size_; i++) {
+    tmpData[i] = std::move(data[i]);
+    data[i].~T();
+  }
   if (capacity > 0) MemoryManager::FreeOnFreeList(data);
   capacity = size_;
   data = tmpData;
@@ -431,11 +437,17 @@ inline typename Array<T>::iterator Array<T>::Insert(iterator position,
     T *tmpData = MemoryManager::NewArrOnFreeList<T>(inCapacity);
     iterator it = iterator(tmpData), itThis = begin();
     iterator end = iterator(tmpData + newSize);
-    for (; it != end, itThis != position; it++, itThis++) *it = *itThis;
+    for (; it != end, itThis != position; it++, itThis++) {
+      *it = *itThis;
+      (*itThis).~T();
+    }
     *it = val;
     ret = it;
     it++;
-    for (; it != end; it++, itThis++) *it = *itThis;
+    for (; it != end; it++, itThis++) {
+      *it = *itThis;
+      (*itThis).~T();
+    }
     if (capacity > 0) MemoryManager::FreeOnFreeList(data);
     capacity = inCapacity;
     data = tmpData;
@@ -458,10 +470,16 @@ inline typename Array<T>::iterator Array<T>::Insert(iterator position,
     T *tmpData = MemoryManager::NewArrOnFreeList<T>(inCapacity);
     iterator it = iterator(tmpData), itThis = begin();
     iterator end = iterator(tmpData + newSize);
-    for (; it != end, itThis != position; it++, itThis++) *it = *itThis;
+    for (; it != end, itThis != position; it++, itThis++) {
+      *it = *itThis;
+      (*itThis).~T();
+    }
     for (int i = 0; i < cnt; i++, it++) *it = val;
     ret = it;
-    for (; it != end; it++, itThis++) *it = *itThis;
+    for (; it != end; it++, itThis++) {
+      *it = *itThis;
+      (*itThis).~T();
+    }
     if (capacity > 0) MemoryManager::FreeOnFreeList(data);
     capacity = inCapacity;
     data = tmpData;
@@ -484,10 +502,16 @@ inline typename Array<T>::iterator Array<T>::Insert(iterator position,
     T *tmpData = MemoryManager::NewArrOnFreeList<T>(inCapacity);
     iterator it = iterator(tmpData), itThis = begin();
     iterator end = iterator(tmpData + newSize);
-    for (; it != end, itThis != position; it++, itThis++) *it = *itThis;
+    for (; it != end, itThis != position; it++, itThis++) {
+      *it = *itThis;
+      (*itThis).~T();
+    }
     for (iterator nit = beginIter; nit != endIter; nit++, it++) *it = *nit;
     ret = it;
-    for (; it != end; it++, itThis++) *it = *itThis;
+    for (; it != end; it++, itThis++) {
+      *it = *itThis;
+      (*itThis).~T();
+    }
     if (capacity > 0) MemoryManager::FreeOnFreeList(data);
     capacity = inCapacity;
     data = tmpData;
@@ -511,10 +535,16 @@ inline typename Array<T>::iterator Array<T>::Insert(iterator position,
     T *tmpData = MemoryManager::NewArrOnFreeList<T>(inCapacity);
     iterator it = iterator(tmpData), itThis = begin();
     iterator end = iterator(tmpData + newSize);
-    for (; it != end, itThis != position; it++, itThis++) *it = *itThis;
+    for (; it != end, itThis != position; it++, itThis++) {
+      *it = *itThis;
+      (*itThis).~T();
+    }
     for (const T *nit = beginPtr; nit != endPtr; nit++, it++) *it = *nit;
     ret = it;
-    for (; it != end; it++, itThis++) *it = *itThis;
+    for (; it != end; it++, itThis++) {
+      *it = *itThis;
+      (*itThis).~T();
+    }
     if (capacity > 0) MemoryManager::FreeOnFreeList(data);
     capacity = inCapacity;
     data = tmpData;
@@ -572,11 +602,17 @@ inline typename Array<T>::iterator Array<T>::Emplace(iterator position,
     T *tmpData = MemoryManager::NewArrOnFreeList<T>(inCapacity);
     iterator it = iterator(tmpData), itThis = begin();
     iterator end = iterator(tmpData + newSize);
-    for (; it != end, itThis != position; it++, itThis++) *it = *itThis;
+    for (; it != end, itThis != position; it++, itThis++) {
+      *it = *itThis;
+      (*itThis).~T();
+    }
     *it = T(std::forward<Args>(args)...);
     ret = it;
     it++;
-    for (; it != end; it++, itThis++) *it = *itThis;
+    for (; it != end; it++, itThis++) {
+      *it = *itThis;
+      (*itThis).~T();
+    }
     if (capacity > 0) MemoryManager::FreeOnFreeList(data);
     capacity = inCapacity;
     data = tmpData;
@@ -599,11 +635,17 @@ inline typename Array<T>::iterator Array<T>::Emplace(const_iterator position,
     T *tmpData = MemoryManager::NewArrOnFreeList<T>(inCapacity);
     iterator it = iterator(tmpData), itThis = begin();
     iterator end = iterator(tmpData + newSize);
-    for (; it != end, itThis != position; it++, itThis++) *it = *itThis;
+    for (; it != end, itThis != position; it++, itThis++) {
+      *it = *itThis;
+      (*itThis).~T();
+    }
     *it = T(std::forward<Args>(args)...);
     ret = it;
     it++;
-    for (; it != end; it++, itThis++) *it = *itThis;
+    for (; it != end; it++, itThis++) {
+      *it = *itThis;
+      (*itThis).~T();
+    }
     if (capacity > 0) MemoryManager::FreeOnFreeList(data);
     capacity = inCapacity;
     data = tmpData;

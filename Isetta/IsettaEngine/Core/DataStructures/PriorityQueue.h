@@ -26,6 +26,7 @@ class PriorityQueue {
   inline int Parent(int i) { return 0.5 * (i - 1); }
   inline int Left(int i) { return 2 * i; }
   inline int Right(int i) { return 2 * i + 1; }
+  inline void PushToTop(int i, int parent);
 
  public:
   PriorityQueue() = default;
@@ -72,6 +73,16 @@ inline void PriorityQueue<T, compare>::Heapify(int i) {
   }
 }
 template <typename T, template <typename> class compare>
+inline void PriorityQueue<T, compare>::PushToTop(int i, int parent) {
+  while (i != 0 && compare<T>()(elements[i], elements[parent])) {
+    T tmp = elements[i];
+    elements[i] = elements[parent];
+    elements[parent] = tmp;
+    i = Parent(i);
+    parent = Parent(i);
+  }
+}
+template <typename T, template <typename> class compare>
 inline void PriorityQueue<T, compare>::Pop() {
   elements.Erase(elements.begin());
   Heapify(0);
@@ -80,23 +91,13 @@ template <typename T, template <typename> class compare>
 inline void PriorityQueue<T, compare>::Push(const T& val) {
   elements.PushBack(val);
   int i = elements.Size() - 1;
-  while (i != 0 && compare<T>()(elements[Parent(i)], elements[i])) {
-    std::swap(&elements[i], &elements[Parent(i)]);
-    i = Parent(i);
-  }
+  PushToTop(i, Parent(i));
 }
 template <typename T, template <typename> class compare>
 inline void PriorityQueue<T, compare>::Push(T&& val) {
   int i = elements.Size();
   elements.PushBack(val);
-  int parent = Parent(i);
-  while (i != 0 && compare<T>()(elements[parent], elements[i])) {
-    T tmp = elements[i];
-    elements[i] = elements[parent];
-    elements[parent] = tmp;
-    i = Parent(i);
-    parent = Parent(i);
-  }
+  PushToTop(i, Parent(i));
 }
 template <typename T, template <typename> class compare>
 inline void PriorityQueue<T, compare>::Swap(PriorityQueue& inQueue) noexcept {
@@ -111,13 +112,6 @@ template <typename... Args>
 inline void PriorityQueue<T, compare>::Emplace(Args&&... args) {
   int i = elements.Size();
   elements.EmplaceBack(std::forward<Args>(args)...);
-  int parent = Parent(i);
-  while (i != 0 && compare<T>()(elements[i], elements[parent])) {
-    T tmp = elements[i];
-    elements[i] = elements[parent];
-    elements[parent] = tmp;
-    i = Parent(i);
-    parent = Parent(i);
-  }
+  PushToTop(i, Parent(i));
 }
 }  // namespace Isetta

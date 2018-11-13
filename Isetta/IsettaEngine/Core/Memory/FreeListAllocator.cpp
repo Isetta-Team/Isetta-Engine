@@ -81,6 +81,8 @@ void FreeListAllocator::Free(void* memPtr) {
   auto* header = reinterpret_cast<AllocHeader*>(headerAddress);
   PtrInt nodeAddress = headerAddress - header->adjustment;
   auto* newNode = new (reinterpret_cast<void*>(nodeAddress)) Node(header->size);
+  Size totalSize = header->size;
+  U64 adjustment = header->adjustment;
 
   // TODO(YIDI): Take care of double deletion, in that situation, memPtr is
   // the same as head
@@ -88,9 +90,6 @@ void FreeListAllocator::Free(void* memPtr) {
     head = newNode;
     return;
   }
-  // TODO(Yidi) + TODO(Jacob) negative on the last one, needs fixing
-  /*memset((void*)(headerAddress + headerSize), NULL,
-         header->size - headerSize - header->adjustment);*/
 
   // find last and next node, try to merge them
   if (nodeAddress < reinterpret_cast<PtrInt>(head)) {
@@ -111,6 +110,9 @@ void FreeListAllocator::Free(void* memPtr) {
     TryMergeWithNext(newNode);
     TryMergeWithNext(last);
   }
+  // TODO(Yidi)
+  // memset((void*)(headerAddress + headerSize), NULL,
+  //       totalSize - headerSize - adjustment);
 }
 
 void* FreeListAllocator::Realloc(void* memPtr, Size size, U8 alignment) {

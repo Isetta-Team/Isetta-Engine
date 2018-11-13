@@ -65,8 +65,10 @@ TEST_METHOD(Push) {
   PriorityQueue<int, Less> queue{1, 2, 3};
   queue.Push(0);
   Assert::AreEqual(4, queue.Size());
-  queue.Push(int());
+  Assert::AreEqual(0, queue.Top());
+  queue.Push(9);
   Assert::AreEqual(5, queue.Size());
+  Assert::AreEqual(0, queue.Top());
 }
 
 TEST_METHOD(Swap) {
@@ -75,6 +77,14 @@ TEST_METHOD(Swap) {
   queueA.Swap(queueB);
   Assert::AreEqual(2, queueA.Size());
   Assert::AreEqual(3, queueB.Size());
+}
+
+TEST_METHOD(TestMe) {
+  PriorityQueue<int, Less> queue{1, 2, 3};
+  // queue.Emplace(5);
+  queue.Push(3);
+  // Array<int> arr{1, 2, 3};
+  // arr.EmplaceBack(1);
 }
 }
 ;  // namespace DataStructuresTest
