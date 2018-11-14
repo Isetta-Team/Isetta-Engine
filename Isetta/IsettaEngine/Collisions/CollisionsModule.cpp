@@ -54,11 +54,18 @@ void CollisionsModule::Update(float deltaTime) {
     CollisionHandler *handler1 = collider1->GetHandler();
     CollisionHandler *handler2 = collider2->GetHandler();
 
-    // No Handler, Same Handler continue
-    // TODO(Caleb) Will need to change for solving
-    if (handler1 && handler2 && handler1 == handler2) continue;
+    // Trigger colliders with no handler shouldn't even be intersection tested
+    if (collider1->GetProperty(Collider::Property::IS_TRIGGER) ||
+        collider2->GetProperty(Collider::Property::IS_TRIGGER) && handler1 &&
+            handler2 && handler1 == handler2)
+      continue;
 
     if (collider1->Intersection(collider2)) {
+      collidingPairs.insert(pair);
+
+      // Colliders with the same handler shouldn't have their functions called
+      if (handler1 == handler2) continue;
+
       // if they do collide
       auto it = lastFramePairs.find(pair);
 
@@ -72,8 +79,6 @@ void CollisionsModule::Update(float deltaTime) {
         if (handler1) handler1->OnCollisionEnter(collider2);
         if (handler2) handler2->OnCollisionEnter(collider1);
       }
-
-      collidingPairs.insert(pair);
     }
   }
 
@@ -399,7 +404,7 @@ float CollisionsModule::SqDistSegmentOBB(const Math::Vector3 &p0,
 Math::Vector3 CollisionsModule::ClosestPtPointSegment(
     const Math::Vector3 &point, const Math::Vector3 &p0,
     const Math::Vector3 &p1, float *_t) {
-  float& t = *_t;
+  float &t = *_t;
   Math::Vector3 to = p1 - p0;
   t = Math::Vector3::Dot(point - p0, to) / Math::Vector3::Dot(to, to);
   if (t < 0.0f) {

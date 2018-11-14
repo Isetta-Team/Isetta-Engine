@@ -90,7 +90,7 @@ void CollisionSolverModule::Update() {
   BROFILER_CATEGORY("Collision Solver Update", Profiler::Color::Aqua);
 
   CollisionUtil::ColliderPairSet collidingPairs =
-      collisionsModule->bvTree.GetCollisionPairs();
+      collisionsModule->collidingPairs;
 
   for (int i = 0; i < 3;
        ++i) {  // TODO(Caleb): Don't hardcode number of iterations
@@ -103,16 +103,13 @@ void CollisionSolverModule::Update() {
       if ((collider1->GetProperty(Collider::Property::IS_STATIC) &&
            (collider2->GetProperty(Collider::Property::IS_STATIC))) ||
           collider1->GetProperty(Collider::Property::IS_TRIGGER) ||
-          collider2->GetProperty(Collider::Property::IS_TRIGGER) ||
-          collisionsModule->ignoreColliderPairs.find(pair) !=
-              collisionsModule->ignoreColliderPairs.end() ||
-          collisionsModule->GetIgnoreLayerCollision(
-              collider1->GetEntity()->GetLayerIndex(),
-              collider2->GetEntity()->GetLayerIndex())) {
+          collider2->GetProperty(Collider::Property::IS_TRIGGER)) {
         continue;
       }
 
-      if (!collider1->Intersection(collider2)) {
+      // Only test intersections after first test because we can use cached
+      // CollisionModule tests
+      if (i > 0 && !collider1->Intersection(collider2)) {
         continue;
       }
 

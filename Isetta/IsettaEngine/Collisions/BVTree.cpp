@@ -271,8 +271,6 @@ const CollisionUtil::ColliderPairSet& BVTree::GetCollisionPairs() {
 #if _EDITOR
           collisionSet.insert(curCollider);
           collisionSet.insert(curNode->collider);
-          DebugDraw::Line(curCollider->GetWorldCenter(),
-                          curNode->collider->GetWorldCenter(), Color::blue, 1, .05);
 #endif
         }
       } else {
