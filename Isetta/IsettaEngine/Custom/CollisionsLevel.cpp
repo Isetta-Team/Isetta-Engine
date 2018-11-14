@@ -30,7 +30,7 @@ namespace Isetta {
 
 using LightProperty = LightComponent::Property;
 using CameraProperty = CameraComponent::Property;
-using ColliderAttribute = Collider::Properties;
+using ColliderAttribute = Collider::Property;
 
 void CollisionsLevel::LoadLevel() {
   Entity* debugEntity{AddEntity("Debug")};

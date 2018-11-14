@@ -18,6 +18,8 @@
 #include "Collisions/CollisionHandler.h"
 #include "Collisions/Collisions.h"
 #include "Collisions/SphereCollider.h"
+
+#include "Collisions/CollisionSolverModule.h"
 #include "Core/Config/Config.h"
 
 namespace Isetta {
@@ -26,6 +28,7 @@ void CollisionsModule::StartUp() {
   // TODO(Yidi) if you do this then you can change it at runtime....
   Collider::fatFactor = CONFIG_VAL(collisionConfig.fatFactor);
   Collisions::collisionsModule = this;
+  CollisionSolverModule::collisionsModule = this;
 }
 
 void CollisionsModule::Update(float deltaTime) {
@@ -395,8 +398,8 @@ float CollisionsModule::SqDistSegmentOBB(const Math::Vector3 &p0,
 }
 Math::Vector3 CollisionsModule::ClosestPtPointSegment(
     const Math::Vector3 &point, const Math::Vector3 &p0,
-    const Math::Vector3 &p1, float *const _t) {
-  float &t = *_t;
+    const Math::Vector3 &p1, float *_t) {
+  float& t = *_t;
   Math::Vector3 to = p1 - p0;
   t = Math::Vector3::Dot(point - p0, to) / Math::Vector3::Dot(to, to);
   if (t < 0.0f) {

@@ -2,12 +2,14 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Custom/BVHTestLevel/BVHLevel.h"
+#include "Collisions/CollisionHandler.h"
 #include "Collisions/SphereCollider.h"
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
 #include "Core/Config/Config.h"
 #include "Core/Math/Random.h"
 #include "Custom/BVHTestLevel/RandomMover.h"
+#include "Custom/DebugCollision.h"
 #include "Custom/FrameReporter.h"
 #include "Custom/IsettaCore.h"
 #include "Custom/RaycastClick.h"
@@ -57,6 +59,8 @@ void BVHLevel::LoadLevel() {
       Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
       sphere->AddComponent<RandomMover>();
       SphereCollider* col = sphere->AddComponent<SphereCollider>();
+      sphere->AddComponent<CollisionHandler>();
+      sphere->AddComponent<DebugCollision>();
       const float size = 20;
       sphere->SetTransform(size *
                            Math::Vector3{Math::Random::GetRandom01() - 0.5f,
@@ -70,6 +74,8 @@ void BVHLevel::LoadLevel() {
     Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
     sphere->AddComponent<RandomMover>();
     SphereCollider* col = sphere->AddComponent<SphereCollider>();
+    sphere->AddComponent<CollisionHandler>();
+    sphere->AddComponent<DebugCollision>();
     const float size = 20;
     sphere->SetTransform(size *
                          Math::Vector3{Math::Random::GetRandom01() - 0.5f,

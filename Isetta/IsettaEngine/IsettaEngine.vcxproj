@@ -149,6 +149,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Collisions\BVTree.cpp" />
     <ClCompile Include="Collisions\CollisionHandler.cpp" />
     <ClCompile Include="Collisions\Collisions.cpp" />
+    <ClCompile Include="Collisions\CollisionSolverModule.cpp" />
     <ClCompile Include="Components\AxisDrawer.cpp" />
     <ClCompile Include="Components\Editor\EditorComponent.cpp" />
     <ClCompile Include="Components\Editor\Hierarchy.cpp" />
@@ -243,6 +244,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Collisions\BVTree.h" />
     <ClInclude Include="Collisions\CollisionHandler.h" />
     <ClInclude Include="Collisions\Collisions.h" />
+    <ClInclude Include="Collisions\CollisionSolverModule.h" />
     <ClInclude Include="Collisions\CollisionUtil.h" />
     <ClInclude Include="Components\AxisDrawer.h" />
     <ClInclude Include="Components\Editor\EditorComponent.h" />

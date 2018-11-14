@@ -313,6 +313,9 @@
     <ClCompile Include="Custom\FontExample.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
+    <ClCompile Include="Collisions\CollisionSolverModule.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -680,6 +683,9 @@
     </ClInclude>
     <ClInclude Include="Graphics\Font.h">
       <Filter>Graphics\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\CollisionSolverModule.h">
+      <Filter>Collisions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

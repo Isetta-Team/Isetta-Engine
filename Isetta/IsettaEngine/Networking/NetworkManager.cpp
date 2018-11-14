@@ -133,8 +133,4 @@ void NetworkManager::RemoveNetworkId(NetworkId* networkId) {
   networkIds.ReturnHandle(networkId->id);
   networkId->id = NULL;
 }
-
-U32 NetworkManager::CreateNetId() {
-  return nextNetworkId++;
-}
 }  // namespace Isetta

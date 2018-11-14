@@ -240,7 +240,7 @@ const CollisionUtil::ColliderPairSet& BVTree::GetCollisionPairs() {
   colliderPairSet.clear();
 
   for (const auto& pair : colNodeMap) {
-    if (pair.first->GetProperties(Collider::Properties::IS_STATIC)) continue;
+    if (pair.first->GetProperty(Collider::Property::IS_STATIC)) continue;
 
     Collider* curCollider = pair.first;
     AABB aabb = curCollider->GetFatAABB();
