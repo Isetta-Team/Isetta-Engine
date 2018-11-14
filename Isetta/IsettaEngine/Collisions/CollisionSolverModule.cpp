@@ -15,14 +15,17 @@
 #include "Core/Math/Vector3.h"
 #include "Core/Math/Vector4.h"
 
+#include "brofiler/ProfilerCore/Brofiler.h"
+
 namespace Isetta {
 CollisionsModule* CollisionSolverModule::collisionsModule{nullptr};
 
-void CollisionSolverModule::StartUp() {};
-void CollisionSolverModule::ShutDown() {};
+void CollisionSolverModule::StartUp(){};
+void CollisionSolverModule::ShutDown(){};
 
 Math::Vector3 CollisionSolverModule::Solve(Collider* collider,
                                            Math::Vector3 point) {
+  PROFILE
   Math::Vector3 closestPoint;
 
   switch (collider->GetType()) {
@@ -84,11 +87,14 @@ Math::Vector3 CollisionSolverModule::Solve(Collider* collider,
 }
 
 void CollisionSolverModule::Update() {
+  BROFILER_CATEGORY("Collision Solver Update", Profiler::Color::Aqua);
+
   CollisionUtil::ColliderPairSet collidingPairs =
       collisionsModule->bvTree.GetCollisionPairs();
 
   for (int i = 0; i < 3;
        ++i) {  // TODO(Caleb): Don't hardcode number of iterations
+
     for (const auto& pair : collidingPairs) {
       Collider* collider1 = pair.first;
       Collider* collider2 = pair.second;
@@ -118,23 +124,22 @@ void CollisionSolverModule::Update() {
 
       bool c1Static = collider1->GetProperty(Collider::Property::IS_STATIC);
       bool c2Static = collider1->GetProperty(Collider::Property::IS_STATIC);
-      int staticSwitch = static_cast<int>(c1Static) + 2 * static_cast<int>(c2Static);
+      int staticSwitch =
+          static_cast<int>(c1Static) + 2 * static_cast<int>(c2Static);
 
       switch (staticSwitch) {
         case 0:  // Neither collider is static
-          collider1->GetTransform()->TranslateWorld(
-              halfDistanceVector);
-          collider2->GetTransform()->TranslateWorld(
-              -halfDistanceVector);
-        break;
+          collider1->GetTransform()->TranslateWorld(halfDistanceVector);
+          collider2->GetTransform()->TranslateWorld(-halfDistanceVector);
+          break;
 
         case 1:  // Collider 1 is static
           collider2->GetTransform()->TranslateWorld(-halfDistanceVector * 2);
-        break;
+          break;
 
         case 2:  // Collider 2 is static
           collider1->GetTransform()->TranslateWorld(halfDistanceVector * 2);
-        break;
+          break;
       }
     }
   }

@@ -7,6 +7,7 @@
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
 #include "Core/Config/Config.h"
+#include "Core/DataStructures/Array.h"
 #include "Core/Math/Random.h"
 #include "Custom/BVHTestLevel/RandomMover.h"
 #include "Custom/DebugCollision.h"
@@ -53,11 +54,20 @@ void BVHLevel::LoadLevel() {
   debug->AddComponent<FrameReporter>();
   debug->AddComponent<RaycastClick>();
 
+  static bool enable = true;
+  Input::RegisterKeyPressCallback(KeyCode::SPACE, [&]() {
+    enable = !enable;
+    for (RandomMover* randomMover : randomMovers) {
+      randomMover->SetActive(enable);
+    }
+  });
+
   Input::RegisterKeyPressCallback(KeyCode::KP_5, [&]() {
     for (int i = 0; i < 100; i++) {
       count++;
       Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
-      sphere->AddComponent<RandomMover>();
+      randomMovers.PushBack(sphere->AddComponent<RandomMover>());
+      randomMovers.Back()->SetActive(enable);
       SphereCollider* col = sphere->AddComponent<SphereCollider>();
       sphere->AddComponent<CollisionHandler>();
       sphere->AddComponent<DebugCollision>();
@@ -72,7 +82,8 @@ void BVHLevel::LoadLevel() {
   Input::RegisterKeyPressCallback(KeyCode::KP_6, [&]() {
     count++;
     Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
-    sphere->AddComponent<RandomMover>();
+    randomMovers.PushBack(sphere->AddComponent<RandomMover>());
+    randomMovers.Back()->SetActive(enable);
     SphereCollider* col = sphere->AddComponent<SphereCollider>();
     sphere->AddComponent<CollisionHandler>();
     sphere->AddComponent<DebugCollision>();

@@ -77,6 +77,7 @@ void BVTree::Update() {
 }
 
 void BVTree::AddNode(Node* const newNode) {
+  PROFILE
   AABB newAABB = newNode->aabb;
 
   if (root == nullptr) {
@@ -131,6 +132,7 @@ void BVTree::AddNode(Node* const newNode) {
 }
 
 void BVTree::RemoveNode(Node* const node, const bool deleteNode) {
+  PROFILE
   ASSERT(node->IsLeaf());
 
   if (node == root) {
@@ -186,7 +188,11 @@ void BVTree::DebugDraw() const {
 
     Color color;
     if (cur->IsLeaf()) {
-      color = Color::green;
+      if (collisionSet.find(cur->collider) != collisionSet.end()) {
+        color = Color::red;
+      } else {
+        color = Color::green;
+      }
       DebugDraw::WireCube(Math::Matrix4::Translate(cur->aabb.GetCenter()) *
                               Math::Matrix4::Scale({cur->aabb.GetSize()}),
                           color, 1, .05);
@@ -237,7 +243,11 @@ bool BVTree::Raycast(Node* const node, const Ray& ray,
 }
 
 const CollisionUtil::ColliderPairSet& BVTree::GetCollisionPairs() {
+  PROFILE
   colliderPairSet.clear();
+#if _EDITOR
+  collisionSet.clear();
+#endif
 
   for (const auto& pair : colNodeMap) {
     if (pair.first->GetProperty(Collider::Property::IS_STATIC)) continue;
@@ -258,6 +268,12 @@ const CollisionUtil::ColliderPairSet& BVTree::GetCollisionPairs() {
         Collider* col = curNode->collider;
         if (curCollider != col) {
           colliderPairSet.insert({curCollider, curNode->collider});
+#if _EDITOR
+          collisionSet.insert(curCollider);
+          collisionSet.insert(curNode->collider);
+          DebugDraw::Line(curCollider->GetWorldCenter(),
+                          curNode->collider->GetWorldCenter(), Color::blue, 1, .05);
+#endif
         }
       } else {
         if (curNode->left->aabb.Intersect(aabb)) {
@@ -279,6 +295,7 @@ void BVTree::Node::UpdateBranchAABB() {
 }
 
 void BVTree::Node::UpdateLeafAABB() {
+  PROFILE
   ASSERT(IsLeaf() && collider != nullptr);
   aabb = collider->GetFatAABB();
 }

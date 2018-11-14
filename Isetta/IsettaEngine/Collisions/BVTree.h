@@ -4,6 +4,7 @@
 #pragma once
 #include <unordered_set>
 #include "AABB.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 #include "Collider.h"
 #include "CollisionUtil.h"
 
@@ -23,6 +24,7 @@ class BVTree {
 
     inline bool IsLeaf() const { return left == nullptr; }
     inline bool IsInFatAABB() const {
+      PROFILE
       return aabb.Contains(collider->GetAABB());
     }
 
@@ -36,6 +38,7 @@ class BVTree {
 
   BVTree() = default;
   friend class CollisionsModule;
+  friend class CollisionSolverModule;
 
  public:
   ~BVTree();
@@ -57,6 +60,9 @@ class BVTree {
 
   CollisionUtil::ColliderPairSet colliderPairSet;
   std::unordered_map<class Collider*, Node*> colNodeMap;
+#if _EDITOR
+  std::set<class Collider*> collisionSet;
+#endif
   Node* root = nullptr;
 };
 
