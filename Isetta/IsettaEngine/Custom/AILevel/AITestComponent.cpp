@@ -6,6 +6,7 @@
 #include "Custom/IsettaCore.h"
 #include "Graphics/ParticleSystemComponent.h"
 #include "Input/Input.h"
+#include "Core/Math/Random.h"
 
 Isetta::AITestComponent::AITestComponent(const Math::Rect& gridSurface,
                                          const Math::Vector2Int& divideNums)
