@@ -253,7 +253,7 @@ const CollisionUtil::ColliderPairSet& BVTree::GetCollisionPairs() {
     if (pair.first->GetProperty(Collider::Property::IS_STATIC)) continue;
 
     Collider* curCollider = pair.first;
-    AABB aabb = curCollider->GetFatAABB();
+    AABB aabb = pair.second->aabb;
     std::queue<Node*> q;
 
     if (root != nullptr) {
