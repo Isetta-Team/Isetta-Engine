@@ -143,6 +143,9 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AI\Nav2DAgent.cpp" />
+    <ClCompile Include="AI\Nav2DObstacle.cpp" />
+    <ClCompile Include="AI\Nav2DPlane.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Audio\AudioModule.cpp" />
     <ClCompile Include="Audio\AudioSource.cpp" />
@@ -154,6 +157,8 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Components\Editor\Hierarchy.cpp" />
     <ClCompile Include="Core\DataStructures\HandleBin.cpp" />
     <ClCompile Include="Core\DataStructures\Trie.cpp" />
+    <ClCompile Include="Custom\AILevel\AITestComponent.cpp" />
+    <ClCompile Include="Custom\AILevel\AITestLevel.cpp" />
     <ClCompile Include="Custom\EditorLevel\EditorLevel.cpp" />
     <ClCompile Include="Components\GridComponent.cpp" />
     <ClCompile Include="Components\FlyController.cpp" />
@@ -237,6 +242,9 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Custom\FontExample.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AI\Nav2DAgent.h" />
+    <ClInclude Include="AI\Nav2DObstacle.h" />
+    <ClInclude Include="AI\Nav2DPlane.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Audio\AudioModule.h" />
     <ClInclude Include="Audio\AudioSource.h" />
@@ -250,6 +258,9 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Core\DataStructures\Array.h" />
     <ClInclude Include="Core\DataStructures\HandleBin.h" />
     <ClInclude Include="Core\DataStructures\PriorityQueue.h" />
+    <ClInclude Include="Custom\AILevel\AITestAgent.h" />
+    <ClInclude Include="Custom\AILevel\AITestComponent.h" />
+    <ClInclude Include="Custom\AILevel\AITestLevel.h" />
     <ClInclude Include="Custom\EditorLevel\EditorLevel.h" />
     <ClInclude Include="Components\GridComponent.h" />
     <ClInclude Include="Components\FlyController.h" />

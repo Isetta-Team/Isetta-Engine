@@ -54,7 +54,7 @@ class ISETTA_API Util {
    * \brief Return the integer ceiling value of the input parameter
    * \param number The parameter number
    */
-  static int CellToInt(float number);
+  static int CeilToInt(float number);
   /**
    * \brief Return the clamped number
    * \param start The start value

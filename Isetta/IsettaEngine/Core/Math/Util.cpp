@@ -28,7 +28,7 @@ float Util::Asin(float number) { return asinf(number); }
 float Util::Atan(float number) { return atanf(number); }
 float Util::Atan2(float y, float x) { return atan2f(y, x); }
 float Util::Ceil(float number) { return ceilf(number); }
-int Util::CellToInt(float number) { return static_cast<int>(ceilf(number)); }
+int Util::CeilToInt(float number) { return static_cast<int>(ceilf(number)); }
 float Util::Clamp(float start, float end, float number) {
   return number < start ? start : (number > end ? end : number);
 }
