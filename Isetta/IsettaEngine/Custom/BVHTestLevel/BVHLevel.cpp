@@ -12,6 +12,7 @@
 #include "Custom/IsettaCore.h"
 #include "Custom/RaycastClick.h"
 
+#include "Components/Editor/EditorComponent.h"
 #include "Custom/LoadNextLevel.h"
 
 namespace Isetta {
@@ -52,6 +53,7 @@ void BVHLevel::LoadLevel() {
 
   Entity* debug{ADD_ENTITY("Debug")};
   debug->AddComponent<GridComponent>();
+  debug->AddComponent<EditorComponent>();
   debug->AddComponent<FrameReporter>();
   debug->AddComponent<RaycastClick>();
 

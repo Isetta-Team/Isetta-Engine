@@ -63,6 +63,7 @@ class CollisionsModule {
   void StartUp();
   void Update(float deltaTime);
   void ShutDown();
+  Array<Collider*> GetPossibleColliders(Collider* collider) const;
 
   friend class EngineLoop;
   friend class Collider;

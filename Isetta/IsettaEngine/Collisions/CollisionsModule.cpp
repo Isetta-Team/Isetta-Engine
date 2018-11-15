@@ -23,7 +23,6 @@
 namespace Isetta {
 void CollisionsModule::StartUp() {
   Collider::collisionsModule = this;
-  // TODO(Yidi) if you do this then you can change it at runtime....
   Collider::fatFactor = CONFIG_VAL(collisionConfig.fatFactor);
   Collisions::collisionsModule = this;
 }
@@ -87,6 +86,10 @@ void CollisionsModule::Update(float deltaTime) {
 }
 
 void CollisionsModule::ShutDown() {}
+
+Array<Collider*> CollisionsModule::GetPossibleColliders(Collider* collider) const {
+  return bvTree.GetPossibleColliders(collider);
+}
 
 bool CollisionsModule::Intersection(const BoxCollider &a,
                                     const BoxCollider &b) {
