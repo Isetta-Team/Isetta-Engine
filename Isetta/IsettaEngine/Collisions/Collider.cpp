@@ -31,17 +31,6 @@ void Collider::OnDisable() {
   collisionsModule->colliders.erase(this);
   collisionsModule->bvTree.RemoveCollider(this);
 }
-
-AABB Collider::GetFatAABB() {
-  AABB aabb = GetAABB();
-  aabb.ExpandPercentage(fatFactor);
-  return aabb;
-}
-
-AABB Collider::GetAABB() {
-   return AABB{Math::Vector3::zero, Math::Vector3::one}; 
-}
-
 void Collider::FindHandler() {
   handler = entity->GetComponent<CollisionHandler>();
   Transform* parent = GetTransform()->GetParent();

@@ -55,8 +55,12 @@ void Start() override;
 void OnEnable() override;
 void OnDisable() override;
 
-virtual AABB GetFatAABB();
-virtual AABB GetAABB();
+// TODO(YIDI): Actually implement this for each collider
+virtual AABB GetFatAABB() {
+  return AABB{Math::Vector3::zero, Math::Vector3::one * (1 + fatFactor)};
+}
+
+virtual AABB GetAABB() { return AABB{Math::Vector3::zero, Math::Vector3::one}; }
 
 private:
 std::bitset<2> properties;

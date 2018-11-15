@@ -19,46 +19,6 @@ void BoxCollider::Update() {
               Math::Vector3::Scale(GetTransform()->GetWorldScale(), size)) *
           (Math::Matrix4)GetTransform()->GetWorldRot(),
       debugColor);
-
-  DebugDraw::WireCube(Math::Matrix4::Translate(GetAABB().GetCenter()) *
-                              Math::Matrix4::Scale({GetAABB().GetSize()}),
-                          debugColor);
-}
-
-AABB BoxCollider::GetAABB() {
-  AABB aabb{GetTransform()->GetWorldPos() + center, Math::Vector3::zero};
-  
-  auto transform = GetTransform();
-  Math::Vector3 point1, point2, point3, point4, point5, point6, point7, point8;
-  point1 = transform->WorldPosFromLocalPos(center - size / 2);
-  point2 = transform->WorldPosFromLocalPos(center - size / 2 +
-                                           Math::Vector3::right * size.x);
-  point3 = transform->WorldPosFromLocalPos(center - size / 2 +
-                                           Math::Vector3::up * size.y);
-  point4 = transform->WorldPosFromLocalPos(center - size / 2 +
-                                           Math::Vector3::up * size.y +
-                                           Math::Vector3::right * size.x);
-
-  point5 = transform->WorldPosFromLocalPos(center - size / 2 +
-                                           Math::Vector3::back * size.z);
-  point6 = transform->WorldPosFromLocalPos(center - size / 2 +
-                                           Math::Vector3::right * size.x +
-                                           Math::Vector3::back * size.z);
-  point7 = transform->WorldPosFromLocalPos(center - size / 2 +
-                                           Math::Vector3::up * size.y +
-                                           Math::Vector3::back * size.z);
-  point8 = transform->WorldPosFromLocalPos(
-      center - size / 2 + Math::Vector3::up * size.y +
-      Math::Vector3::back * size.z + Math::Vector3::right * size.x);
-  aabb.Encapsulate(point1);
-  aabb.Encapsulate(point2);
-  aabb.Encapsulate(point3);
-  aabb.Encapsulate(point4);
-  aabb.Encapsulate(point5);
-  aabb.Encapsulate(point6);
-  aabb.Encapsulate(point7);
-  aabb.Encapsulate(point8);
-  return aabb;
 }
 
 bool BoxCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,

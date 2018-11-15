@@ -66,14 +66,14 @@ start_level = LEVEL_NAME
 ```
 `LEVEL_NAME` can then be replaced with any of these options:
 - When running IsettaEngine:
-	- `InEngineTestLevel`: Level with a fly camera and light
-	- `CollisionsLevel`: Level testing our collision intersections
-	- `BVHLevel`: Level testing our dynamic AABB tree
+	- InEngineTestLevel: Level with a fly camera and light
+	- CollisionsLevel: Level testing our collision intersections
+	- BVHLevel: Level testing our dynamic AABB tree
 - When running IsettaTestBed:
-	- `ExampleLevel`: Level with an animating model and example component
-	- `Level1`: First demo twin-stick shooter game we created!
-	- `DebugLevel`: Level demoing our debug drawing capabilities
-	- `GUILevel`: Level demoing our GUI capabilities
+	- ExampleLevel: Level with an animating model and example component
+	- Level1: First demo twin-stick shooter game we created!
+	- DebugLevel: Level demoing our debug drawing capabilities
+	- GUILevel: Level demoing our GUI capabilities
 
 ## Going Through Time
 Assuming you have checked out master, you are looking at our latest work. If you would like to view the engine from the start you can use the tags feature to see the code week to week. If you are interested in a specific feature, there are branches for each of the major systems of development for you to `checkout` (the majority of development happened on those branches, we slipped up sometimes and made changes on staging).
