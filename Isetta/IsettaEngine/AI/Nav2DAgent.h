@@ -15,7 +15,7 @@ class Nav2DAgent {
 
   float maxAcceleration = 2;
   float maxVelocity = 2;
-  float timeToTarget = 0.1;
+  float timeToTarget = 0.1f;
   Math::Vector2 GetAIMovement(float deltaTime);
 
  public:

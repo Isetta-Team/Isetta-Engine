@@ -4,6 +4,7 @@
 #include "Custom/AILevel/AITestComponent.h"
 #include "AITestAgent.h"
 #include "Custom/IsettaCore.h"
+#include "Graphics/ParticleSystemComponent.h"
 #include "Input/Input.h"
 
 Isetta::AITestComponent::AITestComponent(const Math::Rect& gridSurface,

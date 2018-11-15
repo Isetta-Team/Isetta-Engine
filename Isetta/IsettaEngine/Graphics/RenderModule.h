@@ -36,6 +36,7 @@ class ISETTA_API_DECLARE RenderModule {
   std::list<class MeshComponent*> meshComponents;
   std::list<class LightComponent*> lightComponents;
   std::list<class CameraComponent*> cameraComponents;
+  std::list<class ParticleSystemComponent*> particleSystemComponents;
 
  private:
   RenderModule() = default;

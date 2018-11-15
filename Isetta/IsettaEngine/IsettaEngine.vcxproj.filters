@@ -334,6 +334,9 @@
     <ClCompile Include="Input\GLFWInput.cpp">
       <Filter>Input</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\ParticleSystemComponent.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -734,6 +737,9 @@
     </ClInclude>
     <ClInclude Include="Input\GLFWInput.h">
       <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ParticleSystemComponent.h">
+      <Filter>Graphics\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

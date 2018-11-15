@@ -202,6 +202,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Graphics\GUIStyle.cpp" />
     <ClCompile Include="Graphics\LightComponent.cpp" />
     <ClCompile Include="Graphics\MeshComponent.cpp" />
+    <ClCompile Include="Graphics\ParticleSystemComponent.cpp" />
     <ClCompile Include="Graphics\RenderModule.cpp" />
     <ClCompile Include="Graphics\Texture.cpp" />
     <ClCompile Include="Input\GLFWInput.cpp" />
@@ -333,6 +334,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Graphics\GUIStyle.h" />
     <ClInclude Include="Graphics\LightComponent.h" />
     <ClInclude Include="Graphics\MeshComponent.h" />
+    <ClInclude Include="Graphics\ParticleSystemComponent.h" />
     <ClInclude Include="Graphics\RectTransform.h" />
     <ClInclude Include="Graphics\RenderModule.h" />
     <ClInclude Include="Graphics\Texture.h" />
