@@ -13,7 +13,7 @@ BEGIN_COMPONENT(AITestAgent, Isetta::Component, true)
 Isetta::Nav2DAgent agent;
 
 public:
-AITestAgent(Isetta::Nav2DPlane* nav2DPlane) : agent(nav2DPlane) {}
+AITestAgent(Isetta::Nav2DPlane* nav2DPlane) : agent(nav2DPlane, 2, 2, 0.2, 1) {}
 void Update() override {
   Isetta::Math::Vector3 currPos{GetTransform()->GetWorldPos()};
   auto v =

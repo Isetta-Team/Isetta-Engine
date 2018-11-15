@@ -27,6 +27,7 @@ class Nav2DPlane {
 
   Math::Vector2Int GetIndexByPosition(Math::Vector2 position) const;
   Math::Vector2Int targetIndex;
+  Math::Vector2 currTarget;
   inline int Vector2IndexToInt(Math::Vector2Int index) const;
   inline int Vector2IndexToInt(int x, int y) const;
   void SetTargetNode(Math::Vector2Int index);
@@ -42,5 +43,6 @@ class Nav2DPlane {
   void SetTarget(Math::Vector2 position);
   void AddObstacle(const Nav2DObstacle& obstacle);
   Math::Vector2 GetDirectionByPosition(Math::Vector2 position);
+  float GetDistanceToTarget(Math::Vector2 position) const;
 };
 }  // namespace Isetta

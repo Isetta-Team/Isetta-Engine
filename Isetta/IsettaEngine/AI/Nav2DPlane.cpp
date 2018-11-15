@@ -148,6 +148,7 @@ void Nav2DPlane::DebugDisplay() const {
 
 void Nav2DPlane::SetTarget(Math::Vector2 position) {
   if (!surface.Contains(position)) return;
+  currTarget = position;
   SetTargetNode(GetIndexByPosition(position));
 }
 
@@ -222,4 +223,8 @@ Math::Vector2 Nav2DPlane::GetDirectionByPosition(Math::Vector2 position) {
   Math::Vector2Int index{GetIndexByPosition(position)};
   if (IsIndexUnavailable(index)) return Math::Vector2::zero;
   return dirMatrix[Vector2IndexToInt(index)];
+}
+
+float Nav2DPlane::GetDistanceToTarget(Math::Vector2 position) const {
+  return Math::Vector2::Distance(position, currTarget);
 }
