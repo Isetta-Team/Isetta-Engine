@@ -728,7 +728,7 @@
     </ClInclude>
     <ClInclude Include="Custom\AILevel\AITestAgent.h">
       <Filter>Custom\AILevel</Filter>
-    </ClCompile>
+    </ClInclude>
     <ClInclude Include="Custom\LoadNextLevel.h">
       <Filter>Custom</Filter>
     </ClInclude>
