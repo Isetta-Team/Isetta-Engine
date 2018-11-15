@@ -69,11 +69,13 @@ Math::Vector3 CollisionSolverModule::Solve(Collider* collider,
         default:  // anything else: Can only extend the radius along the
                   // circular cross-section of the capsule
           Math::Vector3 capsuleDir = (cp0 - cp1).Normalized();
-          Math::Vector3 crossProd = Math::Vector3::Cross(radialPoint, capsuleDir);
+          Math::Vector3 crossProd =
+              Math::Vector3::Cross(radialPoint, capsuleDir);
           Math::Vector3 projLine = Math::Vector3::Cross(capsuleDir, crossProd);
           closestPoint =
               closestPoint + projLine * capsule->radius * radiusScale;
       }
+
       break;
     }
     case Collider::ColliderType::SPHERE:
@@ -84,6 +86,9 @@ Math::Vector3 CollisionSolverModule::Solve(Collider* collider,
       break;
   }
 
+#if _EDITOR
+  DebugDraw::Point(closestPoint, Color::white, 5, .1);
+#endif
   return closestPoint;
 }
 
@@ -129,14 +134,28 @@ void CollisionSolverModule::Update() {
         case 0:  // Neither collider is static
           collider1->GetTransform()->TranslateWorld(halfDistanceVector);
           collider2->GetTransform()->TranslateWorld(-halfDistanceVector);
+#if _EDITOR
+          DebugDraw::Line(closestPoint1, closestPoint1 + halfDistanceVector,
+                          Color::cyan, 3, .1);
+          DebugDraw::Line(closestPoint2, closestPoint2 - halfDistanceVector,
+                          Color::cyan, 3, .1);
+#endif
           break;
 
         case 1:  // Collider 1 is static
           collider2->GetTransform()->TranslateWorld(-halfDistanceVector * 2);
+#if _EDITOR
+          DebugDraw::Line(closestPoint2, closestPoint2 - halfDistanceVector * 2,
+                          Color::cyan, 3, .1);
+#endif
           break;
 
         case 2:  // Collider 2 is static
           collider1->GetTransform()->TranslateWorld(halfDistanceVector * 2);
+#if _EDITOR
+          DebugDraw::Line(closestPoint1, closestPoint1 + halfDistanceVector * 2,
+                          Color::cyan, 3, .1);
+#endif
           break;
       }
     }

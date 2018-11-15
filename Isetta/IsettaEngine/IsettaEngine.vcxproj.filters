@@ -316,6 +316,9 @@
     <ClCompile Include="Collisions\CollisionSolverModule.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
+    <ClCompile Include="Custom\CollisionSolverLevel\CollisionSolverLevel.cpp">
+      <Filter>Custom\CollisionSolverLevel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -398,6 +401,9 @@
     </Filter>
     <Filter Include="Components\Editor">
       <UniqueIdentifier>{810b8627-00c8-4ae3-9a0d-ba5ac1948eb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\CollisionSolverLevel">
+      <UniqueIdentifier>{f54c709b-be6b-4035-87e9-f6043119f744}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -686,6 +692,9 @@
     </ClInclude>
     <ClInclude Include="Collisions\CollisionSolverModule.h">
       <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\CollisionSolverLevel\CollisionSolverLevel.h">
+      <Filter>Custom\CollisionSolverLevel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
