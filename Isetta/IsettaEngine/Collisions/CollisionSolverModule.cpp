@@ -15,6 +15,7 @@
 #include "Core/Math/Vector3.h"
 #include "Core/Math/Vector4.h"
 
+#include "Core/Debug/DebugDraw.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
@@ -68,8 +69,8 @@ Math::Vector3 CollisionSolverModule::Solve(Collider* collider,
         default:  // anything else: Can only extend the radius along the
                   // circular cross-section of the capsule
           Math::Vector3 capsuleDir = (cp0 - cp1).Normalized();
-          Math::Vector3 v = Math::Vector3::Cross(radialPoint, capsuleDir);
-          Math::Vector3 projLine = Math::Vector3::Cross(capsuleDir, v);
+          Math::Vector3 crossProd = Math::Vector3::Cross(radialPoint, capsuleDir);
+          Math::Vector3 projLine = Math::Vector3::Cross(capsuleDir, crossProd);
           closestPoint =
               closestPoint + projLine * capsule->radius * radiusScale;
       }
@@ -120,7 +121,7 @@ void CollisionSolverModule::Update() {
       Math::Vector3 halfDistanceVector = (closestPoint2 - closestPoint1) * .5;
 
       bool c1Static = collider1->GetProperty(Collider::Property::IS_STATIC);
-      bool c2Static = collider1->GetProperty(Collider::Property::IS_STATIC);
+      bool c2Static = collider2->GetProperty(Collider::Property::IS_STATIC);
       int staticSwitch =
           static_cast<int>(c1Static) + 2 * static_cast<int>(c2Static);
 

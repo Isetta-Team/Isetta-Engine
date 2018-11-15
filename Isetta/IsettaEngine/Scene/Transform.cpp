@@ -367,6 +367,7 @@ void Transform::SetDirty() {
   // TODO(YIDI): Don't need to traverse all children, if one child is dirty, all
   // children all also dirty
   isDirty = true;
+  isWorldToLocalDirty = true;
   ForDescendants([](Transform *trans) {
     trans->isDirty = true;
     trans->isWorldToLocalDirty = true;
