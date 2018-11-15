@@ -181,18 +181,18 @@ void Transform::SetParent(Transform *const transform) {
   Transform *targetTransform = transform;
   if (transform == nullptr) {
     targetTransform =
-        LevelManager::Instance().currentLevel->levelRoot->GetTransform();
+        LevelManager::Instance().loadedLevel->levelRoot->GetTransform();
   }
   if (parent == targetTransform) {
     LOG_WARNING(Debug::Channel::Graphics,
                 "You are trying to set (%s)'s parent to (%s), whose is already "
                 "their parent",
-              GetName().c_str(), targetTransform->GetName().c_str());
+                GetName().c_str(), targetTransform->GetName().c_str());
     return;
   }
   Math::Vector3 originalPos = GetWorldPos();
   Math::Quaternion originalRot = GetWorldRot();
-   Math::Vector3 originalScale = GetWorldScale();
+  Math::Vector3 originalScale = GetWorldScale();
 
   if (parent != nullptr) {
     parent->RemoveChild(this);
@@ -203,7 +203,7 @@ void Transform::SetParent(Transform *const transform) {
   parent = targetTransform;
   SetWorldPos(originalPos);
   SetWorldRot(originalRot);
-   SetWorldScale(originalScale);
+  SetWorldScale(originalScale);
   SetDirty();
 }
 

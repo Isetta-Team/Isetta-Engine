@@ -111,6 +111,7 @@ class ISETTA_API Util {
    * \param number The input number
    */
   static bool IsPowerOfTwo(int number);
+  static float LerpUnclamped(float start, float end, float time);
   /**
    * \brief Lerp the value between start and end by time
    * \param start The starting number

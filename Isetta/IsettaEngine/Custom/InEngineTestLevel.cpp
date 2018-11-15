@@ -12,7 +12,6 @@
 #include "Graphics/Texture.h"
 
 namespace Isetta {
-
 using LightProperty = LightComponent::Property;
 using CameraProperty = CameraComponent::Property;
 

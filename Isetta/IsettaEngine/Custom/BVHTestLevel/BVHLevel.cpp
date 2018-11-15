@@ -12,6 +12,8 @@
 #include "Custom/IsettaCore.h"
 #include "Custom/RaycastClick.h"
 
+#include "Custom/LoadNextLevel.h"
+
 namespace Isetta {
 
 using LightProperty = LightComponent::Property;
@@ -45,6 +47,8 @@ void BVHLevel::LoadLevel() {
       CONFIG_VAL(renderConfig.nearClippingPlane));
   camComp->SetProperty<CameraProperty::FAR_PLANE>(
       CONFIG_VAL(renderConfig.farClippingPlane));
+
+  cameraEntity->AddComponent<LoadNextLevel>("EmptyLevel");
 
   Entity* debug{ADD_ENTITY("Debug")};
   debug->AddComponent<GridComponent>();

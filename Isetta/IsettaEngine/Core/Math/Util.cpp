@@ -65,7 +65,11 @@ bool Util::IsPowerOfTwo(int number) {
         "Utility::IsPowerOfTwo => Negative numbers are not supported."};
   return !(number == 0) && !(number & (number - 1));
 }
+float Util::LerpUnclamped(float start, float end, float time) {
+  return start * (1 - time) + time * end;
+}
 float Util::Lerp(float start, float end, float time) {
+  time = Clamp01(time);
   return start * (1 - time) + time * end;
 }
 float Util::Ln(float number) { return logf(number); }

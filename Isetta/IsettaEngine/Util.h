@@ -37,7 +37,8 @@ inline void StrRemoveSpaces(std::string* str) {
 }
 
 inline Array<std::string> StrSplit(const std::string& inStr,
-                                        const char separator) {
+                                   const char separator) {
+  if (inStr.empty()) return Array<std::string>{};
   Array<std::string> results;
   Size lastPos = -1;
   Size sepPos = inStr.find(separator);

@@ -14,11 +14,11 @@
 #include "Graphics/GUI.h"
 #include "Graphics/LightComponent.h"
 #include "Graphics/RectTransform.h"
-#include "Graphics/AnimationComponent.h"
 #include "Input/Input.h"
 #include "Scene/Entity.h"
 #include "Scene/Level.h"
 #include "Scene/LevelManager.h"
 #include "Scene/Transform.h"
 #include "Util.h"
-#define ADD_ENTITY(name) Isetta::LevelManager::Instance().currentLevel->AddEntity(name)
+#define ADD_ENTITY(name) \
+  Isetta::LevelManager::Instance().loadedLevel->AddEntity(name)

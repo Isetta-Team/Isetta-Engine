@@ -328,6 +328,12 @@
     <ClCompile Include="AI\Nav2DAgent.cpp">
       <Filter>AI</Filter>
     </ClCompile>
+    <ClCompile Include="Custom\LoadNextLevel.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\GLFWInput.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -722,6 +728,12 @@
     </ClInclude>
     <ClInclude Include="Custom\AILevel\AITestAgent.h">
       <Filter>Custom\AILevel</Filter>
+    </ClCompile>
+    <ClInclude Include="Custom\LoadNextLevel.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\GLFWInput.h">
+      <Filter>Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

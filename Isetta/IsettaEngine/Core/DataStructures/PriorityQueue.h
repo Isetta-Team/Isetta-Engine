@@ -8,17 +8,17 @@
 
 namespace Isetta {
 template <typename T>
-struct Less {
+struct ISETTA_API_DECLARE Less {
   bool operator()(const T& a, const T& b) { return a < b; }
 };
 
 template <typename T>
-struct Greater {
+struct ISETTA_API_DECLARE Greater {
   bool operator()(const T& a, const T& b) { return a > b; }
 };
 
 template <typename T, template <typename> class compare = Less>
-class PriorityQueue {
+class ISETTA_API_DECLARE PriorityQueue {
  private:
   Array<T> elements;
 
@@ -43,9 +43,11 @@ class PriorityQueue {
   }
   inline PriorityQueue& operator=(const PriorityQueue& inQueue) {
     elements = inQueue.elements;
+    return *this;
   }
   inline PriorityQueue& operator=(PriorityQueue&& inQueue) noexcept {
-    elements = std::move(inQueue);
+    elements = std::move(inQueue.elements);
+    return *this;
   }
 
   inline void Clear();
@@ -64,7 +66,7 @@ inline void PriorityQueue<T, compare>::Heapify(int i) {
   int l = Left(i);
   int r = Right(i);
   int min = i;
-  if (l < elements.Size() && compare<T>()(elements[l], elements[r])) min = l;
+  if (l < elements.Size() && compare<T>()(elements[l], elements[min])) min = l;
   if (r < elements.Size() && compare<T>()(elements[r], elements[min])) min = r;
   if (min != i) {
     T tmp = elements[i];

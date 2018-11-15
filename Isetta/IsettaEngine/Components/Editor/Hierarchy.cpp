@@ -23,7 +23,7 @@ void Hierarchy::GuiUpdate() {
                 Transform* target = nullptr;
 
                 std::list<Entity*> entities =
-                    LevelManager::Instance().currentLevel->GetEntities();
+                    LevelManager::Instance().loadedLevel->GetEntities();
                 for (const auto& entity : entities) {
                   Func<int, Transform*> countLevel = [](Transform* t) -> int {
                     int i = 0;

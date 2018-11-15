@@ -84,7 +84,8 @@ void AudioModule::LoadAllAudioClips() {
   PROFILE
   std::string clipNames = CONFIG_VAL(audioConfig.audioClips);
   Util::StrRemoveSpaces(&clipNames);
-  Array<std::string>& clips = Util::StrSplit(clipNames, ',');
+  Array<std::string> clips;
+  if (!clipNames.empty()) clips = Util::StrSplit(clipNames, ',');
 
   for (const auto& file : clips) {
     FMOD::Sound* sound = nullptr;

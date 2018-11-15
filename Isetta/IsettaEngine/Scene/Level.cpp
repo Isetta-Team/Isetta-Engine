@@ -7,6 +7,7 @@
 #include "Core/Memory/MemoryManager.h"
 #include "Graphics/GUI.h"
 #include "Graphics/RectTransform.h"
+#include "Input/Input.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
@@ -49,6 +50,7 @@ void Level::UnloadLevel() {
     MemoryManager::DeleteOnFreeList<Entity>(entity);
     entity = nullptr;
   }
+  Input::Clear();
 }
 
 void Level::AddComponentToStart(Component* component) {

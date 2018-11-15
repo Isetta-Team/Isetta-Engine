@@ -2,8 +2,8 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include "FMOD/inc/fmod.hpp"
 #include "Scene/Component.h"
-#include "fmod.hpp"
 
 namespace Isetta {
 class AudioModule;

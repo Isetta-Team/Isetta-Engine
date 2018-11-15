@@ -12,10 +12,10 @@ namespace Isetta {
 using CallbackPair = std::pair<U16, Action<EventObject>>;
 class ISETTA_API Events {
  public:
-  static Events& Instance() {
-    static Events instance{};
-    return instance;
-  }
+  static Events& Instance() { return *instance; }
+
+  void StartUp() { instance = this; }
+  void ShutDown();
 
   void RaiseQueuedEvent(const EventObject& eventObject);
   void RaiseImmediateEvent(const EventObject& eventObject);
@@ -28,6 +28,8 @@ class ISETTA_API Events {
   void Clear();
 
  private:
+  inline static Events* instance;
+
   Events() = default;
   PriorityQueue<EventObject, Greater> eventQueue;
   std::unordered_map<StringId, Array<CallbackPair>> callbackMap;

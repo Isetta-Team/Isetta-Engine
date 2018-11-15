@@ -110,7 +110,14 @@ class InputModule {
   U16 RegisterGamepadConnectionCallback(const Action<int, int>& callback);
   void UnegisterGamepadConnectionCallback(U16 handle);
 
-  // TODO(Chaojie + Jacob): Talk about these, should unregister return bool?
+  void Clear();
+
+  // TODO(Chaojie) + TODO(Jacob): Talk about these, should unregister return
+  // bool?
+  void RegisterWindowCloseGLFWCallback(const Action<GLFWwindow*>& callback);
+  U16 RegisterWindowSizeGLFWCallback(
+      const Action<GLFWwindow*, int, int>& callback);
+  void UnegisterWindowSizeGLFWCallback(U16 handle);
   U16 RegisterMouseButtonGLFWCallback(
       const Action<GLFWwindow*, int, int, int>& callback);
   void UnregisterMouseButtonGLFWCallback(U16 handle);
@@ -148,8 +155,6 @@ class InputModule {
   void DeadZoneOptimize(float* horizontal, float* verticle);
 
   static std::list<Action<>> windowCloseCallbacks;
-  static void WindowCloseListener(GLFWwindow* win);
-
   static KeyMap keyPressCallbacks;
   static KeyMap keyReleaseCallbacks;
   static MouseMap mousePressCallbacks;
@@ -158,6 +163,7 @@ class InputModule {
   static std::unordered_map<U16, Action<double, double>> scrollCallbacks;
   static std::unordered_map<U16, Action<int, int>> gamepadConnectionCallbacks;
 
+  static void WindowCloseListener(GLFWwindow* win);
   static void KeyEventListener(GLFWwindow* win, int key, int scancode,
                                int action, int mods);
   static void MouseEventListener(GLFWwindow* win, int button, int action,
@@ -167,6 +173,10 @@ class InputModule {
   static void GamepadEventListener(int gamepadID, int gamepadEvent);
   static void WindowSizeListener(GLFWwindow* win, int width, int height);
 
+  // GLFW Callbacks
+  static std::list<Action<GLFWwindow*>> windowCloseGLFWCallbacks;
+  static std::unordered_map<U16, Action<GLFWwindow*, int, int>>
+      windowSizeGLFWCallbacks;
   static std::unordered_map<U16, Action<GLFWwindow*, int, int, int>>
       mouseButtonGLFWCallbacks;
   static std::unordered_map<U16, Action<GLFWwindow*, int, int, int, int>>
@@ -176,7 +186,8 @@ class InputModule {
   static std::unordered_map<U16, Action<GLFWwindow*, unsigned int>>
       charGLFWCallbacks;
 
-  static U16 totalHandle;
+  static U16 inputHandle;
+  static U8 glfwHandle;
 
   friend class EngineLoop;
 };

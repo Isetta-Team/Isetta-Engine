@@ -12,7 +12,7 @@
 
 namespace Isetta {
 template <typename T>
-class Array {
+class ISETTA_API_DECLARE Array {
  public:
   class iterator {
    public:
@@ -237,6 +237,8 @@ class Array {
   inline iterator Emplace(const_iterator position, Args &&... args);
   template <typename... Args>
   inline void EmplaceBack(Args &&... args);
+
+  inline void clear() { Clear(); }
 };
 
 template <typename T>

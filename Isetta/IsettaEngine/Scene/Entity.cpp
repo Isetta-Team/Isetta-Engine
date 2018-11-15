@@ -149,11 +149,11 @@ void Entity::DestroyImmediately(Entity* entity) {
 }
 
 Entity* Entity::GetEntityByName(const std::string& name) {
-  return LevelManager::Instance().currentLevel->GetEntityByName(name);
+  return LevelManager::Instance().loadedLevel->GetEntityByName(name);
 }
 
 std::list<Entity*> Entity::GetEntitiesByName(const std::string& name) {
-  return LevelManager::Instance().currentLevel->GetEntitiesByName(name);
+  return LevelManager::Instance().loadedLevel->GetEntitiesByName(name);
 }
 
 void Entity::SetActive(bool inActive) {
