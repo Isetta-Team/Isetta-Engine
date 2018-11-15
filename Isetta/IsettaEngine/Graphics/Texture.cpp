@@ -2,34 +2,48 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Graphics/Texture.h"
+
+#ifndef __  // GLAD must be placed first
+#include <glad/glad.h>
+#endif
+#include <GLFW/glfw3.h>
+
 #include <Horde3D.h>
-#include "RenderModule.h"
-#include "Util.h"
 #include <string_view>
+#include "Graphics/RenderModule.h"
+#include "Util.h"
 
 namespace Isetta {
-
-U8* Texture::LoadTexture(std::string_view textureName, int* width,
-                         int* height) {
-  H3DRes renderResource =
-      h3dAddResource(H3DResTypes::Texture, textureName.data(), 0);
+Texture::Texture(std::string_view fileName, bool load) : fileName{fileName} {
+  if (load) LoadTexture();
+}
+Texture::~Texture() { UnloadTexture(); }
+void Texture::LoadTexture() {
+  if (texture) return;
+  h3dres = h3dAddResource(H3DResTypes::Texture, fileName.data(), 0);
   RenderModule::LoadResourceFromDisk(
-      renderResource, Util::StrFormat("Texture::LoadResourceFromFile => "
-                                      "Cannot load the resource from %s",
-                                      textureName.data()));
-  // TODO(Chaojie) + TODO(Jacob): With .png it's rgb; with .tga it's rgba(or rgb0)
-  // ImgPixelStream  - Pixel data of an image. The data
-  // layout matches the layout specified by the texture format with the
-  // exception that half-float is converted to float. The first element in the
-  // data array corresponds to the lower left corner.
-  U8* data =
-      static_cast<U8*>(h3dMapResStream(renderResource, H3DTexRes::ImageElem, 0,
-                                       H3DTexRes::ImgPixelStream, true, false));
-  *width = h3dGetResParamI(renderResource, H3DTexRes::ImageElem, 0,
-                           H3DTexRes::ImgWidthI);
-  *height = h3dGetResParamI(renderResource, H3DTexRes::ImageElem, 0,
-                            H3DTexRes::ImgHeightI);
-  h3dUnmapResStream(renderResource);
-  return data;
+      h3dres, Util::StrFormat("Texture::LoadResourceFromFile => "
+                              "Cannot load the resource from %s",
+                              fileName.data()));
+  U8* data = static_cast<U8*>(h3dMapResStream(
+      h3dres, H3DTexRes::ImageElem, 0, H3DTexRes::ImgPixelStream, true, false));
+  size.x =
+      h3dGetResParamI(h3dres, H3DTexRes::ImageElem, 0, H3DTexRes::ImgWidthI);
+  size.y =
+      h3dGetResParamI(h3dres, H3DTexRes::ImageElem, 0, H3DTexRes::ImgHeightI);
+  h3dUnmapResStream(h3dres);
+
+  glGenTextures(1, &texture);
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_BGRA,
+               GL_UNSIGNED_BYTE, data);
+}
+void Texture::UnloadTexture() {
+  if (!texture) return;
+  h3dRemoveResource(h3dres);
+  glDeleteTextures(1, &texture);
+  texture = 0;
 }
 }  // namespace Isetta

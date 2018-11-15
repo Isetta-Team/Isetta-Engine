@@ -44,9 +44,28 @@
     <ClCompile Include="InputLevel\InputTestComponent.cpp">
       <Filter>Input Level</Filter>
     </ClCompile>
+    <ClCompile Include="Week10MiniGame\Week10Level.cpp">
+      <Filter>Week10MiniGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Week10MiniGame\W10Player.cpp">
+      <Filter>Week10MiniGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Week10MiniGame\W10NetworkManager.cpp">
+      <Filter>Week10MiniGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Week10MiniGame\W10GameManager.cpp">
+      <Filter>Week10MiniGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Week10MiniGame\W10UIManager.cpp">
+      <Filter>Week10MiniGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Week10MiniGame\W10NetworkPlayer.cpp">
+      <Filter>Week10MiniGame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
+    <None Include="cpp.hint" />
     <None Include="user.cfg" />
   </ItemGroup>
   <ItemGroup>
@@ -64,6 +83,9 @@
     </Filter>
     <Filter Include="Input Level">
       <UniqueIdentifier>{b2aa16a6-0583-4fa7-8226-452f3aaeeb72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Week10MiniGame">
+      <UniqueIdentifier>{fc75b8db-ca98-41c5-9514-c1160776a012}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -108,6 +130,24 @@
     </ClInclude>
     <ClInclude Include="InputLevel\InputTestComponent.h">
       <Filter>Input Level</Filter>
+    </ClInclude>
+    <ClInclude Include="Week10MiniGame\Week10Level.h">
+      <Filter>Week10MiniGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Week10MiniGame\W10Player.h">
+      <Filter>Week10MiniGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Week10MiniGame\W10NetworkManager.h">
+      <Filter>Week10MiniGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Week10MiniGame\W10GameManager.h">
+      <Filter>Week10MiniGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Week10MiniGame\W10UIManager.h">
+      <Filter>Week10MiniGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Week10MiniGame\W10NetworkPlayer.h">
+      <Filter>Week10MiniGame</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

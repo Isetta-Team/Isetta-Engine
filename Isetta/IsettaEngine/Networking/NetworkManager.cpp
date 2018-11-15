@@ -5,10 +5,13 @@
 #include "Networking/NetworkManager.h"
 #include "Core/Config/Config.h"
 #include "Networking/NetworkId.h"
+#include "Networking/NetworkTransform.h"
 #include "Networking/NetworkingModule.h"
 #include "Scene/Entity.h"
 
 namespace Isetta {
+
+NetworkManager::NetworkManager() : networkIds(1){};
 
 NetworkManager& NetworkManager::Instance() {
   static NetworkManager instance;
@@ -74,7 +77,7 @@ yojimbo::Message* NetworkManager::CreateClientMessage(int messageId) {
 }
 
 yojimbo::Message* NetworkManager::CreateServerMessage(int clientIdx,
-  int messageId) {
+                                                      int messageId) {
   return networkingModule->server->CreateMessage(clientIdx, messageId);
 }
 
@@ -94,36 +97,40 @@ NetworkId* NetworkManager::GetNetworkId(const U32 id) {
   return NULL;
 }
 
-U32 NetworkManager::CreateNetworkId(NetworkId* NetworkId) {
+U32 NetworkManager::CreateNetworkId(NetworkId* networkId) {
   if (!ServerIsRunning()) {
     throw std::exception("Cannot create a new network id on a client");
   }
-  U32 netId = nextNetworkId++;
-  NetworkId->id = netId;
-  networkIdToComponentMap[netId] = NetworkId;
+  U32 netId = networkIds.GetHandle();
+  networkId->id = netId;
+  networkIdToComponentMap[netId] = networkId;
+  NetworkTransform::serverPosTimestamps[netId] = 0;
+  NetworkTransform::serverRotTimestamps[netId] = 0;
+  NetworkTransform::serverScaleTimestamps[netId] = 0;
 }
 
-U32 NetworkManager::AssignNetworkId(U32 netId,
-                                    NetworkId* NetworkId) {
+U32 NetworkManager::AssignNetworkId(U32 netId, NetworkId* networkId) {
   if (networkIdToComponentMap.find(netId) != networkIdToComponentMap.end()) {
     throw std::exception(Util::StrFormat(
         "Multiple objects trying to assign to the same network id: %d", netId));
-  } else if (NetworkId->id > 0) {
+  } else if (networkId->id > 0) {
     throw std::exception(
         Util::StrFormat("Trying to assign network id %d to existing network "
                         "object with id %d",
-                        netId, NetworkId->id));
+                        netId, networkId->id));
   }
-  NetworkId->id = netId;
-  networkIdToComponentMap[netId] = NetworkId;
+  networkId->id = netId;
+  networkIdToComponentMap[netId] = networkId;
+  networkIds.RemoveHandle(netId);
 }
 
-void NetworkManager::RemoveNetworkId(NetworkId* NetworkId) {
-  if (!NetworkId->id) {
+void NetworkManager::RemoveNetworkId(NetworkId* networkId) {
+  if (!networkId->id) {
     throw std::exception(Util::StrFormat(
         "Cannot remove network id on a nonexistent network object"));
   }
-  networkIdToComponentMap.erase(NetworkId->id);
-  NetworkId->id = NULL;
+  networkIdToComponentMap.erase(networkId->id);
+  networkIds.ReturnHandle(networkId->id);
+  networkId->id = NULL;
 }
 }  // namespace Isetta

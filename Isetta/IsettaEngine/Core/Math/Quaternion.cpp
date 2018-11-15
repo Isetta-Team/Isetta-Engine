@@ -15,6 +15,10 @@ const Quaternion Quaternion::identity = Quaternion{0, 0, 0, 1};
 
 Quaternion::Quaternion() : w{0.f}, x{0.f}, y{0.f}, z{0.f} {}
 
+Quaternion::Quaternion(const float inX, const float inY, const float inZ,
+                       const float inW)
+    : w{inW}, x{inX}, y{inY}, z{inZ} {}
+
 Quaternion::Quaternion(float eulerX, float eulerY, float eulerZ) {
   eulerX *= Util::DEG2RAD;
   eulerY *= Util::DEG2RAD;
@@ -23,8 +27,8 @@ Quaternion::Quaternion(float eulerX, float eulerY, float eulerZ) {
   Quaternion pitch(0, Util::Sin(eulerY * 0.5f), 0, Util::Cos(eulerY * 0.5f));
   Quaternion yaw(0, 0, Util::Sin(eulerZ * 0.5f), Util::Cos(eulerZ * 0.5f));
 
-  // Order: y * x * z
-  *this = (pitch * roll * yaw).Normalized();
+  // Order: z * y * x
+  *this = (yaw * pitch * roll).Normalized();
 }
 
 Quaternion Quaternion::FromEulerAngles(const Vector3& eulerAngles) {
@@ -36,7 +40,8 @@ Quaternion Quaternion::FromEulerAngles(const float eulerX, const float eulerY,
   return Quaternion{eulerX, eulerY, eulerZ};
 }
 
-Quaternion Quaternion::FromAngleAxis(const Vector3& axis, const float angleDeg) {
+Quaternion Quaternion::FromAngleAxis(const Vector3& axis,
+                                     const float angleDeg) {
   float rad = angleDeg * Util::DEG2RAD;
   rad /= 2;
   float sin = Util::Sin(rad);
@@ -157,7 +162,8 @@ Vector3 Quaternion::GetEulerAngles() const {
   float sinPitch = 2.f * (q.w * q.y - q.z * q.x);
   float pitch;
   if (Util::Abs(sinPitch) >= 1)
-    pitch = Util::PI / 2 * Util::Sign(sinPitch);  // use 90 degrees if out of range
+    pitch =
+        Util::PI / 2 * Util::Sign(sinPitch);  // use 90 degrees if out of range
   else
     pitch = Util::Asin(sinPitch);
 

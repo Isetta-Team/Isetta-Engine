@@ -13,6 +13,7 @@
 #include "Networking/NetworkingModule.h"
 
 #include "Core/Config/Config.h"
+#include "Core/Debug/DebugDraw.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Filesystem.h"
 #include "Core/Time/Clock.h"
@@ -20,12 +21,10 @@
 #include "Input/Input.h"
 #include "Input/KeyCode.h"
 #include "Networking/NetworkManager.h"
-#include "Scene/Level.h"
-
 #include "Scene/Entity.h"
+#include "Scene/Level.h"
 #include "Scene/LevelManager.h"
-
-#include "Core/Debug/DebugDraw.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 
@@ -43,6 +42,7 @@ EngineLoop::EngineLoop() {
   collisionsModule = new CollisionsModule{};
   audioModule = new AudioModule{};
   networkingModule = new NetworkingModule{};
+  events = new Events{};
 }
 EngineLoop::~EngineLoop() {
   delete memoryManager;
@@ -53,9 +53,12 @@ EngineLoop::~EngineLoop() {
   delete collisionsModule;
   delete audioModule;
   delete networkingModule;
+  delete events;
 }
 
 void EngineLoop::StartUp() {
+  BROFILER_EVENT("Start Up");
+
   Logger::NewSession();
   Config::Instance().Read("config.cfg");
   if (Filesystem::Instance().FileExists("user.cfg")) {
@@ -76,13 +79,19 @@ void EngineLoop::StartUp() {
   collisionsModule->StartUp();
   audioModule->StartUp();
   networkingModule->StartUp();
+  events->StartUp();
 
-  LevelManager::Instance().LoadStartupLevel();
+  // LevelManager::Instance().LoadStartupLevel();
+  LevelManager::Instance().LoadLevel(
+      Config::Instance().levelConfig.startLevel.GetVal());
+  LevelManager::Instance().LoadLevel();
 
   StartGameClock();
 }
 
 void EngineLoop::Update() {
+  BROFILER_FRAME("Main Thread");
+
   GetGameClock().UpdateTime();
 
   // TODO(All) Add networking update
@@ -108,25 +117,34 @@ void EngineLoop::Update() {
 }
 
 void EngineLoop::FixedUpdate(float deltaTime) {
+  BROFILER_CATEGORY("Fixed Update", Profiler::Color::IndianRed);
+
   networkingModule->Update(deltaTime);
   collisionsModule->Update(deltaTime);
-  LevelManager::Instance().currentLevel->FixedUpdate();
+  LevelManager::Instance().loadedLevel->FixedUpdate();
 }
 void EngineLoop::VariableUpdate(float deltaTime) {
+  BROFILER_CATEGORY("Variable Update", Profiler::Color::SteelBlue);
+
   inputModule->Update(deltaTime);
-  LevelManager::Instance().currentLevel->Update();
+  LevelManager::Instance().loadedLevel->Update();
   Events::Instance().Update();
-  LevelManager::Instance().currentLevel->LateUpdate();
+  LevelManager::Instance().loadedLevel->LateUpdate();
   audioModule->Update(deltaTime);
   renderModule->Update(deltaTime);
   DebugDraw::Update();
   guiModule->Update(deltaTime);
   windowModule->Update(deltaTime);
   memoryManager->Update();
+
+  LevelManager::Instance().LoadLevel();
 }
 
 void EngineLoop::ShutDown() {
+  BROFILER_EVENT("Shut Down");
+
   LevelManager::Instance().UnloadLevel();
+  events->ShutDown();
   networkingModule->ShutDown();
   audioModule->ShutDown();
   collisionsModule->ShutDown();

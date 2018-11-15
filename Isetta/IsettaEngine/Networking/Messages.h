@@ -20,8 +20,9 @@ class NetworkMessageFactory : public yojimbo::MessageFactory {
   yojimbo::Message* CreateMessageInternal(int type) {
     yojimbo::Message* message;
     yojimbo::Allocator& allocator = GetAllocator();
-    message = NetworkManager::Instance().factories[type].second(allocator.Allocate(
-        NetworkManager::Instance().factories[type].first, __FILE__, __LINE__));
+    message = NetworkManager::Instance().factories[type].second(
+        allocator.Allocate(NetworkManager::Instance().factories[type].first,
+                           __FILE__, __LINE__));
     if (!message) return NULL;
     SetMessageType(message, type);
     return message;
@@ -38,12 +39,12 @@ template <typename T>
 bool NetworkMessageRegistry<T>::registered =
     NetworkManager::Instance().RegisterMessageType<T>(sizeof(T), T::Create);
 
-
-#define RPC_MESSAGE_DEFINE(NAME)                                              \
-  class NAME : public yojimbo::Message, public NetworkMessageRegistry<NAME> { \
-   public:                                                                    \
-    bool IsRegisteredInNetworkManager() const { return registered; }          \
-    static inline NAME* Create(void* memory) { return new (memory) NAME(); }  \
+#define RPC_MESSAGE_DEFINE(NAME)                                             \
+  class NAME : public yojimbo::Message,                                      \
+               public Isetta::NetworkMessageRegistry<NAME> {                 \
+   public:                                                                   \
+    bool IsRegisteredInNetworkManager() const { return registered; }         \
+    static inline NAME* Create(void* memory) { return new (memory) NAME(); } \
     static std::string GetMessageName() { return #NAME; }
 
 #define RPC_MESSAGE_FINISH               \
@@ -124,7 +125,8 @@ class CustomAdapter : public yojimbo::Adapter {
   yojimbo::MessageFactory* CreateMessageFactory(yojimbo::Allocator* allocator) {
     return new (
         allocator->Allocate(sizeof(NetworkMessageFactory), __FILE__, __LINE__))
-        NetworkMessageFactory(allocator, NetworkManager::Instance().GetMessageTypeCount());
+        NetworkMessageFactory(allocator,
+                              NetworkManager::Instance().GetMessageTypeCount());
   }
 };
 }  // namespace Isetta

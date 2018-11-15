@@ -7,8 +7,10 @@
 #include "Core/Memory/MemoryManager.h"
 #include "Graphics/GUI.h"
 #include "Graphics/RectTransform.h"
+#include "Input/Input.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 
@@ -34,11 +36,21 @@ std::list<Entity*> Level::GetEntitiesByName(const std::string& name) {
   return returnEntities;
 }
 
+std::list<class Entity*> Level::GetEntities() const { return entities; }
+
 void Level::UnloadLevel() {
+  PROFILE
+  // for (auto& entity : entities) {
+  //   if (entity->GetTransform()->GetParent() == levelRootTransform) {
+  //     MemoryManager::DeleteOnFreeList<Entity>(entity);
+  //   }
+  // }
+  MemoryManager::DeleteOnFreeList<Entity>(levelRoot);
   for (auto& entity : entities) {
     MemoryManager::DeleteOnFreeList<Entity>(entity);
+    entity = nullptr;
   }
-  MemoryManager::DeleteOnFreeList<Entity>(levelRoot);
+  Input::Clear();
 }
 
 void Level::AddComponentToStart(Component* component) {
@@ -46,6 +58,7 @@ void Level::AddComponentToStart(Component* component) {
 }
 
 void Level::StartComponents() {
+  PROFILE
   while (!componentsToStart.empty()) {
     componentsToStart.top()->Start();
     componentsToStart.pop();
@@ -57,6 +70,7 @@ Entity* Level::AddEntity(std::string name) {
 }
 
 Entity* Level::AddEntity(std::string name, Entity* parent) {
+  PROFILE
   Entity* entity = MemoryManager::NewOnFreeList<Entity>(name);
   entities.push_back(entity);
   // TODO(YIDI): Change it when transform returns pointer
@@ -65,6 +79,8 @@ Entity* Level::AddEntity(std::string name, Entity* parent) {
 }
 
 void Level::Update() {
+  BROFILER_CATEGORY("Level Update", Profiler::Color::GoldenRod);
+
   StartComponents();
   for (const auto& entity : entities) {
     if (entity->GetActive()) entity->Update();
@@ -72,6 +88,8 @@ void Level::Update() {
 }
 
 void Level::FixedUpdate() {
+  BROFILER_CATEGORY("Level Fixed Update", Profiler::Color::DarkSeaGreen);
+
   StartComponents();
   for (const auto& entity : entities) {
     entity->FixedUpdate();
@@ -79,67 +97,27 @@ void Level::FixedUpdate() {
 }
 
 void Level::GUIUpdate() {
+  PROFILE
   for (const auto& entity : entities) {
     entity->GuiUpdate();
   }
-
-#if _DEBUG
-  static RectTransform rectTrans{{20, 100, 250, 500}};
-  bool isOpen = true;
-  GUI::Window(rectTrans, "Hierarchy", [&]() {
-    float buttonHeight = 20;
-    float buttonWidth = 200;
-    float height = 10;
-    float left = 5;
-    float padding = 20;
-    static Transform* transform = nullptr;
-
-    for (const auto& entity : entities) {
-      Func<int, Transform*> countLevel = [](Transform* t) -> int {
-        int i = 0;
-        while (t->GetParent() != nullptr) {
-          t = t->GetParent();
-          i++;
-        }
-        return i;
-      };
-
-      Action<Transform*> action = [&](Transform* t) {
-        int level = countLevel(t);
-        if (GUI::Button(RectTransform{Math::Rect{left + level * padding, height,
-                                                 buttonWidth - level * padding,
-                                                 buttonHeight}},
-                        t->GetName())) {
-          transform = transform == t ? nullptr : t;
-        }
-        height += 1.25f * buttonHeight;
-      };
-      action(entity->GetTransform());
-      entity->GetTransform()->ForDescendants(action);
-    }
-
-    if (transform != nullptr) {
-      transform->InspectorGUI();
-    }
-  });
-#endif
 }
 
 void Level::LateUpdate() {
+  BROFILER_CATEGORY("Level Late Update", Profiler::Color::LightCyan);
+
   for (const auto& entity : entities) {
     entity->LateUpdate();
   }
 
   for (auto& entity : entities) {
     if (entity->GetAttribute(Entity::EntityAttributes::NEED_DESTROY)) {
-      MemoryManager::DeleteOnFreeList(entity);
+      MemoryManager::DeleteOnFreeList<Entity>(entity);
       entity = nullptr;
     }
   }
 
-  entities.remove_if([](Entity*& entity) {
-    return entity == nullptr;
-  });
+  entities.remove_if([](Entity*& entity) { return entity == nullptr; });
 }
 
 Level::Level() : levelRoot{MemoryManager::NewOnFreeList<Entity>("Root")} {}

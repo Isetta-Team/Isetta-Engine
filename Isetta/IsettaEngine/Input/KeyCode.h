@@ -125,6 +125,15 @@ enum class KeyCode {
   MENU
 };
 enum class MouseButtonCode { MOUSE_LEFT, MOUSE_RIGHT, MOUSE_MIDDLE, ALL };
+enum class ModifierKeys : U8 {
+  SHIFT = 1 << 0,
+  CTRL = 1 << 1,
+  ALT = 1 << 2,
+  SUPER = 1 << 3
+};
+inline ModifierKeys operator|(ModifierKeys lhs, ModifierKeys rhs) {
+  return (ModifierKeys)(static_cast<U8>(lhs) | static_cast<U8>(rhs));
+}
 
 enum class GamepadAxis {
   L_HORIZONTAL,

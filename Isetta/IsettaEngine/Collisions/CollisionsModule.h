@@ -4,7 +4,7 @@
 #pragma once
 #include <unordered_map>
 #include <unordered_set>
-#include "BVTree.h"
+#include "Collisions/BVTree.h"
 #include "Scene/Layers.h"
 #include "Util.h"
 
@@ -51,17 +51,14 @@ class CollisionsModule {
   CollisionsModule() = default;
   ~CollisionsModule() = default;
 
-  // TODO(Jacob) remove
-  std::unordered_set<class Collider *> colliders;
-
   // probably mark them as "still colliding"
   CollisionUtil::ColliderPairSet collidingPairs;
-  CollisionUtil::ColliderPairSet ignoreCollisions;
+  CollisionUtil::ColliderPairSet ignoreColliderPairs;
 
   BVTree bvTree;
   std::bitset<static_cast<int>(0.5f * Layers::LAYERS_CAPACITY *
                                (Layers::LAYERS_CAPACITY + 1))>
-      collisionMatrix;
+      ignoreCollisionLayer = 0;
 
   void StartUp();
   void Update(float deltaTime);

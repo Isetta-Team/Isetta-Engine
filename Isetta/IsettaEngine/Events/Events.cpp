@@ -3,22 +3,30 @@
  */
 #include <Events/Events.h>
 #include <execution>
+#include "Core/DataStructures/Array.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Time/Time.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 using namespace Isetta;
 U16 Events::totalListeners = 0;
-
+void Isetta::Events::ShutDown() {
+  callbackMap.clear();
+  eventQueue.~PriorityQueue();
+  instance = nullptr;
+}
 void Events::RaiseQueuedEvent(const EventObject& eventObject) {
-  eventQueue.push(eventObject);
+  PROFILE
+  eventQueue.Push(eventObject);
 }
 
 void Events::RaiseImmediateEvent(const EventObject& eventObject) {
+  PROFILE
   StringId eventNameId{SID(eventObject.eventName.c_str())};
   if (callbackMap.count(eventNameId) > 0) {
     // prevent unregistering the callback from screwing up the range-based for
     // loop
-    std::vector<std::pair<U16, Action<EventObject>>> callbacks{
+    Array<std::pair<U16, Action<EventObject>>> callbacks{
         callbackMap.at(eventNameId)};
     for (const auto& callbackPair : callbacks) {
       callbackPair.second(eventObject);
@@ -34,7 +42,7 @@ U16 Events::RegisterEventListener(std::string_view eventName,
   StringId eventNameId{SID(eventName.data())};
   U16 handle = totalListeners++;
   if (callbackMap.count(eventNameId) > 0) {
-    callbackMap.at(eventNameId).emplace_back(std::make_pair(handle, callback));
+    callbackMap.at(eventNameId).EmplaceBack(std::make_pair(handle, callback));
   } else {
     callbackMap.insert(std::make_pair(
         eventNameId,
@@ -47,8 +55,8 @@ void Events::UnregisterEventListener(std::string_view eventName,
                                      U16 eventListenerHandle) {
   StringId eventNameId{SID(eventName.data())};
   if (callbackMap.count(eventNameId) > 0) {
-    std::vector<CallbackPair>& callbacks = callbackMap.at(eventNameId);
-    callbacks.erase(
+    Array<CallbackPair>& callbacks = callbackMap.at(eventNameId);
+    callbacks.Erase(
         std::remove_if(std::begin(callbacks), std::end(callbacks),
                        [eventListenerHandle](const CallbackPair& pair) {
                          return pair.first == eventListenerHandle;
@@ -60,13 +68,20 @@ void Events::UnregisterEventListener(std::string_view eventName,
   }
 }
 
+void Events::Clear() {
+  eventQueue.Clear();
+  callbackMap.clear();
+}
+
 void Events::Update() {
-  while (!eventQueue.empty()) {
-    EventObject currEvent = eventQueue.top();
+  BROFILER_CATEGORY("Event Update", Profiler::Color::Lavender);
+
+  while (!eventQueue.IsEmpty()) {
+    EventObject currEvent = eventQueue.Top();
     if (currEvent.timeFrame > Time::GetTimeFrame()) {
       break;
     }
-    eventQueue.pop();
+    eventQueue.Pop();
     RaiseImmediateEvent(currEvent);
   }
 }

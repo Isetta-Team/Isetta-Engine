@@ -30,12 +30,16 @@ class ISETTA_API_DECLARE Input {
    * \param callback The callback function
    */
   static U16 RegisterKeyPressCallback(KeyCode key, const Action<>& callback);
+  static U16 RegisterKeyPressCallback(KeyCode key, ModifierKeys mods,
+                                      const Action<>& callback);
   /**
    * \brief Unregister a callback by the key and handle
    * \param key The key to detect
    * \param handle The handle to unregister
    */
   static void UnregisterKeyPressCallback(KeyCode key, U16 handle);
+  static void UnregisterKeyPressCallback(KeyCode key, ModifierKeys mods,
+                                         U16 handle);
   /**
    * \brief Register a callback function to the key release event and return its
    * handle
@@ -43,12 +47,16 @@ class ISETTA_API_DECLARE Input {
    * \param callback The callback function
    */
   static U16 RegisterKeyReleaseCallback(KeyCode key, const Action<>& callback);
+  static U16 RegisterKeyReleaseCallback(KeyCode key, ModifierKeys mods,
+                                        const Action<>& callback);
   /**
    * \brief Unregister a callback by the key and handle
    * \param key The key to detect
    * \param handle The handle to unregister
    */
   static void UnregisterKeyReleaseCallback(KeyCode key, U16 handle);
+  static void UnregisterKeyReleaseCallback(KeyCode key, ModifierKeys mods,
+                                           U16 handle);
   /**
    * \brief Get the position of the mouse
    */
@@ -95,18 +103,7 @@ class ISETTA_API_DECLARE Input {
   static float GetGamepadAxis(GamepadAxis axis);
   static bool IsGamepadButtonPressed(GamepadButton button);
 
-  static U16 RegisterMouseButtonGLFWCallback(
-      const Action<GLFWwindow*, int, int, int>& callback);
-  static void UnregisterMouseButtonGLFWCallback(U16 handle);
-  static U16 RegisterKeyGLFWCallback(
-      const Action<GLFWwindow*, int, int, int, int>& callback);
-  static void UnegisterKeyGLFWCallback(U16 handle);
-  static U16 RegisterScrollGLFWCallback(
-      const Action<GLFWwindow*, double, double>& callback);
-  static void UnegisterScrollGLFWCallback(U16 handle);
-  static U16 RegisterCharGLFWCallback(
-      const Action<GLFWwindow*, unsigned int>& callback);
-  static void UnegisterCharGLFWCallback(U16 handle);
+  static void Clear();
 
  private:
   static class InputModule* inputModule;

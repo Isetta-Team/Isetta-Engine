@@ -10,7 +10,6 @@
 #include "Core/Math/Rect.h"
 #include "Core/Math/Vector2.h"
 
-typedef void* TextureID;
 class ImGuiInputTextCallbackData;
 class ImFont;
 class ImGuiTextFilter;
@@ -18,13 +17,16 @@ class ImGuiTextFilter;
 namespace Isetta {
 class RectTransform;
 class GUIStyle;
-using Font = ImFont;
+// using Font = ImFont;
 using TextFilter = ImGuiTextFilter;
 using InputTextCallbackData = ImGuiInputTextCallbackData;
 using InputTextCallback = int (*)(InputTextCallbackData*);
+template <typename T>
+class Array;
 namespace Math {
 class Rect;
-}
+class Vector3;
+}  // namespace Math
 }  // namespace Isetta
 
 namespace Isetta {
@@ -477,13 +479,13 @@ class ISETTA_API GUI {
     Color hovered;
     Color active;
     Color text;
-    Font* font;
+    class Font* font;
     InputStyle();
-    InputStyle(Font* const font);
+    InputStyle(class Font* const font);
     InputStyle(const Color& background, const Color& hovered,
                const Color& active, const Color& text);
     InputStyle(const Color& background, const Color& hovered,
-               const Color& active, const Color& text, Font* const font)
+               const Color& active, const Color& text, class Font* const font)
         : background{background},
           hovered{hovered},
           active{active},
@@ -493,11 +495,12 @@ class ISETTA_API GUI {
   struct ISETTA_API LabelStyle {
     Color text;
     Color background;
-    Font* font;
+    class Font* font;
     LabelStyle();
-    LabelStyle(Font* const font);
+    LabelStyle(class Font* const font);
     LabelStyle(const Color& text, const Color& background);
-    LabelStyle(const Color& text, const Color& background, Font* const font)
+    LabelStyle(const Color& text, const Color& background,
+               class Font* const font)
         : text{text}, background{background}, font{font} {}
   };
   struct ISETTA_API ProgressBarStyle {
@@ -529,15 +532,20 @@ class ISETTA_API GUI {
   struct ISETTA_API TextStyle {
     bool isWrapped = false;
     bool isDisabled = false;
+    class Font* font = nullptr;
     // TODO(Jacob) Not worth implementing now
     // bool isBulleted;
     Color text;
     TextStyle();
-    TextStyle(const Color& text) : text{text} {}
-    TextStyle(bool wrapped, bool disabled, const Color& text)
-        : isWrapped{wrapped},
-          isDisabled{disabled},
-          /*isBulleted{b},*/ text{text} {}
+    TextStyle(const Color& text)
+        : text{text}, isWrapped{false}, isDisabled{false} {}
+    TextStyle(float fontSize, const std::string_view& fontName = "");
+    TextStyle(class Font* const font);
+    TextStyle(const Color& text, float fontSize,
+              const std::string_view& fontName = "");
+    TextStyle(const Color& text, class Font* const font)
+        : text{text}, font{font} {}
+    TextStyle(bool wrapped, bool disabled, const Color& text);
   };
   struct ISETTA_API WindowStyle {
     Color background;
@@ -558,12 +566,13 @@ class ISETTA_API GUI {
                      const Action<>& callback, const ButtonStyle& style = {},
                      bool repeating = false);
   static bool ButtonImage(const RectTransform& transform, const std::string& id,
-                          const TextureID& textureId,
+                          const class Texture& texture,
                           const ButtonStyle& style = {},
                           const ImageStyle& imgStyle = {},
                           bool repeating = false);
   static bool ButtonImage(const RectTransform& transform, const std::string& id,
-                          const TextureID& textureId, const Action<>& callback,
+                          const class Texture& texture,
+                          const Action<>& callback,
                           const ButtonStyle& btnStyle = {},
                           const ImageStyle& imgStyle = {},
                           bool repeating = false, int framePadding = -1);
@@ -623,9 +632,11 @@ class ISETTA_API GUI {
   /*
   static void Bullet();
   */
-  // TODO(Jacob) styling
-  static void Label(const RectTransform& transform, const std::string& label,
-                    const std::string& format, const LabelStyle& style);
+  // TODO(Jacob) styling, doesn't seem needed
+  // static void Label(const RectTransform& transform,
+  //                  const std::string_view& label,
+  //                  const std::string_view& format,
+  //                  const LabelStyle& style = {});
   ////////////////////////////////////////
   // TODO(Jacob) NOT PART OF GAME NEEDS //
   ////////////////////////////////////////
@@ -663,13 +674,14 @@ class ISETTA_API GUI {
   //  InputTextCallbackData();
   //};
   static bool InputText(const RectTransform& transform,
-                        const std::string& label, char* buffer, int bufferSize,
-                        const InputStyle& style = {},
+                        const std::string_view& label, char* buffer,
+                        int bufferSize, const InputStyle& style = {},
                         InputTextFlags flags = InputTextFlags::None,
                         InputTextCallback callback = NULL,
                         void* userData = NULL);
-  static void InputInt(const RectTransform& transform, const std::string& label,
-                       int* value, const InputStyle& style = {}, int step = 1,
+  static void InputInt(const RectTransform& transform,
+                       const std::string_view& label, int* value,
+                       const InputStyle& style = {}, int step = 1,
                        int stepFast = 100,
                        InputTextFlags flags = InputTextFlags::None);
   ////////////////////////////////////////
@@ -687,26 +699,25 @@ class ISETTA_API GUI {
                            float stepFast = 0.0f,
                            const std::string& format = "%.3f",
                            InputTextFlags flags = InputTextFlags::None);
-  static void InputVector3(const RectTransform& transform, const std::string&
-  label,
-                           Math::Vector3* value, float step = 0.0f,
-                           float stepFast = 0.0f,
-                           const std::string& format = "%.3f",
-                           InputTextFlags flags = InputTextFlags::None);
   static void InputVector4(const RectTransform& transform, const std::string&
   label, Math::Vector4* value, float step = 0.0f, float stepFast = 0.0f, const
   std::string& format = "%.3f", GUIInputTextFlags flags =
   GUIInputTextFlags::None);
   // TODO(Jacob) InputVector2/3/4Int
   */
+  static void InputVector3(const RectTransform& transform,
+                           const std::string_view& label, Math::Vector3* value,
+                           float step = 0.0f, const InputStyle& style = {},
+                           const std::string_view& format = "%.3f",
+                           InputTextFlags flags = InputTextFlags::None);
 
   // SLIDER
   ////////////////////////////////////////
   // TODO(Jacob) NOT PART OF GAME NEEDS //
   ////////////////////////////////////////
   static void SliderFloat(const RectTransform& transform,
-                          const std::string& label, float* value, float min,
-                          float max, float power = 1,
+                          const std::string_view& label, float* value,
+                          float min, float max, float power = 1,
                           const char* format = "%.3f",
                           const InputStyle& style = {});
   /*
@@ -767,7 +778,7 @@ class ISETTA_API GUI {
                        const ComboStyle& style = {});
   static void ComboBox(const RectTransform& transform,
                        const std::string_view& label, int* current,
-                       const std::vector<std::string>& items,
+                       const Array<std::string>& items,
                        const ComboStyle& style = {});
   static bool ButtonDropDown(const RectTransform& transform,
                              const std::string_view& label,
@@ -881,8 +892,8 @@ class ISETTA_API GUI {
     // TODO(Jacob) Do we allow DrawLine? 3017
   };
 
-  static void Image(const RectTransform& transform, const TextureID& textureId,
-                    const ImageStyle& style = {});
+  static void Image(const RectTransform& transform,
+                    const class Texture& texture, const ImageStyle& style = {});
 
   static void ProgressBar(const RectTransform& transform, float fraction,
                           const std::string& overlay = "",
@@ -931,9 +942,6 @@ class ISETTA_API GUI {
   static void PopStyleID();
   static void PushStyleParam(GUIStyleVar style, float* value);
   static void PopStyleParam();
-  // TODO(Jacob) Font
-  // static void PushFont(Font* font)
-  // static void PopFont();
   static void PushItemWidth(float width);  // TODO(Jacob) integrate into
   other
                                            // things (lines 2011-2047)
@@ -944,14 +952,19 @@ class ISETTA_API GUI {
   // TODO(Jacob) Classic/Dark/Light sytling?
   */
   // TODO(Jacob) Load/SaveIniSettings?
-  // TODO(Jacob) Fonts
-  // static Font* GetFont();
 
-  // TODO(Jacob) have font map?
-  static Font* GetDefaultFont();
-  static Font* AddFontFromFile(const std::string& filename, int fontSize);
-  static Font* AddFontFromMemory(void* fontBuffer, int fontSize, float pixels);
-  static void PushFont(const Font*& font);
+  static class Font* GetDefaultFont();
+  static void AddDefaultFont(const std::string_view& fontName, float size);
+  static void AddDefaultFont(class Font* const font);
+  static class Font* GetFont(const std::string_view fontName, float size);
+  static class Font* AddFontFromFile(const std::string& filename,
+                                     float fontSize,
+                                     const std::string_view& fontName = "");
+  static class Font* AddFontFromMemory(void* fontBuffer, float fontSize,
+                                       float pixels,
+                                       const std::string_view& fontName);
+  static void PushFont(const std::string_view fontName, float fontSize);
+  static void PushFont(class Font* const font);
   static void PopFont();
   static void PushStyleVar(StyleVar var, float val);
   static void PushStyleVar(StyleVar var, const Math::Vector2& val);

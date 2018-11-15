@@ -2,7 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include <vector>
+#include "Core/DataStructures/Array.h"
 #include "Scene/Component.h"
 
 namespace Isetta {
@@ -10,7 +10,7 @@ BEGIN_COMPONENT(DebugCollision, Component, true)
 private:
 int collisions = 0;
 int enterHandle, exitHandle;
-std::vector<class Collider*> colliders;
+Array<class Collider*> colliders;
 class CollisionHandler* handler;
 
 public:

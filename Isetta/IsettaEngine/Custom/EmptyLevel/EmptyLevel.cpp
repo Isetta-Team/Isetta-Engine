@@ -2,12 +2,15 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Custom/EmptyLevel/EmptyLevel.h"
+
 #include "Application.h"
 #include "Core/Config/Config.h"
 #include "Custom/IsettaCore.h"
 #include "Graphics/CameraComponent.h"
 
+#include "Components/Editor/Console.h"
 #include "Custom/EscapeExit.h"
+#include "Custom/LoadNextLevel.h"
 
 namespace Isetta {
 
@@ -28,5 +31,6 @@ void EmptyLevel::LoadLevel() {
 
   // Application::Exit();
   cameraEntity->AddComponent<EscapeExit>();
+  cameraEntity->AddComponent<LoadNextLevel>("EditorLevel");
 }
 }  // namespace Isetta

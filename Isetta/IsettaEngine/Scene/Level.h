@@ -16,10 +16,13 @@
       return Isetta::MemoryManager::NewOnStack<NAME>();                   \
     };                                                                    \
     static std::string GetLevelName() { return #NAME; }                   \
+    std::string GetName() const override { return #NAME; }                \
                                                                           \
    private:
 
-#define CREATE_LEVEL_END };
+#define CREATE_LEVEL_END \
+  }                      \
+  ;
 
 namespace Isetta {
 class ISETTA_API Level {
@@ -36,8 +39,11 @@ class ISETTA_API Level {
   class Entity* levelRoot;
   Level();
   virtual ~Level() = default;
+
+  virtual std::string GetName() const = 0;
   class Entity* GetEntityByName(const std::string&);
   class std::list<class Entity*> GetEntitiesByName(const std::string&);
+  class std::list<class Entity*> GetEntities() const;
 
   virtual void LoadLevel() {}
   virtual void UnloadLevel();

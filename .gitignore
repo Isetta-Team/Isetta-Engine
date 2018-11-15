@@ -4,7 +4,6 @@
 
 # Engine files
 /Isetta/Isetta*/user.cfg
-/Isetta/Isetta*/user.cfg
 /Isetta/Build/
 
 /cpplint.py

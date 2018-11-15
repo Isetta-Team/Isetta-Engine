@@ -8,11 +8,13 @@
 
 #include "Collisions/Ray.h"
 #include "Core/Debug/DebugDraw.h"
+#include "Core/Math/Matrix3.h"
 #include "Core/Math/Matrix4.h"
 #include "Core/Math/Vector4.h"
 #include "Scene/Transform.h"
 
 namespace Isetta {
+#if _EDITOR
 void CapsuleCollider::Update() {
   Math::Matrix4 scale;
   Math::Matrix4 rotation;
@@ -30,6 +32,8 @@ void CapsuleCollider::Update() {
    Math::Vector3 P1 = GetTransform()->GetWorldPos() + center + dir;*/
   // DebugDraw::Line(P0, P1, Color::blue);
 }
+#endif
+
 bool CapsuleCollider::RaycastSphere(const Math::Vector3& center, float radius,
                                     const Ray& ray, RaycastHit* const hitInfo,
                                     float maxDistance) {
@@ -113,9 +117,9 @@ bool CapsuleCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
         !RaycastSphere(p0, radius * radiusScale, ray, &aHit, maxDistance))
       return false;
     if (aHit.GetDistance() < bHit.GetDistance())
-      *hitInfo = aHit;
+      *hitInfo = std::move(aHit);
     else
-      *hitInfo = bHit;
+      *hitInfo = std::move(bHit);
     return true;
   }
 
@@ -141,6 +145,20 @@ bool CapsuleCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
   }
 
   return false;
+}
+
+AABB CapsuleCollider::GetFatAABB() {
+  return AABB{GetWorldCenter(),
+              2.f *
+                  (GetWorldHeight() * GetTransform()->GetUp() +
+                   radius * Math::Vector3::one) *
+                  (1 + fatFactor)};
+}
+AABB CapsuleCollider::GetAABB() {
+  // TODO(Yidi) + TODO(Jacob) not a tight AABB
+  return AABB{GetWorldCenter(),
+              2.f * (GetWorldHeight() * GetTransform()->GetUp() +
+                     radius * Math::Vector3::one)};
 }
 
 INTERSECTION_TEST(CapsuleCollider)

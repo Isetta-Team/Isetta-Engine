@@ -218,6 +218,7 @@ char* Filesystem::Read(const char* fileName) {
     GetReadWriteError();
   }
   CloseHandle(hFile);
+  buffer[dwFileSize] = '\0';
   return buffer;
 }
 

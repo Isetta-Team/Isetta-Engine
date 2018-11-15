@@ -16,6 +16,7 @@
 #include "Core/IsettaAlias.h"
 #include "Graphics/AnimationComponent.h"
 #include "Networking/NetworkManager.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 // F Windows
 #ifdef SendMessage
@@ -83,6 +84,8 @@ void NetworkingModule::StartUp() {
 }
 
 void NetworkingModule::Update(float deltaTime) {
+  BROFILER_CATEGORY("Network Update", Profiler::Color::Orange);
+
   clock.UpdateTime();
 
   // Check for new connections
@@ -156,6 +159,7 @@ void NetworkingModule::AddServerToClientMessage(int clientIdx,
 }
 
 void NetworkingModule::PumpClientServerUpdate(double time) {
+  PROFILE
   client->SendPackets();
   if (server) {
     server->SendPackets();
@@ -245,14 +249,15 @@ void NetworkingModule::Connect(const char* serverAddress, int serverPort,
 }
 
 void NetworkingModule::Disconnect() {
-  if (!client->IsConnecting()) {
+  if (client->IsConnected()) {
+    client->Disconnect();
+  } else if (!client->IsConnecting()) {
     return;
-  } else if (!client->IsConnected()) {
+  } else {
     throw std::exception(
         "NetworkingModule::Disconnect => Cannot disconnect the client if it is "
         "not already connected.");
   }
-  client->Disconnect();
 }
 
 void NetworkingModule::CreateServer(const char* address, int port) {

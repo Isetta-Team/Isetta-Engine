@@ -21,17 +21,17 @@ void GUIComponent::GuiUpdate() {
       RectTransform{Math::Rect{0, 0, 80, 20}, GUI::Pivot::Bot, GUI::Pivot::Bot},
       "btn", []() { LOG_INFO(Debug::Channel::GUI, "btn"); },
       GUI::ButtonStyle{Color::red, Color::blue, Color::yellow});
-  GUI::ButtonImage(RectTransform{{100, 40, 80, 20}}, "btn-id", NULL,
-                   []() { LOG_INFO(Debug::Channel::GUI, "btn image"); },
-                   GUI::ButtonStyle{Color::grey, Color::green, Color::cyan},
-                   GUI::ImageStyle{Color::blue, Color::white, 2}, true);
+  // GUI::ButtonImage(RectTransform{{100, 40, 80, 20}}, "btn-id", NULL,
+  //                  []() { LOG_INFO(Debug::Channel::GUI, "btn image"); },
+  //                  GUI::ButtonStyle{Color::grey, Color::green, Color::cyan},
+  //                  GUI::ImageStyle{Color::blue, Color::white, 2}, true);
   GUI::Toggle(RectTransform{{10, 130, 40, 40}}, "toggle me", &checkbox,
               GUI::ButtonStyle{Color::red, Color::blue, Color::yellow});
   GUI::Text(RectTransform{{100, 130, 40, 40}},
             Util::StrFormat("I am %s and I am %d", "Jake", 10),
             GUI::TextStyle{false, false, Color::grey});
-  GUI::Label(RectTransform{{100, 230, 40, 40}}, "labelthing", "text",
-             GUI::LabelStyle{Color::white, Color::clear});
+  // GUI::Label(RectTransform{{100, 230, 40, 40}}, "labelthing", "text",
+  //           GUI::LabelStyle{Color::white, Color::clear});
 
   static char buffer[1024];
   // struct TestCallback {

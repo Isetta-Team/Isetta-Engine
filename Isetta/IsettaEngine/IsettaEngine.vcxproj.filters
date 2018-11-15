@@ -213,16 +213,16 @@
     <ClCompile Include="Collisions\CollisionsModule.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
-    <ClCompile Include="Collisions\Collider.cpp">
-      <Filter>Collisions</Filter>
-    </ClCompile>
     <ClCompile Include="Collisions\CapsuleCollider.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
-    <ClCompile Include="Collisions\AABB.cpp">
+    <ClCompile Include="Collisions\Collider.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
     <ClCompile Include="Collisions\BoxCollider.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Collisions\AABB.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
     <ClCompile Include="Custom\NetworkLevel.cpp">
@@ -274,12 +274,6 @@
     <ClCompile Include="Networking\NetworkId.cpp">
       <Filter>Networking</Filter>
     </ClCompile>
-    <ClCompile Include="Components\NetworkTransform.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Components\Console.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="Custom\EscapeExit.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
@@ -291,6 +285,54 @@
     </ClCompile>
     <ClCompile Include="Components\AxisDrawer.cpp">
       <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\EditorLevel\EditorLevel.cpp">
+      <Filter>Custom\EditorLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Editor\Inspector.cpp">
+      <Filter>Components\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Editor\Console.cpp">
+      <Filter>Components\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Editor\Hierarchy.cpp">
+      <Filter>Components\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DataStructures\Trie.cpp">
+      <Filter>Core\DataStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="Networking\NetworkTransform.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DataStructures\HandleBin.cpp">
+      <Filter>Core\DataStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Editor\EditorComponent.cpp">
+      <Filter>Components\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\FontExample.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\Nav2DPlane.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\AILevel\AITestLevel.cpp">
+      <Filter>Custom\AILevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\AILevel\AITestComponent.cpp">
+      <Filter>Custom\AILevel</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\Nav2DObstacle.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\Nav2DAgent.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\LoadNextLevel.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\GLFWInput.cpp">
+      <Filter>Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -368,6 +410,18 @@
     </Filter>
     <Filter Include="Custom\BVHTestLevel">
       <UniqueIdentifier>{d6dd3b2a-276f-4d5e-8016-f458080f209b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\EditorLevel">
+      <UniqueIdentifier>{48eaf7c9-0b50-4561-bbca-2c68a5456570}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Editor">
+      <UniqueIdentifier>{810b8627-00c8-4ae3-9a0d-ba5ac1948eb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI">
+      <UniqueIdentifier>{26d9eeab-63d0-4452-af57-de69b9db1c79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\AILevel">
+      <UniqueIdentifier>{c2ec0a3b-7c7e-4727-a06c-c0efe1d53754}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -603,12 +657,6 @@
     <ClInclude Include="Networking\NetworkId.h">
       <Filter>Networking</Filter>
     </ClInclude>
-    <ClInclude Include="Components\NetworkTransform.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Components\Console.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="Collisions\CollisionUtil.h">
       <Filter>Collisions</Filter>
     </ClInclude>
@@ -629,6 +677,63 @@
     </ClInclude>
     <ClInclude Include="Components\AxisDrawer.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\EditorLevel\EditorLevel.h">
+      <Filter>Custom\EditorLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Editor\Hierarchy.h">
+      <Filter>Components\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Editor\Inspector.h">
+      <Filter>Components\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Editor\Console.h">
+      <Filter>Components\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\Array.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="Networking\NetworkTransform.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\HandleBin.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Editor\EditorComponent.h">
+      <Filter>Components\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\FontExample.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Font.h">
+      <Filter>Graphics\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\PriorityQueue.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\Nav2DPlane.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\AILevel\AITestLevel.h">
+      <Filter>Custom\AILevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\AILevel\AITestComponent.h">
+      <Filter>Custom\AILevel</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\Nav2DObstacle.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\Nav2DAgent.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\AILevel\AITestAgent.h">
+      <Filter>Custom\AILevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\LoadNextLevel.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\GLFWInput.h">
+      <Filter>Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -700,8 +805,8 @@
       <Filter>Resources\test</Filter>
     </None>
     <None Include="config.cfg" />
-    <None Include="user.cfg" />
     <None Include="cpp.hint" />
+    <None Include="user.cfg" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Resources\test\Low-Poly-Racing-Car.scene.xml">

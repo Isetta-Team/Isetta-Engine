@@ -6,11 +6,13 @@
 #include "Core/Debug/Debug.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Memory/MemoryManager.h"
+#include "Graphics/Font.h"
 #include "Graphics/GUI.h"
-#include "Input/Input.h"
-
+#include "Input/GLFWInput.h"
 #include "Scene/Level.h"
 #include "Scene/LevelManager.h"
+
+#include "brofiler/ProfilerCore/Brofiler.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
@@ -31,6 +33,14 @@ void FreeAlloc(void* ptr, void* user_data) {
 }
 
 namespace Isetta {
+Font* GUIModule::GetFont(const std::string_view& fontName, float size) {
+  auto font = fonts.find({SID(fontName.data()), size});
+  return font == fonts.end() ? nullptr : font->second;
+}
+void GUIModule::AddFont(const std::string_view& fontName, float size,
+                        Font* const font) {
+  fonts.insert({{SID(fontName.data()), size}, font});
+}
 void GUIModule::StartUp(const GLFWwindow* win) {
   GUI::guiModule = this;
   winHandle = win;
@@ -49,7 +59,6 @@ void GUIModule::StartUp(const GLFWwindow* win) {
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
   ImGuiIO& io = ImGui::GetIO();
-  (void)io;
 
   // Setup Dear ImGui binding
   ImGui_ImplGlfw_InitForOpenGL(const_cast<GLFWwindow*>(winHandle), false);
@@ -65,22 +74,26 @@ void GUIModule::StartUp(const GLFWwindow* win) {
   // io.IniFilename = NULL;
   // Load Fonts
   // io.Fonts->AddFontDefault();
-  // io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
-  // io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
-  // io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
-  // io.Fonts->AddFontFromFileTTF("../../misc/fonts/ProggyTiny.ttf", 10.0f);
+  // io.Fonts->AddFontFromFileTTF("../External/imgui/misc/fonts/Roboto-Medium.ttf",
+  // 16.0f); io.Fonts->AddFontFromFileTTF(
+  //    "../External/imgui/misc/fonts/Cousine-Regular.ttf", 15.0f);
+  // io.Fonts->AddFontFromFileTTF(
+  //    "../External/imgui/misc/fonts/DroidSans.ttf", 72.0f);
+  // io.Fonts->AddFontFromFileTTF("../External/imgui/misc/fonts/ProggyTiny.ttf", 10.0f);
   // ImFont* font =
   // io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f,
   // NULL, io.Fonts->GetGlyphRangesJapanese());
   // IM_ASSERT(font != NULL);
 
-  Input::RegisterMouseButtonGLFWCallback(ImGui_ImplGlfw_MouseButtonCallback);
-  Input::RegisterScrollGLFWCallback(ImGui_ImplGlfw_ScrollCallback);
-  Input::RegisterKeyGLFWCallback(ImGui_ImplGlfw_KeyCallback);
-  Input::RegisterCharGLFWCallback(ImGui_ImplGlfw_CharCallback);
+  GLFWInput::RegisterMouseButtonCallback(ImGui_ImplGlfw_MouseButtonCallback);
+  GLFWInput::RegisterScrollCallback(ImGui_ImplGlfw_ScrollCallback);
+  GLFWInput::RegisterKeyCallback(ImGui_ImplGlfw_KeyCallback);
+  GLFWInput::RegisterCharCallback(ImGui_ImplGlfw_CharCallback);
 }
 
 void GUIModule::Update(float deltaTime) {
+  BROFILER_CATEGORY("GUI Update", Profiler::Color::PowderBlue);
+
   // LOG_INFO(Isetta::Debug::Channel::GUI,
   //         "-------------GUI UPDATE 1-------------");
   ImGui_ImplOpenGL3_NewFrame();
@@ -106,7 +119,7 @@ void GUIModule::Update(float deltaTime) {
           ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus);
   ImGui::PopStyleVar(2);
 
-  LevelManager::Instance().currentLevel->GUIUpdate();
+  LevelManager::Instance().loadedLevel->GUIUpdate();
 
   ImGui::End();
   ImGui::Render();

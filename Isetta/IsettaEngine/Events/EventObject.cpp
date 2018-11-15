@@ -2,18 +2,19 @@
  * Copyright (c) 2018 Isetta
  */
 #include <Events/EventObject.h>
+#include "Core/DataStructures/Array.h"
 #include "Core/Time/Time.h"
 
 namespace Isetta {
 
 EventObject::EventObject(std::string name, U64 frame, EventPriority priority,
-                         std::vector<EventParam> params)
+                         Array<EventParam> params)
     : eventName{name},
       timeFrame{frame},
       eventPriority{priority},
       eventParams{params} {}
 
-EventObject::EventObject(std::string name, std::vector<EventParam> params)
+EventObject::EventObject(std::string name, Array<EventParam> params)
     : eventName{name},
       timeFrame{Time::GetTimeFrame()},
       eventPriority{EventPriority::MEDIUM},
@@ -26,10 +27,10 @@ EventObject::EventObject(const EventObject& other)
       eventParams{other.eventParams} {}
 
 EventObject::EventObject(EventObject&& other) noexcept
-    : eventName{std::move(other.eventName)},
-      timeFrame{std::move(other.timeFrame)},
-      eventPriority{std::move(other.eventPriority)},
-      eventParams{std::move(other.eventParams)} {}
+    : eventName{other.eventName},
+      timeFrame{other.timeFrame},
+      eventPriority{other.eventPriority},
+      eventParams{other.eventParams} {}
 
 EventObject& EventObject::operator=(const EventObject& other) {
   if (other == *this) return *this;
@@ -42,10 +43,10 @@ EventObject& EventObject::operator=(const EventObject& other) {
 
 EventObject& EventObject::operator=(EventObject&& other) noexcept {
   if (other == *this) return *this;
-  eventName = std::move(other.eventName);
-  timeFrame = std::move(other.timeFrame);
-  eventPriority = std::move(other.eventPriority);
-  eventParams = std::move(other.eventParams);
+  eventName = other.eventName;
+  timeFrame = other.timeFrame;
+  eventPriority = other.eventPriority;
+  eventParams = other.eventParams;
   return *this;
 }
 

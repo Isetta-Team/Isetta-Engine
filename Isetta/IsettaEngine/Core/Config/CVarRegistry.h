@@ -4,6 +4,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <vector>
 #include "Core/Config/ICVar.h"
 #include "SID/sid.h"
 

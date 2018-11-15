@@ -33,6 +33,7 @@ class ISETTA_API EngineLoop {
   class GUIModule* guiModule;
   class NetworkingModule* networkingModule;
   class CollisionsModule* collisionsModule;
+  class Events* events;
 
   void Run();
   void StartUp();
@@ -43,8 +44,6 @@ class ISETTA_API EngineLoop {
 
   void StartGameClock() const;
 
-  class TestInitalization;
-  friend class TestInitialization;
   friend class Application;
 };
 }  // namespace Isetta

@@ -5,60 +5,54 @@
 #include "Core/Memory/MemoryManager.h"
 
 namespace Isetta {
-class TrieTree {
- private:
-  struct TrieNode {
-    static const int ASCII_CHAR_SET = 128;
-    struct TrieNode* children[ASCII_CHAR_SET];
-    bool isLeaf;
+template <typename T>
+class Array;
 
-    TrieNode() {
-      for (int i = 0; i < TrieNode::ASCII_CHAR_SET; i++) children[i] = nullptr;
-    }
-    ~TrieNode() {
-      for (int i = 0; i < TrieNode::ASCII_CHAR_SET; i++)
-        if (children[i]) {
-          children[i]->~TrieNode();
-          MemoryManager::FreeOnFreeList(children);
-        }
-    }
+class Trie {
+ public:
+  struct Node {
+    static const int ASCII_CHAR_SET = 128;
+    struct Node* children[ASCII_CHAR_SET];
+    bool isWord;
+
+    Node();
+    ~Node();
+
+    Node(const Node& inNode);
+    Node(Node&& inNode);
+    Node& operator=(const Node& inNode);
+    Node& operator=(Node&& inNode) noexcept;
+
+   private:
+    Node* Copy(const Node* const node);
+
+    friend Trie;
   };
 
-  TrieNode* root;
+ private:
+  Node* root{nullptr};
+  int wordCnt{0}, depth{0};
 
-  inline TrieNode* GetNode() {
-    TrieNode* node = MemoryManager::NewOnFreeList<TrieNode>();
-    node->isLeaf = false;
-  }
+  Node* NewNode();
+  void GetWordsUtil(Node* const node, Array<std::string_view>* const words,
+                    char* const word, int pos) const;
 
  public:
-  TrieTree() { root = GetNode(); }
-  ~TrieTree() { root->~TrieNode(); }
+  Trie();
+  ~Trie();
 
-  inline void Insert(const std::string_view& key) {
-    TrieNode* next = root;
-    for (int i = 0; i < key.length(); i++) {
-      int index = static_cast<int>(key[i]);
-      if (!next->children[index]) next->children[index] = GetNode();
-      next = next->children[index];
-    }
-    next->isLeaf = true;
-  }
+  Trie(const Trie& inTrie);
+  Trie(Trie&& inTrie) noexcept;
+  Trie& operator=(const Trie& inTrie);
+  Trie& operator=(Trie&& inTrie);
 
-  inline TrieNode* Find(const std::string_view& key) {
-    TrieNode* next = root;
-    for (int i = 0; i < key.length(); i++) {
-      int index = static_cast<int>(key[i]);
-      if (!next->children[index]) return false;
-      next = next->children[index];
-    }
-    return next;
-  }
+  explicit Trie(const Array<std::string_view>& vec);
 
-  inline bool Contains(const std::string_view& key) {
-    TrieNode* node = Find(key);
-    return (node != NULL && node->isLeaf);
-  }
+  void Insert(const std::string_view& key);
+  Node* Find(const std::string_view& key);
+  bool Contains(const std::string_view& key);
+  bool HasPrefix(const std::string_view& key);
+  Array<std::string_view> GetWords() const;
 };
 
 }  // namespace Isetta

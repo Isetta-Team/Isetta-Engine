@@ -87,7 +87,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL\*.lib;$(SolutionDir)External\imgui\lib\$(Configuration)\imgui.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL\*.lib;$(SolutionDir)External\imgui\lib\$(Configuration)\imgui.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
@@ -157,9 +157,16 @@
     <ClCompile Include="InputLevel\InputLevel.cpp" />
     <ClCompile Include="InputLevel\InputTestComponent.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Week10MiniGame\W10GameManager.cpp" />
+    <ClCompile Include="Week10MiniGame\W10NetworkManager.cpp" />
+    <ClCompile Include="Week10MiniGame\W10NetworkPlayer.cpp" />
+    <ClCompile Include="Week10MiniGame\W10Player.cpp" />
+    <ClCompile Include="Week10MiniGame\W10UIManager.cpp" />
+    <ClCompile Include="Week10MiniGame\Week10Level.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
+    <None Include="cpp.hint" />
     <None Include="user.cfg" />
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +184,12 @@
     <ClInclude Include="Halves\Zombie.h" />
     <ClInclude Include="InputLevel\InputLevel.h" />
     <ClInclude Include="InputLevel\InputTestComponent.h" />
+    <ClInclude Include="Week10MiniGame\W10GameManager.h" />
+    <ClInclude Include="Week10MiniGame\W10NetworkManager.h" />
+    <ClInclude Include="Week10MiniGame\W10NetworkPlayer.h" />
+    <ClInclude Include="Week10MiniGame\W10Player.h" />
+    <ClInclude Include="Week10MiniGame\W10UIManager.h" />
+    <ClInclude Include="Week10MiniGame\Week10Level.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

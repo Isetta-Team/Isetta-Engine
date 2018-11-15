@@ -2,11 +2,12 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Core/Memory/MemoryManager.h"
-#include <vector>
 #include "Core/Config/Config.h"
+#include "Core/DataStructures/Array.h"
 #include "Core/Math/Random.h"
 #include "Core/Memory/ObjectHandle.h"
 #include "Util.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 
@@ -27,6 +28,11 @@ void* MemoryManager::AllocOnStack(const Size size, const U8 alignment) {
 
 void* MemoryManager::AllocOnFreeList(const Size size, const U8 alignment) {
   return GetInstance()->freeListAllocator.Alloc(size, alignment);
+}
+
+void* MemoryManager::ReallocOnFreeList(void* memPtr, const Size size,
+                                       const U8 alignment) {
+  return GetInstance()->freeListAllocator.Realloc(memPtr, size, alignment);
 }
 
 void MemoryManager::FreeOnFreeList(void* memPtr) {
@@ -55,6 +61,8 @@ void MemoryManager::StartUp() {
 // Memory Manager's update needs to be called after everything that need memory
 // allocation
 void MemoryManager::Update() {
+  BROFILER_CATEGORY("Memory Update", Profiler::Color::Teal);
+
   singleFrameAllocator.Clear();
   doubleBufferedAllocator.SwapBuffer();
   doubleBufferedAllocator.ClearCurrentBuffer();
@@ -88,20 +96,20 @@ MemoryManager* MemoryManager::GetInstance() {
 
 void MemoryManager::DefragmentTest() {
   const U32 count = 1024;
-  std::vector<ObjectHandle<U64>> arr;
+  Array<ObjectHandle<U64>> arr;
 
   for (U32 i = 0; i < count; i++) {
     auto ref = NewDynamic<U64>();
     *ref = i;
-    arr.push_back(ref);
+    arr.PushBack(ref);
   }
 
   auto map = instance->dynamicArena.addressIndexMap;
 
   for (U32 i = 0; i < count / 2; i++) {
-    int index = Math::Random::GetRandomGenerator(0, arr.size() - 1).GetValue();
+    int index = Math::Random::GetRandomGenerator(0, arr.Size() - 1).GetValue();
     DeleteDynamic(arr[index]);
-    arr.erase(arr.begin() + index);
+    arr.Erase(arr.begin() + index);
   }
 }
 }  // namespace Isetta

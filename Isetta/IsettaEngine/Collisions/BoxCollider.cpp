@@ -12,6 +12,7 @@
 #include "Scene/Transform.h"
 
 namespace Isetta {
+#if _EDITOR
 void BoxCollider::Update() {
   DebugDraw::WireCube(
       Math::Matrix4::Translate(GetTransform()->GetWorldPos() + center) *
@@ -20,6 +21,7 @@ void BoxCollider::Update() {
           (Math::Matrix4)GetTransform()->GetWorldRot(),
       debugColor);
 }
+#endif
 
 bool BoxCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
                           float maxDistance) {
@@ -43,12 +45,36 @@ bool BoxCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
   if (tmax < 0 || tmin > tmax) return false;
   if (tmin < 0) tmin = tmax;
 
-  Math::Vector3 n;  // TODO (normal)
-  RaycastHitCtor(hitInfo, tmin,
-                 GetTransform()->WorldPosFromLocalPos(o) +
-                     GetTransform()->WorldDirFromLocalDir(d) * tmin,
-                 n);
+  Math::Vector3 pt = GetTransform()->WorldPosFromLocalPos(o) +
+                     GetTransform()->WorldDirFromLocalDir(d) * tmin;
+  Math::Vector3 to = pt - GetWorldCenter();
+  Math::Vector3 n;
+  tmax = 0;
+  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
+    float tmp = Math::Vector3::Dot(to, GetTransform()->GetAxis(i));
+    if (tmp > tmax) {
+      tmax = tmp;
+      n = Math::Util::Sign(tmp) * GetTransform()->GetAxis(i);
+    }
+  }
+
+  RaycastHitCtor(hitInfo, tmin, pt, n);
   return true;
+}
+
+AABB BoxCollider::GetFatAABB() {
+  AABB aabb = GetAABB();
+  aabb.Expand(1.f + fatFactor);
+  return aabb;
+}
+AABB BoxCollider::GetAABB() {
+  const Math::Vector3 size = GetWorldSize();
+  Math::Vector3 aabbSize = size;
+  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++)
+    aabbSize[i] = Math::Util::Abs(GetTransform()->GetLeft()[i]) * size.x +
+                  Math::Util::Abs(GetTransform()->GetUp()[i]) * size.y +
+                  Math::Util::Abs(GetTransform()->GetForward()[i]) * size.z;
+  return AABB{GetWorldCenter(), aabbSize};
 }
 
 INTERSECTION_TEST(BoxCollider)

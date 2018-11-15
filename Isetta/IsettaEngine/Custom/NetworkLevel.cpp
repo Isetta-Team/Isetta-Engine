@@ -3,8 +3,9 @@
  */
 #include "Custom/NetworkLevel.h"
 
-#include "Components/NetworkTransform.h"
+#include "Components/Editor/EditorComponent.h"
 #include "Components/FlyController.h"
+#include "Components/GridComponent.h"
 #include "Core/Color.h"
 #include "Core/Config/Config.h"
 #include "Core/Math/Math.h"
@@ -15,8 +16,8 @@
 #include "Graphics/LightComponent.h"
 #include "Input/Input.h"
 #include "Networking/NetworkId.h"
+#include "Networking/NetworkTransform.h"
 #include "Scene/Entity.h"
-#include "Components/GridComponent.h"
 
 using namespace Isetta;
 
@@ -80,12 +81,14 @@ void RegisterExampleMessageFunctions() {
 
             SpawnMessage* spawnMessage =
                 reinterpret_cast<SpawnMessage*>(message);
-            const Entity* entity = NetworkManager::Instance().GetNetworkEntity(
+
+            Entity* entity = NetworkManager::Instance().GetNetworkEntity(
                 spawnMessage->netId);
             if (!entity) {
-              Entity* e = LevelManager::Instance().currentLevel->AddEntity(
+              Entity* e = LevelManager::Instance().loadedLevel->AddEntity(
                   Util::StrFormat("NetworkEntity%d", spawnMessage->netId));
-              NetworkId* netId = e->AddComponent<NetworkId>(spawnMessage->netId);
+              NetworkId* netId =
+                  e->AddComponent<NetworkId>(spawnMessage->netId);
               netId->clientAuthorityId = spawnMessage->clientAuthorityId;
               spawnedEntities.push_back(e);
 
@@ -93,14 +96,18 @@ void RegisterExampleMessageFunctions() {
               e->GetTransform()->SetLocalScale(Math::Vector3::one * .01);
               MeshComponent* mesh = e->AddComponent<MeshComponent, true>(
                   "Zombie/Zombie.scene.xml");
-              AnimationComponent* animation =
-                  e->AddComponent<AnimationComponent, true>(mesh);
-              animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
-              e->GetComponent<AnimationComponent>()->Play();
               if (netId->HasClientAuthority()) {
                 e->AddComponent<KeyTransform>();
               }
               e->AddComponent<NetworkTransform>();
+
+              if (spawnMessage->a) {
+                Entity* parent = NetworkManager::Instance().GetNetworkEntity(
+                    spawnMessage->a);
+
+                e->GetTransform()->SetParent(parent->GetTransform());
+                e->GetTransform()->SetLocalScale(Math::Vector3::one);
+              }
             }
           });
 
@@ -112,7 +119,7 @@ void RegisterExampleMessageFunctions() {
                 reinterpret_cast<SpawnMessage*>(message);
 
             if (!spawnMessage->netId) {
-              Entity* e = LevelManager::Instance().currentLevel->AddEntity(
+              Entity* e = LevelManager::Instance().loadedLevel->AddEntity(
                   Util::StrFormat("NetworkEntity%d", count++));
               NetworkId* netId = e->AddComponent<NetworkId>();
               netId->clientAuthorityId = clientIdx;
@@ -124,14 +131,18 @@ void RegisterExampleMessageFunctions() {
               e->GetTransform()->SetLocalScale(Math::Vector3::one * .01);
               MeshComponent* mesh = e->AddComponent<MeshComponent, true>(
                   "Zombie/Zombie.scene.xml");
-              AnimationComponent* animation =
-                  e->AddComponent<AnimationComponent, true>(mesh);
-              animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
-              e->GetComponent<AnimationComponent>()->Play();
               if (netId->HasClientAuthority()) {
                 e->AddComponent<KeyTransform>();
               }
               e->AddComponent<NetworkTransform>();
+
+              if (spawnMessage->a) {
+                Entity* parent = NetworkManager::Instance().GetNetworkEntity(
+                    spawnMessage->a);
+
+                e->GetTransform()->SetParent(parent->GetTransform());
+                e->GetTransform()->SetLocalScale(Math::Vector3::one);
+              }
             }
 
             NetworkManager::Instance().SendAllMessageFromServer<SpawnMessage>(
@@ -152,8 +163,7 @@ void RegisterExampleMessageFunctions() {
             if (!entity) {
               return;
             }
-            NetworkManager::Instance().RemoveNetworkId(
-                entity->GetComponent<NetworkId>());
+
             spawnedEntities.remove(entity);
             Entity::Destroy(entity);
           });
@@ -177,8 +187,6 @@ void RegisterExampleMessageFunctions() {
               return;
             }
 
-            NetworkManager::Instance().RemoveNetworkId(
-                entity->GetComponent<NetworkId>());
             spawnedEntities.remove(entity);
             Entity::Destroy(entity);
           });
@@ -219,9 +227,7 @@ void NetworkLevel::LoadLevel() {
     if (NetworkManager::Instance().LocalClientIsConnected()) {
       SpawnMessage* m =
           NetworkManager::Instance().GenerateMessageFromClient<SpawnMessage>();
-      m->a = 1;
-      m->b = 2;
-      m->c = 3;
+      m->a = 0;
       NetworkManager::Instance().SendMessageFromClient(m);
 
       ++spawnCounter;
@@ -238,6 +244,35 @@ void NetworkLevel::LoadLevel() {
       NetworkManager::Instance().SendMessageFromClient(m);
 
       ++despawnCounter;
+    }
+  });
+  Input::RegisterKeyPressCallback(KeyCode::U, []() {
+    if (NetworkManager::Instance().LocalClientIsConnected()) {
+      SpawnMessage* m =
+          NetworkManager::Instance().GenerateMessageFromClient<SpawnMessage>();
+      m->a = spawnedEntities.back()->GetComponent<NetworkId>()->id;
+      NetworkManager::Instance().SendMessageFromClient(m);
+
+      ++spawnCounter;
+    }
+  });
+  Input::RegisterKeyPressCallback(KeyCode::I, []() {
+    if (NetworkManager::Instance().LocalClientIsConnected()) {
+      auto it = spawnedEntities.end();
+      it = std::prev(it);
+      it = std::prev(it);
+      spawnedEntities.back()
+          ->GetComponent<NetworkTransform>()
+          ->SetNetworkedParent((*it)->GetComponent<NetworkId>()->id);
+    }
+  });
+  Input::RegisterKeyPressCallback(KeyCode::K, []() {
+    if (NetworkManager::Instance().LocalClientIsConnected()) {
+      spawnedEntities.back()
+          ->GetComponent<NetworkTransform>()
+          ->SetNetworkedParentToRoot();
+      spawnedEntities.back()->GetTransform()->SetLocalScale(
+          Math::Vector3(.01, .01, .01));
     }
   });
 
@@ -293,6 +328,5 @@ void NetworkLevel::LoadLevel() {
   lightComp->SetProperty<LightProperty::SHADOW_MAP_COUNT>(1);
   lightComp->SetProperty<LightProperty::SHADOW_MAP_BIAS>(0.01f);
   lightEntity->AddComponent<GridComponent>();
+  lightEntity->AddComponent<EditorComponent>();
 }
-
-void NetworkLevel::UnloadLevel() { RegisterExampleMessageFunctions(); }

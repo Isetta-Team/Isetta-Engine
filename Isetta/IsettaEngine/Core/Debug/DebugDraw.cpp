@@ -17,6 +17,7 @@
 #include "Graphics/CameraComponent.h"
 #include "Graphics/RenderModule.h"
 #include "Scene/Transform.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 #define PLANE 1
@@ -28,8 +29,10 @@ namespace Isetta {
 #define CUBE_WIRE_INDICIES 24
 #define CUBE_VERTICIES 8
 #define CIRCLE CUBE + CUBE_VERTICIES
-#define CIRCLE_INDICIES 25
-#define CIRCLE_VERTICIES 25
+#define CIRCLE_INDICIES 13
+//#define CIRCLE_INDICIES 25
+#define CIRCLE_VERTICIES 13
+//#define CIRCLE_VERTICIES 25
 #define SPHERE_SEGMENTS 4
 
 #define RIGHT CIRCLE
@@ -51,33 +54,33 @@ const float DebugDraw::verticies[] = {
     0.5f, 0.5f, -0.5f,    // top-back-right
     -0.5f, -0.5f, -0.5f,  // bot-back-left
     -0.5f, 0.5f, -0.5f,   // top-back-left
-    // CIRCLE - 25
-    1.0f, 0.0f, 0.0f,        // right
-    0.966f, 0.259f, 0.0f,    //
-    0.866f, 0.5f, 0.0f,      //
-    0.707f, 0.707f, 0.0f,    //
-    0.5f, 0.866f, 0.0f,      //
-    0.259f, 0.966f, 0.0f,    //
-    0.0f, 1.0f, 0.0f,        // up
-    -0.259f, 0.966f, 0.0f,   //
-    -0.5f, 0.866f, 0.0f,     //
-    -0.707f, 0.707f, 0.0f,   //
-    -0.866f, 0.5f, 0.0f,     //
-    -0.966f, 0.259f, 0.0f,   //
-    -1.0f, 0.0f, 0.0f,       // left
-    -0.966f, -0.259f, 0.0f,  //
-    -0.866f, -0.5f, 0.0f,    //
-    -0.707f, -0.707f, 0.0f,  //
-    -0.5f, -0.866f, 0.0f,    //
-    -0.259f, -0.966f, 0.0f,  //
-    0.0f, -1.0f, 0.0f,       // down
-    0.259f, -0.966f, 0.0f,   //
-    0.5f, -0.866f, 0.0f,     //
-    0.707f, -0.707f, 0.0f,   //
-    0.866f, -0.5f, 0.0f,     //
-    0.966f, -0.259f, 0.0f,   //
-    1.0f, 0.0f, 0.0f,        //
-    0.0f, 0.0f, 1.0f,        // forward
+    // CIRCLE - 13 (deprecated 25)
+    1.0f, 0.0f, 0.0f,  // right
+    // 0.966f, 0.259f, 0.0f,    //
+    0.866f, 0.5f, 0.0f,  //
+                         // 0.707f, 0.707f, 0.0f,    //
+    0.5f, 0.866f, 0.0f,  //
+    // 0.259f, 0.966f, 0.0f,    //
+    0.0f, 1.0f, 0.0f,  // up
+    //-0.259f, 0.966f, 0.0f,   //
+    -0.5f, 0.866f, 0.0f,  //
+    //-0.707f, 0.707f, 0.0f,   //
+    -0.866f, 0.5f, 0.0f,  //
+    //-0.966f, 0.259f, 0.0f,   //
+    -1.0f, 0.0f, 0.0f,  // left
+    //-0.966f, -0.259f, 0.0f,  //
+    -0.866f, -0.5f, 0.0f,  //
+    //-0.707f, -0.707f, 0.0f,  //
+    -0.5f, -0.866f, 0.0f,  //
+    //-0.259f, -0.966f, 0.0f,  //
+    0.0f, -1.0f, 0.0f,  // down
+    // 0.259f, -0.966f, 0.0f,   //
+    0.5f, -0.866f, 0.0f,  //
+                          // 0.707f, -0.707f, 0.0f,   //
+    0.866f, -0.5f, 0.0f,  //
+    // 0.966f, -0.259f, 0.0f,   //
+    1.0f, 0.0f, 0.0f,  //
+    0.0f, 0.0f, 1.0f,  // forward
 };
 const int DebugDraw::indices[] = {
     // PLANE
@@ -109,16 +112,17 @@ const int DebugDraw::indices[] = {
     7 + CUBE, 6 + CUBE, 6 + CUBE, 4 + CUBE,  // Back - 2
     0 + CUBE, 5 + CUBE, 1 + CUBE, 4 + CUBE,  // other
     2 + CUBE, 6 + CUBE, 3 + CUBE, 7 + CUBE,  //
-    // CIRCLE - 24
-    0 + CIRCLE, 1 + CIRCLE,                 //
-    2 + CIRCLE, 3 + CIRCLE, 4 + CIRCLE,     //
-    5 + CIRCLE, 6 + CIRCLE, 7 + CIRCLE,     //
-    8 + CIRCLE, 9 + CIRCLE, 10 + CIRCLE,    //
-    11 + CIRCLE, 12 + CIRCLE, 13 + CIRCLE,  //
-    14 + CIRCLE, 15 + CIRCLE, 16 + CIRCLE,  //
-    17 + CIRCLE, 18 + CIRCLE, 19 + CIRCLE,  //
-    20 + CIRCLE, 21 + CIRCLE, 22 + CIRCLE,  //
-    23 + CIRCLE, 0 + CIRCLE,                //
+    // CIRCLE - 25
+    0 + CIRCLE, 1 + CIRCLE,               //
+    2 + CIRCLE, 3 + CIRCLE, 4 + CIRCLE,   //
+    5 + CIRCLE, 6 + CIRCLE, 7 + CIRCLE,   //
+    8 + CIRCLE, 9 + CIRCLE, 10 + CIRCLE,  //
+    11 + CIRCLE, 0 + CIRCLE,
+    // 12 + CIRCLE, 13 + CIRCLE,  //
+    // 14 + CIRCLE, 15 + CIRCLE, 16 + CIRCLE,  //
+    // 17 + CIRCLE, 18 + CIRCLE, 19 + CIRCLE,  //
+    // 20 + CIRCLE, 21 + CIRCLE, 22 + CIRCLE,  //
+    // 23 + CIRCLE, 0 + CIRCLE,                //
     // LINES
     0, RIGHT,    //
     0, UP,       //
@@ -234,6 +238,8 @@ void DebugDraw::StartUp() {
   glBindVertexArray(0);
 }
 void DebugDraw::Update() {
+  BROFILER_CATEGORY("Debug Draw Update", Profiler::Color::Peru);
+
   auto it = durationDraw.begin();
   while (it != durationDraw.end()) {
     if (it->first < 0) {
@@ -345,10 +351,10 @@ void DebugDraw::WireCapsule(const Math::Matrix4& transformation, float radius,
       std::pair(duration, std::bind(DrawWireCapsule, transformation, radius,
                                     height, color, thickness, depthTest)));
 }
-void DebugDraw::Grid(const Math::Matrix4& transformation, const Color& color,
-                     float thickness, float duration) {
+void DebugDraw::Grid(const Math::Matrix4& transformation, int lines,
+                     const Color& color, float thickness, float duration) {
   durationDraw.push_back(std::pair(
-      duration, std::bind(DrawGrid, transformation, color, thickness)));
+      duration, std::bind(DrawGrid, transformation, lines, color, thickness)));
 }
 void DebugDraw::Axis(const Math::Matrix4& transformation, const Color& xColor,
                      const Color& yColor, const Color& zColor, float thickness,
@@ -388,11 +394,17 @@ void DebugDraw::OpenGLDraw(const Math::Matrix4& transformation,
           ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
           .data);
   // TODO(Jacob) replace with world to local call
+  // glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
+  //                   CameraComponent::Main()
+  //                       ->GetTransform()
+  //                       ->GetLocalToWorldMatrix()
+  //                       .Inverse()
+  //                       .Transpose()
+  //                       .data);
   glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
                      CameraComponent::Main()
                          ->GetTransform()
-                         ->GetLocalToWorldMatrix()
-                         .Inverse()
+                         ->GetWorldToLocalMatrix()
                          .Transpose()
                          .data);
   glUniformMatrix4fv(modelLoc, 1, GL_FALSE, transformation.Transpose().data);
@@ -672,7 +684,7 @@ void DebugDraw::DrawWireCapsule(const Math::Matrix4& transformation,
                                           CUBE_WIRE_INDICIES)));
              });
 }
-void DebugDraw::DrawGrid(const Math::Matrix4& transformation,
+void DebugDraw::DrawGrid(const Math::Matrix4& transformation, int lines,
                          const Color& color, float thickness) {
   glUseProgram(shaderProgram);
 
@@ -684,15 +696,24 @@ void DebugDraw::DrawGrid(const Math::Matrix4& transformation,
   Math::Matrix4 viewMat =
       CameraComponent::Main()->GetTransform()->GetLocalToWorldMatrix();
   // TODO(Jacob) replace with world to local call
-  glUniformMatrix4fv(viewLoc, 1, GL_FALSE, viewMat.Inverse().Transpose().data);
-  Math::Matrix4 model = transformation;
+  // glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
+  // viewMat.Inverse().Transpose().data);
+  glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
+                     CameraComponent::Main()
+                         ->GetTransform()
+                         ->GetWorldToLocalMatrix()
+                         .Transpose()
+                         .data);
+  Math::Matrix4 model = transformation.Transpose();
   if (model.IsZero()) {
     model = Math::Matrix4::identity;
     model.SetRow(3, viewMat.GetRow(3));  // horde row-col
+    // TODO(Jacob) magic numbers
     model.Set(3, 1, 0);
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, model.data);
   }
-  glUniformMatrix4fv(modelLoc, 1, GL_FALSE, model.data);
   glUniform4fv(colorLoc, 1, color.rgba);
+  glUniformMatrix4fv(modelLoc, 1, GL_FALSE, model.data);
   GLError();
 
   glEnable(GL_DEPTH_TEST);
@@ -703,11 +724,11 @@ void DebugDraw::DrawGrid(const Math::Matrix4& transformation,
   glLineWidth(thickness);
   glBindVertexArray(sVAO);
 
-  for (int i = -30; i <= 30; i++) {
-    lineVerticies[0] = -30;
+  for (int i = -lines; i <= lines; i++) {
+    lineVerticies[0] = -lines;
     lineVerticies[1] = 0;
     lineVerticies[2] = i;
-    lineVerticies[3] = 30;
+    lineVerticies[3] = lines;
     lineVerticies[4] = 0;
     lineVerticies[5] = i;
     glBindBuffer(GL_ARRAY_BUFFER, sVBO);
@@ -717,13 +738,13 @@ void DebugDraw::DrawGrid(const Math::Matrix4& transformation,
     glDrawArrays(GL_LINES, 0, 2);
   }
 
-  for (int i = -30; i <= 30; i++) {
+  for (int i = -lines; i <= lines; i++) {
     lineVerticies[0] = i;
     lineVerticies[1] = 0;
-    lineVerticies[2] = -30;
+    lineVerticies[2] = -lines;
     lineVerticies[3] = i;
     lineVerticies[4] = 0;
-    lineVerticies[5] = 30;
+    lineVerticies[5] = lines;
     glBindBuffer(GL_ARRAY_BUFFER, sVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(lineVerticies), lineVerticies,
                  GL_DYNAMIC_DRAW);

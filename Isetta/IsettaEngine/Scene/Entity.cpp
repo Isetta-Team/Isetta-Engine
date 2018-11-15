@@ -2,22 +2,26 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Scene/Entity.h"
+
 #include "Level.h"
 #include "LevelManager.h"
 #include "Scene/Component.h"
 #include "Scene/Layers.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 
 void Entity::OnEnable() {
+  PROFILE
   for (auto& comp : components) {
     comp->OnEnable();
   }
 }
 
 void Entity::GuiUpdate() {
+  PROFILE
   for (auto& comp : components) {
-    if (comp->GetActive() &&
+    if (comp && comp->GetActive() &&
         comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
       comp->GuiUpdate();
     }
@@ -25,6 +29,7 @@ void Entity::GuiUpdate() {
 }
 
 void Entity::Update() {
+  PROFILE
   for (auto& comp : components) {
     if (comp->GetActive() &&
         comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
@@ -34,6 +39,7 @@ void Entity::Update() {
 }
 
 void Entity::FixedUpdate() {
+  PROFILE
   for (auto& comp : components) {
     if (comp->GetActive() &&
         comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
@@ -43,6 +49,7 @@ void Entity::FixedUpdate() {
 }
 
 void Entity::LateUpdate() {
+  PROFILE
   for (auto& comp : components) {
     if (comp->GetActive() &&
         comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
@@ -52,15 +59,10 @@ void Entity::LateUpdate() {
 }
 
 void Entity::CheckDestroy() {
+  PROFILE
   if (GetAttribute(EntityAttributes::NEED_DESTROY)) {
     // Destroy itself
-    for (auto& comp : components) {
-      comp->OnDestroy();
-    }
-    for (auto& comp : components) {
-      MemoryManager::DeleteOnFreeList<Component>(comp);
-    }
-    // TODO(Chaojie): delete child
+    DestroyImmediately(this);
   } else {
     // Destroy components
     auto typeIter = componentTypes.begin();
@@ -68,9 +70,10 @@ void Entity::CheckDestroy() {
     while (typeIter != componentTypes.end() && compIter != components.end()) {
       Component* comp = *compIter;
       if (comp->GetAttribute(Component::ComponentAttributes::NEED_DESTROY)) {
+        comp->~Component();
         comp->OnDestroy();
         MemoryManager::DeleteOnFreeList<Component>(comp);
-        components.erase(compIter);
+        components.Erase(compIter);
         componentTypes.erase(typeIter);
       } else {
         ++compIter;
@@ -81,6 +84,7 @@ void Entity::CheckDestroy() {
 }
 
 void Entity::OnDisable() {
+  PROFILE
   for (auto& comp : components) {
     comp->OnDisable();
   }
@@ -109,15 +113,47 @@ Entity::~Entity() {
 }
 
 void Entity::Destroy(Entity* entity) {
+  if (entity->GetAttribute(EntityAttributes::NEED_DESTROY)) {
+    return;
+  }
+  if (entity->GetTransform()->GetParent()) {
+    entity->GetTransform()->GetParent()->RemoveChild(&entity->transform);
+  }
+  DestroyHelper(entity);
+}
+
+void Entity::DestroyHelper(Entity* entity) {
+  Array<Transform*> removingChildren;
   entity->SetAttribute(EntityAttributes::NEED_DESTROY, true);
+  for (Transform* child : entity->transform.children) {
+    removingChildren.PushBack(child);
+    DestroyHelper(child->GetEntity());
+  }
+  for (Transform* child : removingChildren) {
+    entity->transform.RemoveChild(child);
+  }
+  entity->GetTransform()->parent = nullptr;
+}
+
+void Entity::DestroyImmediately(Entity* entity) {
+  for (auto& comp : entity->components) {
+    comp->OnDestroy();
+  }
+  for (auto& comp : entity->components) {
+    MemoryManager::DeleteOnFreeList<Component>(comp);
+  }
+  entity->components.Clear();
+  if (entity->GetTransform()->GetParent()) {
+    entity->GetTransform()->GetParent()->RemoveChild(&entity->transform);
+  }
 }
 
 Entity* Entity::GetEntityByName(const std::string& name) {
-  return LevelManager::Instance().currentLevel->GetEntityByName(name);
+  return LevelManager::Instance().loadedLevel->GetEntityByName(name);
 }
 
 std::list<Entity*> Entity::GetEntitiesByName(const std::string& name) {
-  return LevelManager::Instance().currentLevel->GetEntitiesByName(name);
+  return LevelManager::Instance().loadedLevel->GetEntitiesByName(name);
 }
 
 void Entity::SetActive(bool inActive) {
@@ -137,6 +173,7 @@ bool Entity::GetActive() const {
 void Entity::SetTransform(const Math::Vector3& worldPos,
                           const Math::Vector3& worldEulerAngles,
                           const Math::Vector3& localScale) {
+  PROFILE
   SetAttribute(EntityAttributes::IS_TRANSFORM_DIRTY, true);
   // TODO(YIDI): Test this
   transform.SetWorldTransform(worldPos, worldEulerAngles, localScale);

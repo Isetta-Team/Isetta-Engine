@@ -4,15 +4,16 @@
 #include "Level1.h"
 #include "CameraController.h"
 #include "Components/FlyController.h"
-#include "GameManager.h"
-#include "PlayerController.h"
 #include "Core/Color.h"
 #include "Core/Config/Config.h"
+#include "Custom/EscapeExit.h"
+#include "GameManager.h"
 #include "Graphics/AnimationComponent.h"
 #include "Graphics/CameraComponent.h"
+#include "Graphics/GUI.h"
 #include "Graphics/LightComponent.h"
+#include "PlayerController.h"
 #include "Scene/Entity.h"
-#include "Custom/EscapeExit.h"
 
 namespace Isetta {
 
@@ -20,6 +21,8 @@ using LightProperty = LightComponent::Property;
 using CameraProperty = CameraComponent::Property;
 
 void Level1::LoadLevel() {
+  GUI::AddFontFromFile("Resources/Fonts/CONSOLA.TTF", 13.0f);
+
   Entity* cameraEntity{AddEntity("Camera")};
   cameraEntity->AddComponent<CameraController>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},

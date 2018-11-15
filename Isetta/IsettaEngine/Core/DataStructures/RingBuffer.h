@@ -4,7 +4,6 @@
 #pragma once
 #include <cmath>
 #include <initializer_list>
-#include <stdexcept>
 #include "Core/Memory/MemoryManager.h"
 #include "ISETTA_API.h"
 
@@ -19,7 +18,7 @@ class ISETTA_API_DECLARE RingBuffer {
   explicit RingBuffer(int n);
   explicit RingBuffer(std::initializer_list<T> il);
   explicit RingBuffer(std::initializer_list<T> il, int n);
-  ~RingBuffer() { MemoryManager::FreeOnFreeList(buffer); }
+  ~RingBuffer() { MemoryManager::DeleteArrOnFreeList<T>(size, buffer); }
 
   // Copy and move constructors
 

@@ -4,6 +4,13 @@
 #pragma once
 #include "Scene/Component.h"
 
-BEGIN_COMPONENT(EventListenerComponent, Isetta::Component, true)
-void Start() override;
-END_COMPONENT(EventListenerComponent, Isetta::Component)
+namespace Isetta {
+BEGIN_COMPONENT(EventListenerComponent, Component, true)
+private:
+int handle;
+
+public:
+void OnEnable() override;
+void OnDisable() override;
+END_COMPONENT(EventListenerComponent, Component)
+}  // namespace Isetta

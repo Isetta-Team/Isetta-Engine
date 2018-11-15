@@ -3,13 +3,16 @@
  */
 #include "Custom/BVHTestLevel/BVHLevel.h"
 #include "Collisions/SphereCollider.h"
+#include "Components/FlyController.h"
+#include "Components/GridComponent.h"
 #include "Core/Config/Config.h"
 #include "Core/Math/Random.h"
 #include "Custom/BVHTestLevel/RandomMover.h"
-#include "Custom/IsettaCore.h"
 #include "Custom/FrameReporter.h"
-#include "Components/FlyController.h"
-#include "Components/GridComponent.h"
+#include "Custom/IsettaCore.h"
+#include "Custom/RaycastClick.h"
+
+#include "Custom/LoadNextLevel.h"
 
 namespace Isetta {
 
@@ -45,16 +48,19 @@ void BVHLevel::LoadLevel() {
   camComp->SetProperty<CameraProperty::FAR_PLANE>(
       CONFIG_VAL(renderConfig.farClippingPlane));
 
+  cameraEntity->AddComponent<LoadNextLevel>("EmptyLevel");
+
   Entity* debug{ADD_ENTITY("Debug")};
   debug->AddComponent<GridComponent>();
   debug->AddComponent<FrameReporter>();
+  debug->AddComponent<RaycastClick>();
 
   Input::RegisterKeyPressCallback(KeyCode::KP_5, [&]() {
     for (int i = 0; i < 100; i++) {
       count++;
       Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
       sphere->AddComponent<RandomMover>();
-      auto col = sphere->AddComponent<SphereCollider>();
+      SphereCollider* col = sphere->AddComponent<SphereCollider>();
       const float size = 20;
       sphere->SetTransform(size *
                            Math::Vector3{Math::Random::GetRandom01() - 0.5f,
@@ -67,7 +73,7 @@ void BVHLevel::LoadLevel() {
     count++;
     Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
     sphere->AddComponent<RandomMover>();
-    auto col = sphere->AddComponent<SphereCollider>();
+    SphereCollider* col = sphere->AddComponent<SphereCollider>();
     const float size = 20;
     sphere->SetTransform(size *
                          Math::Vector3{Math::Random::GetRandom01() - 0.5f,

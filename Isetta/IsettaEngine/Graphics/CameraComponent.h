@@ -14,61 +14,62 @@ class Vector2;
 }  // namespace Math
 
 BEGIN_COMPONENT(CameraComponent, Component, true)
- public:
-  enum class Property {
-    FOV,
-    NEAR_PLANE,
-    FAR_PLANE,
-    PROJECTION,
-  };
+public:
+enum class Property {
+  FOV,
+  NEAR_PLANE,
+  FAR_PLANE,
+  PROJECTION,
+};
 
-  explicit CameraComponent(std::string cameraName);
+explicit CameraComponent(std::string cameraName);
 
-  void OnEnable() override;
-  void OnDisable() override;
+void OnEnable() override;
+void OnDisable() override;
+void OnDestroy() override;
 
-  template <Property Attr, typename T>
-  void SetProperty(T value);
+template <Property Attr, typename T>
+void SetProperty(T value);
 
-  template <Property Attr, typename T>
-  T GetProperty() const;
+template <Property Attr, typename T>
+T GetProperty() const;
 
-  static const CameraComponent* Main() { return _main; }
+static const CameraComponent* Main() { return _main; }
 
-  Math::Matrix4 GetHordeTransform() const {
-    const float* transformPtr;
-    h3dGetNodeTransMats(renderNode, nullptr, &transformPtr);
-    return Math::Matrix4(transformPtr);
-  }
+Math::Matrix4 GetHordeTransform() const {
+  const float* transformPtr;
+  h3dGetNodeTransMats(renderNode, nullptr, &transformPtr);
+  return Math::Matrix4(transformPtr);
+}
 
-  Ray ScreenPointToRay(const Math::Vector2& position) const;
-  // TODO(all) ScreenToViewportPoint
-  // TODO(all) ScreenToWorldPoint
-  // TODO(all) ViewportPointToRay
-  // TODO(all) ViewportToScreenPoint
-  // TODO(all) ViewportToWorldPoint
-  // TODO(all) WorldToScreenPoint
-  // TODO(all) WorldToViewportPoint
+Ray ScreenPointToRay(const Math::Vector2& position) const;
+// TODO(all) ScreenToViewportPoint
+// TODO(all) ScreenToWorldPoint
+// TODO(all) ViewportPointToRay
+// TODO(all) ViewportToScreenPoint
+// TODO(all) ViewportToWorldPoint
+// TODO(all) WorldToScreenPoint
+// TODO(all) WorldToViewportPoint
 
- private:
-  void UpdateH3DTransform() const;
-  void ResizeViewport(int width, int height);
-  void SetupCameraViewport() const;
+private:
+void UpdateH3DTransform() const;
+void ResizeViewport(int width, int height);
+void SetupCameraViewport() const;
 
-  static CameraComponent* _main;
+static CameraComponent* _main;
 
-  static class RenderModule* renderModule;
-  friend class RenderModule;
+static class RenderModule* renderModule;
+friend class RenderModule;
 
-  float fov{};
-  float nearPlane{};
-  float farPlane{};
-  Math::Matrix4 projMat;
+float fov{};
+float nearPlane{};
+float farPlane{};
+Math::Matrix4 projMat;
 
-  std::string name;
-  H3DNode renderNode;
-  H3DRes renderResource;
-  int resizeHandle;
+std::string name;
+H3DNode renderNode;
+H3DRes renderResource;
+int resizeHandle;
 END_COMPONENT(CameraComponent, Component)
 
 template <CameraComponent::Property Attr, typename T>

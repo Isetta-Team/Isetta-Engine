@@ -8,8 +8,10 @@
 #include <algorithm>
 #include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
+#include "Core/DataStructures/Array.h"
 #include "Core/Debug/Logger.h"
 #include "Util.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 
@@ -19,7 +21,7 @@ FMOD_RESULT F_CALLBACK LogAudioModule(FMOD_DEBUG_FLAGS flags, const char* file,
   char msg[1024];
   strcpy_s(msg, 1024, message);
   std::remove(std::begin(msg), std::end(msg), '\n');
-  LOG_INFO(Debug::Channel::Sound, msg);
+  // LOG_INFO(Debug::Channel::Sound, msg);
   return FMOD_OK;
 }
 
@@ -42,7 +44,11 @@ void AudioModule::StartUp() {
   AudioSource::audioModule = this;
 }
 
-void AudioModule::Update(float deltaTime) const { fmodSystem->update(); }
+void AudioModule::Update(float deltaTime) const {
+  BROFILER_CATEGORY("Audio Update", Profiler::Color::Maroon);
+
+  fmodSystem->update();
+}
 
 void AudioModule::ShutDown() {
   for (const auto& it : soundMap) {
@@ -55,6 +61,7 @@ void AudioModule::ShutDown() {
 }
 
 FMOD::Sound* AudioModule::FindSound(const char* soundName) {
+  PROFILE
   const auto strId = SID(soundName);
   if (soundMap.find(strId) != soundMap.end()) {
     return soundMap[strId];
@@ -74,17 +81,19 @@ FMOD::Channel* AudioModule::Play(FMOD::Sound* sound, const bool loop,
 }
 
 void AudioModule::LoadAllAudioClips() {
+  PROFILE
   std::string clipNames = CONFIG_VAL(audioConfig.audioClips);
   Util::StrRemoveSpaces(&clipNames);
-  std::vector<std::string> clips = Util::StrSplit(clipNames, ',');
-  
+  Array<std::string> clips;
+  if (!clipNames.empty()) clips = Util::StrSplit(clipNames, ',');
+
   for (const auto& file : clips) {
     FMOD::Sound* sound = nullptr;
-    std::string path = soundFilesRoot + file;
+    std::string path = soundFilesRoot + file.data();
     CheckStatus(
         fmodSystem->createSound(path.c_str(), FMOD_LOWMEM, nullptr, &sound));
 
-    soundMap.insert({SID(file.c_str()), sound});
+    soundMap.insert({SID(file.data()), sound});
   }
 }
 
