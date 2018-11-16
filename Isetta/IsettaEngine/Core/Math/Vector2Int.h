@@ -92,7 +92,7 @@ class ISETTA_API_DECLARE Vector2Int {
   inline Vector2Int operator*(int scalar) const {
     return Vector2Int(x * scalar, y * scalar);
   }
-  inline friend Vector2Int operator*(float scalar, Vector2Int v) {
+  inline friend Vector2Int operator*(int scalar, Vector2Int v) {
     return v * scalar;
   }
   inline Vector2Int& operator*=(int scalar) {

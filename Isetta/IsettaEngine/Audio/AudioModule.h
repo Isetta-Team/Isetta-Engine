@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include "Core/Config/CVar.h"
 #include "Core/IsettaAlias.h"
-#include "fmod.hpp"
+#include "FMOD/inc/fmod.hpp"
 
 namespace Isetta {
 class AudioModule {

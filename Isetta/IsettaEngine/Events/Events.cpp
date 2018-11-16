@@ -10,10 +10,14 @@
 
 using namespace Isetta;
 U16 Events::totalListeners = 0;
-
+void Isetta::Events::ShutDown() {
+  callbackMap.clear();
+  eventQueue.~PriorityQueue();
+  instance = nullptr;
+}
 void Events::RaiseQueuedEvent(const EventObject& eventObject) {
   PROFILE
-  eventQueue.push(eventObject);
+  eventQueue.Push(eventObject);
 }
 
 void Events::RaiseImmediateEvent(const EventObject& eventObject) {
@@ -41,7 +45,8 @@ U16 Events::RegisterEventListener(std::string_view eventName,
     callbackMap.at(eventNameId).EmplaceBack(std::make_pair(handle, callback));
   } else {
     callbackMap.insert(std::make_pair(
-        eventNameId, Array<CallbackPair>{std::make_pair(handle, callback)}));
+        eventNameId,
+        std::vector<CallbackPair>{std::make_pair(handle, callback)}));
   }
   return handle;
 }
@@ -64,20 +69,19 @@ void Events::UnregisterEventListener(std::string_view eventName,
 }
 
 void Events::Clear() {
-  eventQueue = std::priority_queue<EventObject, Array<EventObject>,
-                                   std::greater<EventObject>>();
+  eventQueue.Clear();
   callbackMap.clear();
 }
 
 void Events::Update() {
   BROFILER_CATEGORY("Event Update", Profiler::Color::Lavender);
 
-  while (!eventQueue.empty()) {
-    EventObject currEvent = eventQueue.top();
+  while (!eventQueue.IsEmpty()) {
+    EventObject currEvent = eventQueue.Top();
     if (currEvent.timeFrame > Time::GetTimeFrame()) {
       break;
     }
-    eventQueue.pop();
+    eventQueue.Pop();
     RaiseImmediateEvent(currEvent);
   }
 }

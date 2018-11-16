@@ -47,7 +47,10 @@ void LightComponent::OnDisable() {
   h3dSetNodeFlags(renderNode, H3DNodeFlags::Inactive, true);
 }
 
-void LightComponent::OnDestroy() { h3dRemoveNode(renderNode); }
+void LightComponent::OnDestroy() {
+  h3dRemoveNode(renderNode);
+  renderModule->lightComponents.remove(this);
+}
 
 void LightComponent::UpdateH3DTransform() const {
   PROFILE

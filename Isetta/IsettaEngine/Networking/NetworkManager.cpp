@@ -5,13 +5,13 @@
 #include "Networking/NetworkManager.h"
 #include "Core/Config/Config.h"
 #include "Networking/NetworkId.h"
-#include "Networking/NetworkingModule.h"
 #include "Networking/NetworkTransform.h"
+#include "Networking/NetworkingModule.h"
 #include "Scene/Entity.h"
 
 namespace Isetta {
 
-NetworkManager::NetworkManager() : networkIds(1) {};
+NetworkManager::NetworkManager() : networkIds(1){};
 
 NetworkManager& NetworkManager::Instance() {
   static NetworkManager instance;
@@ -77,7 +77,7 @@ yojimbo::Message* NetworkManager::CreateClientMessage(int messageId) {
 }
 
 yojimbo::Message* NetworkManager::CreateServerMessage(int clientIdx,
-  int messageId) {
+                                                      int messageId) {
   return networkingModule->server->CreateMessage(clientIdx, messageId);
 }
 

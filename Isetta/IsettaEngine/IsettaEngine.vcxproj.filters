@@ -313,6 +313,30 @@
     <ClCompile Include="Custom\FontExample.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
+    <ClCompile Include="AI\Nav2DPlane.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\AILevel\AITestLevel.cpp">
+      <Filter>Custom\AILevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\AILevel\AITestComponent.cpp">
+      <Filter>Custom\AILevel</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\Nav2DObstacle.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\Nav2DAgent.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\LoadNextLevel.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\GLFWInput.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\ParticleSystemComponent.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
     <ClCompile Include="Collisions\CollisionSolverModule.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
@@ -401,6 +425,12 @@
     </Filter>
     <Filter Include="Components\Editor">
       <UniqueIdentifier>{810b8627-00c8-4ae3-9a0d-ba5ac1948eb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI">
+      <UniqueIdentifier>{26d9eeab-63d0-4452-af57-de69b9db1c79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\AILevel">
+      <UniqueIdentifier>{c2ec0a3b-7c7e-4727-a06c-c0efe1d53754}</UniqueIdentifier>
     </Filter>
     <Filter Include="Custom\CollisionSolverLevel">
       <UniqueIdentifier>{f54c709b-be6b-4035-87e9-f6043119f744}</UniqueIdentifier>
@@ -689,6 +719,36 @@
     </ClInclude>
     <ClInclude Include="Graphics\Font.h">
       <Filter>Graphics\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\PriorityQueue.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\Nav2DPlane.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\AILevel\AITestLevel.h">
+      <Filter>Custom\AILevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\AILevel\AITestComponent.h">
+      <Filter>Custom\AILevel</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\Nav2DObstacle.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\Nav2DAgent.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\AILevel\AITestAgent.h">
+      <Filter>Custom\AILevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\LoadNextLevel.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\GLFWInput.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ParticleSystemComponent.h">
+      <Filter>Graphics\Render</Filter>
     </ClInclude>
     <ClInclude Include="Collisions\CollisionSolverModule.h">
       <Filter>Collisions</Filter>

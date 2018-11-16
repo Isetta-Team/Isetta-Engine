@@ -44,6 +44,7 @@ EngineLoop::EngineLoop() {
   collisionSolverModule = new CollisionSolverModule{};
   audioModule = new AudioModule{};
   networkingModule = new NetworkingModule{};
+  events = new Events{};
 }
 EngineLoop::~EngineLoop() {
   delete memoryManager;
@@ -55,6 +56,7 @@ EngineLoop::~EngineLoop() {
   delete collisionSolverModule;
   delete audioModule;
   delete networkingModule;
+  delete events;
 }
 
 void EngineLoop::StartUp() {
@@ -81,8 +83,12 @@ void EngineLoop::StartUp() {
   collisionSolverModule->StartUp();
   audioModule->StartUp();
   networkingModule->StartUp();
+  events->StartUp();
 
-  LevelManager::Instance().LoadStartupLevel();
+  // LevelManager::Instance().LoadStartupLevel();
+  LevelManager::Instance().LoadLevel(
+      Config::Instance().levelConfig.startLevel.GetVal());
+  LevelManager::Instance().LoadLevel();
 
   StartGameClock();
 }
@@ -119,28 +125,30 @@ void EngineLoop::FixedUpdate(float deltaTime) {
 
   networkingModule->Update(deltaTime);
   collisionsModule->Update(deltaTime);
-  collisionSolverModule->Update();
-  LevelManager::Instance().currentLevel->FixedUpdate();
+  LevelManager::Instance().loadedLevel->FixedUpdate();
 }
 void EngineLoop::VariableUpdate(float deltaTime) {
   BROFILER_CATEGORY("Variable Update", Profiler::Color::SteelBlue);
 
   inputModule->Update(deltaTime);
-  LevelManager::Instance().currentLevel->Update();
+  LevelManager::Instance().loadedLevel->Update();
   Events::Instance().Update();
-  LevelManager::Instance().currentLevel->LateUpdate();
+  LevelManager::Instance().loadedLevel->LateUpdate();
   audioModule->Update(deltaTime);
   renderModule->Update(deltaTime);
   DebugDraw::Update();
   guiModule->Update(deltaTime);
   windowModule->Update(deltaTime);
   memoryManager->Update();
+
+  LevelManager::Instance().LoadLevel();
 }
 
 void EngineLoop::ShutDown() {
   BROFILER_EVENT("Shut Down");
 
   LevelManager::Instance().UnloadLevel();
+  events->ShutDown();
   networkingModule->ShutDown();
   audioModule->ShutDown();
   collisionsModule->ShutDown();

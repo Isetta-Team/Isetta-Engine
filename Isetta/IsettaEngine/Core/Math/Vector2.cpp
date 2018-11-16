@@ -34,10 +34,12 @@ float Vector2::Magnitude() const { return sqrtf(SqrMagnitude()); }
 float Vector2::SqrMagnitude() const { return x * x + y * y; }
 Vector2 Vector2::Normalized() const {
   float length{Magnitude()};
+  if (length == 0) return zero;
   return Vector2(x / length, y / length);
 }
 void Vector2::Normalize() noexcept {
   float length{Magnitude()};
+  if (length == 0) return;
   x /= length;
   y /= length;
 }

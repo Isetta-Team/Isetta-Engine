@@ -85,7 +85,7 @@ void RegisterExampleMessageFunctions() {
             Entity* entity = NetworkManager::Instance().GetNetworkEntity(
                 spawnMessage->netId);
             if (!entity) {
-              Entity* e = LevelManager::Instance().currentLevel->AddEntity(
+              Entity* e = LevelManager::Instance().loadedLevel->AddEntity(
                   Util::StrFormat("NetworkEntity%d", spawnMessage->netId));
               NetworkId* netId =
                   e->AddComponent<NetworkId>(spawnMessage->netId);
@@ -119,7 +119,7 @@ void RegisterExampleMessageFunctions() {
                 reinterpret_cast<SpawnMessage*>(message);
 
             if (!spawnMessage->netId) {
-              Entity* e = LevelManager::Instance().currentLevel->AddEntity(
+              Entity* e = LevelManager::Instance().loadedLevel->AddEntity(
                   Util::StrFormat("NetworkEntity%d", count++));
               NetworkId* netId = e->AddComponent<NetworkId>();
               netId->clientAuthorityId = clientIdx;
@@ -271,7 +271,8 @@ void NetworkLevel::LoadLevel() {
       spawnedEntities.back()
           ->GetComponent<NetworkTransform>()
           ->SetNetworkedParentToRoot();
-      spawnedEntities.back()->GetTransform()->SetLocalScale(Math::Vector3(.01, .01, .01));
+      spawnedEntities.back()->GetTransform()->SetLocalScale(
+          Math::Vector3(.01, .01, .01));
     }
   });
 

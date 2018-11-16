@@ -3,8 +3,8 @@
  */
 #include "Graphics/AnimationComponent.h"
 
-#include <Horde3D.h>
 #include "Core/Config/Config.h"
+#include "Horde3D.h"
 #include "Util.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
 

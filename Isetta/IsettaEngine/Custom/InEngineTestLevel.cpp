@@ -12,11 +12,14 @@
 #include "Graphics/Texture.h"
 
 namespace Isetta {
-
 using LightProperty = LightComponent::Property;
 using CameraProperty = CameraComponent::Property;
 
 void InEngineTestLevel::LoadLevel() {
+  Input::RegisterKeyPressCallback(KeyCode::ESCAPE,
+                                  []() { Application::Exit(); });
+
+
   Entity* lightEntity{AddEntity("Light")};
   LightComponent* lightComp = lightEntity->AddComponent<LightComponent, true>(
       "materials/light.material.xml", "LIGHT_1");
@@ -34,7 +37,7 @@ void InEngineTestLevel::LoadLevel() {
       cameraEntity->AddComponent<CameraComponent, true>("Camera");
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
-  // cameraEntity->AddComponent<FlyController, true>();
+  cameraEntity->AddComponent<FlyController>();
   camComp->SetProperty<CameraProperty::FOV>(
       CONFIG_VAL(renderConfig.fieldOfView));
   camComp->SetProperty<CameraProperty::NEAR_PLANE>(

@@ -3,11 +3,11 @@
  */
 
 #include "Week10MiniGame/W10NetworkManager.h"
-#include "Networking/NetworkTransform.h"
 #include "Core/Config/Config.h"
 #include "Custom/IsettaCore.h"
 #include "Events/Events.h"
 #include "Networking/NetworkId.h"
+#include "Networking/NetworkTransform.h"
 #include "Week10MiniGame/W10NetworkPlayer.h"
 #include "Week10MiniGame/W10Player.h"
 
@@ -284,7 +284,7 @@ void W10NetworkManager::Awake() {
 
 void W10NetworkManager::Start() {
   auto gameManagerEntity =
-      Isetta::LevelManager::Instance().currentLevel->GetEntityByName(
+      Isetta::LevelManager::Instance().loadedLevel->GetEntityByName(
           "GameManager");
   if (gameManagerEntity == nullptr) {
     LOG_WARNING(Isetta::Debug::Channel::General,

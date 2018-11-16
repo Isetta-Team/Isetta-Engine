@@ -126,7 +126,7 @@ void Entity::DestroyHelper(Entity* entity) {
   Array<Transform*> removingChildren;
   entity->SetAttribute(EntityAttributes::NEED_DESTROY, true);
   for (Transform* child : entity->transform.children) {
-    removingChildren.push_back(child);
+    removingChildren.PushBack(child);
     DestroyHelper(child->GetEntity());
   }
   for (Transform* child : removingChildren) {
@@ -149,11 +149,11 @@ void Entity::DestroyImmediately(Entity* entity) {
 }
 
 Entity* Entity::GetEntityByName(const std::string& name) {
-  return LevelManager::Instance().currentLevel->GetEntityByName(name);
+  return LevelManager::Instance().loadedLevel->GetEntityByName(name);
 }
 
 std::list<Entity*> Entity::GetEntitiesByName(const std::string& name) {
-  return LevelManager::Instance().currentLevel->GetEntitiesByName(name);
+  return LevelManager::Instance().loadedLevel->GetEntitiesByName(name);
 }
 
 void Entity::SetActive(bool inActive) {

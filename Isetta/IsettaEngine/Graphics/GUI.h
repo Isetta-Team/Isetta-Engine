@@ -541,7 +541,7 @@ class ISETTA_API GUI {
         : text{text}, isWrapped{false}, isDisabled{false} {}
     TextStyle(float fontSize, const std::string_view& fontName = "");
     TextStyle(class Font* const font);
-    TextStyle(const Color& text, int fontSize,
+    TextStyle(const Color& text, float fontSize,
               const std::string_view& fontName = "");
     TextStyle(const Color& text, class Font* const font)
         : text{text}, font{font} {}

@@ -80,12 +80,12 @@ void KeyTransform::Update() {
         10 * step * Math::Vector3::right *
         Time::GetDeltaTime());
   }
-  if (Input::IsKeyPressed(KeyCode::UP_ARROW)) {
+  if (Input::IsKeyPressed(KeyCode::DOWN_ARROW)) {
     this->GetTransform()->TranslateLocal(
         10 * step * Math::Vector3::forward *
         Time::GetDeltaTime());
   }
-  if (Input::IsKeyPressed(KeyCode::DOWN_ARROW)) {
+  if (Input::IsKeyPressed(KeyCode::UP_ARROW)) {
     this->GetTransform()->TranslateLocal(
         10 * step * Math::Vector3::back *
         Time::GetDeltaTime());

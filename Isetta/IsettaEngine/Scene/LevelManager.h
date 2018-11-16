@@ -18,24 +18,26 @@ class LevelRegistry {
 class ISETTA_API LevelManager {
  private:
   std::unordered_map<StringId, Func<class Level*>> levels;
+  class Level* loadLevel{nullptr};
+
+  void LoadLevel();
+  void UnloadLevel();
+  friend class EngineLoop;
 
  public:
   struct LevelConfig {
     CVarString startLevel{"start_level", "Level1"};
   };
 
-  std::string currentLevelName{};
-  class Level* currentLevel{nullptr};
+  class Level* loadedLevel{nullptr};
 
   static LevelManager& Instance();
 
   bool Register(std::string, Func<class Level*>);
 
   LevelManager() = default;
-  void LoadStartupLevel();
-  void LoadLevel();
-  void UnloadLevel() const;
   ~LevelManager() = default;
+  void LoadLevel(std::string_view level);
 };
 
 template <typename T>

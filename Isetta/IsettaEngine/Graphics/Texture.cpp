@@ -2,15 +2,14 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Graphics/Texture.h"
-#include <Horde3D.h>
-#include <string_view>
 
-#pragma once
 #ifndef __  // GLAD must be placed first
 #include <glad/glad.h>
 #endif
 #include <GLFW/glfw3.h>
 
+#include <Horde3D.h>
+#include <string_view>
 #include "Graphics/RenderModule.h"
 #include "Util.h"
 
@@ -20,7 +19,7 @@ Texture::Texture(std::string_view fileName, bool load) : fileName{fileName} {
 }
 Texture::~Texture() { UnloadTexture(); }
 void Texture::LoadTexture() {
-  if (!texture) return;
+  if (texture) return;
   h3dres = h3dAddResource(H3DResTypes::Texture, fileName.data(), 0);
   RenderModule::LoadResourceFromDisk(
       h3dres, Util::StrFormat("Texture::LoadResourceFromFile => "
@@ -42,6 +41,7 @@ void Texture::LoadTexture() {
                GL_UNSIGNED_BYTE, data);
 }
 void Texture::UnloadTexture() {
+  if (!texture) return;
   h3dRemoveResource(h3dres);
   glDeleteTextures(1, &texture);
   texture = 0;

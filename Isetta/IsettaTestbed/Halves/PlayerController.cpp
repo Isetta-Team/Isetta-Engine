@@ -31,8 +31,7 @@ void PlayerController::Start() {
 
 void PlayerController::Update() {
   if (Input::IsGamepadButtonPressed(GamepadButton::Y)) {
-    auto light =
-        LevelManager::Instance().currentLevel->GetEntityByName("Light");
+    auto light = LevelManager::Instance().loadedLevel->GetEntityByName("Light");
     if (light != nullptr) {
       Entity::Destroy(light);
     }
@@ -43,8 +42,7 @@ void PlayerController::Update() {
   Math::Vector3 movement{};
 
   movement +=
-      Input::GetGamepadAxis(GamepadAxis::L_HORIZONTAL) *
-          Math::Vector3::left +
+      Input::GetGamepadAxis(GamepadAxis::L_HORIZONTAL) * Math::Vector3::left +
       Input::GetGamepadAxis(GamepadAxis::L_VERTICLE) * Math::Vector3::forward;
 
   if (movement.Magnitude() > 1) {
@@ -65,8 +63,7 @@ void PlayerController::Update() {
   }
 
   lookDir +=
-      Input::GetGamepadAxis(GamepadAxis::R_HORIZONTAL) *
-          Math::Vector3::left +
+      Input::GetGamepadAxis(GamepadAxis::R_HORIZONTAL) * Math::Vector3::left +
       Input::GetGamepadAxis(GamepadAxis::R_VERTICLE) * Math::Vector3::forward;
 
   if (lookDir.Magnitude() >= 1.f) {

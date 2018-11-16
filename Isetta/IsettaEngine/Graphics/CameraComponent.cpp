@@ -2,6 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Graphics/CameraComponent.h"
+
 #include <utility>
 #include "Core/Debug/Assert.h"
 #include "Graphics/RenderModule.h"
@@ -46,6 +47,10 @@ void CameraComponent::OnEnable() {
 void CameraComponent::OnDisable() {
   h3dRemoveNode(renderNode);
   Input::UnegisterWindowSizeCallback(resizeHandle);
+}
+
+void CameraComponent::OnDestroy() {
+  renderModule->cameraComponents.remove(this);
 }
 
 Ray Isetta::CameraComponent::ScreenPointToRay(

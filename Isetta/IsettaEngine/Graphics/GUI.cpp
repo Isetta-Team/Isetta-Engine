@@ -136,12 +136,13 @@ void GUI::Toggle(const RectTransform& transform, const std::string& label,
 // TEXT
 void GUI::Text(const RectTransform& transform, const std::string& format,
                const TextStyle& style) {
+  ImGui::PushFont(reinterpret_cast<ImFont*>(style.font));
   const char* formatCStr = format.c_str();
   RectTransform rectTransform{transform};
   if (rectTransform.rect.width <= 0)
     rectTransform.rect.width = ImGui::CalcTextSize(formatCStr).x;
-  if (rectTransform.rect.width <= 0)
-    rectTransform.rect.width = ImGui::CalcTextSize(formatCStr).x;
+  if (rectTransform.rect.height <= 0)
+    rectTransform.rect.height = ImGui::CalcTextSize(formatCStr).y;
   ImGui::SetCursorPos((ImVec2)SetPosition(rectTransform));
   ImGui::PushItemWidth(rectTransform.rect.width);
 
@@ -150,7 +151,6 @@ void GUI::Text(const RectTransform& transform, const std::string& format,
                         !style.isDisabled
                             ? (ImVec4)style.text
                             : context->Style.Colors[ImGuiCol_TextDisabled]);
-  ImGui::PushFont(reinterpret_cast<ImFont*>(style.font));
   bool need_wrap = style.isWrapped &&
                    (context->CurrentWindow->DC.TextWrapPos <
                     0.0f);  // Keep existing wrap position is one ia already set
@@ -158,9 +158,9 @@ void GUI::Text(const RectTransform& transform, const std::string& format,
   if (need_wrap) {
     ImGui::PushTextWrapPos(0.0f);
   }
-  ImGui::PopFont();
   ImGui::PopStyleColor();
   ImGui::PopItemWidth();
+  ImGui::PopFont();
 }
 // Doesn't seem like its needed
 // void GUI::Label(const RectTransform& transform, const std::string_view&
@@ -185,16 +185,27 @@ bool GUI::InputText(const RectTransform& transform,
                     const std::string_view& label, char* buffer, int bufferSize,
                     const InputStyle& style, InputTextFlags flags,
                     InputTextCallback callback, void* userData) {
-  ImGui::SetCursorPos((ImVec2)SetPosition(transform));
-  ImGui::PushItemWidth(transform.rect.width);
+  // ImGui::SetCursorPos((ImVec2)SetPosition(transform));
+  // ImGui::PushItemWidth(transform.rect.width);
+  RectTransform rect{transform};
+  const char* labelCStr = label.data();
+  ImVec2 textSize = ImGui::CalcTextSize(labelCStr);
+  rect.rect.height = textSize.y;
+  ImGui::SetCursorPos((ImVec2)SetPosition(rect));
 
   ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)style.background);
   ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)style.hovered);
   ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)style.active);
   ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)style.text);
-  ImGui::PushID(label.data());
-  ImGui::Text(label.data());
+  ImGui::PushID(labelCStr);
+  ImGui::Text(labelCStr);
   ImGui::SameLine();
+
+  rect.rect.x += textSize.x + GUI::GetStyle().ItemSpacing.x;
+  rect.rect.y -= GUI::GetStyle().FramePadding.y;
+  ImGui::SetCursorPos((ImVec2)SetPosition(rect));
+  rect.rect.width -= textSize.x + GUI::GetStyle().ItemSpacing.x;
+  ImGui::PushItemWidth(rect.rect.width);
   bool input = ImGui::InputText("##input_text", buffer, bufferSize,
                                 ImGuiInputTextFlags(flags), callback, userData);
   ImGui::PopID();
@@ -546,6 +557,12 @@ Font* GUI::AddFontFromFile(const std::string& filename, float fontSize,
     if (font) return font;
     font = reinterpret_cast<Font*>(
         ImGui::GetIO().Fonts->AddFontFromFileTTF(filename.c_str(), fontSize));
+    if (!font) {
+      LOG_ERROR(Debug::Channel::GUI,
+                "GUI::AddFontFromFile => Could not load font %s",
+                filename.c_str());
+      return nullptr;
+    }
     guiModule->AddFont(filename, fontSize, font);
     return font;
   } else {
@@ -553,6 +570,12 @@ Font* GUI::AddFontFromFile(const std::string& filename, float fontSize,
     if (font) return font;
     font = reinterpret_cast<Font*>(
         ImGui::GetIO().Fonts->AddFontFromFileTTF(filename.c_str(), fontSize));
+    if (!font) {
+      LOG_ERROR(Debug::Channel::GUI,
+                "GUI::AddFontFromFile => Could not load font %s",
+                filename.c_str());
+      return nullptr;
+    }
     guiModule->AddFont(fontName, fontSize, font);
     return font;
   }

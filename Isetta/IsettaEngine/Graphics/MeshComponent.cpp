@@ -53,6 +53,8 @@ void MeshComponent::OnDisable() {
   h3dSetNodeFlags(renderNode, H3DNodeFlags::Inactive, true);
 }
 
-void MeshComponent::OnDestroy() { h3dRemoveNode(renderNode); }
+void MeshComponent::OnDestroy() {
+  h3dRemoveNode(renderNode);
+}
 
 }  // namespace Isetta

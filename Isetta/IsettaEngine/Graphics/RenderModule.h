@@ -3,11 +3,11 @@
  */
 #pragma once
 
-#include <GLFW/glfw3.h>
-#include <Horde3D.h>
 #include <list>
 #include <string>
 #include "Core/Config/CVar.h"
+#include "GLFW/glfw3.h"
+#include "Horde3D.h"
 
 namespace Isetta {
 class ISETTA_API_DECLARE RenderModule {
@@ -36,6 +36,7 @@ class ISETTA_API_DECLARE RenderModule {
   std::list<class MeshComponent*> meshComponents;
   std::list<class LightComponent*> lightComponents;
   std::list<class CameraComponent*> cameraComponents;
+  std::list<class ParticleSystemComponent*> particleSystemComponents;
 
  private:
   RenderModule() = default;

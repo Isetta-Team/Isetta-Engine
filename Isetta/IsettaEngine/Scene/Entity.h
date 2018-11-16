@@ -130,7 +130,7 @@ T* Entity::AddComponent(Args&&... args) {
     componentTypes.emplace_back(typeIndex);
     components.EmplaceBack(component);
 
-    LevelManager::Instance().currentLevel->AddComponentToStart(component);
+    LevelManager::Instance().loadedLevel->AddComponentToStart(component);
     return component;
   }
 }

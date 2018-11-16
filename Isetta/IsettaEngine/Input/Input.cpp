@@ -7,7 +7,6 @@
 #include "Input/InputModule.h"
 
 namespace Isetta {
-
 InputModule* Input::inputModule{nullptr};
 
 void Input::RegisterWindowCloseCallback(const Action<>& callback) {
@@ -88,41 +87,6 @@ void Input::UnregisterScrollCallback(U16 handle) {
   inputModule->UnregisterScrollCallback(handle);
 }
 
-/// GLFW Callbacks
-U16 Input::RegisterMouseButtonGLFWCallback(
-    const Action<GLFWwindow*, int, int, int>& callback) {
-  return inputModule->RegisterMouseButtonGLFWCallback(callback);
-}
-
-void Input::UnregisterMouseButtonGLFWCallback(U16 handle) {
-  inputModule->UnregisterMouseButtonGLFWCallback(handle);
-}
-
-U16 Input::RegisterKeyGLFWCallback(
-    const Action<GLFWwindow*, int, int, int, int>& callback) {
-  return inputModule->RegisterKeyGLFWCallback(callback);
-}
-
-void Input::UnegisterKeyGLFWCallback(U16 handle) {
-  inputModule->UnegisterKeyGLFWCallback(handle);
-}
-U16 Input::RegisterScrollGLFWCallback(
-    const Action<GLFWwindow*, double, double>& callback) {
-  return inputModule->RegisterScrollGLFWCallback(callback);
-}
-void Input::UnegisterScrollGLFWCallback(U16 handle) {
-  inputModule->UnregisterScrollGLFWCallback(handle);
-}
-
-U16 Input::RegisterCharGLFWCallback(
-    const Action<GLFWwindow*, unsigned int>& callback) {
-  return inputModule->RegisterCharGLFWCallback(callback);
-}
-
-void Input::UnegisterCharGLFWCallback(U16 handle) {
-  inputModule->UnegisterCharGLFWCallback(handle);
-}
-
 float Input::GetGamepadAxis(GamepadAxis axis) {
   return inputModule->GetGamepadAxis(axis);
 }
@@ -130,4 +94,5 @@ float Input::GetGamepadAxis(GamepadAxis axis) {
 bool Input::IsGamepadButtonPressed(GamepadButton button) {
   return inputModule->IsGamepadButtonPressed(button);
 }
+void Input::Clear() { inputModule->Clear(); }
 }  // namespace Isetta

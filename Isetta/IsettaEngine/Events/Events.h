@@ -2,20 +2,20 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include <queue>
 #include "Core/DataStructures/Array.h"
+#include "Core/DataStructures/PriorityQueue.h"
 #include "Core/IsettaAlias.h"
-#include "EventObject.h"
+#include "Events/EventObject.h"
 #include "SID/sid.h"
 
 namespace Isetta {
 using CallbackPair = std::pair<U16, Action<EventObject>>;
 class ISETTA_API Events {
  public:
-  static Events& Instance() {
-    static Events instance{};
-    return instance;
-  }
+  static Events& Instance() { return *instance; }
+
+  void StartUp() { instance = this; }
+  void ShutDown();
 
   void RaiseQueuedEvent(const EventObject& eventObject);
   void RaiseImmediateEvent(const EventObject& eventObject);
@@ -28,10 +28,10 @@ class ISETTA_API Events {
   void Clear();
 
  private:
+  inline static Events* instance;
+
   Events() = default;
-  std::priority_queue<EventObject, Array<EventObject>,
-                      std::greater<EventObject>>
-      eventQueue;
+  PriorityQueue<EventObject, Greater> eventQueue;
   std::unordered_map<StringId, Array<CallbackPair>> callbackMap;
 
   void Update();
