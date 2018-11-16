@@ -18,12 +18,12 @@ bool AABB::Contains(const AABB& aabb) const {
 
 bool AABB::Intersect(const AABB& other) const {
   return (min.x <= other.max.x && max.x >= other.min.x) &&
-         (min.y <= other.max.y && max.x >= other.min.x) &&
+         (min.y <= other.max.y && max.y >= other.min.y) &&
          (min.z <= other.max.z && max.z >= other.min.z);
 }
 bool AABB::Intersect(const AABB* a, const AABB* b) {
   return (a->min.x <= b->max.x && a->max.x >= b->min.x) &&
-         (a->min.y <= b->max.y && a->max.x >= b->min.x) &&
+         (a->min.y <= b->max.y && a->max.y >= b->min.y) &&
          (a->min.z <= b->max.z && a->max.z >= b->min.z);
 }
 

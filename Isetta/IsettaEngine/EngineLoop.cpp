@@ -4,6 +4,7 @@
 #include "EngineLoop.h"
 
 #include "Audio/AudioModule.h"
+#include "Collisions/CollisionSolverModule.h"
 #include "Collisions/CollisionsModule.h"
 #include "Core/Memory/MemoryManager.h"
 #include "Graphics/GUIModule.h"
@@ -40,6 +41,7 @@ EngineLoop::EngineLoop() {
   inputModule = new InputModule{};
   guiModule = new GUIModule{};
   collisionsModule = new CollisionsModule{};
+  collisionSolverModule = new CollisionSolverModule{};
   audioModule = new AudioModule{};
   networkingModule = new NetworkingModule{};
   events = new Events{};
@@ -51,6 +53,7 @@ EngineLoop::~EngineLoop() {
   delete inputModule;
   delete guiModule;
   delete collisionsModule;
+  delete collisionSolverModule;
   delete audioModule;
   delete networkingModule;
   delete events;
@@ -77,6 +80,7 @@ void EngineLoop::StartUp() {
   guiModule->StartUp(windowModule->winHandle);
   DebugDraw::StartUp();
   collisionsModule->StartUp();
+  collisionSolverModule->StartUp();
   audioModule->StartUp();
   networkingModule->StartUp();
   events->StartUp();
@@ -148,6 +152,7 @@ void EngineLoop::ShutDown() {
   networkingModule->ShutDown();
   audioModule->ShutDown();
   collisionsModule->ShutDown();
+  collisionSolverModule->ShutDown();
   DebugDraw::ShutDown();
   guiModule->ShutDown();
   inputModule->ShutDown();

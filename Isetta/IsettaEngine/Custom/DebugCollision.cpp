@@ -32,7 +32,7 @@ void DebugCollision::OnCollisionExit(Collider* const other) {
   collisions--;
   if (collisions == 0) {
     for (auto& c : colliders) {
-      c->debugColor = Color::red;
+      c->debugColor = Color::green;
     }
   }
 }

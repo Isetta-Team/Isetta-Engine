@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Custom/CollisionsLevel.h"
+#include "Custom/CollisionSolverLevel/CollisionSolverLevel.h"
 
+#include "Components/Editor/EditorComponent.h"
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
 #include "Custom/DebugCollision.h"
@@ -23,8 +24,8 @@
 #include "Collisions/Collider.h"
 #include "Collisions/CollisionHandler.h"
 #include "Collisions/SphereCollider.h"
-#include "IsettaCore.h"
-#include "FrameReporter.h"
+#include "Custom/FrameReporter.h"
+#include "Custom/IsettaCore.h"
 
 namespace Isetta {
 
@@ -32,7 +33,7 @@ using LightProperty = LightComponent::Property;
 using CameraProperty = CameraComponent::Property;
 using ColliderAttribute = Collider::Property;
 
-void CollisionsLevel::LoadLevel() {
+void CollisionSolverLevel::LoadLevel() {
   Entity* debugEntity{AddEntity("Debug")};
   debugEntity->AddComponent<FrameReporter>();
 
@@ -40,9 +41,9 @@ void CollisionsLevel::LoadLevel() {
   Entity* cameraEntity{AddEntity("Camera")};
   CameraComponent* camComp =
       cameraEntity->AddComponent<CameraComponent>("Camera");
-  cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
+  cameraEntity->SetTransform(Math::Vector3{0, 10, 6}, Math::Vector3{-45, 0, 0},
                              Math::Vector3::one);
-  cameraEntity->AddComponent<FlyController>();
+  cameraEntity->AddComponent<FlyController>(false);
   camComp->SetProperty<CameraProperty::FOV>(
       CONFIG_VAL(renderConfig.fieldOfView));
   camComp->SetProperty<CameraProperty::NEAR_PLANE>(
@@ -62,6 +63,7 @@ void CollisionsLevel::LoadLevel() {
   lightComp->SetProperty<LightProperty::COLOR_MULTIPLIER>(1.0f);
   lightComp->SetProperty<LightProperty::SHADOW_MAP_COUNT>(1);
   lightComp->SetProperty<LightProperty::SHADOW_MAP_BIAS>(0.01f);
+  lightEntity->AddComponent<EditorComponent>();
 
   Entity* grid{AddEntity("Grid")};
   grid->AddComponent<GridComponent>();
@@ -74,7 +76,7 @@ void CollisionsLevel::LoadLevel() {
   staticCol[0] = AddEntity("box-collider");
   staticCol[0]->SetTransform(Math::Vector3{0, 1, 0}, Math::Vector3{0, 0, 0});
   BoxCollider* bCol = staticCol[0]->AddComponent<BoxCollider>();
-  bCol->SetProperties(ColliderAttribute::IS_STATIC, true);
+  //bCol->SetProperties(ColliderAttribute::IS_STATIC, true);
   CollisionHandler* handler = staticCol[0]->AddComponent<CollisionHandler>();
   handler->RegisterOnEnter([](Collider* const col) {
     LOG("collided with " + col->GetEntity()->GetName());
@@ -95,35 +97,41 @@ void CollisionsLevel::LoadLevel() {
   // staticCol[2]->AddComponent<DebugCollision>();
 
   //// DYNAMIC
-  for (int i = 0; i < COLLIDERS; i++) {
-    Entity* oscillator{AddEntity("oscillator")};
-    oscillator->GetTransform()->SetParent(staticCol[i]->GetTransform());
-    oscillator->GetTransform()->SetLocalPos(7 * Math::Vector3::left);
-    oscillator->AddComponent<OscillateMove>(0, 1, -1, 12);
-    oscillator->AddComponent<KeyTransform>(0.25);
-    oscillator->AddComponent<CollisionHandler>();
+  static Entity* box{AddEntity("box-collider-dynamic")};
+  box->SetTransform(Math::Vector3{3, 1, 0}, Math::Vector3{0, 0, 0});
+  //box->GetTransform()->SetLocalRot(-45 * Math::Vector3::up);
+  box->AddComponent<BoxCollider>();
+  box->AddComponent<KeyTransform>();
 
-    Entity* box{AddEntity("box-collider" + i)};
-    box->GetTransform()->SetParent(oscillator->GetTransform());
-    box->GetTransform()->SetLocalPos(-2 * Math::Vector3::left);
-    box->AddComponent<BoxCollider>();
+  static Entity* sphere{AddEntity("sphere-collider-dynamic")};
+  sphere->SetTransform(Math::Vector3{3, 1, -4});
+  sphere->AddComponent<SphereCollider>();
+  sphere->AddComponent<KeyTransform>()->SetActive(false);
 
-    Entity* sphere{AddEntity("sphere-collider" + i)};
-    sphere->GetTransform()->SetParent(oscillator->GetTransform());
-    sphere->GetTransform()->SetLocalPos(Math::Vector3::zero);
-    sphere->AddComponent<SphereCollider>();
+  static Entity* capsule{AddEntity("capsule-collider-dynamic")};
+  capsule->GetTransform()->SetLocalPos(Math::Vector3{3, 1, -8});
+  capsule->GetTransform()->SetLocalRot(-30 * Math::Vector3::up);
+  capsule->AddComponent<CapsuleCollider>(
+      0.5, 2, static_cast<CapsuleCollider::Direction>(0));
+  capsule->AddComponent<KeyTransform>()->SetActive(false);
 
-    for (int j = 0; j < 3; j++) {
-      Entity* capsule{AddEntity("capsule-collider" + i + j)};
-      capsule->GetTransform()->SetParent(oscillator->GetTransform());
-      capsule->GetTransform()->SetLocalPos(3 * (j + 1) * Math::Vector3::left);
-      capsule->GetTransform()->SetLocalRot(-30 * Math::Vector3::up);
-      CapsuleCollider* col = capsule->AddComponent<CapsuleCollider>(
-          0.5, 2, static_cast<CapsuleCollider::Direction>(j));
-    }
+  Input::RegisterKeyPressCallback(KeyCode::ESCAPE,
+                                  []() { Application::Exit(); });
 
-    Input::RegisterKeyPressCallback(KeyCode::ESCAPE,
-                                    []() { Application::Exit(); });
-  }
+  Input::RegisterKeyPressCallback(KeyCode::NUM1, [&]() {
+    box->GetComponent<KeyTransform>()->SetActive(true);
+    sphere->GetComponent<KeyTransform>()->SetActive(false);
+    capsule->GetComponent<KeyTransform>()->SetActive(false);
+  });
+  Input::RegisterKeyPressCallback(KeyCode::NUM2, [&]() {
+    box->GetComponent<KeyTransform>()->SetActive(false);
+    sphere->GetComponent<KeyTransform>()->SetActive(true);
+    capsule->GetComponent<KeyTransform>()->SetActive(false);
+  });
+  Input::RegisterKeyPressCallback(KeyCode::NUM3, [&]() {
+    box->GetComponent<KeyTransform>()->SetActive(false);
+    sphere->GetComponent<KeyTransform>()->SetActive(false);
+    capsule->GetComponent<KeyTransform>()->SetActive(true);
+  });
 }
 }  // namespace Isetta

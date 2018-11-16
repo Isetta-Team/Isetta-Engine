@@ -6,6 +6,8 @@
 
 namespace Isetta {
 
+FlyController::FlyController(bool inControl) : enableLook{inControl} {};
+
 void FlyController::OnEnable() {
   SetAttribute(ComponentAttributes::NEED_UPDATE, true);
   lastFrameMousePos = Input::GetMousePosition();

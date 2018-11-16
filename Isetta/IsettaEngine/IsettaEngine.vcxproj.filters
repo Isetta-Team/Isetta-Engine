@@ -337,6 +337,12 @@
     <ClCompile Include="Graphics\ParticleSystemComponent.cpp">
       <Filter>Graphics\Render</Filter>
     </ClCompile>
+    <ClCompile Include="Collisions\CollisionSolverModule.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\CollisionSolverLevel\CollisionSolverLevel.cpp">
+      <Filter>Custom\CollisionSolverLevel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -425,6 +431,9 @@
     </Filter>
     <Filter Include="Custom\AILevel">
       <UniqueIdentifier>{c2ec0a3b-7c7e-4727-a06c-c0efe1d53754}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\CollisionSolverLevel">
+      <UniqueIdentifier>{f54c709b-be6b-4035-87e9-f6043119f744}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -740,6 +749,12 @@
     </ClInclude>
     <ClInclude Include="Graphics\ParticleSystemComponent.h">
       <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\CollisionSolverModule.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\CollisionSolverLevel\CollisionSolverLevel.h">
+      <Filter>Custom\CollisionSolverLevel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
