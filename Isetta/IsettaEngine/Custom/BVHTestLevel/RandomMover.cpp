@@ -16,6 +16,12 @@ void RandomMover::Update() {
                                  Math::Random::GetRandom01() - 0.5f,
                                  Math::Random::GetRandom01() - 0.5f} *
                    Math::Random::GetRandom01() * speed;
+
+    if (range > 0 &&
+        GetTransform()->GetWorldPos().SqrMagnitude() > range * range &&
+        Math::Vector3::Dot(GetTransform()->GetWorldPos(), velocity) > 0) {
+      velocity *= -1;
+    }
   }
 }
 }  // namespace Isetta

@@ -54,11 +54,33 @@ void BVHLevel::LoadLevel() {
   debug->AddComponent<FrameReporter>();
   debug->AddComponent<RaycastClick>();
 
+  BVTree::drawDebugBoxes = true;
+
   static bool enable = true;
   Input::RegisterKeyPressCallback(KeyCode::SPACE, [&]() {
     enable = !enable;
     for (RandomMover* randomMover : randomMovers) {
       randomMover->SetActive(enable);
+    }
+  });
+
+  Input::RegisterKeyPressCallback(KeyCode::KP_ENTER, [&]() {
+    BVTree::drawDebugBoxes = !BVTree::drawDebugBoxes;
+  });
+
+  static float range = 10;
+  Input::RegisterKeyPressCallback(KeyCode::KP_7, [&]() {
+    --range;
+    for (RandomMover* randomMover : randomMovers) {
+      randomMover->range = range;
+      randomMover->coolDown = 0;
+    }
+  });
+  Input::RegisterKeyPressCallback(KeyCode::KP_9, [&]() {
+    ++range;
+    for (RandomMover* randomMover : randomMovers) {
+      randomMover->range = range;
+      randomMover->coolDown = 0;
     }
   });
 
@@ -68,6 +90,7 @@ void BVHLevel::LoadLevel() {
       Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
       randomMovers.PushBack(sphere->AddComponent<RandomMover>());
       randomMovers.Back()->SetActive(enable);
+      randomMovers.Back()->range = range;
       SphereCollider* col = sphere->AddComponent<SphereCollider>();
       sphere->AddComponent<CollisionHandler>();
       sphere->AddComponent<DebugCollision>();
@@ -84,6 +107,7 @@ void BVHLevel::LoadLevel() {
     Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
     randomMovers.PushBack(sphere->AddComponent<RandomMover>());
     randomMovers.Back()->SetActive(enable);
+    randomMovers.Back()->range = range;
     SphereCollider* col = sphere->AddComponent<SphereCollider>();
     sphere->AddComponent<CollisionHandler>();
     sphere->AddComponent<DebugCollision>();

@@ -53,6 +53,10 @@ class BVTree {
                class RaycastHit* const hitInfo, float maxDistance);
   const CollisionUtil::ColliderPairSet& GetCollisionPairs();
 
+#if _EDITOR
+  static bool drawDebugBoxes;
+#endif
+
  private:
   void AddNode(Node* const newNode);
   void RemoveNode(Node* const node, bool deleteNode);

@@ -176,7 +176,17 @@ void BVTree::RemoveNode(Node* const node, const bool deleteNode) {
   }
 }
 
+#if _EDITOR
+bool BVTree::drawDebugBoxes = false;
+#endif
+
 void BVTree::DebugDraw() const {
+#if _EDITOR
+  if (!drawDebugBoxes) {
+    return;
+  }
+#endif
+
   std::queue<Node*> q;
 
   if (root != nullptr) {
