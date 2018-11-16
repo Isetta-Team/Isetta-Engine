@@ -54,9 +54,8 @@ void CollisionsModule::Update(float deltaTime) {
     CollisionHandler *handler2 = collider2->GetHandler();
 
     // Trigger colliders with no handler shouldn't even be intersection tested
-    if (collider1->GetProperty(Collider::Property::IS_TRIGGER) ||
-        collider2->GetProperty(Collider::Property::IS_TRIGGER) && handler1 &&
-            handler2 && handler1 == handler2)
+    if ((collider1->isTrigger || collider2->isTrigger) && handler1 &&
+        handler2 && handler1 == handler2)
       continue;
 
     if (collider1->Intersection(collider2)) {
@@ -95,7 +94,8 @@ void CollisionsModule::Update(float deltaTime) {
 
 void CollisionsModule::ShutDown() {}
 
-Array<Collider*> CollisionsModule::GetPossibleColliders(Collider* collider) const {
+Array<Collider *> CollisionsModule::GetPossibleColliders(
+    Collider *collider) const {
   return bvTree.GetPossibleColliders(collider);
 }
 

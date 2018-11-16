@@ -34,10 +34,10 @@ CapsuleCollider(float radius = 0.5, float height = 1,
 CapsuleCollider(const Math::Vector3& center, float radius = 0.5,
                 float height = 1, Direction direction = Direction::Y_AXIS)
     : Collider{center}, radius{radius}, height{height}, direction{direction} {}
-CapsuleCollider(bool isStatic, bool isTrigger, const Math::Vector3& center,
+CapsuleCollider(bool trigger, const Math::Vector3& center,
                 float radius = 0.5, float height = 1,
                 Direction direction = Direction::Y_AXIS)
-    : Collider{isStatic, isTrigger, center},
+    : Collider{trigger, center},
       radius{radius},
       height{height},
       direction{direction} {}

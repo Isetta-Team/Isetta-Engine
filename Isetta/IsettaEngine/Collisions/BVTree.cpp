@@ -5,10 +5,12 @@
 
 #include <queue>
 #include <unordered_set>
+#include "Core/Config/Config.h"
 #include "Core/DataStructures/Array.h"
 #include "Core/Debug/Assert.h"
 #include "Core/Debug/DebugDraw.h"
 #include "Ray.h"
+#include "Scene/Entity.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
@@ -61,7 +63,7 @@ void BVTree::RemoveCollider(Collider* const collider) {
 }
 
 void BVTree::Update() {
-  PROFILE
+  BROFILER_CATEGORY("BVTree Update", Profiler::Color::Coral);
   Array<Node*> toReInsert;
 
   std::queue<Node*> q;
@@ -120,10 +122,11 @@ bool BVTree::Raycast(Node* const node, const Ray& ray,
 }
 
 const CollisionUtil::ColliderPairSet& BVTree::GetCollisionPairs() {
+  PROFILE
   colliderPairSet.clear();
 
   for (const auto& pair : colNodeMap) {
-    if (pair.first->GetProperty(Collider::Property::IS_STATIC)) continue;
+    if (pair.first->GetEntity()->isStatic) continue;
 
     Collider* collider = pair.first;
     AABB aabb = collider->GetFatAABB();
@@ -156,6 +159,7 @@ const CollisionUtil::ColliderPairSet& BVTree::GetCollisionPairs() {
 }
 
 Array<Collider*> BVTree::GetPossibleColliders(Collider* collider) const {
+  PROFILE
   Array<Collider*> ret;
 
   AABB aabb = collider->GetFatAABB();
@@ -285,16 +289,10 @@ void BVTree::RemoveNode(Node* const node, const bool deleteNode) {
   }
 }
 
-#if _EDITOR
-bool BVTree::drawDebugBoxes = false;
-#endif
-
 void BVTree::DebugDraw() const {
-#if _EDITOR
-  if (!drawDebugBoxes) {
+  if (!Config::Instance().drawConfig.bvtDrawAABBs.GetVal()) {
     return;
   }
-#endif
 
   std::queue<Node*> q;
 
@@ -307,13 +305,11 @@ void BVTree::DebugDraw() const {
 
     Color color;
     if (cur->IsLeaf()) {
-#if _EDITOR
       if (collisionSet.find(cur->collider) != collisionSet.end()) {
         color = Color::red;
       } else {
         color = Color::green;
       }
-#endif
       DebugDraw::WireCube(Math::Matrix4::Translate(cur->aabb.GetCenter()) *
                               Math::Matrix4::Scale({cur->aabb.GetSize()}),
                           color, 1, .05);

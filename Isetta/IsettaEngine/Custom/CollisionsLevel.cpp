@@ -30,7 +30,6 @@ namespace Isetta {
 
 using LightProperty = LightComponent::Property;
 using CameraProperty = CameraComponent::Property;
-using ColliderAttribute = Collider::Property;
 
 void CollisionsLevel::LoadLevel() {
   Entity* debugEntity{AddEntity("Debug")};
@@ -71,26 +70,24 @@ void CollisionsLevel::LoadLevel() {
   const int COLLIDERS = 3;
   Entity* staticCol[COLLIDERS];
 
-  staticCol[0] = AddEntity("box-collider");
+  staticCol[0] = AddEntity("box-collider", true);
   staticCol[0]->SetTransform(Math::Vector3{0, 1, 0}, Math::Vector3{0, 0, 0});
   BoxCollider* bCol = staticCol[0]->AddComponent<BoxCollider>();
-  bCol->SetProperties(ColliderAttribute::IS_STATIC, true);
   CollisionHandler* handler = staticCol[0]->AddComponent<CollisionHandler>();
   handler->RegisterOnEnter([](Collider* const col) {
     LOG("collided with " + col->GetEntity()->GetName());
   });
   staticCol[0]->AddComponent<DebugCollision>();
 
-  staticCol[1] = AddEntity("sphere-collider");
+  staticCol[1] = AddEntity("sphere-collider", true);
   staticCol[1]->SetTransform(Math::Vector3{0, 1, -4});
   SphereCollider* sCol = staticCol[1]->AddComponent<SphereCollider>();
   Collider* c = staticCol[1]->GetComponent<Collider>();
-  sCol->SetProperties(ColliderAttribute::IS_STATIC, true);
 
-  staticCol[2] = AddEntity("capsule-collider");
+  staticCol[2] = AddEntity("capsule-collider", true);
   staticCol[2]->SetTransform(Math::Vector3{0, 1, -8});
   CapsuleCollider* cCol = staticCol[2]->AddComponent<CapsuleCollider>(
-      true, false, Math::Vector3::zero, 0.5, 2,
+      false, Math::Vector3::zero, 0.5, 2,
       CapsuleCollider::Direction::X_AXIS);
   // staticCol[2]->AddComponent<DebugCollision>();
 
