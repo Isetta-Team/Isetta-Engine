@@ -540,7 +540,7 @@ Math::Vector3 CollisionsModule::ClosestPtPointAABB(const Math::Vector3 &point,
                          aabb.GetMax().y);
   pt.z = Math::Util::Min(Math::Util::Max(point.z, aabb.GetMin().z),
                          aabb.GetMax().z);
-  return Math::Vector3();
+  return pt;
 }
 Math::Vector3 CollisionsModule::ClosestPtPointOBB(const Math::Vector3 &point,
                                                   const BoxCollider &box) {
@@ -552,8 +552,7 @@ Math::Vector3 CollisionsModule::ClosestPtPointOBB(const Math::Vector3 &point,
     float dist = Math::Vector3::Dot(d, box.GetTransform()->GetAxis(i));
     if (dist > extents[i]) {
       dist = extents[i];
-    }
-    if (dist < -extents[i]) {
+    } else if (dist < -extents[i]) {
       dist = -extents[i];
     }
     pt += dist * box.GetTransform()->GetAxis(i);

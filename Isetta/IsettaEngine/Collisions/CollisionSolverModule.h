@@ -3,17 +3,25 @@
  */
 #pragma once
 
-#include "Scene/Layers.h"
 #include "Collisions/CollisionUtil.h"
+#include "Scene/Layers.h"
 
 namespace Isetta {
 class CollisionSolverModule {
- public: 
+ public:
+  struct Collision {
+    Math::Vector3 hitPoint;
+    bool onEdge;
+  };
+
  private:
   CollisionSolverModule() = default;
   ~CollisionSolverModule() = default;
 
-  Math::Vector3 Solve(Collider* collider, Math::Vector3 point);
+  Collision Solve(Collider* collider, Math::Vector3 point);
+  Math::Vector3 Resolve(Collider* collider1, Collision collision1,
+                        Collider* collider2, Collision collision2);
+  Math::Vector3 GetStrongestAxis(BoxCollider* box, Math::Vector3 point);
 
   void StartUp();
   void Update();
