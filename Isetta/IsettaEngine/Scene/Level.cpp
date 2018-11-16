@@ -65,13 +65,13 @@ void Level::StartComponents() {
   }
 }
 
-Entity* Level::AddEntity(std::string name) {
-  return AddEntity(name, levelRoot);
+Entity* Level::AddEntity(std::string name, bool entityStatic) {
+  return AddEntity(name, levelRoot, entityStatic);
 }
 
-Entity* Level::AddEntity(std::string name, Entity* parent) {
+Entity* Level::AddEntity(std::string name, Entity* parent, bool entityStatic) {
   PROFILE
-  Entity* entity = MemoryManager::NewOnFreeList<Entity>(name);
+  Entity* entity = MemoryManager::NewOnFreeList<Entity>(name, entityStatic);
   entities.push_back(entity);
   // TODO(YIDI): Change it when transform returns pointer
   entity->transform.SetParent(&(parent->transform));

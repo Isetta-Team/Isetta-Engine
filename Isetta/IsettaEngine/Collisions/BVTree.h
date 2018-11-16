@@ -11,6 +11,7 @@
 namespace Isetta {
 
 class BVTree {
+ private:
   // BVNode serves two purposes: leaf and branch
   struct Node {
     explicit Node(AABB aabb) : aabb(std::move(aabb)) {}
@@ -50,10 +51,6 @@ class BVTree {
 
   const CollisionUtil::ColliderPairSet& GetCollisionPairs();
   Array<Collider*> GetPossibleColliders(class Collider* collider) const;
-
-#if _EDITOR
-  static bool drawDebugBoxes;
-#endif
 
  private:
   void AddNode(Node* newNode);
