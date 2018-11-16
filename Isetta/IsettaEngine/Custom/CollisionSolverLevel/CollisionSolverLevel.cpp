@@ -76,7 +76,7 @@ void CollisionSolverLevel::LoadLevel() {
   staticCol[0] = AddEntity("box-collider");
   staticCol[0]->SetTransform(Math::Vector3{0, 1, 0}, Math::Vector3{0, 0, 0});
   BoxCollider* bCol = staticCol[0]->AddComponent<BoxCollider>();
-  bCol->SetProperties(ColliderAttribute::IS_STATIC, true);
+  //bCol->SetProperties(ColliderAttribute::IS_STATIC, true);
   CollisionHandler* handler = staticCol[0]->AddComponent<CollisionHandler>();
   handler->RegisterOnEnter([](Collider* const col) {
     LOG("collided with " + col->GetEntity()->GetName());

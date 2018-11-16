@@ -10,8 +10,8 @@ namespace Isetta {
 class CollisionSolverModule {
  public:
   struct Collision {
-    Math::Vector3 hitPoint;
-    bool onEdge;
+    Math::Vector3 hitPoint = Math::Vector3::zero;
+    bool onEdge = false;
   };
 
  private:
