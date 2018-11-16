@@ -101,8 +101,8 @@ bool Entity::GetAttribute(EntityAttributes attr) const {
 Entity::Entity(const std::string& name)
     : transform(this),
       attributes{0b101},
-      entityID{SID(name.c_str())},
       entityName{name} {
+  CoCreateGuid(&entityId);
   OnEnable();
 }
 

@@ -27,6 +27,9 @@ void Inspector::GuiUpdate() {
         float padding = 15;
         RectTransform rect =
             RectTransform{Math::Rect{padding, height, 300, 100}};
+        GUI::Text(rect, target->GetEntity()->GetEntityIdString());
+        rect.rect.y += 15;
+
         GUI::Text(rect, target->GetEntity()->GetName());
         rect.rect.y += 15;
 
