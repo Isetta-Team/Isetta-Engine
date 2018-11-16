@@ -56,7 +56,6 @@ class BVTree {
 #endif
 
  private:
-  BVTree() = default;
   void AddNode(Node* newNode);
   void RemoveNode(Node* node, bool deleteNode);
   void DebugDraw() const;
