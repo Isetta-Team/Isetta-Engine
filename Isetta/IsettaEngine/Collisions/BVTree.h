@@ -51,10 +51,6 @@ class BVTree {
   const CollisionUtil::ColliderPairSet& GetCollisionPairs();
   Array<Collider*> GetPossibleColliders(class Collider* collider) const;
 
-#if _EDITOR
-  static bool drawDebugBoxes;
-#endif
-
  private:
   void AddNode(Node* newNode);
   void RemoveNode(Node* node, bool deleteNode);

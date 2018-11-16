@@ -62,7 +62,6 @@ class ISETTA_API Component {
 
   enum class ComponentAttributes {
     IS_ACTIVE,
-    HAS_STARTED,
     HAS_AWAKEN,
     NEED_DESTROY,
     NEED_UPDATE

@@ -56,6 +56,7 @@ class ISETTA_API Config {
   AudioModule::AudioConfig audioConfig;
   LevelManager::LevelConfig levelConfig;
   CollisionsModule::CollisionConfig collisionConfig;
+  Debug::DrawConfig drawConfig;
 
   /// Max FPS of the engine
   CVar<int> maxFps = {"max_fps", 16};

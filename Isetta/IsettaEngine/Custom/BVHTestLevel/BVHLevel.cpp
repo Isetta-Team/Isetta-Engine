@@ -59,8 +59,8 @@ void BVHLevel::LoadLevel() {
   debug->AddComponent<EditorComponent>();
   debug->AddComponent<FrameReporter>();
   debug->AddComponent<RaycastClick>();
-
-  BVTree::drawDebugBoxes = true;
+  
+  Config::Instance().drawConfig.bvtDrawAABBs.SetVal("1");
 
   static bool enable = true;
   Input::RegisterKeyPressCallback(KeyCode::SPACE, [&]() {
@@ -71,7 +71,8 @@ void BVHLevel::LoadLevel() {
   });
 
   Input::RegisterKeyPressCallback(KeyCode::KP_ENTER, [&]() {
-    BVTree::drawDebugBoxes = !BVTree::drawDebugBoxes;
+    Config::Instance().drawConfig.bvtDrawAABBs.SetVal(
+        Config::Instance().drawConfig.bvtDrawAABBs.GetVal() ? "0" : "1");
   });
 
   static float range = 10;

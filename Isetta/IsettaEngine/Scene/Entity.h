@@ -43,6 +43,7 @@ class ISETTA_API_DECLARE Entity {
 
  public:
   Entity(const std::string& name);
+  Entity(const std::string& name, const bool& entityStatic);
   ~Entity();
 
   std::string GetName() const { return entityName; }
@@ -91,6 +92,8 @@ class ISETTA_API_DECLARE Entity {
   void SetLayer(std::string layer);
   int GetLayerIndex() const;
   std::string GetLayerName() const;
+
+  const bool isStatic;
 };
 
 template <typename T, typename... Args>
