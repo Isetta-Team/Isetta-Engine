@@ -44,7 +44,7 @@ void Hierarchy::GuiUpdate() {
                     }
                     height += 1.25f * buttonHeight;
                   };
-                  action(entity->GetTransform());
+                  action(entity->transform);
                 }
 
                 if (inspector && target) {

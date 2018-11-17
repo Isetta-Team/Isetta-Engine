@@ -55,7 +55,7 @@ void Component::FlattenHelper(std::type_index parent, std::type_index curr) {
   }
 }
 
-Component::Component() : attributes{0b10001}, entity{nullptr} {
+Component::Component() : attributes{0b10001}, entity{curEntity}, transform(curTransform) {
   if (!isFlattened) {
     FlattenComponentList();
   }
@@ -87,7 +87,7 @@ bool Component::GetActive() const {
   return GetAttribute(ComponentAttributes::IS_ACTIVE);
 }
 
-Transform* Component::GetTransform() const { return entity->GetTransform(); }
+Transform* Component::GetTransform() const { return transform; }
 
 Entity* Component::GetEntity() const { return entity; }
 }  // namespace Isetta

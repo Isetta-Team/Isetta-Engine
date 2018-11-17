@@ -7,7 +7,7 @@
 namespace Isetta {
 void RandomMover::Update() {
   float dt = Time::GetDeltaTime();
-  GetTransform()->TranslateWorld(velocity * dt);
+  transform->TranslateWorld(velocity * dt);
 
   coolDown -= dt;
   if (coolDown <= 0) {

@@ -69,7 +69,7 @@ void Inspector::GuiUpdate() {
         GUI::Text(RectTransform{Math::Rect{padding, rect.rect.y, 300, 100}},
                   "Components");
 
-        for (const auto &component : target->GetEntity()->GetComponents()) {
+        for (const auto &component : target->GetEntity()->GetComponents<Component>()) {
           Component &comp = *component;
           rect.rect.y += padding;
           GUI::Text(RectTransform{Math::Rect{padding, rect.rect.y, 300, 100}},

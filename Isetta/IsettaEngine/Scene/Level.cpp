@@ -74,7 +74,7 @@ Entity* Level::AddEntity(std::string name, Entity* parent) {
   Entity* entity = MemoryManager::NewOnFreeList<Entity>(name);
   entities.push_back(entity);
   // TODO(YIDI): Change it when transform returns pointer
-  entity->transform.SetParent(&(parent->transform));
+  entity->transform->SetParent(parent->transform);
   return entity;
 }
 
