@@ -19,7 +19,7 @@ void Zombie::OnEnable() {
     AnimationComponent* animation =
         entity->AddComponent<AnimationComponent, true>(mesh);
     animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
-    audio = GetEntity()->AddComponent<AudioSource>();
+    audio = entity->AddComponent<AudioSource>();
     audio->SetAudioClip("zombie-death.mp3");
     isInitialized = true;
   }

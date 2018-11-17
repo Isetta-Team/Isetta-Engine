@@ -10,7 +10,7 @@
 #include "W10NetworkManager.h"
 
 void W10NetworkPlayer::InitPosition() {
-  GetEntity()->SetTransform(Isetta::Math::Vector3{isOnRight ? -1.f : 1.f, 0, 0},
+  entity->SetTransform(Isetta::Math::Vector3{isOnRight ? -1.f : 1.f, 0, 0},
                             Isetta::Math::Vector3::zero,
                             Isetta::Math::Vector3{1, 1, 1});
 
@@ -29,7 +29,7 @@ W10NetworkPlayer::W10NetworkPlayer(bool isRight, int swordNetID,
       clientAuthorityId{clientAuthorityID} {}
 
 void W10NetworkPlayer::Awake() {
-  GetEntity()->AddComponent<Isetta::MeshComponent>(
+  entity->AddComponent<Isetta::MeshComponent>(
       "blockFencing/Enemy.scene.xml");
 
   swordEntity = ADD_ENTITY("Sword2");

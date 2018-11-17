@@ -75,7 +75,7 @@ void CollisionsLevel::LoadLevel() {
   BoxCollider* bCol = staticCol[0]->AddComponent<BoxCollider>();
   CollisionHandler* handler = staticCol[0]->AddComponent<CollisionHandler>();
   handler->RegisterOnEnter([](Collider* const col) {
-    LOG("collided with " + col->GetEntity()->GetName());
+    LOG("collided with " + col->entity->GetName());
   });
   staticCol[0]->AddComponent<DebugCollision>();
 

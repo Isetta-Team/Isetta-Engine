@@ -61,9 +61,6 @@ class ISETTA_API Component {
   inline static class Transform* curTransform{nullptr};
 
  protected:
-  class Entity* const entity;
-  class Transform* const transform;
-
   enum class ComponentAttributes {
     IS_ACTIVE,
     HAS_AWAKEN,
@@ -85,7 +82,8 @@ class ISETTA_API Component {
   void SetActive(bool value);
   bool GetActive() const;
   class Transform* GetTransform() const;
-  class Entity* GetEntity() const;
+  class Entity* const entity;
+  class Transform* const transform;
 
   virtual void OnEnable() {}
   virtual void Awake() {}

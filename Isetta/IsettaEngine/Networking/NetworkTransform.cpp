@@ -34,7 +34,7 @@ void NetworkTransform::Start() {
             return;
           }
 
-          Entity* entity = netId->GetEntity();
+          Entity* entity = netId->entity;
           NetworkTransform* nt = entity->GetComponent<NetworkTransform>();
 
           if (nt && positionMessage->timestamp < nt->lastPosMessage) {
@@ -85,7 +85,7 @@ void NetworkTransform::Start() {
             return;
           }
 
-          Entity* entity = netId->GetEntity();
+          Entity* entity = netId->entity;
           NetworkTransform* nt = entity->GetComponent<NetworkTransform>();
 
           if (nt && rotationMessage->timestamp < nt->lastRotMessage) {
@@ -134,7 +134,7 @@ void NetworkTransform::Start() {
             return;
           }
 
-          Entity* entity = netId->GetEntity();
+          Entity* entity = netId->entity;
           NetworkTransform* nt = entity->GetComponent<NetworkTransform>();
 
           if (nt && scaleMessage->timestamp < nt->lastScaleMessage) {
@@ -183,7 +183,7 @@ void NetworkTransform::Start() {
             return;
           }
 
-          Entity* entity = netId->GetEntity();
+          Entity* entity = netId->entity;
           NetworkTransform* nt = entity->GetComponent<NetworkTransform>();
 
           if (!nt) {
@@ -293,7 +293,7 @@ void NetworkTransform::Start() {
             return;
           }
 
-          Entity* entity = netId->GetEntity();
+          Entity* entity = netId->entity;
 
           if (parentMessage->parentNetId == 0) {
             entity->transform->SetParent(nullptr);

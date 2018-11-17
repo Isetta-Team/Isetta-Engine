@@ -54,5 +54,5 @@ void Isetta::AITestLevel::LoadLevel()
 
     auto ai = camera->AddComponent<AITestComponent>(Math::Rect{0, 0, 10, 10},
                                                     Math::Vector2Int{20, 20},
-                                                    moveCube->GetTransform());
+                                                    moveCube->transform);
 }

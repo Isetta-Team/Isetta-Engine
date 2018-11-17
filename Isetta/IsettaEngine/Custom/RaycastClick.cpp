@@ -27,7 +27,7 @@ void RaycastClick::OnEnable() {
     if (Collisions::Raycast(r, &hitInfo)) {
       DebugDraw::Point(hitInfo.GetPoint(), Color::red, 5, 5);
       LOG_INFO(Debug::Channel::Collisions, "Raycast Hit: %s",
-               hitInfo.GetCollider()->GetEntity()->GetName());
+               hitInfo.GetCollider()->entity->GetName());
     } else {
       DebugDraw::Point(r.GetPoint(20), Color::brown, 5, 5);
     }

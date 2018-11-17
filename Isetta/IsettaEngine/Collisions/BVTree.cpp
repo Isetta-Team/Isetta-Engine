@@ -127,7 +127,7 @@ const CollisionUtil::ColliderPairSet &BVTree::GetCollisionPairs() {
   colliderPairSet.clear();
 
   for (const auto &pair : colNodeMap) {
-    if (pair.first->GetEntity()->isStatic) continue;
+    if (pair.first->entity->isStatic) continue;
 
     Collider *collider = pair.first;
     AABB aabb = collider->GetFatAABB();

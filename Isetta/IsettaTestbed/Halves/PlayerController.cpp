@@ -11,7 +11,7 @@ PlayerController* PlayerController::instance;
 void PlayerController::OnEnable() {
   instance = this;
   if (shootAudio == nullptr) {
-    shootAudio = GetEntity()->AddComponent<AudioSource>();
+    shootAudio = entity->AddComponent<AudioSource>();
   }
 
   shootAudio->SetAudioClip("gunshot.aiff");
