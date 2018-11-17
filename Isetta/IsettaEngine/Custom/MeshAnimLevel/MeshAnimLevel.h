@@ -2,11 +2,11 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Scene/IsettaLevel.h"
 #include <queue>
+#include "Scene/IsettaLevel.h"
 
 namespace Isetta {
-CREATE_LEVEL(InEngineTestLevel)
+CREATE_LEVEL(MeshAnimLevel)
 void LoadLevel() override;
 std::queue<Entity*> zombies;
 CREATE_LEVEL_END

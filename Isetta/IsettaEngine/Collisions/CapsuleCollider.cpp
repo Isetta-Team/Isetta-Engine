@@ -4,10 +4,11 @@
 #include "Collisions/CapsuleCollider.h"
 #include "Collisions/BoxCollider.h"
 #include "Collisions/CollisionsModule.h"
+#include "Collisions/RaycastHit.h"
 #include "Collisions/SphereCollider.h"
 
-#include "Collisions/Ray.h"
 #include "Core/Debug/DebugDraw.h"
+#include "Core/Geometry/Ray.h"
 #include "Core/Math/Matrix3.h"
 #include "Core/Math/Matrix4.h"
 #include "Core/Math/Vector4.h"

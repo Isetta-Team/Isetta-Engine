@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Custom/CollisionsLevel.h"
+#include "Custom/CollisionsLevel/CollisionsLevel.h"
 
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
@@ -23,8 +23,8 @@
 #include "Collisions/Collider.h"
 #include "Collisions/CollisionHandler.h"
 #include "Collisions/SphereCollider.h"
-#include "IsettaCore.h"
-#include "FrameReporter.h"
+#include "Components/Editor/FrameReporter.h"
+#include "Custom/IsettaCore.h"
 
 namespace Isetta {
 

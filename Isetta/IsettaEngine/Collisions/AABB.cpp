@@ -3,8 +3,9 @@
  */
 #include "AABB.h"
 
+#include "Collisions/RaycastHit.h"
+#include "Core/Geometry/Ray.h"
 #include "Core/Math/Util.h"
-#include "Ray.h"
 
 namespace Isetta {
 bool AABB::Contains(const Math::Vector3& point) const {

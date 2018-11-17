@@ -8,12 +8,9 @@
 #include "Custom/IsettaCore.h"
 #include "Graphics/CameraComponent.h"
 
-#include "Components/Editor/Console.h"
 #include "Custom/EscapeExit.h"
-#include "Custom/LoadNextLevel.h"
 
 namespace Isetta {
-
 using CameraProperty = CameraComponent::Property;
 
 void EmptyLevel::LoadLevel() {
@@ -31,6 +28,5 @@ void EmptyLevel::LoadLevel() {
 
   // Application::Exit();
   cameraEntity->AddComponent<EscapeExit>();
-  cameraEntity->AddComponent<LoadNextLevel>("EditorLevel");
 }
 }  // namespace Isetta

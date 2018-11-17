@@ -30,10 +30,10 @@ void EditorLevel::LoadLevel() {
       CONFIG_VAL(renderConfig.farClippingPlane));
 
   Entity* editor{AddEntity("Editor")};
-  editor->AddComponent<EscapeExit>();
   editor->AddComponent<EditorComponent>();
   // editor->AddComponent<Console>("Console", true);
   // Inspector* inspector = editor->AddComponent<Inspector>("Inspector", false);
   // editor->AddComponent<Hierarchy>("Hierarchy", true, inspector);
+  editor->AddComponent<EscapeExit>();
 }
 }  // namespace Isetta
