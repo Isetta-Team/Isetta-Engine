@@ -30,12 +30,12 @@ namespace Isetta {
 
 BEGIN_COMPONENT(Collider, Component, false)
 public:
-enum class Properties { IS_STATIC, IS_TRIGGER };
+enum class Property { IS_STATIC, IS_TRIGGER };
 
-void SetProperties(Properties attr, const bool value) {
+void SetProperties(Property attr, const bool value) {
   properties.set(static_cast<int>(attr), value);
 }
-bool GetProperties(Properties attr) const {
+bool GetProperty(Property attr) const {
   return properties.test(static_cast<int>(attr));
 }
 
@@ -72,6 +72,7 @@ void FindHandler();
 static class CollisionsModule* collisionsModule;
 friend class CollisionsModule;
 friend class CollisionHandler;
+friend class CollisionSolverModule;
 
 protected:
 inline static float fatFactor = 0.2f;
@@ -80,8 +81,8 @@ Collider(const Math::Vector3& center) : center{center}, properties{0b00} {}
 Collider(const bool isStatic = false, const bool isTrigger = false,
          const Math::Vector3& center = Math::Vector3::zero)
     : center{center} {
-  properties[static_cast<int>(Properties::IS_STATIC)] = isStatic;
-  properties[static_cast<int>(Properties::IS_TRIGGER)] = isTrigger;
+  properties[static_cast<int>(Property::IS_STATIC)] = isStatic;
+  properties[static_cast<int>(Property::IS_TRIGGER)] = isTrigger;
 }
 virtual ~Collider() = default;
 

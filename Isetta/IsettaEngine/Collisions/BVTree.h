@@ -4,6 +4,7 @@
 #pragma once
 #include <unordered_set>
 #include "AABB.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 #include "Collider.h"
 #include "CollisionUtil.h"
 
@@ -31,6 +32,10 @@ class BVTree {
     Node* right{nullptr};
   };
 
+  BVTree() = default;
+  friend class CollisionsModule;
+  friend class CollisionSolverModule;
+
  public:
   ~BVTree();
 
@@ -46,14 +51,20 @@ class BVTree {
   const CollisionUtil::ColliderPairSet& GetCollisionPairs();
   Array<Collider*> GetPossibleColliders(class Collider* collider) const;
 
+#if _EDITOR
+  static bool drawDebugBoxes;
+#endif
+
  private:
-  BVTree() = default;
   void AddNode(Node* newNode);
   void RemoveNode(Node* node, bool deleteNode);
   void DebugDraw() const;
 
   CollisionUtil::ColliderPairSet colliderPairSet;
   std::unordered_map<class Collider*, Node*> colNodeMap;
+#if _EDITOR
+  std::set<class Collider*> collisionSet;
+#endif
   Node* root = nullptr;
 
   friend class CollisionsModule;

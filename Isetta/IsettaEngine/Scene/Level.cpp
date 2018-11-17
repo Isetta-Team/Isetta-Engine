@@ -15,9 +15,8 @@
 namespace Isetta {
 
 Entity* Level::GetEntityByName(const std::string& name) {
-  StringId inID{SID(name.c_str())};
   for (const auto& entity : entities) {
-    if (entity->entityID == inID) {
+    if (entity->entityName == name) {
       return entity;
     }
   }
@@ -27,9 +26,8 @@ Entity* Level::GetEntityByName(const std::string& name) {
 
 std::list<Entity*> Level::GetEntitiesByName(const std::string& name) {
   std::list<Entity*> returnEntities;
-  StringId inID{SID(name.c_str())};
   for (const auto& entity : entities) {
-    if (entity->entityID == inID) {
+    if (entity->entityName == name) {
       returnEntities.emplace_back(entity);
     }
   }

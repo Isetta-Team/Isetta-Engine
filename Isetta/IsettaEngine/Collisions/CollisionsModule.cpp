@@ -18,6 +18,8 @@
 #include "Collisions/CollisionHandler.h"
 #include "Collisions/Collisions.h"
 #include "Collisions/SphereCollider.h"
+
+#include "Collisions/CollisionSolverModule.h"
 #include "Core/Config/Config.h"
 
 namespace Isetta {
@@ -25,6 +27,7 @@ void CollisionsModule::StartUp() {
   Collider::collisionsModule = this;
   Collider::fatFactor = CONFIG_VAL(collisionConfig.fatFactor);
   Collisions::collisionsModule = this;
+  CollisionSolverModule::collisionsModule = this;
 }
 
 void CollisionsModule::Update(float deltaTime) {
@@ -50,11 +53,18 @@ void CollisionsModule::Update(float deltaTime) {
     CollisionHandler *handler1 = collider1->GetHandler();
     CollisionHandler *handler2 = collider2->GetHandler();
 
-    // No Handler, Same Handler continue
-    // TODO(Caleb) Will need to change for solving
-    if (handler1 && handler2 && handler1 == handler2) continue;
+    // Trigger colliders with no handler shouldn't even be intersection tested
+    if (collider1->GetProperty(Collider::Property::IS_TRIGGER) ||
+        collider2->GetProperty(Collider::Property::IS_TRIGGER) && handler1 &&
+            handler2 && handler1 == handler2)
+      continue;
 
     if (collider1->Intersection(collider2)) {
+      collidingPairs.insert(pair);
+
+      // Colliders with the same handler shouldn't have their functions called
+      if (handler1 == handler2) continue;
+
       // if they do collide
       auto it = lastFramePairs.find(pair);
 
@@ -68,8 +78,6 @@ void CollisionsModule::Update(float deltaTime) {
         if (handler1) handler1->OnCollisionEnter(collider2);
         if (handler2) handler2->OnCollisionEnter(collider1);
       }
-
-      collidingPairs.insert(pair);
     }
   }
 
@@ -398,7 +406,7 @@ float CollisionsModule::SqDistSegmentOBB(const Math::Vector3 &p0,
 }
 Math::Vector3 CollisionsModule::ClosestPtPointSegment(
     const Math::Vector3 &point, const Math::Vector3 &p0,
-    const Math::Vector3 &p1, float *const _t) {
+    const Math::Vector3 &p1, float *_t) {
   float &t = *_t;
   Math::Vector3 to = p1 - p0;
   t = Math::Vector3::Dot(point - p0, to) / Math::Vector3::Dot(to, to);
@@ -535,7 +543,7 @@ Math::Vector3 CollisionsModule::ClosestPtPointAABB(const Math::Vector3 &point,
                          aabb.GetMax().y);
   pt.z = Math::Util::Min(Math::Util::Max(point.z, aabb.GetMin().z),
                          aabb.GetMax().z);
-  return Math::Vector3();
+  return pt;
 }
 Math::Vector3 CollisionsModule::ClosestPtPointOBB(const Math::Vector3 &point,
                                                   const BoxCollider &box) {
@@ -547,8 +555,7 @@ Math::Vector3 CollisionsModule::ClosestPtPointOBB(const Math::Vector3 &point,
     float dist = Math::Vector3::Dot(d, box.GetTransform()->GetAxis(i));
     if (dist > extents[i]) {
       dist = extents[i];
-    }
-    if (dist < -extents[i]) {
+    } else if (dist < -extents[i]) {
       dist = -extents[i];
     }
     pt += dist * box.GetTransform()->GetAxis(i);

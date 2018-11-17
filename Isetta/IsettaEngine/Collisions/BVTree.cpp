@@ -123,7 +123,7 @@ const CollisionUtil::ColliderPairSet& BVTree::GetCollisionPairs() {
   colliderPairSet.clear();
 
   for (const auto& pair : colNodeMap) {
-    if (pair.first->GetProperties(Collider::Properties::IS_STATIC)) continue;
+    if (pair.first->GetProperty(Collider::Property::IS_STATIC)) continue;
 
     Collider* collider = pair.first;
     AABB aabb = collider->GetFatAABB();
@@ -186,6 +186,7 @@ Array<Collider*> BVTree::GetPossibleColliders(Collider* collider) const {
 }
 
 void BVTree::AddNode(Node* const newNode) {
+  PROFILE
   AABB newAABB = newNode->aabb;
 
   if (root == nullptr) {
@@ -240,6 +241,7 @@ void BVTree::AddNode(Node* const newNode) {
 }
 
 void BVTree::RemoveNode(Node* const node, const bool deleteNode) {
+  PROFILE
   ASSERT(node->IsLeaf());
 
   if (node == root) {
@@ -283,7 +285,17 @@ void BVTree::RemoveNode(Node* const node, const bool deleteNode) {
   }
 }
 
+#if _EDITOR
+bool BVTree::drawDebugBoxes = false;
+#endif
+
 void BVTree::DebugDraw() const {
+#if _EDITOR
+  if (!drawDebugBoxes) {
+    return;
+  }
+#endif
+
   std::queue<Node*> q;
 
   if (root != nullptr) {
@@ -295,7 +307,13 @@ void BVTree::DebugDraw() const {
 
     Color color;
     if (cur->IsLeaf()) {
-      color = Color::green;
+#if _EDITOR
+      if (collisionSet.find(cur->collider) != collisionSet.end()) {
+        color = Color::red;
+      } else {
+        color = Color::green;
+      }
+#endif
       DebugDraw::WireCube(Math::Matrix4::Translate(cur->aabb.GetCenter()) *
                               Math::Matrix4::Scale({cur->aabb.GetSize()}),
                           color, 1, .05);

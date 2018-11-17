@@ -9,6 +9,9 @@
 namespace Isetta {
 BEGIN_COMPONENT(FlyController, Component, false)
 public:
+  FlyController() = default;
+  FlyController(bool inControl);
+
   void OnEnable() override;
   void Update() override;
   void GuiUpdate() override;

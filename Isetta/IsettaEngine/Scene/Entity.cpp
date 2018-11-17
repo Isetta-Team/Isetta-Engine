@@ -104,6 +104,7 @@ Entity::Entity(const std::string& name)
       entityID{SID(name.c_str())},
       entityName{name},
       transform(&m_transform) {
+  CoCreateGuid(&entityId);
   OnEnable();
 }
 

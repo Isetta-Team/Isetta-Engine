@@ -152,6 +152,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Collisions\BVTree.cpp" />
     <ClCompile Include="Collisions\CollisionHandler.cpp" />
     <ClCompile Include="Collisions\Collisions.cpp" />
+    <ClCompile Include="Collisions\CollisionSolverModule.cpp" />
     <ClCompile Include="Components\AxisDrawer.cpp" />
     <ClCompile Include="Components\Editor\EditorComponent.cpp" />
     <ClCompile Include="Components\Editor\Hierarchy.cpp" />
@@ -159,6 +160,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\DataStructures\Trie.cpp" />
     <ClCompile Include="Custom\AILevel\AITestComponent.cpp" />
     <ClCompile Include="Custom\AILevel\AITestLevel.cpp" />
+    <ClCompile Include="Custom\CollisionSolverLevel\CollisionSolverLevel.cpp" />
     <ClCompile Include="Custom\EditorLevel\EditorLevel.cpp" />
     <ClCompile Include="Components\GridComponent.cpp" />
     <ClCompile Include="Components\FlyController.cpp" />
@@ -254,6 +256,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Collisions\BVTree.h" />
     <ClInclude Include="Collisions\CollisionHandler.h" />
     <ClInclude Include="Collisions\Collisions.h" />
+    <ClInclude Include="Collisions\CollisionSolverModule.h" />
     <ClInclude Include="Collisions\CollisionUtil.h" />
     <ClInclude Include="Components\AxisDrawer.h" />
     <ClInclude Include="Components\Editor\EditorComponent.h" />
@@ -264,6 +267,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Custom\AILevel\AITestAgent.h" />
     <ClInclude Include="Custom\AILevel\AITestComponent.h" />
     <ClInclude Include="Custom\AILevel\AITestLevel.h" />
+    <ClInclude Include="Custom\CollisionSolverLevel\CollisionSolverLevel.h" />
     <ClInclude Include="Custom\EditorLevel\EditorLevel.h" />
     <ClInclude Include="Components\GridComponent.h" />
     <ClInclude Include="Components\FlyController.h" />
