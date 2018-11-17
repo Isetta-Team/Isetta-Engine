@@ -3,6 +3,7 @@
  */
 #pragma once
 #include <Windows.h>
+#include <array>
 #include <bitset>
 #include <execution>
 #include <typeindex>
@@ -12,19 +13,11 @@
 #include "Core/Memory/MemoryManager.h"
 #include "Scene/Transform.h"
 #include "Util.h"
-#include <array>
 
-namespace Isetta
-{
-class ISETTA_API_DECLARE Entity
-{
-private:
-  enum class EntityAttributes
-  {
-    IS_ACTIVE,
-    NEED_DESTROY,
-    IS_TRANSFORM_DIRTY
-  };
+namespace Isetta {
+class ISETTA_API_DECLARE Entity {
+ private:
+  enum class EntityAttributes { IS_ACTIVE, NEED_DESTROY, IS_TRANSFORM_DIRTY };
 
   friend class RenderModule;
   friend class Level;
@@ -50,15 +43,14 @@ private:
   void SetAttribute(EntityAttributes attr, bool value);
   bool GetAttribute(EntityAttributes attr) const;
 
-public:
+ public:
   Entity(const std::string &name);
   Entity(const std::string &name, const bool &entityStatic);
   ~Entity();
 
   std::string GetName() const { return entityName; }
   GUID GetEntityId() const { return entityId; }
-  std::string GetEntityIdString() const
-  {
+  std::string GetEntityIdString() const {
     std::array<char, 40> output;
     snprintf(output.data(), output.size(),
              "{%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x}",
@@ -119,24 +111,19 @@ public:
 };
 
 template <typename T, typename... Args>
-T *Entity::AddComponent(Args &&... args)
-{
+T *Entity::AddComponent(Args &&... args) {
   T *component = AddComponent<T, true>(std::forward<Args>(args)...);
   return component;
 }
 
 template <typename T, bool IsActive, typename... Args>
-T *Entity::AddComponent(Args &&... args)
-{
-  if constexpr (!std::is_base_of<class Component, T>::value)
-  {
+T *Entity::AddComponent(Args &&... args) {
+  if constexpr (!std::is_base_of<class Component, T>::value) {
     throw std::logic_error(
         Util::StrFormat("Entity::AddComponent => %s is not a derived class "
                         "from Component class",
                         typeid(T).name));
-  }
-  else
-  {
+  } else {
     std::type_index typeIndex{typeid(T)};
     if (std::any_of(
             std::execution::par, Component::excludeComponents().begin(),
@@ -144,8 +131,7 @@ T *Entity::AddComponent(Args &&... args)
             [typeIndex](std::type_index type) { return type == typeIndex; }) &&
         std::any_of(
             std::execution::par, componentTypes.begin(), componentTypes.end(),
-            [typeIndex](std::type_index type) { return type == typeIndex; }))
-    {
+            [typeIndex](std::type_index type) { return type == typeIndex; })) {
       throw std::logic_error(Util::StrFormat(
           "Entity::AddComponent => Adding multiple excluded components %s",
           typeIndex.name()));
@@ -153,8 +139,7 @@ T *Entity::AddComponent(Args &&... args)
     T *component = MemoryManager::NewOnFreeList<T>(std::forward<Args>(args)...);
     component->SetActive(IsActive);
     component->entity = this;
-    if (IsActive)
-    {
+    if (IsActive) {
       component->Awake();
       component->SetAttribute(Component::ComponentAttributes::HAS_AWAKEN, true);
       component->OnEnable();
@@ -168,19 +153,16 @@ T *Entity::AddComponent(Args &&... args)
 }
 
 template <typename T>
-T *Entity::GetComponent()
-{
+T *Entity::GetComponent() {
   auto types = Component::childrenTypes();
   std::list<std::type_index> availableTypes =
       types.at(std::type_index(typeid(T)));
-  for (int i = 0; i < componentTypes.size(); i++)
-  {
+  for (int i = 0; i < componentTypes.size(); i++) {
     std::type_index componentType = componentTypes[i];
     if (std::any_of(std::execution::par, availableTypes.begin(),
                     availableTypes.end(), [componentType](std::type_index x) {
                       return x == componentType;
-                    }))
-    {
+                    })) {
       return static_cast<T *>(components[i]);
     }
   }
@@ -188,52 +170,43 @@ T *Entity::GetComponent()
 }
 
 template <typename T>
-Array<T *> Entity::GetComponents()
-{
+Array<T *> Entity::GetComponents() {
   std::list<std::type_index> availableTypes =
       Component::childrenTypes().at(std::type_index(typeid(T)));
   Array<T *> returnValue;
   returnValue.Reserve(componentTypes.size());
-  for (int i = 0; i < componentTypes.size(); i++)
-  {
+  for (int i = 0; i < componentTypes.size(); i++) {
     std::type_index componentType = componentTypes[i];
     if (std::any_of(std::execution::par, availableTypes.begin(),
                     availableTypes.end(), [componentType](std::type_index x) {
                       return x == componentType;
-                    }))
-    {
+                    })) {
       returnValue.EmplaceBack(static_cast<T *>(components[i]));
     }
   }
   return returnValue;
 }
 template <typename T>
-inline T *Entity::GetComponentInParent()
-{
+inline T *Entity::GetComponentInParent() {
   return transform.parent->entity->GetComponent<T>();
 }
 template <typename T>
-inline Array<T *> Entity::GetComponentsInParent()
-{
+inline Array<T *> Entity::GetComponentsInParent() {
   return transform.parent->entity->GetComponents<T>();
 }
 template <typename T>
-inline T *Entity::GetComponentInChildren()
-{
+inline T *Entity::GetComponentInChildren() {
   T *component = nullptr;
-  for (auto it = transform.begin(); it != transform.end() && !component; it++)
-  {
+  for (auto it = transform.begin(); it != transform.end() && !component; it++) {
     // TODO Calling getcomponent on iterator could break
     component = it->GetComponent<T>();
   }
   return component;
 }
 template <typename T>
-inline Array<T *> Entity::GetComponentsInChildren()
-{
+inline Array<T *> Entity::GetComponentsInChildren() {
   Array<T *> components;
-  for (auto it = transform.begin(); it != transform.end(); it++)
-  {
+  for (auto it = transform.begin(); it != transform.end(); it++) {
     // TODO Calling getcomponent on iterator could break
     Array<T *> c;
     c = it->GetComponents<T>();
@@ -242,24 +215,19 @@ inline Array<T *> Entity::GetComponentsInChildren()
   return components;
 }
 template <typename T>
-inline T *Entity::GetComponentInDescendant()
-{
+inline T *Entity::GetComponentInDescendant() {
   T *component = nullptr;
-  for (auto it = transform.begin(); it != transform.end() && !component; it++)
-  {
+  for (auto it = transform.begin(); it != transform.end() && !component; it++) {
     // TODO Calling getcomponent on iterator could break
     component = it->GetComponent<T>();
-    if (!component)
-      component = it->GetComponentInDescendant<T>();
+    if (!component) component = it->GetComponentInDescendant<T>();
   }
   return component;
 }
 template <typename T>
-inline Array<T *> Entity::GetComponentsInDescendant()
-{
+inline Array<T *> Entity::GetComponentsInDescendant() {
   Array<T *> components;
-  for (auto it = transform.begin(); it != transform.end(); it++)
-  {
+  for (auto it = transform.begin(); it != transform.end(); it++) {
     // TODO Calling getcomponent on iterator could break
     Array<T *> c;
     c = it->GetComponents<T>();
@@ -269,4 +237,4 @@ inline Array<T *> Entity::GetComponentsInDescendant()
   }
   return components;
 }
-} // namespace Isetta
+}  // namespace Isetta

@@ -27,14 +27,11 @@
 #include "Components/Editor/FrameReporter.h"
 #include "Custom/IsettaCore.h"
 
-namespace Isetta
-{
-
+namespace Isetta {
 using LightProperty = LightComponent::Property;
 using CameraProperty = CameraComponent::Property;
 
-void CollisionSolverLevel::LoadLevel()
-{
+void CollisionSolverLevel::LoadLevel() {
   Entity *debugEntity{AddEntity("Debug")};
   debugEntity->AddComponent<FrameReporter>();
 
@@ -91,8 +88,7 @@ void CollisionSolverLevel::LoadLevel()
   staticCol[2] = AddEntity("capsule-collider", true);
   staticCol[2]->SetTransform(Math::Vector3{0, 1, -8});
   CapsuleCollider *cCol = staticCol[2]->AddComponent<CapsuleCollider>(
-      false, Math::Vector3::zero, 0.5, 2,
-      CapsuleCollider::Direction::X_AXIS);
+      false, Math::Vector3::zero, 0.5, 2, CapsuleCollider::Direction::X_AXIS);
   // staticCol[2]->AddComponent<DebugCollision>();
 
   //// DYNAMIC
@@ -133,4 +129,4 @@ void CollisionSolverLevel::LoadLevel()
     capsule->GetComponent<KeyTransform>()->SetActive(true);
   });
 }
-} // namespace Isetta
+}  // namespace Isetta
