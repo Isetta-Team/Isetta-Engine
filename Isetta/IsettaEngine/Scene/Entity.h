@@ -13,6 +13,7 @@
 #include "Core/Memory/MemoryManager.h"
 #include "Scene/Transform.h"
 #include "Util.h"
+#include "LevelManager.h"
 
 namespace Isetta {
 class ISETTA_API_DECLARE Entity {

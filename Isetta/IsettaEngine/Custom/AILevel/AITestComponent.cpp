@@ -14,7 +14,9 @@ Isetta::AITestComponent::AITestComponent(const Math::Rect& gridSurface,
 
 void Isetta::AITestComponent::Update() {
   navPlane.UpdateRoute();
+#ifdef _EDITOR
   navPlane.DebugDisplay();
+#endif
 }
 
 void Isetta::AITestComponent::Awake() {

@@ -101,7 +101,7 @@ Nav2DPlane::Nav2DPlane(const Math::Rect& gridSurface,
                gridSurface.height / divideNums.y} {
   AddObstacle(Nav2DObstacle{{{2.3, 1.5}, {7.6, 3.2}, {5.4, 8.6}}});
 }
-
+#ifdef _EDITOR
 void Nav2DPlane::DebugDisplay() const {
   Math::Vector2 startingPoint{surface.Min() + 0.5 * nodeSize};
   int index = -1;
@@ -137,6 +137,7 @@ void Nav2DPlane::DebugDisplay() const {
     }
   }
 }
+#endif
 
 void Nav2DPlane::AddTarget(class Transform* transform) {
   currTargets.PushBack(transform);
