@@ -7,6 +7,7 @@
 #include <functional>
 #include <string>
 #include <unordered_map>
+#include "Core/Config/CVar.h"
 #include "Core/IsettaAlias.h"
 #include "ISETTA_API.h"
 

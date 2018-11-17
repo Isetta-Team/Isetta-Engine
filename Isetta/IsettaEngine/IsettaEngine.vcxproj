@@ -147,6 +147,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="AI\Nav2DObstacle.cpp" />
     <ClCompile Include="AI\Nav2DPlane.cpp" />
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Audio\AudioListener.cpp" />
     <ClCompile Include="Audio\AudioModule.cpp" />
     <ClCompile Include="Audio\AudioSource.cpp" />
     <ClCompile Include="Collisions\BVTree.cpp" />
@@ -160,6 +161,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\DataStructures\Trie.cpp" />
     <ClCompile Include="Custom\AILevel\AITestComponent.cpp" />
     <ClCompile Include="Custom\AILevel\AITestLevel.cpp" />
+    <ClCompile Include="Custom\AudioLevel\AudioLevel.cpp" />
     <ClCompile Include="Custom\CollisionSolverLevel\CollisionSolverLevel.cpp" />
     <ClCompile Include="Custom\EditorLevel\EditorLevel.cpp" />
     <ClCompile Include="Components\GridComponent.cpp" />
@@ -199,6 +201,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Events\Events.cpp" />
     <ClCompile Include="Graphics\AnimationComponent.cpp" />
     <ClCompile Include="Graphics\CameraComponent.cpp" />
+    <ClCompile Include="Graphics\Font.cpp" />
     <ClCompile Include="Graphics\GUI.cpp" />
     <ClCompile Include="Graphics\GUIModule.cpp" />
     <ClCompile Include="Graphics\GUIStyle.cpp" />
@@ -251,6 +254,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="AI\Nav2DObstacle.h" />
     <ClInclude Include="AI\Nav2DPlane.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Audio\AudioListener.h" />
     <ClInclude Include="Audio\AudioModule.h" />
     <ClInclude Include="Audio\AudioSource.h" />
     <ClInclude Include="Collisions\BVTree.h" />
@@ -268,6 +272,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Custom\AILevel\AITestAgent.h" />
     <ClInclude Include="Custom\AILevel\AITestComponent.h" />
     <ClInclude Include="Custom\AILevel\AITestLevel.h" />
+    <ClInclude Include="Custom\AudioLevel\AudioLevel.h" />
     <ClInclude Include="Custom\CollisionSolverLevel\CollisionSolverLevel.h" />
     <ClInclude Include="Custom\EditorLevel\EditorLevel.h" />
     <ClInclude Include="Components\GridComponent.h" />

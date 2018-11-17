@@ -6,6 +6,7 @@
 #include "Bullet.h"
 #include "Core/Math/Random.h"
 #include "Custom/IsettaCore.h"
+#include "Graphics/Font.h"
 #include "Graphics/GUI.h"
 #include "PlayerController.h"
 #include "Zombie.h"
@@ -15,7 +16,7 @@ std::vector<Entity*> GameManager::zombies;
 int GameManager::score = 0;
 
 void GameManager::Start() {
-  font = GUI::AddFontFromFile("Resources/Fonts/ZOMBIE.TTF", 48.0f);
+  font = Font::AddFontFromFile("Resources/Fonts/ZOMBIE.TTF", 48.0f);
 }
 
 void GameManager::OnEnable() {

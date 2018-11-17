@@ -4,6 +4,7 @@
 #pragma once
 
 #include <SID/sid.h>
+#include <list>
 #include <string>
 #include <unordered_map>
 #include "Core/Config/CVar.h"
@@ -14,7 +15,6 @@ namespace Isetta {
 class AudioModule {
  public:
   struct AudioConfig {
-    CVarString pathUnderResource{"audio_file_path", "Sound"};
     CVar<Size> memorySize{"audio_memory_size", 10485760};
     CVarString audioClips{"audio_clips", ""};
   };
@@ -70,8 +70,10 @@ class AudioModule {
   FMOD::System* fmodSystem;
   std::string soundFilesRoot;
   std::unordered_map<StringId, FMOD::Sound*> soundMap;
+  std::list<class AudioListener*> listeners;
 
   friend class AudioSource;
+  friend class AudioListener;
   friend class EngineLoop;
 };
 

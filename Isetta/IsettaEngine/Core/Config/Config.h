@@ -63,7 +63,7 @@ class ISETTA_API Config {
   /// Max simulation count of update loop
   CVar<int> maxSimCount = {"max_simulation_count", 5};
   /// File path for the resources of game/engine
-  CVarString resourcePath{"resource_path", ""};
+  CVarString resourcePath{"resource_path", "Resources"};
 
   /**
    * @brief Use the Filesystem to read the file, then call ProcessFile to parse

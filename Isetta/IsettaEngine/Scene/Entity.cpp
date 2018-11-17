@@ -22,7 +22,7 @@ void Entity::GuiUpdate() {
   PROFILE
   for (auto &comp : components) {
     if (comp && comp->GetActive() &&
-        comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
+        comp->GetAttribute(Component::ComponentAttributes::NEED_GUI_UPDATE)) {
       comp->GuiUpdate();
     }
   }
@@ -42,7 +42,7 @@ void Entity::FixedUpdate() {
   PROFILE
   for (auto &comp : components) {
     if (comp->GetActive() &&
-        comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
+        comp->GetAttribute(Component::ComponentAttributes::NEED_FIXED_UPDATE)) {
       comp->FixedUpdate();
     }
   }
@@ -52,7 +52,7 @@ void Entity::LateUpdate() {
   PROFILE
   for (auto &comp : components) {
     if (comp->GetActive() &&
-        comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
+        comp->GetAttribute(Component::ComponentAttributes::NEED_LATE_UPDATE)) {
       comp->LateUpdate();
     }
   }

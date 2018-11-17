@@ -43,6 +43,8 @@ void GUIModule::AddFont(const std::string_view& fontName, float size,
 }
 void GUIModule::StartUp(const GLFWwindow* win) {
   GUI::guiModule = this;
+  Font::guiModule = this;
+
   winHandle = win;
   gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
