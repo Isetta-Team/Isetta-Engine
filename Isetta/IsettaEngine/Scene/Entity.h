@@ -49,7 +49,7 @@ class ISETTA_API_DECLARE Entity {
   ~Entity();
 
   Transform* transform{};
-  Transform* GetTransform() const { return transform; }
+
   std::string GetName() const { return entityName; }
   GUID GetEntityId() const { return entityId; }
   std::string GetEntityIdString() const {
