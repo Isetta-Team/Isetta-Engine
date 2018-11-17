@@ -323,7 +323,7 @@
       <Filter>Components\Editor</Filter>
     </ClCompile>
     <ClCompile Include="Custom\MeshAnimLevel\MeshAnimLevel.cpp">
-      <Filter>Custom\MeshModelLevel</Filter>
+      <Filter>Custom\MeshAnimLevel</Filter>
     </ClCompile>
     <ClCompile Include="Custom\CollisionsLevel\CollisionsLevel.cpp">
       <Filter>Custom\CollisionsLevel</Filter>
@@ -423,14 +423,14 @@
     <Filter Include="Custom\CollisionSolverLevel">
       <UniqueIdentifier>{f54c709b-be6b-4035-87e9-f6043119f744}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Custom\MeshModelLevel">
-      <UniqueIdentifier>{d17fab49-2b9b-4414-8c02-f508f9b79890}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Custom\CollisionsLevel">
       <UniqueIdentifier>{d2906e91-cd20-4cc1-83fc-0fea4a771d7a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\Geometry">
       <UniqueIdentifier>{be68b692-0a9b-4c08-aa62-a06b16b48fb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\MeshAnimLevel">
+      <UniqueIdentifier>{d17fab49-2b9b-4414-8c02-f508f9b79890}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -754,7 +754,7 @@
       <Filter>Components\Editor</Filter>
     </ClInclude>
     <ClInclude Include="Custom\MeshAnimLevel\MeshAnimLevel.h">
-      <Filter>Custom\MeshModelLevel</Filter>
+      <Filter>Custom\MeshAnimLevel</Filter>
     </ClInclude>
     <ClInclude Include="Custom\CollisionsLevel\CollisionsLevel.h">
       <Filter>Custom\CollisionsLevel</Filter>
