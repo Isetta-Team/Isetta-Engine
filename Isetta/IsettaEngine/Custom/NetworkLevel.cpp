@@ -93,7 +93,7 @@ void RegisterExampleMessageFunctions() {
               spawnedEntities.push_back(e);
 
               // Zomble
-              e->GetTransform()->SetLocalScale(Math::Vector3::one * .01);
+              e->transform->SetLocalScale(Math::Vector3::one * .01);
               MeshComponent* mesh = e->AddComponent<MeshComponent, true>(
                   "Zombie/Zombie.scene.xml");
               if (netId->HasClientAuthority()) {
@@ -105,8 +105,8 @@ void RegisterExampleMessageFunctions() {
                 Entity* parent = NetworkManager::Instance().GetNetworkEntity(
                     spawnMessage->a);
 
-                e->GetTransform()->SetParent(parent->GetTransform());
-                e->GetTransform()->SetLocalScale(Math::Vector3::one);
+                e->transform->SetParent(parent->transform);
+                e->transform->SetLocalScale(Math::Vector3::one);
               }
             }
           });
@@ -128,7 +128,7 @@ void RegisterExampleMessageFunctions() {
               spawnMessage->clientAuthorityId = clientIdx;
 
               // Zomble
-              e->GetTransform()->SetLocalScale(Math::Vector3::one * .01);
+              e->transform->SetLocalScale(Math::Vector3::one * .01);
               MeshComponent* mesh = e->AddComponent<MeshComponent, true>(
                   "Zombie/Zombie.scene.xml");
               if (netId->HasClientAuthority()) {
@@ -140,8 +140,8 @@ void RegisterExampleMessageFunctions() {
                 Entity* parent = NetworkManager::Instance().GetNetworkEntity(
                     spawnMessage->a);
 
-                e->GetTransform()->SetParent(parent->GetTransform());
-                e->GetTransform()->SetLocalScale(Math::Vector3::one);
+                e->transform->SetParent(parent->transform);
+                e->transform->SetLocalScale(Math::Vector3::one);
               }
             }
 
@@ -271,7 +271,7 @@ void NetworkLevel::LoadLevel() {
       spawnedEntities.back()
           ->GetComponent<NetworkTransform>()
           ->SetNetworkedParentToRoot();
-      spawnedEntities.back()->GetTransform()->SetLocalScale(
+      spawnedEntities.back()->transform->SetLocalScale(
           Math::Vector3(.01, .01, .01));
     }
   });

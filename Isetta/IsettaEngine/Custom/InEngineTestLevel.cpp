@@ -60,8 +60,8 @@ void InEngineTestLevel::LoadLevel() {
                          Math::Vector3::one * 0.01f);
     Entity* cube{ADD_ENTITY(Util::StrFormat("Cube%d", count))};
     cube->AddComponent<MeshComponent>("primitive/cube.scene.xml");
-    cube->GetTransform()->SetParent(zombie->GetTransform());
-    cube->GetTransform()->SetLocalPos(Math::Vector3::zero);
+    cube->transform->SetParent(zombie->transform);
+    cube->transform->SetLocalPos(Math::Vector3::zero);
   });
 
   Input::RegisterKeyPressCallback(KeyCode::PAGE_DOWN, [&]() {

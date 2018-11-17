@@ -109,8 +109,8 @@ void CollisionSolverLevel::LoadLevel() {
   sphere->AddComponent<KeyTransform>()->SetActive(false);
 
   static Entity* capsule{AddEntity("capsule-collider-dynamic")};
-  capsule->GetTransform()->SetLocalPos(Math::Vector3{3, 1, -8});
-  capsule->GetTransform()->SetLocalRot(-30 * Math::Vector3::up);
+  capsule->transform->SetLocalPos(Math::Vector3{3, 1, -8});
+  capsule->transform->SetLocalRot(-30 * Math::Vector3::up);
   capsule->AddComponent<CapsuleCollider>(
       0.5, 2, static_cast<CapsuleCollider::Direction>(0));
   capsule->AddComponent<KeyTransform>()->SetActive(false);

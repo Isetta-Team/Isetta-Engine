@@ -2,11 +2,8 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Scene/Level.h"
-#include <algorithm>
-#include "Core/Math/Rect.h"
 #include "Core/Memory/MemoryManager.h"
 #include "Graphics/GUI.h"
-#include "Graphics/RectTransform.h"
 #include "Input/Input.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
