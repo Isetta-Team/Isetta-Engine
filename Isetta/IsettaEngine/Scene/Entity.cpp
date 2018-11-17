@@ -108,7 +108,6 @@ Entity::Entity(const std::string &name, const bool &entityStatic)
     : transform(this),
       attributes{0b101},
       entityName{name},
-<<<<<<< 00f2613bf73cd350064eee71ac96485806d24815
       isStatic{entityStatic} {
   CoCreateGuid(&entityId);
   OnEnable();
@@ -124,48 +123,13 @@ void Entity::Destroy(Entity *entity) {
   if (entity->GetAttribute(EntityAttributes::NEED_DESTROY)) {
     return;
   }
+
   if (entity->GetTransform()->GetParent()) {
     entity->GetTransform()->GetParent()->RemoveChild(&entity->transform);
-=======
-      isStatic{entityStatic} {
-  entityName{name} {
-    CoCreateGuid(&entityId);
-    OnEnable();
-  }
-
-  Entity::~Entity() {
-    OnDisable();
-    Destroy(this);
-    CheckDestroy();
-  }
-
-  void Entity::Destroy(Entity * entity) {
-    if (entity->GetAttribute(EntityAttributes::NEED_DESTROY)) {
-      return;
-    }
-    if (entity->GetTransform()->GetParent()) {
-      entity->GetTransform()->GetParent()->RemoveChild(&entity->transform);
-    }
-    DestroyHelper(entity);
-  }
-
-  void Entity::DestroyHelper(Entity * entity) {
-    Array<Transform *> removingChildren;
-    entity->SetAttribute(EntityAttributes::NEED_DESTROY, true);
-    for (Transform *child : entity->transform.children) {
-      removingChildren.PushBack(child);
-      DestroyHelper(child->GetEntity());
-    }
-    for (Transform *child : removingChildren) {
-      entity->transform.RemoveChild(child);
-    }
-    entity->GetTransform()->parent = nullptr;
->>>>>>> Rebase formatting
   }
   DestroyHelper(entity);
 }
 
-<<<<<<< 00f2613bf73cd350064eee71ac96485806d24815
 void Entity::DestroyHelper(Entity *entity) {
   Array<Transform *> removingChildren;
   entity->SetAttribute(EntityAttributes::NEED_DESTROY, true);
@@ -175,28 +139,10 @@ void Entity::DestroyHelper(Entity *entity) {
   }
   for (Transform *child : removingChildren) {
     entity->transform.RemoveChild(child);
-=======
-void Entity::DestroyImmediately(Entity *entity) {
-  for (auto &comp : entity->components) {
-    comp->OnDestroy();
-  }
-  for (auto &comp : entity->components) {
-    MemoryManager::DeleteOnFreeList<Component>(comp);
-  }
-  entity->components.Clear();
-  if (entity->GetTransform()->GetParent()) {
-    entity->GetTransform()->GetParent()->RemoveChild(&entity->transform);
-  }
-}
-
-Entity *Entity::GetEntityByName(const std::string &name) {
-  return LevelManager::Instance().loadedLevel->GetEntityByName(name);
->>>>>>> Rebase formatting
   }
   entity->GetTransform()->parent = nullptr;
-}  // namespace Isetta
+}
 
-<<<<<<< 00f2613bf73cd350064eee71ac96485806d24815
 void Entity::DestroyImmediately(Entity *entity) {
   for (auto &comp : entity->components) {
     comp->OnDestroy();
@@ -207,28 +153,9 @@ void Entity::DestroyImmediately(Entity *entity) {
   entity->components.Clear();
   if (entity->GetTransform()->GetParent()) {
     entity->GetTransform()->GetParent()->RemoveChild(&entity->transform);
-=======
-std::list<Entity *> Entity::GetEntitiesByName(const std::string &name) {
-  return LevelManager::Instance().loadedLevel->GetEntitiesByName(name);
-}
-
-void Entity::SetActive(bool inActive) {
-  bool isActive = GetAttribute(EntityAttributes::IS_ACTIVE);
-  SetAttribute(EntityAttributes::IS_ACTIVE, inActive);
-  if (!isActive && inActive) {
-    OnEnable();
-  } else if (isActive && !inActive) {
-    OnDisable();
   }
 }
 
-bool Entity::GetActive() const {
-  return GetAttribute(EntityAttributes::IS_ACTIVE);
->>>>>>> Rebase formatting
-  }
-}
-
-<<<<<<< 00f2613bf73cd350064eee71ac96485806d24815
 Entity *Entity::GetEntityByName(const std::string &name) {
   return LevelManager::Instance().loadedLevel->GetEntityByName(name);
 }
@@ -266,20 +193,3 @@ void Entity::SetLayer(std::string layer) {
 int Entity::GetLayerIndex() const { return layer; }
 std::string Entity::GetLayerName() const { return Layers::LayerToName(layer); }
 }  // namespace Isetta
-=======
-void Entity::SetTransform(const Math::Vector3 &worldPos,
-                          const Math::Vector3 &worldEulerAngles,
-                          const Math::Vector3 &localScale) {
-  PROFILE
-  SetAttribute(EntityAttributes::IS_TRANSFORM_DIRTY, true);
-  // TODO(YIDI): Test this
-  transform.SetWorldTransform(worldPos, worldEulerAngles, localScale);
-}
-void Entity::SetLayer(int layer) { this->layer = Layers::CheckLayer(layer); }
-void Entity::SetLayer(std::string layer) {
-  this->layer = Layers::NameToLayer(layer);
-}
-int Entity::GetLayerIndex() const { return layer; }
-std::string Entity::GetLayerName() const { return Layers::LayerToName(layer); }
-}  // namespace Isetta
->>>>>>> Rebase formatting
