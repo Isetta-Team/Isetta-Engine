@@ -5,7 +5,8 @@
 #include "Collisions/CollisionHandler.h"
 #include "Collisions/CollisionsModule.h"
 
-#include "Collisions/Ray.h"
+#include "Collisions/RaycastHit.h"
+#include "Core/Geometry/Ray.h"
 #include "Scene/Entity.h"
 
 namespace Isetta {
@@ -40,5 +41,4 @@ void Collider::RaycastHitCtor(RaycastHit* const hitInfo, const float distance,
                               const Math::Vector3& normal) {
   *hitInfo = RaycastHit{this, distance, point, normal.Normalized()};
 }
-
 }  // namespace Isetta

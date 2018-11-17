@@ -44,7 +44,8 @@ class ISETTA_API_DECLARE Entity {
   bool GetAttribute(EntityAttributes attr) const;
 
  public:
-  Entity(const std::string& name);
+  Entity(const std::string &name);
+  Entity(const std::string &name, const bool &entityStatic);
   ~Entity();
 
   Transform* transform{};
@@ -62,35 +63,35 @@ class ISETTA_API_DECLARE Entity {
 
     return std::string(output.data());
   }
-  static void Destroy(Entity* entity);
-  static void DestroyHelper(Entity* entity);
-  static void DestroyImmediately(Entity* entity);
-  static Entity* GetEntityByName(const std::string& name);
-  static std::list<Entity*> GetEntitiesByName(const std::string& name);
+  static void Destroy(Entity *entity);
+  static void DestroyHelper(Entity *entity);
+  static void DestroyImmediately(Entity *entity);
+  static Entity *GetEntityByName(const std::string &name);
+  static std::list<Entity *> GetEntitiesByName(const std::string &name);
 
   void SetActive(bool inActive);
   bool GetActive() const;
 
   template <typename T, typename... Args>
-  T* AddComponent(Args&&... args);
+  T *AddComponent(Args &&... args);
   template <typename T, bool IsActive, typename... Args>
-  T* AddComponent(Args&&... args);
+  T *AddComponent(Args &&... args);
   template <typename T>
-  T* GetComponent();
+  T *GetComponent();
   template <typename T>
-  Array<T*> GetComponents();
+  Array<T *> GetComponents();
   template <typename T>
-  T* GetComponentInParent();
+  T *GetComponentInParent();
   template <typename T>
-  Array<T*> GetComponentsInParent();
+  Array<T *> GetComponentsInParent();
   template <typename T>
-  T* GetComponentInChildren();
+  T *GetComponentInChildren();
   template <typename T>
-  Array<T*> GetComponentsInChildren();
+  Array<T *> GetComponentsInChildren();
   template <typename T>
-  T* GetComponentInDescendant();
+  T *GetComponentInDescendant();
   template <typename T>
-  Array<T*> GetComponentsInDescendant();
+  Array<T *> GetComponentsInDescendant();
 
   void SetTransform(const Math::Vector3& worldPos = Math::Vector3::zero,
                     const Math::Vector3& worldEulerAngles = Math::Vector3::zero,
@@ -100,16 +101,18 @@ class ISETTA_API_DECLARE Entity {
   void SetLayer(std::string layer);
   int GetLayerIndex() const;
   std::string GetLayerName() const;
+
+  const bool isStatic;
 };
 
 template <typename T, typename... Args>
-T* Entity::AddComponent(Args&&... args) {
-  T* component = AddComponent<T, true>(std::forward<Args>(args)...);
+T *Entity::AddComponent(Args &&... args) {
+  T *component = AddComponent<T, true>(std::forward<Args>(args)...);
   return component;
 }
 
 template <typename T, bool IsActive, typename... Args>
-T* Entity::AddComponent(Args&&... args) {
+T *Entity::AddComponent(Args &&... args) {
   if constexpr (!std::is_base_of<class Component, T>::value) {
     throw std::logic_error(
         Util::StrFormat("Entity::AddComponent => %s is not a derived class "
@@ -128,6 +131,7 @@ T* Entity::AddComponent(Args&&... args) {
           "Entity::AddComponent => Adding multiple excluded components %s",
           typeIndex.name()));
     }
+
     // Set the data so the next Component can pick them up in constructor
     T::curEntity = this;
     T::curTransform = transform;
@@ -148,7 +152,7 @@ T* Entity::AddComponent(Args&&... args) {
 }
 
 template <typename T>
-T* Entity::GetComponent() {
+T *Entity::GetComponent() {
   auto types = Component::childrenTypes();
   std::list<std::type_index> availableTypes =
       types.at(std::type_index(typeid(T)));
@@ -158,17 +162,17 @@ T* Entity::GetComponent() {
                     availableTypes.end(), [componentType](std::type_index x) {
                       return x == componentType;
                     })) {
-      return static_cast<T*>(components[i]);
+      return static_cast<T *>(components[i]);
     }
   }
   return nullptr;
 }
 
 template <typename T>
-Array<T*> Entity::GetComponents() {
+Array<T *> Entity::GetComponents() {
   std::list<std::type_index> availableTypes =
       Component::childrenTypes().at(std::type_index(typeid(T)));
-  Array<T*> returnValue;
+  Array<T *> returnValue;
   returnValue.Reserve(componentTypes.size());
   for (int i = 0; i < componentTypes.size(); i++) {
     std::type_index componentType = componentTypes[i];
@@ -176,7 +180,7 @@ Array<T*> Entity::GetComponents() {
                     availableTypes.end(), [componentType](std::type_index x) {
                       return x == componentType;
                     })) {
-      returnValue.EmplaceBack(static_cast<T*>(components[i]));
+      returnValue.EmplaceBack(static_cast<T *>(components[i]));
     }
   }
   return returnValue;
@@ -204,7 +208,7 @@ inline Array<T*> Entity::GetComponentsInChildren() {
   Array<T*> components;
   for (auto it = transform->begin(); it != transform->end(); it++) {
     // TODO Calling getcomponent on iterator could break
-    Array<T*> c;
+    Array<T *> c;
     c = it->GetComponents<T>();
     components.insert(components.end(), c.begin(), c.end());
   }
@@ -226,7 +230,7 @@ inline Array<T*> Entity::GetComponentsInDescendant() {
   Array<T*> components;
   for (auto it = transform->begin(); it != transform->end(); it++) {
     // TODO Calling getcomponent on iterator could break
-    Array<T*> c;
+    Array<T *> c;
     c = it->GetComponents<T>();
     components.insert(components.end(), c.begin(), c.end());
     c = it->GetComponentsInDescendant<T>();

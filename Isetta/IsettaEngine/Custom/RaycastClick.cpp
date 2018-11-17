@@ -8,13 +8,13 @@
 
 #include "Collisions/Collider.h"
 #include "Collisions/Collisions.h"
-#include "Collisions/Ray.h"
+#include "Collisions/RaycastHit.h"
 #include "Core/Debug/Logger.h"
+#include "Core/Geometry/Ray.h"
 #include "Graphics/CameraComponent.h"
 #include "Scene/Entity.h"
 
 namespace Isetta {
-
 void RaycastClick::OnEnable() {
   Input::RegisterMousePressCallback(MouseButtonCode::MOUSE_LEFT, []() {
     Ray r =

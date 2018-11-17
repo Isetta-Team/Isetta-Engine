@@ -115,6 +115,7 @@ void EngineLoop::FixedUpdate(const float deltaTime) const {
 
   networkingModule->Update(deltaTime);
   collisionsModule->Update(deltaTime);
+  collisionSolverModule->Update();
   LevelManager::Instance().loadedLevel->FixedUpdate();
 }
 void EngineLoop::VariableUpdate(const float deltaTime) const {

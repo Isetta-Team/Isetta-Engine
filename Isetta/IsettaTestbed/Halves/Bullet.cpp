@@ -39,7 +39,7 @@ void Bullet::Update() {
   }
   for (const auto& zombie : GameManager::zombies) {
     if (!zombie->GetActive()) continue;
-    float disSqrd = (zombie->GetTransform()->GetWorldPos() + 1.5 * Math::Vector3::up - GetTransform()->GetWorldPos()).SqrMagnitude();
+    float disSqrd = (zombie->transform->GetWorldPos() + 1.5 * Math::Vector3::up - GetTransform()->GetWorldPos()).SqrMagnitude();
     if (disSqrd < 1.f) {
       zombie->GetComponent<Zombie>()->TakeDamage(damage);
       entity->SetActive(false);

@@ -54,9 +54,9 @@ void RegisterExampleMessageFunctions() {
                   "Server says we should stop the animation!");
             }
             if (handleMessage->handle == 2) {
-              AudioSource audio = AudioSource();
-              audio.SetAudioClip("gunshot.aiff");
-              audio.Play(false, 1.f);
+              AudioSource audio = AudioSource("Sound\\gunshot.aiff");
+              // AudioSource(true, false, 1.f, "Sound\\gunshot.aiff");
+              audio.Play();
             }
           });
 

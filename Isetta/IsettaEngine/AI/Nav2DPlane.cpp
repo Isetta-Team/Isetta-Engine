@@ -5,6 +5,7 @@
 #include <queue>
 #include "Core/Debug/DebugDraw.h"
 #include "Core/Math/Vector3.h"
+#include "Scene/Transform.h"
 
 using namespace Isetta;
 
@@ -21,16 +22,7 @@ int Nav2DPlane::Vector2IndexToInt(int x, int y) const {
   return y * divideInfo.x + x;
 }
 
-void Nav2DPlane::SetTargetNode(Math::Vector2Int index) {
-  if (index != targetIndex) {
-    targetIndex = index;
-    UpdateCost();
-    UpdateDirection();
-  }
-}
-
-void Nav2DPlane::UpdateCost() {
-  costMatrix.Assign(costMatrix.Size(), 255);
+void Nav2DPlane::UpdateCost(Math::Vector2Int targetIndex) {
   Array<bool> visited(divideInfo.x * divideInfo.y, false);
   std::queue<Math::Vector2Int> updatingQueue;
   visited[Vector2IndexToInt(targetIndex)] = true;
@@ -40,7 +32,8 @@ void Nav2DPlane::UpdateCost() {
     if (IsIndexUnavailable(nextIndex)) return;
     int flatNextIndex{Vector2IndexToInt(nextIndex)};
     if (!visited[flatNextIndex]) {
-      costMatrix[flatNextIndex] = costMatrix[currFlatIndex] + 1;
+      costMatrix[flatNextIndex] = Math::Util::Min(costMatrix[currFlatIndex] + 1,
+                                                  costMatrix[flatNextIndex]);
       visited[flatNextIndex] = true;
       updatingQueue.push(nextIndex);
     }
@@ -105,8 +98,7 @@ Nav2DPlane::Nav2DPlane(const Math::Rect& gridSurface,
       surface{gridSurface},
       divideInfo{divideNums},
       nodeSize{gridSurface.width / divideNums.x,
-               gridSurface.height / divideNums.y},
-      targetIndex{-1} {
+               gridSurface.height / divideNums.y} {
   AddObstacle(Nav2DObstacle{{{2.3, 1.5}, {7.6, 3.2}, {5.4, 8.6}}});
 }
 
@@ -146,10 +138,21 @@ void Nav2DPlane::DebugDisplay() const {
   }
 }
 
-void Nav2DPlane::SetTarget(Math::Vector2 position) {
-  if (!surface.Contains(position)) return;
-  currTarget = position;
-  SetTargetNode(GetIndexByPosition(position));
+void Nav2DPlane::AddTarget(class Transform* transform) {
+  currTargets.PushBack(transform);
+  // SetTargetNode(GetIndexByPosition(position));
+}
+
+void Nav2DPlane::UpdateRoute() {
+  costMatrix.Assign(costMatrix.Size(), 255);
+  for (const auto transform : currTargets) {
+    Math::Vector2 position{transform->GetWorldPos().x,
+                           transform->GetWorldPos().z};
+    if (surface.Contains(position)) {
+      UpdateCost(GetIndexByPosition(position));
+    }
+  }
+  UpdateDirection();
 }
 
 void Nav2DPlane::AddLine(Math::Vector2 start, Math::Vector2 end) {
@@ -226,5 +229,12 @@ Math::Vector2 Nav2DPlane::GetDirectionByPosition(Math::Vector2 position) {
 }
 
 float Nav2DPlane::GetDistanceToTarget(Math::Vector2 position) const {
-  return Math::Vector2::Distance(position, currTarget);
+  float distance{surface.width * surface.height};
+  for (auto transform : currTargets) {
+    distance = Math::Util::Min(
+        distance,
+        Math::Vector2::Distance(position, {transform->GetWorldPos().x,
+                                           transform->GetWorldPos().z}));
+  }
+  return distance;
 }

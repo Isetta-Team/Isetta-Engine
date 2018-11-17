@@ -26,12 +26,11 @@ class Nav2DPlane {
   Array<Nav2DObstacle> obstacles;
 
   Math::Vector2Int GetIndexByPosition(Math::Vector2 position) const;
-  Math::Vector2Int targetIndex;
-  Math::Vector2 currTarget;
+  Array<Math::Vector2Int> targetIndices;
+  Array<class Transform*> currTargets;
   inline int Vector2IndexToInt(Math::Vector2Int index) const;
   inline int Vector2IndexToInt(int x, int y) const;
-  void SetTargetNode(Math::Vector2Int index);
-  void UpdateCost();
+  void UpdateCost(Math::Vector2Int targetIndex);
   void UpdateDirection();
   bool IsIndexUnavailable(Math::Vector2Int index) const;
   void AddLine(Math::Vector2 start, Math::Vector2 end);
@@ -40,7 +39,8 @@ class Nav2DPlane {
   Nav2DPlane() = default;
   Nav2DPlane(const Math::Rect& gridSurface, const Math::Vector2Int& divideNums);
   void DebugDisplay() const;
-  void SetTarget(Math::Vector2 position);
+  void AddTarget(class Transform* transform);
+  void UpdateRoute();
   void AddObstacle(const Nav2DObstacle& obstacle);
   Math::Vector2 GetDirectionByPosition(Math::Vector2 position);
   float GetDistanceToTarget(Math::Vector2 position) const;

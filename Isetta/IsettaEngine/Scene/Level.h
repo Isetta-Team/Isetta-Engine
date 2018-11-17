@@ -48,8 +48,8 @@ class ISETTA_API Level {
   virtual void LoadLevel() {}
   virtual void UnloadLevel();
 
-  class Entity* AddEntity(std::string name);
-  class Entity* AddEntity(std::string name, class Entity* parent);
+  class Entity* AddEntity(std::string name, bool entityStatic = false);
+  class Entity* AddEntity(std::string name, class Entity* parent, bool entityStatic = false);
 
   void Update();
   void FixedUpdate();

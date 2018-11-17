@@ -14,11 +14,11 @@ void W10NetworkPlayer::InitPosition() {
                             Isetta::Math::Vector3::zero,
                             Isetta::Math::Vector3{1, 1, 1});
 
-  swordEntity->GetTransform()->SetParent(GetTransform());
-  swordEntity->GetTransform()->SetLocalPos(
+  swordEntity->transform->SetParent(GetTransform());
+  swordEntity->transform->SetLocalPos(
       Isetta::Math::Vector3((isOnRight ? 1 : -1) * 0.25f, 0, 0.25f));
 
-  swordEntity->GetTransform()->SetLocalScale(
+  swordEntity->transform->SetLocalScale(
       Isetta::Math::Vector3{0.375, 0.025, 0.025});
 }
 
@@ -56,7 +56,7 @@ void W10NetworkPlayer::Awake() {
 void W10NetworkPlayer::SwordBlocked() {
   LOG_INFO(Isetta::Debug::Channel::General, "Sword blocked");
 
-  swordEntity->GetTransform()->SetParent(nullptr);
+  swordEntity->transform->SetParent(nullptr);
 }
 
 void W10NetworkPlayer::Update() {

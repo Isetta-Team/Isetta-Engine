@@ -1,8 +1,10 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Collisions/Plane.h"
-#include "Collisions/Ray.h"
+#include "Core/Geometry/Plane.h"
+
+#include "Collisions/RaycastHit.h"
+#include "Core/Geometry/Ray.h"
 #include "Core/Math/Util.h"
 
 namespace Isetta {

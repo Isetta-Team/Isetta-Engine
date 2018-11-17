@@ -9,7 +9,8 @@ namespace Isetta {
 
 bool Component::isFlattened = false;
 
-bool Component::RegisterComponent(std::type_index curr, std::type_index base, bool isExclude) {
+bool Component::RegisterComponent(std::type_index curr, std::type_index base,
+                                  bool isExclude) {
   if (isExclude) excludeComponents().insert(curr);
   std::unordered_map<std::type_index, std::list<std::type_index>>& children =
       childrenTypes();
@@ -55,7 +56,7 @@ void Component::FlattenHelper(std::type_index parent, std::type_index curr) {
   }
 }
 
-Component::Component() : attributes{0b10001}, entity{curEntity}, transform(curTransform) {
+Component::Component() : attributes{0b111001}, entity{curEntity}, transform(curTransform) {
   if (!isFlattened) {
     FlattenComponentList();
   }

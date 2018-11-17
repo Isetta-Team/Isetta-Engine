@@ -4,6 +4,7 @@
 #include "Scene/LevelManager.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
+#include "Input/Input.h"
 #include "Scene/Level.h"
 
 namespace Isetta {
@@ -31,6 +32,7 @@ void LevelManager::LoadLevel() {
 void LevelManager::UnloadLevel() {
   if (loadedLevel != nullptr) {
     loadedLevel->UnloadLevel();
+    Input::Clear();
     LOG("Unloaded: %s", loadedLevel->GetName().c_str());
     loadedLevel->~Level();
     loadedLevel = nullptr;

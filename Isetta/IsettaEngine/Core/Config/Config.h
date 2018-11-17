@@ -56,13 +56,14 @@ class ISETTA_API Config {
   AudioModule::AudioConfig audioConfig;
   LevelManager::LevelConfig levelConfig;
   CollisionsModule::CollisionConfig collisionConfig;
+  Debug::DrawConfig drawConfig;
 
   /// Max FPS of the engine
   CVar<int> maxFps = {"max_fps", 16};
   /// Max simulation count of update loop
   CVar<int> maxSimCount = {"max_simulation_count", 5};
   /// File path for the resources of game/engine
-  CVarString resourcePath{"resource_path", ""};
+  CVarString resourcePath{"resource_path", "Resources"};
 
   /**
    * @brief Use the Filesystem to read the file, then call ProcessFile to parse

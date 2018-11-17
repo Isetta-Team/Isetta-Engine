@@ -218,10 +218,10 @@ void CollisionSolverModule::Update() {
       Collider* collider2 = pair.second;
 
       // Look for a reason to skip this collision solve
-      if ((collider1->GetProperty(Collider::Property::IS_STATIC) &&
-           (collider2->GetProperty(Collider::Property::IS_STATIC))) ||
-          collider1->GetProperty(Collider::Property::IS_TRIGGER) ||
-          collider2->GetProperty(Collider::Property::IS_TRIGGER)) {
+      if ((collider1->GetEntity()->isStatic &&
+           collider1->GetEntity()->isStatic) ||
+          collider1->isTrigger ||
+          collider2->isTrigger) {
         continue;
       }
 
@@ -238,8 +238,8 @@ void CollisionSolverModule::Update() {
       Math::Vector3 response =
           Resolve(collider1, collision1, collider2, collision2);
 
-      bool c1Static = collider1->GetProperty(Collider::Property::IS_STATIC);
-      bool c2Static = collider2->GetProperty(Collider::Property::IS_STATIC);
+      bool c1Static = collider1->GetEntity()->isStatic;
+      bool c2Static = collider2->GetEntity()->isStatic;
       int staticSwitch =
           static_cast<int>(c1Static) + 2 * static_cast<int>(c2Static);
 

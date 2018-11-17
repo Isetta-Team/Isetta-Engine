@@ -86,11 +86,11 @@ void W10Player::Update() {
 
   if (!isSwordFlying && swordStabStatus == 3) {
     if (Isetta::Math::Util::Abs(GetTransform()->GetWorldPos().x -
-                                swordEntity->GetTransform()->GetWorldPos().x) <
+                                swordEntity->transform->GetWorldPos().x) <
         0.1f) {
       swordEntity->GetComponent<Isetta::NetworkTransform>()->SetNetworkedParent(
           GetEntity()->GetComponent<Isetta::NetworkId>()->id);
-      swordEntity->GetTransform()->SetLocalPos(
+      swordEntity->transform->SetLocalPos(
           Isetta::Math::Vector3((isOnRight ? 1 : -1) * 0.25f, 0, 0.25f));
       swordStabStatus = 0;
       swordPos = 0;
@@ -107,7 +107,7 @@ void W10Player::Update() {
   if (isSwordFlying) {
     flyDuration += Isetta::Time::GetDeltaTime();
     if (flyDuration > totalFlyDuration) {
-      swordEntity->GetTransform()->SetWorldPos(
+      swordEntity->transform->SetWorldPos(
           Isetta::Math::Vector3{targetX, targetY, 0});
       isSwordFlying = false;
       flyDuration = 0;
@@ -115,7 +115,7 @@ void W10Player::Update() {
       float y = originY + v0y * flyDuration -
                 0.5 * gravity * flyDuration * flyDuration;
       float x = targetX - (totalFlyDuration - flyDuration) * v0x;
-      swordEntity->GetTransform()->SetWorldPos(Isetta::Math::Vector3{x, y, 0});
+      swordEntity->transform->SetWorldPos(Isetta::Math::Vector3{x, y, 0});
     }
   }
 }
@@ -125,11 +125,11 @@ void W10Player::InitPosition() {
                             Isetta::Math::Vector3::zero,
                             Isetta::Math::Vector3{1, 1, 1});
 
-  swordEntity->GetTransform()->SetParent(GetTransform());
-  swordEntity->GetTransform()->SetLocalPos(
+  swordEntity->transform->SetParent(GetTransform());
+  swordEntity->transform->SetLocalPos(
       Isetta::Math::Vector3((isOnRight ? 1 : -1) * 0.25f, 0, 0.25f));
 
-  swordEntity->GetTransform()->SetLocalScale(
+  swordEntity->transform->SetLocalScale(
       Isetta::Math::Vector3{0.375, 0.025, 0.025});
   swordStabStatus = 0;
   swordPos = 0;
@@ -150,9 +150,9 @@ void W10Player::ChangeSwordVerticlePosition(int direction) {
           .GenerateMessageFromClient<W10SwordPosMessage>();
   swordMessage->swordPos = swordPos;
   Isetta::NetworkManager::Instance().SendMessageFromClient(swordMessage);
-  auto swordLocalPos = swordEntity->GetTransform()->GetLocalPos();
+  auto swordLocalPos = swordEntity->transform->GetLocalPos();
   swordLocalPos.y = swordPos * 0.15;
-  swordEntity->GetTransform()->SetLocalPos(swordLocalPos);
+  swordEntity->transform->SetLocalPos(swordLocalPos);
 }
 
 void W10Player::ChangeSwordHorizontalPosition(float deltaTime) {
@@ -166,11 +166,11 @@ void W10Player::ChangeSwordHorizontalPosition(float deltaTime) {
 
   swordXProgress += sign * stabSpeed * deltaTime;
   swordXProgress = Isetta::Math::Util::Clamp01(swordXProgress);
-  auto swordLocalPos = swordEntity->GetTransform()->GetLocalPos();
+  auto swordLocalPos = swordEntity->transform->GetLocalPos();
   swordLocalPos.x = Isetta::Math::Util::Lerp(
       (isOnRight ? 1 : -1) * 0.25, (isOnRight ? 1 : -1) * swordTargetX,
       swordXProgress);
-  swordEntity->GetTransform()->SetLocalPos(swordLocalPos);
+  swordEntity->transform->SetLocalPos(swordLocalPos);
 
   if (swordXProgress == 1) {
     // to revoke
@@ -201,7 +201,7 @@ void W10Player::SwordBlocked() {
   }
 
   // swordEntity->GetComponent<Isetta::NetworkTransform>()->SetNetworkedParentToRoot();
-  swordEntity->GetTransform()->SetParent(nullptr);
+  swordEntity->transform->SetParent(nullptr);
   targetX = randomX;
   isSwordFlying = true;
   flyDuration = 0;

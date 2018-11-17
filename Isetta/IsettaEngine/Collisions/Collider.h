@@ -9,6 +9,10 @@
 #include "Scene/Component.h"
 #include "Scene/Transform.h"
 
+namespace Isetta::Math {
+class Ray;
+}
+
 namespace Isetta {
 #define INTERSECTION_TEST(TYPE)                             \
   bool TYPE::Intersection(Collider* const other) {          \
@@ -30,16 +34,9 @@ namespace Isetta {
 
 BEGIN_COMPONENT(Collider, Component, false)
 public:
-enum class Property { IS_STATIC, IS_TRIGGER };
 
-void SetProperties(Property attr, const bool value) {
-  properties.set(static_cast<int>(attr), value);
-}
-bool GetProperty(Property attr) const {
-  return properties.test(static_cast<int>(attr));
-}
-
-Math::Vector3 center;
+ bool isTrigger = false;
+ Math::Vector3 center;
 Color debugColor = Color::green;
 
 // TODO(Jacob) virtual Math::Vector3 ClosestPoint(Math::Vector3 point) = 0;
@@ -59,7 +56,6 @@ virtual AABB GetFatAABB() = 0;
 virtual AABB GetAABB() = 0;
 
 private:
-std::bitset<2> properties;
 int hierarchyHandle;
 class CollisionHandler* handler{nullptr};
 
@@ -77,12 +73,11 @@ friend class CollisionSolverModule;
 protected:
 inline static float fatFactor = 0.2f;
 
-Collider(const Math::Vector3& center) : center{center}, properties{0b00} {}
-Collider(const bool isStatic = false, const bool isTrigger = false,
+Collider(const Math::Vector3& center) : center{center}, isTrigger{false} {}
+Collider(const bool trigger = false,
          const Math::Vector3& center = Math::Vector3::zero)
     : center{center} {
-  properties[static_cast<int>(Property::IS_STATIC)] = isStatic;
-  properties[static_cast<int>(Property::IS_TRIGGER)] = isTrigger;
+  isTrigger = trigger;
 }
 virtual ~Collider() = default;
 

@@ -5,6 +5,7 @@
 
 #include <sstream>
 #include <string>
+#include "Core/Config/CVarRegistry.h"
 #include "Core/Config/ICVar.h"
 #include "Core/Math/Vector3.h"
 #include "SID/sid.h"

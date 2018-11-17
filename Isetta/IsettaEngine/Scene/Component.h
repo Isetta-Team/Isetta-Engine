@@ -39,7 +39,7 @@ struct ISETTA_API_DECLARE ComponentRegistry {};
 class ISETTA_API Component {
   friend class Entity;
 
-  std::bitset<5> attributes;
+  std::bitset<7> attributes;
 
   static std::unordered_map<std::type_index, std::list<std::type_index>>&
   childrenTypes() {
@@ -66,10 +66,12 @@ class ISETTA_API Component {
 
   enum class ComponentAttributes {
     IS_ACTIVE,
-    HAS_STARTED,
     HAS_AWAKEN,
     NEED_DESTROY,
-    NEED_UPDATE
+    NEED_GUI_UPDATE,
+    NEED_UPDATE,
+    NEED_LATE_UPDATE,
+    NEED_FIXED_UPDATE,
   };
 
   Component();
@@ -88,10 +90,18 @@ class ISETTA_API Component {
   virtual void OnEnable() {}
   virtual void Awake() {}
   virtual void Start() {}
-  virtual void GuiUpdate() {}
-  virtual void Update() {}
-  virtual void LateUpdate() {}
-  virtual void FixedUpdate() {}
+  virtual void GuiUpdate() {
+    SetAttribute(ComponentAttributes::NEED_GUI_UPDATE, false);
+  }
+  virtual void Update() {
+    SetAttribute(ComponentAttributes::NEED_UPDATE, false);
+  }
+  virtual void LateUpdate() {
+    SetAttribute(ComponentAttributes::NEED_LATE_UPDATE, false);
+  }
+  virtual void FixedUpdate() {
+    SetAttribute(ComponentAttributes::NEED_FIXED_UPDATE, false);
+  }
   virtual void OnDestroy() {}
   virtual void OnDisable() {}
 

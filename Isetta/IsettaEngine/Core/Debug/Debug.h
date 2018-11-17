@@ -8,6 +8,10 @@
 #include "ISETTA_API.h"
 
 namespace Isetta::Debug {
+struct DrawConfig {
+  CVar<int> bvtDrawAABBs{"bvh_draw_aabbs", 0};
+};
+
 /**
  * @brief Verbosity of the logger:
  * Off - no messages will be output (only needed for mask)

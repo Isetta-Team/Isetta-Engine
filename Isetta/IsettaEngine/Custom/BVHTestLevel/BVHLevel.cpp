@@ -4,6 +4,7 @@
 #include "Custom/BVHTestLevel/BVHLevel.h"
 #include "Collisions/CollisionHandler.h"
 #include "Collisions/SphereCollider.h"
+#include "Components/Editor/FrameReporter.h"
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
 #include "Core/Config/Config.h"
@@ -11,7 +12,6 @@
 #include "Core/Math/Random.h"
 #include "Custom/BVHTestLevel/RandomMover.h"
 #include "Custom/DebugCollision.h"
-#include "Custom/FrameReporter.h"
 #include "Custom/IsettaCore.h"
 #include "Custom/RaycastClick.h"
 
@@ -59,8 +59,8 @@ void BVHLevel::LoadLevel() {
   debug->AddComponent<EditorComponent>();
   debug->AddComponent<FrameReporter>();
   debug->AddComponent<RaycastClick>();
-
-  BVTree::drawDebugBoxes = true;
+  
+  Config::Instance().drawConfig.bvtDrawAABBs.SetVal("1");
 
   static bool enable = true;
   Input::RegisterKeyPressCallback(KeyCode::SPACE, [&]() {
@@ -71,7 +71,8 @@ void BVHLevel::LoadLevel() {
   });
 
   Input::RegisterKeyPressCallback(KeyCode::KP_ENTER, [&]() {
-    BVTree::drawDebugBoxes = !BVTree::drawDebugBoxes;
+    Config::Instance().drawConfig.bvtDrawAABBs.SetVal(
+        Config::Instance().drawConfig.bvtDrawAABBs.GetVal() ? "0" : "1");
   });
 
   static float range = 10;

@@ -169,7 +169,7 @@ void Transform::SetParent(Transform* const transform) {
   Transform* targetTransform = transform;
   if (transform == nullptr) {
     targetTransform =
-        LevelManager::Instance().loadedLevel->levelRoot->GetTransform();
+        LevelManager::Instance().loadedLevel->levelRoot->transform;
   }
   if (parent == targetTransform) {
     LOG_WARNING(Debug::Channel::Graphics,

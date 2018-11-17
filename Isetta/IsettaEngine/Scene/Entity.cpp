@@ -13,16 +13,16 @@ namespace Isetta {
 
 void Entity::OnEnable() {
   PROFILE
-  for (auto& comp : components) {
+  for (auto &comp : components) {
     comp->OnEnable();
   }
 }
 
 void Entity::GuiUpdate() {
   PROFILE
-  for (auto& comp : components) {
+  for (auto &comp : components) {
     if (comp && comp->GetActive() &&
-        comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
+        comp->GetAttribute(Component::ComponentAttributes::NEED_GUI_UPDATE)) {
       comp->GuiUpdate();
     }
   }
@@ -30,7 +30,7 @@ void Entity::GuiUpdate() {
 
 void Entity::Update() {
   PROFILE
-  for (auto& comp : components) {
+  for (auto &comp : components) {
     if (comp->GetActive() &&
         comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
       comp->Update();
@@ -40,9 +40,9 @@ void Entity::Update() {
 
 void Entity::FixedUpdate() {
   PROFILE
-  for (auto& comp : components) {
+  for (auto &comp : components) {
     if (comp->GetActive() &&
-        comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
+        comp->GetAttribute(Component::ComponentAttributes::NEED_FIXED_UPDATE)) {
       comp->FixedUpdate();
     }
   }
@@ -50,9 +50,9 @@ void Entity::FixedUpdate() {
 
 void Entity::LateUpdate() {
   PROFILE
-  for (auto& comp : components) {
+  for (auto &comp : components) {
     if (comp->GetActive() &&
-        comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
+        comp->GetAttribute(Component::ComponentAttributes::NEED_LATE_UPDATE)) {
       comp->LateUpdate();
     }
   }
@@ -68,7 +68,7 @@ void Entity::CheckDestroy() {
     auto typeIter = componentTypes.begin();
     auto compIter = components.begin();
     while (typeIter != componentTypes.end() && compIter != components.end()) {
-      Component* comp = *compIter;
+      Component *comp = *compIter;
       if (comp->GetAttribute(Component::ComponentAttributes::NEED_DESTROY)) {
         comp->~Component();
         comp->OnDestroy();
@@ -85,7 +85,7 @@ void Entity::CheckDestroy() {
 
 void Entity::OnDisable() {
   PROFILE
-  for (auto& comp : components) {
+  for (auto &comp : components) {
     comp->OnDisable();
   }
 }
@@ -98,11 +98,17 @@ bool Entity::GetAttribute(EntityAttributes attr) const {
   return attributes.test(static_cast<int>(attr));
 }
 
-Entity::Entity(const std::string& name)
+Entity::Entity(const std::string &name)
+    : m_transform(this), attributes{0b101}, entityName{name}, transform(&m_transform), isStatic{false} {
+  CoCreateGuid(&entityId);
+  OnEnable();
+}
+
+Entity::Entity(const std::string &name, const bool &entityStatic)
     : m_transform(this),
       attributes{0b101},
-      entityName{name},
-      transform(&m_transform) {
+      entityName{name}, transform(&m_transform),
+      isStatic{entityStatic} {
   CoCreateGuid(&entityId);
   OnEnable();
 }
@@ -113,7 +119,7 @@ Entity::~Entity() {
   CheckDestroy();
 }
 
-void Entity::Destroy(Entity* entity) {
+void Entity::Destroy(Entity *entity) {
   if (entity->GetAttribute(EntityAttributes::NEED_DESTROY)) {
     return;
   }
@@ -123,8 +129,8 @@ void Entity::Destroy(Entity* entity) {
   DestroyHelper(entity);
 }
 
-void Entity::DestroyHelper(Entity* entity) {
-  Array<Transform*> removingChildren;
+void Entity::DestroyHelper(Entity *entity) {
+  Array<Transform *> removingChildren;
   entity->SetAttribute(EntityAttributes::NEED_DESTROY, true);
   for (Transform* child : entity->transform->children) {
     removingChildren.PushBack(child);
@@ -136,11 +142,11 @@ void Entity::DestroyHelper(Entity* entity) {
   entity->transform->parent = nullptr;
 }
 
-void Entity::DestroyImmediately(Entity* entity) {
-  for (auto& comp : entity->components) {
+void Entity::DestroyImmediately(Entity *entity) {
+  for (auto &comp : entity->components) {
     comp->OnDestroy();
   }
-  for (auto& comp : entity->components) {
+  for (auto &comp : entity->components) {
     MemoryManager::DeleteOnFreeList<Component>(comp);
   }
   entity->components.Clear();
@@ -149,11 +155,11 @@ void Entity::DestroyImmediately(Entity* entity) {
   }
 }
 
-Entity* Entity::GetEntityByName(const std::string& name) {
+Entity *Entity::GetEntityByName(const std::string &name) {
   return LevelManager::Instance().loadedLevel->GetEntityByName(name);
 }
 
-std::list<Entity*> Entity::GetEntitiesByName(const std::string& name) {
+std::list<Entity *> Entity::GetEntitiesByName(const std::string &name) {
   return LevelManager::Instance().loadedLevel->GetEntitiesByName(name);
 }
 
@@ -171,9 +177,9 @@ bool Entity::GetActive() const {
   return GetAttribute(EntityAttributes::IS_ACTIVE);
 }
 
-void Entity::SetTransform(const Math::Vector3& worldPos,
-                          const Math::Vector3& worldEulerAngles,
-                          const Math::Vector3& localScale) {
+void Entity::SetTransform(const Math::Vector3 &worldPos,
+                          const Math::Vector3 &worldEulerAngles,
+                          const Math::Vector3 &localScale) {
   PROFILE
   SetAttribute(EntityAttributes::IS_TRANSFORM_DIRTY, true);
   transform->SetWorldTransform(worldPos, worldEulerAngles, localScale);

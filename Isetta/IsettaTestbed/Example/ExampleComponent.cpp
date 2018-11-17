@@ -10,10 +10,10 @@ namespace Isetta {
 void ExampleComponent::OnEnable() {
   Input::RegisterKeyPressCallback(KeyCode::F1, [&]() {
     Entity* man = Entity::GetEntityByName("PushAnim");
-    if (man->GetTransform()->GetParent() == GetTransform()) {
-      man->GetTransform()->SetParent(nullptr);
+    if (man->transform->GetParent() == GetTransform()) {
+      man->transform->SetParent(nullptr);
     } else {
-      man->GetTransform()->SetParent(GetTransform());
+      man->transform->SetParent(GetTransform());
     }
   });
 }

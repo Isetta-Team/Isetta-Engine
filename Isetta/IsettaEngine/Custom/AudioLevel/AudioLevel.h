@@ -3,11 +3,9 @@
  */
 #pragma once
 #include "Scene/IsettaLevel.h"
-#include <queue>
 
 namespace Isetta {
-CREATE_LEVEL(InEngineTestLevel)
+CREATE_LEVEL(AudioLevel)
 void LoadLevel() override;
-std::queue<Entity*> zombies;
 CREATE_LEVEL_END
 }  // namespace Isetta

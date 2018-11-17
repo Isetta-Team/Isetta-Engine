@@ -3,18 +3,18 @@
  */
 #include "Custom/AILevel/AITestComponent.h"
 #include "AITestAgent.h"
+#include "Core/Math/Random.h"
 #include "Custom/IsettaCore.h"
 #include "Graphics/ParticleSystemComponent.h"
 #include "Input/Input.h"
-#include "Core/Math/Random.h"
 
 Isetta::AITestComponent::AITestComponent(const Math::Rect& gridSurface,
-                                         const Math::Vector2Int& divideNums)
-    : navPlane(gridSurface, divideNums) {}
+                                         const Math::Vector2Int& divideNums,
+                                         Transform* tracking)
+    : navPlane(gridSurface, divideNums), trackingEntity(tracking) {}
 
 void Isetta::AITestComponent::Update() {
-  navPlane.SetTarget(Math::Vector2{trackingEntity->GetWorldPos().x,
-                                   trackingEntity->GetWorldPos().z});
+  navPlane.UpdateRoute();
   navPlane.DebugDisplay();
 }
 
@@ -36,4 +36,8 @@ void Isetta::AITestComponent::Awake() {
       entity->SetTransform({randomX, 0.0, randomY}, {0, 0, 0}, {0.1, 0.1, 0.1});
     }
   });
+  auto zero = ADD_ENTITY("Zero entity");
+  zero->SetTransform({0.3, 0, 0.3});
+  navPlane.AddTarget(zero->transform);
+  navPlane.AddTarget(trackingEntity);
 }
