@@ -3,6 +3,7 @@
  */
 #pragma once
 #include <Windows.h>
+#include <array>
 #include <bitset>
 #include <execution>
 #include <typeindex>
@@ -12,7 +13,6 @@
 #include "Core/Memory/MemoryManager.h"
 #include "Scene/Transform.h"
 #include "Util.h"
-#include <array>
 
 namespace Isetta {
 class ISETTA_API_DECLARE Entity {
@@ -48,11 +48,11 @@ class ISETTA_API_DECLARE Entity {
   ~Entity();
 
   Transform* transform{};
-
+  Transform* GetTransform() const { return transform; }
   std::string GetName() const { return entityName; }
   GUID GetEntityId() const { return entityId; }
   std::string GetEntityIdString() const {
-    std::array<char,40> output;
+    std::array<char, 40> output;
     snprintf(output.data(), output.size(),
              "{%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x}",
              entityId.Data1, entityId.Data2, entityId.Data3, entityId.Data4[0],
@@ -192,7 +192,8 @@ inline Array<T*> Entity::GetComponentsInParent() {
 template <typename T>
 inline T* Entity::GetComponentInChildren() {
   T* component = nullptr;
-  for (auto it = transform->begin(); it != transform->end() && !component; it++) {
+  for (auto it = transform->begin(); it != transform->end() && !component;
+       it++) {
     // TODO Calling getcomponent on iterator could break
     component = it->GetComponent<T>();
   }
@@ -212,7 +213,8 @@ inline Array<T*> Entity::GetComponentsInChildren() {
 template <typename T>
 inline T* Entity::GetComponentInDescendant() {
   T* component = nullptr;
-  for (auto it = transform->begin(); it != transform->end() && !component; it++) {
+  for (auto it = transform->begin(); it != transform->end() && !component;
+       it++) {
     // TODO Calling getcomponent on iterator could break
     component = it->GetComponent<T>();
     if (!component) component = it->GetComponentInDescendant<T>();
