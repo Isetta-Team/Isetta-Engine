@@ -26,7 +26,7 @@ BoxCollider(bool trigger, const Math::Vector3& center,
             const Math::Vector3& size = Math::Vector3::one)
     : Collider{trigger, center}, size{size} {}
 
-bool Raycast(const Ray& ray, RaycastHit* const hitInfo,
+bool Raycast(const class Ray& ray, RaycastHit* const hitInfo,
              float maxDistance = 0) final;
 
 inline Math::Vector3 GetWorldSize() const {

@@ -9,6 +9,10 @@
 #include "Scene/Component.h"
 #include "Scene/Transform.h"
 
+namespace Isetta::Math {
+class Ray;
+}
+
 namespace Isetta {
 #define INTERSECTION_TEST(TYPE)                             \
   bool TYPE::Intersection(Collider* const other) {          \

@@ -13,7 +13,7 @@
 #include "Util.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
 
-#include "Collisions/Ray.h"
+#include "Core/Geometry/Ray.h"
 #include "Core/Math/Util.h"
 #include "Core/Math/Vector2.h"
 #include "Core/Math/Vector3.h"

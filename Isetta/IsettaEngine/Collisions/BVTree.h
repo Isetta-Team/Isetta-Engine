@@ -4,12 +4,15 @@
 #pragma once
 #include <unordered_set>
 #include "AABB.h"
-#include "brofiler/ProfilerCore/Brofiler.h"
 #include "Collider.h"
 #include "CollisionUtil.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
+
+namespace Isetta::Math {
+class Ray;
+}
 
 namespace Isetta {
-
 class BVTree {
  private:
   // BVNode serves two purposes: leaf and branch
@@ -44,9 +47,9 @@ class BVTree {
   void RemoveCollider(class Collider* collider);
   void Update();
 
-  bool Raycast(const class Ray& ray, class RaycastHit* hitInfo,
+  bool Raycast(const Ray& ray, class RaycastHit* hitInfo,
                float maxDistance) const;
-  bool Raycast(Node* node, const class Ray& ray, class RaycastHit* hitInfo,
+  bool Raycast(Node* node, const Ray& ray, class RaycastHit* hitInfo,
                float maxDistance) const;
 
   const CollisionUtil::ColliderPairSet& GetCollisionPairs();

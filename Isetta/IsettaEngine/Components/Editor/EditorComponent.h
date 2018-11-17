@@ -10,8 +10,10 @@ private:
 class Console* console;
 class Inspector* inspector;
 class Hierarchy* hierarchy;
+class FrameReporter* frameReporter;
 
-int menuHandle, consoleHandle, inspectorHandle, hierarchyHandle;
+int menuHandle, consoleHandle, inspectorHandle, hierarchyHandle,
+    frameReporterHandle;
 bool isOpen, menuOpen{true};
 
 void OnDisable() override;

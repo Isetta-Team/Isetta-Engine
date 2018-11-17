@@ -4,7 +4,7 @@
 #include "Collisions/CollisionsModule.h"
 
 #include "Collisions/AABB.h"
-#include "Collisions/Ray.h"
+#include "Core/Geometry/Ray.h"
 #include "Core/Math/Matrix3.h"
 #include "Core/Math/Vector3.h"
 #include "Core/Math/Vector4.h"
