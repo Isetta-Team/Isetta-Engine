@@ -52,6 +52,6 @@ void Isetta::AITestLevel::LoadLevel() {
   moveCube->AddComponent<KeyTransform>();
 
   auto ai = camera->AddComponent<AITestComponent>(Math::Rect{0, 0, 10, 10},
-                                                  Math::Vector2Int{20, 20});
-  ai->trackingEntity = moveCube->GetTransform();
+                                                  Math::Vector2Int{20, 20},
+                                                  moveCube->GetTransform());
 }

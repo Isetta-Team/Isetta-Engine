@@ -14,7 +14,7 @@ Nav2DPlane navPlane;
 
 public:
 AITestComponent(const Math::Rect& gridSurface,
-                const Math::Vector2Int& divideNums);
+                const Math::Vector2Int& divideNums, Transform* tracking);
 // void GuiUpdate() override;
 void Update() override;
 void Awake() override;
