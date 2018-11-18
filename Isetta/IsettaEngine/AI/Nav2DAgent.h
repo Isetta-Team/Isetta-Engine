@@ -4,9 +4,10 @@
 #pragma once
 #include "Core/Math/Vector2.h"
 #include "Nav2DPlane.h"
+#include "Scene/Component.h"
 
 namespace Isetta {
-class Nav2DAgent {
+BEGIN_COMPONENT(Nav2DAgent, Component, true)
   Math::Vector2 velocity;
   Math::Vector2 linear;
   Nav2DPlane* navPlane;
@@ -25,5 +26,5 @@ class Nav2DAgent {
   explicit Nav2DAgent(Nav2DPlane* plane, float maxAcc = 2.f, float maxV = 2.f, float timeToTarget = 0.1f, float arriving = 0.5f);
   Math::Vector2 GetAIMovement(Math::Vector2 agentPosition,
                               float deltaTime);
-};
+END_COMPONENT(Nav2DAgent, Component)
 }  // namespace Isetta
