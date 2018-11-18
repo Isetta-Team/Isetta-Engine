@@ -49,17 +49,17 @@ void MeshAnimLevel::LoadLevel() {
   grid->AddComponent<EscapeExit>();
 
   static int count = 0;
-  int zombieCount = 100;
+  int zombieCount = 1;
   int size = 10;
 
-  U64* hi = MemoryManager::NewArrOnFreeList<U64>(256);
-  for (int i = 0; i < 256; ++i) {
-    hi[i] = i;
-  }
+  // U64* hi = MemoryManager::NewArrOnFreeList<U64>(256);
+  // for (int i = 0; i < 256; ++i) {
+    // hi[i] = i;
+  // }
 
-  for (int i = 0; i < 256; ++i) {
-    LOG_INFO(Debug::Channel::General, "First %d", hi[i]);
-  }
+  // for (int i = 0; i < 256; ++i) {
+    // LOG_INFO(Debug::Channel::General, "First %d", hi[i]);
+  // }
 
   for (int i = 0; i < zombieCount; ++i) {
     Entity* zombie{AddEntity(Util::StrFormat("Zombie (%d)", count++))};
@@ -76,11 +76,11 @@ void MeshAnimLevel::LoadLevel() {
                          Math::Vector3::zero, Math::Vector3::one * 0.01f);
   }
 
-  hi = (U64*) MemoryManager::ReallocOnFreeList(hi, 4096);
+  // hi = (U64*) MemoryManager::ReallocOnFreeList(hi, 4096);
 
-  for (int i = 0; i < 512; ++i) {
-    LOG_INFO(Debug::Channel::General, "First %d", hi[i]);
-  }
+  // for (int i = 0; i < 512; ++i) {
+    // LOG_INFO(Debug::Channel::General, "First %d", hi[i]);
+  // }
 
   Input::RegisterKeyPressCallback(KeyCode::UP_ARROW, [=]() {
     for (int i = 0; i < 10; ++i) {
