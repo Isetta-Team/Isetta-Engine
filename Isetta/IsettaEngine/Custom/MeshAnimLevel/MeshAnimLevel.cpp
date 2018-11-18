@@ -51,6 +51,7 @@ void MeshAnimLevel::LoadLevel() {
   static int count = 0;
   int zombieCount = 100;
   int size = 10;
+
   for (int i = 0; i < zombieCount; ++i) {
     Entity* zombie{AddEntity(Util::StrFormat("Zombie (%d)", count++))};
     zombies.push(zombie);
