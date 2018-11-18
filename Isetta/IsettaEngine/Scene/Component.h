@@ -48,9 +48,9 @@ class ISETTA_API Component {
     return children;
   }
 
-  static std::set<std::type_index>& excludeComponents() {
-    static std::set<std::type_index> excludes{};
-    return excludes;
+  static std::set<std::type_index>& uniqueComponents() {
+    static std::set<std::type_index> uniques{};
+    return uniques;
   }
 
   static void FlattenComponentList();

@@ -126,8 +126,8 @@ T *Entity::AddComponent(Args &&... args) {
   } else {
     std::type_index typeIndex{typeid(T)};
     if (std::any_of(
-            std::execution::par, Component::excludeComponents().begin(),
-            Component::excludeComponents().end(),
+            std::execution::par, Component::uniqueComponents().begin(),
+            Component::uniqueComponents().end(),
             [typeIndex](std::type_index type) { return type == typeIndex; }) &&
         std::any_of(
             std::execution::par, componentTypes.begin(), componentTypes.end(),

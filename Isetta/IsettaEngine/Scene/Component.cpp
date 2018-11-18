@@ -10,7 +10,7 @@ namespace Isetta {
 bool Component::isFlattened = false;
 
 bool Component::RegisterComponent(std::type_index curr, std::type_index base, bool isExclude) {
-  if (isExclude) excludeComponents().insert(curr);
+  if (isExclude) uniqueComponents().insert(curr);
   std::unordered_map<std::type_index, std::list<std::type_index>>& children =
       childrenTypes();
 
