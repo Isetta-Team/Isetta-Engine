@@ -24,7 +24,7 @@ AudioSource::AudioSource(const std::bitset<3>& properties, float volume,
 
 void AudioSource::Update() {
   if (fmodChannel && IsPlaying() && GetProperty(Property::IS_3D)) {
-    const Math::Vector3 position = GetTransform()->GetWorldPos();
+    const Math::Vector3 position = transform->GetWorldPos();
     const FMOD_VECTOR fmodPosition{position.x, position.y, position.z};
     fmodChannel->set3DAttributes(&fmodPosition, nullptr);
   }

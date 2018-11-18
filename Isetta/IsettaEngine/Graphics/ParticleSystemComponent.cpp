@@ -14,7 +14,7 @@ Isetta::ParticleSystemComponent::ParticleSystemComponent(
 }
 
 void Isetta::ParticleSystemComponent::UpdateTransform() const {
-  PROFILE Transform::SetH3DNodeTransform(renderNode, *GetTransform());
+  PROFILE Transform::SetH3DNodeTransform(renderNode, *transform);
 }
 
 void Isetta::ParticleSystemComponent::UpdateEmitter(float deltaTime) const {

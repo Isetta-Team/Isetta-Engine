@@ -15,13 +15,13 @@ Isetta::Nav2DAgent agent;
 public:
 AITestAgent(Isetta::Nav2DPlane* nav2DPlane) : agent(nav2DPlane, 2, 2, 0.2, 1) {}
 void Update() override {
-  Isetta::Math::Vector3 currPos{GetTransform()->GetWorldPos()};
+  Isetta::Math::Vector3 currPos{transform->GetWorldPos()};
   auto v =
       agent.GetAIMovement({currPos.x, currPos.z}, Isetta::Time::GetDeltaTime());
   currPos.x += v.x * Isetta::Time::GetDeltaTime();
   currPos.z += v.y * Isetta::Time::GetDeltaTime();
-  GetTransform()->SetWorldPos(currPos);
-  Isetta::DebugDraw::Cube(GetTransform()->GetLocalToWorldMatrix(), Isetta::Color::green);
+  transform->SetWorldPos(currPos);
+  Isetta::DebugDraw::Cube(transform->GetLocalToWorldMatrix(), Isetta::Color::green);
 }
 
 END_COMPONENT(AITestAgent, Isetta::Component)

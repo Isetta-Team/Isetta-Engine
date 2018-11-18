@@ -51,9 +51,9 @@ void AudioModule::Update(float deltaTime) const {
 
   if (listeners.empty()) return;
   const AudioListener* listener = *listeners.begin();
-  const Math::Vector3 position = listener->GetTransform()->GetWorldPos();
-  const Math::Vector3 forward = listener->GetTransform()->GetForward();
-  const Math::Vector3 up = listener->GetTransform()->GetUp();
+  const Math::Vector3 position = listener->transform->GetWorldPos();
+  const Math::Vector3 forward = listener->transform->GetForward();
+  const Math::Vector3 up = listener->transform->GetUp();
 
   const FMOD_VECTOR fmodPosition{position.x, position.y, position.z};
   const FMOD_VECTOR fmodForward{forward.x, forward.y, forward.z};

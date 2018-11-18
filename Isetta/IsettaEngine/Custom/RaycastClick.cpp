@@ -22,7 +22,7 @@ void RaycastClick::OnEnable() {
     RaycastHit hitInfo;
     DebugDraw::Line(r.GetOrigin(), r.GetPoint(100.0f), Color::red, 1.5f, 5);
     DebugDraw::Cube(
-        CameraComponent::Main()->GetTransform()->GetLocalToWorldMatrix(),
+        CameraComponent::Main()->transform->GetLocalToWorldMatrix(),
         Color::red, 5);
     if (Collisions::Raycast(r, &hitInfo)) {
       DebugDraw::Point(hitInfo.GetPoint(), Color::red, 5, 5);

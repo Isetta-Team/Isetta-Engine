@@ -36,7 +36,7 @@ std::list<class Entity*> Level::GetEntities() const { return entities; }
 void Level::UnloadLevel() {
   PROFILE
   // for (auto& entity : entities) {
-  //   if (entity->GetTransform()->GetParent() == levelRootTransform) {
+  //   if (entity->transform->GetParent() == levelRootTransform) {
   //     MemoryManager::DeleteOnFreeList<Entity>(entity);
   //   }
   // }

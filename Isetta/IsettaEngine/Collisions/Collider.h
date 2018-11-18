@@ -45,7 +45,7 @@ virtual bool Raycast(const class Ray& ray, class RaycastHit* const hitInfo,
                      float maxDistance = 0) = 0;
 
 Math::Vector3 GetWorldCenter() const {
-  return center + GetTransform()->GetWorldPos();
+  return center + transform->GetWorldPos();
 }
 
 void Start() override;

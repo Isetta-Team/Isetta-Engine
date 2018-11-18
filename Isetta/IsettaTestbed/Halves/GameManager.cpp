@@ -60,7 +60,7 @@ void GameManager::SpawnZombie() const {
 
   float angle = Math::Random::GetRandom01() * Math::Util::PI * 2;
   Math::Vector3 zombiePos =
-      player->GetTransform()->GetWorldPos() +
+      player->transform->GetWorldPos() +
       Math::Vector3{spawnRadius * Math::Util::Sin(angle), 0,
                     spawnRadius * Math::Util::Cos(angle)};
 

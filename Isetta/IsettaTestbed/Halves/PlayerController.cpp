@@ -54,7 +54,7 @@ void PlayerController::Update() {
       isMoving = true;
       animationComp->TransitToAnimationState(1, 0.2f);
     }
-    GetTransform()->TranslateWorld(movement * moveSpeed * dt);
+    transform->TranslateWorld(movement * moveSpeed * dt);
   } else {
     if (isMoving) {
       isMoving = false;
@@ -68,7 +68,7 @@ void PlayerController::Update() {
 
   if (lookDir.Magnitude() >= 1.f) {
     lookDir.Normalize();
-    GetTransform()->LookAt(GetTransform()->GetWorldPos() + lookDir);
+    transform->LookAt(transform->GetWorldPos() + lookDir);
     cooldown -= dt;
     if (cooldown <= 0.f) {
       Shoot();
@@ -89,7 +89,7 @@ void PlayerController::GuiUpdate() {
   GUI::SliderFloat(RectTransform{Math::Rect{-200, base + interval, 300, 100},
                                  GUI::Pivot::TopRight, GUI::Pivot::TopRight},
                    "Player Scale", &scale, 0, 0.1f, 1);
-  GetTransform()->SetLocalScale(scale * Math::Vector3::one);
+  transform->SetLocalScale(scale * Math::Vector3::one);
 
   GUI::SliderFloat(
       RectTransform{Math::Rect{-200, base + interval * 2, 300, 100},
@@ -118,12 +118,12 @@ void PlayerController::Shoot() {
   bullet->SetActive(true);
   if (bullet != nullptr) {
     bullet->GetComponent<Bullet>()->Reactivate(
-        GetTransform()->GetWorldPos() + GetTransform()->GetForward() * 0.7 -
-            GetTransform()->GetLeft() * 0.1 + GetTransform()->GetUp() * 1.5,
-        GetTransform()->GetForward());
+        transform->GetWorldPos() + transform->GetForward() * 0.7 -
+            transform->GetLeft() * 0.1 + transform->GetUp() * 1.5,
+        transform->GetForward());
   }
-  // bulletComp->Initialize(GetTransform()->GetWorldPos(),
-  // GetTransform()->GetForward());
+  // bulletComp->Initialize(transform->GetWorldPos(),
+  // transform->GetForward());
 }
 
 }  // namespace Isetta

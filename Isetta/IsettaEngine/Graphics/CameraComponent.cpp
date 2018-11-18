@@ -61,15 +61,15 @@ Ray Isetta::CameraComponent::ScreenPointToRay(
   float tan = Math::Util::Tan(0.5f * fov * Math::Util::DEG2RAD);
   float px = (2.f * ((position.x + 0.5f) / width) - 1) * tan * aspect;
   float py = (1.f - 2.f * ((position.y + 0.5f) / height)) * tan;
-  Math::Vector3 o = GetTransform()->GetWorldPos();
+  Math::Vector3 o = transform->GetWorldPos();
   Math::Vector3 dir =
-      GetTransform()->WorldDirFromLocalDir(Math::Vector3{px, py, -1});
+      transform->WorldDirFromLocalDir(Math::Vector3{px, py, -1});
   return Ray{o, dir};
 }
 
 void CameraComponent::UpdateH3DTransform() const {
   PROFILE
-  Transform::SetH3DNodeTransform(renderNode, *GetTransform());
+  Transform::SetH3DNodeTransform(renderNode, *transform);
 }
 
 void CameraComponent::ResizeViewport(int width, int height) {

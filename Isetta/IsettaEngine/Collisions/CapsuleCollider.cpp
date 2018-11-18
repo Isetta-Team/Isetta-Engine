@@ -21,7 +21,7 @@ void CapsuleCollider::Update() {
   Math::Matrix4 rotation;
   GetWorldCapsule(&rotation, &scale);
   DebugDraw::WireCapsule(
-      Math::Matrix4::Translate(GetTransform()->GetWorldPos() + center) * scale *
+      Math::Matrix4::Translate(transform->GetWorldPos() + center) * scale *
           rotation,
       radius, height, debugColor);
 
@@ -29,8 +29,8 @@ void CapsuleCollider::Update() {
       (Math::Vector3)(rotation * scale *
                       Math::Matrix4::Scale(Math::Vector3{height - 2 * radius}) *
                       Math::Vector4{0, 1, 0, 0});
-  /* Math::Vector3 P0 = GetTransform()->GetWorldPos() + center - dir;
-   Math::Vector3 P1 = GetTransform()->GetWorldPos() + center + dir;*/
+  /* Math::Vector3 P0 = transform->GetWorldPos() + center - dir;
+   Math::Vector3 P1 = transform->GetWorldPos() + center + dir;*/
   // DebugDraw::Line(P0, P1, Color::blue);
 }
 #endif
@@ -58,29 +58,29 @@ bool CapsuleCollider::RaycastSphere(const Math::Vector3& center, float radius,
 float CapsuleCollider::GetWorldCapsule(Math::Matrix4* rotation,
                                        Math::Matrix4* scale) const {
   Math::Matrix4& rot = *rotation;
-  rot = (Math::Matrix4)GetTransform()->GetWorldRot();
+  rot = (Math::Matrix4)transform->GetWorldRot();
   float max;
   switch (direction) {
     case Direction::X_AXIS:
       rot *= Math::Matrix4::zRot90;
       // rot = rot * Math::Matrix4::zRot90;
-      max = Math::Util::Max(GetTransform()->GetWorldScale().y,
-                            GetTransform()->GetWorldScale().z);
+      max = Math::Util::Max(transform->GetWorldScale().y,
+                            transform->GetWorldScale().z);
       *scale = Math::Matrix4::Scale(
-          Math::Vector3{GetTransform()->GetWorldScale().x, max, max});
+          Math::Vector3{transform->GetWorldScale().x, max, max});
       break;
     case Direction::Y_AXIS:
-      max = Math::Util::Max(GetTransform()->GetWorldScale().x,
-                            GetTransform()->GetWorldScale().z);
+      max = Math::Util::Max(transform->GetWorldScale().x,
+                            transform->GetWorldScale().z);
       *scale = Math::Matrix4::Scale(
-          Math::Vector3{max, GetTransform()->GetWorldScale().y, max});
+          Math::Vector3{max, transform->GetWorldScale().y, max});
       break;
     case Direction::Z_AXIS:
       *rotation *= Math::Matrix4::xRot90;
-      max = Math::Util::Max(GetTransform()->GetWorldScale().x,
-                            GetTransform()->GetWorldScale().y);
+      max = Math::Util::Max(transform->GetWorldScale().x,
+                            transform->GetWorldScale().y);
       *scale = Math::Matrix4::Scale(
-          Math::Vector3{max, max, GetTransform()->GetWorldScale().z});
+          Math::Vector3{max, max, transform->GetWorldScale().z});
       break;
   }
   return max;
@@ -151,14 +151,14 @@ bool CapsuleCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
 AABB CapsuleCollider::GetFatAABB() {
   return AABB{GetWorldCenter(),
               2.f *
-                  (GetWorldHeight() * GetTransform()->GetUp() +
+                  (GetWorldHeight() * transform->GetUp() +
                    radius * Math::Vector3::one) *
                   (1 + fatFactor)};
 }
 AABB CapsuleCollider::GetAABB() {
   // TODO(Yidi) + TODO(Jacob) not a tight AABB
   return AABB{GetWorldCenter(),
-              2.f * (GetWorldHeight() * GetTransform()->GetUp() +
+              2.f * (GetWorldHeight() * transform->GetUp() +
                      radius * Math::Vector3::one)};
 }
 

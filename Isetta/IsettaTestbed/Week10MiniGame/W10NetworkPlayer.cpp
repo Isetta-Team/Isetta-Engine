@@ -14,7 +14,7 @@ void W10NetworkPlayer::InitPosition() {
                             Isetta::Math::Vector3::zero,
                             Isetta::Math::Vector3{1, 1, 1});
 
-  swordEntity->transform->SetParent(GetTransform());
+  swordEntity->transform->SetParent(transform);
   swordEntity->transform->SetLocalPos(
       Isetta::Math::Vector3((isOnRight ? 1 : -1) * 0.25f, 0, 0.25f));
 
@@ -60,12 +60,12 @@ void W10NetworkPlayer::SwordBlocked() {
 }
 
 void W10NetworkPlayer::Update() {
-  // if (swordEntity->GetTransform()->GetWorldPos().y < 0) {
-  //   if (Isetta::Math::Util::Abs(GetTransform()->GetWorldPos().x -
-  //                               swordEntity->GetTransform()->GetWorldPos().x)
+  // if (swordEntity->transform->GetWorldPos().y < 0) {
+  //   if (Isetta::Math::Util::Abs(transform->GetWorldPos().x -
+  //                               swordEntity->transform->GetWorldPos().x)
   //                               <
   //       0.1f) {
-  //     swordEntity->GetTransform()->SetParent(GetTransform());
+  //     swordEntity->transform->SetParent(transform);
   //   }
   // }
 }

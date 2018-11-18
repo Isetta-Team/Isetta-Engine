@@ -87,8 +87,4 @@ void Component::SetActive(bool value) {
 bool Component::GetActive() const {
   return GetAttribute(ComponentAttributes::IS_ACTIVE);
 }
-
-Transform* Component::GetTransform() const { return transform; }
-
-Entity* Component::GetEntity() const { return entity; }
 }  // namespace Isetta

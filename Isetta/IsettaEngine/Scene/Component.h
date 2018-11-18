@@ -81,7 +81,6 @@ class ISETTA_API Component {
   virtual ~Component() = default;
   void SetActive(bool value);
   bool GetActive() const;
-  class Transform* GetTransform() const;
   class Entity* const entity;
   class Transform* const transform;
 

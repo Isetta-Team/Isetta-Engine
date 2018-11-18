@@ -79,7 +79,7 @@ void W10NetworkManager::ClientHandleAttackAttemptMessage(
           .GenerateMessageFromClient<W10PositionReportMessage>();
   if (gameManager->player != nullptr) {
     posMessage->positionX =
-        gameManager->player->GetTransform()->GetWorldPos().x;
+        gameManager->player->transform->GetWorldPos().x;
     LOG_INFO(Isetta::Debug::Channel::General, "Client send position report");
     Isetta::NetworkManager::Instance().SendMessageFromClient(posMessage);
   }

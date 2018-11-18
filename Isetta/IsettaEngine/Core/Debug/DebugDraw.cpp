@@ -396,14 +396,14 @@ void DebugDraw::OpenGLDraw(const Math::Matrix4& transformation,
   // TODO(Jacob) replace with world to local call
   // glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
   //                   CameraComponent::Main()
-  //                       ->GetTransform()
+  //                       ->transform
   //                       ->GetLocalToWorldMatrix()
   //                       .Inverse()
   //                       .Transpose()
   //                       .data);
   glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
                      CameraComponent::Main()
-                         ->GetTransform()
+                         ->transform
                          ->GetWorldToLocalMatrix()
                          .Transpose()
                          .data);
@@ -470,7 +470,7 @@ void DebugDraw::DrawPoint(const Math::Vector3 point, const Color& color,
   // TODO(Jacob) replace with world to local call
   glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
                      CameraComponent::Main()
-                         ->GetTransform()
+                         ->transform
                          ->GetLocalToWorldMatrix()
                          .Inverse()
                          .Transpose()
@@ -516,7 +516,7 @@ void DebugDraw::DrawLine(const Math::Vector3& start, const Math::Vector3& end,
   // TODO(Jacob) replace with world to local call
   glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
                      CameraComponent::Main()
-                         ->GetTransform()
+                         ->transform
                          ->GetLocalToWorldMatrix()
                          .Inverse()
                          .Transpose()
@@ -694,13 +694,13 @@ void DebugDraw::DrawGrid(const Math::Matrix4& transformation, int lines,
           ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
           .data);
   Math::Matrix4 viewMat =
-      CameraComponent::Main()->GetTransform()->GetLocalToWorldMatrix();
+      CameraComponent::Main()->transform->GetLocalToWorldMatrix();
   // TODO(Jacob) replace with world to local call
   // glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
   // viewMat.Inverse().Transpose().data);
   glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
                      CameraComponent::Main()
-                         ->GetTransform()
+                         ->transform
                          ->GetWorldToLocalMatrix()
                          .Transpose()
                          .data);

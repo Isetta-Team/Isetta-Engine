@@ -77,7 +77,7 @@ void W10Player::Update() {
   if (canOperate && Isetta::Input::IsKeyPressed(Isetta::KeyCode::D)) {
     direction += 1;
   }
-  GetTransform()->TranslateWorld(direction * horizontalSpeed *
+  transform->TranslateWorld(direction * horizontalSpeed *
                                  Isetta::Time::GetDeltaTime() *
                                  Isetta::Math::Vector3::left);
 
@@ -85,7 +85,7 @@ void W10Player::Update() {
   if (swordStabStatus == 0) isSwordFlying = false;
 
   if (!isSwordFlying && swordStabStatus == 3) {
-    if (Isetta::Math::Util::Abs(GetTransform()->GetWorldPos().x -
+    if (Isetta::Math::Util::Abs(transform->GetWorldPos().x -
                                 swordEntity->transform->GetWorldPos().x) <
         0.1f) {
       swordEntity->GetComponent<Isetta::NetworkTransform>()->SetNetworkedParent(
@@ -125,7 +125,7 @@ void W10Player::InitPosition() {
                             Isetta::Math::Vector3::zero,
                             Isetta::Math::Vector3{1, 1, 1});
 
-  swordEntity->transform->SetParent(GetTransform());
+  swordEntity->transform->SetParent(transform);
   swordEntity->transform->SetLocalPos(
       Isetta::Math::Vector3((isOnRight ? 1 : -1) * 0.25f, 0, 0.25f));
 
@@ -190,7 +190,7 @@ void W10Player::SwordBlocked() {
   if (swordStabStatus != 2) return;
   swordStabStatus = 3;
   float randomX;
-  float currentX{GetTransform()->GetWorldPos().x};
+  float currentX{transform->GetWorldPos().x};
   if (isOnRight) {
     randomX = -2 +
               Isetta::Math::Random::GetRandom01() * (currentX - -2) / 3 * 2 +
@@ -205,14 +205,14 @@ void W10Player::SwordBlocked() {
   targetX = randomX;
   isSwordFlying = true;
   flyDuration = 0;
-  originY = GetTransform()->GetWorldPos().y;
+  originY = transform->GetWorldPos().y;
   totalFlyDuration = (randomX - currentX) / v0x;
   v0y = (targetY - originY +
          0.5 * gravity * totalFlyDuration * totalFlyDuration) /
         totalFlyDuration;
   LOG_INFO(Isetta::Debug::Channel::General, "v0x = %f", v0x);
 
-  // swordEntity->GetTransform()->SetWorldPos(
+  // swordEntity->transform->SetWorldPos(
   //    Isetta::Math::Vector3{randomX, -0.25, 0});
-  // swordEntity->GetTransform()->SetWorldRot(Isetta::Math::Vector3{0, 0, 0});
+  // swordEntity->transform->SetWorldRot(Isetta::Math::Vector3{0, 0, 0});
 }

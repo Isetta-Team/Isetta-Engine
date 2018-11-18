@@ -94,7 +94,7 @@ void CollisionSolverLevel::LoadLevel() {
   //// DYNAMIC
   static Entity *box{AddEntity("box-collider-dynamic")};
   box->SetTransform(Math::Vector3{3, 1, 0}, Math::Vector3{0, 0, 0});
-  // box->GetTransform()->SetLocalRot(-45 * Math::Vector3::up);
+  // box->transform->SetLocalRot(-45 * Math::Vector3::up);
   box->AddComponent<BoxCollider>();
   box->AddComponent<KeyTransform>();
 

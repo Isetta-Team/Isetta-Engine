@@ -8,6 +8,6 @@
 namespace Isetta {
 
 void AxisDrawer::Update() {
-  DebugDraw::Axis(GetTransform()->GetLocalToWorldMatrix());
+  DebugDraw::Axis(transform->GetLocalToWorldMatrix());
 }
 }  // namespace Isetta

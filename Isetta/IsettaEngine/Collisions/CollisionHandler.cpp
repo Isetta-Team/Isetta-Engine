@@ -16,13 +16,13 @@ void CollisionHandler::OnEnable() {
     colliders[i]->SetHandler(this);
   }
   Action<Collider*> action = [&](Collider* c) { c->SetHandler(this); };
-  for (auto& t : *GetTransform()) {
+  for (auto& t : *transform) {
     SetColliderHandler(t, action);
   }
 }
 void CollisionHandler::OnDisable() {
   CollisionHandler* handler = nullptr;
-  Transform* parent = GetTransform()->GetParent();
+  Transform* parent = transform->GetParent();
   while (parent && !handler) {
     handler = parent->GetEntity()->GetComponent<CollisionHandler>();
     parent = parent->GetParent();
@@ -32,7 +32,7 @@ void CollisionHandler::OnDisable() {
     colliders[i]->SetHandler(this);
   }
   Action<Collider*> action = [&](Collider* c) { c->SetHandler(handler); };
-  for (auto& t : *GetTransform()) {
+  for (auto& t : *transform) {
     SetColliderHandler(t, action);
   }
 }

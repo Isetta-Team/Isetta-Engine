@@ -14,8 +14,8 @@ float Bullet::flySpeed = 50;
 
 void Bullet::Reactivate(const Math::Vector3& pos, const Math::Vector3& flyDir) {
   dir = flyDir.Normalized();
-  GetTransform()->SetWorldPos(pos);
-  GetTransform()->LookAt(GetTransform()->GetWorldPos() + dir);
+  transform->SetWorldPos(pos);
+  transform->LookAt(transform->GetWorldPos() + dir);
 }
 
 void Bullet::OnEnable() {
@@ -31,7 +31,7 @@ void Bullet::OnEnable() {
 void Bullet::Update() {
   if (!entity->GetActive()) return;
 
-  GetTransform()->TranslateWorld(dir * Time::GetDeltaTime() * flySpeed);
+  transform->TranslateWorld(dir * Time::GetDeltaTime() * flySpeed);
   elapsedTime += Time::GetDeltaTime();
   if (elapsedTime > lifeTime) {
     // TODO(YIDI): Add this when Destroy is working
@@ -39,7 +39,7 @@ void Bullet::Update() {
   }
   for (const auto& zombie : GameManager::zombies) {
     if (!zombie->GetActive()) continue;
-    float disSqrd = (zombie->transform->GetWorldPos() + 1.5 * Math::Vector3::up - GetTransform()->GetWorldPos()).SqrMagnitude();
+    float disSqrd = (zombie->transform->GetWorldPos() + 1.5 * Math::Vector3::up - transform->GetWorldPos()).SqrMagnitude();
     if (disSqrd < 1.f) {
       zombie->GetComponent<Zombie>()->TakeDamage(damage);
       entity->SetActive(false);
