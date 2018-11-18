@@ -53,7 +53,7 @@ class ISETTA_API FreeListAllocator {
   };
 
   void Erase() const;
-  void RemoveNode(Node* node);
+  void RemoveNode(Node* last, Node* nodeToRemove);
   static void InsertNodeAt(Node* pos, Node* newNode);
   static void TryMergeWithNext(Node* node);
 

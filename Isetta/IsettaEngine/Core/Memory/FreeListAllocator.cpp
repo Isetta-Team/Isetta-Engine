@@ -27,6 +27,7 @@ void* FreeListAllocator::Alloc(const Size size, const U8 alignment) {
   MemUtil::CheckAlignment(alignment);
 
   Size need = headerSize + alignment + size;
+  Node* last = nullptr;
   Node* cur = head;
   Node* node = nullptr;
 
@@ -35,6 +36,7 @@ void* FreeListAllocator::Alloc(const Size size, const U8 alignment) {
       node = cur;
       break;
     }
+    last = cur;
     cur = cur->next;
   }
 
@@ -60,11 +62,11 @@ void* FreeListAllocator::Alloc(const Size size, const U8 alignment) {
         Node(node->size - occupiedSize);
 
     InsertNodeAt(node, newNode);
-    RemoveNode(node);
+    RemoveNode(last, node);
     allocSize = occupiedSize;
   } else {
     // not enough space left for node
-    RemoveNode(node);
+    RemoveNode(last, node);
     allocSize = node->size;
   }
 
@@ -76,15 +78,11 @@ void* FreeListAllocator::Alloc(const Size size, const U8 alignment) {
 }
 
 void FreeListAllocator::Free(void* memPtr) {
-  PtrInt headerAddress = reinterpret_cast<PtrInt>(memPtr) - headerSize;
-  auto* header = reinterpret_cast<AllocHeader*>(headerAddress);
-  PtrInt nodeAddress = headerAddress - header->adjustment;
-  auto* newNode = new (reinterpret_cast<void*>(nodeAddress)) Node(header->size);
-  Size totalSize = header->size;
-  U64 adjustment = header->adjustment;
+  PtrInt allocHeaderAdd = reinterpret_cast<PtrInt>(memPtr) - headerSize;
+  auto* allocHeader = reinterpret_cast<AllocHeader*>(allocHeaderAdd);
+  PtrInt nodeAddress = allocHeaderAdd - allocHeader->adjustment;
+  auto* newNode = new (reinterpret_cast<void*>(nodeAddress)) Node(allocHeader->size);
 
-  // TODO(YIDI): Take care of double deletion, in that situation, memPtr is
-  // the same as head
   if (head == nullptr) {
     head = newNode;
     return;
@@ -94,8 +92,6 @@ void FreeListAllocator::Free(void* memPtr) {
   if (nodeAddress < reinterpret_cast<PtrInt>(head)) {
     newNode->next = head;
     head = newNode;
-    // TODO(YIDI): Go through this with a test case (make sure there won't be
-    // gaps anywhere in this list)
     TryMergeWithNext(head);
   } else {
     Node* last = nullptr;
@@ -109,6 +105,7 @@ void FreeListAllocator::Free(void* memPtr) {
     TryMergeWithNext(newNode);
     TryMergeWithNext(last);
   }
+
   // TODO(Yidi)
   // memset((void*)(headerAddress + headerSize), NULL,
   //       totalSize - headerSize - adjustment);
@@ -192,32 +189,18 @@ void FreeListAllocator::Erase() const {
   }
 }
 
-void FreeListAllocator::RemoveNode(Node* node) {
-  Node* last = nullptr;
-
-  if (node == head) {
-    head = node->next;
+void FreeListAllocator::RemoveNode(Node* last, Node* nodeToRemove) {
+  if (nodeToRemove == head) {
+    head = nodeToRemove->next;
     return;
   }
 
-  Node* cur = head;
-  while (cur != nullptr) {
-    if (cur->next == node) {
-      last = cur;
-      break;
-    }
-    cur = cur->next;
-  }
-
-  if (last == nullptr) {
-    throw std::exception{
-        Util::StrFormat("FreeListAllocator::RemoveNode => Node not found!")};
-  }
-
-  last->next = node->next;
+  ASSERT(last != nullptr);
+  last->next = nodeToRemove->next;
 }
 
 void FreeListAllocator::InsertNodeAt(Node* pos, Node* newNode) {
+  ASSERT(pos != nullptr && newNode != nullptr);
   newNode->next = pos->next;
   pos->next = newNode;
 }
@@ -233,6 +216,7 @@ void FreeListAllocator::TryMergeWithNext(Node* node) {
     // if the adjacent next address is a node
     node->size += node->next->size;
     node->next = node->next->next;
+    // the original node->next is effectively deleted cause no one has reference to it
   }
 }
 

@@ -11,6 +11,8 @@
 #include "Component.h"
 #include "Core/DataStructures/Array.h"
 #include "Core/Memory/MemoryManager.h"
+#include "Scene/Level.h"
+#include "Scene/LevelManager.h"
 #include "Scene/Transform.h"
 #include "Util.h"
 
@@ -23,7 +25,7 @@ class ISETTA_API_DECLARE Entity {
   friend class Level;
 
   std::vector<std::type_index> componentTypes;
-  Array<class Component*> components;
+  Array<class Component *> components;
   Transform m_transform;
 
   void OnEnable();
@@ -48,7 +50,7 @@ class ISETTA_API_DECLARE Entity {
   Entity(const std::string &name, const bool &entityStatic);
   ~Entity();
 
-  Transform* transform{};
+  Transform *transform{};
 
   std::string GetName() const { return entityName; }
   GUID GetEntityId() const { return entityId; }
@@ -93,9 +95,9 @@ class ISETTA_API_DECLARE Entity {
   template <typename T>
   Array<T *> GetComponentsInDescendant();
 
-  void SetTransform(const Math::Vector3& worldPos = Math::Vector3::zero,
-                    const Math::Vector3& worldEulerAngles = Math::Vector3::zero,
-                    const Math::Vector3& localScale = Math::Vector3::one);
+  void SetTransform(const Math::Vector3 &worldPos = Math::Vector3::zero,
+                    const Math::Vector3 &worldEulerAngles = Math::Vector3::zero,
+                    const Math::Vector3 &localScale = Math::Vector3::one);
 
   void SetLayer(int layer);
   void SetLayer(std::string layer);
@@ -136,7 +138,7 @@ T *Entity::AddComponent(Args &&... args) {
     T::curEntity = this;
     T::curTransform = transform;
 
-    T* component = MemoryManager::NewOnFreeList<T>(std::forward<Args>(args)...);
+    T *component = MemoryManager::NewOnFreeList<T>(std::forward<Args>(args)...);
     component->SetActive(IsActive);
     if (IsActive) {
       component->Awake();
@@ -186,16 +188,16 @@ Array<T *> Entity::GetComponents() {
   return returnValue;
 }
 template <typename T>
-inline T* Entity::GetComponentInParent() {
+inline T *Entity::GetComponentInParent() {
   return transform->parent->entity->GetComponent<T>();
 }
 template <typename T>
-inline Array<T*> Entity::GetComponentsInParent() {
+inline Array<T *> Entity::GetComponentsInParent() {
   return transform->parent->entity->GetComponents<T>();
 }
 template <typename T>
-inline T* Entity::GetComponentInChildren() {
-  T* component = nullptr;
+inline T *Entity::GetComponentInChildren() {
+  T *component = nullptr;
   for (auto it = transform->begin(); it != transform->end() && !component;
        it++) {
     // TODO Calling getcomponent on iterator could break
@@ -204,8 +206,8 @@ inline T* Entity::GetComponentInChildren() {
   return component;
 }
 template <typename T>
-inline Array<T*> Entity::GetComponentsInChildren() {
-  Array<T*> components;
+inline Array<T *> Entity::GetComponentsInChildren() {
+  Array<T *> components;
   for (auto it = transform->begin(); it != transform->end(); it++) {
     // TODO Calling getcomponent on iterator could break
     Array<T *> c;
@@ -215,8 +217,8 @@ inline Array<T*> Entity::GetComponentsInChildren() {
   return components;
 }
 template <typename T>
-inline T* Entity::GetComponentInDescendant() {
-  T* component = nullptr;
+inline T *Entity::GetComponentInDescendant() {
+  T *component = nullptr;
   for (auto it = transform->begin(); it != transform->end() && !component;
        it++) {
     // TODO Calling getcomponent on iterator could break
@@ -226,8 +228,8 @@ inline T* Entity::GetComponentInDescendant() {
   return component;
 }
 template <typename T>
-inline Array<T*> Entity::GetComponentsInDescendant() {
-  Array<T*> components;
+inline Array<T *> Entity::GetComponentsInDescendant() {
+  Array<T *> components;
   for (auto it = transform->begin(); it != transform->end(); it++) {
     // TODO Calling getcomponent on iterator could break
     Array<T *> c;

@@ -7,8 +7,6 @@
 #include "Input/Input.h"
 #include "Input/KeyCode.h"
 #include "Scene/Entity.h"
-#include "Scene/Level.h"
-#include "Scene/LevelManager.h"
 
 #include "Components/Editor/Console.h"
 #include "Components/Editor/FrameReporter.h"
