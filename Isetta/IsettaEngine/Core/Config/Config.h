@@ -12,9 +12,10 @@
 #include "Core/DataStructures/Array.h"
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
-#include "Core/Math/Vector3.h"
 #include "Core/Memory/MemoryManager.h"
 #include "EngineLoop.h"
+#include "Graphics/CameraComponent.h"
+#include "Graphics/LightComponent.h"
 #include "Graphics/RenderModule.h"
 #include "Graphics/Window.h"
 #include "Networking/NetworkingModule.h"
@@ -48,6 +49,9 @@ class ISETTA_API Config {
   EngineLoop::LoopConfig loopConfig;
   /// RenderModule configuration CVars
   RenderModule::RenderConfig renderConfig;
+  CameraComponent::CameraConfig cameraConfig;
+  LightComponent::LightConfig lightConfig;
+
   /// NetworkingModule configuration CVars
   NetworkingModule::NetworkConfig networkConfig;
   /// MemoryManager configuration CVars

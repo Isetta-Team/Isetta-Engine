@@ -19,12 +19,6 @@ void DebugLevel::LoadLevel() {
 
   CameraComponent* camComp =
       cameraEntity->AddComponent<CameraComponent, true>("Camera");
-  camComp->SetProperty<CameraProperty::FOV>(
-      CONFIG_VAL(renderConfig.fieldOfView));
-  camComp->SetProperty<CameraProperty::NEAR_PLANE>(
-      CONFIG_VAL(renderConfig.nearClippingPlane));
-  camComp->SetProperty<CameraProperty::FAR_PLANE>(
-      CONFIG_VAL(renderConfig.farClippingPlane));
   cameraEntity->AddComponent<FlyController>();
 
   cameraEntity->AddComponent<DebugComponent>();
