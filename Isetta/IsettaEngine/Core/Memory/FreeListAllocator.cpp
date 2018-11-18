@@ -74,7 +74,9 @@ void* FreeListAllocator::Alloc(const Size size, const U8 alignment) {
   new (reinterpret_cast<void*>(headerAddress))
       AllocHeader(allocSize, adjustment);
 
-  return reinterpret_cast<void*>(alignedAddress);
+  void* ret = reinterpret_cast<void*>(alignedAddress);
+  memset(ret, 0, size);
+  return ret;
 }
 
 void FreeListAllocator::Free(void* memPtr) {
@@ -82,6 +84,7 @@ void FreeListAllocator::Free(void* memPtr) {
   auto* allocHeader = reinterpret_cast<AllocHeader*>(allocHeaderAdd);
   PtrInt nodeAddress = allocHeaderAdd - allocHeader->adjustment;
   auto* newNode = new (reinterpret_cast<void*>(nodeAddress)) Node(allocHeader->size);
+  memset(newNode + 1, 0xD, newNode->size - nodeSize);
 
   if (head == nullptr) {
     head = newNode;
@@ -90,10 +93,12 @@ void FreeListAllocator::Free(void* memPtr) {
 
   // find last and next node, try to merge them
   if (nodeAddress < reinterpret_cast<PtrInt>(head)) {
+    // New node is on the left of head node
     newNode->next = head;
     head = newNode;
     TryMergeWithNext(head);
   } else {
+    // New node is on the right of head node
     Node* last = nullptr;
     Node* cur = head;
     while (reinterpret_cast<PtrInt>(cur) < nodeAddress && cur != nullptr) {
@@ -105,10 +110,6 @@ void FreeListAllocator::Free(void* memPtr) {
     TryMergeWithNext(newNode);
     TryMergeWithNext(last);
   }
-
-  // TODO(Yidi)
-  // memset((void*)(headerAddress + headerSize), NULL,
-  //       totalSize - headerSize - adjustment);
 }
 
 void* FreeListAllocator::Realloc(void* memPtr, const Size newSize, const U8 alignment) {
@@ -116,7 +117,7 @@ void* FreeListAllocator::Realloc(void* memPtr, const Size newSize, const U8 alig
   auto* allocHeader = reinterpret_cast<AllocHeader*>(allocHeaderAdd);
 
   void* dest = Alloc(newSize, alignment);
-  memcpy(dest, memPtr, allocHeader->size);
+  memcpy(dest, memPtr, Math::Util::Min(allocHeader->size, newSize));
   Free(memPtr);
   return dest;
 }
@@ -160,6 +161,7 @@ void FreeListAllocator::TryMergeWithNext(Node* node) {
     // if the adjacent next address is a node
     node->size += node->next->size;
     node->next = node->next->next;
+    memset(node + 1, 0xD, node->size - nodeSize);
     // the original node->next is effectively deleted cause no one has reference to it
   }
 }
