@@ -20,6 +20,7 @@ void EditorComponent::Awake() {
   console = entity->AddComponent<Console>("Console", true);
   inspector = entity->AddComponent<Inspector>("Inspector", false);
   hierarchy = entity->AddComponent<Hierarchy>("Hierarchy", true, inspector);
+  frameReporter = entity->AddComponent<FrameReporter>();
 }
 void EditorComponent::OnEnable() {
   menuHandle = Input::RegisterKeyPressCallback(

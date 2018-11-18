@@ -44,34 +44,33 @@ void* FreeListAllocator::Alloc(const Size size, const U8 alignment) {
                         "the new request")};
   }
 
-  // TODO(YIDI): the node can be overriden
   PtrInt rawAddress = reinterpret_cast<PtrInt>(node);
   rawAddress += headerSize;  // leave size for header
   PtrInt misAlignment = rawAddress & (alignment - 1);
   U64 adjustment = alignment - misAlignment;
-  adjustment += ((~alignment & adjustment) << 1);
   PtrInt alignedAddress = rawAddress + adjustment;
-
-  Size occupiedSize = headerSize + adjustment + size;
   PtrInt headerAddress = alignedAddress - headerSize;
 
-  // new headers will be reclaimed during "free" process
-  // TODO(YIDI): This step maybe buggy, see "Image Creator" page 16, Make sure
-  // the node on the left's next is aligned properly
+  Size occupiedSize = headerSize + adjustment + size;
+  Size allocSize;
+
   if (node->size >= occupiedSize + nodeSize) {
     // enough space to put a node here
-    auto* header = new (reinterpret_cast<void*>(headerAddress))
-        AllocHeader(occupiedSize, adjustment);
+    Node* newNode = new (reinterpret_cast<void*>(alignedAddress + size))
+        Node(node->size - occupiedSize);
 
-    InsertNodeAt(node, new (reinterpret_cast<void*>(alignedAddress + size))
-                           Node(node->size - occupiedSize));
+    InsertNodeAt(node, newNode);
+    RemoveNode(node);
+    allocSize = occupiedSize;
   } else {
     // not enough space left for node
-    auto* header = new (reinterpret_cast<void*>(headerAddress))
-        AllocHeader(node->size, adjustment);
+    RemoveNode(node);
+    allocSize = node->size;
   }
 
-  RemoveNode(node);
+  // new headers will be reclaimed during "free" process
+  new (reinterpret_cast<void*>(headerAddress))
+      AllocHeader(allocSize, adjustment);
 
   return reinterpret_cast<void*>(alignedAddress);
 }
