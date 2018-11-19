@@ -29,14 +29,14 @@ void Isetta::AITestLevel::LoadLevel()
     camera->AddComponent<EscapeExit>();
     // camera->AddComponent<EditorComponent>();
 
-    Entity *moveCube{ADD_ENTITY("Move")};
-    moveCube->SetTransform(Math::Vector3{5, 0, 5}, Math::Vector3::zero,
-                           Math::Vector3::one * 0.2);
-    moveCube->AddComponent<MeshComponent>("primitive/Cube.scene.xml");
-    auto p = moveCube->AddComponent<ParticleSystemComponent>(
-        "particles/particleSys1/particleSys1.scene.xml");
-    Input::RegisterKeyPressCallback(KeyCode::L, [p]() { p->SetActive(false); });
-    Input::RegisterKeyPressCallback(KeyCode::O, [p]() { p->SetActive(true); });
+  Entity* moveCube{ADD_ENTITY("Move")};
+  moveCube->SetTransform(Math::Vector3{5, 0, 5}, Math::Vector3::zero,
+                         Math::Vector3::one * 0.2);
+  moveCube->AddComponent<MeshComponent>("primitive/Cube.scene.xml");
+  auto p = moveCube->AddComponent<ParticleSystemComponent>(
+      "particles/particleSys1/particleSys1.scene.xml");
+  Input::RegisterKeyPressCallback(KeyCode::L, [p]() { p->SetActive(false); });
+  Input::RegisterKeyPressCallback(KeyCode::O, [p]() { p->SetActive(true); });
 
     moveCube->AddComponent<KeyTransform>();
 
