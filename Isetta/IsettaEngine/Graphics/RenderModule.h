@@ -13,14 +13,14 @@ namespace Isetta {
 class ISETTA_API_DECLARE RenderModule {
  public:
   struct RenderConfig {
-    CVar<int> hordeLoadTextures{"horde_load_textures", 1};
-    CVar<int> hordeTexCompression{"horde_tex_compression", 0};
-    CVar<int> hordeMaxAnisotropy{"horde_max_abusotropy", 4};
-    CVar<int> hordeShadowmapSize{"horde_shadowmap_size", 2048};
-    CVar<int> hordeFastAnimation{"horde_fast_animation", 1};
-    CVar<int> hordeSampleCount{"horde_sample_count", 0};
-    CVar<int> hordeDumpFailedShaders{"horde_dump_failed_shaders", 1};
-    CVarString hordePipeline{"horde_pipeline",
+    CVar<int> hordeLoadTextures{"load_textures", 1};
+    CVar<int> hordeTexCompression{"tex_compression", 0};
+    CVar<int> hordeMaxAnisotropy{"max_abusotropy", 4};
+    CVar<int> hordeShadowmapSize{"shadowmap_size", 2048};
+    CVar<int> hordeFastAnimation{"fast_animation", 1};
+    CVar<int> hordeSampleCount{"render_sample_count", 0};
+    CVar<int> hordeDumpFailedShaders{"dump_failed_shaders", 1};
+    CVarString hordePipeline{"render_pipeline_file",
                              "pipelines/forward.pipeline.xml"};
   };
 
