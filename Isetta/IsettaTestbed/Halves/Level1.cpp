@@ -21,7 +21,7 @@ namespace Isetta {
 using LightProperty = LightComponent::Property;
 using CameraProperty = CameraComponent::Property;
 
-void Level1::LoadLevel() {
+void Level1::OnLevelLoad() {
   Font::AddFontFromFile("Resources/Fonts/CONSOLA.TTF", 13.0f);
 
   Entity* cameraEntity{AddEntity("Camera")};

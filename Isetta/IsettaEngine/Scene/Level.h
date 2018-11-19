@@ -26,9 +26,21 @@
 
 namespace Isetta {
 class ISETTA_API Level {
+ private:
   std::list<class Entity*> entitiesToRemove;
   void AddComponentToStart(class Component* component);
   void StartComponents();
+
+  void UnloadLevel();
+  void Update();
+  void GUIUpdate();
+  void FixedUpdate();
+  void LateUpdate();
+
+  friend class Entity;
+  friend class EngineLoop;
+  friend class GUIModule;
+  friend class LevelManager;
 
  protected:
   std::list<class Entity*> entities;
@@ -45,17 +57,11 @@ class ISETTA_API Level {
   class std::list<class Entity*> GetEntitiesByName(const std::string&);
   class std::list<class Entity*> GetEntities() const;
 
-  virtual void LoadLevel() {}
-  virtual void UnloadLevel();
+  virtual void OnLevelLoad() = 0;
+  virtual void OnLevelUnload() {}
 
   class Entity* AddEntity(std::string name, bool entityStatic = false);
-  class Entity* AddEntity(std::string name, class Entity* parent, bool entityStatic = false);
-
-  void Update();
-  void FixedUpdate();
-  void GUIUpdate();
-  void LateUpdate();
-
-  friend class Entity;
+  class Entity* AddEntity(std::string name, class Entity* parent,
+                          bool entityStatic = false);
 };
 }  // namespace Isetta

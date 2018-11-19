@@ -38,6 +38,8 @@ class AudioModule {
    */
   void ShutDown();
 
+  void UnloadLevel();
+
   /**
    * \brief Check FMOD_RESULT and throw exception when there's an error
    */

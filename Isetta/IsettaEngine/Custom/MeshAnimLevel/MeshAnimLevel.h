@@ -7,7 +7,7 @@
 
 namespace Isetta {
 CREATE_LEVEL(MeshAnimLevel)
-void LoadLevel() override;
+void OnLevelLoad() override;
 std::queue<Entity*> zombies;
 CREATE_LEVEL_END
 }  // namespace Isetta

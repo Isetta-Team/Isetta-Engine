@@ -132,7 +132,10 @@ void EngineLoop::VariableUpdate(const float deltaTime) const {
   windowModule->Update(deltaTime);
   memoryManager->Update();
 
-  LevelManager::Instance().LoadLevel();
+  if (LevelManager::Instance().LoadLevel()) {
+    inputModule->Clear();
+    audioModule->UnloadLevel();
+  }
 }
 
 void EngineLoop::ShutDown() {

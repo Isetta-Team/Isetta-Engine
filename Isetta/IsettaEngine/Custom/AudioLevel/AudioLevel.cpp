@@ -20,7 +20,7 @@ namespace Isetta {
 using CameraProperty = CameraComponent::Property;
 using AudioProperty = AudioSource::Property;
 
-void AudioLevel::LoadLevel() {
+void AudioLevel::OnLevelLoad() {
   Entity* cameraEntity{AddEntity("Camera")};
   CameraComponent* camComp =
       cameraEntity->AddComponent<CameraComponent, true>("Camera");

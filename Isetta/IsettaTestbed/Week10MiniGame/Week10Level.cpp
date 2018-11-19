@@ -13,7 +13,7 @@
 
 using namespace Isetta;
 
-void Week10Level::LoadLevel() {
+void Week10Level::OnLevelLoad() {
   Entity* cameraEntity{AddEntity("Camera")};
   CameraComponent* camComp =
       cameraEntity->AddComponent<CameraComponent, true>("Camera");

@@ -69,6 +69,18 @@ void AudioModule::ShutDown() {
   CoUninitialize();
 }
 
+void AudioModule::UnloadLevel() {
+  int channels;
+  fmodSystem->getChannelsPlaying(&channels);
+  for (int i = 0; i < channels; ++i) {
+    FMOD::Channel* channel = nullptr;
+    FMOD_RESULT res = fmodSystem->getChannel(i, &channel);
+    if (res == FMOD_OK && channel) {
+      channel->stop();
+    }
+  }
+}
+
 void PrintAudioMemoryUsage() {
   int currentAllocated;
   int maxAllocated;

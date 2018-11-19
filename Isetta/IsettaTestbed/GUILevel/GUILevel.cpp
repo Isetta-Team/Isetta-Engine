@@ -11,7 +11,7 @@
 using namespace Isetta;
 using CameraProperty = CameraComponent::Property;
 
-void GUILevel::LoadLevel() {
+void GUILevel::OnLevelLoad() {
   Entity* cameraEntity{AddEntity("Camera")};
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);

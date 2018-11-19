@@ -110,6 +110,7 @@ void GUIModule::Update(float deltaTime) {
           ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus);
   ImGui::PopStyleVar(2);
 
+  // TODO Don't love this coupling
   LevelManager::Instance().loadedLevel->GUIUpdate();
 
   ImGui::End();

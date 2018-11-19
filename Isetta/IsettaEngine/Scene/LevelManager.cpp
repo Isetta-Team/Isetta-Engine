@@ -17,15 +17,17 @@ bool LevelManager::Register(const std::string& name, Func<Level*> level) {
   return true;
 }
 
-void LevelManager::LoadLevel() {
+bool LevelManager::LoadLevel() {
   if (pendingLoadLevel != nullptr) {
     UnloadLevel();
     loadedLevel = pendingLoadLevel;
     pendingLoadLevel = nullptr;
     LOG("Loading......%s", loadedLevel->GetName().c_str());
-    loadedLevel->LoadLevel();
+    loadedLevel->OnLevelLoad();
     LOG("Loading Complete");
+    return true;
   }
+  return false;
 }
 
 void LevelManager::UnloadLevel() {
@@ -39,13 +41,13 @@ void LevelManager::UnloadLevel() {
 
 // void LevelManager::LoadStartupLevel() {
 //  currentLevelName = Config::Instance().levelConfig.startLevel.GetVal();
-//  LoadLevel();
+//  OnLevelLoad();
 //}
 
-// void LevelManager::LoadLevel() {
+// void LevelManager::OnLevelLoad() {
 //  currentLevel = levels.at(SID(currentLevelName.c_str()))();
 //  if (currentLevel != nullptr) {
-//    currentLevel->LoadLevel();
+//    currentLevel->OnLevelLoad();
 //  }
 //}
 

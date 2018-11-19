@@ -31,7 +31,7 @@ namespace Isetta {
 using LightProperty = LightComponent::Property;
 using CameraProperty = CameraComponent::Property;
 
-void CollisionsLevel::LoadLevel() {
+void CollisionsLevel::OnLevelLoad() {
   Entity* debugEntity{AddEntity("Debug")};
   debugEntity->AddComponent<FrameReporter>();
 
@@ -81,8 +81,7 @@ void CollisionsLevel::LoadLevel() {
   staticCol[2] = AddEntity("capsule-collider", true);
   staticCol[2]->SetTransform(Math::Vector3{0, 1, -8});
   CapsuleCollider* cCol = staticCol[2]->AddComponent<CapsuleCollider>(
-      false, Math::Vector3::zero, 0.5, 2,
-      CapsuleCollider::Direction::X_AXIS);
+      false, Math::Vector3::zero, 0.5, 2, CapsuleCollider::Direction::X_AXIS);
   // staticCol[2]->AddComponent<DebugCollision>();
 
   //// DYNAMIC

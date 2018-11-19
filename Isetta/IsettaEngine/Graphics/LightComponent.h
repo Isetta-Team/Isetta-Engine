@@ -2,10 +2,10 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include <Horde3D.h>
 #include <string>
 #include "Core/Color.h"
 #include "Core/Config/CVar.h"
+#include "Horde3D.h"
 #include "Scene/Component.h"
 
 namespace Isetta {

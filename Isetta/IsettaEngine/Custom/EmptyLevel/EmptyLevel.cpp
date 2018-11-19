@@ -13,7 +13,7 @@
 namespace Isetta {
 using CameraProperty = CameraComponent::Property;
 
-void EmptyLevel::LoadLevel() {
+void EmptyLevel::OnLevelLoad() {
   Entity* cameraEntity{AddEntity("Camera")};
   CameraComponent* camComp =
       cameraEntity->AddComponent<CameraComponent, true>("Camera");

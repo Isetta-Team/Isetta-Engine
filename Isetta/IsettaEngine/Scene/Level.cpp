@@ -2,9 +2,8 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Scene/Level.h"
+#include "Audio/AudioModule.h"
 #include "Core/Memory/MemoryManager.h"
-#include "Graphics/GUI.h"
-#include "Input/Input.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
@@ -40,12 +39,12 @@ void Level::UnloadLevel() {
   //     MemoryManager::DeleteOnFreeList<Entity>(entity);
   //   }
   // }
+  OnLevelUnload();
   MemoryManager::DeleteOnFreeList<Entity>(levelRoot);
   for (auto& entity : entities) {
     MemoryManager::DeleteOnFreeList<Entity>(entity);
     entity = nullptr;
   }
-  Input::Clear();
 }
 
 void Level::AddComponentToStart(Component* component) {

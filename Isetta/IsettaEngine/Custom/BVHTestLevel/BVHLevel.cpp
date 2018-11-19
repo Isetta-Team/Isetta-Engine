@@ -23,7 +23,7 @@ namespace Isetta {
 using LightProperty = LightComponent::Property;
 using CameraProperty = CameraComponent::Property;
 
-void BVHLevel::LoadLevel() {
+void BVHLevel::OnLevelLoad() {
   Input::RegisterKeyPressCallback(KeyCode::ESCAPE,
                                   []() { Application::Exit(); });
 

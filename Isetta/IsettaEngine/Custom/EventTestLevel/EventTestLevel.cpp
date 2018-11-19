@@ -12,7 +12,7 @@
 using namespace Isetta;
 using CameraProperty = CameraComponent::Property;
 
-void EventTestLevel::LoadLevel() {
+void EventTestLevel::OnLevelLoad() {
   Entity* cameraEntity{AddEntity("Camera")};
   CameraComponent* camComp =
       cameraEntity->AddComponent<CameraComponent, true>("Camera");
