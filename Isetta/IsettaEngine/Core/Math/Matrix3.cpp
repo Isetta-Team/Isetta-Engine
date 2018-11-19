@@ -34,15 +34,11 @@ Matrix3::Matrix3(float m11, float m12, float m13, float m21, float m22,
 }
 
 Matrix3::Matrix3(const Matrix3& inMatrix) {
-  for (int i = 0; i < ELEMENT_COUNT; i++) {
-    data[i] = inMatrix.data[i];
-  }
+  for (int i = 0; i < ELEMENT_COUNT; ++i) data[i] = inMatrix.data[i];
 }
 
 Matrix3::Matrix3(Matrix3&& inMatrix) noexcept {
-  for (int i = 0; i < ELEMENT_COUNT; i++) {
-    data[i] = inMatrix.data[i];
-  }
+  for (int i = 0; i < ELEMENT_COUNT; ++i) data[i] = inMatrix.data[i];
 }
 
 // float Matrix3::operator[](int i) const {
@@ -56,15 +52,11 @@ float* Matrix3::operator[](int i) const {
   return (float*)(row_col[i]);
 }
 Matrix3& Matrix3::operator=(const Matrix3& inMatrix) {
-  for (int i = 0; i < ELEMENT_COUNT; i++) {
-    data[i] = inMatrix.data[i];
-  }
+  for (int i = 0; i < ELEMENT_COUNT; ++i) data[i] = inMatrix.data[i];
   return *this;
 }
 Matrix3& Matrix3::operator=(Matrix3&& inMatrix) noexcept {
-  for (int i = 0; i < ELEMENT_COUNT; i++) {
-    data[i] = inMatrix.data[i];
-  }
+  for (int i = 0; i < ELEMENT_COUNT; ++i) data[i] = inMatrix.data[i];
   return *this;
 }
 Matrix3::Matrix3(const Vector3& aVector, const Vector3& bVector) {
@@ -80,7 +72,7 @@ Matrix3::Matrix3(const Vector3& aVector, const Vector3& bVector) {
 }
 
 bool Matrix3::operator==(const Matrix3& rhs) const {
-  for (int i = 0; i < ELEMENT_COUNT; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; ++i) {
     if (data[i] != rhs.data[i]) {
       return false;
     }
@@ -90,35 +82,35 @@ bool Matrix3::operator==(const Matrix3& rhs) const {
 bool Matrix3::operator!=(const Matrix3& rhs) const { return !(*this == rhs); }
 Matrix3 Matrix3::operator+(const Matrix3& rhs) const {
   Matrix3 ret{};
-  for (int i = 0; i < ELEMENT_COUNT; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; ++i) {
     ret.data[i] += rhs.data[i];
   }
   return ret;
 }
 Matrix3& Matrix3::operator+=(const Matrix3& rhs) {
-  for (int i = 0; i < ELEMENT_COUNT; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; ++i) {
     data[i] += rhs.data[i];
   }
   return *this;
 }
 Matrix3 Matrix3::operator-(const Matrix3& rhs) const {
   Matrix3 ret{};
-  for (int i = 0; i < ELEMENT_COUNT; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; ++i) {
     ret.data[i] -= rhs.data[i];
   }
   return ret;
 }
 Matrix3 Matrix3::operator-=(const Matrix3& rhs) {
-  for (int i = 0; i < ELEMENT_COUNT; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; ++i) {
     data[i] += rhs.data[i];
   }
   return *this;
 }
 Matrix3 Matrix3::operator*(const Matrix3& rhs) const {
   Matrix3 ret{};
-  for (int i = 0; i < ROW_COUNT; i++) {
-    for (int j = 0; j < ROW_COUNT; j++) {
-      for (int k = 0; k < ROW_COUNT; k++) {
+  for (int i = 0; i < ROW_COUNT; ++i) {
+    for (int j = 0; j < ROW_COUNT; ++j) {
+      for (int k = 0; k < ROW_COUNT; ++k) {
         ret.data[i * 3 + j] += data[i * 3 + k] * rhs.data[k * 3 + j];
       }
     }
@@ -127,16 +119,16 @@ Matrix3 Matrix3::operator*(const Matrix3& rhs) const {
 }
 Matrix3 Matrix3::operator*=(const Matrix3& rhs) {
   float newData[ROW_COUNT][ROW_COUNT];
-  for (int i = 0; i < ROW_COUNT; i++) {
-    for (int j = 0; j < ROW_COUNT; j++) {
+  for (int i = 0; i < ROW_COUNT; ++i) {
+    for (int j = 0; j < ROW_COUNT; ++j) {
       newData[i][j] = 0;
-      for (int k = 0; k < ROW_COUNT; k++) {
+      for (int k = 0; k < ROW_COUNT; ++k) {
         newData[i][j] += row_col[i][k] * rhs.row_col[k][j];
       }
     }
   }
-  for (int i = 0; i < ROW_COUNT; i++) {
-    for (int j = 0; j < ROW_COUNT; j++) {
+  for (int i = 0; i < ROW_COUNT; ++i) {
+    for (int j = 0; j < ROW_COUNT; ++j) {
       row_col[i][j] = newData[i][j];
     }
   }
@@ -144,13 +136,13 @@ Matrix3 Matrix3::operator*=(const Matrix3& rhs) {
 }
 Matrix3 Matrix3::operator*(float scalar) const {
   Matrix3 ret{};
-  for (int i = 0; i < ELEMENT_COUNT; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; ++i) {
     ret.data[i] = data[i] * scalar;
   }
   return ret;
 }
 Matrix3 Matrix3::operator*=(float scalar) {
-  for (int i = 0; i < ELEMENT_COUNT; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; ++i) {
     data[i] *= scalar;
   }
   return *this;
@@ -205,8 +197,8 @@ Matrix3 Matrix3::Transpose() const {
 }
 
 bool Matrix3::IsIdentity() const {
-  for (int i = 0; i < ROW_COUNT; i++) {
-    for (int j = 0; j < ROW_COUNT; j++) {
+  for (int i = 0; i < ROW_COUNT; ++i) {
+    for (int j = 0; j < ROW_COUNT; ++j) {
       if (data[i * ROW_COUNT + j] != static_cast<float>(i == j) ||
           data[j * ROW_COUNT + i] != static_cast<float>(i == j)) {
         return false;
@@ -217,7 +209,7 @@ bool Matrix3::IsIdentity() const {
 }
 
 bool Matrix3::IsZero() const {
-  for (int i = 0; i < ELEMENT_COUNT; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; ++i) {
     if (data[i] != 0) return false;
   }
   return true;
@@ -264,7 +256,7 @@ void Matrix3::SetDiagonal(const float r0c0, const float r1c1,
 }
 
 bool Matrix3::FuzzyEqual(const Matrix3& lhs, const Matrix3& rhs) {
-  for (int i = 0; i < ELEMENT_COUNT; i++) {
+  for (int i = 0; i < ELEMENT_COUNT; ++i) {
     if (abs(lhs.data[i] - rhs.data[i]) > FLT_EPSILON) {
       return false;
     }

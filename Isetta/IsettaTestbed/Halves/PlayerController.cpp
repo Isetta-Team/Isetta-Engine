@@ -14,7 +14,8 @@ void PlayerController::OnEnable() {
     shootAudio = entity->AddComponent<AudioSource>();
   }
 
-  shootAudio->SetAudioClip("gunshot.aiff");
+  shootAudio->SetAudioClip("Sound/gunshot.aiff");
+  shootAudio->SetVolume(0.75f);
   bullets.reserve(bulletPoolSize);
 
   for (int i = 0; i < bulletPoolSize; i++) {
@@ -105,7 +106,7 @@ void PlayerController::GuiUpdate() {
 PlayerController* PlayerController::Instance() { return instance; }
 
 void PlayerController::Shoot() {
-  shootAudio->Play(false, .75f);
+  shootAudio->Play();
   Entity* bullet = nullptr;
 
   for (auto& bul : bullets) {

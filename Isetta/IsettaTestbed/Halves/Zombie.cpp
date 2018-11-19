@@ -19,8 +19,7 @@ void Zombie::OnEnable() {
     AnimationComponent* animation =
         entity->AddComponent<AnimationComponent, true>(mesh);
     animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
-    audio = entity->AddComponent<AudioSource>();
-    audio->SetAudioClip("zombie-death.mp3");
+    audio = entity->AddComponent<AudioSource>("Sound/zombie-death.mp3");
     isInitialized = true;
   }
   entity->GetComponent<AnimationComponent>()->Play();
@@ -33,15 +32,14 @@ void Zombie::Update() {
 
   Math::Vector3 dir =
       player->transform->GetWorldPos() - transform->GetWorldPos();
-  transform->TranslateWorld(dir.Normalized() * Time::GetDeltaTime() *
-                                speed);
+  transform->TranslateWorld(dir.Normalized() * Time::GetDeltaTime() * speed);
   transform->LookAt(transform->GetWorldPos() + dir);
 }
 
 void Zombie::TakeDamage(const float damage) {
   health -= damage;
   if (health <= 0) {
-    audio->Play(false, 1.0f);
+    audio->Play();
     GameManager::score += (Math::Random::GetRandom01() / 2 + 0.5f) * 10;
     entity->SetActive(false);
   }

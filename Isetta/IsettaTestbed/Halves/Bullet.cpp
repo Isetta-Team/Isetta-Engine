@@ -3,8 +3,8 @@
  */
 #include "Bullet.h"
 #include "Custom/IsettaCore.h"
-#include "Graphics/MeshComponent.h"
 #include "GameManager.h"
+#include "Graphics/MeshComponent.h"
 #include "Zombie.h"
 
 namespace Isetta {
@@ -22,8 +22,7 @@ void Bullet::OnEnable() {
   if (!initialized) {
     entity->AddComponent<MeshComponent, true>("Bullet/Bullet.scene.xml");
     initialized = true;
-    audio = entity->AddComponent<AudioSource>();
-    audio->SetAudioClip("bullet-impact.wav");
+    audio = entity->AddComponent<AudioSource>("Sound/bullet-impact.wav");
   }
   elapsedTime = 0.f;
 }
@@ -39,11 +38,13 @@ void Bullet::Update() {
   }
   for (const auto& zombie : GameManager::zombies) {
     if (!zombie->GetActive()) continue;
-    float disSqrd = (zombie->transform->GetWorldPos() + 1.5 * Math::Vector3::up - transform->GetWorldPos()).SqrMagnitude();
+    float disSqrd = (zombie->transform->GetWorldPos() +
+                     1.5 * Math::Vector3::up - transform->GetWorldPos())
+                        .SqrMagnitude();
     if (disSqrd < 1.f) {
       zombie->GetComponent<Zombie>()->TakeDamage(damage);
       entity->SetActive(false);
-      audio->Play(false, 1.0f);
+      audio->Play();
     }
   }
 }

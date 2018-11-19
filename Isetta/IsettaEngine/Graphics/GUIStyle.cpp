@@ -40,7 +40,7 @@ GUIStyle::GUIStyle(bool imGuiStyle) {
   MouseCursorScale = style.MouseCursorScale;
   AntiAliasedFill = style.AntiAliasedFill;
   CurveTessellationTol = style.CurveTessellationTol;
-  for (int i = 0; i < static_cast<int>(GUI::ColorStyles::COUNT); i++) {
+  for (int i = 0; i < static_cast<int>(GUI::ColorStyles::COUNT); ++i) {
     Colors[i] = style.Colors[i];
   }
 }
@@ -105,7 +105,7 @@ GUI::TextStyle::TextStyle() {
 }
 GUI::TextStyle::TextStyle(float fontSize, const std::string_view& fontName) {
   text = GetStyle().Colors[(int)ColorStyles::Text];
-  Font* loadFont = guiModule->GetFont(fontName, fontSize);
+  Font* loadFont = Font::GetFont(fontName, fontSize);
   if (loadFont)
     font = loadFont;
   else {
@@ -121,7 +121,7 @@ GUI::TextStyle::TextStyle(Font* const font) : font{font} {
 GUI::TextStyle::TextStyle(const Color& text, float fontSize,
                           const std::string_view& fontName)
     : text{text} {
-  Font* loadFont = guiModule->GetFont(fontName, fontSize);
+  Font* loadFont = Font::GetFont(fontName, fontSize);
   if (loadFont)
     font = loadFont;
   else {

@@ -29,7 +29,7 @@ void Isetta::AITestComponent::Awake() {
   });
 
   Input::RegisterKeyPressCallback(KeyCode::K, [&]() {
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 100; ++i) {
       auto entity = ADD_ENTITY("Agent");
       entity->AddComponent<AITestAgent>(&navPlane);
       float randomX = Math::Random::GetRandom01() * 10;

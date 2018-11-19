@@ -12,7 +12,7 @@
 namespace Isetta {
 void CollisionHandler::OnEnable() {
   Array<Collider*> colliders = entity->GetComponents<Collider>();
-  for (int i = 0; i < colliders.Size(); i++) {
+  for (int i = 0; i < colliders.Size(); ++i) {
     colliders[i]->SetHandler(this);
   }
   Action<Collider*> action = [&](Collider* c) { c->SetHandler(this); };
@@ -28,7 +28,7 @@ void CollisionHandler::OnDisable() {
     parent = parent->GetParent();
   }
   Array<Collider*> colliders = entity->GetComponents<Collider>();
-  for (int i = 0; i < colliders.Size(); i++) {
+  for (int i = 0; i < colliders.Size(); ++i) {
     colliders[i]->SetHandler(this);
   }
   Action<Collider*> action = [&](Collider* c) { c->SetHandler(handler); };
@@ -67,21 +67,21 @@ void CollisionHandler::OnCollisionCallback(
 }
 U16 CollisionHandler::RegisterOnEnter(
     const Action<class Collider* const>& action) {
-  int handle = handles++;
+  int handle = ++handles;
   onEnter.insert(std::make_pair(handle, action));
   return handle;
 }
 void CollisionHandler::UnregisterOnEnter(U16 handle) { onEnter.erase(handle); }
 U16 CollisionHandler::RegisterOnStay(
     const Action<class Collider* const>& action) {
-  int handle = handles++;
+  int handle = ++handles;
   onStay.insert(std::make_pair(handle, action));
   return handle;
 }
 void CollisionHandler::UnregisterOnStay(U16 handle) { onStay.erase(handle); }
 U16 CollisionHandler::RegisterOnExit(
     const Action<class Collider* const>& action) {
-  int handle = handles++;
+  int handle = ++handles;
   onExit.insert(std::make_pair(handle, action));
   return handle;
 }

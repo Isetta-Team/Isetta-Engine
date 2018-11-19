@@ -3,12 +3,13 @@
  */
 #pragma once
 #include "Core/IsettaAlias.h"
-#include "FMOD/inc/fmod.hpp"
 #include "Scene/Component.h"
 
-namespace Isetta {
-class AudioModule;
+namespace FMOD {
+class Channel;
+}
 
+namespace Isetta {
 // TODO(YIDI): add 3d support
 /**
  * \brief AudioSource is the class used to play specific sound clips
@@ -20,11 +21,11 @@ enum class Property {
   LOOP,
   IS_MUTE,
 };
+class AudioClip* clip;
 
 AudioSource();
 explicit AudioSource(std::string_view audioClip);
-AudioSource(const std::bitset<3>& properties, float volume,
-            std::string_view audioClip = "");
+AudioSource(const std::bitset<3>& properties, std::string_view audioClip = "");
 
 void Update() override;
 
@@ -35,7 +36,7 @@ bool GetProperty(const Property prop) const;
  * \brief Set the audio clip to be played on this AudioSource
  * \param soundName
  */
-void SetAudioClip(std::string_view audioClip);
+void SetAudioClip(const std::string_view audioClip);
 
 /**
  * \brief Play the sound with specified properties
@@ -68,28 +69,29 @@ void Mute(bool = true);
 /**
  * \brief Change speed of music, only supports MOD/S3M/XM/IT/MIDI file formats
  */
-void SetSpeed(float);
-float GetSpeed() const;
+// void SetSpeed(float);
+// float GetSpeed() const;
 /**
  * \brief Check if the sound is currently playing
  * \return
  */
 bool IsPlaying() const;
+bool IsPaused() const;
+bool IsStarted() const;
 
 void LoopFor(int count);
 
 private:
-FMOD::Sound* fmodSound{};
 FMOD::Channel* fmodChannel{};
-static AudioModule* audioModule;
 
 bool isChannelValid() const;
 bool isSoundValid() const;
 
-float volume, speed, loopCount;
+float volume, speed;
+int loopCount;
 std::bitset<3> properties;
-std::string audioClip;
 
+static class AudioModule* audioModule;
 friend class AudioModule;
 END_COMPONENT(AudioSource, Component);
 }  // namespace Isetta

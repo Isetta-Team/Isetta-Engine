@@ -105,18 +105,18 @@ bool CollisionsModule::Intersection(const BoxCollider &a,
   float ra, rb;
   Math::Matrix3 rot, absRot;
 
-  for (int i = 0; i < Math::Matrix3::ROW_COUNT; i++) {
-    for (int j = 0; j < Math::Matrix3::ROW_COUNT; j++) {
-      rot[i][j] = Math::Vector3::Dot(a.transform->GetAxis(i),
-                                     b.transform->GetAxis(j));
+  for (int i = 0; i < Math::Matrix3::ROW_COUNT; ++i) {
+    for (int j = 0; j < Math::Matrix3::ROW_COUNT; ++j) {
+      rot[i][j] =
+          Math::Vector3::Dot(a.transform->GetAxis(i), b.transform->GetAxis(j));
     }
   }
   Math::Vector3 t = b.GetWorldCenter() - a.GetWorldCenter();
   t = Math::Vector3{Math::Vector3::Dot(t, a.transform->GetLeft()),
                     Math::Vector3::Dot(t, a.transform->GetUp()),
                     Math::Vector3::Dot(t, a.transform->GetForward())};
-  for (int i = 0; i < Math::Matrix3::ROW_COUNT; i++) {
-    for (int j = 0; j < Math::Matrix3::ROW_COUNT; j++) {
+  for (int i = 0; i < Math::Matrix3::ROW_COUNT; ++i) {
+    for (int j = 0; j < Math::Matrix3::ROW_COUNT; ++j) {
       absRot[i][j] = Math::Util::Abs(rot[i][j]) + Math::Util::EPSILON;
     }
   }
@@ -124,14 +124,14 @@ bool CollisionsModule::Intersection(const BoxCollider &a,
   Math::Vector3 aExtents = a.GetWorldExtents();
   Math::Vector3 bExtents = b.GetWorldExtents();
   // Test axes L = A0, L = A1, L = A2
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < 3; ++i) {
     ra = aExtents[i];
     rb = bExtents[0] * absRot[i][0] + bExtents[1] * absRot[i][1] +
          bExtents[2] * absRot[i][2];
     if (Math::Util::Abs(t[i]) > ra + rb) return 0;
   }
   // Test axes L = B0, L = B1, L = B2
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < 3; ++i) {
     ra = aExtents[0] * absRot[0][i] + aExtents[1] * absRot[1][i] +
          aExtents[2] * absRot[2][i];
     rb = bExtents[i];
@@ -551,7 +551,7 @@ Math::Vector3 CollisionsModule::ClosestPtPointOBB(const Math::Vector3 &point,
   Math::Vector3 pt = box.GetWorldCenter();
 
   Math::Vector3 extents = box.GetWorldExtents();
-  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
+  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
     float dist = Math::Vector3::Dot(d, box.transform->GetAxis(i));
     if (dist > extents[i]) {
       dist = extents[i];
@@ -566,17 +566,16 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
                                                  const BoxCollider &box,
                                                  float *_t, float *_distSq) {
   Math::Vector3 o = box.transform->LocalPosFromWorldPos(line.GetOrigin());
-  Math::Vector3 dir =
-      box.transform->LocalDirFromWorldDir(line.GetDirection());
+  Math::Vector3 dir = box.transform->LocalDirFromWorldDir(line.GetDirection());
   float &t = *_t;
   float &distSq = *_distSq;
   distSq = 0;
 
   int perp = 0;
-  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
+  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
     if (Math::Util::Abs(Math::Vector3::Dot(
             dir, Math::Matrix3::identity.GetRow(i))) < Math::Util::EPSILON)
-      perp++;
+      ++perp;
   }
   switch (perp) {
     case 3:
@@ -586,7 +585,7 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
     case 2: {
       // LOG_INFO(Debug::Channel::Collisions, "Case 2");
       int x = -1;
-      for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
+      for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
         if (Math::Util::Abs(
                 Math::Vector3::Dot(dir, Math::Matrix3::identity.GetRow(i))) >
             Math::Util::EPSILON) {
@@ -628,7 +627,7 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
     case 1: {
       // LOG_INFO(Debug::Channel::Collisions, "Case 1");
       int z = -1;
-      for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
+      for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
         if (Math::Util::Abs(
                 Math::Vector3::Dot(dir, Math::Matrix3::identity.GetRow(i))) <
             Math::Util::EPSILON) {
@@ -664,7 +663,7 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
       p0[z] = pt[z];
       distSq = INFINITY;
       // TODO(Jacob) could be optimized maybe
-      for (int i = 0; i < 2; i++) {
+      for (int i = 0; i < 2; ++i) {
         p1 = p0;
         float tRay, tSeg;
         Math::Vector3 ptRay, ptSeg;
@@ -908,12 +907,12 @@ bool CollisionsModule::CapsuleAABBIntersect(const Math::Vector3 &start,
 
   Math::Vector3 ineg[Math::Vector3::ELEMENT_COUNT];
   Math::Vector3 ipos[Math::Vector3::ELEMENT_COUNT];
-  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
+  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
     ineg[i] = cneg[i] * to + start;
     ipos[i] = cpos[i] * to + start;
   }
 
-  for (int x = 0; x < Math::Vector3::ELEMENT_COUNT; x++) {
+  for (int x = 0; x < Math::Vector3::ELEMENT_COUNT; ++x) {
     int y = (x + 1) % 3;
     int z = (x + 2) % 3;
     if (Math::Util::Abs(ineg[x][y]) > extents[y] ||
@@ -1083,7 +1082,7 @@ float CollisionsModule::SqDistanceToAABB(const Math::Vector3 &min,
                                          const Math::Vector3 &max,
                                          const Math::Vector3 &center) {
   float t, distSq = 0;
-  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
+  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
     if (center[i] < min[i]) {
       t = center[i] - min[i];
       distSq += t * t;

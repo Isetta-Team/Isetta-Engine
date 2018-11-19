@@ -50,8 +50,8 @@ void MemoryArena::Defragment() {
   PROFILE
   if (addressIndexMap.empty()) return;
 
-  for (int i = 0; i < 6; i++) {
-    curIndex++;
+  for (int i = 0; i < 6; ++i) {
+    ++curIndex;
     if (curIndex >= addressIndexMap.size()) {
       curIndex = 0;
     }

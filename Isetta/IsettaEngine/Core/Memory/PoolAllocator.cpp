@@ -25,7 +25,7 @@ PoolAllocator::PoolAllocator(const Size chunkSize, const Size count) {
 
   PtrInt address = reinterpret_cast<PtrInt>(memHead);
 
-  for (Size i = 1; i < count; i++) {
+  for (Size i = 1; i < count; ++i) {
     address += elementSize;
     Node* node = new (reinterpret_cast<void*>(address)) Node{nullptr};
     cur->next = node;
@@ -49,9 +49,7 @@ void PoolAllocator::Free(void* mem) {
   head = node;
 }
 
-void PoolAllocator::Erase() const {
-  std::free(memHead);
-}
+void PoolAllocator::Erase() const { std::free(memHead); }
 
 PoolAllocator::Node::Node(Node* next) { this->next = next; }
 }  // namespace Isetta

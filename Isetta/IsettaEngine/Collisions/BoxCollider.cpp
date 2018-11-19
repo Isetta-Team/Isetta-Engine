@@ -32,7 +32,7 @@ bool BoxCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
   Math::Vector3 invD = 1.0f / d;
 
   float t[6];
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < 3; ++i) {
     t[2 * i] = -(e[i] + o[i]) * invD[i];
     t[2 * i + 1] = (e[i] - o[i]) * invD[i];
   }
@@ -70,7 +70,7 @@ AABB BoxCollider::GetFatAABB() {
 AABB BoxCollider::GetAABB() {
   const Math::Vector3 size = GetWorldSize();
   Math::Vector3 aabbSize = size;
-  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++)
+  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i)
     aabbSize[i] = Math::Util::Abs(transform->GetLeft()[i]) * size.x +
                   Math::Util::Abs(transform->GetUp()[i]) * size.y +
                   Math::Util::Abs(transform->GetForward()[i]) * size.z;

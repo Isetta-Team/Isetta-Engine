@@ -6,8 +6,6 @@
 #include <Windows.h>
 #include <functional>
 #include <string>
-#include <unordered_map>
-#include "Core/Config/CVar.h"
 #include "Core/IsettaAlias.h"
 #include "ISETTA_API.h"
 
@@ -32,6 +30,7 @@ class ISETTA_API Filesystem {
     static Filesystem instance;
     return instance;
   }
+
   /**
    * @brief Destroy the File System object, cancel all current processes,
    * close files, I/O completion port, and delete all buffers created

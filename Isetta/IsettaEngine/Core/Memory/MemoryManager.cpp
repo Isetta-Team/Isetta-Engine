@@ -101,7 +101,7 @@ void MemoryManager::DefragmentTest() {
   const U32 count = 1024;
   Array<ObjectHandle<U64>> arr;
 
-  for (U32 i = 0; i < count; i++) {
+  for (U32 i = 0; i < count; ++i) {
     auto ref = NewDynamic<U64>();
     *ref = i;
     arr.PushBack(ref);
@@ -109,7 +109,7 @@ void MemoryManager::DefragmentTest() {
 
   auto map = instance->dynamicArena.addressIndexMap;
 
-  for (U32 i = 0; i < count / 2; i++) {
+  for (U32 i = 0; i < count / 2; ++i) {
     int index = Math::Random::GetRandomGenerator(0, arr.Size() - 1).GetValue();
     DeleteDynamic(arr[index]);
     arr.Erase(arr.begin() + index);

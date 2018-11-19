@@ -29,7 +29,7 @@ void Hierarchy::GuiUpdate() {
                     int i = 0;
                     while (t->GetParent() != nullptr) {
                       t = t->GetParent();
-                      i++;
+                      ++i;
                     }
                     return i;
                   };

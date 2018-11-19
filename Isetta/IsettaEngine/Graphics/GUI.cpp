@@ -300,7 +300,7 @@ void GUI::ComboBox(const RectTransform& transform,
 
   int& idx = *current;
   if (ImGui::BeginCombo(label.data(), items[idx].c_str())) {
-    for (int i = 0; i < items.Size(); i++) {
+    for (int i = 0; i < items.Size(); ++i) {
       ImGui::Selectable(items[i].c_str(), idx == i);
     }
     ImGui::EndCombo();

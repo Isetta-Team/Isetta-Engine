@@ -6,12 +6,11 @@
 #include <combaseapi.h>
 #include <fmod_errors.h>
 #include <algorithm>
+#include "Audio/AudioClip.h"
 #include "Audio/AudioListener.h"
 #include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
-#include "Core/DataStructures/Array.h"
 #include "Core/Debug/Logger.h"
-#include "SID/sid.h"
 #include "Util.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
 
@@ -41,9 +40,10 @@ void AudioModule::StartUp() {
                                nullptr));
   // fmodSystem->set3DSettings(1.f, 1.f, 1.f);
 
-  LoadAllAudioClips();
   AudioSource::audioModule = this;
   AudioListener::audioModule = this;
+  AudioClip::audioModule = this;
+  AudioClip::LoadConfigClips();
 }
 
 void AudioModule::Update(float deltaTime) const {
@@ -64,51 +64,9 @@ void AudioModule::Update(float deltaTime) const {
 }
 
 void AudioModule::ShutDown() {
-  for (const auto& it : soundMap) {
-    CheckStatus(it.second->release());
-  }
-
-  soundMap.clear();
+  AudioClip::UnloadAll();
   CheckStatus(fmodSystem->release());
   CoUninitialize();
-}
-
-FMOD::Sound* AudioModule::FindSound(const char* soundName) {
-  PROFILE
-  const auto strId = SID(soundName);
-  if (soundMap.find(strId) != soundMap.end()) {
-    return soundMap[strId];
-  }
-
-  throw std::exception{Util::StrFormat(
-      "AudioModule::FindSound => Sound file %s not found!", soundName)};
-}
-
-FMOD::Channel* AudioModule::Play(FMOD::Sound* sound, const bool loop,
-                                 const float volume) const {
-  FMOD::Channel* channel = nullptr;
-  sound->setMode(loop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF);
-  CheckStatus(fmodSystem->playSound(sound, nullptr, false, &channel));
-  CheckStatus(channel->setVolume(volume));
-  return channel;
-}
-
-void AudioModule::LoadAllAudioClips() {
-  PROFILE
-  std::string clipNames = CONFIG_VAL(audioConfig.audioClips);
-  Util::StrRemoveSpaces(&clipNames);
-  Array<std::string> clips;
-  if (!clipNames.empty()) clips = Util::StrSplit(clipNames, ',');
-
-  std::string& resourcePath = CONFIG_VAL(resourcePath) + R"(\)";
-  for (const auto& file : clips) {
-    FMOD::Sound* sound = nullptr;
-    std::string path = resourcePath + file.data();
-    CheckStatus(
-        fmodSystem->createSound(path.c_str(), FMOD_LOWMEM, nullptr, &sound));
-
-    soundMap.insert({SID(file.data()), sound});
-  }
 }
 
 void PrintAudioMemoryUsage() {
@@ -127,5 +85,29 @@ void AudioModule::CheckStatus(const FMOD_RESULT status) {
     throw std::exception{Util::StrFormat("AudioSource::CheckStatus => %s",
                                          FMOD_ErrorString(status))};
   }
+}
+
+void AudioModule::LoadClip(AudioClip* const clip) const {
+  clip->fmodSound = nullptr;
+  const std::string fullPath =
+      CONFIG_VAL(resourcePath) + R"(\)" + clip->filePath;
+  CheckStatus(fmodSystem->createSound(fullPath.c_str(), FMOD_LOWMEM, nullptr,
+                                      &clip->fmodSound));
+}
+
+void AudioModule::Play(AudioSource* const source) const {
+  using Property = AudioSource::Property;
+  U64 mode = 0;
+  mode |= source->GetProperty(Property::IS_3D) ? FMOD_3D : FMOD_2D;
+  mode |=
+      source->GetProperty(Property::LOOP) ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF;
+  CheckStatus(source->clip->fmodSound->setMode(mode));
+  source->fmodChannel = nullptr;
+  CheckStatus(fmodSystem->playSound(source->clip->fmodSound, nullptr, false,
+                                    &source->fmodChannel));
+  CheckStatus(source->fmodChannel->setVolume(source->volume));
+  CheckStatus(source->fmodChannel->setLoopCount(source->loopCount));
+  CheckStatus(
+      source->fmodChannel->setMute(source->GetProperty(Property::IS_MUTE)));
 }
 }  // namespace Isetta

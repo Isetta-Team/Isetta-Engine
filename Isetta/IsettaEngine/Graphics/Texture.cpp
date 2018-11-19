@@ -3,22 +3,18 @@
  */
 #include "Graphics/Texture.h"
 
-#ifndef __  // GLAD must be placed first
 #include <glad/glad.h>
-#endif
-#include <GLFW/glfw3.h>
-
-#include <Horde3D.h>
 #include <string_view>
 #include "Graphics/RenderModule.h"
+#include "Horde3D.h"
 #include "Util.h"
 
 namespace Isetta {
 Texture::Texture(std::string_view fileName, bool load) : fileName{fileName} {
-  if (load) LoadTexture();
+  if (load) Load();
 }
-Texture::~Texture() { UnloadTexture(); }
-void Texture::LoadTexture() {
+Texture::~Texture() { Unload(); }
+void Texture::Load() {
   if (texture) return;
   h3dres = h3dAddResource(H3DResTypes::Texture, fileName.data(), 0);
   RenderModule::LoadResourceFromDisk(
@@ -40,7 +36,7 @@ void Texture::LoadTexture() {
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_BGRA,
                GL_UNSIGNED_BYTE, data);
 }
-void Texture::UnloadTexture() {
+void Texture::Unload() {
   if (!texture) return;
   h3dRemoveResource(h3dres);
   glDeleteTextures(1, &texture);

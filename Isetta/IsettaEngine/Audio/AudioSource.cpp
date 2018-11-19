@@ -1,25 +1,28 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Audio/AudioSource.h"
+#include "AudioSource.h"
 
+#include "AudioClip.h"
 #include "AudioModule.h"
+#include "FMOD/inc/fmod.hpp"
 #include "Scene/Transform.h"
 
 namespace Isetta {
 AudioModule* AudioSource::audioModule;
 
-AudioSource::AudioSource() : volume{1.f}, properties{0b100} {}
+AudioSource::AudioSource()
+    : properties{0b100}, volume{1.f}, speed{1.f}, loopCount{-1} {}
 
-AudioSource::AudioSource(std::string_view audioClip)
-    : volume{1.f}, audioClip{audioClip}, properties{0b100} {
-  if (!audioClip.empty()) fmodSound = audioModule->FindSound(audioClip.data());
+AudioSource::AudioSource(std::string_view clipName)
+    : properties{0b100}, volume{1.f}, speed{1.f}, loopCount{-1} {
+  if (!clipName.empty()) clip = AudioClip::GetClip(clipName);
 }
 
-AudioSource::AudioSource(const std::bitset<3>& properties, float volume,
-                         std::string_view audioClip)
-    : properties{properties}, volume{volume}, audioClip{audioClip} {
-  if (!audioClip.empty()) fmodSound = audioModule->FindSound(audioClip.data());
+AudioSource::AudioSource(const std::bitset<3>& properties,
+                         std::string_view clipName)
+    : properties{properties}, volume{1.f}, speed{1.f}, loopCount{-1} {
+  if (!clipName.empty()) clip = AudioClip::GetClip(clipName);
 }
 
 void AudioSource::Update() {
@@ -34,11 +37,11 @@ void AudioSource::SetProperty(const Property prop, bool value) {
   switch (prop) {
     case Property::IS_3D:
       properties.set(static_cast<int>(Property::IS_3D), value);
-      if (fmodSound != nullptr) {
+      if (clip) {
         if (value)
-          fmodSound->setMode(FMOD_3D);
+          clip->fmodSound->setMode(FMOD_3D);
         else
-          fmodSound->setMode(FMOD_2D);
+          clip->fmodSound->setMode(FMOD_2D);
       }
       break;
     case Property::LOOP:
@@ -62,26 +65,18 @@ bool AudioSource::GetProperty(const Property prop) const {
   };
 }
 
-void AudioSource::SetAudioClip(std::string_view audioClip) {
-  this->audioClip = audioClip;
-  fmodSound = audioModule->FindSound(audioClip.data());
+void AudioSource::SetAudioClip(const std::string_view audioClip) {
+  this->clip = AudioClip::GetClip(audioClip);
 }
 
 void AudioSource::Play() {
   if (isSoundValid()) {
-    if (GetProperty(Property::IS_3D))
-      fmodSound->setMode(FMOD_3D);
-    else
-      fmodSound->setMode(FMOD_2D);
-    fmodChannel =
-        audioModule->Play(fmodSound, GetProperty(Property::LOOP), volume);
-    fmodChannel->setLoopCount(loopCount);
-    fmodChannel->setMute(GetProperty(Property::IS_MUTE));
+    audioModule->Play(this);
   }
 }
 
 void AudioSource::Pause() const {
-  if (isChannelValid() && IsPlaying()) {
+  if (isChannelValid()) {
     AudioModule::CheckStatus(fmodChannel->setPaused(true));
   }
 }
@@ -99,7 +94,7 @@ void AudioSource::Stop() const {
 }
 
 void AudioSource::SetVolume(const float inVolume) {
-  volume = inVolume;
+  volume = Math::Util::Clamp01(inVolume);
   if (fmodChannel) AudioModule::CheckStatus(fmodChannel->setVolume(volume));
 }
 
@@ -108,26 +103,49 @@ void AudioSource::Mute(bool mute) {
   if (fmodChannel) AudioModule::CheckStatus(fmodChannel->setMute(mute));
 }
 
-void AudioSource::SetSpeed(const float inSpeed) {
-  speed = inSpeed;
-  if (fmodSound) AudioModule::CheckStatus(fmodSound->setMusicSpeed(speed));
-}
-float AudioSource::GetSpeed() const { return speed; }
+// void AudioSource::SetSpeed(const float inSpeed) {
+//  speed = inSpeed;
+//  if (clip) AudioModule::CheckStatus(clip->fmodSound->setMusicSpeed(speed));
+//}
+// float AudioSource::GetSpeed() const { return speed; }
 
 bool AudioSource::IsPlaying() const {
-  bool isPlaying = false;
-  fmodChannel->isPlaying(&isPlaying);
-  return isPlaying;
+  if (fmodChannel) {
+    bool isPlaying, isPaused;
+    audioModule->CheckStatus(fmodChannel->isPlaying(&isPlaying));
+    audioModule->CheckStatus(fmodChannel->getPaused(&isPaused));
+    return isPlaying && isPaused;
+  }
+  return false;
+}
+
+bool AudioSource::IsPaused() const {
+  if (fmodChannel) {
+    bool isPaused;
+    audioModule->CheckStatus(fmodChannel->getPaused(&isPaused));
+    return isPaused;
+  }
+  return false;
+}
+
+bool AudioSource::IsStarted() const {
+  if (fmodChannel) {
+    bool isPlaying;
+    audioModule->CheckStatus(fmodChannel->isPlaying(&isPlaying));
+    return isPlaying;
+  }
+  return false;
 }
 
 void AudioSource::LoopFor(int count) {
   loopCount = count;
   SetProperty(Property::LOOP, count > 0);
-  if (fmodSound) AudioModule::CheckStatus(fmodSound->setLoopCount(count));
+  if (clip->fmodSound)
+    AudioModule::CheckStatus(clip->fmodSound->setLoopCount(count));
 }
 
 bool AudioSource::isChannelValid() const {
-  if (fmodChannel == nullptr) {
+  if (!fmodChannel) {
     throw std::exception{
         "AudioSource::isChannelValid => There is no sound playing on this "
         "AudioSource"};
@@ -137,9 +155,9 @@ bool AudioSource::isChannelValid() const {
 }
 
 bool AudioSource::isSoundValid() const {
-  if (fmodSound == nullptr) {
+  if (!clip) {
     throw std::exception{
-        "AudioSource::isSoundValid => Sound clip for this audio source is not "
+        "AudioSource::isSoundValid => Audio clip for this audio source is not "
         "found!"};
   }
 

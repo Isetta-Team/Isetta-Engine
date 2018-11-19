@@ -3,10 +3,8 @@
  */
 #include "Core/Debug/DebugDraw.h"
 
-#ifndef __  // GLAD must be placed first
-#include <glad/glad.h>
-#endif
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 #include "Core/Debug/Logger.h"
 #include "Core/Math/Matrix4.h"
@@ -247,7 +245,7 @@ void DebugDraw::Update() {
     } else {
       it->first -= EngineLoop::GetGameClock().GetDeltaTime();
       it->second();
-      it++;
+      ++it;
     }
   }
 }
@@ -403,8 +401,7 @@ void DebugDraw::OpenGLDraw(const Math::Matrix4& transformation,
   //                       .data);
   glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
                      CameraComponent::Main()
-                         ->transform
-                         ->GetWorldToLocalMatrix()
+                         ->transform->GetWorldToLocalMatrix()
                          .Transpose()
                          .data);
   glUniformMatrix4fv(modelLoc, 1, GL_FALSE, transformation.Transpose().data);
@@ -470,8 +467,7 @@ void DebugDraw::DrawPoint(const Math::Vector3 point, const Color& color,
   // TODO(Jacob) replace with world to local call
   glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
                      CameraComponent::Main()
-                         ->transform
-                         ->GetLocalToWorldMatrix()
+                         ->transform->GetLocalToWorldMatrix()
                          .Inverse()
                          .Transpose()
                          .data);
@@ -516,8 +512,7 @@ void DebugDraw::DrawLine(const Math::Vector3& start, const Math::Vector3& end,
   // TODO(Jacob) replace with world to local call
   glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
                      CameraComponent::Main()
-                         ->transform
-                         ->GetLocalToWorldMatrix()
+                         ->transform->GetLocalToWorldMatrix()
                          .Inverse()
                          .Transpose()
                          .data);
@@ -700,8 +695,7 @@ void DebugDraw::DrawGrid(const Math::Matrix4& transformation, int lines,
   // viewMat.Inverse().Transpose().data);
   glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
                      CameraComponent::Main()
-                         ->transform
-                         ->GetWorldToLocalMatrix()
+                         ->transform->GetWorldToLocalMatrix()
                          .Transpose()
                          .data);
   Math::Matrix4 model = transformation.Transpose();
@@ -724,7 +718,7 @@ void DebugDraw::DrawGrid(const Math::Matrix4& transformation, int lines,
   glLineWidth(thickness);
   glBindVertexArray(sVAO);
 
-  for (int i = -lines; i <= lines; i++) {
+  for (int i = -lines; i <= lines; ++i) {
     lineVerticies[0] = -lines;
     lineVerticies[1] = 0;
     lineVerticies[2] = i;
@@ -738,7 +732,7 @@ void DebugDraw::DrawGrid(const Math::Matrix4& transformation, int lines,
     glDrawArrays(GL_LINES, 0, 2);
   }
 
-  for (int i = -lines; i <= lines; i++) {
+  for (int i = -lines; i <= lines; ++i) {
     lineVerticies[0] = i;
     lineVerticies[1] = 0;
     lineVerticies[2] = -lines;

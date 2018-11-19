@@ -4,7 +4,6 @@
 #include "Scene/LevelManager.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
-#include "Input/Input.h"
 #include "Scene/Level.h"
 
 namespace Isetta {
@@ -14,7 +13,7 @@ LevelManager& LevelManager::Instance() {
 }
 
 bool LevelManager::Register(const std::string& name, Func<Level*> level) {
-    levels.insert_or_assign(SID(name.c_str()), level);
+  levels.insert_or_assign(SID(name.c_str()), level);
   return true;
 }
 
@@ -32,7 +31,6 @@ void LevelManager::LoadLevel() {
 void LevelManager::UnloadLevel() {
   if (loadedLevel != nullptr) {
     loadedLevel->UnloadLevel();
-    Input::Clear();
     LOG("Unloaded: %s", loadedLevel->GetName().c_str());
     loadedLevel->~Level();
     loadedLevel = nullptr;

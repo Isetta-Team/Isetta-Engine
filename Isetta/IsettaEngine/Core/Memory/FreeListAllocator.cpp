@@ -2,9 +2,9 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Core/Memory/FreeListAllocator.h"
+#include <iostream>
 #include "Core/Config/Config.h"
 #include "Core/Memory/MemUtil.h"
-#include <iostream>
 #include "Scene/Entity.h"
 
 namespace Isetta {
@@ -127,7 +127,8 @@ void FreeListAllocator::Erase() const {
   }
 
 #if _DEBUG
-  LOG_WARNING(Debug::Channel::Memory, "Memory leak of %I64u detect on freelist", sizeUsed);
+  LOG_WARNING(Debug::Channel::Memory, "Memory leak of %I64u detect on freelist",
+              sizeUsed);
 #endif
 
   std::free(memHead);
@@ -202,7 +203,7 @@ void FreeListAllocator::TryMergeWithNext(Node* node) {
 void FreeListAllocator::Print() const {
   const int interval = 180;
   static int i = interval;
-  i++;
+  ++i;
   if (i > interval) {
     LOG_INFO(Debug::Channel::Memory, "Freelist usage: %I64u / %I64u = %.3f%%",
              sizeUsed, totalSize,

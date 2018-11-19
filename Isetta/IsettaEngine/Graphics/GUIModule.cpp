@@ -3,10 +3,8 @@
  */
 #include "Graphics/GUIModule.h"
 
-#include "Core/Debug/Debug.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Memory/MemoryManager.h"
-#include "Graphics/Font.h"
 #include "Graphics/GUI.h"
 #include "Input/GLFWInput.h"
 #include "Scene/Level.h"
@@ -33,17 +31,8 @@ void FreeAlloc(void* ptr, void* user_data) {
 }
 
 namespace Isetta {
-Font* GUIModule::GetFont(const std::string_view& fontName, float size) {
-  auto font = fonts.find({SID(fontName.data()), size});
-  return font == fonts.end() ? nullptr : font->second;
-}
-void GUIModule::AddFont(const std::string_view& fontName, float size,
-                        Font* const font) {
-  fonts.insert({{SID(fontName.data()), size}, font});
-}
 void GUIModule::StartUp(const GLFWwindow* win) {
   GUI::guiModule = this;
-  Font::guiModule = this;
 
   winHandle = win;
   gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
