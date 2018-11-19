@@ -5,6 +5,7 @@
 
 #include <utility>
 #include "Core/Config/Config.h"
+#include "Core/Math/Vector4.h"
 #include "Scene/Transform.h"
 #include "Util.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
@@ -32,6 +33,19 @@ H3DRes LightComponent::LoadResourceFromFile(std::string_view resourceName) {
                                    resourceName.data()));
 
   return lightMatRes;
+}
+
+void LightComponent::Start() {
+  SetProperty<Property::RADIUS>(CONFIG_M_VAL(lightConfig, radius));
+  SetProperty<Property::FOV>(CONFIG_M_VAL(lightConfig, fieldOfView));
+  SetProperty<Property::COLOR>(
+      Color{Math::Vector4(CONFIG_M_VAL(lightConfig, color), 1.0f)});
+  SetProperty<Property::COLOR_MULTIPLIER>(
+      CONFIG_M_VAL(lightConfig, colorMultiplier));
+  SetProperty<Property::SHADOW_MAP_COUNT>(
+      CONFIG_M_VAL(lightConfig, shadowMapCount));
+  SetProperty<Property::SHADOW_MAP_BIAS>(
+      CONFIG_M_VAL(lightConfig, shadowMapBias));
 }
 
 void LightComponent::OnEnable() {

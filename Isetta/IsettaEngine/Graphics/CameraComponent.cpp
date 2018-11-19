@@ -13,6 +13,7 @@
 #include "Util.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
 
+#include "Core/Config/Config.h"
 #include "Core/Geometry/Ray.h"
 #include "Core/Math/Util.h"
 #include "Core/Math/Vector2.h"
@@ -29,6 +30,12 @@ CameraComponent::CameraComponent(std::string cameraName)
   if (!_main) {
     _main = this;
   }
+}
+
+void CameraComponent::Start() {
+  SetProperty<Property::FOV>(CONFIG_VAL(cameraConfig.fieldOfView));
+  SetProperty<Property::NEAR_PLANE>(CONFIG_VAL(cameraConfig.nearClippingPlane));
+  SetProperty<Property::FAR_PLANE>(CONFIG_VAL(cameraConfig.farClippingPlane));
 }
 
 void CameraComponent::OnEnable() {

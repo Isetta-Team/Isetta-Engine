@@ -43,11 +43,11 @@ void CollisionSolverLevel::LoadLevel() {
                              Math::Vector3::one);
   cameraEntity->AddComponent<FlyController>(false);
   camComp->SetProperty<CameraProperty::FOV>(
-      CONFIG_VAL(renderConfig.fieldOfView));
+      CONFIG_VAL(cameraConfig.fieldOfView));
   camComp->SetProperty<CameraProperty::NEAR_PLANE>(
-      CONFIG_VAL(renderConfig.nearClippingPlane));
+      CONFIG_VAL(cameraConfig.nearClippingPlane));
   camComp->SetProperty<CameraProperty::FAR_PLANE>(
-      CONFIG_VAL(renderConfig.farClippingPlane));
+      CONFIG_VAL(cameraConfig.farClippingPlane));
 
   // Light
   Entity *lightEntity{AddEntity("Light")};

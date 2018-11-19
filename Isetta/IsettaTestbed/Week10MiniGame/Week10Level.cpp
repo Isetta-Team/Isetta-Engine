@@ -18,24 +18,12 @@ void Week10Level::LoadLevel() {
   CameraComponent* camComp =
       cameraEntity->AddComponent<CameraComponent, true>("Camera");
   cameraEntity->SetTransform(Math::Vector3{0, 0.25f, 3.0f});
-  camComp->SetProperty<CameraComponent::Property::FOV>(
-      CONFIG_VAL(renderConfig.fieldOfView));
-  camComp->SetProperty<CameraComponent::Property::NEAR_PLANE>(
-      CONFIG_VAL(renderConfig.nearClippingPlane));
-  camComp->SetProperty<CameraComponent::Property::FAR_PLANE>(
-      CONFIG_VAL(renderConfig.farClippingPlane));
 
   Entity* lightEntity{AddEntity("Light")};
   LightComponent* lightComp = lightEntity->AddComponent<LightComponent, true>(
       "materials/light.material.xml", "LIGHT_1");
   lightEntity->SetTransform(Math::Vector3{0, 6, 3.5f}, Math::Vector3{-30, 0, 0},
                             Math::Vector3::one);
-  lightComp->SetProperty<LightComponent::Property::RADIUS>(2500);
-  lightComp->SetProperty<LightComponent::Property::FOV>(180);
-  lightComp->SetProperty<LightComponent::Property::COLOR>(Color::white);
-  lightComp->SetProperty<LightComponent::Property::COLOR_MULTIPLIER>(1.0f);
-  lightComp->SetProperty<LightComponent::Property::SHADOW_MAP_COUNT>(1);
-  lightComp->SetProperty<LightComponent::Property::SHADOW_MAP_BIAS>(0.01f);
 
   Entity* debug{ADD_ENTITY("Debug")};
   debug->AddComponent<EditorComponent>();

@@ -38,7 +38,9 @@ class Nav2DPlane {
  public:
   Nav2DPlane() = default;
   Nav2DPlane(const Math::Rect& gridSurface, const Math::Vector2Int& divideNums);
+#ifdef _EDITOR
   void DebugDisplay() const;
+#endif
   void AddTarget(class Transform* transform);
   void UpdateRoute();
   void AddObstacle(const Nav2DObstacle& obstacle);
