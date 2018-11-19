@@ -129,6 +129,7 @@ void NetworkingModule::ShutDown() {
   ShutdownYojimbo();
 
   client->~Client();
+  MemoryManager::FreeOnFreeList(clientSendBuffer);
   clientAllocator->~NetworkAllocator();
 }
 
