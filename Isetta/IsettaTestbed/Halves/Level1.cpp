@@ -10,6 +10,7 @@
 #include "GameManager.h"
 #include "Graphics/AnimationComponent.h"
 #include "Graphics/CameraComponent.h"
+#include "Graphics/Font.h"
 #include "Graphics/GUI.h"
 #include "Graphics/LightComponent.h"
 #include "PlayerController.h"
@@ -21,7 +22,7 @@ using LightProperty = LightComponent::Property;
 using CameraProperty = CameraComponent::Property;
 
 void Level1::LoadLevel() {
-  GUI::AddFontFromFile("Resources/Fonts/CONSOLA.TTF", 13.0f);
+  Font::AddFontFromFile("Resources/Fonts/CONSOLA.TTF", 13.0f);
 
   Entity* cameraEntity{AddEntity("Camera")};
   cameraEntity->AddComponent<CameraController>();

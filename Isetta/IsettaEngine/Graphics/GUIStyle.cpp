@@ -105,7 +105,7 @@ GUI::TextStyle::TextStyle() {
 }
 GUI::TextStyle::TextStyle(float fontSize, const std::string_view& fontName) {
   text = GetStyle().Colors[(int)ColorStyles::Text];
-  Font* loadFont = guiModule->GetFont(fontName, fontSize);
+  Font* loadFont = Font::GetFont(fontName, fontSize);
   if (loadFont)
     font = loadFont;
   else {
@@ -121,7 +121,7 @@ GUI::TextStyle::TextStyle(Font* const font) : font{font} {
 GUI::TextStyle::TextStyle(const Color& text, float fontSize,
                           const std::string_view& fontName)
     : text{text} {
-  Font* loadFont = guiModule->GetFont(fontName, fontSize);
+  Font* loadFont = Font::GetFont(fontName, fontSize);
   if (loadFont)
     font = loadFont;
   else {

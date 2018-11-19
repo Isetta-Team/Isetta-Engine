@@ -340,6 +340,12 @@
     <ClCompile Include="Graphics\Font.cpp">
       <Filter>Graphics\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="Audio\AudioClip.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\AudioPlay.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -785,6 +791,12 @@
     </ClInclude>
     <ClInclude Include="Custom\AudioLevel\AudioLevel.h">
       <Filter>Custom\AudioLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioClip.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\AudioPlay.h">
+      <Filter>Custom</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

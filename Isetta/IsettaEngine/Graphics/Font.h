@@ -2,7 +2,11 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include <unordered_map>
+#include "Util.h"
 #include "imgui/imgui.h"
+
+class StringId;
 
 namespace Isetta {
 struct ISETTA_API Font : private ImFont {
@@ -19,7 +23,12 @@ struct ISETTA_API Font : private ImFont {
   static void PopFont();
 
  private:
-  inline static class GUIModule* guiModule;
+  static void AddFontToMap(const std::string_view fontName, float size,
+                           Font* const font);
+  static std::unordered_map<std::pair<StringId, float>, Font*, Util::PairHash>
+      fonts;
+
+  static class GUIModule* guiModule;
   friend class GUIModule;
   friend class GUI;
 };

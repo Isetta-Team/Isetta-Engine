@@ -3,10 +3,8 @@
  */
 #include "Core/Debug/DebugDraw.h"
 
-#ifndef __  // GLAD must be placed first
-#include <glad/glad.h>
-#endif
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 #include "Core/Debug/Logger.h"
 #include "Core/Math/Matrix4.h"

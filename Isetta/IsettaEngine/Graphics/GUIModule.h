@@ -7,15 +7,9 @@
 #include <glad/glad.h>
 #endif
 #include <GLFW/glfw3.h>
-#include <list>
-#include <string>
-#include <unordered_map>
-#include <utility>
-#include "SID/sid.h"
 
 #include "Core/Color.h"
 #include "Core/Config/CVar.h"
-#include "Core/IsettaAlias.h"
 #include "Util.h"
 
 namespace Isetta::Math {
@@ -71,10 +65,6 @@ class GUIModule {
     CVar<Color> ModalWindowDimBg{"modal_window_dim_bg_style", Color{}};
   };
 
-  class Font* GetFont(const std::string_view& fontName, float size);
-  void AddFont(const std::string_view& fontName, float size,
-               class Font* const font);
-
  private:
   GUIModule() = default;
   ~GUIModule() = default;
@@ -88,8 +78,6 @@ class GUIModule {
 
   const GLFWwindow* winHandle;
   int winWidth, winHeight;
-  std::unordered_map<std::pair<StringId, float>, class Font*, Util::PairHash>
-      fonts;
 
   friend class EngineLoop;
 };
