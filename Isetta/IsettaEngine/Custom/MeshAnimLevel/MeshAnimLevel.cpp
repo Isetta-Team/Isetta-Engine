@@ -11,7 +11,7 @@
 #include "Custom/IsettaCore.h"
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
-#include "Components/Editor/FrameReporter.h"
+#include "Graphics/Texture.h"
 
 namespace Isetta {
 using LightProperty = LightComponent::Property;
@@ -30,75 +30,30 @@ void MeshAnimLevel::LoadLevel() {
       "materials/light.material.xml", "LIGHT_1");
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
+  lightComp->SetProperty<LightProperty::RADIUS>(2500);
+  lightComp->SetProperty<LightProperty::FOV>(180);
+  lightComp->SetProperty<LightProperty::COLOR>(Color::white);
+  lightComp->SetProperty<LightProperty::COLOR_MULTIPLIER>(1.0f);
+  lightComp->SetProperty<LightProperty::SHADOW_MAP_COUNT>(1);
+  lightComp->SetProperty<LightProperty::SHADOW_MAP_BIAS>(0.01f);
 
   Entity* grid{ADD_ENTITY("Grid")};
   grid->AddComponent<GridComponent>();
   grid->AddComponent<EditorComponent>();
-  grid->AddComponent<EscapeExit>();
 
-  static int count = 0;
-  int zombieCount = 1;
-  int size = 10;
+  Entity* zombie{AddEntity("Zombie")};
+  zombies.push(zombie);
+  MeshComponent* mesh =
+      zombie->AddComponent<MeshComponent>("Zombie/Zombie.scene.xml");
+  AnimationComponent* animation =
+      zombie->AddComponent<AnimationComponent>(mesh);
+  animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
+  zombie->SetTransform(Math::Vector3::zero, Math::Vector3::zero,
+                       Math::Vector3::one * 0.01f);
 
-  // U64* hi = MemoryManager::NewArrOnFreeList<U64>(256);
-  // for (int i = 0; i < 256; ++i) {
-    // hi[i] = i;
-  // }
-
-  // for (int i = 0; i < 256; ++i) {
-    // LOG_INFO(Debug::Channel::General, "First %d", hi[i]);
-  // }
-
-  for (int i = 0; i < zombieCount; ++i) {
-    Entity* zombie{AddEntity(Util::StrFormat("Zombie (%d)", count++))};
-    zombies.push(zombie);
-    MeshComponent* mesh =
-        zombie->AddComponent<MeshComponent>("Zombie/Zombie.scene.xml");
-    AnimationComponent* animation =
-        zombie->AddComponent<AnimationComponent>(mesh);
-    animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
-    zombie->SetTransform(Math::Vector3{Math::Random::GetRandom01() - 0.5f,
-                                       Math::Random::GetRandom01() - 0.5f,
-                                       Math::Random::GetRandom01() - 0.5f} *
-                             size,
-                         Math::Vector3::zero, Math::Vector3::one * 0.01f);
-  }
-
-  // hi = (U64*) MemoryManager::ReallocOnFreeList(hi, 4096);
-
-  // for (int i = 0; i < 512; ++i) {
-    // LOG_INFO(Debug::Channel::General, "First %d", hi[i]);
-  // }
-
-  Input::RegisterKeyPressCallback(KeyCode::UP_ARROW, [=]() {
-    for (int i = 0; i < 10; ++i) {
-      Entity* zombie{this->AddEntity(Util::StrFormat("Zombie (%d)", count++))};
-      this->zombies.push(zombie);
-      MeshComponent* mesh =
-          zombie->AddComponent<MeshComponent>("Zombie/Zombie.scene.xml");
-      AnimationComponent* animation =
-          zombie->AddComponent<AnimationComponent>(mesh);
-      animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
-      zombie->SetTransform(Math::Vector3{Math::Random::GetRandom01() - 0.5f,
-                                         Math::Random::GetRandom01() - 0.5f,
-                                         Math::Random::GetRandom01() - 0.5f} *
-                               size,
-                           Math::Vector3::zero, Math::Vector3::one * 0.01f);
-    }
-  });
-  Input::RegisterKeyPressCallback(KeyCode::DOWN_ARROW, [&]() {
-    for (int i = 0; i < 10; ++i) {
-      if (zombies.empty()) return;
-      Entity::Destroy(zombies.front());
-      zombies.pop();
-    }
-  });
-
-  // Entity* cube{AddEntity("Cube")};
-  // cube->AddComponent<MeshComponent>("primitive/cube.scene.xml");
-  // cube->transform->SetParent(zombie->transform);
-  // cube->transform->SetLocalPos(2.f * Math::Vector3::up);
-
-  // Application::Exit();
+  Entity* cube{AddEntity("Cube")};
+  cube->AddComponent<MeshComponent>("primitive/cube.scene.xml");
+  cube->transform->SetParent(zombie->transform);
+  cube->transform->SetLocalPos(2.f * Math::Vector3::up);
 }
 }  // namespace Isetta
