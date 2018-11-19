@@ -13,8 +13,10 @@ void AudioPlay::OnEnable() {
   handle = Input::RegisterKeyPressCallback(key, [&]() {
     if (src->IsPaused())
       src->Continue();
-    else
+    else if (src->IsPlaying())
       src->Pause();
+    else
+      src->Play();
   });
 }
 void AudioPlay::OnDisable() { Input::UnregisterKeyPressCallback(key, handle); }

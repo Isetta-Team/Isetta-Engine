@@ -24,8 +24,10 @@ enum class Property {
 class AudioClip* clip;
 
 AudioSource();
-explicit AudioSource(std::string_view audioClip);
-AudioSource(const std::bitset<3>& properties, std::string_view audioClip = "");
+explicit AudioSource(std::string_view clipName);
+explicit AudioSource(class AudioClip* clip);
+AudioSource(const std::bitset<3>& properties, std::string_view clipName = "");
+AudioSource(const std::bitset<3>& properties, class AudioClip* clip);
 
 void Update() override;
 
@@ -84,8 +86,9 @@ void LoopFor(int count);
 private:
 FMOD::Channel* fmodChannel{};
 
-bool isChannelValid() const;
-bool isSoundValid() const;
+bool IsChannelValid() const;
+bool IsSoundValid() const;
+bool IsValidHandle() const;
 
 float volume, speed;
 int loopCount;

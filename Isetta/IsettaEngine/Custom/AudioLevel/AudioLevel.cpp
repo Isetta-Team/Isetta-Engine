@@ -39,7 +39,7 @@ void AudioLevel::LoadLevel() {
   Entity* audio3D{AddEntity("3DAudio")};
   audio3D->transform->SetWorldPos(Math::Vector3{0, 0, 0});
   AudioSource* src3D =
-      audio3D->AddComponent<AudioSource>(0b011, "Sound/zombie-hit.wav");
+      audio3D->AddComponent<AudioSource>(0b001, "Sound/zombie-hit.wav");
   audio3D->AddComponent<AudioPlay>(KeyCode::NUM3, src3D);
 
   Entity* audio2D{AddEntity("2DAudio")};

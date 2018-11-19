@@ -19,14 +19,24 @@ AudioSource::AudioSource(std::string_view clipName)
   if (!clipName.empty()) clip = AudioClip::GetClip(clipName);
 }
 
+AudioSource::AudioSource(AudioClip* clip)
+    : clip{clip}, properties{0b100}, volume{1.f}, speed{1.f}, loopCount{-1} {}
+
 AudioSource::AudioSource(const std::bitset<3>& properties,
                          std::string_view clipName)
     : properties{properties}, volume{1.f}, speed{1.f}, loopCount{-1} {
   if (!clipName.empty()) clip = AudioClip::GetClip(clipName);
 }
 
+AudioSource::AudioSource(const std::bitset<3>& properties, AudioClip* clip)
+    : clip{clip},
+      properties{properties},
+      volume{1.f},
+      speed{1.f},
+      loopCount{-1} {}
+
 void AudioSource::Update() {
-  if (fmodChannel && IsPlaying() && GetProperty(Property::IS_3D)) {
+  if (IsValidHandle() && IsPlaying() && GetProperty(Property::IS_3D)) {
     const Math::Vector3 position = transform->GetWorldPos();
     const FMOD_VECTOR fmodPosition{position.x, position.y, position.z};
     fmodChannel->set3DAttributes(&fmodPosition, nullptr);
@@ -70,25 +80,25 @@ void AudioSource::SetAudioClip(const std::string_view audioClip) {
 }
 
 void AudioSource::Play() {
-  if (isSoundValid()) {
+  if (IsSoundValid()) {
     audioModule->Play(this);
   }
 }
 
 void AudioSource::Pause() const {
-  if (isChannelValid()) {
+  if (IsChannelValid()) {
     AudioModule::CheckStatus(fmodChannel->setPaused(true));
   }
 }
 
 void AudioSource::Continue() const {
-  if (isChannelValid()) {
+  if (IsChannelValid()) {
     AudioModule::CheckStatus(fmodChannel->setPaused(false));
   }
 }
 
 void AudioSource::Stop() const {
-  if (isChannelValid() && IsPlaying()) {
+  if (IsChannelValid() && IsPlaying()) {
     AudioModule::CheckStatus(fmodChannel->stop());
   }
 }
@@ -110,28 +120,28 @@ void AudioSource::Mute(bool mute) {
 // float AudioSource::GetSpeed() const { return speed; }
 
 bool AudioSource::IsPlaying() const {
-  if (fmodChannel) {
-    bool isPlaying, isPaused;
-    audioModule->CheckStatus(fmodChannel->isPlaying(&isPlaying));
-    audioModule->CheckStatus(fmodChannel->getPaused(&isPaused));
-    return isPlaying && isPaused;
+  if (IsValidHandle()) {
+    bool isPlaying{false}, isPaused{false};
+    AudioModule::CheckStatus(fmodChannel->isPlaying(&isPlaying));
+    AudioModule::CheckStatus(fmodChannel->getPaused(&isPaused));
+    return isPlaying && !isPaused;
   }
   return false;
 }
 
 bool AudioSource::IsPaused() const {
-  if (fmodChannel) {
+  if (IsValidHandle()) {
     bool isPaused;
-    audioModule->CheckStatus(fmodChannel->getPaused(&isPaused));
+    AudioModule::CheckStatus(fmodChannel->getPaused(&isPaused));
     return isPaused;
   }
   return false;
 }
 
 bool AudioSource::IsStarted() const {
-  if (fmodChannel) {
+  if (IsValidHandle()) {
     bool isPlaying;
-    audioModule->CheckStatus(fmodChannel->isPlaying(&isPlaying));
+    AudioModule::CheckStatus(fmodChannel->isPlaying(&isPlaying));
     return isPlaying;
   }
   return false;
@@ -140,11 +150,19 @@ bool AudioSource::IsStarted() const {
 void AudioSource::LoopFor(int count) {
   loopCount = count;
   SetProperty(Property::LOOP, count > 0);
-  if (clip->fmodSound)
-    AudioModule::CheckStatus(clip->fmodSound->setLoopCount(count));
 }
 
-bool AudioSource::isChannelValid() const {
+bool AudioSource::IsValidHandle() const {
+  if (!fmodChannel) return false;
+  int index;
+  FMOD_RESULT res = fmodChannel->getIndex(&index);
+  if (res == FMOD_ERR_INVALID_HANDLE || res == FMOD_ERR_CHANNEL_STOLEN) {
+    return false;
+  }
+  return true;
+}
+
+bool AudioSource::IsChannelValid() const {
   if (!fmodChannel) {
     throw std::exception{
         "AudioSource::isChannelValid => There is no sound playing on this "
@@ -154,7 +172,7 @@ bool AudioSource::isChannelValid() const {
   return true;
 }
 
-bool AudioSource::isSoundValid() const {
+bool AudioSource::IsSoundValid() const {
   if (!clip) {
     throw std::exception{
         "AudioSource::isSoundValid => Audio clip for this audio source is not "
