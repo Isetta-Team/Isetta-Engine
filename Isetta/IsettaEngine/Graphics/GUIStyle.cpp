@@ -40,7 +40,7 @@ GUIStyle::GUIStyle(bool imGuiStyle) {
   MouseCursorScale = style.MouseCursorScale;
   AntiAliasedFill = style.AntiAliasedFill;
   CurveTessellationTol = style.CurveTessellationTol;
-  for (int i = 0; i < static_cast<int>(GUI::ColorStyles::COUNT); i++) {
+  for (int i = 0; i < static_cast<int>(GUI::ColorStyles::COUNT); ++i) {
     Colors[i] = style.Colors[i];
   }
 }

@@ -321,7 +321,7 @@ void BVTree::DebugDraw() const {
       int depth = 0;
       auto parent = cur->parent;
       while (parent != nullptr) {
-        depth++;
+        ++depth;
         parent = parent->parent;
       }
       color = Color::Lerp(Color::white, Color::black,

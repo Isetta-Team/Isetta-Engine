@@ -102,7 +102,7 @@ void EngineLoop::Update() {
   accumulateTime += GetGameClock().GetDeltaTime();
 
   for (int i = 0; i < maxSimulationCount && accumulateTime > intervalTime;
-       i++) {
+       ++i) {
     FixedUpdate(intervalTime);
     accumulateTime -= intervalTime;
   }

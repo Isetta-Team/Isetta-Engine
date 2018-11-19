@@ -151,7 +151,7 @@ ObjectHandle<T>::ObjectHandle(void* mem, const U32 uniqueID, const Size size,
   HandleEntry* entry = nullptr;
 
   // FUTURE: To optimize the speed of this, remember last index
-  for (U32 i = 0; i < MemoryArena::maxHandleCount; i++) {
+  for (U32 i = 0; i < MemoryArena::maxHandleCount; ++i) {
     if (MemoryArena::entryArr[i].isEmpty) {
       index = i;
       entry = &MemoryArena::entryArr[index];

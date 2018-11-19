@@ -86,7 +86,7 @@ template <typename T>
 T* FreeListAllocator::NewArr(Size length, const U8 alignment) {
   void* alloc = Alloc(sizeof(T) * length, alignment);
   char* allocAddress = static_cast<char*>(alloc);
-  for (int i = 0; i < length; i++) new (allocAddress + i * sizeof(T)) T;
+  for (int i = 0; i < length; ++i) new (allocAddress + i * sizeof(T)) T;
   return static_cast<T*>(alloc);
 }
 

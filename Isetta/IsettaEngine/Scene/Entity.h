@@ -11,11 +11,11 @@
 #include "Component.h"
 #include "Core/DataStructures/Array.h"
 #include "Core/Memory/MemoryManager.h"
+#include "LevelManager.h"
 #include "Scene/Level.h"
 #include "Scene/LevelManager.h"
 #include "Scene/Transform.h"
 #include "Util.h"
-#include "LevelManager.h"
 
 namespace Isetta {
 class ISETTA_API_DECLARE Entity {
@@ -159,7 +159,7 @@ T *Entity::GetComponent() {
   auto types = Component::childrenTypes();
   std::list<std::type_index> availableTypes =
       types.at(std::type_index(typeid(T)));
-  for (int i = 0; i < componentTypes.size(); i++) {
+  for (int i = 0; i < componentTypes.size(); ++i) {
     std::type_index componentType = componentTypes[i];
     if (std::any_of(std::execution::par, availableTypes.begin(),
                     availableTypes.end(), [componentType](std::type_index x) {
@@ -177,7 +177,7 @@ Array<T *> Entity::GetComponents() {
       Component::childrenTypes().at(std::type_index(typeid(T)));
   Array<T *> returnValue;
   returnValue.Reserve(componentTypes.size());
-  for (int i = 0; i < componentTypes.size(); i++) {
+  for (int i = 0; i < componentTypes.size(); ++i) {
     std::type_index componentType = componentTypes[i];
     if (std::any_of(std::execution::par, availableTypes.begin(),
                     availableTypes.end(), [componentType](std::type_index x) {
@@ -200,7 +200,7 @@ template <typename T>
 inline T *Entity::GetComponentInChildren() {
   T *component = nullptr;
   for (auto it = transform->begin(); it != transform->end() && !component;
-       it++) {
+       ++it) {
     // TODO Calling getcomponent on iterator could break
     component = it->GetComponent<T>();
   }
@@ -209,7 +209,7 @@ inline T *Entity::GetComponentInChildren() {
 template <typename T>
 inline Array<T *> Entity::GetComponentsInChildren() {
   Array<T *> components;
-  for (auto it = transform->begin(); it != transform->end(); it++) {
+  for (auto it = transform->begin(); it != transform->end(); ++it) {
     // TODO Calling getcomponent on iterator could break
     Array<T *> c;
     c = it->GetComponents<T>();
@@ -221,7 +221,7 @@ template <typename T>
 inline T *Entity::GetComponentInDescendant() {
   T *component = nullptr;
   for (auto it = transform->begin(); it != transform->end() && !component;
-       it++) {
+       ++it) {
     // TODO Calling getcomponent on iterator could break
     component = it->GetComponent<T>();
     if (!component) component = it->GetComponentInDescendant<T>();
@@ -231,7 +231,7 @@ inline T *Entity::GetComponentInDescendant() {
 template <typename T>
 inline Array<T *> Entity::GetComponentsInDescendant() {
   Array<T *> components;
-  for (auto it = transform->begin(); it != transform->end(); it++) {
+  for (auto it = transform->begin(); it != transform->end(); ++it) {
     // TODO Calling getcomponent on iterator could break
     Array<T *> c;
     c = it->GetComponents<T>();

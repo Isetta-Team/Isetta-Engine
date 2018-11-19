@@ -328,7 +328,7 @@ void Transform::RecalculateLocalToWorldMatrix() {
   } else {
     localToWorldMatrix = localToParentMatrix;
   }
-  for (int i = 0; i < Math::Matrix3::ROW_COUNT; i++) {
+  for (int i = 0; i < Math::Matrix3::ROW_COUNT; ++i) {
     axis[i] = localToWorldMatrix.GetCol(i).GetVector3().Normalized();
   }
 }

@@ -49,7 +49,7 @@ TemplatePoolAllocator<T>::TemplatePoolAllocator(const Size count) {
   head = new (memHead) Node();
   Node* cur = head;
 
-  for (Size i = 1; i < count; i++) {
+  for (Size i = 1; i < count; ++i) {
     address += elementSize;
     Node* node = new (reinterpret_cast<void*>(address)) Node();
     cur->next = node;

@@ -40,7 +40,7 @@ Clock::Clock(Clock&& inClock) noexcept
 
 void Clock::UpdateTime() {
   PROFILE
-  timeFrame++;
+  ++timeFrame;
   deltaTime = 0.0;
   if (!isPause) {
     TimePoint newTime = HighResClock::now();

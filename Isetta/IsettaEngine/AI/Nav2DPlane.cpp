@@ -61,8 +61,8 @@ void Nav2DPlane::UpdateDirection() {
     }
     return costMatrix[Vector2IndexToInt(curr + dir)];
   };
-  for (int i = 0; i < divideInfo.y; i++) {
-    for (int j = 0; j < divideInfo.x; j++) {
+  for (int i = 0; i < divideInfo.y; ++i) {
+    for (int j = 0; j < divideInfo.x; ++j) {
       int minCost{255};
       float minX{0.0}, minY{0.0};
       for (int x = -1; x < 2; ++x) {

@@ -47,7 +47,7 @@ void BVHLevel::LoadLevel() {
   debug->AddComponent<EditorComponent>();
   debug->AddComponent<FrameReporter>();
   debug->AddComponent<RaycastClick>();
-  
+
   Config::Instance().drawConfig.bvtDrawAABBs.SetVal("1");
 
   static bool enable = true;
@@ -80,8 +80,8 @@ void BVHLevel::LoadLevel() {
   });
 
   Input::RegisterKeyPressCallback(KeyCode::KP_5, [&]() {
-    for (int i = 0; i < 100; i++) {
-      count++;
+    for (int i = 0; i < 100; ++i) {
+      ++count;
       Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
       randomMovers.PushBack(sphere->AddComponent<RandomMover>());
       randomMovers.Back()->SetActive(enable);
@@ -98,7 +98,7 @@ void BVHLevel::LoadLevel() {
   });
 
   Input::RegisterKeyPressCallback(KeyCode::KP_6, [&]() {
-    count++;
+    ++count;
     Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
     randomMovers.PushBack(sphere->AddComponent<RandomMover>());
     randomMovers.Back()->SetActive(enable);

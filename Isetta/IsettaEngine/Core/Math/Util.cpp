@@ -44,7 +44,7 @@ int Util::ClosestPowerOfTwo(int number) {
   for (Size i = 1; i < sizeof(ceil) * CHAR_BIT; i *= 2) {
     ceil |= ceil >> i;
   }
-  ceil++;
+  ++ceil;
   int floor = ceil >> 1;
   if (abs(number - ceil) < abs(number - floor)) {
     return ceil;
@@ -98,7 +98,7 @@ int Util::NextPowerOfTwo(int number) {
   for (Size i = 1; i < sizeof(ceil) * CHAR_BIT; i *= 2) {
     ceil |= ceil >> i;
   }
-  ceil++;
+  ++ceil;
   return ceil;
 }
 float Util::Pow(float number, float power) { return powf(number, power); }
