@@ -162,6 +162,7 @@ class ISETTA_API_DECLARE Array {
     inVector.data = nullptr;
   }
   inline Array &operator=(const Array &inVector) {
+    if (capacity > 0) MemoryManager::DeleteArrOnFreeList<T>(capacity, data);
     size = inVector.size;
     capacity = inVector.capacity;
     data = MemoryManager::NewArrOnFreeList<T>(capacity);
