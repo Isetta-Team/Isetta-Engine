@@ -17,13 +17,11 @@
 #include "Custom/EscapeExit.h"
 
 namespace Isetta {
-using CameraProperty = CameraComponent::Property;
 using AudioProperty = AudioSource::Property;
 
 void AudioLevel::OnLevelLoad() {
   Entity* cameraEntity{AddEntity("Camera")};
-  CameraComponent* camComp =
-      cameraEntity->AddComponent<CameraComponent, true>("Camera");
+  cameraEntity->AddComponent<CameraComponent>();
   // cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0,
   // 0},
   //                           Math::Vector3::one);

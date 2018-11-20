@@ -10,18 +10,16 @@
 #include "Graphics/CameraComponent.h"
 
 using namespace Isetta;
-using CameraProperty = CameraComponent::Property;
 
 void EventTestLevel::OnLevelLoad() {
-  Entity* cameraEntity{AddEntity("Camera")};
-  CameraComponent* camComp =
-      cameraEntity->AddComponent<CameraComponent, true>("Camera");
+  Entity* cameraEntity = CREATE_ENTITY("Camera");
+  cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
 
-  Entity* senderEntity{CREATE_ENTITY("SenderEntity")};
+  Entity* senderEntity = CREATE_ENTITY("SenderEntity");
   senderEntity->AddComponent<EventSenderComponent>();
 
-  Entity* listenerEntity{CREATE_ENTITY("ListenerEntity")};
+  Entity* listenerEntity = CREATE_ENTITY("ListenerEntity");
   listenerEntity->AddComponent<EventListenerComponent>();
 }

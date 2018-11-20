@@ -5,22 +5,18 @@
 #include "AITestComponent.h"
 #include "Components/Editor/EditorComponent.h"
 #include "Components/FlyController.h"
-#include "Core/Config/Config.h"
 #include "Custom/EscapeExit.h"
 #include "Custom/IsettaCore.h"
 #include "Custom/KeyTransform.h"
 #include "Graphics/ParticleSystemComponent.h"
 
-using CameraProperty = Isetta::CameraComponent::Property;
-using LightProperty = Isetta::LightComponent::Property;
-
 void Isetta::AITestLevel::OnLevelLoad() {
   Entity *camera = AddEntity("Camera");
   camera->SetTransform(Math::Vector3{5, 5, 16}, Math::Vector3{-20, 0, 0},
                        Math::Vector3::one);
-  auto camComp = camera->AddComponent<CameraComponent>("Camera");
+  camera->AddComponent<CameraComponent>();
   Entity *lightEntity{AddEntity("Light")};
-  LightComponent *lightComp = lightEntity->AddComponent<LightComponent>(
+  lightEntity->AddComponent<LightComponent>(
       "materials/light.material.xml", "LIGHT_1");
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);

@@ -10,7 +10,6 @@
 #include "Scene/Component.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
-#include "Util.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
 
 #include "Core/Config/Config.h"
@@ -23,8 +22,7 @@ namespace Isetta {
 RenderModule* CameraComponent::renderModule{nullptr};
 CameraComponent* CameraComponent::_main{nullptr};
 
-CameraComponent::CameraComponent(std::string cameraName)
-    : name{std::move(cameraName)}, renderNode(NULL), renderResource(NULL) {
+CameraComponent::CameraComponent() : renderNode(NULL), renderResource(NULL) {
   ASSERT(renderModule != nullptr);
   renderModule->cameraComponents.push_back(this);
   if (!_main) {
@@ -41,7 +39,8 @@ void CameraComponent::Start() {
 void CameraComponent::OnEnable() {
   ASSERT(renderModule != nullptr);
   renderNode =
-      h3dAddCameraNode(H3DRootNode, name.c_str(), renderModule->pipelineRes);
+      h3dAddCameraNode(H3DRootNode, entity->GetEntityIdString().c_str(),
+                       renderModule->pipelineRes);
   h3dSetNodeParamI(renderNode, H3DCamera::OccCullingI, 1);
   int width, height;
   glfwGetWindowSize(renderModule->winHandle, &width, &height);

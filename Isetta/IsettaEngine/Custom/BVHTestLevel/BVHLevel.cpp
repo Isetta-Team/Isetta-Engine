@@ -20,29 +20,25 @@
 
 namespace Isetta {
 
-using LightProperty = LightComponent::Property;
-using CameraProperty = CameraComponent::Property;
-
 void BVHLevel::OnLevelLoad() {
   Input::RegisterKeyPressCallback(KeyCode::ESCAPE,
                                   []() { Application::Exit(); });
 
-  Entity* lightEntity{AddEntity("Light")};
-  LightComponent* lightComp = lightEntity->AddComponent<LightComponent, true>(
-      "materials/light.material.xml", "LIGHT_1");
+  Entity* lightEntity = CREATE_ENTITY("Light");
+  lightEntity->AddComponent<LightComponent>("materials/light.material.xml",
+                                            "LIGHT_1");
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
 
-  Entity* cameraEntity{AddEntity("Camera")};
-  CameraComponent* camComp =
-      cameraEntity->AddComponent<CameraComponent, true>("Camera");
+  Entity* cameraEntity = CREATE_ENTITY("Camera");
+  cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
   cameraEntity->AddComponent<FlyController>();
 
   cameraEntity->AddComponent<LoadNextLevel>("EmptyLevel");
 
-  Entity* debug{CREATE_ENTITY("Debug")};
+  Entity* debug = CREATE_ENTITY("Debug");
   debug->AddComponent<GridComponent>();
   debug->AddComponent<EditorComponent>();
   debug->AddComponent<FrameReporter>();

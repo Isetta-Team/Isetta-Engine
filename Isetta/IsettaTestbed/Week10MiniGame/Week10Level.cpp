@@ -14,12 +14,11 @@
 using namespace Isetta;
 
 void Week10Level::OnLevelLoad() {
-  Entity* cameraEntity{AddEntity("Camera")};
-  CameraComponent* camComp =
-      cameraEntity->AddComponent<CameraComponent, true>("Camera");
+  Entity* cameraEntity{CREATE_ENTITY("Camera")};
+  cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->SetTransform(Math::Vector3{0, 0.25f, 3.0f});
 
-  Entity* lightEntity{AddEntity("Light")};
+  Entity* lightEntity{CREATE_ENTITY("Light")};
   LightComponent* lightComp = lightEntity->AddComponent<LightComponent, true>(
       "materials/light.material.xml", "LIGHT_1");
   lightEntity->SetTransform(Math::Vector3{0, 6, 3.5f}, Math::Vector3{-30, 0, 0},
