@@ -19,7 +19,7 @@ void PlayerController::OnEnable() {
   bullets.reserve(bulletPoolSize);
 
   for (int i = 0; i < bulletPoolSize; i++) {
-    Entity* bullet{ADD_ENTITY(Util::StrFormat("Bullet (%d)", i))};
+    Entity* bullet{CREATE_ENTITY(Util::StrFormat("Bullet (%d)", i))};
     bullet->AddComponent<Bullet>();
     bullet->SetActive(false);
     bullets.push_back(bullet);

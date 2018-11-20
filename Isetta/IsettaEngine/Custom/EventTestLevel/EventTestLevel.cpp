@@ -19,9 +19,9 @@ void EventTestLevel::OnLevelLoad() {
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
 
-  Entity* senderEntity{ADD_ENTITY("SenderEntity")};
+  Entity* senderEntity{CREATE_ENTITY("SenderEntity")};
   senderEntity->AddComponent<EventSenderComponent>();
 
-  Entity* listenerEntity{ADD_ENTITY("ListenerEntity")};
+  Entity* listenerEntity{CREATE_ENTITY("ListenerEntity")};
   listenerEntity->AddComponent<EventListenerComponent>();
 }

@@ -19,7 +19,7 @@
 
 namespace Isetta {
 #define CREATE_ENTITY(NAME) \
-  Isetta::LevelManager::Instance().loadedLevel->AddEntity(#NAME);
+  Isetta::LevelManager::Instance().loadedLevel->AddEntity(NAME)
 
 class ISETTA_API_DECLARE Entity {
  private:

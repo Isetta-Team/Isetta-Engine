@@ -7,7 +7,6 @@
 #include "Core/Math/Matrix4.h"
 #include "Core/Math/Quaternion.h"
 #include "Core/Math/Vector3.h"
-#include "Horde3D.h"
 
 namespace Isetta {
 class ISETTA_API_DECLARE Transform {
@@ -17,7 +16,7 @@ class ISETTA_API_DECLARE Transform {
   // constructors
   Transform() = delete;
   explicit Transform(class Entity* const entity);
-  ~Transform();
+  ~Transform() = default;
 
   void SetLocalToWorldMatrix(const Math::Matrix4& newMatrix);
 
@@ -88,7 +87,8 @@ class ISETTA_API_DECLARE Transform {
                          const Math::Vector3& inScale);
 
   // more utilities
-  static void SetH3DNodeTransform(H3DNode node, Transform& transform);
+  typedef int H3DNode;
+  static void SetH3DNodeTransform(int node, Transform& transform);
 
   // iterator
   typedef Array<Transform*>::iterator iterator;

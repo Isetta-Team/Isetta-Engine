@@ -32,7 +32,7 @@ void MeshAnimLevel::OnLevelLoad() {
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
 
-  Entity *grid{ADD_ENTITY("Grid")};
+  Entity *grid{CREATE_ENTITY("Grid")};
   grid->AddComponent<GridComponent>();
   grid->AddComponent<EditorComponent>();
 

@@ -25,15 +25,15 @@ void Week10Level::OnLevelLoad() {
   lightEntity->SetTransform(Math::Vector3{0, 6, 3.5f}, Math::Vector3{-30, 0, 0},
                             Math::Vector3::one);
 
-  Entity* debug{ADD_ENTITY("Debug")};
+  Entity* debug{CREATE_ENTITY("Debug")};
   debug->AddComponent<EditorComponent>();
 
-  Entity* ground{ADD_ENTITY("Ground")};
+  Entity* ground{CREATE_ENTITY("Ground")};
   ground->AddComponent<MeshComponent>("blockFencing/Ground.scene.xml");
   ground->SetTransform(Math::Vector3{0, -5.25, 0}, Math::Vector3::zero,
                        Math::Vector3{4.0f, 10.0f, 1});
 
-  Entity* networkManager{ADD_ENTITY("GameManager")};
+  Entity* networkManager{CREATE_ENTITY("GameManager")};
   networkManager->AddComponent<W10NetworkManager>();
   networkManager->AddComponent<W10GameManager>();
   networkManager->AddComponent<W10UIManager>();
