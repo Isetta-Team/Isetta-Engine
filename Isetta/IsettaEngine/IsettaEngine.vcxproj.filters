@@ -346,6 +346,9 @@
     <ClCompile Include="Custom\AudioPlay.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
+    <ClCompile Include="Custom\SkeletonLevel\SkeletonLevel.cpp">
+      <Filter>Custom\SkeletonLevel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -449,6 +452,9 @@
     </Filter>
     <Filter Include="Custom\AudioLevel">
       <UniqueIdentifier>{6d7a5ecf-3f90-4d5e-a963-184ec35d68e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\SkeletonLevel">
+      <UniqueIdentifier>{33133f07-dc65-44ed-bb04-78b420645ffb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -797,6 +803,9 @@
     </ClInclude>
     <ClInclude Include="Custom\AudioPlay.h">
       <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\SkeletonLevel\SkeletonLevel.h">
+      <Filter>Custom\SkeletonLevel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

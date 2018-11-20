@@ -201,6 +201,7 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClCompile Include="Custom\OscillateMove.cpp" />
     <ClCompile Include="Custom\CollisionsLevel\CollisionsLevel.cpp" />
     <ClCompile Include="Custom\RaycastClick.cpp" />
+    <ClCompile Include="Custom\SkeletonLevel\SkeletonLevel.cpp" />
     <ClCompile Include="EngineLoop.cpp" />
     <ClCompile Include="Events\EventObject.cpp" />
     <ClCompile Include="Events\Events.cpp" />
@@ -340,6 +341,7 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClInclude Include="Custom\OscillateMove.h" />
     <ClInclude Include="Custom\CollisionsLevel\CollisionsLevel.h" />
     <ClInclude Include="Custom\RaycastClick.h" />
+    <ClInclude Include="Custom\SkeletonLevel\SkeletonLevel.h" />
     <ClInclude Include="EngineLoop.h" />
     <ClInclude Include="Events\EventObject.h" />
     <ClInclude Include="Events\Events.h" />

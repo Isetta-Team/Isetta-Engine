@@ -30,19 +30,12 @@ void MeshAnimLevel::OnLevelLoad() {
       "materials/light.material.xml", "LIGHT_1");
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
-  lightComp->SetProperty<LightProperty::RADIUS>(2500);
-  lightComp->SetProperty<LightProperty::FOV>(180);
-  lightComp->SetProperty<LightProperty::COLOR>(Color::white);
-  lightComp->SetProperty<LightProperty::COLOR_MULTIPLIER>(1.0f);
-  lightComp->SetProperty<LightProperty::SHADOW_MAP_COUNT>(1);
-  lightComp->SetProperty<LightProperty::SHADOW_MAP_BIAS>(0.01f);
 
   Entity *grid{ADD_ENTITY("Grid")};
   grid->AddComponent<GridComponent>();
   grid->AddComponent<EditorComponent>();
 
   Entity *zombie{AddEntity("Zombie")};
-  zombies.push(zombie);
   MeshComponent *mesh =
       zombie->AddComponent<MeshComponent>("Zombie/Zombie.scene.xml");
   AnimationComponent *animation =

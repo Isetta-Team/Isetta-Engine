@@ -5,7 +5,7 @@
 #include "Scene/IsettaLevel.h"
 
 namespace Isetta {
-CREATE_LEVEL(MeshAnimLevel)
+CREATE_LEVEL(SkeletonLevel)
 void OnLevelLoad() override;
 CREATE_LEVEL_END
 }  // namespace Isetta

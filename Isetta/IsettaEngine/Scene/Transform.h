@@ -19,6 +19,8 @@ class ISETTA_API_DECLARE Transform {
   explicit Transform(class Entity* const entity);
   ~Transform();
 
+  void SetLocalToWorldMatrix(const Math::Matrix4& newMatrix);
+
   // position
   Math::Vector3 GetWorldPos();
   Math::Vector3 GetLocalPos() const;
