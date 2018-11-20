@@ -35,7 +35,8 @@ void BVTree::Node::SwapOutChild(Node *const oldChild, Node *const newChild) {
   }
 }
 
-BVTree::BVTree() : nodePool(CONFIG_VAL(collisionConfig.bvTreeNodeSize)) {}
+BVTree::BVTree() : nodePool(CONFIG_VAL(collisionConfig.bvTreeNodeSize),
+               CONFIG_VAL(memoryConfig.defaultPoolIncrement)) {}
 
 void BVTree::AddCollider(Collider *const collider) {
   Node *newNode = nodePool.Get(collider);
@@ -212,7 +213,8 @@ void BVTree::AddNode(Node *const newNode) {
       root->right = newNode;
     } else {
       // cur is actual leaf, convert cur to branch
-      Node *newBranch = nodePool.Get(AABB::Encapsulate(cur->aabb, newNode->aabb));
+      Node *newBranch =
+          nodePool.Get(AABB::Encapsulate(cur->aabb, newNode->aabb));
       newBranch->parent = cur->parent;
       cur->parent->SwapOutChild(cur, newBranch);
       cur->parent = newBranch;
@@ -293,11 +295,11 @@ void BVTree::DebugDraw() const {
 
     if (cur->IsLeaf()) {
 #if _EDITOR
-      if (collisionSet.find(cur->collider) != collisionSet.end()) {
+      // if (collisionSet.find(cur->collider) != collisionSet.end()) {
         color = Color::red;
-      } else {
+      // } else {
         color = Color::green;
-      }
+      // }
       DebugDraw::WireCube(Math::Matrix4::Translate(cur->aabb.GetCenter()) *
                               Math::Matrix4::Scale({cur->aabb.GetSize()}),
                           color, 1, .05);

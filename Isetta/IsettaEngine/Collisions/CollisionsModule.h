@@ -16,7 +16,7 @@ class CollisionsModule {
  public:
   struct CollisionConfig {
     CVar<float> fatFactor{"collision_fat_factor", 0.2f};
-    CVar<int> bvTreeNodeSize{"bv_tree_node_size", 200};
+    CVar<Size> bvTreeNodeSize{"bv_tree_node_size", 200};
   };
 
   static bool Intersection(const class BoxCollider &,
@@ -55,7 +55,7 @@ class CollisionsModule {
   CollisionUtil::ColliderPairSet collidingPairs;
   CollisionUtil::ColliderPairSet ignoreColliderPairs;
 
-  BVTree bvTree;
+  BVTree* bvTree;
   std::bitset<static_cast<int>(0.5f * Layers::LAYERS_CAPACITY *
                                (Layers::LAYERS_CAPACITY + 1))>
       ignoreCollisionLayer = 0;

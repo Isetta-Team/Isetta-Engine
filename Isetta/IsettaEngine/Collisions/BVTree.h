@@ -40,6 +40,7 @@ class BVTree {
   BVTree();
   friend class CollisionsModule;
   friend class CollisionSolverModule;
+  friend class FreeListAllocator;
 
  public:
   ~BVTree() = default;
@@ -66,7 +67,7 @@ class BVTree {
   Node* root = nullptr;
   TemplatePoolAllocator<Node> nodePool;
 #if _EDITOR
-  std::set<class Collider*> collisionSet;
+  // std::set<class Collider*> collisionSet;
 #endif
 };
 

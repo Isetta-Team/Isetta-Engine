@@ -5,6 +5,7 @@
 #include "Core/IsettaAlias.h"
 #include "ISETTA_API.h"
 #include "MemUtil.h"
+#include <vector>
 
 namespace Isetta {
 /*
@@ -58,7 +59,7 @@ class ISETTA_API FreeListAllocator {
 
   Node* head = nullptr;
   void* memHead = nullptr;
-  std::list<void*> additionalMemory;
+  std::vector<void*> additionalMemory;
 
   // A lesson learned here: if these two variables are not static, it will
   // implicitly involve in the copy constructor's copying process. But as they

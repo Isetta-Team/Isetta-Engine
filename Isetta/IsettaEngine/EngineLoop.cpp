@@ -47,7 +47,6 @@ EngineLoop::EngineLoop() {
   events = new Events{};
 }
 EngineLoop::~EngineLoop() {
-  delete memoryManager;
   delete windowModule;
   delete renderModule;
   delete inputModule;
@@ -57,6 +56,8 @@ EngineLoop::~EngineLoop() {
   delete audioModule;
   delete networkingModule;
   delete events;
+  memoryManager->ShutDown();
+  delete memoryManager;
 }
 
 void EngineLoop::StartUp() {
@@ -152,7 +153,6 @@ void EngineLoop::ShutDown() {
   inputModule->ShutDown();
   renderModule->ShutDown();
   windowModule->ShutDown();
-  memoryManager->ShutDown();
   Logger::ShutDown();
 }
 

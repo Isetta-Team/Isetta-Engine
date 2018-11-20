@@ -109,8 +109,8 @@ void FreeListAllocator::Expand() {
   void* newMem = std::malloc(increment);
   Node* newNode = new (newMem) Node{increment};
   InsertNode(newNode);
-  additionalMemory.push_back(newNode);
-
+  additionalMemory.push_back(newMem);
+  LOG_INFO(Debug::Channel::Memory, "Freelist just expanded by %I64u", increment);
 #if _DEBUG
   totalSize += increment;
 #endif
@@ -127,7 +127,7 @@ void FreeListAllocator::Erase() const {
 #endif
 
   std::free(memHead);
-  for (void* const memory : additionalMemory) {
+  for (void* memory : additionalMemory) {
     std::free(memory);
   }
 }
