@@ -20,13 +20,13 @@ class ISETTA_API LevelManager {
   std::unordered_map<StringId, Func<class Level*>> levels;
   class Level* pendingLoadLevel{nullptr};
 
-  bool LoadLevel();
+  void LoadLevel();
   void UnloadLevel();
   friend class EngineLoop;
 
  public:
   struct LevelConfig {
-    CVarString startLevel{"start_level", "Level1"};
+    CVarString startLevel{"start_level", "EmptyLevel"};
   };
 
   class Level* loadedLevel{nullptr};

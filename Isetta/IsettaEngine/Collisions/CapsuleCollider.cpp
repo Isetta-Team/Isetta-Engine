@@ -26,12 +26,13 @@ void CapsuleCollider::Update() {
       radius, height, debugColor);
 
   Math::Vector3 dir =
-      (Math::Vector3)(rotation * scale *
-                      Math::Matrix4::Scale(Math::Vector3{height - 2 * radius}) *
-                      Math::Vector4{0, 1, 0, 0});
-  /* Math::Vector3 P0 = transform->GetWorldPos() + center - dir;
-   Math::Vector3 P1 = transform->GetWorldPos() + center + dir;*/
-  // DebugDraw::Line(P0, P1, Color::blue);
+      0.5f * static_cast<Math::Vector3>(
+                 (rotation * scale *
+                  Math::Matrix4::Scale(Math::Vector3{height - 2 * radius}) *
+                  Math::Vector4{0, 1, 0, 0}));
+  Math::Vector3 P0 = transform->GetWorldPos() + center - dir;
+  Math::Vector3 P1 = transform->GetWorldPos() + center + dir;
+  DebugDraw::Line(P0, P1, Color::blue);
 }
 #endif
 
@@ -149,17 +150,15 @@ bool CapsuleCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
 }
 
 AABB CapsuleCollider::GetFatAABB() {
-  return AABB{GetWorldCenter(),
-              2.f *
-                  (GetWorldHeight() * transform->GetUp() +
-                   radius * Math::Vector3::one) *
-                  (1 + fatFactor)};
+  return AABB{GetWorldCenter(), 2.f *
+                                    (GetWorldHeight() * transform->GetUp() +
+                                     radius * Math::Vector3::one) *
+                                    (1 + fatFactor)};
 }
 AABB CapsuleCollider::GetAABB() {
   // TODO(Yidi) + TODO(Jacob) not a tight AABB
-  return AABB{GetWorldCenter(),
-              2.f * (GetWorldHeight() * transform->GetUp() +
-                     radius * Math::Vector3::one)};
+  return AABB{GetWorldCenter(), 2.f * (GetWorldHeight() * transform->GetUp() +
+                                       radius * Math::Vector3::one)};
 }
 
 INTERSECTION_TEST(CapsuleCollider)

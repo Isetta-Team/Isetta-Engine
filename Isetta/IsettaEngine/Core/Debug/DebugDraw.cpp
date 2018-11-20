@@ -627,7 +627,7 @@ void DebugDraw::DrawWireCapsule(const Math::Matrix4& transformation,
                                 float thickness, bool depthTest) {
   static const int halfCircle = 0.5f * CIRCLE_INDICIES;
   static const float squareScale = 0.5f * Math::Util::Sqrt(2);
-  float lineHeight = height - 2 * radius;
+  const float lineHeight = 0.5f * (height - 2 * radius);
   Math::Matrix4 up = Math::Matrix4::Translate(lineHeight * Math::Vector3::up);
   Math::Matrix4 down =
       Math::Matrix4::Translate(lineHeight * Math::Vector3::down);

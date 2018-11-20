@@ -28,15 +28,14 @@ enum class Direction { X_AXIS, Y_AXIS, Z_AXIS };
 float radius, height;
 Direction direction;
 
-CapsuleCollider(float radius = 0.5, float height = 1,
+CapsuleCollider(float radius = 0.5, float height = 2,
                 Direction direction = Direction::Y_AXIS)
     : Collider{}, radius{radius}, height{height}, direction{direction} {}
 CapsuleCollider(const Math::Vector3& center, float radius = 0.5,
-                float height = 1, Direction direction = Direction::Y_AXIS)
+                float height = 2, Direction direction = Direction::Y_AXIS)
     : Collider{center}, radius{radius}, height{height}, direction{direction} {}
-CapsuleCollider(bool trigger, const Math::Vector3& center,
-                float radius = 0.5, float height = 1,
-                Direction direction = Direction::Y_AXIS)
+CapsuleCollider(bool trigger, const Math::Vector3& center, float radius = 0.5,
+                float height = 2, Direction direction = Direction::Y_AXIS)
     : Collider{trigger, center},
       radius{radius},
       height{height},
@@ -50,24 +49,24 @@ bool Raycast(const Ray& ray, RaycastHit* const hitInfo,
 inline float GetWorldRadius() const {
   switch (direction) {
     case Direction::X_AXIS:
-      return Math::Util::Max(transform->GetWorldScale().y,
-                             transform->GetWorldScale().z);
+      return radius * Math::Util::Max(transform->GetWorldScale().y,
+                                      transform->GetWorldScale().z);
     case Direction::Y_AXIS:
-      return Math::Util::Max(transform->GetWorldScale().x,
-                             transform->GetWorldScale().z);
+      return radius * Math::Util::Max(transform->GetWorldScale().x,
+                                      transform->GetWorldScale().z);
     case Direction::Z_AXIS:
-      return Math::Util::Max(transform->GetWorldScale().x,
-                             transform->GetWorldScale().y);
+      return radius * Math::Util::Max(transform->GetWorldScale().x,
+                                      transform->GetWorldScale().y);
   }
 }
 inline float GetWorldHeight() const {
   switch (direction) {
     case Direction::X_AXIS:
-      return transform->GetWorldScale().x;
+      return height * transform->GetWorldScale().x;
     case Direction::Y_AXIS:
-      return transform->GetWorldScale().y;
+      return height * transform->GetWorldScale().y;
     case Direction::Z_AXIS:
-      return transform->GetWorldScale().z;
+      return height * transform->GetWorldScale().z;
   }
 }
 

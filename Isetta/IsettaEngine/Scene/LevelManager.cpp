@@ -17,17 +17,14 @@ bool LevelManager::Register(const std::string& name, Func<Level*> level) {
   return true;
 }
 
-bool LevelManager::LoadLevel() {
+void LevelManager::LoadLevel() {
   if (pendingLoadLevel != nullptr) {
-    UnloadLevel();
     loadedLevel = pendingLoadLevel;
     pendingLoadLevel = nullptr;
     LOG("Loading......%s", loadedLevel->GetName().c_str());
     loadedLevel->OnLevelLoad();
     LOG("Loading Complete");
-    return true;
   }
-  return false;
 }
 
 void LevelManager::UnloadLevel() {
