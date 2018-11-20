@@ -4,6 +4,7 @@
 #include "Components/Editor/Hierarchy.h"
 
 #include "Components/Editor/Inspector.h"
+#include "Graphics/GUI.h"
 #include "Scene/Entity.h"
 #include "Scene/Level.h"
 #include "Scene/LevelManager.h"
@@ -36,12 +37,14 @@ void Hierarchy::GuiUpdate() {
 
                   Action<Transform*> action = [&](Transform* t) {
                     int level = countLevel(t);
+                    GUI::PushID(t->GetEntity()->GetEntityIdString());
                     if (GUI::Button(RectTransform{Math::Rect{
                                         left + (level - 1) * padding, height,
                                         buttonWidth, buttonHeight}},
                                     t->GetName())) {
                       target = t;
                     }
+                    GUI::PopID();
                     height += 1.25f * buttonHeight;
                   };
                   action(entity->transform);

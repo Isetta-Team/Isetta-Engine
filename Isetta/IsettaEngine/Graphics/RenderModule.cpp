@@ -8,10 +8,10 @@
 #include "Core/Config/Config.h"
 #include "Core/Filesystem.h"
 #include "Core/Math/Vector3.h"
-#include "Graphics/ParticleSystemComponent.h"
 #include "Graphics/AnimationComponent.h"
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
+#include "Graphics/ParticleSystemComponent.h"
 #include "Horde3DUtils.h"
 #include "Scene/Entity.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
@@ -66,6 +66,10 @@ void RenderModule::Update(float deltaTime) {
     }
     particle->UpdateEmitter(deltaTime);
   }
+  // if (cameraComponents.empty()) {
+  //  LevelManager::Instance().LoadLevel("NoCameraLevel");
+  //  return;
+  //}
   ASSERT(!cameraComponents.empty());
   CameraComponent::_main = cameraComponents.front();
   h3dRender(CameraComponent::_main->renderNode);

@@ -198,6 +198,8 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClCompile Include="Custom\KeyTransform.cpp" />
     <ClCompile Include="Custom\LoadNextLevel.cpp" />
     <ClCompile Include="Custom\NetworkLevel.cpp" />
+    <ClCompile Include="Custom\NoCameraLevel\NoCameraComponent.cpp" />
+    <ClCompile Include="Custom\NoCameraLevel\NoCameraLevel.cpp" />
     <ClCompile Include="Custom\OscillateMove.cpp" />
     <ClCompile Include="Custom\CollisionsLevel\CollisionsLevel.cpp" />
     <ClCompile Include="Custom\PrimitiveLevel\PrimitiveLevel.cpp" />
@@ -340,6 +342,8 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClInclude Include="Custom\KeyTransform.h" />
     <ClInclude Include="Custom\LoadNextLevel.h" />
     <ClInclude Include="Custom\NetworkLevel.h" />
+    <ClInclude Include="Custom\NoCameraLevel\NoCameraComponent.h" />
+    <ClInclude Include="Custom\NoCameraLevel\NoCameraLevel.h" />
     <ClInclude Include="Custom\OscillateMove.h" />
     <ClInclude Include="Custom\CollisionsLevel\CollisionsLevel.h" />
     <ClInclude Include="Custom\PrimitiveLevel\PrimitiveLevel.h" />

@@ -535,6 +535,9 @@ void GUI::ProgressBar(const RectTransform& transform, float fraction,
   }
 }
 
+void GUI::PushID(std::string_view id) { ImGui::PushID(id.data()); }
+void GUI::PopID() { ImGui::PopID(); }
+
 void GUI::PushStyleVar(StyleVar var, float val) {
   ImGui::PushStyleVar((ImGuiStyleVar)var, val);
 }

@@ -18,12 +18,13 @@ using LightProperty = LightComponent::Property;
 using CameraProperty = CameraComponent::Property;
 
 void MeshAnimLevel::OnLevelLoad() {
-  Entity *cameraEntity{AddEntity("Camera")};
-  CameraComponent *camComp =
-      cameraEntity->AddComponent<CameraComponent>("Camera");
-  cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
-                             Math::Vector3::one);
-  cameraEntity->AddComponent<FlyController>();
+  // Entity *cameraEntity{AddEntity("Camera")};
+  // CameraComponent *camComp =
+  //    cameraEntity->AddComponent<CameraComponent>("Camera");
+  // cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0,
+  // 0},
+  //                           Math::Vector3::one);
+  // cameraEntity->AddComponent<FlyController>();
 
   Entity *lightEntity{AddEntity("Light")};
   LightComponent *lightComp = lightEntity->AddComponent<LightComponent>(
@@ -45,7 +46,7 @@ void MeshAnimLevel::OnLevelLoad() {
                        Math::Vector3::one * 0.01f);
 
   Entity *cube{AddEntity("Cube")};
-  cube->AddComponent<MeshComponent>("primitive/cube.scene.xml");
+  cube->AddComponent<MeshComponent>("primitives/Cube.scene.xml");
   cube->transform->SetParent(zombie->transform);
   cube->transform->SetLocalPos(2.f * Math::Vector3::up);
 }
