@@ -361,6 +361,9 @@
     <ClCompile Include="Custom\NoCameraLevel\NoCameraComponent.cpp">
       <Filter>Custom\NoCameraLevel</Filter>
     </ClCompile>
+    <ClCompile Include="Custom\SkeletonLevel\SkeletonLevel.cpp">
+      <Filter>Custom\SkeletonLevel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -473,6 +476,9 @@
     </Filter>
     <Filter Include="Custom\NoCameraLevel">
       <UniqueIdentifier>{29db0a17-3bdd-4334-8a99-896a2d5da961}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\SkeletonLevel">
+      <UniqueIdentifier>{33133f07-dc65-44ed-bb04-78b420645ffb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -836,6 +842,9 @@
     </ClInclude>
     <ClInclude Include="Custom\NoCameraLevel\NoCameraComponent.h">
       <Filter>Custom\NoCameraLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\SkeletonLevel\SkeletonLevel.h">
+      <Filter>Custom\SkeletonLevel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
