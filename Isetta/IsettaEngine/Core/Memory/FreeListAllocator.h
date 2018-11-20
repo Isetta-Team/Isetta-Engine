@@ -22,9 +22,9 @@ namespace Isetta {
 class ISETTA_API FreeListAllocator {
  public:
   // This class is using RAII
-  FreeListAllocator() = default;
+  FreeListAllocator() = delete;
   explicit FreeListAllocator(Size size);
-  ~FreeListAllocator() = default;
+  ~FreeListAllocator();
 
   void* Alloc(Size size, U8 alignment);
   void Free(void* memPtr);
@@ -51,7 +51,6 @@ class ISETTA_API FreeListAllocator {
   };
 
   void Expand();
-  void Erase() const;
   void RemoveNode(Node* last, Node* nodeToRemove);
   void InsertNode(Node* newNode);
   static void InsertNodeAt(Node* pos, Node* newNode);

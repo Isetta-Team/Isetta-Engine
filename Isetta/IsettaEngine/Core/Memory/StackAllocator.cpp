@@ -15,6 +15,10 @@ StackAllocator::StackAllocator(const Size stackSize)
   bottomAddress = reinterpret_cast<PtrInt>(bottom);
 }
 
+StackAllocator::~StackAllocator() {
+  std::free(bottom);
+}
+
 void* StackAllocator::Alloc(const Size size, const U8 alignment) {
   MemUtil::CheckAlignment(alignment);
 
@@ -36,8 +40,4 @@ void* StackAllocator::Alloc(const Size size, const U8 alignment) {
   return reinterpret_cast<void*>(alignedAddress);
 }
 
-void StackAllocator::Erase() {
-  Clear();
-  std::free(bottom);
-}
 }  // namespace Isetta

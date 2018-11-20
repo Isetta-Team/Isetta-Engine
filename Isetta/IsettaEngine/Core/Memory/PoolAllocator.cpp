@@ -32,7 +32,7 @@ void* PoolAllocator::Get() {
 
   void* ret = head;
   head = head->next;
-  memset(ret, 0x0, chunkSize);
+  // memset(ret, 0x0, chunkSize);
   return ret;
 }
 

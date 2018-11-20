@@ -16,6 +16,22 @@ FreeListAllocator::FreeListAllocator(const Size size) {
 #endif
 }
 
+FreeListAllocator::~FreeListAllocator() {
+  if (memHead == nullptr) {
+    return;
+  }
+
+#if _DEBUG
+  LOG_WARNING(Debug::Channel::Memory, "Memory leak of %I64u detect on freelist",
+              sizeUsed);
+#endif
+
+  std::free(memHead);
+  for (void* memory : additionalMemory) {
+    std::free(memory);
+  }
+}
+
 void* FreeListAllocator::Alloc(const Size size, const U8 alignment) {
   if (head == nullptr) {
     Expand();
@@ -114,22 +130,6 @@ void FreeListAllocator::Expand() {
 #if _DEBUG
   totalSize += increment;
 #endif
-}
-
-void FreeListAllocator::Erase() const {
-  if (memHead == nullptr) {
-    return;
-  }
-
-#if _DEBUG
-  LOG_WARNING(Debug::Channel::Memory, "Memory leak of %I64u detect on freelist",
-              sizeUsed);
-#endif
-
-  std::free(memHead);
-  for (void* memory : additionalMemory) {
-    std::free(memory);
-  }
 }
 
 void FreeListAllocator::RemoveNode(Node* last, Node* nodeToRemove) {

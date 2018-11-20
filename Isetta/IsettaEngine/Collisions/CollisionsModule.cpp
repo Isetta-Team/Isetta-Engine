@@ -28,13 +28,12 @@ void CollisionsModule::StartUp() {
   Collider::fatFactor = CONFIG_VAL(collisionConfig.fatFactor);
   Collisions::collisionsModule = this;
   CollisionSolverModule::collisionsModule = this;
-  bvTree = MemoryManager::NewOnFreeList<BVTree>();
 }
 
 void CollisionsModule::Update(float deltaTime) {
   BROFILER_CATEGORY("Collision Update", Profiler::Color::Orchid);
 
-  bvTree->Update();
+  bvTree.Update();
 
   // By the end of the checking loop, pairs left in the lastFramePairs
   // are those who are no longer colliding
@@ -42,7 +41,7 @@ void CollisionsModule::Update(float deltaTime) {
 
   collidingPairs.clear();
 
-  for (const auto &pair : bvTree->GetCollisionPairs()) {
+  for (const auto &pair : bvTree.GetCollisionPairs()) {
     Collider *collider1 = pair.first;
     Collider *collider2 = pair.second;
     // Ignore Single/Layer Collisions continue
@@ -94,12 +93,11 @@ void CollisionsModule::Update(float deltaTime) {
 }
 
 void CollisionsModule::ShutDown() {
-  MemoryManager::DeleteOnFreeList<BVTree>(bvTree);
 }
 
 Array<Collider *> CollisionsModule::GetPossibleColliders(
     Collider *collider) const {
-  return bvTree->GetPossibleColliders(collider);
+  return bvTree.GetPossibleColliders(collider);
 }
 
 bool CollisionsModule::Intersection(const BoxCollider &a,
@@ -312,7 +310,7 @@ bool CollisionsModule::Raycast(const Ray &ray, RaycastHit *const hitInfo,
   //  }
   //}
   // return hitInfo->GetDistance() < INFINITY;
-  return bvTree->Raycast(ray, hitInfo, maxDistance);
+  return bvTree.Raycast(ray, hitInfo, maxDistance);
 }
 bool CollisionsModule::GetIgnoreLayerCollision(int layer1, int layer2) const {
   Layers::CheckLayer(layer1);

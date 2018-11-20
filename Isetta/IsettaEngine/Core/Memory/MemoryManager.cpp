@@ -39,23 +39,14 @@ void MemoryManager::FreeOnFreeList(void* memPtr) {
   GetInstance()->freeListAllocator.Free(memPtr);
 }
 
-MemoryManager::MemoryManager() {
-  // TODO(YIDI): The two allocators are still initialized here by automatically
-  // calling their default constructors, find a better way to handle this
+MemoryManager::MemoryManager()
+    : lsrAndLevelAllocator(CONFIG_VAL(memoryConfig.lsrAndLevelAllocatorSize)),
+      singleFrameAllocator(CONFIG_VAL(memoryConfig.singleFrameAllocatorSize)),
+      doubleBufferedAllocator(
+          CONFIG_VAL(memoryConfig.doubleBufferedAllocatorSize)),
+      dynamicArena(CONFIG_VAL(memoryConfig.dynamicArenaSize)),
+      freeListAllocator(CONFIG_VAL(memoryConfig.freeListAllocatorSize)) {
   instance = this;
-}
-
-void MemoryManager::StartUp() {
-  MemoryConfig& configs = Config::Instance().memoryConfig;
-  // CONFIG_VAL(memoryConfig.lsrAndLevelAllocatorSize)
-  lsrAndLevelAllocator =
-      StackAllocator(configs.lsrAndLevelAllocatorSize.GetVal());
-  singleFrameAllocator =
-      StackAllocator(configs.singleFrameAllocatorSize.GetVal());
-  doubleBufferedAllocator =
-      DoubleBufferedAllocator(configs.doubleBufferedAllocatorSize.GetVal());
-  dynamicArena = MemoryArena(configs.dynamicArenaSize.GetVal());
-  freeListAllocator = FreeListAllocator(configs.freeListAllocatorSize.GetVal());
 }
 
 // Memory Manager's update needs to be called after everything that need memory
@@ -70,14 +61,6 @@ void MemoryManager::Update() {
 #if _DEBUG
   freeListAllocator.Print();
 #endif
-}
-
-void MemoryManager::ShutDown() {
-  singleFrameAllocator.Erase();
-  doubleBufferedAllocator.Erase();
-  dynamicArena.Erase();
-  lsrAndLevelAllocator.Erase();
-  freeListAllocator.Erase();
 }
 
 void MemoryManager::FinishEngineStartupListener() {
