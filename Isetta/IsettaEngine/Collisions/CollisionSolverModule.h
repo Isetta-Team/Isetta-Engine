@@ -21,7 +21,7 @@ class CollisionSolverModule {
   Collision Solve(Collider* collider, Math::Vector3 point);
   Math::Vector3 Resolve(Collider* collider1, Collision collision1,
                         Collider* collider2, Collision collision2);
-  Math::Vector3 GetStrongestAxis(BoxCollider* box, Math::Vector3 point);
+  Math::Vector3 GetPushDirection(Collider* box, Math::Vector3 point);
 
   void StartUp();
   void Update();

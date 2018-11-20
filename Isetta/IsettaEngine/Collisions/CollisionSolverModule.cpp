@@ -29,6 +29,8 @@ void CollisionSolverModule::ShutDown(){};
 
 Collision CollisionSolverModule::Solve(Collider* collider,
                                        Math::Vector3 point) {
+  const float EPS = 1e-6;
+
   PROFILE
   Collision collision;
 
@@ -36,31 +38,33 @@ Collision CollisionSolverModule::Solve(Collider* collider,
     case Collider::ColliderType::BOX: {
       BoxCollider* box = static_cast<BoxCollider*>(collider);
 
-      // AABB aabb = AABB(box->center, box->size);
-      // collision.hitPoint =
-      // box->transform->WorldPosFromLocalPos(collisionsModule->ClosestPtPointAABB(box->transform->LocalPosFromWorldPos(point),
-      // aabb));
+      Math::Vector3 p = box->transform->LocalPosFromWorldPos(point) -
+                        box->center;  // TODO(Caleb): Check if this is supposed
+                                      // to be converted from world space
 
-      // collision.hitPoint = collisionsModule->ClosestPtPointOBB(point, *box);
-
-      Math::Vector3 d = point - (box->GetWorldCenter());
-      collision.hitPoint = box->GetWorldCenter();
+      Math::Vector3 extents = box->size * .5;
+      Math::Vector3 hitPoint = Math::Vector3::zero;
 
       int numEdges = 0;
+      int maxAxis = 0;
+      float maxDist = Math::Util::Abs(p[0]);
 
-      Math::Vector3 extents = box->GetWorldExtents();
       for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
-        float dist = Math::Vector3::Dot(d, box->transform->GetAxis(i));
-        if (dist > extents[i]) {
-          dist = extents[i];
-          ++numEdges;
-        } else if (dist < -extents[i]) {
-          dist = -extents[i];
-          ++numEdges;
+        hitPoint[i] =
+            Math::Util::Min(Math::Util::Max(p[i], -extents[i]), extents[i]);
+
+        if (Math::Util::Abs(p[i]) > maxDist) {
+          maxDist = Math::Util::Abs(p[i]);
+          maxAxis = i;
         }
-        collision.hitPoint += dist * box->transform->GetAxis(i);
+
+        if (Math::Util::Abs(hitPoint[i]) >= extents[i]) ++numEdges;
       }
 
+      hitPoint[maxAxis] =
+          Math::Util::Sign(hitPoint[maxAxis]) * (extents[maxAxis] + EPS);
+
+      collision.hitPoint = box->transform->WorldPosFromLocalPos(hitPoint);
       collision.onEdge = numEdges > 1;
       break;
     }
@@ -83,27 +87,13 @@ Collision CollisionSolverModule::Solve(Collider* collider,
       float t;
       collision.hitPoint =
           collisionsModule->ClosestPtPointSegment(point, cp0, cp1, &t);
-      U32 tInt = reinterpret_cast<U32&>(t);
 
       // TODO(Caleb): Make this float reinterpretation platform agnostic
       // (i.e. can't use just IEEE)
       Math::Vector3 radialPoint = (point - collision.hitPoint).Normalized();
-      switch (tInt) {
-        case 0x3f800000:  // 1: Can extend the radius "anywhere"
-        case 0x00000000:  // 0
-          collision.hitPoint =
-              collision.hitPoint + radialPoint * capsule->radius * radiusScale;
-          break;
 
-        default:  // anything else: Can only extend the radius along the
-                  // circular cross-section of the capsule
-          Math::Vector3 capsuleDir = (cp0 - cp1).Normalized();
-          Math::Vector3 crossProd =
-              Math::Vector3::Cross(radialPoint, capsuleDir);
-          Math::Vector3 projLine = Math::Vector3::Cross(capsuleDir, crossProd);
-          collision.hitPoint =
-              collision.hitPoint + projLine * capsule->radius * radiusScale;
-      }
+      collision.hitPoint =
+          collision.hitPoint + radialPoint * capsule->radius * radiusScale;
 
       break;
     }
@@ -122,24 +112,40 @@ Collision CollisionSolverModule::Solve(Collider* collider,
   return collision;
 }
 
-Math::Vector3 CollisionSolverModule::GetStrongestAxis(BoxCollider* box,
+Math::Vector3 CollisionSolverModule::GetPushDirection(Collider* collider,
                                                       Math::Vector3 point) {
-  Math::Vector3 d = point - box->GetWorldCenter();
+  switch (collider->GetType()) {
+    case Collider::ColliderType::BOX: {
+      BoxCollider* box = static_cast<BoxCollider*>(collider);
+      Math::Vector3 d = point - box->GetWorldCenter();
 
-  int strongest = 0;
-  float maxMagnitude =
-      Math::Util::Abs(Math::Vector3::Dot(box->transform->GetAxis(0), d));
+      int strongest = 0;
+      float maxMagnitude =
+          Math::Util::Abs(Math::Vector3::Dot(box->transform->GetAxis(0), d));
 
-  for (int i = 1; i < Math::Vector3::ELEMENT_COUNT; ++i) {
-    float magnitude =
-        Math::Util::Abs(Math::Vector3::Dot(box->transform->GetAxis(i), d));
-    if (magnitude > maxMagnitude) {
-      strongest = i;
-      maxMagnitude = magnitude;
-    }
+      for (int i = 1; i < Math::Vector3::ELEMENT_COUNT; ++i) {
+        float magnitude =
+            Math::Util::Abs(Math::Vector3::Dot(box->transform->GetAxis(i), d));
+        if (magnitude > maxMagnitude) {
+          strongest = i;
+          maxMagnitude = magnitude;
+        }
+      }
+
+      return box->transform->GetAxis(strongest);
+    } break;
+
+    case Collider::ColliderType::CAPSULE: {
+      return (point - collider->GetWorldCenter())
+          .Normalized();  // TODO(Caleb): Make an actual capsule force vector
+                          // lol
+    } break;
+
+    case Collider::ColliderType::SPHERE:
+    default: {
+      return (point - collider->GetWorldCenter()).Normalized();
+    } break;
   }
-
-  return box->transform->GetAxis(strongest);
 }
 
 Math::Vector3 CollisionSolverModule::Resolve(Collider* collider1,
@@ -149,58 +155,19 @@ Math::Vector3 CollisionSolverModule::Resolve(Collider* collider1,
   // Calculate the solve point based on the collisions
   int solveType = static_cast<int>(collision1.onEdge) +
                   2 * static_cast<int>(collision2.onEdge);
+  bool collider1IsDominant = collider1->GetType() == Collider::ColliderType::BOX;
 
-  Math::Vector3 response;
+  Math::Vector3 responseDirection;
 
-  switch (solveType) {
-    case 0: {  // Neither collider collided on its edge
-      int dominantCollider = static_cast<int>(collider1->GetType() ==
-                                              Collider::ColliderType::BOX) +
-                             2 * static_cast<int>(collider2->GetType() ==
-                                                  Collider::ColliderType::BOX);
-      switch (dominantCollider) {
-        case 0: {  // Neither collider is a box
-          response = collision2.hitPoint - collision1.hitPoint;
-        } break;
-
-        case 1:  // The first or both colliders are boxes
-        case 3: {
-          Math::Vector3 strongestAxis = GetStrongestAxis(
-              static_cast<BoxCollider*>(collider1), collision1.hitPoint);
-          float magnitude = Math::Vector3::Dot(
-              (collision2.hitPoint - collision1.hitPoint), strongestAxis);
-          response = strongestAxis * magnitude;
-        } break;
-
-        case 2: {  // The second collider is a box
-          Math::Vector3 strongestAxis = GetStrongestAxis(
-              static_cast<BoxCollider*>(collider2), collision2.hitPoint);
-          float magnitude = Math::Vector3::Dot(
-              (collision2.hitPoint - collision1.hitPoint), strongestAxis);
-          response = strongestAxis * magnitude;
-        } break;
-      }
-    } break;
-
-    case 2:  // The second or both colliders collided on their edges
-    case 3: {
-      Math::Vector3 strongestAxis = GetStrongestAxis(
-          static_cast<BoxCollider*>(collider1), collision1.hitPoint);
-      float magnitude = Math::Vector3::Dot(
-          (collision2.hitPoint - collision1.hitPoint), strongestAxis);
-      response = strongestAxis * magnitude;
-    } break;
-
-    case 1: {  // The first collider collided on its edge
-      Math::Vector3 strongestAxis = GetStrongestAxis(
-          static_cast<BoxCollider*>(collider2), collision2.hitPoint);
-      float magnitude = Math::Vector3::Dot(
-          (collision2.hitPoint - collision1.hitPoint), strongestAxis);
-      response = strongestAxis * magnitude;
-    } break;
+  if (!collision1.onEdge && !collision2.onEdge && collider1IsDominant || collision2.onEdge) {
+    responseDirection = GetPushDirection(collider1, collision1.hitPoint);
+  } else {
+    responseDirection = GetPushDirection(collider2, collision2.hitPoint);
   }
 
-  return response;
+  return Math::Vector3::Dot((collision2.hitPoint - collision1.hitPoint),
+                            responseDirection) *
+         responseDirection;
 }
 
 void CollisionSolverModule::Update() {
