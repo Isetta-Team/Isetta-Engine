@@ -8,7 +8,7 @@ namespace Isetta {
 BEGIN_COMPONENT(KeyTransform, Component, true)
 private:
   float step;
-  bool pressed;
+  bool pressed = false;
 
  public:
   KeyTransform(float step = 1) : step{step} {}

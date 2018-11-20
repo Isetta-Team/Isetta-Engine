@@ -57,13 +57,11 @@ void KeyTransform::OnEnable() {
   // Scale
   Input::RegisterKeyPressCallback(KeyCode::KP_1, [&]() {
     if (pressed) return;
-    this->transform->SetLocalScale(this->transform->GetLocalScale() *
-                                       1.1);
+    this->transform->SetLocalScale(this->transform->GetLocalScale() * 1.1);
   });
   Input::RegisterKeyPressCallback(KeyCode::KP_3, [&]() {
     if (pressed) return;
-    this->transform->SetLocalScale(this->transform->GetLocalScale() *
-                                       .9);
+    this->transform->SetLocalScale(this->transform->GetLocalScale() * .9);
   });
 
   Input::RegisterKeyPressCallback(KeyCode::M, [&]() { pressed = !pressed; });
@@ -71,78 +69,64 @@ void KeyTransform::OnEnable() {
 void KeyTransform::Update() {
   if (!pressed) return;
   if (Input::IsKeyPressed(KeyCode::RIGHT_ARROW)) {
-    this->transform->TranslateLocal(
-        10 * step * Math::Vector3::left *
-        Time::GetDeltaTime());
+    this->transform->TranslateLocal(10 * step * Math::Vector3::left *
+                                    Time::GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::LEFT_ARROW)) {
-    this->transform->TranslateLocal(
-        10 * step * Math::Vector3::right *
-        Time::GetDeltaTime());
+    this->transform->TranslateLocal(10 * step * Math::Vector3::right *
+                                    Time::GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::DOWN_ARROW)) {
-    this->transform->TranslateLocal(
-        10 * step * Math::Vector3::forward *
-        Time::GetDeltaTime());
+    this->transform->TranslateLocal(10 * step * Math::Vector3::forward *
+                                    Time::GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::UP_ARROW)) {
-    this->transform->TranslateLocal(
-        10 * step * Math::Vector3::back *
-        Time::GetDeltaTime());
+    this->transform->TranslateLocal(10 * step * Math::Vector3::back *
+                                    Time::GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::PAGE_UP)) {
-    this->transform->TranslateLocal(
-        10 * step * Math::Vector3::up *
-        Time::GetDeltaTime());
+    this->transform->TranslateLocal(10 * step * Math::Vector3::up *
+                                    Time::GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::PAGE_DOWN)) {
-    this->transform->TranslateLocal(
-        10 * step * Math::Vector3::down *
-        Time::GetDeltaTime());
+    this->transform->TranslateLocal(10 * step * Math::Vector3::down *
+                                    Time::GetDeltaTime());
   }
 
   // Rotation
   if (Input::IsKeyPressed(KeyCode::KP_8)) {
-    this->transform->RotateLocal(
-        Math::Vector3::right,
-        50 * step * Time::GetDeltaTime());
+    this->transform->RotateLocal(Math::Vector3::right,
+                                 50 * step * Time::GetDeltaTime());
   };
   if (Input::IsKeyPressed(KeyCode::KP_2)) {
-    this->transform->RotateLocal(
-        Math::Vector3::left,
-        50 * step * Time::GetDeltaTime());
+    this->transform->RotateLocal(Math::Vector3::left,
+                                 50 * step * Time::GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::KP_4)) {
-    this->transform->RotateLocal(
-        Math::Vector3::down,
-        50 * step * Time::GetDeltaTime());
+    this->transform->RotateLocal(Math::Vector3::down,
+                                 50 * step * Time::GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::KP_6)) {
-    this->transform->RotateLocal(
-        Math::Vector3::up,
-        50 * step * Time::GetDeltaTime());
+    this->transform->RotateLocal(Math::Vector3::up,
+                                 50 * step * Time::GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::KP_7)) {
-    this->transform->RotateLocal(
-        Math::Vector3::back,
-        50 * step * Time::GetDeltaTime());
+    this->transform->RotateLocal(Math::Vector3::back,
+                                 50 * step * Time::GetDeltaTime());
   }
   if (Input::IsKeyPressed(KeyCode::KP_9)) {
-    this->transform->RotateLocal(
-        Math::Vector3::forward,
-        50 * step * Time::GetDeltaTime());
+    this->transform->RotateLocal(Math::Vector3::forward,
+                                 50 * step * Time::GetDeltaTime());
   }
 
   // Scale
   if (Input::IsKeyPressed(KeyCode::KP_1)) {
-    this->transform->SetLocalScale(
-        this->transform->GetLocalScale() *
-        (1 + .25 * Time::GetDeltaTime()));
+    this->transform->SetLocalScale(this->transform->GetLocalScale() *
+                                   (1 + .25 * Time::GetDeltaTime()));
   }
   if (Input::IsKeyPressed(KeyCode::KP_3)) {
-    this->transform->SetLocalScale(
-        this->transform->GetLocalScale() *
-        (1 - .25 * Time::GetDeltaTime()));
+    this->transform->SetLocalScale(this->transform->GetLocalScale() *
+                                   (1 - .25 * Time::GetDeltaTime()));
   }
 
   // Rotation
