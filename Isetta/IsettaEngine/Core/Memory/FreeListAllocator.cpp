@@ -2,10 +2,9 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Core/Memory/FreeListAllocator.h"
-#include <iostream>
 #include "Core/Config/Config.h"
 #include "Core/Memory/MemUtil.h"
-#include "Scene/Entity.h"
+#include <iostream>
 
 namespace Isetta {
 
@@ -14,9 +13,23 @@ FreeListAllocator::FreeListAllocator(const Size size) {
   head = new (memHead) Node(size);
 #if _DEBUG
   totalSize += size;
-  LOG_INFO(Debug::Channel::Memory, "A new free list of size %d is created",
-           size);
 #endif
+}
+
+FreeListAllocator::~FreeListAllocator() {
+  if (memHead == nullptr) {
+    return;
+  }
+
+#if _DEBUG
+  LOG_WARNING(Debug::Channel::Memory, "Memory leak of %I64u detect on freelist",
+              sizeUsed);
+#endif
+
+  std::free(memHead);
+  for (void* memory : additionalMemory) {
+    std::free(memory);
+  }
 }
 
 void* FreeListAllocator::Alloc(const Size size, const U8 alignment) {
@@ -62,20 +75,19 @@ void* FreeListAllocator::Alloc(const Size size, const U8 alignment) {
         Node(node->size - occupiedSize);
 
     InsertNodeAt(node, newNode);
-    RemoveNode(last, node);
     allocSize = occupiedSize;
   } else {
     // not enough space left for node
-    RemoveNode(last, node);
     allocSize = node->size;
   }
+
+  RemoveNode(last, node);
 
   // new headers will be reclaimed during "free" process
   new (reinterpret_cast<void*>(headerAddress))
       AllocHeader(allocSize, adjustment);
 #if _DEBUG
   sizeUsed += allocSize;
-  std::cout << sizeUsed << " ++ " << allocSize << std::endl;
 #endif
 
   void* ret = reinterpret_cast<void*>(alignedAddress);
@@ -88,7 +100,6 @@ void FreeListAllocator::Free(void* memPtr) {
   auto* allocHeader = reinterpret_cast<AllocHeader*>(allocHeaderAdd);
 #if _DEBUG
   sizeUsed -= allocHeader->size;
-  std::cout << sizeUsed << " -- " << allocHeader->size << std::endl;
 #endif
   PtrInt nodeAddress = allocHeaderAdd - allocHeader->adjustment;
   auto* newNode =
@@ -114,27 +125,11 @@ void FreeListAllocator::Expand() {
   void* newMem = std::malloc(increment);
   Node* newNode = new (newMem) Node{increment};
   InsertNode(newNode);
-  additionalMemory.push_back(newNode);
-
+  additionalMemory.push_back(newMem);
+  LOG_INFO(Debug::Channel::Memory, "Freelist just expanded by %I64u", increment);
 #if _DEBUG
   totalSize += increment;
 #endif
-}
-
-void FreeListAllocator::Erase() const {
-  if (memHead == nullptr) {
-    return;
-  }
-
-#if _DEBUG
-  LOG_WARNING(Debug::Channel::Memory, "Memory leak of %I64u detect on freelist",
-              sizeUsed);
-#endif
-
-  std::free(memHead);
-  for (void* const memory : additionalMemory) {
-    std::free(memory);
-  }
 }
 
 void FreeListAllocator::RemoveNode(Node* last, Node* nodeToRemove) {
@@ -174,9 +169,6 @@ void FreeListAllocator::InsertNode(Node* newNode) {
     TryMergeWithNext(newNode);
     TryMergeWithNext(last);
   }
-  // TODO(Yidi)
-  // memset((void*)(headerAddress + headerSize), NULL,
-  //       totalSize - headerSize - adjustment);
 }
 
 void FreeListAllocator::InsertNodeAt(Node* pos, Node* newNode) {
@@ -208,7 +200,7 @@ void FreeListAllocator::Print() const {
   static int i = interval;
   ++i;
   if (i > interval) {
-    LOG_INFO(Debug::Channel::Memory, "Freelist usage: %I64u / %I64u = %.3f%%",
+    LOG_INFO(Debug::Channel::Memory, "Freelist usage: %I64u / %I64u = %.3f %%",
              sizeUsed, totalSize,
              static_cast<float>(sizeUsed) / totalSize * 100);
     i = 0;

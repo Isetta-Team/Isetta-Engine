@@ -17,9 +17,7 @@ ColliderType GetType() const final { return ColliderType::BOX; }
 public:
 Math::Vector3 size;
 
-explicit BoxCollider(const Math::Vector3& size = Math::Vector3::one)
-    : Collider{}, size{size} {}
-BoxCollider(const Math::Vector3& center,
+BoxCollider(const Math::Vector3& center = Math::Vector3::zero,
             const Math::Vector3& size = Math::Vector3::one)
     : Collider{center}, size{size} {}
 BoxCollider(bool trigger, const Math::Vector3& center,

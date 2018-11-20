@@ -2,11 +2,12 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include <unordered_set>
+#include <set>
+#include <unordered_map>
 #include "AABB.h"
 #include "Collider.h"
 #include "CollisionUtil.h"
-#include "brofiler/ProfilerCore/Brofiler.h"
+#include "Core/Memory/TemplatePoolAllocator.h"
 
 namespace Isetta::Math {
 class Ray;
@@ -36,12 +37,13 @@ class BVTree {
     Node* right{nullptr};
   };
 
-  BVTree() = default;
+  BVTree();
   friend class CollisionsModule;
   friend class CollisionSolverModule;
+  friend class FreeListAllocator;
 
  public:
-  ~BVTree();
+  ~BVTree() = default;
 
   void AddCollider(class Collider* collider);
   void RemoveCollider(class Collider* collider);
@@ -62,12 +64,11 @@ class BVTree {
 
   CollisionUtil::ColliderPairSet colliderPairSet;
   std::unordered_map<class Collider*, Node*> colNodeMap;
-#if _EDITOR
-  std::set<class Collider*> collisionSet;
-#endif
   Node* root = nullptr;
-
-  friend class CollisionsModule;
+  TemplatePoolAllocator<Node> nodePool;
+#if _EDITOR
+  // std::set<class Collider*> collisionSet;
+#endif
 };
 
 }  // namespace Isetta

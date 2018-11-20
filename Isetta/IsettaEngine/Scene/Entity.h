@@ -18,6 +18,9 @@
 #include "Util.h"
 
 namespace Isetta {
+#define CREATE_ENTITY(NAME) \
+  Isetta::LevelManager::Instance().loadedLevel->AddEntity(NAME)
+
 class ISETTA_API_DECLARE Entity {
  private:
   enum class EntityAttributes { IS_ACTIVE, NEED_DESTROY, IS_TRANSFORM_DIRTY };
@@ -27,7 +30,7 @@ class ISETTA_API_DECLARE Entity {
 
   std::vector<std::type_index> componentTypes;
   Array<class Component *> components;
-  Transform m_transform;
+  Transform internalTransform;
 
   void OnEnable();
   void GuiUpdate();
@@ -46,13 +49,18 @@ class ISETTA_API_DECLARE Entity {
   void SetAttribute(EntityAttributes attr, bool value);
   bool GetAttribute(EntityAttributes attr) const;
 
- public:
   Entity(const std::string &name);
   Entity(const std::string &name, const bool &entityStatic);
+  friend Level;
+  friend class MemoryManager;
+  friend class FreeListAllocator;
+
+ public:
   ~Entity();
 
   Transform *transform{};
 
+  void SetName(std::string_view name) { entityName = name; }
   std::string GetName() const { return entityName; }
   GUID GetEntityId() const { return entityId; }
   std::string GetEntityIdString() const {

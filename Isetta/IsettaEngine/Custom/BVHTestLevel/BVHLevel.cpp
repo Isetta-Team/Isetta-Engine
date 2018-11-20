@@ -42,7 +42,7 @@ void BVHLevel::OnLevelLoad() {
 
   cameraEntity->AddComponent<LoadNextLevel>("EmptyLevel");
 
-  Entity* debug{ADD_ENTITY("Debug")};
+  Entity* debug{CREATE_ENTITY("Debug")};
   debug->AddComponent<GridComponent>();
   debug->AddComponent<EditorComponent>();
   debug->AddComponent<FrameReporter>();
@@ -82,7 +82,7 @@ void BVHLevel::OnLevelLoad() {
   Input::RegisterKeyPressCallback(KeyCode::KP_5, [&]() {
     for (int i = 0; i < 100; ++i) {
       ++count;
-      Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
+      Entity* sphere{CREATE_ENTITY(Util::StrFormat("Sphere (%d)", count))};
       randomMovers.PushBack(sphere->AddComponent<RandomMover>());
       randomMovers.Back()->SetActive(enable);
       randomMovers.Back()->range = range;
@@ -99,7 +99,7 @@ void BVHLevel::OnLevelLoad() {
 
   Input::RegisterKeyPressCallback(KeyCode::KP_6, [&]() {
     ++count;
-    Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
+    Entity* sphere{CREATE_ENTITY(Util::StrFormat("Sphere (%d)", count))};
     randomMovers.PushBack(sphere->AddComponent<RandomMover>());
     randomMovers.Back()->SetActive(enable);
     randomMovers.Back()->range = range;

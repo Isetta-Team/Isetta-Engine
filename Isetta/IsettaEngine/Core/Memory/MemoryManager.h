@@ -22,6 +22,7 @@ class ISETTA_API MemoryManager {
     CVar<Size> dynamicArenaSize{"dynamic_arena_size", 10_MB};
     CVar<Size> freeListAllocatorSize{"free_list_allocator_size", 10_MB};
     CVar<Size> freeListIncrement{"free_list_increment", 10_MB};
+    CVar<Size> defaultPoolIncrement{"default_pool_increment", 50};
   };
 
   /**
@@ -127,15 +128,17 @@ class ISETTA_API MemoryManager {
   static void DeleteDynamic(const ObjectHandle<T>& objToDelete);
 
  private:
-  MemoryManager();
-  ~MemoryManager() = default;
-
   /**
    * \brief Start up the memory manager. This creates the single frame
    * allocator, the double buffered allocator, and the dynamic arena. Their
    * specific sizes can be specified in engine config
    */
-  void StartUp();
+  MemoryManager();
+  /**
+   * \brief Free all memory, any further attempt to use objects managed by the
+   * memory manager will crash the game
+   */
+  ~MemoryManager() = default;
 
   /**
    * \brief Update the memory manager. This needs to be called in simulation
@@ -143,12 +146,6 @@ class ISETTA_API MemoryManager {
    * buffered allocators and defragment the dynamic memory arena
    */
   void Update();
-
-  /**
-   * \brief Free all memory, any further attempt to use objects managed by the
-   * memory manager will crash the game
-   */
-  void ShutDown();
 
   // set the marker to clear to when finishing a level
   // TODO(YIDI): Someone please call this
@@ -161,12 +158,12 @@ class ISETTA_API MemoryManager {
   static void DefragmentTest();
 
   static MemoryManager* instance;
-  StackAllocator lsrAndLevelAllocator{};
+  StackAllocator lsrAndLevelAllocator;
   Size lvlMemStartMarker{};
-  StackAllocator singleFrameAllocator{};
-  DoubleBufferedAllocator doubleBufferedAllocator{};
-  MemoryArena dynamicArena{};
-  FreeListAllocator freeListAllocator{};
+  StackAllocator singleFrameAllocator;
+  DoubleBufferedAllocator doubleBufferedAllocator;
+  MemoryArena dynamicArena;
+  FreeListAllocator freeListAllocator;
 
   friend class EngineLoop;
 

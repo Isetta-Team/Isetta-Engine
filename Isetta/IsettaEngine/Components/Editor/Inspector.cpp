@@ -18,7 +18,7 @@ void Inspector::GuiUpdate() {
   if (!target) return;
 
   GUI::Window(
-      rectTransform, title.c_str(),
+      rectTransform, title,
       [&]() {
         std::string parentName =
             target->GetParent() ? target->GetParent()->GetName() : "null";
@@ -27,10 +27,10 @@ void Inspector::GuiUpdate() {
         float padding = 15;
         RectTransform rect =
             RectTransform{Math::Rect{padding, height, 300, 100}};
-        GUI::Text(rect, target->GetEntity()->GetEntityIdString());
+        GUI::Text(rect, target->entity->GetEntityIdString());
         rect.rect.y += 15;
 
-        GUI::Text(rect, target->GetEntity()->GetName());
+        GUI::Text(rect, target->entity->GetName());
         rect.rect.y += 15;
 
         GUI::Text(rect, "World Position " + target->GetWorldPos().ToString());
@@ -72,7 +72,7 @@ void Inspector::GuiUpdate() {
         GUI::Text(RectTransform{Math::Rect{padding, rect.rect.y, 300, 100}},
                   "Components");
 
-        for (const auto &component : target->GetEntity()->GetComponents<Component>()) {
+        for (const auto &component : target->entity->GetComponents<Component>()) {
           Component &comp = *component;
           rect.rect.y += padding;
           GUI::Text(RectTransform{Math::Rect{padding, rect.rect.y, 300, 100}},

@@ -13,6 +13,8 @@
 #include "Components/Editor/Inspector.h"
 #include "Custom/EscapeExit.h"
 
+#include "Scene/Primitive.h"
+
 namespace Isetta {
 using CameraProperty = CameraComponent::Property;
 
@@ -30,5 +32,8 @@ void EditorLevel::OnLevelLoad() {
   // Inspector* inspector = editor->AddComponent<Inspector>("Inspector", false);
   // editor->AddComponent<Hierarchy>("Hierarchy", true, inspector);
   editor->AddComponent<EscapeExit>();
+
+  Primitive::Create(Primitive::Type::Cube);
+  Primitive::Create(Primitive::Type::Cube);
 }
 }  // namespace Isetta

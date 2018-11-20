@@ -2,7 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include <utility>
 #include "Collisions/AABB.h"
 #include "Core/Color.h"
 #include "Core/Math/Vector3.h"

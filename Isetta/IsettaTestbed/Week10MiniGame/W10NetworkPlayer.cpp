@@ -32,7 +32,7 @@ void W10NetworkPlayer::Awake() {
   entity->AddComponent<Isetta::MeshComponent>(
       "blockFencing/Enemy.scene.xml");
 
-  swordEntity = ADD_ENTITY("Sword2");
+  swordEntity = CREATE_ENTITY("Sword2");
   swordEntity->AddComponent<Isetta::MeshComponent>("primitive/cube.scene.xml");
   auto networkId = swordEntity->AddComponent<Isetta::NetworkId>(swordNetId);
   networkId->clientAuthorityId = clientAuthorityId;

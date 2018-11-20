@@ -19,9 +19,6 @@
 #include "Core/Filesystem.h"
 #include "Core/Time/Clock.h"
 #include "Events/Events.h"
-#include "Input/Input.h"
-#include "Input/KeyCode.h"
-#include "Networking/NetworkManager.h"
 #include "Scene/Entity.h"
 #include "Scene/Level.h"
 #include "Scene/LevelManager.h"
@@ -35,6 +32,13 @@ EngineLoop& EngineLoop::Instance() {
 }
 
 EngineLoop::EngineLoop() {
+  Logger::NewSession();
+  Config::Instance().Read("config.cfg");
+  if (Filesystem::Instance().FileExists("user.cfg")) {
+    Config::Instance().Read("user.cfg");
+  }
+
+  // Memory manager must start before everything else
   memoryManager = new MemoryManager{};
   windowModule = new WindowModule{};
   renderModule = new RenderModule{};
@@ -46,8 +50,8 @@ EngineLoop::EngineLoop() {
   networkingModule = new NetworkingModule{};
   events = new Events{};
 }
+
 EngineLoop::~EngineLoop() {
-  delete memoryManager;
   delete windowModule;
   delete renderModule;
   delete inputModule;
@@ -57,16 +61,11 @@ EngineLoop::~EngineLoop() {
   delete audioModule;
   delete networkingModule;
   delete events;
+  delete memoryManager;
 }
 
 void EngineLoop::StartUp() {
   BROFILER_EVENT("Start Up");
-
-  Logger::NewSession();
-  Config::Instance().Read("config.cfg");
-  if (Filesystem::Instance().FileExists("user.cfg")) {
-    Config::Instance().Read("user.cfg");
-  }
 
   intervalTime = 1.0 / Config::Instance().loopConfig.maxFps.GetVal();
   maxSimulationCount = Config::Instance().loopConfig.maxSimCount.GetVal();
@@ -74,8 +73,6 @@ void EngineLoop::StartUp() {
   // Will be set to false when Application set it to isGameRunning
   isGameRunning = true;
 
-  // Memory module must start before everything else
-  memoryManager->StartUp();
   // Window module must start before things depend on it
   windowModule->StartUp();
   renderModule->StartUp(windowModule->winHandle);
@@ -132,9 +129,11 @@ void EngineLoop::VariableUpdate(const float deltaTime) const {
   windowModule->Update(deltaTime);
   memoryManager->Update();
 
-  if (LevelManager::Instance().LoadLevel()) {
+  if (LevelManager::Instance().pendingLoadLevel) {
+    LevelManager::Instance().UnloadLevel();
     inputModule->Clear();
     audioModule->UnloadLevel();
+    LevelManager::Instance().LoadLevel();
   }
 }
 
@@ -152,7 +151,6 @@ void EngineLoop::ShutDown() {
   inputModule->ShutDown();
   renderModule->ShutDown();
   windowModule->ShutDown();
-  memoryManager->ShutDown();
   Logger::ShutDown();
 }
 

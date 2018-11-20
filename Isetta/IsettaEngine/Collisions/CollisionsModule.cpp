@@ -92,7 +92,8 @@ void CollisionsModule::Update(float deltaTime) {
   }
 }
 
-void CollisionsModule::ShutDown() {}
+void CollisionsModule::ShutDown() {
+}
 
 Array<Collider *> CollisionsModule::GetPossibleColliders(
     Collider *collider) const {
@@ -310,7 +311,6 @@ bool CollisionsModule::Raycast(const Ray &ray, RaycastHit *const hitInfo,
   //}
   // return hitInfo->GetDistance() < INFINITY;
   return bvTree.Raycast(ray, hitInfo, maxDistance);
-  return false;
 }
 bool CollisionsModule::GetIgnoreLayerCollision(int layer1, int layer2) const {
   Layers::CheckLayer(layer1);

@@ -11,9 +11,9 @@ class ISETTA_API StackAllocator {
  public:
   typedef Size Marker;
 
-  StackAllocator() = default;
+  StackAllocator() = delete;
   explicit StackAllocator(Size stackSize);
-  ~StackAllocator() = default;
+  ~StackAllocator();
 
   /**
    * \brief Grab properly aligned memory from the stack allocator. You probably
@@ -45,19 +45,13 @@ class ISETTA_API StackAllocator {
    * \brief Free the stack allocator to a specific marker
    * \param marker Marker to free to
    */
-  void FreeToMarker(const Marker marker) { top = marker; };
+  void FreeToMarker(const Marker marker) { top = marker; }
 
   /**
    * \brief Clear the whole stack allocator to its bottom. All memory will be
    * available for new allocations again
    */
-  void Clear() { top = 0; };
-
-  /**
-   * \brief Free all memory in this stack allocator. The stack allocator will
-   * become unusable after calling this
-   */
-  void Erase();
+  void Clear() { top = 0; }
 
   /**
    * \brief Get the current marker position

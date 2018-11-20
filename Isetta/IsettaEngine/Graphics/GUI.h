@@ -950,7 +950,8 @@ class ISETTA_API GUI {
   // TODO(Jacob) Classic/Dark/Light sytling?
   */
   // TODO(Jacob) Load/SaveIniSettings?
-
+  static void PushID(std::string_view id);
+  static void PopID();
   static void PushStyleVar(StyleVar var, float val);
   static void PushStyleVar(StyleVar var, const Math::Vector2& val);
   static void PopStyleVar(int pops = 1);
