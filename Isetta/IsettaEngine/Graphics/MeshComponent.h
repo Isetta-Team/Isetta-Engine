@@ -4,32 +4,40 @@
 #pragma once
 #include <Horde3D.h>
 #include <string>
-#include "Scene/Component.h"
 #include <string_view>
+#include "Core/Math/Math.h"
+#include "SID/sid.h"
+#include "Scene/Component.h"
 
 namespace Isetta {
 BEGIN_COMPONENT(MeshComponent, Component, false)
-  H3DNode renderNode{0};
-  H3DRes renderResource{0};
+H3DNode renderNode{0};
+H3DRes renderResource{0};
 
-  explicit MeshComponent(std::string_view resourceName);
-  ~MeshComponent();
+std::unordered_map<StringId, H3DNode> joints;
 
-  void UpdateTransform() const; 
+explicit MeshComponent(std::string_view resourceName);
+~MeshComponent();
 
- protected:
-  static H3DRes LoadResourceFromFile(std::string_view resourceName);
+void UpdateTransform() const;
 
-  void OnEnable() override;
-  void OnDisable() override;
-  void OnDestroy() override;
+protected:
+static H3DRes LoadResourceFromFile(std::string_view resourceName);
 
-  friend class AnimationComponent;
-  friend class Entity;
-  friend class MemoryManager;
-  friend class FreeListAllocator;
-  friend class RenderModule;
+void OnEnable() override;
+void OnDisable() override;
+void OnDestroy() override;
 
-  static class RenderModule* renderModule;
+friend class AnimationComponent;
+friend class Entity;
+friend class MemoryManager;
+friend class FreeListAllocator;
+friend class RenderModule;
+
+public:
+std::tuple<Math::Vector3, Math::Quaternion> GetJointWorldTransform(
+    std::string jointName);
+
+static class RenderModule* renderModule;
 END_COMPONENT(MeshComponent, Component)
 }  // namespace Isetta

@@ -352,6 +352,9 @@
     <ClCompile Include="Custom\PrimitiveLevel\PrimitiveLevel.cpp">
       <Filter>Custom\PrimitiveLevel</Filter>
     </ClCompile>
+    <ClCompile Include="Custom\SkeletonLevel\SkeletonLevel.cpp">
+      <Filter>Custom\SkeletonLevel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -458,6 +461,9 @@
     </Filter>
     <Filter Include="Custom\PrimitiveLevel">
       <UniqueIdentifier>{0b6e1da6-cd48-4704-81c7-c7fc5d36def2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\SkeletonLevel">
+      <UniqueIdentifier>{33133f07-dc65-44ed-bb04-78b420645ffb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -812,6 +818,9 @@
     </ClInclude>
     <ClInclude Include="Custom\PrimitiveLevel\PrimitiveLevel.h">
       <Filter>Custom\PrimitiveLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\SkeletonLevel\SkeletonLevel.h">
+      <Filter>Custom\SkeletonLevel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
