@@ -216,7 +216,7 @@ bool CollisionsModule::Intersection(const BoxCollider &box,
   Math::Vector3 dir = (Math::Vector3)(
       rot * scale *
       Math::Matrix4::Scale(Math::Vector3{capsule.height - 2 * capsule.radius}) *
-      Math::Vector4{0, 1, 0, 0});
+      Math::Vector4{0, 1, 0, 0}) * .5;
   Math::Vector3 p0 = capsule.GetWorldCenter() - dir;
   Math::Vector3 p1 = capsule.GetWorldCenter() + dir;
   return SqDistSegmentOBB(p0, p1, box) <=
@@ -255,11 +255,11 @@ bool CollisionsModule::Intersection(const SphereCollider &sphere,
   Math::Vector3 dir = (Math::Vector3)(
       rot * scale *
       Math::Matrix4::Scale(Math::Vector3{capsule.height - 2 * capsule.radius}) *
-      Math::Vector4{0, 1, 0, 0});
+      Math::Vector4{0, 1, 0, 0}) * .5;
   Math::Vector3 p0 = capsule.GetWorldCenter() - dir;
   Math::Vector3 p1 = capsule.GetWorldCenter() + dir;
   float distSq = SqDistPointSegment(p0, p1, sphere.GetWorldCenter());
-  return distSq <= Math::Util::Square(sphere.radius * sphere.GetWorldRadius() +
+  return distSq <= Math::Util::Square(sphere.GetWorldRadius() +
                                       capsule.radius * radiusScale);
 }
 bool CollisionsModule::Intersection(const CapsuleCollider &a,

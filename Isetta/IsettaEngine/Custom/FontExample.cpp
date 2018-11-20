@@ -3,6 +3,7 @@
 #include "Graphics/Font.h"
 #include "Graphics/GUI.h"
 #include "Graphics/RectTransform.h"
+#include "imgui/imgui.h"
 
 namespace Isetta {
 FontExample::FontExample(float fontSize, const std::string_view fontName)
