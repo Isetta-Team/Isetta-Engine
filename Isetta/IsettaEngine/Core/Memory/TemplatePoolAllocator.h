@@ -2,7 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Memory/MemUtil.h"
 #include "Util.h"
@@ -12,29 +11,30 @@ namespace Isetta {
 template <typename T>
 class TemplatePoolAllocator {
  public:
-  TemplatePoolAllocator() = default;
+  TemplatePoolAllocator() = delete;
   explicit TemplatePoolAllocator(Size count);
-  ~TemplatePoolAllocator() = default;
-  T* Get();
+  ~TemplatePoolAllocator() { MemUtil::Free(memHead); }
+
+  template <typename... Args>
+  T* Get(Args&&...);
   void Free(T*);
-  void Erase() const;
 
  private:
-  union Node {
+  union PoolNode {
     T t;
-    Node* next;
-    Node();
+    PoolNode* next;
+    PoolNode() : next(nullptr) {}
   };
 
   Size capacity{};
   Size elementSize{};
-  Node* head;
+  PoolNode* head{};
   void* memHead{};
 };
 
 template <typename T>
 TemplatePoolAllocator<T>::TemplatePoolAllocator(const Size count) {
-  if (sizeof(Node*) > sizeof(T)) {
+  if (sizeof(PoolNode*) > sizeof(T)) {
     throw std::exception{Util::StrFormat(
         "TemplatePoolAllocator::TemplatePoolAllocator => Using "
         "TemplatePoolAllocator for type %s will incur more overhead memory "
@@ -44,31 +44,32 @@ TemplatePoolAllocator<T>::TemplatePoolAllocator(const Size count) {
 
   capacity = count;
   elementSize = sizeof(T);
-  memHead = MemUtil::AllocDefaultAligned(elementSize * capacity);
+  memHead = MemUtil::Alloc(elementSize * capacity);
   PtrInt address = reinterpret_cast<PtrInt>(memHead);
-  head = new (memHead) Node();
-  Node* cur = head;
+  head = new (memHead) PoolNode();
+  PoolNode* cur = head;
 
   for (Size i = 1; i < count; ++i) {
     address += elementSize;
-    Node* node = new (reinterpret_cast<void*>(address)) Node();
+    auto* node = new (reinterpret_cast<void*>(address)) PoolNode();
     cur->next = node;
     cur = cur->next;
   }
 }
 
 template <typename T>
-T* TemplatePoolAllocator<T>::Get() {
+template <typename... Args>
+T* TemplatePoolAllocator<T>::Get(Args&&... args) {
   if (head == nullptr) {
     throw std::out_of_range(
         "TemplatePoolAllocator::Get => Not enough memory in "
         "TemplatePoolAllocator");
   }
 
-  Node* next = head->next;
+  PoolNode* next = head->next;
   // head's content will be overriden when constructing T
   // so it's next must be cached before that
-  T* t = new (head) T();
+  T* t = new (head) T(std::forward<Args>(args)...);
   head = next;
   return t;
 }
@@ -76,18 +77,9 @@ T* TemplatePoolAllocator<T>::Get() {
 template <typename T>
 void TemplatePoolAllocator<T>::Free(T* t) {
   t->~T();
-  Node* node = new (t) Node();
+  auto* node = new (t) PoolNode();
   node->next = head;
   head = node;
 }
 
-template <typename T>
-void TemplatePoolAllocator<T>::Erase() const {
-  MemUtil::FreeDefaultAligned(memHead);
-}
-
-template <typename T>
-TemplatePoolAllocator<T>::Node::Node() {
-  next = nullptr;
-}
 }  // namespace Isetta

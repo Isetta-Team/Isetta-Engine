@@ -41,22 +41,15 @@ class ISETTA_API Config {
     return instance;
   }
 
-  /// Logger configuartion CVars
   Logger::LoggerConfig logger;
-  /// WindowModule configuration CVars
   WindowModule::WindowConfig windowConfig;
-  /// EngineLoop configuration CVars
   EngineLoop::LoopConfig loopConfig;
-  /// RenderModule configuration CVars
   RenderModule::RenderConfig renderConfig;
   CameraComponent::CameraConfig cameraConfig;
   LightComponent::LightConfig lightConfig;
 
-  /// NetworkingModule configuration CVars
   NetworkingModule::NetworkConfig networkConfig;
-  /// MemoryManager configuration CVars
   MemoryManager::MemoryConfig memoryConfig;
-  /// AudioModule configuration CVars
   AudioModule::AudioConfig audioConfig;
   LevelManager::LevelConfig levelConfig;
   CollisionsModule::CollisionConfig collisionConfig;

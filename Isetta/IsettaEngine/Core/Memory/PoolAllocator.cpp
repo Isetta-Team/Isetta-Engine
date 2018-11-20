@@ -7,8 +7,8 @@
 
 namespace Isetta {
 
-PoolAllocator::PoolAllocator(const Size chunkSize, const Size count) {
-  elementSize = chunkSize;
+PoolAllocator::PoolAllocator(const Size chunkSize, const Size count)
+    : elementSize(chunkSize) {
 
   if (elementSize > sizeof(Node*)) {
     throw std::exception{Util::StrFormat(
@@ -38,9 +38,9 @@ void* PoolAllocator::Get() {
     throw std::out_of_range{"PoolAllocator::Get => Not enough memory"};
   }
 
-  // TODO(YIDI): Should I initialize memory to zero before return?
   void* ret = head;
   head = head->next;
+  memset(ret, 0x0, elementSize);
   return ret;
 }
 
@@ -50,6 +50,4 @@ void PoolAllocator::Free(void* mem) {
 }
 
 void PoolAllocator::Erase() const { std::free(memHead); }
-
-PoolAllocator::Node::Node(Node* next) { this->next = next; }
 }  // namespace Isetta
