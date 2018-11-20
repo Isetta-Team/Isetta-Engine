@@ -12,14 +12,14 @@
 using namespace Isetta;
 
 void EventTestLevel::OnLevelLoad() {
-  Entity* cameraEntity = CREATE_ENTITY("Camera");
+  Entity* cameraEntity = Entity::CreateEntity("Camera");
   cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
 
-  Entity* senderEntity = CREATE_ENTITY("SenderEntity");
+  Entity* senderEntity = Entity::CreateEntity("SenderEntity");
   senderEntity->AddComponent<EventSenderComponent>();
 
-  Entity* listenerEntity = CREATE_ENTITY("ListenerEntity");
+  Entity* listenerEntity = Entity::CreateEntity("ListenerEntity");
   listenerEntity->AddComponent<EventListenerComponent>();
 }

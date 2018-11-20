@@ -14,19 +14,19 @@
 namespace Isetta {
 
 void ExampleLevel::OnLevelLoad() {
-  Entity* cameraEntity = CREATE_ENTITY("Camera");
+  Entity* cameraEntity = Entity::CreateEntity("Camera");
   cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
   cameraEntity->AddComponent<FlyController>();
 
-  Entity* lightEntity = CREATE_ENTITY("Light");
+  Entity* lightEntity = Entity::CreateEntity("Light");
   lightEntity->AddComponent<LightComponent>("materials/light.material.xml",
                                             "LIGHT_1");
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
 
-  Entity* man = CREATE_ENTITY("PushAnim");
+  Entity* man = Entity::CreateEntity("PushAnim");
   man->SetTransform(Math::Vector3{0, 0, 0}, Math::Vector3{0, 90, 0});
   // man->AddComponent<PlayerController, true>();
   MeshComponent* pushMesh =
@@ -35,7 +35,7 @@ void ExampleLevel::OnLevelLoad() {
   AnimationComponent* ani = man->AddComponent<AnimationComponent>(pushMesh);
   ani->AddAnimation("push/Pushing.anim", 0, "", false);
 
-  Entity* customEntity = CREATE_ENTITY("custom");
+  Entity* customEntity = Entity::CreateEntity("custom");
   customEntity->AddComponent<ExampleComponent>();
   customEntity->AddComponent<GridComponent>();
 }

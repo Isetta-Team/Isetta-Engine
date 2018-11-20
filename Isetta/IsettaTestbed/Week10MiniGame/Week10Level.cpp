@@ -14,25 +14,25 @@
 using namespace Isetta;
 
 void Week10Level::OnLevelLoad() {
-  Entity* cameraEntity{CREATE_ENTITY("Camera")};
+  Entity* cameraEntity{Entity::CreateEntity("Camera")};
   cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->SetTransform(Math::Vector3{0, 0.25f, 3.0f});
 
-  Entity* lightEntity{CREATE_ENTITY("Light")};
+  Entity* lightEntity{Entity::CreateEntity("Light")};
   LightComponent* lightComp = lightEntity->AddComponent<LightComponent, true>(
       "materials/light.material.xml", "LIGHT_1");
   lightEntity->SetTransform(Math::Vector3{0, 6, 3.5f}, Math::Vector3{-30, 0, 0},
                             Math::Vector3::one);
 
-  Entity* debug{CREATE_ENTITY("Debug")};
+  Entity* debug{Entity::CreateEntity("Debug")};
   debug->AddComponent<EditorComponent>();
 
-  Entity* ground{CREATE_ENTITY("Ground")};
+  Entity* ground{Entity::CreateEntity("Ground")};
   ground->AddComponent<MeshComponent>("blockFencing/Ground.scene.xml");
   ground->SetTransform(Math::Vector3{0, -5.25, 0}, Math::Vector3::zero,
                        Math::Vector3{4.0f, 10.0f, 1});
 
-  Entity* networkManager{CREATE_ENTITY("GameManager")};
+  Entity* networkManager{Entity::CreateEntity("GameManager")};
   networkManager->AddComponent<W10NetworkManager>();
   networkManager->AddComponent<W10GameManager>();
   networkManager->AddComponent<W10UIManager>();

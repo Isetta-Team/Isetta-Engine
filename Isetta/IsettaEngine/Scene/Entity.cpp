@@ -99,7 +99,11 @@ bool Entity::GetAttribute(EntityAttributes attr) const {
 }
 
 Entity::Entity(const std::string &name)
-    : internalTransform(this), attributes{0b101}, entityName{name}, transform(&internalTransform), isStatic{false} {
+    : internalTransform(this),
+      attributes{0b101},
+      entityName{name},
+      transform(&internalTransform),
+      isStatic{false} {
   CoCreateGuid(&entityId);
   OnEnable();
 }
@@ -107,7 +111,8 @@ Entity::Entity(const std::string &name)
 Entity::Entity(const std::string &name, const bool &entityStatic)
     : internalTransform(this),
       attributes{0b101},
-      entityName{name}, transform(&internalTransform),
+      entityName{name},
+      transform(&internalTransform),
       isStatic{entityStatic} {
   CoCreateGuid(&entityId);
   OnEnable();
@@ -117,6 +122,10 @@ Entity::~Entity() {
   OnDisable();
   Destroy(this);
   CheckDestroy();
+}
+
+Entity* Entity::CreateEntity(const std::string name, Entity *parent, const bool entityStatic) {
+  return LevelManager::Instance().loadedLevel->AddEntity(name, parent, entityStatic);
 }
 
 void Entity::Destroy(Entity *entity) {
@@ -132,11 +141,11 @@ void Entity::Destroy(Entity *entity) {
 void Entity::DestroyHelper(Entity *entity) {
   Array<Transform *> removingChildren;
   entity->SetAttribute(EntityAttributes::NEED_DESTROY, true);
-  for (Transform* child : entity->transform->children) {
+  for (Transform *child : entity->transform->children) {
     removingChildren.PushBack(child);
     DestroyHelper(child->entity);
   }
-  for (Transform* child : removingChildren) {
+  for (Transform *child : removingChildren) {
     entity->transform->RemoveChild(child);
   }
   entity->transform->parent = nullptr;

@@ -11,11 +11,11 @@
 #include "Graphics/ParticleSystemComponent.h"
 
 void Isetta::AITestLevel::OnLevelLoad() {
-  Entity *camera = AddEntity("Camera");
+  Entity *camera = Entity::CreateEntity("Camera");
   camera->SetTransform(Math::Vector3{5, 5, 16}, Math::Vector3{-20, 0, 0},
                        Math::Vector3::one);
   camera->AddComponent<CameraComponent>();
-  Entity *lightEntity{AddEntity("Light")};
+  Entity *lightEntity{Entity::CreateEntity("Light")};
   lightEntity->AddComponent<LightComponent>(
       "materials/light.material.xml", "LIGHT_1");
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
@@ -24,7 +24,7 @@ void Isetta::AITestLevel::OnLevelLoad() {
   camera->AddComponent<EscapeExit>();
   // camera->AddComponent<EditorComponent>();
 
-  Entity *moveCube{AddEntity("Move")};
+  Entity *moveCube{Entity::CreateEntity("Move")};
   moveCube->SetTransform(Math::Vector3{5, 0, 5}, Math::Vector3::zero,
                          Math::Vector3::one * 0.2);
   moveCube->AddComponent<MeshComponent>("primitive/Cube.scene.xml");

@@ -21,7 +21,7 @@ void Isetta::AITestComponent::Update() {
 
 void Isetta::AITestComponent::Awake() {
   Input::RegisterKeyPressCallback(KeyCode::J, [&]() {
-    auto entity = CREATE_ENTITY("Agent");
+    auto entity = Entity::CreateEntity("Agent");
     entity->AddComponent<AITestAgent>(&navPlane);
     float randomX = Math::Random::GetRandom01() * 10;
     float randomY = Math::Random::GetRandom01() * 10;
@@ -30,14 +30,14 @@ void Isetta::AITestComponent::Awake() {
 
   Input::RegisterKeyPressCallback(KeyCode::K, [&]() {
     for (int i = 0; i < 100; ++i) {
-      auto entity = CREATE_ENTITY("Agent");
+      auto entity = Entity::CreateEntity("Agent");
       entity->AddComponent<AITestAgent>(&navPlane);
       float randomX = Math::Random::GetRandom01() * 10;
       float randomY = Math::Random::GetRandom01() * 10;
       entity->SetTransform({randomX, 0.0, randomY}, {0, 0, 0}, {0.1, 0.1, 0.1});
     }
   });
-  auto zero = CREATE_ENTITY("Zero entity");
+  auto zero = Entity::CreateEntity("Zero entity");
   zero->SetTransform({0.3, 0, 0.3});
   navPlane.AddTarget(zero->transform);
   navPlane.AddTarget(trackingEntity);

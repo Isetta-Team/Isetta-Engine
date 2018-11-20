@@ -24,13 +24,13 @@ void BVHLevel::OnLevelLoad() {
   Input::RegisterKeyPressCallback(KeyCode::ESCAPE,
                                   []() { Application::Exit(); });
 
-  Entity* lightEntity = CREATE_ENTITY("Light");
+  Entity* lightEntity = Entity::CreateEntity("Light");
   lightEntity->AddComponent<LightComponent>("materials/light.material.xml",
                                             "LIGHT_1");
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
 
-  Entity* cameraEntity = CREATE_ENTITY("Camera");
+  Entity* cameraEntity = Entity::CreateEntity("Camera");
   cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
@@ -38,7 +38,7 @@ void BVHLevel::OnLevelLoad() {
 
   cameraEntity->AddComponent<LoadNextLevel>("EmptyLevel");
 
-  Entity* debug = CREATE_ENTITY("Debug");
+  Entity* debug = Entity::CreateEntity("Debug");
   debug->AddComponent<GridComponent>();
   debug->AddComponent<EditorComponent>();
   debug->AddComponent<FrameReporter>();
@@ -78,7 +78,7 @@ void BVHLevel::OnLevelLoad() {
   Input::RegisterKeyPressCallback(KeyCode::KP_5, [&]() {
     for (int i = 0; i < 100; ++i) {
       ++count;
-      Entity* sphere{CREATE_ENTITY(Util::StrFormat("Sphere (%d)", count))};
+      Entity* sphere{Entity::CreateEntity(Util::StrFormat("Sphere (%d)", count))};
       randomMovers.PushBack(sphere->AddComponent<RandomMover>());
       randomMovers.Back()->SetActive(enable);
       randomMovers.Back()->range = range;
@@ -95,7 +95,7 @@ void BVHLevel::OnLevelLoad() {
 
   Input::RegisterKeyPressCallback(KeyCode::KP_6, [&]() {
     ++count;
-    Entity* sphere{CREATE_ENTITY(Util::StrFormat("Sphere (%d)", count))};
+    Entity* sphere{Entity::CreateEntity(Util::StrFormat("Sphere (%d)", count))};
     randomMovers.PushBack(sphere->AddComponent<RandomMover>());
     randomMovers.Back()->SetActive(enable);
     randomMovers.Back()->range = range;

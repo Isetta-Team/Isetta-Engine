@@ -19,20 +19,20 @@ namespace Isetta {
 void Level1::OnLevelLoad() {
   Font::AddFontFromFile("Resources/Fonts/CONSOLA.TTF", 13.0f);
 
-  Entity* cameraEntity{CREATE_ENTITY("Camera")};
+  Entity* cameraEntity{Entity::CreateEntity("Camera")};
   cameraEntity->AddComponent<CameraController>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
 
   cameraEntity->AddComponent<CameraComponent>();
 
-  Entity* lightEntity{CREATE_ENTITY("Light")};
+  Entity* lightEntity{Entity::CreateEntity("Light")};
   lightEntity->AddComponent<LightComponent>("materials/light.material.xml",
                                             "LIGHT_1");
   lightEntity->SetTransform(Math::Vector3{0, 200, 600},
                             Math::Vector3{-30, 0, 0});
 
-  Entity* player{CREATE_ENTITY("Player")};
+  Entity* player{Entity::CreateEntity("Player")};
   player->SetTransform(Math::Vector3{0, 0, 0}, Math::Vector3{0, 90, 0},
                        0.03f * Math::Vector3::one);
   MeshComponent* playerMesh =
@@ -44,10 +44,10 @@ void Level1::OnLevelLoad() {
   ani->AddAnimation("Soldier/Soldier_Idle.anim", 0, "", false);
   ani->AddAnimation("Soldier/Soldier.anim", 0, "", false);
 
-  Entity* ground{CREATE_ENTITY("Ground")};
+  Entity* ground{Entity::CreateEntity("Ground")};
   ground->AddComponent<MeshComponent>("Ground/Level.scene.xml");
 
-  Entity* gameManager{CREATE_ENTITY("Game Manager")};
+  Entity* gameManager{Entity::CreateEntity("Game Manager")};
   gameManager->AddComponent<GameManager>();
   gameManager->AddComponent<EscapeExit>();
 

@@ -31,6 +31,9 @@ class ISETTA_API Level {
   void AddComponentToStart(class Component* component);
   void StartComponents();
 
+  class Entity* AddEntity(std::string name, class Entity* parent,
+                          bool entityStatic = false);
+
   void UnloadLevel();
   void Update();
   void GUIUpdate();
@@ -59,9 +62,5 @@ class ISETTA_API Level {
 
   virtual void OnLevelLoad() = 0;
   virtual void OnLevelUnload() {}
-
-  class Entity* AddEntity(std::string name, bool entityStatic = false);
-  class Entity* AddEntity(std::string name, class Entity* parent,
-                          bool entityStatic = false);
 };
 }  // namespace Isetta

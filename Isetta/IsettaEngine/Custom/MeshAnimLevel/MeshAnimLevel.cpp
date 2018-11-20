@@ -14,23 +14,23 @@
 namespace Isetta {
 
 void MeshAnimLevel::OnLevelLoad() {
-  Entity *cameraEntity{CREATE_ENTITY("Camera")};
+  Entity *cameraEntity{Entity::CreateEntity("Camera")};
   cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
   cameraEntity->AddComponent<FlyController>();
 
-  Entity *lightEntity{CREATE_ENTITY("Light")};
+  Entity *lightEntity{Entity::CreateEntity("Light")};
   lightEntity->AddComponent<LightComponent>("materials/light.material.xml",
                                             "LIGHT_1");
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
 
-  Entity *grid{CREATE_ENTITY("Grid")};
+  Entity *grid{Entity::CreateEntity("Grid")};
   grid->AddComponent<GridComponent>();
   grid->AddComponent<EditorComponent>();
 
-  Entity *zombie{CREATE_ENTITY("Zombie")};
+  Entity *zombie{Entity::CreateEntity("Zombie")};
   MeshComponent *mesh =
       zombie->AddComponent<MeshComponent>("Zombie/Zombie.scene.xml");
   AnimationComponent *animation =
@@ -39,7 +39,7 @@ void MeshAnimLevel::OnLevelLoad() {
   zombie->SetTransform(Math::Vector3::zero, Math::Vector3::zero,
                        Math::Vector3::one * 0.01f);
 
-  Entity *cube{CREATE_ENTITY("Cube")};
+  Entity *cube{Entity::CreateEntity("Cube")};
   cube->AddComponent<MeshComponent>("primitives/Cube.scene.xml");
   cube->transform->SetParent(zombie->transform);
   cube->transform->SetLocalPos(2.f * Math::Vector3::up);

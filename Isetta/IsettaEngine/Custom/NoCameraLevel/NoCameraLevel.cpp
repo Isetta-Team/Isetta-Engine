@@ -17,7 +17,7 @@ void NoCameraLevel::OnLevelLoad() {
       Font::AddFontFromFile("font\\ProggyClean.ttf", 30.f, "ProggyClean");
   // Font::AddDefaultFont(font);
 
-  Entity* cameraEntity{CREATE_ENTITY("Camera")};
+  Entity* cameraEntity{Entity::CreateEntity("Camera")};
   cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
