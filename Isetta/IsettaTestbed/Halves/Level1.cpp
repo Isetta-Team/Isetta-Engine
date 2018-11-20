@@ -10,6 +10,7 @@
 #include "GameManager.h"
 #include "Graphics/AnimationComponent.h"
 #include "Graphics/CameraComponent.h"
+#include "Graphics/Font.h"
 #include "Graphics/GUI.h"
 #include "Graphics/LightComponent.h"
 #include "PlayerController.h"
@@ -20,8 +21,8 @@ namespace Isetta {
 using LightProperty = LightComponent::Property;
 using CameraProperty = CameraComponent::Property;
 
-void Level1::LoadLevel() {
-  GUI::AddFontFromFile("Resources/Fonts/CONSOLA.TTF", 13.0f);
+void Level1::OnLevelLoad() {
+  Font::AddFontFromFile("Resources/Fonts/CONSOLA.TTF", 13.0f);
 
   Entity* cameraEntity{AddEntity("Camera")};
   cameraEntity->AddComponent<CameraController>();
@@ -30,12 +31,6 @@ void Level1::LoadLevel() {
 
   CameraComponent* camComp =
       cameraEntity->AddComponent<CameraComponent>("Camera");
-  camComp->SetProperty<CameraProperty::FOV>(
-      CONFIG_VAL(renderConfig.fieldOfView));
-  camComp->SetProperty<CameraProperty::NEAR_PLANE>(
-      CONFIG_VAL(renderConfig.nearClippingPlane));
-  camComp->SetProperty<CameraProperty::FAR_PLANE>(
-      CONFIG_VAL(renderConfig.farClippingPlane));
 
   Entity* lightEntity{AddEntity("Light")};
   LightComponent* lightComp = lightEntity->AddComponent<LightComponent>(

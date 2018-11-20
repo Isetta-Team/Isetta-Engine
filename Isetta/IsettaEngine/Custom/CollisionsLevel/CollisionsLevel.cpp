@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Custom/CollisionsLevel.h"
+#include "Custom/CollisionsLevel/CollisionsLevel.h"
 
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
@@ -23,15 +23,15 @@
 #include "Collisions/Collider.h"
 #include "Collisions/CollisionHandler.h"
 #include "Collisions/SphereCollider.h"
-#include "IsettaCore.h"
-#include "FrameReporter.h"
+#include "Components/Editor/FrameReporter.h"
+#include "Custom/IsettaCore.h"
 
 namespace Isetta {
 
 using LightProperty = LightComponent::Property;
 using CameraProperty = CameraComponent::Property;
 
-void CollisionsLevel::LoadLevel() {
+void CollisionsLevel::OnLevelLoad() {
   Entity* debugEntity{AddEntity("Debug")};
   debugEntity->AddComponent<FrameReporter>();
 
@@ -42,12 +42,6 @@ void CollisionsLevel::LoadLevel() {
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
   cameraEntity->AddComponent<FlyController>();
-  camComp->SetProperty<CameraProperty::FOV>(
-      CONFIG_VAL(renderConfig.fieldOfView));
-  camComp->SetProperty<CameraProperty::NEAR_PLANE>(
-      CONFIG_VAL(renderConfig.nearClippingPlane));
-  camComp->SetProperty<CameraProperty::FAR_PLANE>(
-      CONFIG_VAL(renderConfig.farClippingPlane));
 
   // Light
   Entity* lightEntity{AddEntity("Light")};
@@ -75,7 +69,7 @@ void CollisionsLevel::LoadLevel() {
   BoxCollider* bCol = staticCol[0]->AddComponent<BoxCollider>();
   CollisionHandler* handler = staticCol[0]->AddComponent<CollisionHandler>();
   handler->RegisterOnEnter([](Collider* const col) {
-    LOG("collided with " + col->GetEntity()->GetName());
+    LOG("collided with " + col->entity->GetName());
   });
   staticCol[0]->AddComponent<DebugCollision>();
 
@@ -87,34 +81,33 @@ void CollisionsLevel::LoadLevel() {
   staticCol[2] = AddEntity("capsule-collider", true);
   staticCol[2]->SetTransform(Math::Vector3{0, 1, -8});
   CapsuleCollider* cCol = staticCol[2]->AddComponent<CapsuleCollider>(
-      false, Math::Vector3::zero, 0.5, 2,
-      CapsuleCollider::Direction::X_AXIS);
+      false, Math::Vector3::zero, 0.5, 2, CapsuleCollider::Direction::X_AXIS);
   // staticCol[2]->AddComponent<DebugCollision>();
 
   //// DYNAMIC
   for (int i = 0; i < COLLIDERS; i++) {
     Entity* oscillator{AddEntity("oscillator")};
-    oscillator->GetTransform()->SetParent(staticCol[i]->GetTransform());
-    oscillator->GetTransform()->SetLocalPos(7 * Math::Vector3::left);
+    oscillator->transform->SetParent(staticCol[i]->transform);
+    oscillator->transform->SetLocalPos(7 * Math::Vector3::left);
     oscillator->AddComponent<OscillateMove>(0, 1, -1, 12);
     oscillator->AddComponent<KeyTransform>(0.25);
     oscillator->AddComponent<CollisionHandler>();
 
     Entity* box{AddEntity("box-collider" + i)};
-    box->GetTransform()->SetParent(oscillator->GetTransform());
-    box->GetTransform()->SetLocalPos(-2 * Math::Vector3::left);
+    box->transform->SetParent(oscillator->transform);
+    box->transform->SetLocalPos(-2 * Math::Vector3::left);
     box->AddComponent<BoxCollider>();
 
     Entity* sphere{AddEntity("sphere-collider" + i)};
-    sphere->GetTransform()->SetParent(oscillator->GetTransform());
-    sphere->GetTransform()->SetLocalPos(Math::Vector3::zero);
+    sphere->transform->SetParent(oscillator->transform);
+    sphere->transform->SetLocalPos(Math::Vector3::zero);
     sphere->AddComponent<SphereCollider>();
 
     for (int j = 0; j < 3; j++) {
       Entity* capsule{AddEntity("capsule-collider" + i + j)};
-      capsule->GetTransform()->SetParent(oscillator->GetTransform());
-      capsule->GetTransform()->SetLocalPos(3 * (j + 1) * Math::Vector3::left);
-      capsule->GetTransform()->SetLocalRot(-30 * Math::Vector3::up);
+      capsule->transform->SetParent(oscillator->transform);
+      capsule->transform->SetLocalPos(3 * (j + 1) * Math::Vector3::left);
+      capsule->transform->SetLocalRot(-30 * Math::Vector3::up);
       CapsuleCollider* col = capsule->AddComponent<CapsuleCollider>(
           0.5, 2, static_cast<CapsuleCollider::Direction>(j));
     }

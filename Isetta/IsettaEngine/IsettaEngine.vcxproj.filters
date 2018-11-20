@@ -147,23 +147,14 @@
     <ClCompile Include="Core\Filesystem.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Custom\InEngineTestLevel.cpp">
-      <Filter>Custom</Filter>
-    </ClCompile>
     <ClCompile Include="Custom\OscillateMove.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
     <ClCompile Include="Custom\KeyTransform.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
-    <ClCompile Include="Custom\CollisionsLevel.cpp">
-      <Filter>Custom</Filter>
-    </ClCompile>
     <ClInclude Include="Core\Time\Time.h">
       <Filter>Core\Time</Filter>
-    </ClInclude>
-    <ClInclude Include="Custom\InEngineTestLevel.h">
-      <Filter>Custom</Filter>
     </ClInclude>
     <ClInclude Include="Collisions\BoxCollider.h">
       <Filter>Collisions</Filter>
@@ -183,19 +174,10 @@
     <ClInclude Include="Core\DataStructures\AVLTree.h">
       <Filter>Core\DataStructures</Filter>
     </ClInclude>
-    <ClInclude Include="Collisions\Ray.h">
-      <Filter>Collisions</Filter>
-    </ClInclude>
     <ClInclude Include="Custom\OscillateMove.h">
       <Filter>Custom</Filter>
     </ClInclude>
     <ClInclude Include="Custom\KeyTransform.h">
-      <Filter>Custom</Filter>
-    </ClInclude>
-    <ClInclude Include="Collisions\Plane.h">
-      <Filter>Collisions</Filter>
-    </ClInclude>
-    <ClInclude Include="Custom\CollisionsLevel.h">
       <Filter>Custom</Filter>
     </ClInclude>
     <ClCompile Include="Components\FlyController.cpp">
@@ -203,9 +185,6 @@
     </ClCompile>
     <ClCompile Include="Components\GridComponent.cpp">
       <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Collisions\Plane.cpp">
-      <Filter>Collisions</Filter>
     </ClCompile>
     <ClCompile Include="Collisions\SphereCollider.cpp">
       <Filter>Collisions</Filter>
@@ -240,9 +219,6 @@
     </ClCompile>
     <ClCompile Include="Collisions\CollisionHandler.cpp">
       <Filter>Collisions</Filter>
-    </ClCompile>
-    <ClCompile Include="Custom\FrameReporter.cpp">
-      <Filter>Custom</Filter>
     </ClCompile>
     <ClCompile Include="Collisions\BVTree.cpp">
       <Filter>Collisions</Filter>
@@ -343,6 +319,33 @@
     <ClCompile Include="Custom\CollisionSolverLevel\CollisionSolverLevel.cpp">
       <Filter>Custom\CollisionSolverLevel</Filter>
     </ClCompile>
+    <ClCompile Include="Components\Editor\FrameReporter.cpp">
+      <Filter>Components\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\MeshAnimLevel\MeshAnimLevel.cpp">
+      <Filter>Custom\MeshAnimLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\CollisionsLevel\CollisionsLevel.cpp">
+      <Filter>Custom\CollisionsLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\Plane.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\AudioListener.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\AudioLevel\AudioLevel.cpp">
+      <Filter>Custom\AudioLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Font.cpp">
+      <Filter>Graphics\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\AudioClip.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\AudioPlay.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -434,6 +437,18 @@
     </Filter>
     <Filter Include="Custom\CollisionSolverLevel">
       <UniqueIdentifier>{f54c709b-be6b-4035-87e9-f6043119f744}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\CollisionsLevel">
+      <UniqueIdentifier>{d2906e91-cd20-4cc1-83fc-0fea4a771d7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Geometry">
+      <UniqueIdentifier>{be68b692-0a9b-4c08-aa62-a06b16b48fb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\MeshAnimLevel">
+      <UniqueIdentifier>{d17fab49-2b9b-4414-8c02-f508f9b79890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\AudioLevel">
+      <UniqueIdentifier>{6d7a5ecf-3f90-4d5e-a963-184ec35d68e9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -632,9 +647,6 @@
     <ClInclude Include="Collisions\Collisions.h">
       <Filter>Collisions</Filter>
     </ClInclude>
-    <ClInclude Include="Custom\FrameReporter.h">
-      <Filter>Custom</Filter>
-    </ClInclude>
     <ClInclude Include="Collisions\BVTree.h">
       <Filter>Collisions</Filter>
     </ClInclude>
@@ -755,6 +767,36 @@
     </ClInclude>
     <ClInclude Include="Custom\CollisionSolverLevel\CollisionSolverLevel.h">
       <Filter>Custom\CollisionSolverLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Editor\FrameReporter.h">
+      <Filter>Components\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\MeshAnimLevel\MeshAnimLevel.h">
+      <Filter>Custom\MeshAnimLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\CollisionsLevel\CollisionsLevel.h">
+      <Filter>Custom\CollisionsLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\RaycastHit.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Ray.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Plane.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioListener.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\AudioLevel\AudioLevel.h">
+      <Filter>Custom\AudioLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioClip.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\AudioPlay.h">
+      <Filter>Custom</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -111,7 +111,7 @@ RingBuffer<T>::RingBuffer(const RingBuffer<T>& rb) : size{rb.GetCapacity()} {
   buffer = MemoryManager::NewArrOnFreeList<T>(size);
 
   T* copyList = rb.ToList();
-  for (int i = 0; i < rb.GetLength(); i++) {
+  for (int i = 0; i < rb.GetLength(); ++i) {
     Put(copyList[i]);
   }
   MemoryManager::FreeOnFreeList(copyList);
@@ -131,7 +131,7 @@ RingBuffer<T>& RingBuffer<T>::operator=(const RingBuffer<T>& rb) {
   buffer = MemoryManager::NewArrOnFreeList<T>(size);
 
   T* copyList = rb.ToList();
-  for (int i = 0; i < rb.GetLength(); i++) {
+  for (int i = 0; i < rb.GetLength(); ++i) {
     Put(copyList[i]);
   }
   MemoryManager::FreeOnFreeList(copyList);
@@ -203,7 +203,7 @@ T* RingBuffer<T>::ToList() const {
   while (idx != tail) {
     list[count] = buffer[idx];
     idx = (idx + 1) % size;
-    count++;
+    ++count;
   }
   return list;
 }

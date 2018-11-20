@@ -10,15 +10,15 @@
 #include "W10NetworkManager.h"
 
 void W10NetworkPlayer::InitPosition() {
-  GetEntity()->SetTransform(Isetta::Math::Vector3{isOnRight ? -1.f : 1.f, 0, 0},
+  entity->SetTransform(Isetta::Math::Vector3{isOnRight ? -1.f : 1.f, 0, 0},
                             Isetta::Math::Vector3::zero,
                             Isetta::Math::Vector3{1, 1, 1});
 
-  swordEntity->GetTransform()->SetParent(GetTransform());
-  swordEntity->GetTransform()->SetLocalPos(
+  swordEntity->transform->SetParent(transform);
+  swordEntity->transform->SetLocalPos(
       Isetta::Math::Vector3((isOnRight ? 1 : -1) * 0.25f, 0, 0.25f));
 
-  swordEntity->GetTransform()->SetLocalScale(
+  swordEntity->transform->SetLocalScale(
       Isetta::Math::Vector3{0.375, 0.025, 0.025});
 }
 
@@ -29,7 +29,7 @@ W10NetworkPlayer::W10NetworkPlayer(bool isRight, int swordNetID,
       clientAuthorityId{clientAuthorityID} {}
 
 void W10NetworkPlayer::Awake() {
-  GetEntity()->AddComponent<Isetta::MeshComponent>(
+  entity->AddComponent<Isetta::MeshComponent>(
       "blockFencing/Enemy.scene.xml");
 
   swordEntity = ADD_ENTITY("Sword2");
@@ -56,16 +56,16 @@ void W10NetworkPlayer::Awake() {
 void W10NetworkPlayer::SwordBlocked() {
   LOG_INFO(Isetta::Debug::Channel::General, "Sword blocked");
 
-  swordEntity->GetTransform()->SetParent(nullptr);
+  swordEntity->transform->SetParent(nullptr);
 }
 
 void W10NetworkPlayer::Update() {
-  // if (swordEntity->GetTransform()->GetWorldPos().y < 0) {
-  //   if (Isetta::Math::Util::Abs(GetTransform()->GetWorldPos().x -
-  //                               swordEntity->GetTransform()->GetWorldPos().x)
+  // if (swordEntity->transform->GetWorldPos().y < 0) {
+  //   if (Isetta::Math::Util::Abs(transform->GetWorldPos().x -
+  //                               swordEntity->transform->GetWorldPos().x)
   //                               <
   //       0.1f) {
-  //     swordEntity->GetTransform()->SetParent(GetTransform());
+  //     swordEntity->transform->SetParent(transform);
   //   }
   // }
 }

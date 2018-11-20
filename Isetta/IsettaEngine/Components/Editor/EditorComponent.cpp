@@ -7,10 +7,9 @@
 #include "Input/Input.h"
 #include "Input/KeyCode.h"
 #include "Scene/Entity.h"
-#include "Scene/Level.h"
-#include "Scene/LevelManager.h"
 
 #include "Components/Editor/Console.h"
+#include "Components/Editor/FrameReporter.h"
 #include "Components/Editor/Hierarchy.h"
 #include "Components/Editor/Inspector.h"
 
@@ -19,6 +18,7 @@ void EditorComponent::Awake() {
   console = entity->AddComponent<Console>("Console", true);
   inspector = entity->AddComponent<Inspector>("Inspector", false);
   hierarchy = entity->AddComponent<Hierarchy>("Hierarchy", true, inspector);
+  frameReporter = entity->AddComponent<FrameReporter>();
 }
 void EditorComponent::OnEnable() {
   menuHandle = Input::RegisterKeyPressCallback(
@@ -33,6 +33,9 @@ void EditorComponent::OnEnable() {
   hierarchyHandle = Input::RegisterKeyPressCallback(
       KeyCode::H, ModifierKeys::CTRL | ModifierKeys::SHIFT,
       [&]() { hierarchy->Open(); });
+  frameReporterHandle = Input::RegisterKeyPressCallback(
+      KeyCode::F, ModifierKeys::CTRL | ModifierKeys::SHIFT,
+      [&]() { frameReporter->Open(); });
 }
 void EditorComponent::OnDisable() {
   Input::UnregisterKeyPressCallback(
@@ -43,6 +46,9 @@ void EditorComponent::OnDisable() {
       KeyCode::I, ModifierKeys::CTRL | ModifierKeys::SHIFT, inspectorHandle);
   Input::UnregisterKeyPressCallback(
       KeyCode::H, ModifierKeys::CTRL | ModifierKeys::SHIFT, hierarchyHandle);
+  Input::UnregisterKeyPressCallback(KeyCode::F,
+                                    ModifierKeys::CTRL | ModifierKeys::SHIFT,
+                                    frameReporterHandle);
 }
 
 void EditorComponent::GuiUpdate() {
@@ -54,6 +60,8 @@ void EditorComponent::GuiUpdate() {
           if (GUI::MenuItem("Console", "Ctrl+Shift+C")) console->Open();
           if (GUI::MenuItem("Inspector", "Ctrl+Shift+I")) inspector->Open();
           if (GUI::MenuItem("Hierarchy", "Ctrl+Shift+H")) hierarchy->Open();
+          if (GUI::MenuItem("Frame Reporter", "Ctrl+Shift+F"))
+            frameReporter->Open();
         });
       },
       true);

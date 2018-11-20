@@ -50,24 +50,24 @@ bool Raycast(const Ray& ray, RaycastHit* const hitInfo,
 inline float GetWorldRadius() const {
   switch (direction) {
     case Direction::X_AXIS:
-      return Math::Util::Max(GetTransform()->GetWorldScale().y,
-                             GetTransform()->GetWorldScale().z);
+      return Math::Util::Max(transform->GetWorldScale().y,
+                             transform->GetWorldScale().z);
     case Direction::Y_AXIS:
-      return Math::Util::Max(GetTransform()->GetWorldScale().x,
-                             GetTransform()->GetWorldScale().z);
+      return Math::Util::Max(transform->GetWorldScale().x,
+                             transform->GetWorldScale().z);
     case Direction::Z_AXIS:
-      return Math::Util::Max(GetTransform()->GetWorldScale().x,
-                             GetTransform()->GetWorldScale().y);
+      return Math::Util::Max(transform->GetWorldScale().x,
+                             transform->GetWorldScale().y);
   }
 }
 inline float GetWorldHeight() const {
   switch (direction) {
     case Direction::X_AXIS:
-      return GetTransform()->GetWorldScale().x;
+      return transform->GetWorldScale().x;
     case Direction::Y_AXIS:
-      return GetTransform()->GetWorldScale().y;
+      return transform->GetWorldScale().y;
     case Direction::Z_AXIS:
-      return GetTransform()->GetWorldScale().z;
+      return transform->GetWorldScale().z;
   }
 }
 

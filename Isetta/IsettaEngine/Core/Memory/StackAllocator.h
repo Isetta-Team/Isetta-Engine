@@ -35,10 +35,10 @@ class ISETTA_API StackAllocator {
    * \tparam args Arguments for the constructor
    * \return Pointer to new object
    */
-  template<typename T, typename ...args>
+  template <typename T, typename... args>
   T* New(args...);
 
-  template<typename T>
+  template <typename T>
   T* NewArr(Size length, U8 alignment);
 
   /**
@@ -61,7 +61,7 @@ class ISETTA_API StackAllocator {
 
   /**
    * \brief Get the current marker position
-   * \return 
+   * \return
    */
   Marker GetMarker() const { return top; };
 
@@ -72,7 +72,7 @@ class ISETTA_API StackAllocator {
   PtrInt bottomAddress;
 };
 
-template <typename T, typename ... args>
+template <typename T, typename... args>
 T* StackAllocator::New(args... argList) {
   void* mem = Alloc(sizeof(T), MemUtil::ALIGNMENT);
   return new (mem) T(argList...);
@@ -82,7 +82,7 @@ template <typename T>
 T* StackAllocator::NewArr(Size length, const U8 alignment) {
   void* alloc = Alloc(sizeof(T) * length + 8, alignment);
   char* allocAddress = static_cast<char*>(alloc);
-  for (int i = 0; i < length; i++) new (allocAddress + i * sizeof(T)) T;
+  for (int i = 0; i < length; ++i) new (allocAddress + i * sizeof(T)) T;
   return static_cast<T*>(alloc);
 }
 }  // namespace Isetta

@@ -29,7 +29,7 @@ void Hierarchy::GuiUpdate() {
                     int i = 0;
                     while (t->GetParent() != nullptr) {
                       t = t->GetParent();
-                      i++;
+                      ++i;
                     }
                     return i;
                   };
@@ -44,7 +44,7 @@ void Hierarchy::GuiUpdate() {
                     }
                     height += 1.25f * buttonHeight;
                   };
-                  action(entity->GetTransform());
+                  action(entity->transform);
                 }
 
                 if (inspector && target) {

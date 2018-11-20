@@ -30,7 +30,7 @@ bool Raycast(const Ray& ray, RaycastHit* const hitInfo,
              float maxDistance = 0) final;
 
 float GetWorldRadius() const {
-  return radius * GetTransform()->GetWorldScale().Max();
+  return radius * transform->GetWorldScale().Max();
 }
 
 AABB GetFatAABB() final;

@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include <Windows.h>
+//#include <Windows.h>
 #include <string>
 #include "Audio/AudioModule.h"
 #include "Collisions/CollisionsModule.h"
@@ -12,9 +12,10 @@
 #include "Core/DataStructures/Array.h"
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
-#include "Core/Math/Vector3.h"
 #include "Core/Memory/MemoryManager.h"
 #include "EngineLoop.h"
+#include "Graphics/CameraComponent.h"
+#include "Graphics/LightComponent.h"
 #include "Graphics/RenderModule.h"
 #include "Graphics/Window.h"
 #include "Networking/NetworkingModule.h"
@@ -48,6 +49,9 @@ class ISETTA_API Config {
   EngineLoop::LoopConfig loopConfig;
   /// RenderModule configuration CVars
   RenderModule::RenderConfig renderConfig;
+  CameraComponent::CameraConfig cameraConfig;
+  LightComponent::LightConfig lightConfig;
+
   /// NetworkingModule configuration CVars
   NetworkingModule::NetworkConfig networkConfig;
   /// MemoryManager configuration CVars
@@ -63,7 +67,7 @@ class ISETTA_API Config {
   /// Max simulation count of update loop
   CVar<int> maxSimCount = {"max_simulation_count", 5};
   /// File path for the resources of game/engine
-  CVarString resourcePath{"resource_path", ""};
+  CVarString resourcePath{"resource_path", "Resources"};
 
   /**
    * @brief Use the Filesystem to read the file, then call ProcessFile to parse

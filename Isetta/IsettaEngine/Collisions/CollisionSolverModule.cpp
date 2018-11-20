@@ -38,7 +38,7 @@ Collision CollisionSolverModule::Solve(Collider* collider,
 
       // AABB aabb = AABB(box->center, box->size);
       // collision.hitPoint =
-      // box->GetTransform()->WorldPosFromLocalPos(collisionsModule->ClosestPtPointAABB(box->GetTransform()->LocalPosFromWorldPos(point),
+      // box->transform->WorldPosFromLocalPos(collisionsModule->ClosestPtPointAABB(box->transform->LocalPosFromWorldPos(point),
       // aabb));
 
       // collision.hitPoint = collisionsModule->ClosestPtPointOBB(point, *box);
@@ -49,8 +49,8 @@ Collision CollisionSolverModule::Solve(Collider* collider,
       int numEdges = 0;
 
       Math::Vector3 extents = box->GetWorldExtents();
-      for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
-        float dist = Math::Vector3::Dot(d, box->GetTransform()->GetAxis(i));
+      for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
+        float dist = Math::Vector3::Dot(d, box->transform->GetAxis(i));
         if (dist > extents[i]) {
           dist = extents[i];
           ++numEdges;
@@ -58,7 +58,7 @@ Collision CollisionSolverModule::Solve(Collider* collider,
           dist = -extents[i];
           ++numEdges;
         }
-        collision.hitPoint += dist * box->GetTransform()->GetAxis(i);
+        collision.hitPoint += dist * box->transform->GetAxis(i);
       }
 
       collision.onEdge = numEdges > 1;
@@ -127,17 +127,19 @@ Math::Vector3 CollisionSolverModule::GetStrongestAxis(BoxCollider* box,
   Math::Vector3 d = point - box->GetWorldCenter();
 
   int strongest = 0;
-  float maxMagnitude = Math::Util::Abs(Math::Vector3::Dot(box->GetTransform()->GetAxis(0), d));
+  float maxMagnitude =
+      Math::Util::Abs(Math::Vector3::Dot(box->transform->GetAxis(0), d));
 
   for (int i = 1; i < Math::Vector3::ELEMENT_COUNT; ++i) {
-    float magnitude = Math::Util::Abs(Math::Vector3::Dot(box->GetTransform()->GetAxis(i), d));
+    float magnitude =
+        Math::Util::Abs(Math::Vector3::Dot(box->transform->GetAxis(i), d));
     if (magnitude > maxMagnitude) {
       strongest = i;
       maxMagnitude = magnitude;
     }
   }
 
-  return box->GetTransform()->GetAxis(strongest);
+  return box->transform->GetAxis(strongest);
 }
 
 Math::Vector3 CollisionSolverModule::Resolve(Collider* collider1,
@@ -170,35 +172,32 @@ Math::Vector3 CollisionSolverModule::Resolve(Collider* collider1,
           response = strongestAxis * magnitude;
         } break;
 
-        case 2: { // The second collider is a box
-            Math::Vector3 strongestAxis = GetStrongestAxis(
-                static_cast<BoxCollider*>(collider2), collision2.hitPoint);
-            float magnitude = Math::Vector3::Dot(
-                (collision2.hitPoint - collision1.hitPoint), strongestAxis);
-            response = strongestAxis * magnitude;
-          }
-          break;
+        case 2: {  // The second collider is a box
+          Math::Vector3 strongestAxis = GetStrongestAxis(
+              static_cast<BoxCollider*>(collider2), collision2.hitPoint);
+          float magnitude = Math::Vector3::Dot(
+              (collision2.hitPoint - collision1.hitPoint), strongestAxis);
+          response = strongestAxis * magnitude;
+        } break;
       }
     } break;
 
     case 2:  // The second or both colliders collided on their edges
     case 3: {
-        Math::Vector3 strongestAxis = GetStrongestAxis(
-            static_cast<BoxCollider*>(collider1), collision1.hitPoint);
-        float magnitude = Math::Vector3::Dot(
-            (collision2.hitPoint - collision1.hitPoint), strongestAxis);
-        response = strongestAxis * magnitude;
-      }
-      break;
+      Math::Vector3 strongestAxis = GetStrongestAxis(
+          static_cast<BoxCollider*>(collider1), collision1.hitPoint);
+      float magnitude = Math::Vector3::Dot(
+          (collision2.hitPoint - collision1.hitPoint), strongestAxis);
+      response = strongestAxis * magnitude;
+    } break;
 
-    case 1: { // The first collider collided on its edge
-        Math::Vector3 strongestAxis = GetStrongestAxis(
-            static_cast<BoxCollider*>(collider2), collision2.hitPoint);
-        float magnitude = Math::Vector3::Dot(
-            (collision2.hitPoint - collision1.hitPoint), strongestAxis);
-        response = strongestAxis * magnitude;
-      }
-      break;
+    case 1: {  // The first collider collided on its edge
+      Math::Vector3 strongestAxis = GetStrongestAxis(
+          static_cast<BoxCollider*>(collider2), collision2.hitPoint);
+      float magnitude = Math::Vector3::Dot(
+          (collision2.hitPoint - collision1.hitPoint), strongestAxis);
+      response = strongestAxis * magnitude;
+    } break;
   }
 
   return response;
@@ -218,10 +217,8 @@ void CollisionSolverModule::Update() {
       Collider* collider2 = pair.second;
 
       // Look for a reason to skip this collision solve
-      if ((collider1->GetEntity()->isStatic &&
-           collider1->GetEntity()->isStatic) ||
-          collider1->isTrigger ||
-          collider2->isTrigger) {
+      if ((collider1->entity->isStatic && collider1->entity->isStatic) ||
+          collider1->isTrigger || collider2->isTrigger) {
         continue;
       }
 
@@ -238,27 +235,27 @@ void CollisionSolverModule::Update() {
       Math::Vector3 response =
           Resolve(collider1, collision1, collider2, collision2);
 
-      bool c1Static = collider1->GetEntity()->isStatic;
-      bool c2Static = collider2->GetEntity()->isStatic;
+      bool c1Static = collider1->entity->isStatic;
+      bool c2Static = collider2->entity->isStatic;
       int staticSwitch =
           static_cast<int>(c1Static) + 2 * static_cast<int>(c2Static);
 
       switch (staticSwitch) {
         case 0:  // Neither collider is static
-          collider1->GetTransform()->TranslateWorld(response * .5);
-          collider2->GetTransform()->TranslateWorld(-response * .5);
+          collider1->transform->TranslateWorld(response * .5);
+          collider2->transform->TranslateWorld(-response * .5);
 #if _EDITOR
           DebugDraw::Line(collision1.hitPoint,
-                          collision1.hitPoint + response * .5, Color::cyan,
-                          3, .1);
+                          collision1.hitPoint + response * .5, Color::cyan, 3,
+                          .1);
           DebugDraw::Line(collision2.hitPoint,
-                          collision2.hitPoint - response * .5, Color::cyan,
-                          3, .1);
+                          collision2.hitPoint - response * .5, Color::cyan, 3,
+                          .1);
 #endif
           break;
 
         case 1:  // Collider 1 is static
-          collider2->GetTransform()->TranslateWorld(-response);
+          collider2->transform->TranslateWorld(-response);
 #if _EDITOR
           DebugDraw::Line(collision2.hitPoint, collision2.hitPoint - response,
                           Color::cyan, 3, .1);
@@ -266,7 +263,7 @@ void CollisionSolverModule::Update() {
           break;
 
         case 2:  // Collider 2 is static
-          collider1->GetTransform()->TranslateWorld(response);
+          collider1->transform->TranslateWorld(response);
 #if _EDITOR
           DebugDraw::Line(collision1.hitPoint, collision1.hitPoint + response,
                           Color::cyan, 3, .1);

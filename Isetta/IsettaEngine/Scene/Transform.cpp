@@ -169,7 +169,7 @@ void Transform::SetParent(Transform* const transform) {
   Transform* targetTransform = transform;
   if (transform == nullptr) {
     targetTransform =
-        LevelManager::Instance().loadedLevel->levelRoot->GetTransform();
+        LevelManager::Instance().loadedLevel->levelRoot->transform;
   }
   if (parent == targetTransform) {
     LOG_WARNING(Debug::Channel::Graphics,
@@ -328,7 +328,7 @@ void Transform::RecalculateLocalToWorldMatrix() {
   } else {
     localToWorldMatrix = localToParentMatrix;
   }
-  for (int i = 0; i < Math::Matrix3::ROW_COUNT; i++) {
+  for (int i = 0; i < Math::Matrix3::ROW_COUNT; ++i) {
     axis[i] = localToWorldMatrix.GetCol(i).GetVector3().Normalized();
   }
 }

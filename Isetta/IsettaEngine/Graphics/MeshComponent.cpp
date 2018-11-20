@@ -26,7 +26,7 @@ MeshComponent::~MeshComponent() {
 
 void MeshComponent::UpdateTransform() const {
   PROFILE
-  Transform::SetH3DNodeTransform(renderNode, *GetTransform());
+  Transform::SetH3DNodeTransform(renderNode, *transform);
 }
 
 H3DRes MeshComponent::LoadResourceFromFile(std::string_view resourceName) {

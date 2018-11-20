@@ -2,11 +2,8 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Scene/Level.h"
-#include <algorithm>
-#include "Core/Math/Rect.h"
+#include "Audio/AudioModule.h"
 #include "Core/Memory/MemoryManager.h"
-#include "Graphics/GUI.h"
-#include "Graphics/RectTransform.h"
 #include "Input/Input.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
@@ -15,9 +12,8 @@
 namespace Isetta {
 
 Entity* Level::GetEntityByName(const std::string& name) {
-  StringId inID{SID(name.c_str())};
   for (const auto& entity : entities) {
-    if (entity->entityID == inID) {
+    if (entity->entityName == name) {
       return entity;
     }
   }
@@ -27,9 +23,8 @@ Entity* Level::GetEntityByName(const std::string& name) {
 
 std::list<Entity*> Level::GetEntitiesByName(const std::string& name) {
   std::list<Entity*> returnEntities;
-  StringId inID{SID(name.c_str())};
   for (const auto& entity : entities) {
-    if (entity->entityID == inID) {
+    if (entity->entityName == name) {
       returnEntities.emplace_back(entity);
     }
   }
@@ -41,10 +36,11 @@ std::list<class Entity*> Level::GetEntities() const { return entities; }
 void Level::UnloadLevel() {
   PROFILE
   // for (auto& entity : entities) {
-  //   if (entity->GetTransform()->GetParent() == levelRootTransform) {
+  //   if (entity->transform->GetParent() == levelRootTransform) {
   //     MemoryManager::DeleteOnFreeList<Entity>(entity);
   //   }
   // }
+  OnLevelUnload();
   MemoryManager::DeleteOnFreeList<Entity>(levelRoot);
   for (auto& entity : entities) {
     MemoryManager::DeleteOnFreeList<Entity>(entity);
@@ -74,7 +70,7 @@ Entity* Level::AddEntity(std::string name, Entity* parent, bool entityStatic) {
   Entity* entity = MemoryManager::NewOnFreeList<Entity>(name, entityStatic);
   entities.push_back(entity);
   // TODO(YIDI): Change it when transform returns pointer
-  entity->transform.SetParent(&(parent->transform));
+  entity->transform->SetParent(parent->transform);
   return entity;
 }
 

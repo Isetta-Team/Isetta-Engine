@@ -9,6 +9,10 @@
 #include "Scene/Component.h"
 #include "Scene/Transform.h"
 
+namespace Isetta::Math {
+class Ray;
+}
+
 namespace Isetta {
 #define INTERSECTION_TEST(TYPE)                             \
   bool TYPE::Intersection(Collider* const other) {          \
@@ -41,7 +45,7 @@ virtual bool Raycast(const class Ray& ray, class RaycastHit* const hitInfo,
                      float maxDistance = 0) = 0;
 
 Math::Vector3 GetWorldCenter() const {
-  return center + GetTransform()->GetWorldPos();
+  return center + transform->GetWorldPos();
 }
 
 void Start() override;

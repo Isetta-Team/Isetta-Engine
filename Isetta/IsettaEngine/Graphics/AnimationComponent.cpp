@@ -24,9 +24,8 @@ AnimationComponent::AnimationComponent(MeshComponent* model)
 int AnimationComponent::AddAnimation(std::string_view animationFilename,
                                      int layer, std::string_view startNode,
                                      bool additive) {
-  totalStates++;
   return AddAnimation(animationFilename, layer, startNode, additive,
-                      totalStates - 1);
+                      totalStates++);
 }
 
 int AnimationComponent::AddAnimation(std::string_view animationFilename,

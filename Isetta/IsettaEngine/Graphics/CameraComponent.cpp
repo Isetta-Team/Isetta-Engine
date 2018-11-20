@@ -13,7 +13,8 @@
 #include "Util.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
 
-#include "Collisions/Ray.h"
+#include "Core/Config/Config.h"
+#include "Core/Geometry/Ray.h"
 #include "Core/Math/Util.h"
 #include "Core/Math/Vector2.h"
 #include "Core/Math/Vector3.h"
@@ -29,6 +30,12 @@ CameraComponent::CameraComponent(std::string cameraName)
   if (!_main) {
     _main = this;
   }
+}
+
+void CameraComponent::Start() {
+  SetProperty<Property::FOV>(CONFIG_VAL(cameraConfig.fieldOfView));
+  SetProperty<Property::NEAR_PLANE>(CONFIG_VAL(cameraConfig.nearClippingPlane));
+  SetProperty<Property::FAR_PLANE>(CONFIG_VAL(cameraConfig.farClippingPlane));
 }
 
 void CameraComponent::OnEnable() {
@@ -61,15 +68,15 @@ Ray Isetta::CameraComponent::ScreenPointToRay(
   float tan = Math::Util::Tan(0.5f * fov * Math::Util::DEG2RAD);
   float px = (2.f * ((position.x + 0.5f) / width) - 1) * tan * aspect;
   float py = (1.f - 2.f * ((position.y + 0.5f) / height)) * tan;
-  Math::Vector3 o = GetTransform()->GetWorldPos();
+  Math::Vector3 o = transform->GetWorldPos();
   Math::Vector3 dir =
-      GetTransform()->WorldDirFromLocalDir(Math::Vector3{px, py, -1});
+      transform->WorldDirFromLocalDir(Math::Vector3{px, py, -1});
   return Ray{o, dir};
 }
 
 void CameraComponent::UpdateH3DTransform() const {
   PROFILE
-  Transform::SetH3DNodeTransform(renderNode, *GetTransform());
+  Transform::SetH3DNodeTransform(renderNode, *transform);
 }
 
 void CameraComponent::ResizeViewport(int width, int height) {

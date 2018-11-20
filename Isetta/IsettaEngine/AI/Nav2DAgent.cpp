@@ -9,8 +9,8 @@ Math::Vector2 Nav2DAgent::GetAIMovement(Math::Vector2 agentPosition,
   float distance = navPlane->GetDistanceToTarget(agentPosition);
 
   UpdateSteeringData(agentPosition, distance);
-  Math::Vector2 velocity{0.f};
-  if (distance < arrivingDistance) {
+  Math::Vector2 velocity;
+  if (distance < stopDistance) {
     velocity = Math::Vector2::zero;
   } else {
     velocity = GetAIMovement(deltaTime);
@@ -21,7 +21,7 @@ Math::Vector2 Nav2DAgent::GetAIMovement(Math::Vector2 agentPosition,
 
 Math::Vector2 Nav2DAgent::GetAIMovement(float deltaTime) {
   velocity += linear * deltaTime;
-  if (velocity.Magnitude() > maxVelocity) {
+  if (velocity.SqrMagnitude() > maxVelocity2) {
     velocity.Normalize();
     velocity *= maxVelocity;
   }
@@ -29,25 +29,27 @@ Math::Vector2 Nav2DAgent::GetAIMovement(float deltaTime) {
 }
 
 Nav2DAgent::Nav2DAgent(Nav2DPlane* plane, float maxAcc, float maxV,
-                       float timeToTarget, float arrving)
+                       float timeToTarget, float arriving)
     : navPlane{plane},
       maxAcceleration{maxAcc},
       maxVelocity{maxV},
       timeToTarget{timeToTarget},
-      arrivingDistance{arrving} {}
+      stopDistance{arriving},
+      maxAcceleration2{maxAcc * maxAcc},
+      maxVelocity2{maxV * maxV} {}
 
 void Nav2DAgent::UpdateSteeringData(Math::Vector2 position, float distance) {
-  float targetSpeed{0};
-  if (distance > arrivingDistance * 2) {
+  float targetSpeed;
+  if (distance > stopDistance * 2) {
     targetSpeed = maxVelocity;
   } else {
-    targetSpeed = maxVelocity * distance / (arrivingDistance * 2);
+    targetSpeed = maxVelocity * distance / (stopDistance * 2);
   }
   Math::Vector2 targetVelocity =
       navPlane->GetDirectionByPosition(position) * targetSpeed;
   linear = targetVelocity - velocity;
   linear /= timeToTarget;
-  if (linear.Magnitude() > maxAcceleration) {
+  if (linear.SqrMagnitude() > maxAcceleration2) {
     linear.Normalize();
     linear *= maxAcceleration;
   }

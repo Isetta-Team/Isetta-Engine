@@ -2,6 +2,8 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include "Core/IsettaAlias.h"
+
 namespace Isetta {
 enum class KeyCode {
   NONE,

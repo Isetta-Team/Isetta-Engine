@@ -6,6 +6,6 @@
 
 namespace Isetta {
 CREATE_LEVEL(AITestLevel)
-void LoadLevel() override;
+void OnLevelLoad() override;
 CREATE_LEVEL_END
-}
+}  // namespace Isetta

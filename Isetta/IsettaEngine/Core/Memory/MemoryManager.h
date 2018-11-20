@@ -21,6 +21,7 @@ class ISETTA_API MemoryManager {
                                            10_MB};
     CVar<Size> dynamicArenaSize{"dynamic_arena_size", 10_MB};
     CVar<Size> freeListAllocatorSize{"free_list_allocator_size", 10_MB};
+    CVar<Size> freeListIncrement{"free_list_increment", 10_MB};
   };
 
   /**
@@ -89,7 +90,7 @@ class ISETTA_API MemoryManager {
 
   // TODO(YIDI): Use different freelist allocators for different stage
   static void* AllocOnFreeList(Size size, U8 alignment = MemUtil::ALIGNMENT);
-  static void* ReallocOnFreeList(void* memPtr, Size size,
+  static void* ReallocOnFreeList(void* memPtr, Size newSize,
                                  U8 alignment = MemUtil::ALIGNMENT);
   static void FreeOnFreeList(void* memPtr);
 

@@ -136,7 +136,7 @@ void GUI::Toggle(const RectTransform& transform, const std::string& label,
 // TEXT
 void GUI::Text(const RectTransform& transform, const std::string& format,
                const TextStyle& style) {
-  ImGui::PushFont(reinterpret_cast<ImFont*>(style.font));
+  Font::PushFont(style.font);
   const char* formatCStr = format.c_str();
   RectTransform rectTransform{transform};
   if (rectTransform.rect.width <= 0)
@@ -160,7 +160,7 @@ void GUI::Text(const RectTransform& transform, const std::string& format,
   }
   ImGui::PopStyleColor();
   ImGui::PopItemWidth();
-  ImGui::PopFont();
+  Font::PopFont();
 }
 // Doesn't seem like its needed
 // void GUI::Label(const RectTransform& transform, const std::string_view&
@@ -300,7 +300,7 @@ void GUI::ComboBox(const RectTransform& transform,
 
   int& idx = *current;
   if (ImGui::BeginCombo(label.data(), items[idx].c_str())) {
-    for (int i = 0; i < items.Size(); i++) {
+    for (int i = 0; i < items.Size(); ++i) {
       ImGui::Selectable(items[i].c_str(), idx == i);
     }
     ImGui::EndCombo();
@@ -534,67 +534,6 @@ void GUI::ProgressBar(const RectTransform& transform, float fraction,
     ImGui::PopStyleColor();
   }
 }
-
-Font* GUI::GetDefaultFont() {
-  return reinterpret_cast<Font*>(ImGui::GetDefaultFont());
-}
-void GUI::AddDefaultFont(const std::string_view& fontName, float size) {
-  Font* font = guiModule->GetFont(fontName, size);
-  if (font)
-    ImGui::GetIO().Fonts->AddFontDefault(
-        reinterpret_cast<ImFont*>(font)->ConfigData);
-}
-void GUI::AddDefaultFont(Font* const font) {
-  ImGui::GetIO().FontDefault = reinterpret_cast<ImFont*>(font);
-}
-Font* GUI::GetFont(const std::string_view fontName, float size) {
-  return guiModule->GetFont(fontName, size);
-}
-Font* GUI::AddFontFromFile(const std::string& filename, float fontSize,
-                           const std::string_view& fontName) {
-  if (fontName.empty()) {
-    Font* font = guiModule->GetFont(filename, fontSize);
-    if (font) return font;
-    font = reinterpret_cast<Font*>(
-        ImGui::GetIO().Fonts->AddFontFromFileTTF(filename.c_str(), fontSize));
-    if (!font) {
-      LOG_ERROR(Debug::Channel::GUI,
-                "GUI::AddFontFromFile => Could not load font %s",
-                filename.c_str());
-      return nullptr;
-    }
-    guiModule->AddFont(filename, fontSize, font);
-    return font;
-  } else {
-    Font* font = guiModule->GetFont(fontName, fontSize);
-    if (font) return font;
-    font = reinterpret_cast<Font*>(
-        ImGui::GetIO().Fonts->AddFontFromFileTTF(filename.c_str(), fontSize));
-    if (!font) {
-      LOG_ERROR(Debug::Channel::GUI,
-                "GUI::AddFontFromFile => Could not load font %s",
-                filename.c_str());
-      return nullptr;
-    }
-    guiModule->AddFont(fontName, fontSize, font);
-    return font;
-  }
-}
-Font* GUI::AddFontFromMemory(void* fontBuffer, float fontSize, float pixels,
-                             const std::string_view& fontName) {
-  Font* font = reinterpret_cast<Font*>(
-      ImGui::GetIO().Fonts->AddFontFromMemoryTTF(fontBuffer, fontSize, pixels));
-  if (fontName.empty()) guiModule->AddFont(fontName, fontSize, font);
-  return font;
-}
-void GUI::PushFont(const std::string_view fontName, float fontSize) {
-  Font* font = guiModule->GetFont(fontName, fontSize);
-  if (font) ImGui::PushFont(reinterpret_cast<ImFont*>(font));
-}
-void GUI::PushFont(Font* const font) {
-  ImGui::PushFont(reinterpret_cast<ImFont*>(font));
-}
-void GUI::PopFont() { ImGui::PopFont(); }
 
 void GUI::PushStyleVar(StyleVar var, float val) {
   ImGui::PushStyleVar((ImGuiStyleVar)var, val);

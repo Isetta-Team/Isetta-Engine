@@ -8,5 +8,5 @@
 
 using namespace Isetta;
 CREATE_LEVEL(InputLevel)
-void LoadLevel() override;
+void OnLevelLoad() override;
 CREATE_LEVEL_END

@@ -3,13 +3,13 @@
  */
 #pragma once
 #include <queue>
-#include "Scene/IsettaLevel.h"
 #include "Core/DataStructures/Array.h"
 #include "Custom/BVHTestLevel/RandomMover.h"
+#include "Scene/IsettaLevel.h"
 
 namespace Isetta {
 CREATE_LEVEL(BVHLevel)
-void LoadLevel() override;
+void OnLevelLoad() override;
 
 private:
 std::queue<Entity*> spheres;

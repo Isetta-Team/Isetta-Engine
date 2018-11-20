@@ -72,7 +72,7 @@ bool Config::ValidLine(const std::string_view& line) const {
   }
 
   int size = tmp.length();
-  for (Size i = tmp.find('=') + 1; i < size; i++) {
+  for (Size i = tmp.find('=') + 1; i < size; ++i) {
     if (tmp[i] != ' ') {
       return true;
     }

@@ -7,7 +7,7 @@
 namespace Isetta {
 void RandomMover::Update() {
   float dt = Time::GetDeltaTime();
-  GetTransform()->TranslateWorld(velocity * dt);
+  transform->TranslateWorld(velocity * dt);
 
   coolDown -= dt;
   if (coolDown <= 0) {
@@ -18,8 +18,8 @@ void RandomMover::Update() {
                    Math::Random::GetRandom01() * speed;
 
     if (range > 0 &&
-        GetTransform()->GetWorldPos().SqrMagnitude() > range * range &&
-        Math::Vector3::Dot(GetTransform()->GetWorldPos(), velocity) > 0) {
+        transform->GetWorldPos().SqrMagnitude() > range * range &&
+        Math::Vector3::Dot(transform->GetWorldPos(), velocity) > 0) {
       velocity *= -1;
     }
   }

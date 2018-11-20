@@ -10,7 +10,7 @@ std::unordered_map<class StringId, int> Layers::layerIndex;
 
 Layers::Constructor::Constructor() {
   layerIndex.reserve(LAYERS_CAPACITY);
-  for (int i = 0; i < READONLY_LAYERS; i++) {
+  for (int i = 0; i < READONLY_LAYERS; ++i) {
     layerIndex.insert(std::make_pair(SID(layers[i].c_str()), i));
   }
 }

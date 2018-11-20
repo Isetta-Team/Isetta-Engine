@@ -2,31 +2,33 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Core/Memory/FreeListAllocator.h"
+#include <iostream>
+#include "Core/Config/Config.h"
 #include "Core/Memory/MemUtil.h"
-#include "Util.h"
+#include "Scene/Entity.h"
 
 namespace Isetta {
 
 FreeListAllocator::FreeListAllocator(const Size size) {
   memHead = std::malloc(size);
   head = new (memHead) Node(size);
-}
-
-FreeListAllocator::FreeListAllocator(void* headPtr, const Size size,
-                                     Action<void*> freeCallback)
-    : memHead(headPtr), freeCallback(std::move(freeCallback)) {
-  head = new (memHead) Node(size);
+#if _DEBUG
+  totalSize += size;
+  LOG_INFO(Debug::Channel::Memory, "A new free list of size %d is created",
+           size);
+#endif
 }
 
 void* FreeListAllocator::Alloc(const Size size, const U8 alignment) {
   if (head == nullptr) {
-    throw std::exception{
-        Util::StrFormat("FreeListAllocator::Alloc => No space left")};
+    Expand();
+    return Alloc(size, alignment);
   }
 
   MemUtil::CheckAlignment(alignment);
 
   Size need = headerSize + alignment + size;
+  Node* last = nullptr;
   Node* cur = head;
   Node* node = nullptr;
 
@@ -35,70 +37,132 @@ void* FreeListAllocator::Alloc(const Size size, const U8 alignment) {
       node = cur;
       break;
     }
+    last = cur;
     cur = cur->next;
   }
 
   if (node == nullptr) {
-    throw std::exception{
-        Util::StrFormat("FreeListAllocator::Alloc => No node is big enough for "
-                        "the new request")};
+    Expand();
+    return Alloc(size, alignment);
   }
 
-  // TODO(YIDI): the node can be overriden
   PtrInt rawAddress = reinterpret_cast<PtrInt>(node);
   rawAddress += headerSize;  // leave size for header
   PtrInt misAlignment = rawAddress & (alignment - 1);
   U64 adjustment = alignment - misAlignment;
-  adjustment += ((~alignment & adjustment) << 1);
   PtrInt alignedAddress = rawAddress + adjustment;
-
-  Size occupiedSize = headerSize + adjustment + size;
   PtrInt headerAddress = alignedAddress - headerSize;
 
-  // new headers will be reclaimed during "free" process
-  // TODO(YIDI): This step maybe buggy, see "Image Creator" page 16, Make sure
-  // the node on the left's next is aligned properly
+  Size occupiedSize = headerSize + adjustment + size;
+  Size allocSize;
+
   if (node->size >= occupiedSize + nodeSize) {
     // enough space to put a node here
-    auto* header = new (reinterpret_cast<void*>(headerAddress))
-        AllocHeader(occupiedSize, adjustment);
+    Node* newNode = new (reinterpret_cast<void*>(alignedAddress + size))
+        Node(node->size - occupiedSize);
 
-    InsertNodeAt(node, new (reinterpret_cast<void*>(alignedAddress + size))
-                           Node(node->size - occupiedSize));
+    InsertNodeAt(node, newNode);
+    RemoveNode(last, node);
+    allocSize = occupiedSize;
   } else {
     // not enough space left for node
-    auto* header = new (reinterpret_cast<void*>(headerAddress))
-        AllocHeader(node->size, adjustment);
+    RemoveNode(last, node);
+    allocSize = node->size;
   }
 
-  RemoveNode(node);
+  // new headers will be reclaimed during "free" process
+  new (reinterpret_cast<void*>(headerAddress))
+      AllocHeader(allocSize, adjustment);
+#if _DEBUG
+  sizeUsed += allocSize;
+  std::cout << sizeUsed << " ++ " << allocSize << std::endl;
+#endif
 
-  return reinterpret_cast<void*>(alignedAddress);
+  void* ret = reinterpret_cast<void*>(alignedAddress);
+  memset(ret, 0, size);
+  return ret;
 }
 
 void FreeListAllocator::Free(void* memPtr) {
-  PtrInt headerAddress = reinterpret_cast<PtrInt>(memPtr) - headerSize;
-  auto* header = reinterpret_cast<AllocHeader*>(headerAddress);
-  PtrInt nodeAddress = headerAddress - header->adjustment;
-  auto* newNode = new (reinterpret_cast<void*>(nodeAddress)) Node(header->size);
-  Size totalSize = header->size;
-  U64 adjustment = header->adjustment;
+  PtrInt allocHeaderAdd = reinterpret_cast<PtrInt>(memPtr) - headerSize;
+  auto* allocHeader = reinterpret_cast<AllocHeader*>(allocHeaderAdd);
+#if _DEBUG
+  sizeUsed -= allocHeader->size;
+  std::cout << sizeUsed << " -- " << allocHeader->size << std::endl;
+#endif
+  PtrInt nodeAddress = allocHeaderAdd - allocHeader->adjustment;
+  auto* newNode =
+      new (reinterpret_cast<void*>(nodeAddress)) Node(allocHeader->size);
+  memset(newNode + 1, 0xD, newNode->size - nodeSize);
 
-  // TODO(YIDI): Take care of double deletion, in that situation, memPtr is
-  // the same as head
+  InsertNode(newNode);
+}
+
+void* FreeListAllocator::Realloc(void* memPtr, const Size newSize,
+                                 const U8 alignment) {
+  PtrInt allocHeaderAdd = reinterpret_cast<PtrInt>(memPtr) - headerSize;
+  auto* allocHeader = reinterpret_cast<AllocHeader*>(allocHeaderAdd);
+
+  void* dest = Alloc(newSize, alignment);
+  memcpy(dest, memPtr, Math::Util::Min(allocHeader->size, newSize));
+  Free(memPtr);
+  return dest;
+}
+
+void FreeListAllocator::Expand() {
+  Size increment = CONFIG_VAL(memoryConfig.freeListIncrement);
+  void* newMem = std::malloc(increment);
+  Node* newNode = new (newMem) Node{increment};
+  InsertNode(newNode);
+  additionalMemory.push_back(newNode);
+
+#if _DEBUG
+  totalSize += increment;
+#endif
+}
+
+void FreeListAllocator::Erase() const {
+  if (memHead == nullptr) {
+    return;
+  }
+
+#if _DEBUG
+  LOG_WARNING(Debug::Channel::Memory, "Memory leak of %I64u detect on freelist",
+              sizeUsed);
+#endif
+
+  std::free(memHead);
+  for (void* const memory : additionalMemory) {
+    std::free(memory);
+  }
+}
+
+void FreeListAllocator::RemoveNode(Node* last, Node* nodeToRemove) {
+  if (nodeToRemove == head) {
+    head = nodeToRemove->next;
+    return;
+  }
+
+  ASSERT(last != nullptr);
+  last->next = nodeToRemove->next;
+}
+
+void FreeListAllocator::InsertNode(Node* newNode) {
   if (head == nullptr) {
     head = newNode;
     return;
   }
 
+  PtrInt nodeAddress = reinterpret_cast<PtrInt>(newNode);
+
   // find last and next node, try to merge them
   if (nodeAddress < reinterpret_cast<PtrInt>(head)) {
+    // New node is on the left of head node
     newNode->next = head;
     head = newNode;
-    // TODO(YIDI): Go through this with a test case (make sure there won't be
-    // gaps anywhere in this list)
     TryMergeWithNext(head);
   } else {
+    // New node is on the right of head node
     Node* last = nullptr;
     Node* cur = head;
     while (reinterpret_cast<PtrInt>(cur) < nodeAddress && cur != nullptr) {
@@ -115,110 +179,8 @@ void FreeListAllocator::Free(void* memPtr) {
   //       totalSize - headerSize - adjustment);
 }
 
-void* FreeListAllocator::Realloc(void* memPtr, Size size, U8 alignment) {
-  PtrInt headerAddress = reinterpret_cast<PtrInt>(memPtr) - headerSize;
-  auto* header = reinterpret_cast<AllocHeader*>(headerAddress);
-
-  void* newPtr = memPtr;
-
-  PtrInt s = size;
-
-  if (header->size >= size) {
-    // If it's smaller than what we had, just shrink our node's size and make a
-    // new one
-
-    // TODO(YIDI): the node can be overriden
-    PtrInt rawAddress = reinterpret_cast<PtrInt>(memPtr) + s;
-    rawAddress += headerSize;  // leave size for header
-    PtrInt misAlignment = rawAddress & (alignment - 1);
-    U64 adjustment = alignment - misAlignment;
-    adjustment += ((~alignment & adjustment) << 1);
-    PtrInt alignedAddress = rawAddress + adjustment;
-
-    Size occupiedSize = headerSize + adjustment + (header->size - size);
-    PtrInt headerAddress = alignedAddress - headerSize;
-
-    PtrInt nodeAddress =
-        reinterpret_cast<PtrInt>(memPtr) + size - header->adjustment;
-    auto* newNode =
-        new (reinterpret_cast<void*>(nodeAddress)) Node(header->size);
-
-    // TODO(YIDI): Take care of double deletion, in that situation, memPtr is
-    // the same as head
-    if (head == nullptr) {
-      head = newNode;
-      return newPtr;
-    }
-
-    // find last and next node, try to merge them
-    if (nodeAddress < reinterpret_cast<PtrInt>(head)) {
-      newNode->next = head;
-      head = newNode;
-      // TODO(YIDI): Go through this with a test case (make sure there won't be
-      // gaps anywhere in this list)
-      TryMergeWithNext(head);
-    } else {
-      Node* last = nullptr;
-      Node* cur = head;
-      while (reinterpret_cast<PtrInt>(cur) < nodeAddress) {
-        last = cur;
-        cur = cur->next;
-      }
-      last->next = newNode;
-      newNode->next = cur;
-      TryMergeWithNext(newNode);
-      TryMergeWithNext(last);
-    }
-
-  } else {
-    // If it's bigger than what we had, grab a whole new chunk of memory and
-    // free the old one
-    newPtr = Alloc(size, alignment);
-    memcpy(newPtr, memPtr, header->size);
-    Free(memPtr);
-  }
-
-  return newPtr;
-}
-
-void FreeListAllocator::Erase() const {
-  if (memHead == nullptr) {
-    return;
-  }
-
-  if (freeCallback == nullptr) {
-    std::free(memHead);
-  } else {
-    freeCallback(memHead);
-  }
-}
-
-void FreeListAllocator::RemoveNode(Node* node) {
-  Node* last = nullptr;
-
-  if (node == head) {
-    head = node->next;
-    return;
-  }
-
-  Node* cur = head;
-  while (cur != nullptr) {
-    if (cur->next == node) {
-      last = cur;
-      break;
-    }
-    cur = cur->next;
-  }
-
-  if (last == nullptr) {
-    throw std::exception{
-        Util::StrFormat("FreeListAllocator::RemoveNode => Node not found!")};
-  }
-
-  last->next = node->next;
-}
-
 void FreeListAllocator::InsertNodeAt(Node* pos, Node* newNode) {
+  ASSERT(pos != nullptr && newNode != nullptr);
   newNode->next = pos->next;
   pos->next = newNode;
 }
@@ -234,7 +196,24 @@ void FreeListAllocator::TryMergeWithNext(Node* node) {
     // if the adjacent next address is a node
     node->size += node->next->size;
     node->next = node->next->next;
+    memset(node + 1, 0xD, node->size - nodeSize);
+    // the original node->next is effectively deleted cause no one has reference
+    // to it
   }
 }
+
+#if _DEBUG
+void FreeListAllocator::Print() const {
+  const int interval = 180;
+  static int i = interval;
+  ++i;
+  if (i > interval) {
+    LOG_INFO(Debug::Channel::Memory, "Freelist usage: %I64u / %I64u = %.3f%%",
+             sizeUsed, totalSize,
+             static_cast<float>(sizeUsed) / totalSize * 100);
+    i = 0;
+  }
+}
+#endif
 
 }  // namespace Isetta

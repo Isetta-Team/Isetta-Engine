@@ -71,9 +71,12 @@ void EngineLoop::StartUp() {
   intervalTime = 1.0 / Config::Instance().loopConfig.maxFps.GetVal();
   maxSimulationCount = Config::Instance().loopConfig.maxSimCount.GetVal();
 
+  // Will be set to false when Application set it to isGameRunning
   isGameRunning = true;
 
+  // Memory module must start before everything else
   memoryManager->StartUp();
+  // Window module must start before things depend on it
   windowModule->StartUp();
   renderModule->StartUp(windowModule->winHandle);
   inputModule->StartUp(windowModule->winHandle);
@@ -85,9 +88,7 @@ void EngineLoop::StartUp() {
   networkingModule->StartUp();
   events->StartUp();
 
-  // LevelManager::Instance().LoadStartupLevel();
-  LevelManager::Instance().LoadLevel(
-      Config::Instance().levelConfig.startLevel.GetVal());
+  LevelManager::Instance().LoadLevel(CONFIG_VAL(levelConfig.startLevel));
   LevelManager::Instance().LoadLevel();
 
   StartGameClock();
@@ -98,29 +99,18 @@ void EngineLoop::Update() {
 
   GetGameClock().UpdateTime();
 
-  // TODO(All) Add networking update
-
-  // end Networking update
-  // LOG_INFO(Debug::Channel::General,
-  // "//////////////UpdateStart//////////////");
-
-  // Client part
   accumulateTime += GetGameClock().GetDeltaTime();
 
   for (int i = 0; i < maxSimulationCount && accumulateTime > intervalTime;
-       i++) {
+       ++i) {
     FixedUpdate(intervalTime);
-    // LOG_INFO(Debug::Channel::General,
-    // std::to_string(accumulateTime));
     accumulateTime -= intervalTime;
   }
 
   VariableUpdate(GetGameClock().GetDeltaTime());
-  // LOG_INFO(Debug::Channel::General,
-  // "//////////////UpdateEnd//////////////");
 }
 
-void EngineLoop::FixedUpdate(float deltaTime) {
+void EngineLoop::FixedUpdate(const float deltaTime) const {
   BROFILER_CATEGORY("Fixed Update", Profiler::Color::IndianRed);
 
   networkingModule->Update(deltaTime);
@@ -128,7 +118,7 @@ void EngineLoop::FixedUpdate(float deltaTime) {
   collisionSolverModule->Update();
   LevelManager::Instance().loadedLevel->FixedUpdate();
 }
-void EngineLoop::VariableUpdate(float deltaTime) {
+void EngineLoop::VariableUpdate(const float deltaTime) const {
   BROFILER_CATEGORY("Variable Update", Profiler::Color::SteelBlue);
 
   inputModule->Update(deltaTime);
@@ -142,7 +132,10 @@ void EngineLoop::VariableUpdate(float deltaTime) {
   windowModule->Update(deltaTime);
   memoryManager->Update();
 
-  LevelManager::Instance().LoadLevel();
+  if (LevelManager::Instance().LoadLevel()) {
+    inputModule->Clear();
+    audioModule->UnloadLevel();
+  }
 }
 
 void EngineLoop::ShutDown() {

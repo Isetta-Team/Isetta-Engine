@@ -54,9 +54,9 @@ void RegisterExampleMessageFunctions() {
                   "Server says we should stop the animation!");
             }
             if (handleMessage->handle == 2) {
-              AudioSource audio = AudioSource();
-              audio.SetAudioClip("gunshot.aiff");
-              audio.Play(false, 1.f);
+              AudioSource audio = AudioSource("Sound\\gunshot.aiff");
+              // AudioSource(true, false, 1.f, "Sound\\gunshot.aiff");
+              audio.Play();
             }
           });
 
@@ -93,7 +93,7 @@ void RegisterExampleMessageFunctions() {
               spawnedEntities.push_back(e);
 
               // Zomble
-              e->GetTransform()->SetLocalScale(Math::Vector3::one * .01);
+              e->transform->SetLocalScale(Math::Vector3::one * .01);
               MeshComponent* mesh = e->AddComponent<MeshComponent, true>(
                   "Zombie/Zombie.scene.xml");
               if (netId->HasClientAuthority()) {
@@ -105,8 +105,8 @@ void RegisterExampleMessageFunctions() {
                 Entity* parent = NetworkManager::Instance().GetNetworkEntity(
                     spawnMessage->a);
 
-                e->GetTransform()->SetParent(parent->GetTransform());
-                e->GetTransform()->SetLocalScale(Math::Vector3::one);
+                e->transform->SetParent(parent->transform);
+                e->transform->SetLocalScale(Math::Vector3::one);
               }
             }
           });
@@ -128,7 +128,7 @@ void RegisterExampleMessageFunctions() {
               spawnMessage->clientAuthorityId = clientIdx;
 
               // Zomble
-              e->GetTransform()->SetLocalScale(Math::Vector3::one * .01);
+              e->transform->SetLocalScale(Math::Vector3::one * .01);
               MeshComponent* mesh = e->AddComponent<MeshComponent, true>(
                   "Zombie/Zombie.scene.xml");
               if (netId->HasClientAuthority()) {
@@ -140,8 +140,8 @@ void RegisterExampleMessageFunctions() {
                 Entity* parent = NetworkManager::Instance().GetNetworkEntity(
                     spawnMessage->a);
 
-                e->GetTransform()->SetParent(parent->GetTransform());
-                e->GetTransform()->SetLocalScale(Math::Vector3::one);
+                e->transform->SetParent(parent->transform);
+                e->transform->SetLocalScale(Math::Vector3::one);
               }
             }
 
@@ -207,7 +207,7 @@ void DeregisterExampleMessageFunctions() {
       exampleServerDespawn);
 }
 
-void NetworkLevel::LoadLevel() {
+void NetworkLevel::OnLevelLoad() {
   // Networking preparation
   RegisterExampleMessageFunctions();
 
@@ -271,7 +271,7 @@ void NetworkLevel::LoadLevel() {
       spawnedEntities.back()
           ->GetComponent<NetworkTransform>()
           ->SetNetworkedParentToRoot();
-      spawnedEntities.back()->GetTransform()->SetLocalScale(
+      spawnedEntities.back()->transform->SetLocalScale(
           Math::Vector3(.01, .01, .01));
     }
   });
@@ -308,12 +308,6 @@ void NetworkLevel::LoadLevel() {
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
   cameraEntity->AddComponent<FlyController>();
-  camComp->SetProperty<CameraProperty::FOV>(
-      CONFIG_VAL(renderConfig.fieldOfView));
-  camComp->SetProperty<CameraProperty::NEAR_PLANE>(
-      CONFIG_VAL(renderConfig.nearClippingPlane));
-  camComp->SetProperty<CameraProperty::FAR_PLANE>(
-      CONFIG_VAL(renderConfig.farClippingPlane));
 
   // Light
   Entity* lightEntity{AddEntity("Light")};

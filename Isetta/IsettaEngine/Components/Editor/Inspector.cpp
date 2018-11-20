@@ -27,6 +27,9 @@ void Inspector::GuiUpdate() {
         float padding = 15;
         RectTransform rect =
             RectTransform{Math::Rect{padding, height, 300, 100}};
+        GUI::Text(rect, target->GetEntity()->GetEntityIdString());
+        rect.rect.y += 15;
+
         GUI::Text(rect, target->GetEntity()->GetName());
         rect.rect.y += 15;
 
@@ -69,7 +72,7 @@ void Inspector::GuiUpdate() {
         GUI::Text(RectTransform{Math::Rect{padding, rect.rect.y, 300, 100}},
                   "Components");
 
-        for (const auto &component : target->GetEntity()->GetComponents()) {
+        for (const auto &component : target->GetEntity()->GetComponents<Component>()) {
           Component &comp = *component;
           rect.rect.y += padding;
           GUI::Text(RectTransform{Math::Rect{padding, rect.rect.y, 300, 100}},

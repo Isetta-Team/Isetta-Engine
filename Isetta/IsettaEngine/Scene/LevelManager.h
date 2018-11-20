@@ -18,9 +18,9 @@ class LevelRegistry {
 class ISETTA_API LevelManager {
  private:
   std::unordered_map<StringId, Func<class Level*>> levels;
-  class Level* loadLevel{nullptr};
+  class Level* pendingLoadLevel{nullptr};
 
-  void LoadLevel();
+  bool LoadLevel();
   void UnloadLevel();
   friend class EngineLoop;
 
@@ -33,11 +33,11 @@ class ISETTA_API LevelManager {
 
   static LevelManager& Instance();
 
-  bool Register(std::string, Func<class Level*>);
+  bool Register(const std::string&, Func<class Level*>);
 
   LevelManager() = default;
   ~LevelManager() = default;
-  void LoadLevel(std::string_view level);
+  void LoadLevel(std::string_view levelName);
 };
 
 template <typename T>

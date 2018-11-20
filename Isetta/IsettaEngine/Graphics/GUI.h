@@ -11,13 +11,11 @@
 #include "Core/Math/Vector2.h"
 
 class ImGuiInputTextCallbackData;
-class ImFont;
 class ImGuiTextFilter;
 
 namespace Isetta {
 class RectTransform;
 class GUIStyle;
-// using Font = ImFont;
 using TextFilter = ImGuiTextFilter;
 using InputTextCallbackData = ImGuiInputTextCallbackData;
 using InputTextCallback = int (*)(InputTextCallbackData*);
@@ -953,19 +951,6 @@ class ISETTA_API GUI {
   */
   // TODO(Jacob) Load/SaveIniSettings?
 
-  static class Font* GetDefaultFont();
-  static void AddDefaultFont(const std::string_view& fontName, float size);
-  static void AddDefaultFont(class Font* const font);
-  static class Font* GetFont(const std::string_view fontName, float size);
-  static class Font* AddFontFromFile(const std::string& filename,
-                                     float fontSize,
-                                     const std::string_view& fontName = "");
-  static class Font* AddFontFromMemory(void* fontBuffer, float fontSize,
-                                       float pixels,
-                                       const std::string_view& fontName);
-  static void PushFont(const std::string_view fontName, float fontSize);
-  static void PushFont(class Font* const font);
-  static void PopFont();
   static void PushStyleVar(StyleVar var, float val);
   static void PushStyleVar(StyleVar var, const Math::Vector2& val);
   static void PopStyleVar(int pops = 1);

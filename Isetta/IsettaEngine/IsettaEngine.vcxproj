@@ -79,7 +79,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)IsettaEngine;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(SolutionDir)External\imgui\examples\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>IN_ENGINE;_EDITOR;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLFW_INCLUDE_NONE;IN_ENGINE;_EDITOR;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
@@ -92,7 +92,8 @@
     <PostBuildEvent>
       <Command>XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(ConfigurationName)\Horde3D.dll" "$(TargetDir)"
 XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(ConfigurationName)\Horde3DUtils.dll" "$(TargetDir)"
-XCOPY  /Y /R "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
+XCOPY  /Y /R "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"
+XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Debug\$(Platform)\*.dll" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL|x64'">
@@ -102,7 +103,7 @@ XCOPY  /Y /R "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)IsettaEngine;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(SolutionDir)External\imgui\examples\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>ISETTA_EXPORTS;_EDITOR;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);EDITOR</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLFW_INCLUDE_NONE;ISETTA_EXPORTS;_EDITOR;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);EDITOR</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
@@ -115,7 +116,8 @@ XCOPY  /Y /R "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <PostBuildEvent>
       <Command>XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\Debug\Horde3D.dll" "$(TargetDir)"
 XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\Debug\Horde3DUtils.dll" "$(TargetDir)"
-xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
+xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"
+XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Debug\$(Platform)\*.dll" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -128,7 +130,7 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)IsettaEngine;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(SolutionDir)External\imgui\examples\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <PreprocessorDefinitions>IN_ENGINE;_EDITOR;_MBCS;%(PreprocessorDefinitions);EDITOR</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLFW_INCLUDE_NONE;IN_ENGINE;_EDITOR;_MBCS;%(PreprocessorDefinitions);EDITOR</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -139,7 +141,8 @@ xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <PostBuildEvent>
       <Command>XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(ConfigurationName)\Horde3D.dll" "$(TargetDir)"
 XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(ConfigurationName)\Horde3DUtils.dll" "$(TargetDir)"
-XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
+XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"
+XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*.dll" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -147,6 +150,8 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="AI\Nav2DObstacle.cpp" />
     <ClCompile Include="AI\Nav2DPlane.cpp" />
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Audio\AudioClip.cpp" />
+    <ClCompile Include="Audio\AudioListener.cpp" />
     <ClCompile Include="Audio\AudioModule.cpp" />
     <ClCompile Include="Audio\AudioSource.cpp" />
     <ClCompile Include="Collisions\BVTree.cpp" />
@@ -160,6 +165,8 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Core\DataStructures\Trie.cpp" />
     <ClCompile Include="Custom\AILevel\AITestComponent.cpp" />
     <ClCompile Include="Custom\AILevel\AITestLevel.cpp" />
+    <ClCompile Include="Custom\AudioLevel\AudioLevel.cpp" />
+    <ClCompile Include="Custom\AudioPlay.cpp" />
     <ClCompile Include="Custom\CollisionSolverLevel\CollisionSolverLevel.cpp" />
     <ClCompile Include="Custom\EditorLevel\EditorLevel.cpp" />
     <ClCompile Include="Components\GridComponent.cpp" />
@@ -181,24 +188,25 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Custom\BVHTestLevel\BVHLevel.cpp" />
     <ClCompile Include="Custom\BVHTestLevel\RandomMover.cpp" />
     <ClCompile Include="Custom\EmptyLevel\EmptyLevel.cpp" />
-    <ClCompile Include="Custom\FrameReporter.cpp" />
+    <ClCompile Include="Components\Editor\FrameReporter.cpp" />
     <ClCompile Include="Custom\EscapeExit.cpp" />
     <ClCompile Include="Custom\EventTestLevel\EventListenerComponent.cpp" />
     <ClCompile Include="Custom\DebugCollision.cpp" />
     <ClCompile Include="Custom\EventTestLevel\EventSenderComponent.cpp" />
     <ClCompile Include="Custom\EventTestLevel\EventTestLevel.cpp" />
-    <ClCompile Include="Custom\InEngineTestLevel.cpp" />
+    <ClCompile Include="Custom\MeshAnimLevel\MeshAnimLevel.cpp" />
     <ClCompile Include="Custom\KeyTransform.cpp" />
     <ClCompile Include="Custom\LoadNextLevel.cpp" />
     <ClCompile Include="Custom\NetworkLevel.cpp" />
     <ClCompile Include="Custom\OscillateMove.cpp" />
-    <ClCompile Include="Custom\CollisionsLevel.cpp" />
+    <ClCompile Include="Custom\CollisionsLevel\CollisionsLevel.cpp" />
     <ClCompile Include="Custom\RaycastClick.cpp" />
     <ClCompile Include="EngineLoop.cpp" />
     <ClCompile Include="Events\EventObject.cpp" />
     <ClCompile Include="Events\Events.cpp" />
     <ClCompile Include="Graphics\AnimationComponent.cpp" />
     <ClCompile Include="Graphics\CameraComponent.cpp" />
+    <ClCompile Include="Graphics\Font.cpp" />
     <ClCompile Include="Graphics\GUI.cpp" />
     <ClCompile Include="Graphics\GUIModule.cpp" />
     <ClCompile Include="Graphics\GUIStyle.cpp" />
@@ -235,7 +243,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClCompile Include="Collisions\CapsuleCollider.cpp" />
     <ClCompile Include="Collisions\Collider.cpp" />
     <ClCompile Include="Collisions\CollisionsModule.cpp" />
-    <ClCompile Include="Collisions\Plane.cpp" />
+    <ClCompile Include="Core\Geometry\Plane.cpp" />
     <ClCompile Include="Collisions\SphereCollider.cpp" />
     <ClCompile Include="Networking\NetworkTransform.cpp" />
     <ClCompile Include="Scene\Component.cpp" />
@@ -251,6 +259,8 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="AI\Nav2DObstacle.h" />
     <ClInclude Include="AI\Nav2DPlane.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Audio\AudioClip.h" />
+    <ClInclude Include="Audio\AudioListener.h" />
     <ClInclude Include="Audio\AudioModule.h" />
     <ClInclude Include="Audio\AudioSource.h" />
     <ClInclude Include="Collisions\BVTree.h" />
@@ -258,6 +268,7 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Collisions\Collisions.h" />
     <ClInclude Include="Collisions\CollisionSolverModule.h" />
     <ClInclude Include="Collisions\CollisionUtil.h" />
+    <ClInclude Include="Collisions\RaycastHit.h" />
     <ClInclude Include="Components\AxisDrawer.h" />
     <ClInclude Include="Components\Editor\EditorComponent.h" />
     <ClInclude Include="Components\Editor\Hierarchy.h" />
@@ -267,6 +278,8 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Custom\AILevel\AITestAgent.h" />
     <ClInclude Include="Custom\AILevel\AITestComponent.h" />
     <ClInclude Include="Custom\AILevel\AITestLevel.h" />
+    <ClInclude Include="Custom\AudioLevel\AudioLevel.h" />
+    <ClInclude Include="Custom\AudioPlay.h" />
     <ClInclude Include="Custom\CollisionSolverLevel\CollisionSolverLevel.h" />
     <ClInclude Include="Custom\EditorLevel\EditorLevel.h" />
     <ClInclude Include="Components\GridComponent.h" />
@@ -313,19 +326,19 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Custom\BVHTestLevel\BVHLevel.h" />
     <ClInclude Include="Custom\BVHTestLevel\RandomMover.h" />
     <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h" />
-    <ClInclude Include="Custom\FrameReporter.h" />
+    <ClInclude Include="Components\Editor\FrameReporter.h" />
     <ClInclude Include="Custom\DebugCollision.h" />
     <ClInclude Include="Custom\EscapeExit.h" />
     <ClInclude Include="Custom\EventTestLevel\EventListenerComponent.h" />
     <ClInclude Include="Custom\EventTestLevel\EventSenderComponent.h" />
     <ClInclude Include="Custom\EventTestLevel\EventTestLevel.h" />
-    <ClInclude Include="Custom\InEngineTestLevel.h" />
+    <ClInclude Include="Custom\MeshAnimLevel\MeshAnimLevel.h" />
     <ClInclude Include="Custom\IsettaCore.h" />
     <ClInclude Include="Custom\KeyTransform.h" />
     <ClInclude Include="Custom\LoadNextLevel.h" />
     <ClInclude Include="Custom\NetworkLevel.h" />
     <ClInclude Include="Custom\OscillateMove.h" />
-    <ClInclude Include="Custom\CollisionsLevel.h" />
+    <ClInclude Include="Custom\CollisionsLevel\CollisionsLevel.h" />
     <ClInclude Include="Custom\RaycastClick.h" />
     <ClInclude Include="EngineLoop.h" />
     <ClInclude Include="Events\EventObject.h" />
@@ -357,8 +370,8 @@ XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"</Command>
     <ClInclude Include="Collisions\CapsuleCollider.h" />
     <ClInclude Include="Collisions\Collider.h" />
     <ClInclude Include="Collisions\CollisionsModule.h" />
-    <ClInclude Include="Collisions\Plane.h" />
-    <ClInclude Include="Collisions\Ray.h" />
+    <ClInclude Include="Core\Geometry\Plane.h" />
+    <ClInclude Include="Core\Geometry\Ray.h" />
     <ClInclude Include="Collisions\SphereCollider.h" />
     <ClInclude Include="Networking\NetworkTransform.h" />
     <ClInclude Include="Scene\Component.h" />

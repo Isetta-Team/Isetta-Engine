@@ -3,8 +3,9 @@
  */
 #include "AABB.h"
 
+#include "Collisions/RaycastHit.h"
+#include "Core/Geometry/Ray.h"
 #include "Core/Math/Util.h"
-#include "Ray.h"
 
 namespace Isetta {
 bool AABB::Contains(const Math::Vector3& point) const {
@@ -68,7 +69,7 @@ bool AABB::Raycast(const Ray& ray, RaycastHit* const hitInfo,
   Math::Vector3 invD = 1.0f / d;
 
   float t[6];
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < 3; ++i) {
     t[2 * i] = -(e[i] + o[i]) * invD[i];
     t[2 * i + 1] = (e[i] - o[i]) * invD[i];
   }
