@@ -6,7 +6,6 @@
 #include <unordered_set>
 #include "Collisions/BVTree.h"
 #include "Scene/Layers.h"
-#include "Util.h"
 
 namespace Isetta::Math {
 class Vector3;
@@ -17,6 +16,7 @@ class CollisionsModule {
  public:
   struct CollisionConfig {
     CVar<float> fatFactor{"collision_fat_factor", 0.2f};
+    CVar<int> bvTreeNodeSize{"bv_tree_node_size", 200};
   };
 
   static bool Intersection(const class BoxCollider &,

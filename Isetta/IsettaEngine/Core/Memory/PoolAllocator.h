@@ -9,9 +9,9 @@ namespace Isetta {
 class PoolAllocator {
  public:
   /**
-   * \brief Construct a pool allocator with `count` slots each of size `chunkSize`
-   * \param chunkSize Size of each slot in byte
-   * \param count Number of slots
+   * \brief Construct a pool allocator with `count` slots each of size
+   * `chunkSize` \param chunkSize Size of each slot in byte \param count Number
+   * of slots
    */
   explicit PoolAllocator(Size chunkSize, Size count);
 
@@ -39,13 +39,13 @@ class PoolAllocator {
  private:
   union Node {
     Node* next;
-    explicit Node(Node* next);
+    explicit Node(Node* next) { this->next = next; }
   };
 
-  Size capacity;
-  Size elementSize;
-  Node* head;
-  void* memHead;
+  Size capacity{};
+  Size elementSize{};
+  Node* head{};
+  void* memHead{};
 };
 
 }  // namespace Isetta
