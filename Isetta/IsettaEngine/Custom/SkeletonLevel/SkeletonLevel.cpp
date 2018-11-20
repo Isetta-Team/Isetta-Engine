@@ -89,46 +89,19 @@ void SkeletonLevel::OnLevelLoad() {
 
   Events::Instance().RegisterEventListener(
       "CustomUpdate", [=](const EventObject &object) {
-        {
-          auto [pos, rot] = mesh->GetJointWorldTransform("Head");
-          head->transform->SetWorldPos(pos);
-          head->transform->SetWorldRot(rot);
-        }
-        {
-          auto [pos, rot] = mesh->GetJointWorldTransform("Hips");
-          hips->transform->SetWorldPos(pos);
-          hips->transform->SetWorldRot(rot);
-        }
-        {
-          auto [pos, rot] = mesh->GetJointWorldTransform("LeftShoulder");
-          leftShoulder->transform->SetWorldPos(pos);
-          leftShoulder->transform->SetWorldRot(rot);
-        }
-        {
-          auto [pos, rot] = mesh->GetJointWorldTransform("RightShoulder");
-          rightShoulder->transform->SetWorldPos(pos);
-          rightShoulder->transform->SetWorldRot(rot);
-        }
-        {
-          auto [pos, rot] = mesh->GetJointWorldTransform("LeftHand");
-          leftHand->transform->SetWorldPos(pos);
-          leftHand->transform->SetWorldRot(rot);
-        }
-        {
-          auto [pos, rot] = mesh->GetJointWorldTransform("RightHand");
-          rightHand->transform->SetWorldPos(pos);
-          rightHand->transform->SetWorldRot(rot);
-        }
-        {
-          auto [pos, rot] = mesh->GetJointWorldTransform("LeftFoot");
-          leftFoot->transform->SetWorldPos(pos);
-          leftFoot->transform->SetWorldRot(rot);
-        }
-        {
-          auto [pos, rot] = mesh->GetJointWorldTransform("RightFoot");
-          rightFoot->transform->SetWorldPos(pos);
-          rightFoot->transform->SetWorldRot(rot);
-        }
+        auto positionFunc = [](MeshComponent* mesh, Entity* jointEntity) {
+          auto [pos, rot] = mesh->GetJointWorldTransform(jointEntity->GetName());
+          jointEntity->transform->SetWorldPos(pos);
+          jointEntity->transform->SetWorldRot(rot);
+        };
+        positionFunc(mesh, head);
+        positionFunc(mesh, hips);
+        positionFunc(mesh, leftShoulder);
+        positionFunc(mesh, rightShoulder);
+        positionFunc(mesh, leftHand);
+        positionFunc(mesh, rightHand);
+        positionFunc(mesh, leftFoot);
+        positionFunc(mesh, rightFoot);
 
         Events::Instance().RaiseQueuedEvent(
             EventObject("CustomUpdate", Time::GetTimeFrame() + 1,

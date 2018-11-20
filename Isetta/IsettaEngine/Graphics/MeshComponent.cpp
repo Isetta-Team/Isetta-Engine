@@ -64,20 +64,12 @@ void MeshComponent::OnDestroy() { h3dRemoveNode(renderNode); }
 std::tuple<Math::Vector3, Math::Quaternion>
 MeshComponent::GetJointWorldTransform(std::string jointName) {
   H3DNode jointNode = joints.at(SID(jointName.c_str()));
-  float test[16], test2[16];
-  const float** testPtr =
-      const_cast<const float**>(reinterpret_cast<float**>(test));
-  const float** testPtr2 =
-      const_cast<const float**>(reinterpret_cast<float**>(test2));
+  const float* data[4];
+  const float** testPtr = &data[0];
+  Math::Matrix4 abs;
+  h3dGetNodeTransMats(jointNode, nullptr, testPtr);
 
-  memset(test, 0, 16);
-  Math::Matrix4 rel, abs;
-  h3dGetNodeTransMats(jointNode, testPtr2, testPtr);
-
-  memcpy(rel.data, *testPtr2, 16 * sizeof(float));
   memcpy(abs.data, *testPtr, 16 * sizeof(float));
-
-  // char* parentName = h3dGetNodeParamStr(h3dGetNodeParent(jointNode))
 
   abs = abs.Transpose();
   Math::Vector3 pos = abs.GetCol(3).GetVector3();
