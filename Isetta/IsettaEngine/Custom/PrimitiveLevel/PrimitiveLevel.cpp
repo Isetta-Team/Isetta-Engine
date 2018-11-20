@@ -43,11 +43,11 @@ void PrimitiveLevel::OnLevelLoad() {
   entity->transform->SetWorldPos(Math::Vector3{1.5f, 0.5f, 0});
   entity = Primitive::Create(Primitive::Type::Cylinder);
   entity->transform->SetWorldPos(Math::Vector3{-1.5f, 1.f, 0});
-  entity = Primitive::Create(Primitive::Type::Grid);
+  entity = Primitive::Create(Primitive::Type::Grid, true);
   entity = Primitive::Create(Primitive::Type::Quad);
   entity->transform->SetWorldPos(Math::Vector3{1.5f, 0.5f, 1});
   entity->transform->SetWorldRot(Math::Vector3{0, 180.f, 0});
-  entity = Primitive::Create(Primitive::Type::Sphere);
+  entity = Primitive::Create(Primitive::Type::Sphere, true);
   entity->transform->SetWorldPos(Math::Vector3{1.5f, 2.f, 0});
 }
 }  // namespace Isetta

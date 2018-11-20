@@ -14,6 +14,6 @@ struct ISETTA_API Primitive {
     Quad,
     Sphere,
   };
-  static class Entity* Create(Type type);
+  static class Entity* Create(Type type, bool withCollider = false);
 };
 }  // namespace Isetta
