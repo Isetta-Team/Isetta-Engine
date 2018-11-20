@@ -26,7 +26,7 @@ class ISETTA_API LevelManager {
 
  public:
   struct LevelConfig {
-    CVarString startLevel{"start_level", "Level1"};
+    CVarString startLevel{"start_level", "EmptyLevel"};
   };
 
   class Level* loadedLevel{nullptr};

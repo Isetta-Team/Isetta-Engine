@@ -346,6 +346,12 @@
     <ClCompile Include="Custom\AudioPlay.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\Primitive.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\PrimitiveLevel\PrimitiveLevel.cpp">
+      <Filter>Custom\PrimitiveLevel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -449,6 +455,9 @@
     </Filter>
     <Filter Include="Custom\AudioLevel">
       <UniqueIdentifier>{6d7a5ecf-3f90-4d5e-a963-184ec35d68e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\PrimitiveLevel">
+      <UniqueIdentifier>{0b6e1da6-cd48-4704-81c7-c7fc5d36def2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -797,6 +806,12 @@
     </ClInclude>
     <ClInclude Include="Custom\AudioPlay.h">
       <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Primitive.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\PrimitiveLevel\PrimitiveLevel.h">
+      <Filter>Custom\PrimitiveLevel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
