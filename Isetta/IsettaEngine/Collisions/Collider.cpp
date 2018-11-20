@@ -32,7 +32,7 @@ void Collider::FindHandler() {
   handler = entity->GetComponent<CollisionHandler>();
   Transform* parent = transform->GetParent();
   while (parent && !handler) {
-    handler = parent->GetEntity()->GetComponent<CollisionHandler>();
+    handler = parent->entity->GetComponent<CollisionHandler>();
     parent = parent->GetParent();
   }
 }

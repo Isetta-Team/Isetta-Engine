@@ -37,7 +37,7 @@ void Hierarchy::GuiUpdate() {
 
                   Action<Transform*> action = [&](Transform* t) {
                     int level = countLevel(t);
-                    GUI::PushID(t->GetEntity()->GetEntityIdString());
+                    GUI::PushID(t->entity->GetEntityIdString());
                     if (GUI::Button(RectTransform{Math::Rect{
                                         left + (level - 1) * padding, height,
                                         buttonWidth, buttonHeight}},

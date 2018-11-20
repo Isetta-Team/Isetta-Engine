@@ -30,7 +30,7 @@ class ISETTA_API_DECLARE Entity {
 
   std::vector<std::type_index> componentTypes;
   Array<class Component *> components;
-  Transform m_transform;
+  Transform internalTransform;
 
   void OnEnable();
   void GuiUpdate();

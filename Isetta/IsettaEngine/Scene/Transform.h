@@ -70,9 +70,6 @@ class ISETTA_API_DECLARE Transform {
               const Math::Vector3& worldUp = Math::Vector3::up);
   void LookAt(Transform& target,
               const Math::Vector3& worldUp = Math::Vector3::up);
-  class Entity* GetEntity() const {
-    return entity;
-  }
   Size GetChildCount() const { return children.Size(); }
   Transform* GetChild(U16 childIndex);
   inline std::string GetName() const;
@@ -105,6 +102,7 @@ class ISETTA_API_DECLARE Transform {
   // both called by SetParent
   void AddChild(Transform* transform);
   void RemoveChild(Transform* transform);
+  class Entity* const entity{nullptr};
 
  private:
   void RecalculateLocalToWorldMatrix();
@@ -131,7 +129,6 @@ class ISETTA_API_DECLARE Transform {
   bool isDirty{true};
   bool isWorldToLocalDirty{true};
 
-  class Entity* const entity{nullptr};
   Transform* parent{nullptr};
   Array<Transform*> children;
 

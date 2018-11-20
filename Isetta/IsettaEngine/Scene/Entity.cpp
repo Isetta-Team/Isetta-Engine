@@ -99,15 +99,15 @@ bool Entity::GetAttribute(EntityAttributes attr) const {
 }
 
 Entity::Entity(const std::string &name)
-    : m_transform(this), attributes{0b101}, entityName{name}, transform(&m_transform), isStatic{false} {
+    : internalTransform(this), attributes{0b101}, entityName{name}, transform(&internalTransform), isStatic{false} {
   CoCreateGuid(&entityId);
   OnEnable();
 }
 
 Entity::Entity(const std::string &name, const bool &entityStatic)
-    : m_transform(this),
+    : internalTransform(this),
       attributes{0b101},
-      entityName{name}, transform(&m_transform),
+      entityName{name}, transform(&internalTransform),
       isStatic{entityStatic} {
   CoCreateGuid(&entityId);
   OnEnable();
@@ -134,7 +134,7 @@ void Entity::DestroyHelper(Entity *entity) {
   entity->SetAttribute(EntityAttributes::NEED_DESTROY, true);
   for (Transform* child : entity->transform->children) {
     removingChildren.PushBack(child);
-    DestroyHelper(child->GetEntity());
+    DestroyHelper(child->entity);
   }
   for (Transform* child : removingChildren) {
     entity->transform->RemoveChild(child);
