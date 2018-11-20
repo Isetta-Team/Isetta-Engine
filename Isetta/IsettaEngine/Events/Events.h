@@ -39,5 +39,6 @@ class ISETTA_API Events {
   static U16 totalListeners;
 
   friend class EngineLoop;
+  friend class StackAllocator;
 };
 }  // namespace Isetta

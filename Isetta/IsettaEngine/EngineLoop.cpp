@@ -40,27 +40,27 @@ EngineLoop::EngineLoop() {
 
   // Memory manager must start before everything else
   memoryManager = new MemoryManager{};
-  windowModule = new WindowModule{};
-  renderModule = new RenderModule{};
-  inputModule = new InputModule{};
-  guiModule = new GUIModule{};
-  collisionsModule = new CollisionsModule{};
-  collisionSolverModule = new CollisionSolverModule{};
-  audioModule = new AudioModule{};
-  networkingModule = new NetworkingModule{};
-  events = new Events{};
+  windowModule = MemoryManager::NewOnStack<WindowModule>();
+  renderModule = MemoryManager::NewOnStack<RenderModule>();
+  inputModule = MemoryManager::NewOnStack<InputModule>();
+  guiModule = MemoryManager::NewOnStack<GUIModule>();
+  collisionsModule = MemoryManager::NewOnStack<CollisionsModule>();
+  collisionSolverModule = MemoryManager::NewOnStack<CollisionSolverModule>();
+  audioModule = MemoryManager::NewOnStack<AudioModule>();
+  networkingModule = MemoryManager::NewOnStack<NetworkingModule>();
+  events = MemoryManager::NewOnStack<Events>();
 }
 
 EngineLoop::~EngineLoop() {
-  delete windowModule;
-  delete renderModule;
-  delete inputModule;
-  delete guiModule;
-  delete collisionsModule;
-  delete collisionSolverModule;
-  delete audioModule;
-  delete networkingModule;
-  delete events;
+  windowModule->~WindowModule();
+  renderModule->~RenderModule();
+  inputModule->~InputModule();
+  guiModule->~GUIModule();
+  collisionsModule->~CollisionsModule();
+  collisionSolverModule->~CollisionSolverModule();
+  audioModule->~AudioModule();
+  networkingModule->~NetworkingModule();
+  events->~Events();
   delete memoryManager;
 }
 

@@ -80,5 +80,6 @@ class GUIModule {
   int winWidth, winHeight;
 
   friend class EngineLoop;
+  friend class StackAllocator;
 };
 }  // namespace Isetta

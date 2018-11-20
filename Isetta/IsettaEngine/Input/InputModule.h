@@ -190,5 +190,6 @@ class InputModule {
   static U8 glfwHandle;
 
   friend class EngineLoop;
+  friend class StackAllocator;
 };
 }  // namespace Isetta

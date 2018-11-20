@@ -65,11 +65,6 @@ class CollisionsModule {
   void ShutDown();
   Array<Collider*> GetPossibleColliders(Collider* collider) const;
 
-  friend class EngineLoop;
-  friend class Collider;
-  friend class Collisions;
-  friend class CollisionSolverModule;
-
   // Utilities
   bool GetIgnoreLayerCollision(int layer1, int layer2) const;
   void SetIgnoreLayerCollision(int layer1, int layer2, bool ignoreLayer = true);
@@ -121,5 +116,11 @@ class CollisionsModule {
   static Math::Vector3 ClosestPtSegmentOBB(const Math::Vector3 &,
                                            const Math::Vector3 &,
                                            const class BoxCollider &);
+
+  friend class EngineLoop;
+  friend class Collider;
+  friend class Collisions;
+  friend class CollisionSolverModule;
+  friend class StackAllocator;
 };
 }  // namespace Isetta

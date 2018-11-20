@@ -63,7 +63,9 @@ Entity* Level::AddEntity(std::string name, Entity* parent, bool entityStatic) {
   PROFILE
   Entity* entity = MemoryManager::NewOnFreeList<Entity>(name, entityStatic);
   entities.push_back(entity);
-  entity->transform->SetParent(parent->transform);
+  if(parent != nullptr) {
+    entity->transform->SetParent(parent->transform);
+  }
   return entity;
 }
 

@@ -44,5 +44,6 @@ class WindowModule {
   class RenderModule* renderModule;
   class InputModule* inputModule;
   friend class EngineLoop;
+  friend class StackAllocator;
 };
 }  // namespace Isetta

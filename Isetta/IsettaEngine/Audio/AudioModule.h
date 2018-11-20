@@ -61,6 +61,7 @@ class AudioModule {
   friend class AudioSource;
   friend class AudioListener;
   friend class EngineLoop;
+  friend class StackAllocator;
 };
 
 }  // namespace Isetta

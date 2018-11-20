@@ -59,5 +59,6 @@ class ISETTA_API_DECLARE RenderModule {
 
   friend class CameraComponent;
   friend class EngineLoop;
+  friend class StackAllocator;
 };
 }  // namespace Isetta
