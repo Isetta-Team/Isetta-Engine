@@ -100,9 +100,7 @@ class ISETTA_API_DECLARE DebugDraw {
   static const char* vertexShaderSource;
   static const char* fragmentShaderSource;
 
-  static int projectionLoc;
-  static int viewLoc;
-  static int modelLoc;
+  static int modelViewProjectionLoc;
   static int colorLoc;
   static unsigned int VBO;
   static unsigned int VAO;
