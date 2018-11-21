@@ -245,7 +245,7 @@ void W10NetworkManager::Awake() {
       });
 
   if (CONFIG_VAL(networkConfig.runServer)) {
-    Isetta::NetworkManager::Instance().CreateServer(
+    Isetta::NetworkManager::Instance().StartServer(
         CONFIG_VAL(networkConfig.defaultServerIP).c_str());
   }
 
@@ -253,7 +253,7 @@ void W10NetworkManager::Awake() {
            Isetta::NetworkManager::Instance().ServerIsRunning());
 
   if (CONFIG_VAL(networkConfig.connectToServer)) {
-    Isetta::NetworkManager::Instance().ConnectToServer(
+    Isetta::NetworkManager::Instance().StartClient(
         CONFIG_VAL(networkConfig.defaultServerIP).c_str(), [](bool b) {
           LOG_INFO(Isetta::Debug::Channel::Networking,
                    "Client connection state: %d", b);

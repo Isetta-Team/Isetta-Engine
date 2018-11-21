@@ -208,12 +208,12 @@ void NetworkLevel::OnLevelLoad() {
   RegisterExampleMessageFunctions();
 
   if (CONFIG_VAL(networkConfig.runServer)) {
-    NetworkManager::Instance().CreateServer(
+    NetworkManager::Instance().StartServer(
         CONFIG_VAL(networkConfig.defaultServerIP).c_str());
   }
 
   if (CONFIG_VAL(networkConfig.connectToServer)) {
-    NetworkManager::Instance().ConnectToServer(
+    NetworkManager::Instance().StartClient(
         CONFIG_VAL(networkConfig.defaultServerIP).c_str(), [](bool b) {
           LOG(Debug::Channel::Networking, "Client connection state: %d", b);
         });

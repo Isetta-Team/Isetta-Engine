@@ -12,7 +12,6 @@
 #include "Core/IsettaAlias.h"
 #include "ISETTA_API.h"
 #include "yojimbo/yojimbo.h"
-#include "ISETTA_API.h"
 
 namespace Isetta {
 
@@ -39,6 +38,7 @@ class ISETTA_API_DECLARE NetworkManager {
   U32 CreateNetworkId(NetworkId* networkId);
   U32 AssignNetworkId(U32 netId, NetworkId* networkId);
   void RemoveNetworkId(NetworkId* networkId);
+  static U16 GetServerPort();
 
   class NetworkingModule* networkingModule;
 
@@ -89,34 +89,31 @@ class ISETTA_API_DECLARE NetworkManager {
   NetworkId* GetNetworkId(const U32 id);
 
   /**
-   * @brief Connects the local Client to a server at the given address.
+   * \brief Initializes the local Server object with the given address and port.
    *
-   * @param serverAddress Address of the server to connect the local Client to.
-   * @param callback Function to call when the connection request either
+   * \param serverIP Address of the server.
+   */
+  void StartServer(const char* serverIP) const;
+  /**
+   * \brief Closes the local Server object and deallocates its allocated memory.
+   *
+   */
+  void StopServer() const;
+  /**
+   * \brief Connects the local Client to a server at the given address.
+   *
+   * \param serverIP Address of the server to connect the local Client to.
+   * \param onStarted Function to call when the connection request either
    * succeeds or fails. Passes a boolean indicating the success of the
    * connection.
    */
-  void ConnectToServer(const char* serverAddress,
-                       Action<bool> callback = nullptr) const;
+  void StartClient(const char* serverIP,
+                   const Action<bool>& onStarted = nullptr) const;
   /**
-   * @brief Disconnects the local Client from the server it is connected to.
-   *
+   * \brief Disconnects the local Client from the server it is connected to.
    */
-  void DisconnectFromServer() const;
-
-  /**
-   * @brief Initializes the local Server object with the given address and port.
-   *
-   * @param address Address of the server.
-   */
-  void CreateServer(const char* address) const;
-  /**
-   * @brief Closes the local Server object and deallocates its allocated memory.
-   *
-   */
-  void CloseServer() const;
-
-  void StartHost(const char* hostIP);
+  void StopClient() const;
+  void StartHost(const char* hostIP) const;
   void StopHost() const;
 
   bool LocalClientIsConnected() const;

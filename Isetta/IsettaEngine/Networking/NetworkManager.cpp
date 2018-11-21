@@ -11,7 +11,7 @@
 
 namespace Isetta {
 
-NetworkManager::NetworkManager() : networkIds(1){};
+NetworkManager::NetworkManager() : networkIds(1){}
 
 NetworkManager& NetworkManager::Instance() {
   static NetworkManager instance;
@@ -27,20 +27,6 @@ void NetworkManager::SendMessageFromServer(const int clientIdx,
   networkingModule->AddServerToClientMessage(clientIdx, message);
 }
 
-void NetworkManager::ConnectToServer(const char* serverAddress,
-                                     const Action<bool> callback) const {
-  networkingModule->Connect(
-      serverAddress, Config::Instance().networkConfig.serverPort.GetVal(),
-      callback);
-}
-
-void NetworkManager::DisconnectFromServer() const { networkingModule->Disconnect(); }
-
-void NetworkManager::CreateServer(const char* address) const {
-  networkingModule->CreateServer(
-      address, Config::Instance().networkConfig.serverPort.GetVal());
-}
-
 bool NetworkManager::LocalClientIsConnected() const {
   return networkingModule->client->IsConnected();
 }
@@ -54,24 +40,35 @@ bool NetworkManager::ServerIsRunning() const {
 }
 
 int NetworkManager::GetMaxClients() {
-  return Config::Instance().networkConfig.maxClients.GetVal();
+  return CONFIG_VAL(networkConfig.maxClients);
 }
 
 int NetworkManager::GetClientIndex() const {
   return networkingModule->client->GetClientIndex();
 }
 
-void NetworkManager::CloseServer() const { networkingModule->CloseServer(); }
+void NetworkManager::StartServer(const char* serverIP) const {
+  networkingModule->CreateServer(serverIP, GetServerPort());
+}
 
-void NetworkManager::StartHost(const char* hostIP) {
-  CreateServer(hostIP);
-  ConnectToServer(hostIP);
+void NetworkManager::StopServer() const { networkingModule->CloseServer(); }
+
+void NetworkManager::StartClient(const char* serverIP,
+                                 const Action<bool>& onStarted) const {
+  networkingModule->Connect(serverIP, GetServerPort(), onStarted);
+}
+
+void NetworkManager::StopClient() const { networkingModule->Disconnect(); }
+
+void NetworkManager::StartHost(const char* hostIP) const {
+  networkingModule->CreateServer(hostIP, GetServerPort());
+  networkingModule->Connect(hostIP, GetServerPort());
   LOG_INFO(Debug::Channel::Networking, "Host Started on %s", hostIP);
 }
 
 void NetworkManager::StopHost() const {
-  DisconnectFromServer();
-  CloseServer();
+  networkingModule->Disconnect();
+  networkingModule->CloseServer();
 }
 
 std::list<std::pair<U16, Action<yojimbo::Message*>>>
@@ -83,12 +80,13 @@ NetworkManager::GetServerFunctions(const int type) {
   return serverCallbacks[type];
 }
 
-yojimbo::Message* NetworkManager::CreateClientMessage(const int messageId) const {
+yojimbo::Message* NetworkManager::CreateClientMessage(
+    const int messageId) const {
   return networkingModule->client->CreateMessage(messageId);
 }
 
-yojimbo::Message* NetworkManager::CreateServerMessage(const int clientIdx,
-                                                      const int messageId) const {
+yojimbo::Message* NetworkManager::CreateServerMessage(
+    const int clientIdx, const int messageId) const {
   return networkingModule->server->CreateMessage(clientIdx, messageId);
 }
 
@@ -143,5 +141,9 @@ void NetworkManager::RemoveNetworkId(NetworkId* networkId) {
   networkIdToComponentMap.erase(networkId->id);
   networkIds.ReturnHandle(networkId->id);
   networkId->id = NULL;
+}
+
+inline U16 NetworkManager::GetServerPort() {
+  return CONFIG_VAL(networkConfig.serverPort);
 }
 }  // namespace Isetta
