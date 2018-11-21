@@ -8,23 +8,25 @@
 #include "Input/Input.h"
 
 void EventSenderComponent::Start() {
-  Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::A, []() {
+  handleA = Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::A, [&]() {
     Isetta::EventParam param{std::string{"RaiseEvent In Queue"}};
     Isetta::EventObject eventObject{"RaiseEvent",
                                     Isetta::Time::GetTimeFrame(),
                                     Isetta::EventPriority::MEDIUM,
                                     {param}};
     Isetta::Events::Instance().RaiseQueuedEvent(eventObject);
+    Isetta::Input::UnregisterKeyPressCallback(Isetta::KeyCode::A, handleA);
   });
-  Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::S, []() {
+  handleB = Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::S, [&]() {
     Isetta::EventParam param{std::string{"RaiseEvent Immediately"}};
     Isetta::EventObject eventObject{"RaiseEvent",
                                     Isetta::Time::GetTimeFrame(),
                                     Isetta::EventPriority::MEDIUM,
                                     {param}};
     Isetta::Events::Instance().RaiseImmediateEvent(eventObject);
+    Isetta::Input::UnregisterKeyPressCallback(Isetta::KeyCode::S, handleB);
   });
-  Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::D, []() {
+  handleC = Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::D, [&]() {
     Isetta::EventParam param1{std::string{"RaiseEvent High"}};
     Isetta::EventParam param2{std::string{"RaiseEvent Low"}};
     Isetta::EventParam param3{std::string{"RaiseEvent Late"}};
@@ -45,5 +47,6 @@ void EventSenderComponent::Start() {
     Isetta::Events::Instance().RaiseQueuedEvent(eventObject1);
     Isetta::Events::Instance().RaiseQueuedEvent(eventObject2);
     Isetta::Events::Instance().RaiseQueuedEvent(eventObject3);
+    Isetta::Input::UnregisterKeyPressCallback(Isetta::KeyCode::D, handleC);
   });
 }

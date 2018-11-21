@@ -846,6 +846,9 @@
     <ClInclude Include="Custom\SkeletonLevel\SkeletonLevel.h">
       <Filter>Custom\SkeletonLevel</Filter>
     </ClInclude>
+    <ClInclude Include="Core\DataStructures\Delegate.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
