@@ -28,7 +28,7 @@ float Util::Asin(float number) { return asinf(number); }
 float Util::Atan(float number) { return atanf(number); }
 float Util::Atan2(float y, float x) { return atan2f(y, x); }
 float Util::Ceil(float number) { return ceilf(number); }
-int Util::CellToInt(float number) { return static_cast<int>(ceilf(number)); }
+int Util::CeilToInt(float number) { return static_cast<int>(ceilf(number)); }
 float Util::Clamp(float start, float end, float number) {
   return number < start ? start : (number > end ? end : number);
 }
@@ -44,7 +44,7 @@ int Util::ClosestPowerOfTwo(int number) {
   for (Size i = 1; i < sizeof(ceil) * CHAR_BIT; i *= 2) {
     ceil |= ceil >> i;
   }
-  ceil++;
+  ++ceil;
   int floor = ceil >> 1;
   if (abs(number - ceil) < abs(number - floor)) {
     return ceil;
@@ -65,7 +65,11 @@ bool Util::IsPowerOfTwo(int number) {
         "Utility::IsPowerOfTwo => Negative numbers are not supported."};
   return !(number == 0) && !(number & (number - 1));
 }
+float Util::LerpUnclamped(float start, float end, float time) {
+  return start * (1 - time) + time * end;
+}
 float Util::Lerp(float start, float end, float time) {
+  time = Clamp01(time);
   return start * (1 - time) + time * end;
 }
 float Util::Ln(float number) { return logf(number); }
@@ -94,7 +98,7 @@ int Util::NextPowerOfTwo(int number) {
   for (Size i = 1; i < sizeof(ceil) * CHAR_BIT; i *= 2) {
     ceil |= ceil >> i;
   }
-  ceil++;
+  ++ceil;
   return ceil;
 }
 float Util::Pow(float number, float power) { return powf(number, power); }

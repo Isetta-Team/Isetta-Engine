@@ -203,5 +203,6 @@ class NetworkingModule {
 
   friend class NetworkManager;
   friend class EngineLoop;
+  friend class StackAllocator;
 };
 }  // namespace Isetta

@@ -3,9 +3,9 @@
  */
 #pragma once
 
-#include <GLFW/glfw3.h>
 #include <string>
 #include "Core/Config/CVar.h"
+#include "GLFW/glfw3.h"
 
 namespace Isetta::Math {
 class Vector2;
@@ -44,5 +44,6 @@ class WindowModule {
   class RenderModule* renderModule;
   class InputModule* inputModule;
   friend class EngineLoop;
+  friend class StackAllocator;
 };
 }  // namespace Isetta

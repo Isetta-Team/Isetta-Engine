@@ -22,15 +22,15 @@ explicit SphereCollider(const float radius = 0.5)
 
 explicit SphereCollider(const Math::Vector3& center, const float radius = 0.5)
     : Collider{center}, radius{radius} {}
-SphereCollider(bool isStatic, bool isTrigger, const Math::Vector3& center,
+SphereCollider(bool trigger, const Math::Vector3& center,
                float radius = 0.5)
-    : Collider{isStatic, isTrigger, center}, radius{radius} {}
+    : Collider{trigger, center}, radius{radius} {}
 
 bool Raycast(const Ray& ray, RaycastHit* const hitInfo,
              float maxDistance = 0) final;
 
 float GetWorldRadius() const {
-  return radius * GetTransform()->GetWorldScale().Max();
+  return radius * transform->GetWorldScale().Max();
 }
 
 AABB GetFatAABB() final;

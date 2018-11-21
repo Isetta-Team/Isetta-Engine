@@ -3,8 +3,9 @@
  */
 #include "AABB.h"
 
+#include "Collisions/RaycastHit.h"
+#include "Core/Geometry/Ray.h"
 #include "Core/Math/Util.h"
-#include "Ray.h"
 
 namespace Isetta {
 bool AABB::Contains(const Math::Vector3& point) const {
@@ -18,12 +19,12 @@ bool AABB::Contains(const AABB& aabb) const {
 
 bool AABB::Intersect(const AABB& other) const {
   return (min.x <= other.max.x && max.x >= other.min.x) &&
-         (min.y <= other.max.y && max.x >= other.min.x) &&
+         (min.y <= other.max.y && max.y >= other.min.y) &&
          (min.z <= other.max.z && max.z >= other.min.z);
 }
 bool AABB::Intersect(const AABB* a, const AABB* b) {
   return (a->min.x <= b->max.x && a->max.x >= b->min.x) &&
-         (a->min.y <= b->max.y && a->max.x >= b->min.x) &&
+         (a->min.y <= b->max.y && a->max.y >= b->min.y) &&
          (a->min.z <= b->max.z && a->max.z >= b->min.z);
 }
 
@@ -68,7 +69,7 @@ bool AABB::Raycast(const Ray& ray, RaycastHit* const hitInfo,
   Math::Vector3 invD = 1.0f / d;
 
   float t[6];
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < 3; ++i) {
     t[2 * i] = -(e[i] + o[i]) * invD[i];
     t[2 * i + 1] = (e[i] - o[i]) * invD[i];
   }

@@ -12,6 +12,7 @@
 #include "Core/IsettaAlias.h"
 #include "ISETTA_API.h"
 #include "yojimbo/yojimbo.h"
+#include "ISETTA_API.h"
 
 namespace Isetta {
 

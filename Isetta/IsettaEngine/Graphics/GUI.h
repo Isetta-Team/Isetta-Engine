@@ -11,13 +11,11 @@
 #include "Core/Math/Vector2.h"
 
 class ImGuiInputTextCallbackData;
-class ImFont;
 class ImGuiTextFilter;
 
 namespace Isetta {
 class RectTransform;
 class GUIStyle;
-// using Font = ImFont;
 using TextFilter = ImGuiTextFilter;
 using InputTextCallbackData = ImGuiInputTextCallbackData;
 using InputTextCallback = int (*)(InputTextCallbackData*);
@@ -541,7 +539,7 @@ class ISETTA_API GUI {
         : text{text}, isWrapped{false}, isDisabled{false} {}
     TextStyle(float fontSize, const std::string_view& fontName = "");
     TextStyle(class Font* const font);
-    TextStyle(const Color& text, int fontSize,
+    TextStyle(const Color& text, float fontSize,
               const std::string_view& fontName = "");
     TextStyle(const Color& text, class Font* const font)
         : text{text}, font{font} {}
@@ -952,20 +950,8 @@ class ISETTA_API GUI {
   // TODO(Jacob) Classic/Dark/Light sytling?
   */
   // TODO(Jacob) Load/SaveIniSettings?
-
-  static class Font* GetDefaultFont();
-  static void AddDefaultFont(const std::string_view& fontName, float size);
-  static void AddDefaultFont(class Font* const font);
-  static class Font* GetFont(const std::string_view fontName, float size);
-  static class Font* AddFontFromFile(const std::string& filename,
-                                     float fontSize,
-                                     const std::string_view& fontName = "");
-  static class Font* AddFontFromMemory(void* fontBuffer, float fontSize,
-                                       float pixels,
-                                       const std::string_view& fontName);
-  static void PushFont(const std::string_view fontName, float fontSize);
-  static void PushFont(class Font* const font);
-  static void PopFont();
+  static void PushID(std::string_view id);
+  static void PopID();
   static void PushStyleVar(StyleVar var, float val);
   static void PushStyleVar(StyleVar var, const Math::Vector2& val);
   static void PopStyleVar(int pops = 1);

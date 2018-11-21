@@ -3,10 +3,8 @@
  */
 #include "Core/Debug/DebugDraw.h"
 
-#ifndef __  // GLAD must be placed first
-#include <glad/glad.h>
-#endif
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 #include "Core/Debug/Logger.h"
 #include "Core/Math/Matrix4.h"
@@ -136,18 +134,15 @@ float DebugDraw::lineVerticies[] = {
 const char* DebugDraw::vertexShaderSource =
     "#version 330 core\n"
     "layout(location = 0) in vec3 vPos;"
-    "uniform mat4 projection;"
-    "uniform mat4 view;"
-    "uniform mat4 model;"
-    "void main() { gl_Position = projection * view * model * "
+    "uniform mat4 modelViewProjectionMat;"
+    "void main() { gl_Position = modelViewProjectionMat * "
     "vec4(vPos, 1.0); }";
 const char* DebugDraw::fragmentShaderSource =
     "#version 330 core\n"
     "out vec4 FragColor;"
     "uniform vec4 color;"
     "void main() { FragColor = color; }";
-int DebugDraw::projectionLoc, DebugDraw::viewLoc, DebugDraw::modelLoc,
-    DebugDraw::colorLoc;
+int DebugDraw::modelViewProjectionLoc, DebugDraw::colorLoc;
 unsigned int DebugDraw::VBO, DebugDraw::VAO, DebugDraw::EBO, DebugDraw::sVBO,
     DebugDraw::sVAO;
 int DebugDraw::shaderProgram;
@@ -158,7 +153,7 @@ void DebugDraw::StartUp() {
   gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
   // Vertex Shader
-  int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+  const int vertexShader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
   glCompileShader(vertexShader);
   // check for shader compile errors
@@ -172,12 +167,7 @@ void DebugDraw::StartUp() {
   }
 
   // Fragment Shader
-  const char* fragmentShaderSource =
-      "#version 330 core\n"
-      "out vec4 FragColor;"
-      "uniform vec4 color;"
-      "void main() { FragColor = color; }";
-  int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+  const int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
   glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
   glCompileShader(fragmentShader);
   // check for shader compile errors
@@ -204,9 +194,8 @@ void DebugDraw::StartUp() {
   glDeleteShader(fragmentShader);
 
   glUseProgram(shaderProgram);
-  projectionLoc = glGetUniformLocation(shaderProgram, "projection");
-  viewLoc = glGetUniformLocation(shaderProgram, "view");
-  modelLoc = glGetUniformLocation(shaderProgram, "model");
+  modelViewProjectionLoc =
+      glGetUniformLocation(shaderProgram, "modelViewProjectionMat");
   colorLoc = glGetUniformLocation(shaderProgram, "color");
 
   glGenVertexArrays(1, &VAO);
@@ -247,7 +236,7 @@ void DebugDraw::Update() {
     } else {
       it->first -= EngineLoop::GetGameClock().GetDeltaTime();
       it->second();
-      it++;
+      ++it;
     }
   }
 }
@@ -351,10 +340,10 @@ void DebugDraw::WireCapsule(const Math::Matrix4& transformation, float radius,
       std::pair(duration, std::bind(DrawWireCapsule, transformation, radius,
                                     height, color, thickness, depthTest)));
 }
-void DebugDraw::Grid(const Math::Matrix4& transformation, const Color& color,
-                     float thickness, float duration) {
+void DebugDraw::Grid(const Math::Matrix4& transformation, int lines,
+                     const Color& color, float thickness, float duration) {
   durationDraw.push_back(std::pair(
-      duration, std::bind(DrawGrid, transformation, color, thickness)));
+      duration, std::bind(DrawGrid, transformation, lines, color, thickness)));
 }
 void DebugDraw::Axis(const Math::Matrix4& transformation, const Color& xColor,
                      const Color& yColor, const Color& zColor, float thickness,
@@ -388,20 +377,14 @@ void DebugDraw::OpenGLDraw(const Math::Matrix4& transformation,
                            const Action<>& shape) {
   glUseProgram(shaderProgram);
 
-  glUniformMatrix4fv(
-      projectionLoc, 1, GL_FALSE,
+  const Math::Matrix4 mvpMat =
       CameraComponent::Main()
           ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
-          .data);
-  // TODO(Jacob) replace with world to local call
-  glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
-                     CameraComponent::Main()
-                         ->GetTransform()
-                         ->GetLocalToWorldMatrix()
-                         .Inverse()
-                         .Transpose()
-                         .data);
-  glUniformMatrix4fv(modelLoc, 1, GL_FALSE, transformation.Transpose().data);
+          .Transpose() *
+      CameraComponent::Main()->transform->GetWorldToLocalMatrix() *
+      transformation;
+  glUniformMatrix4fv(modelViewProjectionLoc, 1, GL_FALSE,
+                     mvpMat.Transpose().data);
   glUniform4fv(colorLoc, 1, color.rgba);
   GLError();
 
@@ -456,20 +439,13 @@ void DebugDraw::DrawPoint(const Math::Vector3 point, const Color& color,
                           float size, bool depthTest) {
   glUseProgram(shaderProgram);
 
-  glUniformMatrix4fv(
-      projectionLoc, 1, GL_FALSE,
+  const Math::Matrix4 mvpMat =
       CameraComponent::Main()
           ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
-          .data);
-  // TODO(Jacob) replace with world to local call
-  glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
-                     CameraComponent::Main()
-                         ->GetTransform()
-                         ->GetLocalToWorldMatrix()
-                         .Inverse()
-                         .Transpose()
-                         .data);
-  glUniformMatrix4fv(modelLoc, 1, GL_FALSE, Math::Matrix4::identity.data);
+          .Transpose() *
+      CameraComponent::Main()->transform->GetWorldToLocalMatrix();
+  glUniformMatrix4fv(modelViewProjectionLoc, 1, GL_FALSE,
+                     mvpMat.Transpose().data);
   glUniform4fv(colorLoc, 1, color.rgba);
   GLError();
 
@@ -502,20 +478,13 @@ void DebugDraw::DrawLine(const Math::Vector3& start, const Math::Vector3& end,
                          const Color& color, float thickness, bool depthTest) {
   glUseProgram(shaderProgram);
 
-  glUniformMatrix4fv(
-      projectionLoc, 1, GL_FALSE,
+  const Math::Matrix4 mvpMat =
       CameraComponent::Main()
           ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
-          .data);
-  // TODO(Jacob) replace with world to local call
-  glUniformMatrix4fv(viewLoc, 1, GL_FALSE,
-                     CameraComponent::Main()
-                         ->GetTransform()
-                         ->GetLocalToWorldMatrix()
-                         .Inverse()
-                         .Transpose()
-                         .data);
-  glUniformMatrix4fv(modelLoc, 1, GL_FALSE, Math::Matrix4::identity.data);
+          .Transpose() *
+      CameraComponent::Main()->transform->GetWorldToLocalMatrix();
+  glUniformMatrix4fv(modelViewProjectionLoc, 1, GL_FALSE,
+                     mvpMat.Transpose().data);
   glUniform4fv(colorLoc, 1, color.rgba);
   GLError();
 
@@ -626,7 +595,7 @@ void DebugDraw::DrawWireCapsule(const Math::Matrix4& transformation,
                                 float thickness, bool depthTest) {
   static const int halfCircle = 0.5f * CIRCLE_INDICIES;
   static const float squareScale = 0.5f * Math::Util::Sqrt(2);
-  float lineHeight = height - 2 * radius;
+  const float lineHeight = 0.5f * (height - 2 * radius);
   Math::Matrix4 up = Math::Matrix4::Translate(lineHeight * Math::Vector3::up);
   Math::Matrix4 down =
       Math::Matrix4::Translate(lineHeight * Math::Vector3::down);
@@ -678,27 +647,19 @@ void DebugDraw::DrawWireCapsule(const Math::Matrix4& transformation,
                                           CUBE_WIRE_INDICIES)));
              });
 }
-void DebugDraw::DrawGrid(const Math::Matrix4& transformation,
+void DebugDraw::DrawGrid(const Math::Matrix4& transformation, int lines,
                          const Color& color, float thickness) {
   glUseProgram(shaderProgram);
 
-  glUniformMatrix4fv(
-      projectionLoc, 1, GL_FALSE,
+  const Math::Matrix4 mvpMat =
       CameraComponent::Main()
           ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
-          .data);
-  Math::Matrix4 viewMat =
-      CameraComponent::Main()->GetTransform()->GetLocalToWorldMatrix();
-  // TODO(Jacob) replace with world to local call
-  glUniformMatrix4fv(viewLoc, 1, GL_FALSE, viewMat.Inverse().Transpose().data);
-  Math::Matrix4 model = transformation;
-  if (model.IsZero()) {
-    model = Math::Matrix4::identity;
-    model.SetRow(3, viewMat.GetRow(3));  // horde row-col
-    model.Set(3, 1, 0);
-  }
-  glUniformMatrix4fv(modelLoc, 1, GL_FALSE, model.data);
+          .Transpose() *
+      CameraComponent::Main()->transform->GetWorldToLocalMatrix();
+  glUniformMatrix4fv(modelViewProjectionLoc, 1, GL_FALSE,
+                     mvpMat.Transpose().data);
   glUniform4fv(colorLoc, 1, color.rgba);
+  // glUniformMatrix4fv(modelLoc, 1, GL_FALSE, model.data);
   GLError();
 
   glEnable(GL_DEPTH_TEST);
@@ -709,11 +670,11 @@ void DebugDraw::DrawGrid(const Math::Matrix4& transformation,
   glLineWidth(thickness);
   glBindVertexArray(sVAO);
 
-  for (int i = -30; i <= 30; i++) {
-    lineVerticies[0] = -30;
+  for (int i = -lines; i <= lines; ++i) {
+    lineVerticies[0] = -lines;
     lineVerticies[1] = 0;
     lineVerticies[2] = i;
-    lineVerticies[3] = 30;
+    lineVerticies[3] = lines;
     lineVerticies[4] = 0;
     lineVerticies[5] = i;
     glBindBuffer(GL_ARRAY_BUFFER, sVBO);
@@ -723,13 +684,13 @@ void DebugDraw::DrawGrid(const Math::Matrix4& transformation,
     glDrawArrays(GL_LINES, 0, 2);
   }
 
-  for (int i = -30; i <= 30; i++) {
+  for (int i = -lines; i <= lines; ++i) {
     lineVerticies[0] = i;
     lineVerticies[1] = 0;
-    lineVerticies[2] = -30;
+    lineVerticies[2] = -lines;
     lineVerticies[3] = i;
     lineVerticies[4] = 0;
-    lineVerticies[5] = 30;
+    lineVerticies[5] = lines;
     glBindBuffer(GL_ARRAY_BUFFER, sVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(lineVerticies), lineVerticies,
                  GL_DYNAMIC_DRAW);

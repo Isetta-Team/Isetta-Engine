@@ -2,11 +2,8 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Scene/Level.h"
-#include <algorithm>
-#include "Core/Math/Rect.h"
-#include "Core/Memory/MemoryManager.h"
-#include "Graphics/GUI.h"
-#include "Graphics/RectTransform.h"
+#include "Audio/AudioModule.h"
+#include "Core/Config/Config.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
@@ -14,9 +11,8 @@
 namespace Isetta {
 
 Entity* Level::GetEntityByName(const std::string& name) {
-  StringId inID{SID(name.c_str())};
   for (const auto& entity : entities) {
-    if (entity->entityID == inID) {
+    if (entity->entityName == name) {
       return entity;
     }
   }
@@ -26,9 +22,8 @@ Entity* Level::GetEntityByName(const std::string& name) {
 
 std::list<Entity*> Level::GetEntitiesByName(const std::string& name) {
   std::list<Entity*> returnEntities;
-  StringId inID{SID(name.c_str())};
   for (const auto& entity : entities) {
-    if (entity->entityID == inID) {
+    if (entity->entityName == name) {
       returnEntities.emplace_back(entity);
     }
   }
@@ -39,10 +34,12 @@ std::list<class Entity*> Level::GetEntities() const { return entities; }
 
 void Level::UnloadLevel() {
   PROFILE
+  OnLevelUnload();
+  pool.Free(levelRoot);
   for (auto& entity : entities) {
-    MemoryManager::DeleteOnFreeList<Entity>(entity);
+    pool.Free(entity);
+    entity = nullptr;
   }
-  MemoryManager::DeleteOnFreeList<Entity>(levelRoot);
 }
 
 void Level::AddComponentToStart(Component* component) {
@@ -57,16 +54,12 @@ void Level::StartComponents() {
   }
 }
 
-Entity* Level::AddEntity(std::string name) {
-  return AddEntity(name, levelRoot);
-}
-
-Entity* Level::AddEntity(std::string name, Entity* parent) {
+Entity* Level::AddEntity(std::string name, Entity* parent, bool entityStatic) {
   PROFILE
-  Entity* entity = MemoryManager::NewOnFreeList<Entity>(name);
+  Entity* entity = pool.Get(name, entityStatic);
+  entity->transform->SetParent(parent != nullptr ? parent->transform
+                                                 : levelRoot->transform);
   entities.push_back(entity);
-  // TODO(YIDI): Change it when transform returns pointer
-  entity->transform.SetParent(&(parent->transform));
   return entity;
 }
 
@@ -104,7 +97,7 @@ void Level::LateUpdate() {
 
   for (auto& entity : entities) {
     if (entity->GetAttribute(Entity::EntityAttributes::NEED_DESTROY)) {
-      MemoryManager::DeleteOnFreeList<Entity>(entity);
+      pool.Free(entity);
       entity = nullptr;
     }
   }
@@ -112,5 +105,8 @@ void Level::LateUpdate() {
   entities.remove_if([](Entity*& entity) { return entity == nullptr; });
 }
 
-Level::Level() : levelRoot{MemoryManager::NewOnFreeList<Entity>("Root")} {}
+Level::Level()
+    : pool(CONFIG_VAL(memoryConfig.entityPoolInitialSize),
+           CONFIG_VAL(memoryConfig.entityPoolIncrement)),
+      levelRoot(pool.Get("Root")) {}
 }  // namespace Isetta

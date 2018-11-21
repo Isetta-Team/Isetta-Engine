@@ -4,52 +4,35 @@
 #include "Level1.h"
 #include "CameraController.h"
 #include "Components/FlyController.h"
-#include "Core/Color.h"
 #include "Core/Config/Config.h"
 #include "Custom/EscapeExit.h"
 #include "GameManager.h"
 #include "Graphics/AnimationComponent.h"
 #include "Graphics/CameraComponent.h"
-#include "Graphics/GUI.h"
+#include "Graphics/Font.h"
 #include "Graphics/LightComponent.h"
 #include "PlayerController.h"
 #include "Scene/Entity.h"
 
 namespace Isetta {
 
-using LightProperty = LightComponent::Property;
-using CameraProperty = CameraComponent::Property;
+void Level1::OnLevelLoad() {
+  Font::AddFontFromFile("Resources/Fonts/CONSOLA.TTF", 13.0f);
 
-void Level1::LoadLevel() {
-  GUI::AddFontFromFile("Resources/Fonts/CONSOLA.TTF", 13.0f);
-
-  Entity* cameraEntity{AddEntity("Camera")};
+  Entity* cameraEntity{Entity::CreateEntity("Camera")};
   cameraEntity->AddComponent<CameraController>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
 
-  CameraComponent* camComp =
-      cameraEntity->AddComponent<CameraComponent>("Camera");
-  camComp->SetProperty<CameraProperty::FOV>(
-      CONFIG_VAL(renderConfig.fieldOfView));
-  camComp->SetProperty<CameraProperty::NEAR_PLANE>(
-      CONFIG_VAL(renderConfig.nearClippingPlane));
-  camComp->SetProperty<CameraProperty::FAR_PLANE>(
-      CONFIG_VAL(renderConfig.farClippingPlane));
+  cameraEntity->AddComponent<CameraComponent>();
 
-  Entity* lightEntity{AddEntity("Light")};
-  LightComponent* lightComp = lightEntity->AddComponent<LightComponent>(
-      "materials/light.material.xml", "LIGHT_1");
+  Entity* lightEntity{Entity::CreateEntity("Light")};
+  lightEntity->AddComponent<LightComponent>("materials/light.material.xml",
+                                            "LIGHT_1");
   lightEntity->SetTransform(Math::Vector3{0, 200, 600},
                             Math::Vector3{-30, 0, 0});
-  lightComp->SetProperty<LightProperty::RADIUS>(2500);
-  lightComp->SetProperty<LightProperty::FOV>(180);
-  lightComp->SetProperty<LightProperty::COLOR>(Color::white);
-  lightComp->SetProperty<LightProperty::COLOR_MULTIPLIER>(1.5f);
-  lightComp->SetProperty<LightProperty::SHADOW_MAP_COUNT>(1);
-  lightComp->SetProperty<LightProperty::SHADOW_MAP_BIAS>(0.01f);
 
-  Entity* player{AddEntity("Player")};
+  Entity* player{Entity::CreateEntity("Player")};
   player->SetTransform(Math::Vector3{0, 0, 0}, Math::Vector3{0, 90, 0},
                        0.03f * Math::Vector3::one);
   MeshComponent* playerMesh =
@@ -61,10 +44,10 @@ void Level1::LoadLevel() {
   ani->AddAnimation("Soldier/Soldier_Idle.anim", 0, "", false);
   ani->AddAnimation("Soldier/Soldier.anim", 0, "", false);
 
-  Entity* ground{AddEntity("Ground")};
+  Entity* ground{Entity::CreateEntity("Ground")};
   ground->AddComponent<MeshComponent>("Ground/Level.scene.xml");
 
-  Entity* gameManager{AddEntity("Game Manager")};
+  Entity* gameManager{Entity::CreateEntity("Game Manager")};
   gameManager->AddComponent<GameManager>();
   gameManager->AddComponent<EscapeExit>();
 

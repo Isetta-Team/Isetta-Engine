@@ -6,7 +6,6 @@
 #include "Core/Memory/StackAllocator.h"
 
 namespace Isetta {
-// TODO(YIDI): This class hasn't been tested
 /**
  * \brief A double buffered allocator is a wrapper on top of the stack
  * allocator. It holds two stack allocators (A, B) and marks one of them as an
@@ -19,21 +18,10 @@ namespace Isetta {
  * cleared.
  */
 class DoubleBufferedAllocator {
- public:
-  ~DoubleBufferedAllocator() = default;
-
  private:
-  /**
-   * \brief Does nothing. This exists only to be called by the constructor of
-   * MemoryManager
-   */
-  DoubleBufferedAllocator() = default;
-
-  /**
-   * \brief Create a new double buffered allocator with specified size
-   * \param size Size in bytes
-   */
+  DoubleBufferedAllocator() = delete;
   explicit DoubleBufferedAllocator(Size size);
+  ~DoubleBufferedAllocator() = default;
 
   /**
    * \brief Grab properly aligned raw memory from the double buffered allocator.
@@ -54,11 +42,6 @@ class DoubleBufferedAllocator {
    * \brief Clears the currently active stack allocator
    */
   void ClearCurrentBuffer();
-
-  /**
-   * \brief Erase both stack allocators
-   */
-  void Erase();
 
   /**
    * \brief Creates a new object on the active stack allocator, which will

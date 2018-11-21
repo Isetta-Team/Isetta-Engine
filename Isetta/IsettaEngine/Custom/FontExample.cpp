@@ -1,19 +1,25 @@
 #include "Custom/FontExample.h"
 
+#include "Graphics/Font.h"
 #include "Graphics/GUI.h"
 #include "Graphics/RectTransform.h"
+#include "imgui/imgui.h"
 
 namespace Isetta {
-void FontExample::Start() {
-  GUI::AddFontFromFile("../External/imgui/misc/fonts/Roboto-Medium.ttf", 16.0f);
-  auto defaultFont = GUI::AddFontFromFile(
-      "../External/imgui/misc/fonts/Roboto-Medium.ttf", 32.0f);
-  font = GUI::AddFontFromFile("../External/imgui/misc/fonts/Roboto-Medium.ttf",
-                              72.0f);
-  GUI::AddDefaultFont(defaultFont);
+FontExample::FontExample(float fontSize, const std::string_view fontName)
+    : fontSize{fontSize} {
+  font = Font::AddFontFromFile(fontName.data(), 16.0f, "FontExampleName");
+  auto defaultFont =
+      Font::AddFontFromFile(fontName.data(), 32.0f, "FontExampleName");
+  if (fontSize > 0)
+    font = Font::AddFontFromFile(fontName.data(), fontSize, "FontExampleName");
+  else
+    fontSize = 16.0f;
+  Font::AddDefaultFont(defaultFont);
 }
 void FontExample::GuiUpdate() {
-  GUI::Text(RectTransform{{0, 0, 0, 0}, GUI::Pivot::Center, GUI::Pivot::Center},
-            "Test", GUI::TextStyle{font});
+  GUI::Text(
+      RectTransform{{0, 100, 0, 0}, GUI::Pivot::Center, GUI::Pivot::Center},
+      "Test", GUI::TextStyle{fontSize, "FontNameExample"});
 }
 }  // namespace Isetta

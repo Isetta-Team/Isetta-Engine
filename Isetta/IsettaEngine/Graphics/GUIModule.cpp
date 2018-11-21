@@ -3,12 +3,10 @@
  */
 #include "Graphics/GUIModule.h"
 
-#include "Core/Debug/Debug.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Memory/MemoryManager.h"
-#include "Graphics/Font.h"
 #include "Graphics/GUI.h"
-#include "Input/Input.h"
+#include "Input/GLFWInput.h"
 #include "Scene/Level.h"
 #include "Scene/LevelManager.h"
 
@@ -33,16 +31,9 @@ void FreeAlloc(void* ptr, void* user_data) {
 }
 
 namespace Isetta {
-Font* GUIModule::GetFont(const std::string_view& fontName, float size) {
-  auto font = fonts.find({SID(fontName.data()), size});
-  return font == fonts.end() ? nullptr : font->second;
-}
-void GUIModule::AddFont(const std::string_view& fontName, float size,
-                        Font* const font) {
-  fonts.insert({{SID(fontName.data()), size}, font});
-}
 void GUIModule::StartUp(const GLFWwindow* win) {
   GUI::guiModule = this;
+
   winHandle = win;
   gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
@@ -85,10 +76,10 @@ void GUIModule::StartUp(const GLFWwindow* win) {
   // NULL, io.Fonts->GetGlyphRangesJapanese());
   // IM_ASSERT(font != NULL);
 
-  Input::RegisterMouseButtonGLFWCallback(ImGui_ImplGlfw_MouseButtonCallback);
-  Input::RegisterScrollGLFWCallback(ImGui_ImplGlfw_ScrollCallback);
-  Input::RegisterKeyGLFWCallback(ImGui_ImplGlfw_KeyCallback);
-  Input::RegisterCharGLFWCallback(ImGui_ImplGlfw_CharCallback);
+  GLFWInput::RegisterMouseButtonCallback(ImGui_ImplGlfw_MouseButtonCallback);
+  GLFWInput::RegisterScrollCallback(ImGui_ImplGlfw_ScrollCallback);
+  GLFWInput::RegisterKeyCallback(ImGui_ImplGlfw_KeyCallback);
+  GLFWInput::RegisterCharCallback(ImGui_ImplGlfw_CharCallback);
 }
 
 void GUIModule::Update(float deltaTime) {
@@ -119,7 +110,8 @@ void GUIModule::Update(float deltaTime) {
           ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus);
   ImGui::PopStyleVar(2);
 
-  LevelManager::Instance().currentLevel->GUIUpdate();
+  // TODO Don't love this coupling
+  LevelManager::Instance().loadedLevel->GUIUpdate();
 
   ImGui::End();
   ImGui::Render();

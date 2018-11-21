@@ -3,8 +3,8 @@
  */
 #include "Graphics/AnimationComponent.h"
 
-#include <Horde3D.h>
 #include "Core/Config/Config.h"
+#include "Horde3D.h"
 #include "Util.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
 
@@ -24,9 +24,8 @@ AnimationComponent::AnimationComponent(MeshComponent* model)
 int AnimationComponent::AddAnimation(std::string_view animationFilename,
                                      int layer, std::string_view startNode,
                                      bool additive) {
-  totalStates++;
   return AddAnimation(animationFilename, layer, startNode, additive,
-                      totalStates - 1);
+                      totalStates++);
 }
 
 int AnimationComponent::AddAnimation(std::string_view animationFilename,
@@ -78,6 +77,9 @@ void AnimationComponent::OnEnable() {
   isPlaying = true;
 }
 void AnimationComponent::OnDisable() { isPlaying = false; }
+void AnimationComponent::OnDestroy() {
+  renderModule->animationComponents.remove(this);
+}
 
 H3DRes AnimationComponent::LoadResourceFromFile(std::string_view resourceName) {
   H3DRes res = h3dAddResource(H3DResTypes::Animation, resourceName.data(), 0);

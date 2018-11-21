@@ -4,7 +4,7 @@
 #include "Collisions/CollisionsModule.h"
 
 #include "Collisions/AABB.h"
-#include "Collisions/Ray.h"
+#include "Core/Geometry/Ray.h"
 #include "Core/Math/Matrix3.h"
 #include "Core/Math/Vector3.h"
 #include "Core/Math/Vector4.h"
@@ -18,14 +18,16 @@
 #include "Collisions/CollisionHandler.h"
 #include "Collisions/Collisions.h"
 #include "Collisions/SphereCollider.h"
+
+#include "Collisions/CollisionSolverModule.h"
 #include "Core/Config/Config.h"
 
 namespace Isetta {
 void CollisionsModule::StartUp() {
   Collider::collisionsModule = this;
-  // TODO(Yidi) if you do this then you can change it at runtime....
   Collider::fatFactor = CONFIG_VAL(collisionConfig.fatFactor);
   Collisions::collisionsModule = this;
+  CollisionSolverModule::collisionsModule = this;
 }
 
 void CollisionsModule::Update(float deltaTime) {
@@ -44,18 +46,24 @@ void CollisionsModule::Update(float deltaTime) {
     Collider *collider2 = pair.second;
     // Ignore Single/Layer Collisions continue
     if (ignoreColliderPairs.find(pair) != ignoreColliderPairs.end() ||
-        GetIgnoreLayerCollision(collider1->GetEntity()->GetLayerIndex(),
-                                collider2->GetEntity()->GetLayerIndex()))
+        GetIgnoreLayerCollision(collider1->entity->GetLayerIndex(),
+                                collider2->entity->GetLayerIndex()))
       continue;
 
     CollisionHandler *handler1 = collider1->GetHandler();
     CollisionHandler *handler2 = collider2->GetHandler();
 
-    // No Handler, Same Handler continue
-    // TODO(Caleb) Will need to change for solving
-    if (handler1 && handler2 && handler1 == handler2) continue;
+    // Trigger colliders with no handler shouldn't even be intersection tested
+    if ((collider1->isTrigger || collider2->isTrigger) && handler1 &&
+        handler2 && handler1 == handler2)
+      continue;
 
     if (collider1->Intersection(collider2)) {
+      collidingPairs.insert(pair);
+
+      // Colliders with the same handler shouldn't have their functions called
+      if (handler1 == handler2) continue;
+
       // if they do collide
       auto it = lastFramePairs.find(pair);
 
@@ -69,8 +77,6 @@ void CollisionsModule::Update(float deltaTime) {
         if (handler1) handler1->OnCollisionEnter(collider2);
         if (handler2) handler2->OnCollisionEnter(collider1);
       }
-
-      collidingPairs.insert(pair);
     }
   }
 
@@ -86,7 +92,13 @@ void CollisionsModule::Update(float deltaTime) {
   }
 }
 
-void CollisionsModule::ShutDown() {}
+void CollisionsModule::ShutDown() {
+}
+
+Array<Collider *> CollisionsModule::GetPossibleColliders(
+    Collider *collider) const {
+  return bvTree.GetPossibleColliders(collider);
+}
 
 bool CollisionsModule::Intersection(const BoxCollider &a,
                                     const BoxCollider &b) {
@@ -94,18 +106,18 @@ bool CollisionsModule::Intersection(const BoxCollider &a,
   float ra, rb;
   Math::Matrix3 rot, absRot;
 
-  for (int i = 0; i < Math::Matrix3::ROW_COUNT; i++) {
-    for (int j = 0; j < Math::Matrix3::ROW_COUNT; j++) {
-      rot[i][j] = Math::Vector3::Dot(a.GetTransform()->GetAxis(i),
-                                     b.GetTransform()->GetAxis(j));
+  for (int i = 0; i < Math::Matrix3::ROW_COUNT; ++i) {
+    for (int j = 0; j < Math::Matrix3::ROW_COUNT; ++j) {
+      rot[i][j] =
+          Math::Vector3::Dot(a.transform->GetAxis(i), b.transform->GetAxis(j));
     }
   }
   Math::Vector3 t = b.GetWorldCenter() - a.GetWorldCenter();
-  t = Math::Vector3{Math::Vector3::Dot(t, a.GetTransform()->GetLeft()),
-                    Math::Vector3::Dot(t, a.GetTransform()->GetUp()),
-                    Math::Vector3::Dot(t, a.GetTransform()->GetForward())};
-  for (int i = 0; i < Math::Matrix3::ROW_COUNT; i++) {
-    for (int j = 0; j < Math::Matrix3::ROW_COUNT; j++) {
+  t = Math::Vector3{Math::Vector3::Dot(t, a.transform->GetLeft()),
+                    Math::Vector3::Dot(t, a.transform->GetUp()),
+                    Math::Vector3::Dot(t, a.transform->GetForward())};
+  for (int i = 0; i < Math::Matrix3::ROW_COUNT; ++i) {
+    for (int j = 0; j < Math::Matrix3::ROW_COUNT; ++j) {
       absRot[i][j] = Math::Util::Abs(rot[i][j]) + Math::Util::EPSILON;
     }
   }
@@ -113,14 +125,14 @@ bool CollisionsModule::Intersection(const BoxCollider &a,
   Math::Vector3 aExtents = a.GetWorldExtents();
   Math::Vector3 bExtents = b.GetWorldExtents();
   // Test axes L = A0, L = A1, L = A2
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < 3; ++i) {
     ra = aExtents[i];
     rb = bExtents[0] * absRot[i][0] + bExtents[1] * absRot[i][1] +
          bExtents[2] * absRot[i][2];
     if (Math::Util::Abs(t[i]) > ra + rb) return 0;
   }
   // Test axes L = B0, L = B1, L = B2
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < 3; ++i) {
     ra = aExtents[0] * absRot[0][i] + aExtents[1] * absRot[1][i] +
          aExtents[2] * absRot[2][i];
     rb = bExtents[i];
@@ -204,7 +216,7 @@ bool CollisionsModule::Intersection(const BoxCollider &box,
   Math::Vector3 dir = (Math::Vector3)(
       rot * scale *
       Math::Matrix4::Scale(Math::Vector3{capsule.height - 2 * capsule.radius}) *
-      Math::Vector4{0, 1, 0, 0});
+      Math::Vector4{0, 1, 0, 0}) * .5;
   Math::Vector3 p0 = capsule.GetWorldCenter() - dir;
   Math::Vector3 p1 = capsule.GetWorldCenter() + dir;
   return SqDistSegmentOBB(p0, p1, box) <=
@@ -213,8 +225,8 @@ bool CollisionsModule::Intersection(const BoxCollider &box,
   // https://github.com/vancegroup-mirrors/open-dynamics-engine-svnmirror/blob/master/ode/src/capsule.cpp
 
   // Not working
-  // Math::Vector3 localP0 = box.GetTransform()->LocalPosFromWorldPos(p0);
-  // Math::Vector3 localP1 = box.GetTransform()->LocalPosFromWorldPos(p1);
+  // Math::Vector3 localP0 = box.transform->LocalPosFromWorldPos(p0);
+  // Math::Vector3 localP1 = box.transform->LocalPosFromWorldPos(p1);
 
   // float t;
   // bool intersect =
@@ -243,11 +255,11 @@ bool CollisionsModule::Intersection(const SphereCollider &sphere,
   Math::Vector3 dir = (Math::Vector3)(
       rot * scale *
       Math::Matrix4::Scale(Math::Vector3{capsule.height - 2 * capsule.radius}) *
-      Math::Vector4{0, 1, 0, 0});
+      Math::Vector4{0, 1, 0, 0}) * .5;
   Math::Vector3 p0 = capsule.GetWorldCenter() - dir;
   Math::Vector3 p1 = capsule.GetWorldCenter() + dir;
   float distSq = SqDistPointSegment(p0, p1, sphere.GetWorldCenter());
-  return distSq <= Math::Util::Square(sphere.radius * sphere.GetWorldRadius() +
+  return distSq <= Math::Util::Square(sphere.GetWorldRadius() +
                                       capsule.radius * radiusScale);
 }
 bool CollisionsModule::Intersection(const CapsuleCollider &a,
@@ -299,7 +311,6 @@ bool CollisionsModule::Raycast(const Ray &ray, RaycastHit *const hitInfo,
   //}
   // return hitInfo->GetDistance() < INFINITY;
   return bvTree.Raycast(ray, hitInfo, maxDistance);
-  return false;
 }
 bool CollisionsModule::GetIgnoreLayerCollision(int layer1, int layer2) const {
   Layers::CheckLayer(layer1);
@@ -395,7 +406,7 @@ float CollisionsModule::SqDistSegmentOBB(const Math::Vector3 &p0,
 }
 Math::Vector3 CollisionsModule::ClosestPtPointSegment(
     const Math::Vector3 &point, const Math::Vector3 &p0,
-    const Math::Vector3 &p1, float *const _t) {
+    const Math::Vector3 &p1, float *_t) {
   float &t = *_t;
   Math::Vector3 to = p1 - p0;
   t = Math::Vector3::Dot(point - p0, to) / Math::Vector3::Dot(to, to);
@@ -532,7 +543,7 @@ Math::Vector3 CollisionsModule::ClosestPtPointAABB(const Math::Vector3 &point,
                          aabb.GetMax().y);
   pt.z = Math::Util::Min(Math::Util::Max(point.z, aabb.GetMin().z),
                          aabb.GetMax().z);
-  return Math::Vector3();
+  return pt;
 }
 Math::Vector3 CollisionsModule::ClosestPtPointOBB(const Math::Vector3 &point,
                                                   const BoxCollider &box) {
@@ -540,33 +551,31 @@ Math::Vector3 CollisionsModule::ClosestPtPointOBB(const Math::Vector3 &point,
   Math::Vector3 pt = box.GetWorldCenter();
 
   Math::Vector3 extents = box.GetWorldExtents();
-  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
-    float dist = Math::Vector3::Dot(d, box.GetTransform()->GetAxis(i));
+  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
+    float dist = Math::Vector3::Dot(d, box.transform->GetAxis(i));
     if (dist > extents[i]) {
       dist = extents[i];
-    }
-    if (dist < -extents[i]) {
+    } else if (dist < -extents[i]) {
       dist = -extents[i];
     }
-    pt += dist * box.GetTransform()->GetAxis(i);
+    pt += dist * box.transform->GetAxis(i);
   }
   return pt;
 }
 Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
                                                  const BoxCollider &box,
                                                  float *_t, float *_distSq) {
-  Math::Vector3 o = box.GetTransform()->LocalPosFromWorldPos(line.GetOrigin());
-  Math::Vector3 dir =
-      box.GetTransform()->LocalDirFromWorldDir(line.GetDirection());
+  Math::Vector3 o = box.transform->LocalPosFromWorldPos(line.GetOrigin());
+  Math::Vector3 dir = box.transform->LocalDirFromWorldDir(line.GetDirection());
   float &t = *_t;
   float &distSq = *_distSq;
   distSq = 0;
 
   int perp = 0;
-  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
+  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
     if (Math::Util::Abs(Math::Vector3::Dot(
             dir, Math::Matrix3::identity.GetRow(i))) < Math::Util::EPSILON)
-      perp++;
+      ++perp;
   }
   switch (perp) {
     case 3:
@@ -576,7 +585,7 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
     case 2: {
       // LOG_INFO(Debug::Channel::Collisions, "Case 2");
       int x = -1;
-      for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
+      for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
         if (Math::Util::Abs(
                 Math::Vector3::Dot(dir, Math::Matrix3::identity.GetRow(i))) >
             Math::Util::EPSILON) {
@@ -613,12 +622,12 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
         pt[z] = extents[z];
       }
       // dist = 0 means intersection
-      return box.GetTransform()->WorldPosFromLocalPos(pt);
+      return box.transform->WorldPosFromLocalPos(pt);
     }
     case 1: {
       // LOG_INFO(Debug::Channel::Collisions, "Case 1");
       int z = -1;
-      for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
+      for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
         if (Math::Util::Abs(
                 Math::Vector3::Dot(dir, Math::Matrix3::identity.GetRow(i))) <
             Math::Util::EPSILON) {
@@ -654,7 +663,7 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
       p0[z] = pt[z];
       distSq = INFINITY;
       // TODO(Jacob) could be optimized maybe
-      for (int i = 0; i < 2; i++) {
+      for (int i = 0; i < 2; ++i) {
         p1 = p0;
         float tRay, tSeg;
         Math::Vector3 ptRay, ptSeg;
@@ -668,7 +677,7 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
         }
       }
       t /= line.GetDirection().Magnitude();
-      return box.GetTransform()->WorldPosFromLocalPos(pt);
+      return box.transform->WorldPosFromLocalPos(pt);
     }
     case 0: {  // assuming line is positive
       // LOG_INFO(Debug::Channel::Collisions, "Case 0");
@@ -699,7 +708,7 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
           pt = Face(2, Line{o, dir}, box, minusExtents, &t, &distSq);
         }
       }
-      return box.GetTransform()->WorldPosFromLocalPos(pt);
+      return box.transform->WorldPosFromLocalPos(pt);
     }
   };
 }
@@ -898,12 +907,12 @@ bool CollisionsModule::CapsuleAABBIntersect(const Math::Vector3 &start,
 
   Math::Vector3 ineg[Math::Vector3::ELEMENT_COUNT];
   Math::Vector3 ipos[Math::Vector3::ELEMENT_COUNT];
-  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
+  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
     ineg[i] = cneg[i] * to + start;
     ipos[i] = cpos[i] * to + start;
   }
 
-  for (int x = 0; x < Math::Vector3::ELEMENT_COUNT; x++) {
+  for (int x = 0; x < Math::Vector3::ELEMENT_COUNT; ++x) {
     int y = (x + 1) % 3;
     int z = (x + 2) % 3;
     if (Math::Util::Abs(ineg[x][y]) > extents[y] ||
@@ -1073,7 +1082,7 @@ float CollisionsModule::SqDistanceToAABB(const Math::Vector3 &min,
                                          const Math::Vector3 &max,
                                          const Math::Vector3 &center) {
   float t, distSq = 0;
-  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
+  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
     if (center[i] < min[i]) {
       t = center[i] - min[i];
       distSq += t * t;
@@ -1087,8 +1096,8 @@ float CollisionsModule::SqDistanceToAABB(const Math::Vector3 &min,
 Math::Vector3 CollisionsModule::ClosestPtSegmentOBB(const Math::Vector3 &p0,
                                                     const Math::Vector3 &p1,
                                                     const BoxCollider &box) {
-  Math::Vector3 q0 = box.GetTransform()->LocalPosFromWorldPos(p0);
-  Math::Vector3 q1 = box.GetTransform()->LocalPosFromWorldPos(p1);
+  Math::Vector3 q0 = box.transform->LocalPosFromWorldPos(p0);
+  Math::Vector3 q1 = box.transform->LocalPosFromWorldPos(p1);
   Line line = Line{q0, q1 - q0};
   float t, distSq;
   return ClosestPtLineOBB(line, box, &t, &distSq);

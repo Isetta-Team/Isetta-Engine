@@ -10,12 +10,13 @@ BEGIN_COMPONENT(RandomMover, Component, false)
 public:
 void Update() override;
 
-private:
-Math::Vector3 velocity;
-
 float speed{5.f};
 float coolDown{0.f};
-float interval{3.f};
+float interval{1.f};
+float range{0.f};
+
+private:
+Math::Vector3 velocity;
 
 
 END_COMPONENT(RandomMover, Component)

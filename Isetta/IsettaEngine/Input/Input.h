@@ -103,18 +103,7 @@ class ISETTA_API_DECLARE Input {
   static float GetGamepadAxis(GamepadAxis axis);
   static bool IsGamepadButtonPressed(GamepadButton button);
 
-  static U16 RegisterMouseButtonGLFWCallback(
-      const Action<GLFWwindow*, int, int, int>& callback);
-  static void UnregisterMouseButtonGLFWCallback(U16 handle);
-  static U16 RegisterKeyGLFWCallback(
-      const Action<GLFWwindow*, int, int, int, int>& callback);
-  static void UnegisterKeyGLFWCallback(U16 handle);
-  static U16 RegisterScrollGLFWCallback(
-      const Action<GLFWwindow*, double, double>& callback);
-  static void UnegisterScrollGLFWCallback(U16 handle);
-  static U16 RegisterCharGLFWCallback(
-      const Action<GLFWwindow*, unsigned int>& callback);
-  static void UnegisterCharGLFWCallback(U16 handle);
+  static void Clear();
 
  private:
   static class InputModule* inputModule;

@@ -4,37 +4,47 @@
 #include "BVTree.h"
 
 #include <queue>
-#include <unordered_set>
+#include "Collisions/RaycastHit.h"
+#include "Core/Config/Config.h"
 #include "Core/DataStructures/Array.h"
 #include "Core/Debug/Assert.h"
 #include "Core/Debug/DebugDraw.h"
-#include "Ray.h"
+#include "Core/Geometry/Ray.h"
 #include "Scene/Entity.h"
-#include "Util.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
-BVTree::~BVTree() {
-  std::queue<Node*> q;
-  q.push(root);
-  while (!q.empty()) {
-    Node* cur = q.front();
-    q.pop();
-    if (cur != nullptr) {
-      q.push(cur->left);
-      q.push(cur->right);
-      delete cur;
-    }
+void BVTree::Node::UpdateBranchAABB() {
+  ASSERT(collider == nullptr && !IsLeaf());
+  aabb = AABB::Encapsulate(left->aabb, right->aabb);
+}
+
+void BVTree::Node::UpdateLeafAABB() {
+  ASSERT(IsLeaf() && collider != nullptr);
+  aabb = collider->GetFatAABB();
+}
+
+void BVTree::Node::SwapOutChild(Node *const oldChild, Node *const newChild) {
+  ASSERT(oldChild == left || oldChild == right);
+  if (oldChild == left) {
+    left = newChild;
+    left->parent = this;
+  } else {
+    right = newChild;
+    right->parent = this;
   }
 }
 
-void BVTree::AddCollider(Collider* const collider) {
-  Node* newNode = MemoryManager::NewOnFreeList<Node>(collider);
+BVTree::BVTree() : nodePool(CONFIG_VAL(collisionConfig.bvTreeNodeSize),
+               CONFIG_VAL(memoryConfig.defaultPoolIncrement)) {}
+
+void BVTree::AddCollider(Collider *const collider) {
+  Node *newNode = nodePool.Get(collider);
   colNodeMap.insert({collider, newNode});
   AddNode(newNode);
 }
 
-void BVTree::RemoveCollider(Collider* const collider) {
+void BVTree::RemoveCollider(Collider *const collider) {
   auto it = colNodeMap.find(collider);
   ASSERT(it != colNodeMap.end());
   RemoveNode(it->second, true);
@@ -42,16 +52,16 @@ void BVTree::RemoveCollider(Collider* const collider) {
 }
 
 void BVTree::Update() {
-  PROFILE
-  Array<Node*> toReInsert;
+  BROFILER_CATEGORY("BVTree Update", Profiler::Color::Coral);
+  Array<Node *> toReInsert;
 
-  std::queue<Node*> q;
+  std::queue<Node *> q;
   if (root != nullptr) {
     q.push(root);
   }
 
   while (!q.empty()) {
-    Node* cur = q.front();
+    Node *cur = q.front();
     q.pop();
 
     if (cur->left != nullptr) q.push(cur->left);
@@ -76,14 +86,107 @@ void BVTree::Update() {
 #endif
 }
 
-void BVTree::AddNode(Node* const newNode) {
+bool BVTree::Raycast(const Ray &ray, RaycastHit *const hitInfo,
+                     const float maxDistance) const {
+  return Raycast(root, ray, hitInfo, maxDistance);
+}
+bool BVTree::Raycast(Node *const node, const Ray &ray,
+                     RaycastHit *const hitInfo, const float maxDistance) const {
+  if (node == nullptr || !node->aabb.Raycast(ray, nullptr, maxDistance)) {
+    return false;
+  }
+  if (node->IsLeaf()) {
+    RaycastHit hitTmp{};
+    if (node->collider->Raycast(ray, &hitTmp, maxDistance) &&
+        hitTmp.GetDistance() < hitInfo->GetDistance()) {
+      *hitInfo = std::move(hitTmp);
+      return true;
+    }
+
+    return false;
+  }
+
+  return Raycast(node->left, ray, hitInfo, maxDistance) ||
+         Raycast(node->right, ray, hitInfo, maxDistance);
+}
+
+const CollisionUtil::ColliderPairSet &BVTree::GetCollisionPairs() {
+  PROFILE
+  colliderPairSet.clear();
+
+  for (const auto &pair : colNodeMap) {
+    if (pair.first->entity->isStatic) continue;
+
+    Collider *collider = pair.first;
+    AABB aabb = collider->GetFatAABB();
+    std::queue<Node *> q;
+
+    if (root != nullptr) {
+      q.push(root);
+    }
+
+    while (!q.empty()) {
+      Node *curNode = q.front();
+      q.pop();
+
+      if (curNode->IsLeaf()) {
+        if (collider != curNode->collider) {
+          colliderPairSet.insert({collider, curNode->collider});
+        }
+      } else {
+        if (curNode->left->aabb.Intersect(aabb)) {
+          q.push(curNode->left);
+        }
+        if (curNode->right->aabb.Intersect(aabb)) {
+          q.push(curNode->right);
+        }
+      }
+    }
+  }
+
+  return colliderPairSet;
+}
+
+Array<Collider *> BVTree::GetPossibleColliders(Collider *collider) const {
+  PROFILE
+  Array<Collider *> ret;
+
+  AABB aabb = collider->GetFatAABB();
+  std::queue<Node *> q;
+
+  if (root != nullptr) {
+    q.push(root);
+  }
+
+  while (!q.empty()) {
+    Node *curNode = q.front();
+    q.pop();
+
+    if (curNode->IsLeaf()) {
+      if (collider != curNode->collider) {
+        ret.PushBack(curNode->collider);
+      }
+    } else {
+      if (curNode->left->aabb.Intersect(aabb)) {
+        q.push(curNode->left);
+      }
+      if (curNode->right->aabb.Intersect(aabb)) {
+        q.push(curNode->right);
+      }
+    }
+  }
+  return ret;
+}
+
+void BVTree::AddNode(Node *const newNode) {
+  PROFILE
   AABB newAABB = newNode->aabb;
 
   if (root == nullptr) {
     root = newNode;
     root->parent = nullptr;
   } else {
-    Node* cur = root;
+    Node *cur = root;
 
     while (!cur->IsLeaf()) {
       float leftIncrease =
@@ -103,16 +206,15 @@ void BVTree::AddNode(Node* const newNode) {
 
     if (cur == root) {
       // cur is root
-      root = MemoryManager::NewOnFreeList<Node>(
-          AABB::Encapsulate(cur->aabb, newAABB));
+      root = nodePool.Get(AABB::Encapsulate(cur->aabb, newAABB));
       cur->parent = root;
       newNode->parent = root;
       root->left = cur;
       root->right = newNode;
     } else {
       // cur is actual leaf, convert cur to branch
-      Node* newBranch = MemoryManager::NewOnFreeList<Node>(
-          AABB::Encapsulate(cur->aabb, newNode->aabb));
+      Node *newBranch =
+          nodePool.Get(AABB::Encapsulate(cur->aabb, newNode->aabb));
       newBranch->parent = cur->parent;
       cur->parent->SwapOutChild(cur, newBranch);
       cur->parent = newBranch;
@@ -120,7 +222,7 @@ void BVTree::AddNode(Node* const newNode) {
       newBranch->left = cur;
       newBranch->right = newNode;
 
-      Node* parent = newBranch->parent;
+      Node *parent = newBranch->parent;
 
       while (parent != nullptr) {
         parent->UpdateBranchAABB();
@@ -130,13 +232,14 @@ void BVTree::AddNode(Node* const newNode) {
   }
 }
 
-void BVTree::RemoveNode(Node* const node, const bool deleteNode) {
+void BVTree::RemoveNode(Node *const node, const bool deleteNode) {
+  PROFILE
   ASSERT(node->IsLeaf());
 
   if (node == root) {
     root = nullptr;
   } else if (node->parent == root) {
-    Node* newRoot;
+    Node *newRoot;
 
     if (node == root->left) {
       newRoot = root->right;
@@ -144,12 +247,12 @@ void BVTree::RemoveNode(Node* const node, const bool deleteNode) {
       newRoot = root->left;
     }
 
-    MemoryManager::DeleteOnFreeList<Node>(root);
+    nodePool.Free(root);
     root = newRoot;
     root->parent = nullptr;
   } else {
-    Node* parent = node->parent;
-    Node* grandParent = parent->parent;
+    Node *parent = node->parent;
+    Node *grandParent = parent->parent;
 
     ASSERT(grandParent != nullptr);
     ASSERT(node == parent->left || node == parent->right);
@@ -160,9 +263,9 @@ void BVTree::RemoveNode(Node* const node, const bool deleteNode) {
       grandParent->SwapOutChild(parent, parent->left);
     }
 
-    MemoryManager::DeleteOnFreeList<Node>(parent);
+    nodePool.Free(parent);
 
-    Node* cur = grandParent;
+    Node *cur = grandParent;
     while (cur != nullptr) {
       cur->UpdateBranchAABB();
       cur = cur->parent;
@@ -170,31 +273,42 @@ void BVTree::RemoveNode(Node* const node, const bool deleteNode) {
   }
 
   if (deleteNode) {
-    MemoryManager::DeleteOnFreeList<Node>(node);
+    nodePool.Free(node);
   }
 }
 
 void BVTree::DebugDraw() const {
-  std::queue<Node*> q;
+  if (!Config::Instance().drawConfig.bvtDrawAABBs.GetVal()) {
+    return;
+  }
+
+  std::queue<Node *> q;
 
   if (root != nullptr) {
     q.push(root);
   }
 
   while (!q.empty()) {
-    Node* cur = q.front();
+    Node *cur = q.front();
 
     Color color;
+
     if (cur->IsLeaf()) {
-      color = Color::green;
+#if _EDITOR
+      // if (collisionSet.find(cur->collider) != collisionSet.end()) {
+        color = Color::red;
+      // } else {
+        color = Color::green;
+      // }
       DebugDraw::WireCube(Math::Matrix4::Translate(cur->aabb.GetCenter()) *
                               Math::Matrix4::Scale({cur->aabb.GetSize()}),
                           color, 1, .05);
+#endif
     } else {
       int depth = 0;
       auto parent = cur->parent;
       while (parent != nullptr) {
-        depth++;
+        ++depth;
         parent = parent->parent;
       }
       color = Color::Lerp(Color::white, Color::black,
@@ -213,85 +327,4 @@ void BVTree::DebugDraw() const {
     }
   }
 }
-
-bool BVTree::Raycast(const Ray& ray, RaycastHit* const hitInfo,
-                     float maxDistance) {
-  return Raycast(root, ray, hitInfo, maxDistance);
-}
-bool BVTree::Raycast(Node* const node, const Ray& ray,
-                     RaycastHit* const hitInfo, float maxDistance) {
-  if (node == nullptr || !node->aabb.Raycast(ray, nullptr, maxDistance))
-    return false;
-  if (node->IsLeaf()) {
-    RaycastHit hitTmp{};
-    if (node->collider->Raycast(ray, &hitTmp, maxDistance) &&
-        hitTmp.GetDistance() < hitInfo->GetDistance()) {
-      *hitInfo = std::move(hitTmp);
-      return true;
-    } else
-      return false;
-  } else {
-    return Raycast(node->left, ray, hitInfo, maxDistance) ||
-           Raycast(node->right, ray, hitInfo, maxDistance);
-  }
-}
-
-const CollisionUtil::ColliderPairSet& BVTree::GetCollisionPairs() {
-  colliderPairSet.clear();
-
-  for (const auto& pair : colNodeMap) {
-    if (pair.first->GetProperties(Collider::Properties::IS_STATIC)) continue;
-
-    Collider* curCollider = pair.first;
-    AABB aabb = curCollider->GetFatAABB();
-    std::queue<Node*> q;
-
-    if (root != nullptr) {
-      q.push(root);
-    }
-
-    while (!q.empty()) {
-      Node* curNode = q.front();
-      q.pop();
-
-      if (curNode->IsLeaf()) {
-        Collider* col = curNode->collider;
-        if (curCollider != col) {
-          colliderPairSet.insert({curCollider, curNode->collider});
-        }
-      } else {
-        if (curNode->left->aabb.Intersect(aabb)) {
-          q.push(curNode->left);
-        }
-        if (curNode->right->aabb.Intersect(aabb)) {
-          q.push(curNode->right);
-        }
-      }
-    }
-  }
-
-  return colliderPairSet;
-}
-
-void BVTree::Node::UpdateBranchAABB() {
-  ASSERT(collider == nullptr && !IsLeaf());
-  aabb = AABB::Encapsulate(left->aabb, right->aabb);
-}
-
-void BVTree::Node::UpdateLeafAABB() {
-  ASSERT(IsLeaf() && collider != nullptr);
-  aabb = collider->GetFatAABB();
-}
-
-void BVTree::Node::SwapOutChild(Node* const oldChild, Node* const newChild) {
-  ASSERT(oldChild == left || oldChild == right);
-  if (oldChild == left) {
-    left = newChild;
-    left->parent = this;
-  } else {
-    right = newChild;
-    right->parent = this;
-  }
-}
-
 }  // namespace Isetta

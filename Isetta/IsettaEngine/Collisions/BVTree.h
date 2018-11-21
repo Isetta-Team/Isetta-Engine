@@ -2,13 +2,18 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include <unordered_set>
+#include <set>
+#include <unordered_map>
 #include "AABB.h"
 #include "Collider.h"
 #include "CollisionUtil.h"
+#include "Core/Memory/TemplatePoolAllocator.h"
+
+namespace Isetta::Math {
+class Ray;
+}
 
 namespace Isetta {
-
 class BVTree {
  private:
   // BVNode serves two purposes: leaf and branch
@@ -19,45 +24,51 @@ class BVTree {
 
     void UpdateBranchAABB();
     void UpdateLeafAABB();
-    void SwapOutChild(Node* const oldChild, Node* const newChild);
+    void SwapOutChild(Node* oldChild, Node* newChild);
 
-    inline bool IsLeaf() const { return left == nullptr; }
-    inline bool IsInFatAABB() const {
-      return aabb.Contains(collider->GetAABB());
-    }
+    bool IsLeaf() const { return left == nullptr; }
+    bool IsInFatAABB() const { return aabb.Contains(collider->GetAABB()); }
+
+    class Collider* collider{nullptr};
+    AABB aabb;
 
     Node* parent{nullptr};
     Node* left{nullptr};
     Node* right{nullptr};
-
-    class Collider* collider{nullptr};
-    AABB aabb;
   };
 
-  BVTree() = default;
+  BVTree();
   friend class CollisionsModule;
+  friend class CollisionSolverModule;
+  friend class FreeListAllocator;
 
  public:
-  ~BVTree();
+  ~BVTree() = default;
 
-  void AddCollider(class Collider* const collider);
-  void RemoveCollider(class Collider* const collider);
+  void AddCollider(class Collider* collider);
+  void RemoveCollider(class Collider* collider);
   void Update();
 
-  bool Raycast(const class Ray& ray, class RaycastHit* const hitInfo,
-               float maxDistance);
-  bool Raycast(Node* const node, const class Ray& ray,
-               class RaycastHit* const hitInfo, float maxDistance);
+  bool Raycast(const Ray& ray, class RaycastHit* hitInfo,
+               float maxDistance) const;
+  bool Raycast(Node* node, const Ray& ray, class RaycastHit* hitInfo,
+               float maxDistance) const;
+
   const CollisionUtil::ColliderPairSet& GetCollisionPairs();
+  Array<Collider*> GetPossibleColliders(class Collider* collider) const;
 
  private:
-  void AddNode(Node* const newNode);
-  void RemoveNode(Node* const node, bool deleteNode);
+  void AddNode(Node* newNode);
+  void RemoveNode(Node* node, bool deleteNode);
   void DebugDraw() const;
 
   CollisionUtil::ColliderPairSet colliderPairSet;
   std::unordered_map<class Collider*, Node*> colNodeMap;
   Node* root = nullptr;
+  TemplatePoolAllocator<Node> nodePool;
+#if _EDITOR
+  // std::set<class Collider*> collisionSet;
+#endif
 };
 
 }  // namespace Isetta

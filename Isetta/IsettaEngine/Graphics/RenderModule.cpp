@@ -8,10 +8,10 @@
 #include "Core/Config/Config.h"
 #include "Core/Filesystem.h"
 #include "Core/Math/Vector3.h"
-#include "Core/Time/StopWatch.h"
 #include "Graphics/AnimationComponent.h"
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
+#include "Graphics/ParticleSystemComponent.h"
 #include "Horde3DUtils.h"
 #include "Scene/Entity.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
@@ -30,6 +30,7 @@ void RenderModule::StartUp(GLFWwindow* win) {
   MeshComponent::renderModule = this;
   LightComponent::renderModule = this;
   CameraComponent::renderModule = this;
+  ParticleSystemComponent::renderModule = this;
 }
 
 void RenderModule::Update(float deltaTime) {
@@ -58,9 +59,20 @@ void RenderModule::Update(float deltaTime) {
   for (const auto& cam : cameraComponents) {
     cam->UpdateH3DTransform();
   }
+  for (const auto& particle : particleSystemComponents) {
+    if (particle->entity->GetAttribute(
+            Entity::EntityAttributes::IS_TRANSFORM_DIRTY)) {
+      particle->UpdateTransform();
+    }
+    particle->UpdateEmitter(deltaTime);
+  }
+  // if (cameraComponents.empty()) {
+  //  LevelManager::Instance().LoadLevel("NoCameraLevel");
+  //  return;
+  //}
   ASSERT(!cameraComponents.empty());
   CameraComponent::_main = cameraComponents.front();
-  h3dRender(cameraComponents.front()->renderNode);
+  h3dRender(CameraComponent::_main->renderNode);
 
   h3dFinalizeFrame();
 }

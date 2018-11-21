@@ -2,12 +2,15 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include <utility>
 #include "Collisions/AABB.h"
 #include "Core/Color.h"
 #include "Core/Math/Vector3.h"
 #include "Scene/Component.h"
 #include "Scene/Transform.h"
+
+namespace Isetta::Math {
+class Ray;
+}
 
 namespace Isetta {
 #define INTERSECTION_TEST(TYPE)                             \
@@ -30,16 +33,9 @@ namespace Isetta {
 
 BEGIN_COMPONENT(Collider, Component, false)
 public:
-enum class Properties { IS_STATIC, IS_TRIGGER };
 
-void SetProperties(Properties attr, const bool value) {
-  properties.set(static_cast<int>(attr), value);
-}
-bool GetProperties(Properties attr) const {
-  return properties.test(static_cast<int>(attr));
-}
-
-Math::Vector3 center;
+ bool isTrigger = false;
+ Math::Vector3 center;
 Color debugColor = Color::green;
 
 // TODO(Jacob) virtual Math::Vector3 ClosestPoint(Math::Vector3 point) = 0;
@@ -48,7 +44,7 @@ virtual bool Raycast(const class Ray& ray, class RaycastHit* const hitInfo,
                      float maxDistance = 0) = 0;
 
 Math::Vector3 GetWorldCenter() const {
-  return center + GetTransform()->GetWorldPos();
+  return transform->WorldPosFromLocalPos(center);
 }
 
 void Start() override;
@@ -59,7 +55,6 @@ virtual AABB GetFatAABB() = 0;
 virtual AABB GetAABB() = 0;
 
 private:
-std::bitset<2> properties;
 int hierarchyHandle;
 class CollisionHandler* handler{nullptr};
 
@@ -72,16 +67,16 @@ void FindHandler();
 static class CollisionsModule* collisionsModule;
 friend class CollisionsModule;
 friend class CollisionHandler;
+friend class CollisionSolverModule;
 
 protected:
 inline static float fatFactor = 0.2f;
 
-Collider(const Math::Vector3& center) : center{center}, properties{0b00} {}
-Collider(const bool isStatic = false, const bool isTrigger = false,
+Collider(const Math::Vector3& center) : center{center}, isTrigger{false} {}
+Collider(const bool trigger = false,
          const Math::Vector3& center = Math::Vector3::zero)
     : center{center} {
-  properties[static_cast<int>(Properties::IS_STATIC)] = isStatic;
-  properties[static_cast<int>(Properties::IS_TRIGGER)] = isTrigger;
+  isTrigger = trigger;
 }
 virtual ~Collider() = default;
 

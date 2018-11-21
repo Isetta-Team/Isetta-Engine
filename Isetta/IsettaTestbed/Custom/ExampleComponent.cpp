@@ -17,12 +17,12 @@ void ExampleComponent::OnEnable() {
   Input::RegisterKeyPressCallback(KeyCode::NUM1, [&]() {
     Entity* man =
         LevelManager::Instance().currentLevel->GetEntityByName("PushAnim");
-    if (man->GetTransform().GetParent() == &GetTransform()) {
-      man->GetTransform().SetParent(nullptr);
+    if (man->transform.GetParent() == &transform) {
+      man->transform.SetParent(nullptr);
       LOG_INFO(Debug::Channel::General, "Parent of %s is set to %s",
                man->GetName().c_str(), "null");
     } else {
-      man->GetTransform().SetParent(&GetTransform());
+      man->transform.SetParent(&transform);
       LOG_INFO(Debug::Channel::General, "Parent of %s is set to %s",
                man->GetName().c_str(), owner->GetName().c_str());
     }
@@ -45,20 +45,20 @@ void ExampleComponent::Update() {
   float speed = 10.f;
 
   if (Input::IsKeyPressed(KeyCode::LEFT_ARROW)) {
-    GetTransform().TranslateWorld(Math::Vector3::left *
+    transform.TranslateWorld(Math::Vector3::left *
                                   EngineLoop::GetGameClock().GetDeltaTime() *
                                   speed);
-    GetTransform().Print();
+    transform.Print();
   }
 
   if (Input::IsKeyPressed(KeyCode::RIGHT_ARROW)) {
-    GetTransform().TranslateWorld(Math::Vector3::right *
+    transform.TranslateWorld(Math::Vector3::right *
                                   EngineLoop::GetGameClock().GetDeltaTime() *
                                   speed);
   }
 
   if (Input::IsKeyPressed(KeyCode::P)) {
-    GetTransform().Print();
+    transform.Print();
   }
 #endif
 }

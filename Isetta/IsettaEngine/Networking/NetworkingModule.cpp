@@ -94,8 +94,7 @@ void NetworkingModule::Update(float deltaTime) {
   // Send out our messages
   SendClientToServerMessages();
   if (server) {
-    for (int i = 0; i < Config::Instance().networkConfig.maxClients.GetVal();
-         i++) {
+    for (int i = 0; i < CONFIG_VAL(networkConfig.maxClients); ++i) {
       SendServerToClientMessages(i);
     }
   }
@@ -108,8 +107,7 @@ void NetworkingModule::Update(float deltaTime) {
   }
 
   if (server) {
-    for (int i = 0; i < Config::Instance().networkConfig.maxClients.GetVal();
-         i++) {
+    for (int i = 0; i < CONFIG_VAL(networkConfig.maxClients); ++i) {
       ProcessClientToServerMessages(i);
     }
   }
@@ -129,6 +127,7 @@ void NetworkingModule::ShutDown() {
   ShutdownYojimbo();
 
   client->~Client();
+  MemoryManager::FreeOnFreeList(clientSendBuffer);
   clientAllocator->~NetworkAllocator();
 }
 
@@ -269,8 +268,7 @@ void NetworkingModule::CreateServer(const char* address, int port) {
   serverSendBufferArray =
       MemoryManager::NewArrOnFreeList<RingBuffer<yojimbo::Message*>>(
           Config::Instance().networkConfig.maxClients.GetVal());
-  for (int i = 0; i < Config::Instance().networkConfig.maxClients.GetVal();
-       i++) {
+  for (int i = 0; i < CONFIG_VAL(networkConfig.maxClients); ++i) {
     serverSendBufferArray[i] = RingBuffer<yojimbo::Message*>(
         Config::Instance().networkConfig.serverQueueSizePerClient.GetVal());
   }

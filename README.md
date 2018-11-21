@@ -52,11 +52,11 @@ git clone --recursive https://github.com/Isetta-Team/Isetta-Engine.git
 
 ## Using the Engine
 You can start playing with our first demo game! You'll need a controller for it.
-1. Set build configuration to "Debug DLL"
+1. Set build configuration to `Debug DLL`
 2. Set "IsettaTestBed" as start up project
 3. Build "IsettaEngine" 
 4. Set `start_level` in `config.cfg` or `user.cfg` to "Level1" 
-	- Refer [below](#) for configuration settings
+	- Refer [below](#Configuration) for configuration settings
 6. Build and run and start playing! There will also be a bunch of values for you to tweak
 
 ### Build Configurations
@@ -66,6 +66,8 @@ There are currently 3 configuration options with this solution of the engine:
 - Release: `Release` settings (optimized code) and level is built/run in-engine (not using engine dll)
   
 There are different levels available in the projects of the solution; ones in IsettaEngine have most recent/testing features, ones in IsettaTestbed are functional tech demos and games. To run any level built within the engine, use Debug or Release and set startup project as IsettaEngine (right-click the IsettaEngine project and select "Set as Startup Project"). To run any level within IsettaTestbed, the configuration must be Debug DLL (to build the engine into a DLL), the startup project should then be IsettaTestbed.
+
+`Debug DLL` will build the `.dll` for you to use and export. To use your version of the engine in another solution/project, build with `Debug DLL` and use those `.dll` and `.lib` built files in your project (follow [Isetta-Game](https://github.com/Isetta-Team/Isetta-Game) instructions for more information). You will also need to export your changed header files, use this command in a command line: `rsync -a --include '*/' --include '*.h' --exclude '*' Isetta/IsettaEngine/ Target_Directory/`. This command is to be run in the top level of the git folder, but source and target directory can be changed as needed.
 
 ### Configuration
 The configuration settings of the engine are placed with `config.cfg` within the IsettaEngine folder.

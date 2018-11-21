@@ -2,9 +2,9 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Scene/LevelManager.h"
-#include "Core/Memory/MemoryManager.h"
-#include "Scene/Level.h"
 #include "Core/Config/Config.h"
+#include "Core/Debug/Logger.h"
+#include "Scene/Level.h"
 
 namespace Isetta {
 LevelManager& LevelManager::Instance() {
@@ -12,28 +12,44 @@ LevelManager& LevelManager::Instance() {
   return instance;
 }
 
-bool LevelManager::Register(std::string name, Func<Level*> level) {
+bool LevelManager::Register(const std::string& name, Func<Level*> level) {
   levels.insert_or_assign(SID(name.c_str()), level);
   return true;
 }
 
-void LevelManager::LoadStartupLevel() {
-  currentLevelName = Config::Instance().levelConfig.startLevel.GetVal();
-  LoadLevel();
-}
-
 void LevelManager::LoadLevel() {
-  currentLevel = levels.at(SID(currentLevelName.c_str()))();
-  if (currentLevel != nullptr) {
-    currentLevel->LoadLevel();
+  if (pendingLoadLevel != nullptr) {
+    loadedLevel = pendingLoadLevel;
+    pendingLoadLevel = nullptr;
+    LOG("Loading......%s", loadedLevel->GetName().c_str());
+    loadedLevel->OnLevelLoad();
+    LOG("Loading Complete");
   }
 }
 
-void LevelManager::UnloadLevel() const {
-  if (currentLevel != nullptr) {
-    currentLevel->UnloadLevel();
-    currentLevel->~Level();
+void LevelManager::UnloadLevel() {
+  if (loadedLevel != nullptr) {
+    loadedLevel->UnloadLevel();
+    LOG("Unloaded: %s", loadedLevel->GetName().c_str());
+    loadedLevel->~Level();
+    loadedLevel = nullptr;
   }
+}
+
+// void LevelManager::LoadStartupLevel() {
+//  currentLevelName = Config::Instance().levelConfig.startLevel.GetVal();
+//  OnLevelLoad();
+//}
+
+// void LevelManager::OnLevelLoad() {
+//  currentLevel = levels.at(SID(currentLevelName.c_str()))();
+//  if (currentLevel != nullptr) {
+//    currentLevel->OnLevelLoad();
+//  }
+//}
+
+void LevelManager::LoadLevel(std::string_view levelName) {
+  pendingLoadLevel = levels.at(SID(levelName.data()))();
 }
 
 }  // namespace Isetta

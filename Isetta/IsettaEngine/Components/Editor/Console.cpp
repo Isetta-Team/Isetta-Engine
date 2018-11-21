@@ -42,7 +42,7 @@ Console::Console(std::string title, bool isOpen, const GUI::WindowStyle& style,
   AddCommand("help", HelpCmd);
 
   int all = static_cast<int>(Debug::Verbosity::All);
-  for (int i = static_cast<int>(Debug::Verbosity::Off); i < all; i++)
+  for (int i = static_cast<int>(Debug::Verbosity::Off); i < all; ++i)
     verbosityColor[i] = textColor[i];
 }
 Console::~Console() {
@@ -61,10 +61,8 @@ void Console::CommandsCmd(Console* const console, std::string_view params) {
 }
 
 void Console::HistoryCmd(Console* const console, std::string_view params) {
-  // for (const auto& cmd : console->GetHistory())
-  //  console->AddLog("- " + cmd + "\n");
-  console->log.pop_back();
-  console->log.pop_back();
+  for (const auto& cmd : console->GetHistory())
+    console->AddLog("- " + cmd + "\n");
 }
 
 void Console::HelpCmd(Console* const console, std::string_view params) {
@@ -139,7 +137,7 @@ int Console::CommandCallback(InputTextCallbackData* data) {
             }
           }
           if (!allMatch) break;
-          matchLen++;
+          ++matchLen;
         }
         if (matchLen > 0) {
           data->DeleteChars(static_cast<int>(wordStart - data->Buf),
@@ -222,7 +220,7 @@ void Console::GuiUpdate() {
         displayChannel[allChannel] = Logger::channelMask.all();
 
         // OTHERS
-        for (int channel = 0; channel < allChannel; channel++) {
+        for (int channel = 0; channel < allChannel; ++channel) {
           displayChannel[channel] = Logger::channelMask.test(channel);
         }
         GUI::ButtonDropDown(rect, "Channel", Math::Vector2{30, 20}, [&]() {
@@ -237,7 +235,7 @@ void Console::GuiUpdate() {
 
           // OTHERS
           for (int channel = 0; channel < static_cast<int>(Debug::Channel::All);
-               channel++) {
+               ++channel) {
             displayChannel[channel] = Logger::channelMask.test(channel);
             std::string label =
                 Debug::ToString(static_cast<Debug::Channel>(channel));
@@ -270,7 +268,7 @@ void Console::GuiUpdate() {
                 for (int verbosity =
                          static_cast<int>(Debug::Verbosity::Off) + 1;
                      verbosity < static_cast<int>(Debug::Verbosity::All);
-                     verbosity++) {
+                     ++verbosity) {
                   if (  // displayVerbosity[verbosity] &&
                       line.find("[" +
                                 Debug::ToString(
@@ -282,7 +280,7 @@ void Console::GuiUpdate() {
                 }
                 for (int channel = 0;
                      channel < static_cast<int>(Debug::Channel::All);
-                     channel++) {
+                     ++channel) {
                   if (  // displayChannel[channel] &&
                       line.find("[" +
                                 Debug::ToString(

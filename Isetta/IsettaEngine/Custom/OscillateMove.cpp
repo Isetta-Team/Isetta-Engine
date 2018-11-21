@@ -16,16 +16,16 @@ void OscillateMove::OnEnable() {
   }
 }
 void OscillateMove::Update() {
-  float dist = Math::Vector3::Dot(GetTransform()->GetLocalPos() - origin,
-                                  GetTransform()->GetAxis(axis));
+  float dist = Math::Vector3::Dot(transform->GetLocalPos() - origin,
+                                  transform->GetAxis(axis));
   if (distance < dist) {
     direction = -1;
   } else if (-distance > dist) {
     direction = 1;
   }
-  GetTransform()->TranslateLocal(direction * GetTransform()->GetAxis(axis) *
+  transform->TranslateLocal(direction * transform->GetAxis(axis) *
                                 speed *
                                 EngineLoop::GetGameClock().GetDeltaTime());
-  // DebugDraw::Cube(Math::Matrix4::Translate(GetTransform()->GetWorldPos()));
+  // DebugDraw::Cube(Math::Matrix4::Translate(transform->GetWorldPos()));
 }
 }  // namespace Isetta

@@ -26,7 +26,7 @@ MeshComponent::~MeshComponent() {
 
 void MeshComponent::UpdateTransform() const {
   PROFILE
-  Transform::SetH3DNodeTransform(renderNode, *GetTransform());
+  Transform::SetH3DNodeTransform(renderNode, *transform);
 }
 
 H3DRes MeshComponent::LoadResourceFromFile(std::string_view resourceName) {
@@ -44,6 +44,12 @@ H3DRes MeshComponent::LoadResourceFromFile(std::string_view resourceName) {
 void MeshComponent::OnEnable() {
   if (renderNode == 0) {
     renderNode = h3dAddNodes(H3DRootNode, renderResource);
+    int count = h3dFindNodes(renderNode, "", H3DNodeTypes::Joint);
+    for (int i = 0; i < count; ++i) {
+      H3DNode node = h3dGetNodeFindResult(i);
+      const char* name = h3dGetNodeParamStr(node, H3DNodeParams::NameStr);
+      joints.insert({SID(name), node});
+    }
   } else {
     h3dSetNodeFlags(renderNode, 0, true);
   }
@@ -53,6 +59,25 @@ void MeshComponent::OnDisable() {
   h3dSetNodeFlags(renderNode, H3DNodeFlags::Inactive, true);
 }
 
-void MeshComponent::OnDestroy() { h3dRemoveNode(renderNode); }
+void MeshComponent::OnDestroy() {
+  h3dRemoveNode(renderNode);
+}
+
+std::tuple<Math::Vector3, Math::Quaternion>
+MeshComponent::GetJointWorldTransform(std::string jointName) {
+  H3DNode jointNode = joints.at(SID(jointName.c_str()));
+  const float* data[4];
+  const float** testPtr = &data[0];
+  Math::Matrix4 abs;
+  h3dGetNodeTransMats(jointNode, nullptr, testPtr);
+
+  memcpy(abs.data, *testPtr, 16 * sizeof(float));
+
+  abs = abs.Transpose();
+  Math::Vector3 pos = abs.GetCol(3).GetVector3();
+  Math::Quaternion q = Math::Quaternion::FromLookRotation(
+      abs.GetCol(0).GetVector3(), abs.GetCol(1).GetVector3());
+  return {pos, q};
+}
 
 }  // namespace Isetta

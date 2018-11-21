@@ -18,9 +18,4 @@ void DoubleBufferedAllocator::ClearCurrentBuffer() {
   stacks[curStackIndex].Clear();
 }
 
-void DoubleBufferedAllocator::Erase() {
-  stacks[0].Erase();
-  stacks[1].Erase();
-}
-
 }  // namespace Isetta
