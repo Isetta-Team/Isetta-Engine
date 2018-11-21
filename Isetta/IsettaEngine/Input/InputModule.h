@@ -7,10 +7,10 @@
 #include <list>
 #include <unordered_map>
 #include <utility>
+#include "Core/DataStructures/Delegate.h"
 #include "Core/IsettaAlias.h"
 #include "Input/KeyCode.h"
 #include "Util.h"
-#include "Core/DataStructures/Delegate.h"
 
 namespace Isetta::Math {
 class Vector2;
@@ -19,18 +19,18 @@ class Vector2;
 namespace Isetta {
 class InputModule {
   // using CBMap = std::unordered_map<int, std::list<std::pair<U16, Action<>>>>;
-  using KeyMap =
-      std::unordered_map<std::pair<int, ModifierKeys>,
-                         Delegate<>, Util::PairHash>;
+  using KeyMap = std::unordered_map<std::pair<int, ModifierKeys>, Delegate<>,
+                                    Util::PairHash>;
   using MouseMap = std::unordered_map<int, Delegate<>>;
+
  public:
   /**
    * \brief Register a callback function to window close event
    * \param callback The callback function
    */
   void RegisterWindowCloseCallback(const Action<>& callback);
-  U16 RegisterWindowSizeCallback(const Action<int, int>& callback);
-  void UnegisterWindowSizeCallback(U16 handle);
+  U64 RegisterWindowSizeCallback(const Action<int, int>& callback);
+  void UnegisterWindowSizeCallback(U64 handle);
   /**
    * \brief Check if the key is pressed
    * \param key The keycode to detect
@@ -102,34 +102,34 @@ class InputModule {
    */
   void UnregisterMouseReleaseCallback(MouseButtonCode mouseButton, U64 handle);
 
-  U16 RegisterScrollCallback(const Action<double, double>& callback);
-  void UnregisterScrollCallback(U16 handle);
+  U64 RegisterScrollCallback(const Action<double, double>& callback);
+  void UnregisterScrollCallback(U64 handle);
 
   float GetGamepadAxis(GamepadAxis axis);
   bool IsGamepadButtonPressed(GamepadButton button);
-  U16 RegisterGamepadConnectionCallback(const Action<int, int>& callback);
-  void UnegisterGamepadConnectionCallback(U16 handle);
+  U64 RegisterGamepadConnectionCallback(const Action<int, int>& callback);
+  void UnegisterGamepadConnectionCallback(U64 handle);
 
   void Clear();
 
   // TODO(Chaojie) + TODO(Jacob): Talk about these, should unregister return
   // bool?
   void RegisterWindowCloseGLFWCallback(const Action<GLFWwindow*>& callback);
-  U16 RegisterWindowSizeGLFWCallback(
+  U64 RegisterWindowSizeGLFWCallback(
       const Action<GLFWwindow*, int, int>& callback);
-  void UnegisterWindowSizeGLFWCallback(U16 handle);
-  U16 RegisterMouseButtonGLFWCallback(
+  void UnegisterWindowSizeGLFWCallback(U64 handle);
+  U64 RegisterMouseButtonGLFWCallback(
       const Action<GLFWwindow*, int, int, int>& callback);
-  void UnregisterMouseButtonGLFWCallback(U16 handle);
-  U16 RegisterKeyGLFWCallback(
+  void UnregisterMouseButtonGLFWCallback(U64 handle);
+  U64 RegisterKeyGLFWCallback(
       const Action<GLFWwindow*, int, int, int, int>& callback);
-  void UnegisterKeyGLFWCallback(U16 handle);
-  U16 RegisterScrollGLFWCallback(
+  void UnegisterKeyGLFWCallback(U64 handle);
+  U64 RegisterScrollGLFWCallback(
       const Action<GLFWwindow*, double, double>& callback);
-  void UnregisterScrollGLFWCallback(U16 handle);
-  U16 RegisterCharGLFWCallback(
+  void UnregisterScrollGLFWCallback(U64 handle);
+  U64 RegisterCharGLFWCallback(
       const Action<GLFWwindow*, unsigned int>& callback);
-  void UnegisterCharGLFWCallback(U16 handle);
+  void UnegisterCharGLFWCallback(U64 handle);
 
  private:
   static GLFWwindow* winHandle;
@@ -142,26 +142,26 @@ class InputModule {
   void ShutDown();
 
   U64 RegisterCallback(int key, ModifierKeys mods, const Action<>& callback,
-                       KeyMap* callbackMap);
+                       KeyMap* delegateMap);
   void UnregisterCallback(int key, ModifierKeys mods, U64 handle,
-                          KeyMap* callbackMap);
+                          KeyMap* delegateMap);
   U64 RegisterCallback(int key, const Action<>& callback,
-                       MouseMap* callbackMap);
-  void UnregisterCallback(int key, U64 handle, MouseMap* callbackMap);
+                       MouseMap* delegateMap);
+  void UnregisterCallback(int key, U64 handle, MouseMap* delegateMap);
   int KeyCodeToGlfwKey(KeyCode key) const;
   int MouseButtonToGlfwKey(MouseButtonCode mouseButton) const;
   GLFWgamepadstate gamepadState;
   void UpdateGamepadState();
   void DeadZoneOptimize(float* horizontal, float* verticle);
 
-  static std::list<Action<>> windowCloseCallbacks;
-  static KeyMap keyPressCallbacks;
-  static KeyMap keyReleaseCallbacks;
-  static MouseMap mousePressCallbacks;
-  static MouseMap mouseReleaseCallbacks;
-  static std::unordered_map<U16, Action<int, int>> windowSizeCallbacks;
-  static std::unordered_map<U16, Action<double, double>> scrollCallbacks;
-  static std::unordered_map<U16, Action<int, int>> gamepadConnectionCallbacks;
+  static Delegate<> windowCloseCallbacks;
+  static KeyMap keyPressDelegates;
+  static KeyMap keyReleaseDelegates;
+  static MouseMap mousePressDelegates;
+  static MouseMap mouseReleaseDelegates;
+  static Delegate<int, int> windowSizeCallbacks;
+  static Delegate<double, double> scrollCallbacks;
+  static Delegate<int, int> gamepadConnectionCallbacks;
 
   static void WindowCloseListener(GLFWwindow* win);
   static void KeyEventListener(GLFWwindow* win, int key, int scancode,
@@ -174,20 +174,12 @@ class InputModule {
   static void WindowSizeListener(GLFWwindow* win, int width, int height);
 
   // GLFW Callbacks
-  static std::list<Action<GLFWwindow*>> windowCloseGLFWCallbacks;
-  static std::unordered_map<U16, Action<GLFWwindow*, int, int>>
-      windowSizeGLFWCallbacks;
-  static std::unordered_map<U16, Action<GLFWwindow*, int, int, int>>
-      mouseButtonGLFWCallbacks;
-  static std::unordered_map<U16, Action<GLFWwindow*, int, int, int, int>>
-      keyGLFWCallbacks;
-  static std::unordered_map<U16, Action<GLFWwindow*, double, double>>
-      scrollGLFWCallbacks;
-  static std::unordered_map<U16, Action<GLFWwindow*, unsigned int>>
-      charGLFWCallbacks;
-
-  static U16 inputHandle;
-  static U8 glfwHandle;
+  static Delegate<GLFWwindow*> windowCloseGLFWCallbacks;
+  static Delegate<GLFWwindow*, int, int> windowSizeGLFWCallbacks;
+  static Delegate<GLFWwindow*, int, int, int> mouseButtonGLFWCallbacks;
+  static Delegate<GLFWwindow*, int, int, int, int> keyGLFWCallbacks;
+  static Delegate<GLFWwindow*, double, double> scrollGLFWCallbacks;
+  static Delegate<GLFWwindow*, unsigned int> charGLFWCallbacks;
 
   friend class EngineLoop;
 };

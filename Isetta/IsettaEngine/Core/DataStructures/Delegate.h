@@ -10,27 +10,26 @@
 namespace Isetta {
 template <typename... ActionArgs>
 class Delegate {
-  using KeyPair = std::pair<U16, Action<ActionArgs&&...>>;
+  using KeyPair = std::pair<U16, Action<const ActionArgs&...>>;
   std::list<KeyPair> actions;
   HandleBin handleBin;
 
  public:
   Delegate() = default;
-  Delegate(const Delegate&) = default;
+  Delegate(const Delegate&) = delete;
   Delegate(Delegate&&) = default;
-  Delegate& operator=(const Delegate&) = default;
+  Delegate& operator=(const Delegate&) = delete;
   Delegate& operator=(Delegate&&) = default;
-  ~Delegate() {
-    
-  }
+  ~Delegate() = default;
 
-  U64 Subscribe(Action<ActionArgs&&...> action);
+  U64 Subscribe(Action<const ActionArgs&...> action);
   void Unsubscribe(U64 handle);
-  void Invoke(ActionArgs&&... args);
+  void Invoke(const ActionArgs&... args);
+  void Clear();
 };
 
 template <typename... ActionArgs>
-U64 Delegate<ActionArgs...>::Subscribe(Action<ActionArgs&&...> action) {
+U64 Delegate<ActionArgs...>::Subscribe(Action<const ActionArgs&...> action) {
   U64 handle = handleBin.GetHandle();
   actions.push_back({handle, action});
   return handle;
@@ -38,23 +37,29 @@ U64 Delegate<ActionArgs...>::Subscribe(Action<ActionArgs&&...> action) {
 
 template <typename... ActionArgs>
 void Delegate<ActionArgs...>::Unsubscribe(U64 handle) {
-  if (std::find_if(actions.begin(), actions.end(),
-                   [handle](const KeyPair& a) {
-                     return a.first == handle;
-                   }) != actions.end()) {
-    actions.remove_if([handle](const KeyPair& action) { return action.first == handle; });
+  if (std::find_if(actions.begin(), actions.end(), [handle](const KeyPair& a) {
+        return a.first == handle;
+      }) != actions.end()) {
+    actions.remove_if(
+        [handle](const KeyPair& action) { return action.first == handle; });
+  }
+}
+
+template <typename... ActionArgs>
+void Delegate<ActionArgs...>::Invoke(const ActionArgs&... args) {
+  // In case the callback is unregistering itself
+  std::list<Action<const ActionArgs&...>> callbacks;
+  for (const KeyPair& callback : actions) {
+    callbacks.push_back(callback.second);
+  }
+  for (const Action<const ActionArgs&...>& callback : callbacks) {
+    callback(args...);
   }
 }
 
 template <typename ... ActionArgs>
-void Delegate<ActionArgs...>::Invoke(ActionArgs&&... args) {
-  // In case the callback is unregistering itself
-  std::list<Action<ActionArgs&&...>> callbacks;
-  for (const KeyPair& callback : actions) {
-    callbacks.push_back(callback.second);
-  }
-  for (const Action<ActionArgs&&...>& callback : callbacks) {
-    callback(args...);
-  }
+void Delegate<ActionArgs...>::Clear() {
+  actions.clear();
+  handleBin.Clear();
 }
 }  // namespace Isetta

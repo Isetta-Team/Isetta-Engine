@@ -55,4 +55,9 @@ bool HandleBin::RemoveHandle(U64 handle) {
     return true;
   }
 }
+
+void HandleBin::Clear() {
+  handles.clear();
+  topHandle = 0ll;
+}
 }  // namespace Isetta
