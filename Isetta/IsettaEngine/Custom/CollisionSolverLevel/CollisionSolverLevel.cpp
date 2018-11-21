@@ -74,6 +74,7 @@ void CollisionSolverLevel::OnLevelLoad() {
   staticCol[0] = AddEntity("box-collider", true);
   staticCol[0]->SetTransform(Math::Vector3{0, 1, 0}, Math::Vector3{0, 0, 0});
   BoxCollider *bCol = staticCol[0]->AddComponent<BoxCollider>();
+  bCol->mass = 100;
   CollisionHandler *handler = staticCol[0]->AddComponent<CollisionHandler>();
   handler->RegisterOnEnter([](Collider *const col) {
     LOG("collided with " + col->entity->GetName());
@@ -84,12 +85,14 @@ void CollisionSolverLevel::OnLevelLoad() {
   staticCol[1]->SetTransform(Math::Vector3{0, 1, -4});
   SphereCollider *sCol = staticCol[1]->AddComponent<SphereCollider>();
   Collider *c = staticCol[1]->GetComponent<Collider>();
+  c->mass = 1;
 
   staticCol[2] = AddEntity("capsule-collider", true);
   staticCol[2]->SetTransform(Math::Vector3{0, 1, -8});
   CapsuleCollider *cCol = staticCol[2]->AddComponent<CapsuleCollider>(
       false, Math::Vector3::zero, 0.5, 2, CapsuleCollider::Direction::X_AXIS);
   // staticCol[2]->AddComponent<DebugCollision>();
+  cCol->mass = 50;
 
   //// DYNAMIC
   static Entity *box{AddEntity("box-collider-dynamic")};
@@ -129,5 +132,10 @@ void CollisionSolverLevel::OnLevelLoad() {
     sphere->GetComponent<KeyTransform>()->SetActive(false);
     capsule->GetComponent<KeyTransform>()->SetActive(true);
   });
+
+  Input::RegisterKeyPressCallback(
+      KeyCode::NUM9, [&]() { sphere->GetComponent<Collider>()->mass -= 10; });
+  Input::RegisterKeyPressCallback(
+      KeyCode::NUM0, [&]() { sphere->GetComponent<Collider>()->mass += 10; });
 }
 }  // namespace Isetta
