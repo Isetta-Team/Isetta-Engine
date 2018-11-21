@@ -98,17 +98,7 @@ bool Entity::GetAttribute(EntityAttributes attr) const {
   return attributes.test(static_cast<int>(attr));
 }
 
-Entity::Entity(const std::string &name)
-    : internalTransform(this),
-      attributes{0b101},
-      entityName{name},
-      transform(&internalTransform),
-      isStatic{false} {
-  CoCreateGuid(&entityId);
-  OnEnable();
-}
-
-Entity::Entity(const std::string &name, const bool &entityStatic)
+Entity::Entity(const std::string& name, const bool entityStatic)
     : internalTransform(this),
       attributes{0b101},
       entityName{name},

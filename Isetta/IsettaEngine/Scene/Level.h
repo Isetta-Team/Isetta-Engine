@@ -7,6 +7,7 @@
 #include <stack>
 #include <string>
 #include "ISETTA_API.h"
+#include "Core/Memory/TemplatePoolAllocator.h"
 
 #define CREATE_LEVEL(NAME)                                                \
   class NAME : public Isetta::Level, public Isetta::LevelRegistry<NAME> { \
@@ -39,6 +40,8 @@ class ISETTA_API Level {
   void GUIUpdate();
   void FixedUpdate();
   void LateUpdate();
+
+  TemplatePoolAllocator<Entity> pool;
 
   friend class Entity;
   friend class EngineLoop;

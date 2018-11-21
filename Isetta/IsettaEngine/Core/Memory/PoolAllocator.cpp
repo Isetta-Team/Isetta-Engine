@@ -56,7 +56,7 @@ void PoolAllocator::InitializeNodes(void* memHead, const Size count) {
 void PoolAllocator::Expand() {
   void* newMemHead = std::malloc(chunkSize * increment);
   InitializeNodes(newMemHead, increment);
-  additionalMemory.push_back(newMemHead);
+  additionalMemory.PushBack(newMemHead);
   capacity += increment;
   LOG_INFO(Debug::Channel::Memory, "Pool allocator increased by %d", increment);
 }

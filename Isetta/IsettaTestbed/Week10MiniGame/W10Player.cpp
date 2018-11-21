@@ -2,16 +2,16 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Week10MiniGame/W10Player.h"
-#include "Networking/NetworkTransform.h"
-#include "Core/Math/Matrix3.h"
+#include "Core/Time/Time.h"
 #include "Custom/IsettaCore.h"
 #include "Events/Events.h"
 #include "Networking/NetworkId.h"
 #include "Networking/NetworkManager.h"
+#include "Networking/NetworkTransform.h"
 #include "W10NetworkManager.h"
-#include "Core/Time/Time.h"
 
-W10Player::W10Player(bool isRight, int swordNetID, int clientAuthorityID)
+W10Player::W10Player(const bool isRight, const int swordNetID,
+                     const int clientAuthorityID)
     : swordEntity{nullptr},
       isOnRight{isRight},
       canOperate{true},
@@ -34,13 +34,13 @@ W10Player::W10Player(bool isRight, int swordNetID, int clientAuthorityID)
       swordNetId(swordNetID) {}
 
 void W10Player::Awake() {
-  entity->AddComponent<Isetta::MeshComponent>(
-      "blockFencing/Player.scene.xml");
+  entity->AddComponent<Isetta::MeshComponent>("blockFencing/Player.scene.xml");
   swordEntity = Isetta::Entity::CreateEntity("Sword");
   swordEntity->AddComponent<Isetta::MeshComponent>("primitive/cube.scene.xml");
   auto networkId = swordEntity->AddComponent<Isetta::NetworkId>(swordNetId);
   networkId->clientAuthorityId = clientAuthorityId;
   swordEntity->AddComponent<Isetta::NetworkTransform>();
+
   Isetta::Events::Instance().RegisterEventListener(
       "Blocked",
       [&](const Isetta::EventObject& eventObject) { SwordBlocked(); });
@@ -78,8 +78,8 @@ void W10Player::Update() {
     direction += 1;
   }
   transform->TranslateWorld(direction * horizontalSpeed *
-                                 Isetta::Time::GetDeltaTime() *
-                                 Isetta::Math::Vector3::left);
+                            Isetta::Time::GetDeltaTime() *
+                            Isetta::Math::Vector3::left);
 
   ChangeSwordHorizontalPosition(Isetta::Time::GetDeltaTime());
   if (swordStabStatus == 0) isSwordFlying = false;
@@ -99,8 +99,8 @@ void W10Player::Update() {
               .GenerateMessageFromClient<W10CollectMessage>();
       message->swordNetId = swordNetId;
       Isetta::NetworkManager::Instance().SendMessageFromClient(message);
-      swordEntity->GetComponent<Isetta::NetworkTransform>()
-          ->ForceSendTransform(true);
+      swordEntity->GetComponent<Isetta::NetworkTransform>()->ForceSendTransform(
+          true);
     }
   }
 
@@ -122,8 +122,8 @@ void W10Player::Update() {
 
 void W10Player::InitPosition() {
   entity->SetTransform(Isetta::Math::Vector3{isOnRight ? -1.f : 1.f, 0, 0},
-                            Isetta::Math::Vector3::zero,
-                            Isetta::Math::Vector3{1, 1, 1});
+                       Isetta::Math::Vector3::zero,
+                       Isetta::Math::Vector3{1, 1, 1});
 
   swordEntity->transform->SetParent(transform);
   swordEntity->transform->SetLocalPos(

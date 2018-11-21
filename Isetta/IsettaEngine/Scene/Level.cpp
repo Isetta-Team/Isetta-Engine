@@ -3,7 +3,7 @@
  */
 #include "Scene/Level.h"
 #include "Audio/AudioModule.h"
-#include "Core/Memory/MemoryManager.h"
+#include "Core/Config/Config.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
@@ -34,15 +34,10 @@ std::list<class Entity*> Level::GetEntities() const { return entities; }
 
 void Level::UnloadLevel() {
   PROFILE
-  // for (auto& entity : entities) {
-  //   if (entity->transform->GetParent() == levelRootTransform) {
-  //     MemoryManager::DeleteOnFreeList<Entity>(entity);
-  //   }
-  // }
   OnLevelUnload();
-  MemoryManager::DeleteOnFreeList<Entity>(levelRoot);
+  pool.Free(levelRoot);
   for (auto& entity : entities) {
-    MemoryManager::DeleteOnFreeList<Entity>(entity);
+    pool.Free(entity);
     entity = nullptr;
   }
 }
@@ -61,11 +56,10 @@ void Level::StartComponents() {
 
 Entity* Level::AddEntity(std::string name, Entity* parent, bool entityStatic) {
   PROFILE
-  Entity* entity = MemoryManager::NewOnFreeList<Entity>(name, entityStatic);
+  Entity* entity = pool.Get(name, entityStatic);
+  entity->transform->SetParent(parent != nullptr ? parent->transform
+                                                 : levelRoot->transform);
   entities.push_back(entity);
-  if(parent != nullptr) {
-    entity->transform->SetParent(parent->transform);
-  }
   return entity;
 }
 
@@ -103,7 +97,7 @@ void Level::LateUpdate() {
 
   for (auto& entity : entities) {
     if (entity->GetAttribute(Entity::EntityAttributes::NEED_DESTROY)) {
-      MemoryManager::DeleteOnFreeList<Entity>(entity);
+      pool.Free(entity);
       entity = nullptr;
     }
   }
@@ -111,5 +105,8 @@ void Level::LateUpdate() {
   entities.remove_if([](Entity*& entity) { return entity == nullptr; });
 }
 
-Level::Level() : levelRoot{MemoryManager::NewOnFreeList<Entity>("Root")} {}
+Level::Level()
+    : pool(CONFIG_VAL(memoryConfig.entityPoolInitialSize),
+           CONFIG_VAL(memoryConfig.entityPoolIncrement)),
+      levelRoot(pool.Get("Root")) {}
 }  // namespace Isetta

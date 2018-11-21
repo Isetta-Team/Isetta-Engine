@@ -18,7 +18,10 @@ class TemplatePoolAllocator {
   T* Get(Args&&... args) {
     return new (pool.Get()) T(std::forward<Args>(args)...);
   }
-  void Free(T* t) { pool.Free(t); }
+  void Free(T* t) {
+    t->~T();
+    pool.Free(t);
+  }
 
  private:
   PoolAllocator pool;

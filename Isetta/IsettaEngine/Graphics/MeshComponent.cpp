@@ -80,21 +80,4 @@ MeshComponent::GetJointWorldTransform(std::string jointName) {
   return {pos, q};
 }
 
-std::tuple<Math::Vector3, Math::Quaternion>
-MeshComponent::GetJointWorldTransform(std::string jointName) {
-  H3DNode jointNode = joints.at(SID(jointName.c_str()));
-  const float* data[4];
-  const float** testPtr = &data[0];
-  Math::Matrix4 abs;
-  h3dGetNodeTransMats(jointNode, nullptr, testPtr);
-
-  memcpy(abs.data, *testPtr, 16 * sizeof(float));
-
-  abs = abs.Transpose();
-  Math::Vector3 pos = abs.GetCol(3).GetVector3();
-  Math::Quaternion q = Math::Quaternion::FromLookRotation(
-      abs.GetCol(0).GetVector3(), abs.GetCol(1).GetVector3());
-  return {pos, q};
-}
-
 }  // namespace Isetta
