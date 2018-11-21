@@ -1,4 +1,4 @@
 <Model name="Sphere" geometry="primitive/Sphere.geo">
 
-	<Mesh name="Sphere" material="primitive/Material.material.xml" sx="0.5" sy="0.5" sz="0.5" batchStart="0" batchCount="2880" vertRStart="0" vertREnd="2225" />
+	<Mesh name="Sphere" material="primitive/.material.xml" sx="0.5" sy="0.5" sz="0.5" batchStart="0" batchCount="2880" vertRStart="0" vertREnd="2225" />
 </Model>
