@@ -12,6 +12,7 @@ namespace Isetta {
 BEGIN_COMPONENT(NetworkTransform, Component, true)
 public:
 void Start() override;
+void Update() override;
 void FixedUpdate() override;
 
 void ForceSendTransform(bool snap = false);

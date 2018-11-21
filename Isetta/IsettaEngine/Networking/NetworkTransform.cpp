@@ -310,8 +310,8 @@ void NetworkTransform::Start() {
               reinterpret_cast<ParentMessage*>(message);
 
           NetworkManager::Instance()
-              .SendAllButClientMessageFromServer<ParentMessage>(
-                  clientIdx, parentMessage);
+              .SendAllButClientMessageFromServer<ParentMessage>(clientIdx,
+                                                                parentMessage);
         });
 
     NetworkTransform::registeredCallbacks = true;
@@ -327,6 +327,32 @@ void NetworkTransform::Start() {
   lastPosMessage = 0;
   lastRotMessage = 0;
   lastScaleMessage = 0;
+}
+
+void NetworkTransform::Update() {
+  if (posInterpolation < 1 || rotInterpolation < 1 || scaleInterpolation < 1) {
+    Transform* t = entity->transform;
+
+    // TODO(Caleb): Find a way to make this more consistent (netId->updateInterval isn't necessarily synced, and maxFPS does not guarantee number of fixed update frames)
+    float netIdLerp =
+        netId->updateInterval / (float)Config::Instance().loopConfig.maxFps.GetVal();
+
+    // Translation
+    posInterpolation =
+        min(posInterpolation + Time::GetDeltaTime() / netIdLerp, 1);
+    t->SetLocalPos(
+        Math::Vector3::Lerp(prevPos, targetPos, posInterpolation));
+    // Rotation
+    rotInterpolation =
+        min(rotInterpolation + Time::GetDeltaTime() / netIdLerp, 1);
+    t->SetLocalRot(Math::Quaternion::Slerp(prevRot, targetRot,
+                                           rotInterpolation));
+    // Scale
+    scaleInterpolation =
+        min(scaleInterpolation + Time::GetDeltaTime() / netIdLerp, 1);
+    t->SetLocalScale(Math::Vector3::Lerp(prevScale, targetScale,
+                                         scaleInterpolation));
+  }
 }
 
 void NetworkTransform::FixedUpdate() {
@@ -374,21 +400,6 @@ void NetworkTransform::FixedUpdate() {
         NetworkManager::Instance().SendMessageFromClient(message);
       }
     }
-  } else if (posInterpolation < 1 || rotInterpolation < 1 || scaleInterpolation < 1) {
-    Transform* t = entity->transform;
-    float netIdLerp = 1.0 / netId->updateInterval;
-
-    // Translation
-    posInterpolation = min(posInterpolation + netIdLerp, 1);
-    t->SetLocalPos(Math::Vector3::Lerp(prevPos, targetPos, posInterpolation));
-    // Rotation
-    rotInterpolation = min(rotInterpolation + netIdLerp, 1);
-    t->SetLocalRot(
-        Math::Quaternion::Slerp(prevRot, targetRot, rotInterpolation));
-    // Scale
-    scaleInterpolation = min(scaleInterpolation + netIdLerp, 1);
-    t->SetLocalScale(
-        Math::Vector3::Lerp(prevScale, targetScale, scaleInterpolation));
   }
 }
 
@@ -415,7 +426,8 @@ void NetworkTransform::ForceSendTransform(bool snap) {
     prevScale = t->GetLocalScale();
 
     TransformMessage* message =
-        NetworkManager::Instance().GenerateMessageFromClient<TransformMessage>();
+        NetworkManager::Instance()
+            .GenerateMessageFromClient<TransformMessage>();
 
     message->timestamp = Time::GetElapsedTime();
     message->snap = snap;

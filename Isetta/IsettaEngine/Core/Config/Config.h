@@ -55,10 +55,6 @@ class ISETTA_API Config {
   CollisionsModule::CollisionConfig collisionConfig;
   Debug::DrawConfig drawConfig;
 
-  /// Max FPS of the engine
-  CVar<int> maxFps = {"max_fps", 16};
-  /// Max simulation count of update loop
-  CVar<int> maxSimCount = {"max_simulation_count", 5};
   /// File path for the resources of game/engine
   CVarString resourcePath{"resource_path", "Resources"};
 
