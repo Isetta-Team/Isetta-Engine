@@ -10,6 +10,7 @@
 #include "Core/IsettaAlias.h"
 #include "Input/KeyCode.h"
 #include "Util.h"
+#include "Core/DataStructures/Delegate.h"
 
 namespace Isetta::Math {
 class Vector2;
@@ -20,9 +21,8 @@ class InputModule {
   // using CBMap = std::unordered_map<int, std::list<std::pair<U16, Action<>>>>;
   using KeyMap =
       std::unordered_map<std::pair<int, ModifierKeys>,
-                         std::list<std::pair<U16, Action<>>>, Util::PairHash>;
-  using MouseMap = std::unordered_map<int, std::list<std::pair<U16, Action<>>>>;
-
+                         Delegate<>, Util::PairHash>;
+  using MouseMap = std::unordered_map<int, Delegate<>>;
  public:
   /**
    * \brief Register a callback function to window close event
@@ -42,28 +42,28 @@ class InputModule {
    * \param key The keycode to detect
    * \param callback The callback function
    */
-  U16 RegisterKeyPressCallback(KeyCode key, ModifierKeys mods,
+  U64 RegisterKeyPressCallback(KeyCode key, ModifierKeys mods,
                                const Action<>& callback);
   /**
    * \brief Unregister a callback by the key and handle
    * \param key The key to detect
    * \param handle The handle to unregister
    */
-  void UnregisterKeyPressCallback(KeyCode key, ModifierKeys mods, U16 handle);
+  void UnregisterKeyPressCallback(KeyCode key, ModifierKeys mods, U64 handle);
   /**
    * \brief Register a callback function to the key release event and return its
    * handle
    * \param key The keycode to detect
    * \param callback The callback function
    */
-  U16 RegisterKeyReleaseCallback(KeyCode key, ModifierKeys mods,
+  U64 RegisterKeyReleaseCallback(KeyCode key, ModifierKeys mods,
                                  const Action<>& callback);
   /**
    * \brief Unregister a callback by the key and handle
    * \param key The key to detect
    * \param handle The handle to unregister
    */
-  void UnregisterKeyReleaseCallback(KeyCode key, ModifierKeys mods, U16 handle);
+  void UnregisterKeyReleaseCallback(KeyCode key, ModifierKeys mods, U64 handle);
   /**
    * \brief Get the position of the mouse
    */
@@ -79,28 +79,28 @@ class InputModule {
    * \param mouseButton The mouse button to detect
    * \param callback The callback function
    */
-  U16 RegisterMousePressCallback(MouseButtonCode mouseButton,
+  U64 RegisterMousePressCallback(MouseButtonCode mouseButton,
                                  const Action<>& callback);
   /**
    * \brief Unregister a callback by the mouse button and handle
    * \param mouseButton The mouse button to detect
    * \param handle The handle to unregister
    */
-  void UnregisterMousePressCallback(MouseButtonCode mouseButton, U16 handle);
+  void UnregisterMousePressCallback(MouseButtonCode mouseButton, U64 handle);
   /**
    * \brief Register a callback function to the mouse release event and return
    * its handle
    * \param mouseButton The mouse button to detect
    * \param callback The callback function
    */
-  U16 RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
+  U64 RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
                                    const Action<>& callback);
   /**
    * \brief Unregister a callback by the mouse button and handle
    * \param mouseButton The mouse button to detect
    * \param handle The handle to unregister
    */
-  void UnregisterMouseReleaseCallback(MouseButtonCode mouseButton, U16 handle);
+  void UnregisterMouseReleaseCallback(MouseButtonCode mouseButton, U64 handle);
 
   U16 RegisterScrollCallback(const Action<double, double>& callback);
   void UnregisterScrollCallback(U16 handle);
@@ -141,13 +141,13 @@ class InputModule {
   void Update(float deltaTime);
   void ShutDown();
 
-  U16 RegisterCallback(int key, ModifierKeys mods, const Action<>& callback,
+  U64 RegisterCallback(int key, ModifierKeys mods, const Action<>& callback,
                        KeyMap* callbackMap);
-  void UnregisterCallback(int key, ModifierKeys mods, U16 handle,
+  void UnregisterCallback(int key, ModifierKeys mods, U64 handle,
                           KeyMap* callbackMap);
-  U16 RegisterCallback(int key, const Action<>& callback,
+  U64 RegisterCallback(int key, const Action<>& callback,
                        MouseMap* callbackMap);
-  void UnregisterCallback(int key, U16 handle, MouseMap* callbackMap);
+  void UnregisterCallback(int key, U64 handle, MouseMap* callbackMap);
   int KeyCodeToGlfwKey(KeyCode key) const;
   int MouseButtonToGlfwKey(MouseButtonCode mouseButton) const;
   GLFWgamepadstate gamepadState;
