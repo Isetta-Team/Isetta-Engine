@@ -207,14 +207,24 @@ void NetworkLevel::OnLevelLoad() {
   // Networking preparation
   RegisterExampleMessageFunctions();
 
-  if (CONFIG_VAL(networkConfig.runServer) &&
-      CONFIG_VAL(networkConfig.connectToServer)) {
+  Input::RegisterKeyPressCallback(KeyCode::NUM1, []() {
     NetworkManager::Instance().StartHost(
         CONFIG_VAL(networkConfig.defaultServerIP));
-  } else {
+  });
+
+  Input::RegisterKeyPressCallback(KeyCode::NUM2, []() {
     NetworkManager::Instance().StartClient(
         CONFIG_VAL(networkConfig.defaultServerIP));
-  }
+  });
+
+  // if (CONFIG_VAL(networkConfig.runServer) &&
+  // CONFIG_VAL(networkConfig.connectToServer)) {
+  // NetworkManager::Instance().StartHost(
+  // CONFIG_VAL(networkConfig.defaultServerIP));
+  // } else {
+  // NetworkManager::Instance().StartClient(
+  // CONFIG_VAL(networkConfig.defaultServerIP));
+  // }
 
   // Spawn across network
   Input::RegisterKeyPressCallback(KeyCode::Y, []() {

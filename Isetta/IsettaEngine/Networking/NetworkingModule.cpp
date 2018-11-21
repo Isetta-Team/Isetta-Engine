@@ -5,9 +5,6 @@
 #include "Networking/NetworkingModule.h"
 
 #include <list>
-#include <stdexcept>
-#include <string>
-#include <unordered_map>
 #include <utility>
 
 #include "Audio/AudioSource.h"
@@ -35,20 +32,20 @@ void NetworkingModule::StartUp() {
     throw std::exception(
         "NetworkingModule::StartUp => Could not initialize yojimbo.");
   }
-  srand((unsigned int)time(NULL));
+  srand(static_cast<unsigned int>(time(nullptr)));
 
   // TODO(Caleb): Figure out some more robust channel settings
   yojimboConfig.numChannels = 2;
   yojimboConfig.channel[0].type = yojimbo::CHANNEL_TYPE_UNRELIABLE_UNORDERED;
   yojimboConfig.channel[1].type = yojimbo::CHANNEL_TYPE_RELIABLE_ORDERED;
-  yojimboConfig.timeout = Config::Instance().networkConfig.timeout.GetVal();
+  yojimboConfig.timeout = CONFIG_VAL(networkConfig.timeout);
 
   privateKey = new (MemoryManager::AllocOnStack(
-      sizeof(U8) * Config::Instance().networkConfig.keyBytes.GetVal()))
-      U8[Config::Instance().networkConfig.keyBytes.GetVal()];
+      sizeof(U8) * CONFIG_VAL(networkConfig.keyBytes)))
+      U8[CONFIG_VAL(networkConfig.keyBytes)];
   // TODO(Caleb): Need to do something more insightful with the private key
   // than all 0s
-  memset(privateKey, 0, Config::Instance().networkConfig.keyBytes.GetVal());
+  memset(privateKey, 0, CONFIG_VAL(networkConfig.keyBytes));
 
   clientId = 0;
   yojimbo::random_bytes(reinterpret_cast<U8*>(&clientId), 8);
@@ -56,13 +53,13 @@ void NetworkingModule::StartUp() {
   void* memPointer =
       MemoryManager::AllocOnStack(yojimboConfig.clientMemory + 1_MB);
   clientAllocator = new (MemoryManager::AllocOnStack(sizeof(NetworkAllocator)))
-      NetworkAllocator(memPointer, (Size)yojimboConfig.clientMemory + 1_MB);
+      NetworkAllocator(memPointer,
+                       static_cast<Size>(yojimboConfig.clientMemory) + 1_MB);
 
-  if (Config::Instance().networkConfig.runServer.GetVal()) {
-    Size serverMemorySize =
-        (yojimboConfig.serverPerClientMemory +
-         yojimboConfig.serverGlobalMemory) *
-        (Config::Instance().networkConfig.maxClients.GetVal() + 1);
+  if (CONFIG_VAL(networkConfig.runServer)) {
+    Size serverMemorySize = (yojimboConfig.serverPerClientMemory +
+                             yojimboConfig.serverGlobalMemory) *
+                            (CONFIG_VAL(networkConfig.maxClients) + 1);
 
     memPointer = MemoryManager::AllocOnStack(serverMemorySize);
     serverAllocator =
@@ -73,14 +70,13 @@ void NetworkingModule::StartUp() {
   client = new (MemoryManager::AllocOnStack(sizeof(yojimbo::Client)))
       yojimbo::Client(
           clientAllocator,
-          yojimbo::Address(
-              Config::Instance().networkConfig.defaultClientIP.GetVal().c_str(),
-              Config::Instance().networkConfig.clientPort.GetVal()),
+          yojimbo::Address(CONFIG_VAL(networkConfig.defaultClientIP).c_str(),
+                           CONFIG_VAL(networkConfig.clientPort)),
           yojimboConfig, NetworkAdapter, clock.GetElapsedTime());
 
   clientSendBuffer =
       MemoryManager::NewArrOnFreeList<RingBuffer<yojimbo::Message*>>(
-          Config::Instance().networkConfig.clientQueueSize.GetVal());
+          CONFIG_VAL(networkConfig.clientQueueSize));
 }
 
 void NetworkingModule::Update(float deltaTime) {
@@ -116,12 +112,12 @@ void NetworkingModule::Update(float deltaTime) {
 void NetworkingModule::ShutDown() {
   try {
     Disconnect();
-  } catch (std::exception e) {
+  } catch (std::exception& e) {
   }
 
   try {
     CloseServer();
-  } catch (std::exception e) {
+  } catch (std::exception& e) {
   }
 
   ShutdownYojimbo();
@@ -267,17 +263,17 @@ void NetworkingModule::CreateServer(const char* address, int port) {
   }
   serverSendBufferArray =
       MemoryManager::NewArrOnFreeList<RingBuffer<yojimbo::Message*>>(
-          Config::Instance().networkConfig.maxClients.GetVal());
+          CONFIG_VAL(networkConfig.maxClients));
   for (int i = 0; i < CONFIG_VAL(networkConfig.maxClients); ++i) {
     serverSendBufferArray[i] = RingBuffer<yojimbo::Message*>(
-        Config::Instance().networkConfig.serverQueueSizePerClient.GetVal());
+        CONFIG_VAL(networkConfig.serverQueueSizePerClient));
   }
 
   serverAddress = yojimbo::Address(address, port);
   server = MemoryManager::NewOnFreeList<yojimbo::Server>(
       serverAllocator, privateKey, serverAddress, yojimboConfig,
       &NetworkingModule::NetworkAdapter, clock.GetElapsedTime());
-  server->Start(Config::Instance().networkConfig.maxClients.GetVal());
+  server->Start(CONFIG_VAL(networkConfig.maxClients));
 
   if (!server->IsRunning()) {
     throw std::exception(

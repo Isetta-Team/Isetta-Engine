@@ -244,21 +244,33 @@ void W10NetworkManager::Awake() {
                                                                   message);
       });
 
-  if (CONFIG_VAL(networkConfig.runServer)) {
-    Isetta::NetworkManager::Instance().StartServer(
-        CONFIG_VAL(networkConfig.defaultServerIP).c_str());
-  }
+  // Networking connection
 
-  LOG_INFO(Isetta::Debug::Channel::Networking, "Server running: %d",
-           Isetta::NetworkManager::Instance().ServerIsRunning());
+  Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::NUM1, []() {
+    Isetta::NetworkManager::Instance().StartHost(
+        CONFIG_VAL(networkConfig.defaultServerIP));
+  });
 
-  if (CONFIG_VAL(networkConfig.connectToServer)) {
+  Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::NUM2, []() {
     Isetta::NetworkManager::Instance().StartClient(
-        CONFIG_VAL(networkConfig.defaultServerIP).c_str(), [](bool b) {
-          LOG_INFO(Isetta::Debug::Channel::Networking,
-                   "Client connection state: %d", b);
-        });
-  }
+        CONFIG_VAL(networkConfig.defaultServerIP));
+  });
+
+  // if (CONFIG_VAL(networkConfig.runServer)) {
+    // Isetta::NetworkManager::Instance().StartServer(
+        // CONFIG_VAL(networkConfig.defaultServerIP).c_str());
+  // }
+
+  // LOG_INFO(Isetta::Debug::Channel::Networking, "Server running: %d",
+           // Isetta::NetworkManager::Instance().ServerIsRunning());
+
+  // if (CONFIG_VAL(networkConfig.connectToServer)) {
+    // Isetta::NetworkManager::Instance().StartClient(
+        // CONFIG_VAL(networkConfig.defaultServerIP).c_str(), [](bool b) {
+          // LOG_INFO(Isetta::Debug::Channel::Networking,
+                   // "Client connection state: %d", b);
+        // });
+  // }
 
   Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::R, []() {
     Isetta::Events::Instance().RaiseImmediateEvent(
