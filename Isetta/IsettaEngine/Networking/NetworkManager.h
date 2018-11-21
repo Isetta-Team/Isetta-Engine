@@ -94,6 +94,7 @@ class ISETTA_API_DECLARE NetworkManager {
    * \param serverIP Address of the server.
    */
   void StartServer(const char* serverIP) const;
+  void StartServer(const std::string& serverIP) const;
   /**
    * \brief Closes the local Server object and deallocates its allocated memory.
    *
@@ -109,11 +110,14 @@ class ISETTA_API_DECLARE NetworkManager {
    */
   void StartClient(const char* serverIP,
                    const Action<bool>& onStarted = nullptr) const;
+  void StartClient(const std::string& serverIP,
+                   const Action<bool>& onStarted = nullptr) const;
   /**
    * \brief Disconnects the local Client from the server it is connected to.
    */
   void StopClient() const;
   void StartHost(const char* hostIP) const;
+  void StartHost(const std::string& hostIP) const;
   void StopHost() const;
 
   bool LocalClientIsConnected() const;

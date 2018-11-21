@@ -11,7 +11,7 @@
 
 namespace Isetta {
 
-NetworkManager::NetworkManager() : networkIds(1){}
+NetworkManager::NetworkManager() : networkIds(1) {}
 
 NetworkManager& NetworkManager::Instance() {
   static NetworkManager instance;
@@ -51,11 +51,20 @@ void NetworkManager::StartServer(const char* serverIP) const {
   networkingModule->CreateServer(serverIP, GetServerPort());
 }
 
+void NetworkManager::StartServer(const std::string& serverIP) const {
+  StartServer(serverIP.c_str());
+}
+
 void NetworkManager::StopServer() const { networkingModule->CloseServer(); }
 
 void NetworkManager::StartClient(const char* serverIP,
                                  const Action<bool>& onStarted) const {
   networkingModule->Connect(serverIP, GetServerPort(), onStarted);
+}
+
+void NetworkManager::StartClient(const std::string& serverIP,
+                                 const Action<bool>& onStarted) const {
+  StartClient(serverIP.c_str(), onStarted);
 }
 
 void NetworkManager::StopClient() const { networkingModule->Disconnect(); }
@@ -64,6 +73,10 @@ void NetworkManager::StartHost(const char* hostIP) const {
   networkingModule->CreateServer(hostIP, GetServerPort());
   networkingModule->Connect(hostIP, GetServerPort());
   LOG_INFO(Debug::Channel::Networking, "Host Started on %s", hostIP);
+}
+
+void NetworkManager::StartHost(const std::string& hostIP) const {
+  StartHost(hostIP.c_str());
 }
 
 void NetworkManager::StopHost() const {

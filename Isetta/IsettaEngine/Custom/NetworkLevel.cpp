@@ -9,6 +9,7 @@
 #include "Core/Config/Config.h"
 #include "Core/Math/Math.h"
 #include "Custom/KeyTransform.h"
+#include "EscapeExit.h"
 #include "Graphics/AnimationComponent.h"
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
@@ -16,7 +17,6 @@
 #include "Networking/NetworkId.h"
 #include "Networking/NetworkTransform.h"
 #include "Scene/Entity.h"
-#include "EscapeExit.h"
 
 using namespace Isetta;
 
@@ -207,16 +207,13 @@ void NetworkLevel::OnLevelLoad() {
   // Networking preparation
   RegisterExampleMessageFunctions();
 
-  if (CONFIG_VAL(networkConfig.runServer)) {
-    NetworkManager::Instance().StartServer(
-        CONFIG_VAL(networkConfig.defaultServerIP).c_str());
-  }
-
-  if (CONFIG_VAL(networkConfig.connectToServer)) {
+  if (CONFIG_VAL(networkConfig.runServer) &&
+      CONFIG_VAL(networkConfig.connectToServer)) {
+    NetworkManager::Instance().StartHost(
+        CONFIG_VAL(networkConfig.defaultServerIP));
+  } else {
     NetworkManager::Instance().StartClient(
-        CONFIG_VAL(networkConfig.defaultServerIP).c_str(), [](bool b) {
-          LOG(Debug::Channel::Networking, "Client connection state: %d", b);
-        });
+        CONFIG_VAL(networkConfig.defaultServerIP));
   }
 
   // Spawn across network
