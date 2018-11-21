@@ -36,7 +36,8 @@ public:
 
  bool isTrigger = false;
  Math::Vector3 center;
-Color debugColor = Color::green;
+ Color debugColor = Color::green;
+ float mass = 1;
 
 // TODO(Jacob) virtual Math::Vector3 ClosestPoint(Math::Vector3 point) = 0;
 // TODO(Jacob) Math::Vector3 ClosestPointOnAABB(Math::Vector3 point);

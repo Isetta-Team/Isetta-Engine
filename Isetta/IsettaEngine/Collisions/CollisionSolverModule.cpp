@@ -176,17 +176,22 @@ void CollisionSolverModule::Update() {
           static_cast<int>(c1Static) + 2 * static_cast<int>(c2Static);
 
       switch (staticSwitch) {
-        case 0:  // Neither collider is static
-          collider1->transform->TranslateWorld(response * .5);
-          collider2->transform->TranslateWorld(-response * .5);
+        case 0: {  // Neither collider is static
+        
+          float massRatio = collider2->mass / (collider1->mass + collider2->mass);
+
+          collider1->transform->TranslateWorld(response * massRatio);
+          collider2->transform->TranslateWorld(-response * (1 - massRatio));
 #if _EDITOR
           DebugDraw::Line(collision1.hitPoint,
-                          collision1.hitPoint + response * .5, Color::cyan, 3,
+                          collision1.hitPoint + response * massRatio, Color::cyan, 3,
                           .1);
           DebugDraw::Line(collision2.hitPoint,
-                          collision2.hitPoint - response * .5, Color::cyan, 3,
+                          collision2.hitPoint - response * (1 - massRatio),
+                          Color::cyan, 3,
                           .1);
 #endif
+       }
           break;
 
         case 1:  // Collider 1 is static

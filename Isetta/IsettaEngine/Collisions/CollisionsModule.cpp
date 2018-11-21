@@ -92,8 +92,7 @@ void CollisionsModule::Update(float deltaTime) {
   }
 }
 
-void CollisionsModule::ShutDown() {
-}
+void CollisionsModule::ShutDown() {}
 
 Array<Collider *> CollisionsModule::GetPossibleColliders(
     Collider *collider) const {
@@ -213,10 +212,12 @@ bool CollisionsModule::Intersection(const BoxCollider &box,
   PROFILE
   Math::Matrix4 rot, scale;
   float radiusScale = capsule.GetWorldCapsule(&rot, &scale);
-  Math::Vector3 dir = (Math::Vector3)(
-      rot * scale *
-      Math::Matrix4::Scale(Math::Vector3{capsule.height - 2 * capsule.radius}) *
-      Math::Vector4{0, 1, 0, 0}) * .5;
+  Math::Vector3 dir =
+      (Math::Vector3)(rot * scale *
+                      Math::Matrix4::Scale(
+                          Math::Vector3{capsule.height - 2 * capsule.radius}) *
+                      Math::Vector4{0, 1, 0, 0}) *
+      .5;
   Math::Vector3 p0 = capsule.GetWorldCenter() - dir;
   Math::Vector3 p1 = capsule.GetWorldCenter() + dir;
   return SqDistSegmentOBB(p0, p1, box) <=
@@ -252,10 +253,12 @@ bool CollisionsModule::Intersection(const SphereCollider &sphere,
   PROFILE
   Math::Matrix4 rot, scale;
   float radiusScale = capsule.GetWorldCapsule(&rot, &scale);
-  Math::Vector3 dir = (Math::Vector3)(
-      rot * scale *
-      Math::Matrix4::Scale(Math::Vector3{capsule.height - 2 * capsule.radius}) *
-      Math::Vector4{0, 1, 0, 0}) * .5;
+  Math::Vector3 dir =
+      (Math::Vector3)(rot * scale *
+                      Math::Matrix4::Scale(
+                          Math::Vector3{capsule.height - 2 * capsule.radius}) *
+                      Math::Vector4{0, 1, 0, 0}) *
+      .5;
   Math::Vector3 p0 = capsule.GetWorldCenter() - dir;
   Math::Vector3 p1 = capsule.GetWorldCenter() + dir;
   float distSq = SqDistPointSegment(p0, p1, sphere.GetWorldCenter());
@@ -268,14 +271,18 @@ bool CollisionsModule::Intersection(const CapsuleCollider &a,
   Math::Matrix4 aRot, aScale, bRot, bScale;
   float arScale = a.GetWorldCapsule(&aRot, &aScale);
   float brScale = b.GetWorldCapsule(&bRot, &bScale);
-  Math::Vector3 aDir = (Math::Vector3)(
-      aRot * aScale *
-      Math::Matrix4::Scale(Math::Vector3{a.height - 2 * a.radius}) *
-      Math::Vector4{0, 1, 0, 0});
-  Math::Vector3 bDir = (Math::Vector3)(
-      bRot * bScale *
-      Math::Matrix4::Scale(Math::Vector3{b.height - 2 * b.radius}) *
-      Math::Vector4{0, 1, 0, 0});
+  Math::Vector3 aDir =
+      (Math::Vector3)(
+          aRot * aScale *
+          Math::Matrix4::Scale(Math::Vector3{a.height - 2 * a.radius}) *
+          Math::Vector4{0, 1, 0, 0}) *
+      .5;
+  Math::Vector3 bDir =
+      (Math::Vector3)(
+          bRot * bScale *
+          Math::Matrix4::Scale(Math::Vector3{b.height - 2 * b.radius}) *
+          Math::Vector4{0, 1, 0, 0}) *
+      .5;
   Math::Vector3 aP0 = a.GetWorldCenter() - aDir;
   Math::Vector3 aP1 = a.GetWorldCenter() + aDir;
   Math::Vector3 bP0 = b.GetWorldCenter() - bDir;
