@@ -6,11 +6,9 @@
 #include "Components/Editor/EditorComponent.h"
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
-#include "Core/Color.h"
 #include "Core/Config/Config.h"
 #include "Core/Math/Math.h"
 #include "Custom/KeyTransform.h"
-#include "Custom/OscillateMove.h"
 #include "Graphics/AnimationComponent.h"
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
@@ -89,7 +87,7 @@ void RegisterExampleMessageFunctions() {
               netId->clientAuthorityId = spawnMessage->clientAuthorityId;
               spawnedEntities.push_back(e);
 
-              // Zomble
+              // Zombie
               e->transform->SetLocalScale(Math::Vector3::one * .01);
               MeshComponent* mesh = e->AddComponent<MeshComponent, true>(
                   "Zombie/Zombie.scene.xml");
@@ -208,18 +206,19 @@ void NetworkLevel::OnLevelLoad() {
   // Networking preparation
   RegisterExampleMessageFunctions();
 
-  if (Config::Instance().networkConfig.runServer.GetVal()) {
+  if (CONFIG_VAL(networkConfig.runServer)) {
     NetworkManager::Instance().CreateServer(
-        Config::Instance().networkConfig.defaultServerIP.GetVal().c_str());
+        CONFIG_VAL(networkConfig.defaultServerIP).c_str());
   }
-  if (Config::Instance().networkConfig.connectToServer.GetVal()) {
+
+  if (CONFIG_VAL(networkConfig.connectToServer)) {
     NetworkManager::Instance().ConnectToServer(
-        Config::Instance().networkConfig.defaultServerIP.GetVal().c_str(),
-        [](bool b) {
+        CONFIG_VAL(networkConfig.defaultServerIP).c_str(), [](bool b) {
           LOG(Debug::Channel::Networking, "Client connection state: %d", b);
         });
   }
 
+  // Spawn across network
   Input::RegisterKeyPressCallback(KeyCode::Y, []() {
     if (NetworkManager::Instance().LocalClientIsConnected()) {
       SpawnMessage* m =
@@ -230,6 +229,8 @@ void NetworkLevel::OnLevelLoad() {
       ++spawnCounter;
     }
   });
+
+  // Despawn across network, only the one who spawned it can despawn it
   Input::RegisterKeyPressCallback(KeyCode::H, []() {
     if (NetworkManager::Instance().LocalClientIsConnected()) {
       if (despawnCounter > spawnCounter) {
@@ -243,6 +244,8 @@ void NetworkLevel::OnLevelLoad() {
       ++despawnCounter;
     }
   });
+
+  // Spawn one and set its parent to the latest one spawned by this client
   Input::RegisterKeyPressCallback(KeyCode::U, []() {
     if (NetworkManager::Instance().LocalClientIsConnected()) {
       SpawnMessage* m =
@@ -253,6 +256,8 @@ void NetworkLevel::OnLevelLoad() {
       ++spawnCounter;
     }
   });
+
+  // Parent to the previously spawned one
   Input::RegisterKeyPressCallback(KeyCode::I, []() {
     if (NetworkManager::Instance().LocalClientIsConnected()) {
       auto it = spawnedEntities.end();
@@ -263,6 +268,8 @@ void NetworkLevel::OnLevelLoad() {
           ->SetNetworkedParent((*it)->GetComponent<NetworkId>()->id);
     }
   });
+
+  // Unparent
   Input::RegisterKeyPressCallback(KeyCode::K, []() {
     if (NetworkManager::Instance().LocalClientIsConnected()) {
       spawnedEntities.back()
@@ -281,6 +288,7 @@ void NetworkLevel::OnLevelLoad() {
       NetworkManager::Instance().SendMessageFromClient(handleMessage);
     }
   });
+
   Input::RegisterKeyPressCallback(KeyCode::O, []() {
     if (NetworkManager::Instance().LocalClientIsConnected()) {
       HandleMessage* handleMessage =
@@ -289,6 +297,7 @@ void NetworkLevel::OnLevelLoad() {
       NetworkManager::Instance().SendMessageFromClient(handleMessage);
     }
   });
+
   Input::RegisterMousePressCallback(MouseButtonCode::MOUSE_LEFT, []() {
     if (NetworkManager::Instance().LocalClientIsConnected()) {
       HandleMessage* handleMessage =
@@ -300,15 +309,15 @@ void NetworkLevel::OnLevelLoad() {
 
   // Camera
   Entity* cameraEntity{Entity::CreateEntity("Camera")};
-      cameraEntity->AddComponent<CameraComponent>();
+  cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
   cameraEntity->AddComponent<FlyController>();
 
   // Light
   Entity* lightEntity{Entity::CreateEntity("Light")};
-  lightEntity->AddComponent<LightComponent>(
-      "materials/light.material.xml", "LIGHT_1");
+  lightEntity->AddComponent<LightComponent>("materials/light.material.xml",
+                                            "LIGHT_1");
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
   lightEntity->AddComponent<GridComponent>();

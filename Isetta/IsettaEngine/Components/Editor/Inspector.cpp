@@ -17,6 +17,12 @@ Inspector::Inspector(std::string title, bool isOpen, Transform *const target)
 void Inspector::GuiUpdate() {
   if (!target) return;
 
+  // Happens when selected entity is destroyed
+  if (target->entity == nullptr) {
+    target = nullptr;
+    return;
+  }
+
   GUI::Window(
       rectTransform, title,
       [&]() {
@@ -55,6 +61,9 @@ void Inspector::GuiUpdate() {
         target->SetLocalScale(tmp);
         rect.rect.y += 25;
 
+    if (target->GetParent() == nullptr) {
+      __debugbreak();
+    }
         GUI::Text(rect, "Parent: " + target->GetParent()->GetName());
         rect.rect.y += 20;
 

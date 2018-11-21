@@ -37,6 +37,7 @@ void* PoolAllocator::Get() {
 }
 
 void PoolAllocator::Free(void* mem) {
+  memset(mem, 0x0, chunkSize);
   PoolNode* newHead = new (mem) PoolNode{head};
   head = newHead;
 }
