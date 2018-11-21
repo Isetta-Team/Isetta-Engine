@@ -214,8 +214,7 @@ T* MemoryManager::NewOnFreeList(Args&&... argList) {
 
 template <typename T>
 void MemoryManager::DeleteOnFreeList(T* ptrToDelete) {
-  ptrToDelete->~T();
-  FreeOnFreeList(ptrToDelete);
+  GetInstance()->freeListAllocator.Delete(ptrToDelete);
 }
 
 template <typename T>

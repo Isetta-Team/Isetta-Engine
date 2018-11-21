@@ -2,10 +2,12 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include <vector>
+#include "Core/Debug/Assert.h"
 #include "Core/IsettaAlias.h"
 #include "ISETTA_API.h"
 #include "MemUtil.h"
-#include <vector>
+#include "SID/sid.h"
 
 namespace Isetta {
 /*
@@ -30,9 +32,10 @@ class ISETTA_API FreeListAllocator {
   void Free(void* memPtr);
   void* Realloc(void* memPtr, Size newSize, U8 alignment);
 
-  template <typename T, typename... args>
-  T* New(args... argList);
-
+  template <typename T, typename... Args>
+  T* New(Args... args);
+  template <typename T>
+  void Delete(T* t);
   template <typename T>
   T* NewArr(Size length, U8 alignment);
 
@@ -70,22 +73,30 @@ class ISETTA_API FreeListAllocator {
 #if _DEBUG
   Size totalSize{0};
   Size sizeUsed{0};
+  using Allocations = std::pair<std::string, U16>;
+  std::unordered_map<StringId, Allocations> monitor;
   void Print() const;
 #endif
 
   friend class MemoryManager;
 };
 
-template <typename T, typename... args>
-T* FreeListAllocator::New(args... argList) {
-  return new (Alloc(sizeof(T), MemUtil::ALIGNMENT)) T(argList...);
+template <typename T, typename... Args>
+T* FreeListAllocator::New(Args... args) {
+  return new (Alloc(sizeof(T), MemUtil::ALIGNMENT)) T(args...);
+}
+
+template <typename T>
+void FreeListAllocator::Delete(T* t) {
+  t->~T();
+  Free(t);
 }
 
 template <typename T>
 T* FreeListAllocator::NewArr(Size length, const U8 alignment) {
   void* alloc = Alloc(sizeof(T) * length, alignment);
   char* allocAddress = static_cast<char*>(alloc);
-  for (int i = 0; i < length; ++i) new (allocAddress + i * sizeof(T)) T;
+  for (Size i = 0; i < length; ++i) new (allocAddress + i * sizeof(T)) T;
   return static_cast<T*>(alloc);
 }
 
