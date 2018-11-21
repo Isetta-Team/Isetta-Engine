@@ -10,6 +10,7 @@
 #include "Custom/IsettaCore.h"
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
+#include "Custom/EscapeExit.h"
 
 namespace Isetta {
 
@@ -29,6 +30,7 @@ void MeshAnimLevel::OnLevelLoad() {
   Entity *grid{Entity::CreateEntity("Grid")};
   grid->AddComponent<GridComponent>();
   grid->AddComponent<EditorComponent>();
+  grid->AddComponent<EscapeExit>();
 
   Entity *zombie{Entity::CreateEntity("Zombie")};
   MeshComponent *mesh =

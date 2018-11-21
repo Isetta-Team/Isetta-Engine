@@ -57,10 +57,9 @@ void Level::StartComponents() {
 Entity* Level::AddEntity(std::string name, Entity* parent, bool entityStatic) {
   PROFILE
   Entity* entity = pool.Get(name, entityStatic);
+  entity->transform->SetParent(parent != nullptr ? parent->transform
+                                                 : levelRoot->transform);
   entities.push_back(entity);
-  if (parent != nullptr) {
-    entity->transform->SetParent(parent->transform);
-  }
   return entity;
 }
 

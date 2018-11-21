@@ -47,8 +47,7 @@ class ISETTA_API_DECLARE Entity {
   void SetAttribute(EntityAttributes attr, bool value);
   bool GetAttribute(EntityAttributes attr) const;
 
-  Entity(const std::string &name);
-  Entity(const std::string &name, const bool &entityStatic);
+  Entity(const std::string& name, bool entityStatic = false);
   friend Level;
   friend class MemoryManager;
   friend class TemplatePoolAllocator<Entity>;
