@@ -67,6 +67,7 @@ void CollisionsLevel::OnLevelLoad() {
   staticCol[0] = AddEntity("box-collider", true);
   staticCol[0]->SetTransform(Math::Vector3{0, 1, 0}, Math::Vector3{0, 0, 0});
   BoxCollider* bCol = staticCol[0]->AddComponent<BoxCollider>();
+  bCol->isTrigger = true;
   CollisionHandler* handler = staticCol[0]->AddComponent<CollisionHandler>();
   handler->RegisterOnEnter([](Collider* const col) {
     LOG("collided with " + col->entity->GetName());
@@ -76,13 +77,17 @@ void CollisionsLevel::OnLevelLoad() {
   staticCol[1] = AddEntity("sphere-collider", true);
   staticCol[1]->SetTransform(Math::Vector3{0, 1, -4});
   SphereCollider* sCol = staticCol[1]->AddComponent<SphereCollider>();
+  sCol->isTrigger = true;
   Collider* c = staticCol[1]->GetComponent<Collider>();
+  staticCol[1]->AddComponent<CollisionHandler>();
+  staticCol[1]->AddComponent<DebugCollision>();
 
   staticCol[2] = AddEntity("capsule-collider", true);
   staticCol[2]->SetTransform(Math::Vector3{0, 1, -8});
   CapsuleCollider* cCol = staticCol[2]->AddComponent<CapsuleCollider>(
-      false, Math::Vector3::zero, 0.5, 2, CapsuleCollider::Direction::X_AXIS);
-  // staticCol[2]->AddComponent<DebugCollision>();
+      true, Math::Vector3::zero, 0.5, 2, CapsuleCollider::Direction::X_AXIS);
+  staticCol[2]->AddComponent<CollisionHandler>();
+  staticCol[2]->AddComponent<DebugCollision>();
 
   //// DYNAMIC
   for (int i = 0; i < COLLIDERS; i++) {
@@ -96,12 +101,18 @@ void CollisionsLevel::OnLevelLoad() {
     Entity* box{AddEntity("box-collider" + i)};
     box->transform->SetParent(oscillator->transform);
     box->transform->SetLocalPos(-2 * Math::Vector3::left);
-    box->AddComponent<BoxCollider>();
+    c = box->AddComponent<BoxCollider>();
+    c->isTrigger = true;
+    box->AddComponent<CollisionHandler>();
+    box->AddComponent<DebugCollision>();
 
     Entity* sphere{AddEntity("sphere-collider" + i)};
     sphere->transform->SetParent(oscillator->transform);
     sphere->transform->SetLocalPos(Math::Vector3::zero);
-    sphere->AddComponent<SphereCollider>();
+    c = sphere->AddComponent<SphereCollider>();
+    c->isTrigger = true;
+    sphere->AddComponent<CollisionHandler>();
+    sphere->AddComponent<DebugCollision>();
 
     for (int j = 0; j < 3; j++) {
       Entity* capsule{AddEntity("capsule-collider" + i + j)};
@@ -110,6 +121,9 @@ void CollisionsLevel::OnLevelLoad() {
       capsule->transform->SetLocalRot(-30 * Math::Vector3::up);
       CapsuleCollider* col = capsule->AddComponent<CapsuleCollider>(
           0.5, 2, static_cast<CapsuleCollider::Direction>(j));
+      col->isTrigger = true;
+      capsule->AddComponent<CollisionHandler>();
+      capsule->AddComponent<DebugCollision>();
     }
 
     Input::RegisterKeyPressCallback(KeyCode::ESCAPE,
