@@ -855,6 +855,9 @@
     <ClInclude Include="Custom\GameMgtLevel\GameMgtLevel.h">
       <Filter>Custom\GameMgtLevel</Filter>
     </ClInclude>
+    <ClInclude Include="Core\DataStructures\Delegate.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

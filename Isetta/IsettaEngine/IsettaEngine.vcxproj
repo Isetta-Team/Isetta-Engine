@@ -279,6 +279,7 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClInclude Include="Components\Editor\EditorComponent.h" />
     <ClInclude Include="Components\Editor\Hierarchy.h" />
     <ClInclude Include="Core\DataStructures\Array.h" />
+    <ClInclude Include="Core\DataStructures\Delegate.h" />
     <ClInclude Include="Core\DataStructures\HandleBin.h" />
     <ClInclude Include="Core\DataStructures\PriorityQueue.h" />
     <ClInclude Include="Custom\AILevel\AITestAgent.h" />

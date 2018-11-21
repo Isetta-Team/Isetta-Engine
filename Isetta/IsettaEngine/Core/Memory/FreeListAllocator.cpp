@@ -200,9 +200,9 @@ void FreeListAllocator::Print() const {
   static int i = interval;
   ++i;
   if (i > interval) {
-    LOG_INFO(Debug::Channel::Memory, "Freelist usage: %I64u / %I64u = %.3f %%",
-             sizeUsed, totalSize,
-             static_cast<float>(sizeUsed) / totalSize * 100);
+    // LOG_INFO(Debug::Channel::Memory, "Freelist usage: %I64u / %I64u = %.3f %%",
+    //          sizeUsed, totalSize,
+    //          static_cast<float>(sizeUsed) / totalSize * 100);
     i = 0;
   }
 }

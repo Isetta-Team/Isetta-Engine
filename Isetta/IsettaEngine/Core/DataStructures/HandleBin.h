@@ -25,6 +25,7 @@ class ISETTA_API HandleBin {
   U64 GetHandle();
   void ReturnHandle(U64 handle);
   bool RemoveHandle(U64 handle);
+  void Clear();
 };
 
 }  // namespace Isetta
