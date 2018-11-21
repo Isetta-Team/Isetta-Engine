@@ -3,9 +3,9 @@
  */
 #include "Graphics/LightComponent.h"
 
-#include <utility>
 #include "Core/Config/Config.h"
 #include "Core/Math/Vector4.h"
+#include "Scene/Entity.h"
 #include "Scene/Transform.h"
 #include "Util.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
@@ -14,13 +14,12 @@ namespace Isetta {
 
 RenderModule* LightComponent::renderModule{nullptr};
 
-LightComponent::LightComponent(std::string_view resourceName,
-                               std::string_view lightName)
-    : name{std::move(lightName)} {
+LightComponent::LightComponent() : name{entity->GetEntityIdString()} {
   ASSERT(renderModule != nullptr);
   renderModule->lightComponents.push_back(this);
 
-  renderResource = LoadResourceFromFile(resourceName);
+  renderResource = LoadResourceFromFile(
+      Config::Instance().lightConfig.lightMaterial.GetVal());
 }
 
 H3DRes LightComponent::LoadResourceFromFile(std::string_view resourceName) {

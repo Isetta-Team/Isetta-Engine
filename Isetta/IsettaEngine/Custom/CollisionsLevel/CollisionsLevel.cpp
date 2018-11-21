@@ -41,8 +41,7 @@ void CollisionsLevel::OnLevelLoad() {
 
   // Light
   Entity* lightEntity{Entity::CreateEntity("Light")};
-  lightEntity->AddComponent<LightComponent>("materials/light.material.xml",
-                                            "LIGHT_1");
+  lightEntity->AddComponent<LightComponent>();
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
   // lightComp->SetProperty<LightProperty::RADIUS>(2500);

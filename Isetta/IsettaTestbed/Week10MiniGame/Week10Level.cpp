@@ -19,8 +19,7 @@ void Week10Level::OnLevelLoad() {
   cameraEntity->SetTransform(Math::Vector3{0, 0.25f, 3.0f});
 
   Entity* lightEntity{Entity::CreateEntity("Light")};
-  lightEntity->AddComponent<LightComponent>(
-      "materials/light.material.xml", "LIGHT_1");
+  lightEntity->AddComponent<LightComponent>();
   lightEntity->SetTransform(Math::Vector3{0, 6, 3.5f}, Math::Vector3{-30, 0, 0},
                             Math::Vector3::one);
 

@@ -27,8 +27,7 @@ void Level1::OnLevelLoad() {
   cameraEntity->AddComponent<AudioListener>();
 
   Entity* lightEntity{Entity::CreateEntity("Light")};
-  lightEntity->AddComponent<LightComponent>("materials/light.material.xml",
-                                            "LIGHT_1");
+  lightEntity->AddComponent<LightComponent>();
   lightEntity->SetTransform(Math::Vector3{0, 200, 600},
                             Math::Vector3{-30, 0, 0});
 

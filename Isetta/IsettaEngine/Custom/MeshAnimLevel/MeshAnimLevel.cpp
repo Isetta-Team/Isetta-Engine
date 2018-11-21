@@ -22,8 +22,7 @@ void MeshAnimLevel::OnLevelLoad() {
   cameraEntity->AddComponent<FlyController>();
 
   Entity *lightEntity{Entity::CreateEntity("Light")};
-  lightEntity->AddComponent<LightComponent>("materials/light.material.xml",
-                                            "LIGHT_1");
+  lightEntity->AddComponent<LightComponent>();
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
 
