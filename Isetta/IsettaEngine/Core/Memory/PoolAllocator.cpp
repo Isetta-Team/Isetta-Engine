@@ -21,7 +21,7 @@ PoolAllocator::PoolAllocator(const Size chunkSize, const Size count,
 PoolAllocator::~PoolAllocator() {
   MemoryManager::FreeOnFreeList(memHead);
   for (void* memory : additionalMemory) {
-    std::free(memory);
+    MemoryManager::FreeOnFreeList(memory);
   }
 }
 
@@ -32,7 +32,7 @@ void* PoolAllocator::Get() {
 
   void* ret = head;
   head = head->next;
-  // memset(ret, 0x0, chunkSize);
+  memset(ret, 0x0, sizeof(PoolNode)); // rest is set during free process
   return ret;
 }
 
@@ -55,7 +55,7 @@ void PoolAllocator::InitializeNodes(void* memHead, const Size count) {
 }
 
 void PoolAllocator::Expand() {
-  void* newMemHead = std::malloc(chunkSize * increment);
+  void* newMemHead = MemoryManager::AllocOnFreeList(chunkSize * increment);
   InitializeNodes(newMemHead, increment);
   additionalMemory.PushBack(newMemHead);
   capacity += increment;

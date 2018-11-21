@@ -16,6 +16,7 @@
 #include "Networking/NetworkId.h"
 #include "Networking/NetworkTransform.h"
 #include "Scene/Entity.h"
+#include "EscapeExit.h"
 
 using namespace Isetta;
 
@@ -81,7 +82,7 @@ void RegisterExampleMessageFunctions() {
                 spawnMessage->netId);
             if (!entity) {
               Entity* e = Entity::CreateEntity(
-                  Util::StrFormat("NetworkEntity%d", spawnMessage->netId));
+                  Util::StrFormat("NetworkEntity (%d)", spawnMessage->netId));
               NetworkId* netId =
                   e->AddComponent<NetworkId>(spawnMessage->netId);
               netId->clientAuthorityId = spawnMessage->clientAuthorityId;
@@ -122,7 +123,7 @@ void RegisterExampleMessageFunctions() {
               spawnMessage->netId = netId->id;
               spawnMessage->clientAuthorityId = clientIdx;
 
-              // Zomble
+              // Zombie
               e->transform->SetLocalScale(Math::Vector3::one * .01);
               MeshComponent* mesh = e->AddComponent<MeshComponent, true>(
                   "Zombie/Zombie.scene.xml");
@@ -322,4 +323,5 @@ void NetworkLevel::OnLevelLoad() {
                             Math::Vector3::one);
   lightEntity->AddComponent<GridComponent>();
   lightEntity->AddComponent<EditorComponent>();
+  lightEntity->AddComponent<EscapeExit>();
 }

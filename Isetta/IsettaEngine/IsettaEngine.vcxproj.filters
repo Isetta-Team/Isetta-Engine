@@ -364,6 +364,9 @@
     <ClCompile Include="Custom\SkeletonLevel\SkeletonLevel.cpp">
       <Filter>Custom\SkeletonLevel</Filter>
     </ClCompile>
+    <ClCompile Include="Custom\GameMgtLevel\GameMgtLevel.cpp">
+      <Filter>Custom\GameMgtLevel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -479,6 +482,9 @@
     </Filter>
     <Filter Include="Custom\SkeletonLevel">
       <UniqueIdentifier>{33133f07-dc65-44ed-bb04-78b420645ffb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\GameMgtLevel">
+      <UniqueIdentifier>{a7ac400a-86be-4a10-b47d-bb0a5d18a9da}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -845,6 +851,9 @@
     </ClInclude>
     <ClInclude Include="Custom\SkeletonLevel\SkeletonLevel.h">
       <Filter>Custom\SkeletonLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\GameMgtLevel\GameMgtLevel.h">
+      <Filter>Custom\GameMgtLevel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

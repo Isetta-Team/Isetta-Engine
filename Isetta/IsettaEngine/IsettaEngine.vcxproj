@@ -194,6 +194,7 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClCompile Include="Custom\DebugCollision.cpp" />
     <ClCompile Include="Custom\EventTestLevel\EventSenderComponent.cpp" />
     <ClCompile Include="Custom\EventTestLevel\EventTestLevel.cpp" />
+    <ClCompile Include="Custom\GameMgtLevel\GameMgtLevel.cpp" />
     <ClCompile Include="Custom\MeshAnimLevel\MeshAnimLevel.cpp" />
     <ClCompile Include="Custom\KeyTransform.cpp" />
     <ClCompile Include="Custom\LoadNextLevel.cpp" />
@@ -337,6 +338,7 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClInclude Include="Custom\EventTestLevel\EventListenerComponent.h" />
     <ClInclude Include="Custom\EventTestLevel\EventSenderComponent.h" />
     <ClInclude Include="Custom\EventTestLevel\EventTestLevel.h" />
+    <ClInclude Include="Custom\GameMgtLevel\GameMgtLevel.h" />
     <ClInclude Include="Custom\MeshAnimLevel\MeshAnimLevel.h" />
     <ClInclude Include="Custom\IsettaCore.h" />
     <ClInclude Include="Custom\KeyTransform.h" />

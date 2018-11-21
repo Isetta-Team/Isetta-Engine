@@ -4,15 +4,15 @@
 #include "Components/Editor/Inspector.h"
 
 #include "Core/Debug/DebugDraw.h"
-#include "Core/Math/Matrix3.h"
 #include "Graphics/GUI.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 #include "imgui/imgui.h"
+#include "Core/Math/Matrix3.h"
 
 namespace Isetta {
-Inspector::Inspector(std::string title, bool isOpen, Transform *const target)
-    : title{title}, isOpen{isOpen}, target{target} {}
+Inspector::Inspector(std::string title, const bool isOpen, Transform *const target)
+    : target{target}, title{title}, isOpen{isOpen} {}
 
 void Inspector::GuiUpdate() {
   if (!target) return;
@@ -61,9 +61,6 @@ void Inspector::GuiUpdate() {
         target->SetLocalScale(tmp);
         rect.rect.y += 25;
 
-    if (target->GetParent() == nullptr) {
-      __debugbreak();
-    }
         GUI::Text(rect, "Parent: " + target->GetParent()->GetName());
         rect.rect.y += 20;
 
