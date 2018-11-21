@@ -51,7 +51,7 @@ class ISETTA_API_DECLARE Entity {
   Entity(const std::string &name, const bool &entityStatic);
   friend Level;
   friend class MemoryManager;
-  friend class FreeListAllocator;
+  friend class TemplatePoolAllocator<Entity>;
 
  public:
   ~Entity();
