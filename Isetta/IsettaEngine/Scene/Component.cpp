@@ -56,7 +56,7 @@ void Component::FlattenHelper(std::type_index parent, std::type_index curr) {
 }
 
 Component::Component()
-    : attributes{0b111001}, entity{curEntity}, transform(curTransform) {
+    : attributes{0b1111001}, entity{curEntity}, transform(curTransform) {
   if (!isFlattened) {
     FlattenComponentList();
   }
