@@ -14,7 +14,7 @@
 namespace Isetta {
 CREATE_LEVEL(NetworkLevel)
 void OnLevelLoad() override;
-};
+};  // namespace Isetta
 
 /**
  * @brief Code-generated struct to be used for sending integer values across the

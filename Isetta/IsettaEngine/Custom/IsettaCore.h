@@ -2,6 +2,8 @@
 
 #pragma once
 #include "Application.h"
+#include "Audio/AudioClip.h"
+#include "Audio/AudioListener.h"
 #include "Audio/AudioSource.h"
 #include "Core/Debug/DebugDraw.h"
 #include "Core/Debug/Logger.h"

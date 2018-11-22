@@ -23,7 +23,7 @@ FreeListAllocator::~FreeListAllocator() {
 #if _DEBUG
   if (sizeUsed > 0) {
     LOG_WARNING(Debug::Channel::Memory,
-                "Memory leak of %I64u detect on freelist", sizeUsed);
+                "Memory leak of %I64u detected on freelist", sizeUsed);
 
     LOG_WARNING(Debug::Channel::Memory,
                 "\u2193\u2193\u2193\u2193\u2193\u2193\u2193\u2193\u2193\u2193 "

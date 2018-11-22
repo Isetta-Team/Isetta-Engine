@@ -11,11 +11,11 @@ PlayerController* PlayerController::instance;
 void PlayerController::OnEnable() {
   instance = this;
   if (shootAudio == nullptr) {
-    shootAudio = entity->AddComponent<AudioSource>();
+    shootAudio = entity->AddComponent<AudioSource>(AudioClip::LoadClip("Sound/gunshot.aiff"));
   }
 
-  shootAudio->SetAudioClip("Sound/gunshot.aiff");
-  shootAudio->SetVolume(0.75f);
+  shootAudio->SetVolume(1.f);
+  shootAudio->SetProperty(AudioSource::Property::IS_3D, false);
   bullets.reserve(bulletPoolSize);
 
   for (int i = 0; i < bulletPoolSize; i++) {

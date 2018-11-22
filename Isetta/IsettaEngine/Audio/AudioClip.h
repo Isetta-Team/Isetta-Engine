@@ -13,24 +13,27 @@ class StringId;
 
 namespace Isetta {
 class ISETTA_API AudioClip {
- private:
-  std::string filePath, name;
-  FMOD::Sound* fmodSound;
-
-  static class AudioModule* audioModule;
-  friend class AudioModule;
-  friend class AudioSource;
-
-  static std::unordered_map<StringId, AudioClip*> clips;
-
-  static void LoadConfigClips();
-  static void UnloadAll();
-
  public:
-  AudioClip(const std::string_view filePath, const std::string_view name = "");
   ~AudioClip();
 
-  // void Unload() const;
-  static AudioClip* GetClip(const std::string_view name);
+  // soundName defaults to filePath if empty
+  static AudioClip* LoadClip(std::string_view filePath,
+                             std::string_view soundName = "");
+  static AudioClip* GetClip(std::string_view name);
+
+ private:
+  explicit AudioClip(std::string_view filePath, std::string_view name);
+
+  static void UnloadAll();
+
+  std::string filePath, name;
+  FMOD::Sound* fmodSound{};
+
+  static class AudioModule* audioModule;
+  static std::unordered_map<StringId, AudioClip*> clips;
+
+  friend class AudioModule;
+  friend class AudioSource;
+  friend class FreeListAllocator;
 };
 }  // namespace Isetta

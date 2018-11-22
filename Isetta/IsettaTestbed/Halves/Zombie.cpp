@@ -15,11 +15,11 @@ float Zombie::speed = 10.f;
 void Zombie::OnEnable() {
   if (!isInitialized) {
     MeshComponent* mesh =
-        entity->AddComponent<MeshComponent, true>("Zombie/Zombie.scene.xml");
+        entity->AddComponent<MeshComponent>("Zombie/Zombie.scene.xml");
     AnimationComponent* animation =
-        entity->AddComponent<AnimationComponent, true>(mesh);
+        entity->AddComponent<AnimationComponent>(mesh);
     animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
-    audio = entity->AddComponent<AudioSource>("Sound/zombie-death.mp3");
+    audio = entity->AddComponent<AudioSource>(AudioClip::LoadClip("Sound\\zombie-death.mp3"));
     isInitialized = true;
   }
   entity->GetComponent<AnimationComponent>()->Play();

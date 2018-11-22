@@ -2,9 +2,8 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Level1.h"
+#include "Audio/AudioListener.h"
 #include "CameraController.h"
-#include "Components/FlyController.h"
-#include "Core/Config/Config.h"
 #include "Custom/EscapeExit.h"
 #include "GameManager.h"
 #include "Graphics/AnimationComponent.h"
@@ -25,6 +24,7 @@ void Level1::OnLevelLoad() {
                              Math::Vector3::one);
 
   cameraEntity->AddComponent<CameraComponent>();
+  cameraEntity->AddComponent<AudioListener>();
 
   Entity* lightEntity{Entity::CreateEntity("Light")};
   lightEntity->AddComponent<LightComponent>("materials/light.material.xml",
@@ -40,7 +40,7 @@ void Level1::OnLevelLoad() {
   player->AddComponent<PlayerController>();
 
   AnimationComponent* ani =
-      player->AddComponent<AnimationComponent, true>(playerMesh);
+      player->AddComponent<AnimationComponent>(playerMesh);
   ani->AddAnimation("Soldier/Soldier_Idle.anim", 0, "", false);
   ani->AddAnimation("Soldier/Soldier.anim", 0, "", false);
 

@@ -3,6 +3,8 @@
  */
 #include "Custom/NetworkLevel.h"
 
+#include "Audio/AudioClip.h"
+#include "Audio/AudioListener.h"
 #include "Components/Editor/EditorComponent.h"
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
@@ -50,8 +52,7 @@ void RegisterExampleMessageFunctions() {
                   "Server says we should stop the animation!");
             }
             if (handleMessage->handle == 2) {
-              AudioSource audio = AudioSource("Sound\\gunshot.aiff");
-              // AudioSource(true, false, 1.f, "Sound\\gunshot.aiff");
+              AudioSource audio(AudioClip::LoadClip("Sound\gunshot.aiff"));
               audio.Play();
             }
           });
@@ -318,9 +319,10 @@ void NetworkLevel::OnLevelLoad() {
   // Camera
   Entity* cameraEntity{Entity::CreateEntity("Camera")};
   cameraEntity->AddComponent<CameraComponent>();
+  cameraEntity->AddComponent<AudioListener>();
+  cameraEntity->AddComponent<FlyController>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
-  cameraEntity->AddComponent<FlyController>();
 
   // Light
   Entity* lightEntity{Entity::CreateEntity("Light")};

@@ -14,7 +14,6 @@ class AudioModule {
  public:
   struct AudioConfig {
     CVar<Size> memorySize{"audio_memory_size", 10485760};
-    CVarString audioClips{"audio_clips", ""};
   };
 
  private:

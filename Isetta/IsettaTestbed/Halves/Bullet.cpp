@@ -20,9 +20,10 @@ void Bullet::Reactivate(const Math::Vector3& pos, const Math::Vector3& flyDir) {
 
 void Bullet::OnEnable() {
   if (!initialized) {
-    entity->AddComponent<MeshComponent, true>("Bullet/Bullet.scene.xml");
+    entity->AddComponent<MeshComponent>("Bullet/Bullet.scene.xml");
     initialized = true;
-    audio = entity->AddComponent<AudioSource>("Sound/bullet-impact.wav");
+    audio = entity->AddComponent<AudioSource>(
+        AudioClip::LoadClip("Sound/bullet-impact.wav"));
   }
   elapsedTime = 0.f;
 }
@@ -33,7 +34,6 @@ void Bullet::Update() {
   transform->TranslateWorld(dir * Time::GetDeltaTime() * flySpeed);
   elapsedTime += Time::GetDeltaTime();
   if (elapsedTime > lifeTime) {
-    // TODO(YIDI): Add this when Destroy is working
     entity->SetActive(false);
   }
   for (const auto& zombie : GameManager::zombies) {

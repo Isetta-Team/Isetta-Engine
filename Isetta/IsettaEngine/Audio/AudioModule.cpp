@@ -43,7 +43,6 @@ void AudioModule::StartUp() {
   AudioSource::audioModule = this;
   AudioListener::audioModule = this;
   AudioClip::audioModule = this;
-  AudioClip::LoadConfigClips();
 }
 
 void AudioModule::Update(float deltaTime) const {
