@@ -33,7 +33,7 @@ void Events::RaiseImmediateEvent(const EventObject& eventObject) {
     }
   } else {
     LOG_WARNING(Debug::Channel::Gameplay, Debug::Verbosity::Warning,
-                "Event %s has no listener.", eventObject.eventName);
+                "Event %s has no listener.", eventObject.eventName.c_str());
   }
 }
 
