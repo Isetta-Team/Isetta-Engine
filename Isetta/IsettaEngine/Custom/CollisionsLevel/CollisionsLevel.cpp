@@ -24,7 +24,7 @@
 #include "Collisions/CollisionHandler.h"
 #include "Collisions/SphereCollider.h"
 #include "Components/Editor/FrameReporter.h"
-#include "Custom/IsettaCore.h"
+#include "Core/IsettaCore.h"
 
 namespace Isetta {
 

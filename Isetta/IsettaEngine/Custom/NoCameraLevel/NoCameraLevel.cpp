@@ -4,7 +4,7 @@
 #include "Custom/NoCameraLevel/NoCameraLevel.h"
 
 #include "Core/Config/Config.h"
-#include "Custom/IsettaCore.h"
+#include "Core/IsettaCore.h"
 #include "Graphics/CameraComponent.h"
 #include "Graphics/Font.h"
 

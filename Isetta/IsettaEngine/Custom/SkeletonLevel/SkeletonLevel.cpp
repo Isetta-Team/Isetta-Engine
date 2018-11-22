@@ -9,7 +9,7 @@
 #include "Components/GridComponent.h"
 #include "Core/Config/Config.h"
 #include "Custom/EscapeExit.h"
-#include "Custom/IsettaCore.h"
+#include "Core/IsettaCore.h"
 #include "Events/Events.h"
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"

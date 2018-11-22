@@ -4,7 +4,7 @@
 #include "EventTestLevel.h"
 #include "Application.h"
 #include "Core/Config/Config.h"
-#include "Custom/IsettaCore.h"
+#include "Core/IsettaCore.h"
 #include "EventListenerComponent.h"
 #include "EventSenderComponent.h"
 #include "Graphics/CameraComponent.h"

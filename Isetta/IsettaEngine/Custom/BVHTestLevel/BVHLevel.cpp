@@ -12,7 +12,7 @@
 #include "Core/Math/Random.h"
 #include "Custom/BVHTestLevel/RandomMover.h"
 #include "Custom/DebugCollision.h"
-#include "Custom/IsettaCore.h"
+#include "Core/IsettaCore.h"
 #include "Custom/RaycastClick.h"
 
 #include "Components/Editor/EditorComponent.h"

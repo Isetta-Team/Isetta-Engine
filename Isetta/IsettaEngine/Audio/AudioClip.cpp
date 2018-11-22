@@ -17,6 +17,8 @@ AudioClip::AudioClip(const std::string_view filePath,
                      const std::string_view name)
     : filePath{filePath}, name{name} {
   audioModule->LoadClip(this);
+
+  // soundName defaults to filePath if empty
   if (name.empty()) this->name = filePath;
   clips.insert({SID(this->name.data()), this});
 }

@@ -7,7 +7,7 @@
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
 #include "Core/Config/Config.h"
-#include "Custom/IsettaCore.h"
+#include "Core/IsettaCore.h"
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
 #include "Custom/EscapeExit.h"

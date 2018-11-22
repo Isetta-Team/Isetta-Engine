@@ -32,15 +32,12 @@ void AudioSource::Update() {
   }
 }
 
-void AudioSource::SetProperty(const Property prop, bool value) {
+void AudioSource::SetProperty(const Property prop, const bool value) {
   switch (prop) {
     case Property::IS_3D:
       properties.set(static_cast<int>(Property::IS_3D), value);
       if (clip) {
-        if (value)
-          clip->fmodSound->setMode(FMOD_3D);
-        else
-          clip->fmodSound->setMode(FMOD_2D);
+        clip->fmodSound->setMode(value ? FMOD_3D : FMOD_2D);
       }
       break;
     case Property::LOOP:
@@ -48,8 +45,7 @@ void AudioSource::SetProperty(const Property prop, bool value) {
       break;
     case Property::IS_MUTE:
       properties.set(static_cast<int>(Property::IS_MUTE), value);
-      if (fmodChannel)
-        AudioModule::CheckStatus(fmodChannel->setMute(value));
+      if (fmodChannel) AudioModule::CheckStatus(fmodChannel->setMute(value));
       break;
   };
 }
@@ -62,7 +58,7 @@ bool AudioSource::GetProperty(const Property prop) const {
       return properties.test(static_cast<int>(Property::LOOP));
     case Property::IS_MUTE:
       return properties.test(static_cast<int>(Property::IS_MUTE));
-  };
+  }
 }
 
 void AudioSource::SetAudioClip(AudioClip* clip) { this->clip = clip; }

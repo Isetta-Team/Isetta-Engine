@@ -2,7 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Custom/BVHTestLevel/RandomMover.h"
-#include "Custom/IsettaCore.h"
+#include "Core/IsettaCore.h"
 
 namespace Isetta {
 void RandomMover::Update() {
