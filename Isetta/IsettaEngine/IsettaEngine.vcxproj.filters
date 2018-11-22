@@ -656,9 +656,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="ISETTA_API.h" />
-    <ClInclude Include="Custom\IsettaCore.h">
-      <Filter>Custom</Filter>
-    </ClInclude>
     <ClInclude Include="Components\FlyController.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -857,6 +854,9 @@
     </ClInclude>
     <ClInclude Include="Core\DataStructures\Delegate.h">
       <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\IsettaCore.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
