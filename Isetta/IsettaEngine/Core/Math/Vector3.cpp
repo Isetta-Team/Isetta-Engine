@@ -106,10 +106,10 @@ Vector3 Vector3::Slerp(const Vector3& start, const Vector3& end, float time) {
   Vector3 relativeVector = end - start * dot;
   return start * cosf(theta) + relativeVector * sinf(theta);
 }
-Vector3 Vector3::FromString(const std::string& str) {
+Vector3 Vector3::FromString(const std::string_view str) {
   Vector3 vec;
   char c;
-  std::istringstream is(str);
+  std::istringstream is(str.data());
   (is >> std::skipws) >> c >> vec.x >> c >> vec.y >> c >> vec.z;
 
   return vec;

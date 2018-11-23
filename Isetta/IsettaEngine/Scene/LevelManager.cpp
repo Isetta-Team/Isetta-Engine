@@ -12,7 +12,7 @@ LevelManager& LevelManager::Instance() {
   return instance;
 }
 
-bool LevelManager::Register(const std::string& name, Func<Level*> level) {
+bool LevelManager::Register(const std::string name, Func<Level*> level) {
   levels.insert_or_assign(SID(name.c_str()), level);
   return true;
 }

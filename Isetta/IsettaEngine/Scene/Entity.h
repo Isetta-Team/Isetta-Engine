@@ -71,7 +71,7 @@ class ISETTA_API_DECLARE Entity {
 
     return std::string(output.data());
   }
-  static Entity* CreateEntity(std::string name, class Entity* parent = nullptr,
+  static Entity* Instantiate(std::string name, class Entity* parent = nullptr,
                           bool entityStatic = false);
   static void Destroy(Entity *entity);
   static void DestroyHelper(Entity *entity);

@@ -16,13 +16,15 @@ H3DRes renderResource{0};
 
 std::unordered_map<StringId, H3DNode> joints;
 
-explicit MeshComponent(std::string_view resourceName);
+explicit MeshComponent(std::string_view resourceName,
+                       bool isEngineResource = false);
 ~MeshComponent();
 
 void UpdateTransform() const;
 
 protected:
-static H3DRes LoadResourceFromFile(std::string_view resourceName);
+static H3DRes LoadResourceFromFile(std::string_view resourceName,
+                                   bool isEngineResource);
 
 void OnEnable() override;
 void OnDisable() override;

@@ -100,9 +100,9 @@ void AudioModule::CheckStatus(const FMOD_RESULT status) {
 
 void AudioModule::LoadClip(AudioClip* const clip) const {
   clip->fmodSound = nullptr;
-  const std::string fullPath =
+  const std::string filePath =
       CONFIG_VAL(resourcePath) + R"(\)" + clip->filePath;
-  CheckStatus(fmodSystem->createSound(fullPath.c_str(), FMOD_LOWMEM, nullptr,
+  CheckStatus(fmodSystem->createSound(filePath.c_str(), FMOD_LOWMEM, nullptr,
                                       &clip->fmodSound));
 }
 

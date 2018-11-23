@@ -3,15 +3,12 @@
  */
 #pragma once
 #include <string>
-#include <unordered_set>
 #include "Core/Color.h"
 #include "Core/DataStructures/Array.h"
 #include "Core/Debug/Debug.h"
 #include "Graphics/GUI.h"
 #include "Graphics/RectTransform.h"
 #include "Scene/Component.h"
-
-#include "Core/DataStructures/Trie.h"
 
 namespace Isetta {
 BEGIN_COMPONENT(Console, Component, false)

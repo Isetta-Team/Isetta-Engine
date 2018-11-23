@@ -19,7 +19,7 @@ void PlayerController::OnEnable() {
   bullets.reserve(bulletPoolSize);
 
   for (int i = 0; i < bulletPoolSize; i++) {
-    Entity* bullet{Entity::CreateEntity(Util::StrFormat("Bullet (%d)", i))};
+    Entity* bullet{Entity::Instantiate(Util::StrFormat("Bullet (%d)", i))};
     bullet->AddComponent<Bullet>();
     bullet->SetActive(false);
     bullets.push_back(bullet);
@@ -44,7 +44,7 @@ void PlayerController::Update() {
 
   movement +=
       Input::GetGamepadAxis(GamepadAxis::L_HORIZONTAL) * Math::Vector3::left +
-      Input::GetGamepadAxis(GamepadAxis::L_VERTICLE) * Math::Vector3::forward;
+      Input::GetGamepadAxis(GamepadAxis::L_VERTICAL) * Math::Vector3::forward;
 
   if (movement.Magnitude() > 1) {
     movement.Normalize();
@@ -65,7 +65,7 @@ void PlayerController::Update() {
 
   lookDir +=
       Input::GetGamepadAxis(GamepadAxis::R_HORIZONTAL) * Math::Vector3::left +
-      Input::GetGamepadAxis(GamepadAxis::R_VERTICLE) * Math::Vector3::forward;
+      Input::GetGamepadAxis(GamepadAxis::R_VERTICAL) * Math::Vector3::forward;
 
   if (lookDir.Magnitude() >= 1.f) {
     lookDir.Normalize();
@@ -115,9 +115,9 @@ void PlayerController::Shoot() {
       break;
     }
   }
-
-  bullet->SetActive(true);
+  
   if (bullet != nullptr) {
+    bullet->SetActive(true);
     bullet->GetComponent<Bullet>()->Reactivate(
         transform->GetWorldPos() + transform->GetForward() * 0.7 -
             transform->GetLeft() * 0.1 + transform->GetUp() * 1.5,

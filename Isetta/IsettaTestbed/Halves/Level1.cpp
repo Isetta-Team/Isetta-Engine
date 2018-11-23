@@ -4,6 +4,9 @@
 #include "Level1.h"
 #include "Audio/AudioListener.h"
 #include "CameraController.h"
+#include "Components/Editor/EditorComponent.h"
+#include "Components/FlyController.h"
+#include "Core/Config/Config.h"
 #include "Custom/EscapeExit.h"
 #include "GameManager.h"
 #include "Graphics/AnimationComponent.h"
@@ -18,7 +21,7 @@ namespace Isetta {
 void Level1::OnLevelLoad() {
   Font::AddFontFromFile("Fonts/CONSOLA.TTF", 13.0f);
 
-  Entity* cameraEntity{Entity::CreateEntity("Camera")};
+  Entity* cameraEntity{Entity::Instantiate("Camera")};
   cameraEntity->AddComponent<CameraController>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
@@ -26,12 +29,12 @@ void Level1::OnLevelLoad() {
   cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->AddComponent<AudioListener>();
 
-  Entity* lightEntity{Entity::CreateEntity("Light")};
+  Entity* lightEntity{Entity::Instantiate("Light")};
   lightEntity->AddComponent<LightComponent>();
   lightEntity->SetTransform(Math::Vector3{0, 200, 600},
                             Math::Vector3{-30, 0, 0});
 
-  Entity* player{Entity::CreateEntity("Player")};
+  Entity* player{Entity::Instantiate("Player")};
   player->SetTransform(Math::Vector3{0, 0, 0}, Math::Vector3{0, 90, 0},
                        0.03f * Math::Vector3::one);
   MeshComponent* playerMesh =
@@ -43,12 +46,13 @@ void Level1::OnLevelLoad() {
   ani->AddAnimation("Soldier/Soldier_Idle.anim", 0, "", false);
   ani->AddAnimation("Soldier/Soldier.anim", 0, "", false);
 
-  Entity* ground{Entity::CreateEntity("Ground")};
+  Entity* ground{Entity::Instantiate("Ground")};
   ground->AddComponent<MeshComponent>("Ground/Level.scene.xml");
 
-  Entity* gameManager{Entity::CreateEntity("Game Manager")};
+  Entity* gameManager{Entity::Instantiate("Game Manager")};
   gameManager->AddComponent<GameManager>();
   gameManager->AddComponent<EscapeExit>();
+  gameManager->AddComponent<EditorComponent>();
 
   // for (int i = 0; i < 10; i++) {
   // Entity* zombie {AddEntity("Zombie")};

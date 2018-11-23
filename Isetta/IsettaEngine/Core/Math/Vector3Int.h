@@ -5,7 +5,7 @@
 #include "ISETTA_API.h"
 
 namespace Isetta::Math {
-class ISETTA_API_DECLARE Vector3Int {
+class ISETTA_API Vector3Int {
  public:
   // Constants
   static const Vector3Int zero;
@@ -66,7 +66,7 @@ class ISETTA_API_DECLARE Vector3Int {
 
   // Conversions
 
-  explicit Vector3Int(const class Vector3& inIntVector);
+  explicit Vector3Int(const class Vector3& inVector);
   Vector3Int(const class Vector2Int& inVector, int inZ);
 
   explicit operator class Vector2Int();

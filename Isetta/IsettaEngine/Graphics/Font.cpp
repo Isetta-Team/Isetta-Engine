@@ -4,7 +4,7 @@
 #include "Font.h"
 
 #include "Core/Config/Config.h"
-#include "GUIModule.h"
+#include "Graphics/GUIModule.h"
 #include "imgui_internal.h"
 
 namespace Isetta {
@@ -30,7 +30,7 @@ Font* Font::GetFont(const std::string_view fontName, float size) {
 }
 Font* Font::AddFontFromFile(const std::string& fileName, float fontSize,
                             const std::string_view& fontName) {
-  const std::string filePath = CONFIG_VAL(resourcePath) + R"(\)" + fileName;
+  const std::string filePath = CONFIG_VAL(resourcePath) + "\\" + fileName;
   if (fontName.empty()) {
     Font* font = GetFont(fileName, fontSize);
     if (font) return font;

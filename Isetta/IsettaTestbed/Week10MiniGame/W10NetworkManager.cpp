@@ -43,7 +43,7 @@ void W10NetworkManager::HandleSpawnMessage(yojimbo::Message* message) {
   if (!entity) {
     Isetta::Events::Instance().RaiseImmediateEvent(
         Isetta::EventObject{"UITextChange", {std::string{"Game Started!"}}});
-    Isetta::Entity* e = Isetta::Entity::CreateEntity(
+    Isetta::Entity* e = Isetta::Entity::Instantiate(
         Isetta::Util::StrFormat("Player%d", spawnMessage->netId));
     Isetta::NetworkId* networkId =
         e->AddComponent<Isetta::NetworkId>(spawnMessage->netId);

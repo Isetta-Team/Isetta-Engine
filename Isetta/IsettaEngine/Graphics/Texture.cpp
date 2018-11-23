@@ -18,9 +18,10 @@ void Texture::Load() {
   if (texture) return;
   h3dres = h3dAddResource(H3DResTypes::Texture, fileName.data(), 0);
   RenderModule::LoadResourceFromDisk(
-      h3dres, Util::StrFormat("Texture::LoadResourceFromFile => "
-                              "Cannot load the resource from %s",
-                              fileName.data()));
+      h3dres, false,
+      Util::StrFormat("Texture::LoadResourceFromFile => "
+                      "Cannot load the resource from %s",
+                      fileName.data()));
   U8* data = static_cast<U8*>(h3dMapResStream(
       h3dres, H3DTexRes::ImageElem, 0, H3DTexRes::ImgPixelStream, true, false));
   size.x =

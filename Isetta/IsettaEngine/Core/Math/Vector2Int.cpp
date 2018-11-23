@@ -16,8 +16,8 @@ const Vector2Int Vector2Int::right = Vector2Int(1, 0);
 const Vector2Int Vector2Int::down = Vector2Int(0, -1);
 const Vector2Int Vector2Int::left = Vector2Int(-1, 0);
 
-Vector2Int::Vector2Int(const Vector2& inIntVector)
-    : x{static_cast<int>(inIntVector.x)}, y{static_cast<int>(inIntVector.y)} {}
+Vector2Int::Vector2Int(const Vector2& inVector)
+    : x{static_cast<int>(inVector.x)}, y{static_cast<int>(inVector.y)} {}
 
 int Vector2Int::operator[](int i) const {
   if (i < 0 || i > ELEMENT_COUNT - 1)

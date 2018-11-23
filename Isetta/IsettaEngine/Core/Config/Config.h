@@ -15,6 +15,7 @@
 #include "Core/Memory/MemoryManager.h"
 #include "EngineLoop.h"
 #include "Graphics/CameraComponent.h"
+#include "Graphics/GUIModule.h"
 #include "Graphics/LightComponent.h"
 #include "Graphics/RenderModule.h"
 #include "Graphics/Window.h"
@@ -47,7 +48,7 @@ class ISETTA_API Config {
   RenderModule::RenderConfig renderConfig;
   CameraComponent::CameraConfig cameraConfig;
   LightComponent::LightConfig lightConfig;
-
+  GUIModule::GUIModuleConfig guiConfig;
   NetworkingModule::NetworkConfig networkConfig;
   MemoryManager::MemoryConfig memoryConfig;
   AudioModule::AudioConfig audioConfig;
@@ -57,6 +58,7 @@ class ISETTA_API Config {
 
   /// File path for the resources of game/engine
   CVarString resourcePath{"resource_path", "Resources"};
+  CVarString enginePath{"engine_path", "Includes"};
 
   /**
    * @brief Use the Filesystem to read the file, then call ProcessFile to parse

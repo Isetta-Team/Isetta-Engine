@@ -3,8 +3,10 @@
  */
 #include "Graphics/GUIModule.h"
 
+#include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Memory/MemoryManager.h"
+#include "Graphics/Font.h"
 #include "Graphics/GUI.h"
 #include "Input/GLFWInput.h"
 #include "Scene/Level.h"
@@ -75,6 +77,13 @@ void GUIModule::StartUp(const GLFWwindow* win) {
   // io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f,
   // NULL, io.Fonts->GetGlyphRangesJapanese());
   // IM_ASSERT(font != NULL);
+  const std::string fontName = "Lato-Regular";
+  const float fontSize = CONFIG_VAL(guiConfig.EngineFontSize);
+  Font* font = reinterpret_cast<Font*>(io.Fonts->AddFontFromFileTTF(
+      (CONFIG_VAL(enginePath) + "\\fonts\\" + fontName + ".ttf").c_str(),
+      fontSize));
+  Font::AddFontToMap(fontName, fontSize, font);
+  ASSERT(font != NULL);
 
   GLFWInput::RegisterMouseButtonCallback(ImGui_ImplGlfw_MouseButtonCallback);
   GLFWInput::RegisterScrollCallback(ImGui_ImplGlfw_ScrollCallback);

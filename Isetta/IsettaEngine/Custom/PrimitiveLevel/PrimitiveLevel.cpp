@@ -13,14 +13,14 @@
 
 namespace Isetta {
 void PrimitiveLevel::OnLevelLoad() {
-  Entity* cameraEntity{Entity::CreateEntity("Camera")};
+  Entity* cameraEntity{Entity::Instantiate("Camera")};
   cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
   cameraEntity->AddComponent<FlyController>();
   cameraEntity->AddComponent<EscapeExit>();
 
-  Entity* lightEntity{Entity::CreateEntity("Light")};
+  Entity* lightEntity{Entity::Instantiate("Light")};
   lightEntity->AddComponent<LightComponent>();
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);

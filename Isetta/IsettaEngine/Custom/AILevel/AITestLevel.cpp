@@ -11,11 +11,11 @@
 #include "Graphics/ParticleSystemComponent.h"
 
 void Isetta::AITestLevel::OnLevelLoad() {
-  Entity *camera = Entity::CreateEntity("Camera");
+  Entity *camera = Entity::Instantiate("Camera");
   camera->SetTransform(Math::Vector3{5, 5, 16}, Math::Vector3{-20, 0, 0},
                        Math::Vector3::one);
   camera->AddComponent<CameraComponent>();
-  Entity *lightEntity{Entity::CreateEntity("Light")};
+  Entity *lightEntity{Entity::Instantiate("Light")};
   lightEntity->AddComponent<LightComponent>();
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
@@ -23,10 +23,10 @@ void Isetta::AITestLevel::OnLevelLoad() {
   camera->AddComponent<EscapeExit>();
   // camera->AddComponent<EditorComponent>();
 
-  Entity *moveCube{Entity::CreateEntity("Move")};
+  Entity *moveCube{Entity::Instantiate("Move")};
   moveCube->SetTransform(Math::Vector3{5, 0, 5}, Math::Vector3::zero,
                          Math::Vector3::one * 0.2);
-  moveCube->AddComponent<MeshComponent>("primitive/Cube.scene.xml");
+  moveCube->AddComponent<MeshComponent>("primitives/Cube.scene.xml");
   auto p = moveCube->AddComponent<ParticleSystemComponent>(
       "particles/particleSys1/particleSys1.scene.xml");
   Input::RegisterKeyPressCallback(KeyCode::L, [p]() { p->SetActive(false); });

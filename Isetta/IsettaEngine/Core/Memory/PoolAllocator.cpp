@@ -5,12 +5,11 @@
 #include "Util.h"
 
 namespace Isetta {
-
 PoolAllocator::PoolAllocator(const Size chunkSize, const Size count,
                              const Size increment)
     : capacity(count), chunkSize(chunkSize), increment(increment) {
   ASSERT(increment != 0);
-  // Using PoolAllocator for chunkSize smaller than pointer will not 
+  // Using PoolAllocator for chunkSize smaller than pointer will not
   // work because of the memory optimization technique
   ASSERT(chunkSize > sizeof(PoolNode*));
 
@@ -32,7 +31,7 @@ void* PoolAllocator::Get() {
 
   void* ret = head;
   head = head->next;
-  memset(ret, 0x0, sizeof(PoolNode)); // rest is set during free process
+  memset(ret, 0x0, sizeof(PoolNode));  // rest is set during free process
   return ret;
 }
 

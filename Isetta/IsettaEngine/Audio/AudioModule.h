@@ -53,7 +53,6 @@ class AudioModule {
   void Play(class AudioSource* const source) const;
 
   FMOD::System* fmodSystem;
-  std::string soundFilesRoot;
   std::list<class AudioListener*> listeners;
 
   friend class AudioClip;
