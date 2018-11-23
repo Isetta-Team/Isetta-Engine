@@ -27,9 +27,10 @@ H3DRes LightComponent::LoadResourceFromFile(std::string_view resourceName) {
       h3dAddResource(H3DResTypes::Material, resourceName.data(), 0);
 
   RenderModule::LoadResourceFromDisk(
-      lightMatRes, Util::StrFormat("LightComponent::LoadResourceFromFile => "
-                                   "Cannot load the resource from %s",
-                                   resourceName.data()));
+      lightMatRes, false,
+      Util::StrFormat("LightComponent::LoadResourceFromFile => "
+                      "Cannot load the resource from %s",
+                      resourceName.data()));
 
   return lightMatRes;
 }

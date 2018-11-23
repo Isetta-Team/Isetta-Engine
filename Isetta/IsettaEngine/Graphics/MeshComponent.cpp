@@ -12,11 +12,12 @@
 namespace Isetta {
 RenderModule* MeshComponent::renderModule{nullptr};
 
-MeshComponent::MeshComponent(std::string_view resourceName) : Component() {
-  // SetAttribute(ComponentAttributes::NEED_UPDATE, false);
+MeshComponent::MeshComponent(std::string_view resourceName,
+                             bool isEngineResource)
+    : Component() {
   ASSERT(renderModule != nullptr);
   renderModule->meshComponents.push_back(this);
-  renderResource = LoadResourceFromFile(resourceName);
+  renderResource = LoadResourceFromFile(resourceName, isEngineResource);
 }
 
 MeshComponent::~MeshComponent() {
@@ -29,14 +30,16 @@ void MeshComponent::UpdateTransform() const {
   Transform::SetH3DNodeTransform(renderNode, *transform);
 }
 
-H3DRes MeshComponent::LoadResourceFromFile(std::string_view resourceName) {
+H3DRes MeshComponent::LoadResourceFromFile(std::string_view resourceName,
+                                           bool isEngineResource) {
   H3DRes renderResource =
       h3dAddResource(H3DResTypes::SceneGraph, resourceName.data(), 0);
 
   RenderModule::LoadResourceFromDisk(
-      renderResource, Util::StrFormat("MeshComponent::LoadResourceFromFile => "
-                                      "Cannot load the resource from %s",
-                                      resourceName.data()));
+      renderResource, isEngineResource,
+      Util::StrFormat("MeshComponent::LoadResourceFromFile => "
+                      "Cannot load the resource from %s",
+                      resourceName.data()));
 
   return renderResource;
 }
@@ -59,9 +62,7 @@ void MeshComponent::OnDisable() {
   h3dSetNodeFlags(renderNode, H3DNodeFlags::Inactive, true);
 }
 
-void MeshComponent::OnDestroy() {
-  h3dRemoveNode(renderNode);
-}
+void MeshComponent::OnDestroy() { h3dRemoveNode(renderNode); }
 
 std::tuple<Math::Vector3, Math::Quaternion>
 MeshComponent::GetJointWorldTransform(std::string jointName) {

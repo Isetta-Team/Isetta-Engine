@@ -62,6 +62,21 @@
     <ClCompile Include="Week10MiniGame\W10NetworkPlayer.cpp">
       <Filter>Week10MiniGame</Filter>
     </ClCompile>
+    <ClCompile Include="KnightGame\Level\KnightMainLevel.cpp">
+      <Filter>KnightGame\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="KnightGame\Gameplay\KnightController.cpp">
+      <Filter>KnightGame\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="KnightGame\Gameplay\SwordController.cpp">
+      <Filter>KnightGame\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="KnightGame\Gameplay\SpinAttack.cpp">
+      <Filter>KnightGame\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="KnightGame\Gameplay\FollowComponent.cpp">
+      <Filter>KnightGame\Gameplay</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
@@ -86,6 +101,15 @@
     </Filter>
     <Filter Include="Week10MiniGame">
       <UniqueIdentifier>{fc75b8db-ca98-41c5-9514-c1160776a012}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KnightGame">
+      <UniqueIdentifier>{05a8ed62-fcd9-4190-a314-79455c7d2b87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KnightGame\Gameplay">
+      <UniqueIdentifier>{1882b48d-26e4-4f7f-98d0-d16732d9f3c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="KnightGame\Level">
+      <UniqueIdentifier>{d860470e-e479-4fed-8df3-14ffca666fed}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +172,24 @@
     </ClInclude>
     <ClInclude Include="Week10MiniGame\W10NetworkPlayer.h">
       <Filter>Week10MiniGame</Filter>
+    </ClInclude>
+    <ClInclude Include="KnightGame\Constants.h">
+      <Filter>KnightGame</Filter>
+    </ClInclude>
+    <ClInclude Include="KnightGame\Level\KnightMainLevel.h">
+      <Filter>KnightGame\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="KnightGame\Gameplay\KnightController.h">
+      <Filter>KnightGame\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="KnightGame\Gameplay\SwordController.h">
+      <Filter>KnightGame\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="KnightGame\Gameplay\SpinAttack.h">
+      <Filter>KnightGame\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="KnightGame\Gameplay\FollowComponent.h">
+      <Filter>KnightGame\Gameplay</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

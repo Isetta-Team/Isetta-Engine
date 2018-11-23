@@ -29,7 +29,7 @@ H3DRes Isetta::ParticleSystemComponent::LoadResourceFromFile(
       h3dAddResource(H3DResTypes::SceneGraph, resourceName.data(), 0);
 
   RenderModule::LoadResourceFromDisk(
-      renderResource,
+      renderResource, false,
       Util::StrFormat("ParticleSystemComponent::LoadResourceFromFile => "
                       "Cannot load the resource from %s",
                       resourceName.data()));

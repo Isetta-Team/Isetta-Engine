@@ -44,7 +44,7 @@ void PlayerController::Update() {
 
   movement +=
       Input::GetGamepadAxis(GamepadAxis::L_HORIZONTAL) * Math::Vector3::left +
-      Input::GetGamepadAxis(GamepadAxis::L_VERTICLE) * Math::Vector3::forward;
+      Input::GetGamepadAxis(GamepadAxis::L_VERTICAL) * Math::Vector3::forward;
 
   if (movement.Magnitude() > 1) {
     movement.Normalize();
@@ -65,7 +65,7 @@ void PlayerController::Update() {
 
   lookDir +=
       Input::GetGamepadAxis(GamepadAxis::R_HORIZONTAL) * Math::Vector3::left +
-      Input::GetGamepadAxis(GamepadAxis::R_VERTICLE) * Math::Vector3::forward;
+      Input::GetGamepadAxis(GamepadAxis::R_VERTICAL) * Math::Vector3::forward;
 
   if (lookDir.Magnitude() >= 1.f) {
     lookDir.Normalize();

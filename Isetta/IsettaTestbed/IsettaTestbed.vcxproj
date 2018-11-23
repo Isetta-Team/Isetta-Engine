@@ -231,6 +231,11 @@
     <ClCompile Include="Halves\Zombie.cpp" />
     <ClCompile Include="InputLevel\InputLevel.cpp" />
     <ClCompile Include="InputLevel\InputTestComponent.cpp" />
+    <ClCompile Include="KnightGame\Gameplay\FollowComponent.cpp" />
+    <ClCompile Include="KnightGame\Gameplay\KnightController.cpp" />
+    <ClCompile Include="KnightGame\Gameplay\SpinAttack.cpp" />
+    <ClCompile Include="KnightGame\Gameplay\SwordController.cpp" />
+    <ClCompile Include="KnightGame\Level\KnightMainLevel.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Week10MiniGame\W10GameManager.cpp" />
     <ClCompile Include="Week10MiniGame\W10NetworkManager.cpp" />
@@ -259,6 +264,12 @@
     <ClInclude Include="Halves\Zombie.h" />
     <ClInclude Include="InputLevel\InputLevel.h" />
     <ClInclude Include="InputLevel\InputTestComponent.h" />
+    <ClInclude Include="KnightGame\Constants.h" />
+    <ClInclude Include="KnightGame\Gameplay\FollowComponent.h" />
+    <ClInclude Include="KnightGame\Gameplay\KnightController.h" />
+    <ClInclude Include="KnightGame\Gameplay\SpinAttack.h" />
+    <ClInclude Include="KnightGame\Gameplay\SwordController.h" />
+    <ClInclude Include="KnightGame\Level\KnightMainLevel.h" />
     <ClInclude Include="Week10MiniGame\W10GameManager.h" />
     <ClInclude Include="Week10MiniGame\W10NetworkManager.h" />
     <ClInclude Include="Week10MiniGame\W10NetworkPlayer.h" />

@@ -38,7 +38,7 @@ class ISETTA_API CVar : public ICVar {
    * @param name of the CVar to put into the map, referenced in configuration
    * and console
    */
-  explicit CVar(const std::string& name) : ICVar(name), value{T()} {
+  explicit CVar(const std::string_view name) : ICVar(name), value{T()} {
     CVarRegistry::RegisterVariable(this);
   }
   /**
@@ -46,8 +46,8 @@ class ISETTA_API CVar : public ICVar {
    *
    * @param strVal string value to be converted into value of type T
    */
-  inline void SetVal(const std::string& strVal) override {
-    std::istringstream iss(strVal);
+  inline void SetVal(const std::string_view strVal) override {
+    std::istringstream iss(strVal.data());
     iss >> value;
   }
   /**
@@ -77,7 +77,7 @@ class ISETTA_API CVarString : public ICVar {
    * @param defaultValue the value set by default (if not found in the config
    * file)
    */
-  CVarString(const std::string& name, const std::string& defaultValue);
+  CVarString(const std::string& name, const std::string_view defaultValue);
   /**
    * @brief Construct a new CVar object, default value set by default
    * constructor of string
@@ -85,13 +85,13 @@ class ISETTA_API CVarString : public ICVar {
    * @param name of the CVar to put into the map, referenced in configuration
    * and console
    */
-  explicit CVarString(const std::string& name);
+  explicit CVarString(const std::string_view name);
   /**
    * @brief Set the Val object
    *
    * @param strVal the string to set the value as
    */
-  inline void SetVal(const std::string& strVal) override { sVal = strVal; }
+  inline void SetVal(const std::string_view strVal) override { sVal = strVal; }
   /**
    * @brief Get the Val object
    *
@@ -113,7 +113,7 @@ class ISETTA_API CVarVector3 : public ICVar {
    * @param defaultValue the value set by default (if not found in the config
    * file)
    */
-  CVarVector3(const std::string& name, const Math::Vector3& defaultValue);
+  CVarVector3(const std::string_view name, const Math::Vector3& defaultValue);
   /**
    * @brief Construct a new CVar object, default value set by default
    * constructor of vector3
@@ -121,13 +121,13 @@ class ISETTA_API CVarVector3 : public ICVar {
    * @param name of the CVar to put into the map, referenced in configuration
    * and console
    */
-  explicit CVarVector3(const std::string& name);
+  explicit CVarVector3(const std::string_view name);
   /**
    * @brief Set the Val object
    *
    * @param strVal string value to be converted into value of Vector3
    */
-  inline void SetVal(const std::string& strVal) override {
+  inline void SetVal(const std::string_view strVal) override {
     v3Val = Math::Vector3::FromString(strVal);
   }
   /**

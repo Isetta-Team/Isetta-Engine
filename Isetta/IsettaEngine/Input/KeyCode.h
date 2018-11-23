@@ -139,9 +139,9 @@ inline ModifierKeys operator|(ModifierKeys lhs, ModifierKeys rhs) {
 
 enum class GamepadAxis {
   L_HORIZONTAL,
-  L_VERTICLE,
+  L_VERTICAL,
   R_HORIZONTAL,
-  R_VERTICLE,
+  R_VERTICAL,
   L_TRIGGER,
   R_TRIGGER,
   ALL

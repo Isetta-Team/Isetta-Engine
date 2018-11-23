@@ -17,9 +17,6 @@
 #include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
-// TODO(Chaojie) remove
-std::string RenderModule::resourcePath{};
-
 void RenderModule::StartUp(GLFWwindow* win) {
   winHandle = win;
   InitRenderConfig();
@@ -85,25 +82,24 @@ void RenderModule::ShutDown() {
 
 void RenderModule::InitRenderConfig() {
   renderInterface = H3DRenderDevice::OpenGL4;
-  resourcePath = Config::Instance().resourcePath.GetVal();
 }
 
 void RenderModule::InitHordeConfig() {
   h3dSetOption(H3DOptions::MaxLogLevel, 0);
   h3dSetOption(H3DOptions::LoadTextures,
-               Config::Instance().renderConfig.hordeLoadTextures.GetVal());
+               CONFIG_VAL(renderConfig.hordeLoadTextures));
   h3dSetOption(H3DOptions::TexCompression,
-               Config::Instance().renderConfig.hordeTexCompression.GetVal());
+               CONFIG_VAL(renderConfig.hordeTexCompression));
   h3dSetOption(H3DOptions::MaxAnisotropy,
-               Config::Instance().renderConfig.hordeMaxAnisotropy.GetVal());
+               CONFIG_VAL(renderConfig.hordeMaxAnisotropy));
   h3dSetOption(H3DOptions::ShadowMapSize,
-               Config::Instance().renderConfig.hordeShadowmapSize.GetVal());
+               CONFIG_VAL(renderConfig.hordeShadowmapSize));
   h3dSetOption(H3DOptions::FastAnimation,
-               Config::Instance().renderConfig.hordeFastAnimation.GetVal());
+               CONFIG_VAL(renderConfig.hordeFastAnimation));
   h3dSetOption(H3DOptions::SampleCount,
-               Config::Instance().renderConfig.hordeSampleCount.GetVal());
+               CONFIG_VAL(renderConfig.hordeSampleCount));
   h3dSetOption(H3DOptions::DumpFailedShaders,
-               Config::Instance().renderConfig.hordeDumpFailedShaders.GetVal());
+               CONFIG_VAL(renderConfig.hordeDumpFailedShaders));
 }
 
 void RenderModule::InitH3D() {
@@ -118,24 +114,29 @@ void RenderModule::InitResources() {  // 1. Add resources
       Config::Instance().renderConfig.hordePipeline.GetVal().c_str(), 0);
 
   LoadResourceFromDisk(
-      pipelineRes,
+      pipelineRes, true,
       "Render::InitPipeline => Error in loading pipeline resources");
 }
 
-void RenderModule::LoadResourceFromDisk(H3DRes resource,
-                                        std::string errorMessage) {
+void RenderModule::LoadResourceFromDisk(H3DRes resource, bool isEnginePath,
+                                        const std::string_view errorMessage) {
   PROFILE
   // horde3d loading won't load all resource files, it only load current
   // resource and ad nested resources into the resource list as unloaded
   // resources. So here, I need to iteratively load all unloaded resources.
   // Assumption: the resource handle is always increasing
+  std::string path;
+  if (isEnginePath)
+    path = CONFIG_VAL(enginePath);
+  else
+    path = CONFIG_VAL(resourcePath);
   while (resource != 0 && !h3dIsResLoaded(resource)) {
     std::string filepath{h3dGetResName(resource)};
-    Filesystem::Concat({resourcePath}, &filepath);
+    Filesystem::Concat({path}, &filepath);
     int fileSize = Filesystem::Instance().GetFileLength(filepath);
     auto data = Filesystem::Instance().Read(filepath.c_str());
     if (!h3dLoadResource(resource, data, fileSize)) {
-      throw std::exception{errorMessage.c_str()};
+      throw std::exception{errorMessage.data()};
     }
 
     delete[] data;

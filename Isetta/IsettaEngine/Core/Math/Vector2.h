@@ -7,7 +7,7 @@
 
 namespace Isetta::Math {
 
-class ISETTA_API_DECLARE Vector2 {
+class ISETTA_API Vector2 {
  public:
   // Constants
   static const Vector2 zero;
@@ -83,7 +83,7 @@ class ISETTA_API_DECLARE Vector2 {
   inline Vector2 operator-(const Vector2& rhs) const {
     return Vector2(x - rhs.x, y - rhs.y);
   }
-  inline friend Vector2 operator-(float , Vector2 rhs) {
+  inline friend Vector2 operator-(float, Vector2 rhs) {
     return Vector2(-rhs.x, -rhs.y);
   }
   inline Vector2& operator-=(const Vector2& rhs) {
