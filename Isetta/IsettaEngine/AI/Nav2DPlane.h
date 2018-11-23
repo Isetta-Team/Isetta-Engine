@@ -42,6 +42,7 @@ class Nav2DPlane {
   void DebugDisplay() const;
 #endif
   void AddTarget(class Transform* transform);
+  void RemoveTarget(class Transform* transform);
   void UpdateRoute();
   void AddObstacle(const Nav2DObstacle& obstacle);
   Math::Vector2 GetDirectionByPosition(Math::Vector2 position);

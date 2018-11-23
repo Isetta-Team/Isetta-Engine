@@ -41,4 +41,8 @@ void Isetta::AITestComponent::Awake() {
   zero->SetTransform({0.3, 0, 0.3});
   navPlane.AddTarget(zero->transform);
   navPlane.AddTarget(trackingEntity);
+
+  Input::RegisterKeyPressCallback(KeyCode::P, [&, zero]() {
+    navPlane.RemoveTarget(zero->transform);
+  });
 }

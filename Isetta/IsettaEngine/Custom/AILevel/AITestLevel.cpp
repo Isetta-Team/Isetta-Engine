@@ -26,7 +26,7 @@ void Isetta::AITestLevel::OnLevelLoad() {
   Entity *moveCube{Entity::Instantiate("Move")};
   moveCube->SetTransform(Math::Vector3{5, 0, 5}, Math::Vector3::zero,
                          Math::Vector3::one * 0.2);
-  moveCube->AddComponent<MeshComponent>("primitive/Cube.scene.xml");
+  moveCube->AddComponent<MeshComponent>("primitives/Cube.scene.xml");
   auto p = moveCube->AddComponent<ParticleSystemComponent>(
       "particles/particleSys1/particleSys1.scene.xml");
   Input::RegisterKeyPressCallback(KeyCode::L, [p]() { p->SetActive(false); });
