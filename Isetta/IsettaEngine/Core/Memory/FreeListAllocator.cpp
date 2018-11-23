@@ -21,6 +21,8 @@ FreeListAllocator::~FreeListAllocator() {
   }
 
 #if _DEBUG
+  LOG_INFO(Debug::Channel::Memory, "You did %I64u news and %I64u deletes", numOfNews, numOfDeletes);
+  LOG_INFO(Debug::Channel::Memory, "You did %I64u allocs and %I64u frees", numOfAllocs, numOfFrees);
   if (sizeUsed > 0) {
     LOG_WARNING(Debug::Channel::Memory,
                 "Memory leak of %I64u detected on freelist", sizeUsed);
@@ -106,15 +108,18 @@ void* FreeListAllocator::Alloc(const Size size, const U8 alignment) {
       AllocHeader(allocSize, adjustment);
 #if _DEBUG
   sizeUsed += allocSize;
-  auto name = Util::StrFormat("AllocSize[%I64u]", allocSize);
-  StringId sid = SID(name);
-  auto it = monitor.find(sid);
-  if (it != monitor.end()) {
-    Allocations allocations = it->second;
-    allocations.second++;
-    it->second = allocations;
-  } else {
-    monitor.insert({sid, {name, 1}});
+  if (monitorPureAlloc) {
+    numOfAllocs++;
+    auto name = Util::StrFormat("AllocSize[%I64u]", allocSize);
+    StringId sid = SID(name);
+    auto it = monitor.find(sid);
+    if (it != monitor.end()) {
+      Allocations allocations = it->second;
+      allocations.second++;
+      it->second = allocations;
+    } else {
+      monitor.insert({sid, {name, 1}});
+    }
   }
 #endif
 
@@ -128,16 +133,19 @@ void FreeListAllocator::Free(void* memPtr) {
   auto* allocHeader = reinterpret_cast<AllocHeader*>(allocHeaderAdd);
 #if _DEBUG
   sizeUsed -= allocHeader->size;
-  auto name = Util::StrFormat("AllocSize[%I64u]", allocHeader->size);
-  StringId sid = SID(name);
-  auto it = monitor.find(sid);
-  ASSERT(it != monitor.end());
-  Allocations allocations = it->second;
-  allocations.second--;
-  if (allocations.second == 0) {
-    monitor.erase(it);
-  } else {
-    it->second = allocations;
+  if (monitorPureAlloc) {
+    numOfFrees++;
+    auto name = Util::StrFormat("AllocSize[%I64u]", allocHeader->size);
+    StringId sid = SID(name);
+    auto it = monitor.find(sid);
+    ASSERT(it != monitor.end());
+    Allocations allocations = it->second;
+    allocations.second--;
+    if (allocations.second == 0) {
+      monitor.erase(it);
+    } else {
+      it->second = allocations;
+    }
   }
 #endif
   PtrInt nodeAddress = allocHeaderAdd - allocHeader->adjustment;

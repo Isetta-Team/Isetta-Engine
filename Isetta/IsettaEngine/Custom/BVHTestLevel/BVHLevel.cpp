@@ -81,7 +81,7 @@ void BVHLevel::OnLevelLoad() {
       randomMovers.PushBack(sphere->AddComponent<RandomMover>());
       randomMovers.Back()->SetActive(enable);
       randomMovers.Back()->range = range;
-      SphereCollider* col = sphere->AddComponent<SphereCollider>();
+      sphere->AddComponent<SphereCollider>();
       sphere->AddComponent<CollisionHandler>();
       sphere->AddComponent<DebugCollision>();
       const float size = 20;
@@ -98,7 +98,7 @@ void BVHLevel::OnLevelLoad() {
     randomMovers.PushBack(sphere->AddComponent<RandomMover>());
     randomMovers.Back()->SetActive(enable);
     randomMovers.Back()->range = range;
-    SphereCollider* col = sphere->AddComponent<SphereCollider>();
+    sphere->AddComponent<SphereCollider>();
     sphere->AddComponent<CollisionHandler>();
     sphere->AddComponent<DebugCollision>();
     const float size = 20;

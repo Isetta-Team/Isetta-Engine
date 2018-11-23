@@ -224,8 +224,7 @@ T* MemoryManager::NewArrOnFreeList(const Size length, const U8 alignment) {
 
 template <typename T>
 void MemoryManager::DeleteArrOnFreeList(Size length, T* ptrToDelete) {
-  for (int i = 0; i < length; ++i) ptrToDelete[i].~T();
-  FreeOnFreeList(ptrToDelete);
+  GetInstance()->freeListAllocator.DeleteArr(length, ptrToDelete);
 }
 
 template <typename T, typename... Args>

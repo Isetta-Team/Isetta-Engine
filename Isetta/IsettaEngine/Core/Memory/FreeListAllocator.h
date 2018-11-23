@@ -38,6 +38,8 @@ class ISETTA_API FreeListAllocator {
   void Delete(T* t);
   template <typename T>
   T* NewArr(Size length, U8 alignment);
+  template <typename T>
+  void DeleteArr(Size length, T* ptrToDelete);
 
  private:
   struct Node {
@@ -73,8 +75,14 @@ class ISETTA_API FreeListAllocator {
 #if _DEBUG
   Size totalSize{0};
   Size sizeUsed{0};
+  Size numOfNews{0};
+  Size numOfDeletes{0};
+  Size numOfAllocs{0};
+  Size numOfFrees{0};
   using Allocations = std::pair<std::string, U16>;
   std::unordered_map<StringId, Allocations> monitor;
+  std::unordered_map<U64, std::string> vtableToNameMap;
+  bool monitorPureAlloc = true;
   void Print() const;
 #endif
 
@@ -83,21 +91,125 @@ class ISETTA_API FreeListAllocator {
 
 template <typename T, typename... Args>
 T* FreeListAllocator::New(Args... args) {
+#if _DEBUG
+  numOfNews++;
+  monitorPureAlloc = false;
+  T* ret = new (Alloc(sizeof(T), MemUtil::ALIGNMENT)) T(args...);
+  monitorPureAlloc = true;
+  std::string name = typeid(T).name();
+
+  if (std::is_base_of<class Component, T>::value) {
+    U64 vPointer = *reinterpret_cast<U64*>(ret);
+    vtableToNameMap.insert({vPointer, name});
+  }
+
+  StringId sid = SID(name.c_str());
+  auto it = monitor.find(sid);
+  if (it != monitor.end()) {
+    Allocations allocations = it->second;
+    allocations.second++;
+    it->second = allocations;
+  } else {
+    monitor.insert({sid, {name, 1}});
+  }
+  return ret;
+#else
   return new (Alloc(sizeof(T), MemUtil::ALIGNMENT)) T(args...);
+#endif
 }
 
 template <typename T>
 void FreeListAllocator::Delete(T* t) {
+#if _DEBUG
+  numOfDeletes++;
+  std::string name = typeid(t).name();
+
+  if (std::is_base_of<class Component, T>::value) {
+    U64 vPointer = *reinterpret_cast<U64*>(t);
+    name = vtableToNameMap.find(vPointer)->second;
+  }
+
+  StringId sid = SID(name.c_str());
+  auto it = monitor.find(sid);
+  ASSERT(it != monitor.end());
+  Allocations allocations = it->second;
+  allocations.second--;
+  if (allocations.second == 0) {
+    monitor.erase(it);
+  } else {
+    it->second = allocations;
+  }
+  t->~T();
+
+  PtrInt allocHeaderAdd = reinterpret_cast<PtrInt>(t) - headerSize;
+  auto* allocHeader = reinterpret_cast<AllocHeader*>(allocHeaderAdd);
+  sizeUsed -= allocHeader->size;
+  PtrInt nodeAddress = allocHeaderAdd - allocHeader->adjustment;
+  auto* newNode =
+      new (reinterpret_cast<void*>(nodeAddress)) Node(allocHeader->size);
+  memset(newNode + 1, 0xD, newNode->size - nodeSize);
+
+  InsertNode(newNode);
+#else
   t->~T();
   Free(t);
+#endif
 }
 
 template <typename T>
 T* FreeListAllocator::NewArr(Size length, const U8 alignment) {
+#if _DEBUG
+  numOfNews += length;
+  monitorPureAlloc = false;
   void* alloc = Alloc(sizeof(T) * length, alignment);
+  monitorPureAlloc = true;
+
+  std::string name = typeid(T).name();
+
+  StringId sid = SID(name.c_str());
+  auto it = monitor.find(sid);
+  if (it != monitor.end()) {
+    Allocations allocations = it->second;
+    allocations.second += length;
+    it->second = allocations;
+  } else {
+    monitor.insert({sid, {name, length}});
+  }
+
+#else
+  void* alloc = Alloc(sizeof(T) * length, alignment);
+#endif
+
   char* allocAddress = static_cast<char*>(alloc);
   for (Size i = 0; i < length; ++i) new (allocAddress + i * sizeof(T)) T;
   return static_cast<T*>(alloc);
+}
+
+template <typename T>
+void FreeListAllocator::DeleteArr(const Size length, T* ptrToDelete) {
+  for (int i = 0; i < length; ++i) ptrToDelete[i].~T();
+#if _DEBUG
+  numOfDeletes += length;
+  std::string name = typeid(T).name();
+
+  StringId sid = SID(name.c_str());
+  auto it = monitor.find(sid);
+  ASSERT(it != monitor.end());
+  Allocations allocations = it->second;
+  allocations.second -= length;
+  ASSERT(allocations.second >= 0);
+  if (allocations.second == 0) {
+    monitor.erase(it);
+  } else {
+    it->second = allocations;
+  }
+
+  monitorPureAlloc = false;
+  Free(static_cast<void*>(ptrToDelete));
+  monitorPureAlloc = true;
+#else
+  Free(static_cast<void*>)ptrToDelete));
+#endif
 }
 
 }  // namespace Isetta

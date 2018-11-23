@@ -18,8 +18,7 @@ LightComponent::LightComponent() : name{entity->GetEntityIdString()} {
   ASSERT(renderModule != nullptr);
   renderModule->lightComponents.push_back(this);
 
-  renderResource = LoadResourceFromFile(
-      Config::Instance().lightConfig.lightMaterial.GetVal());
+  renderResource = LoadResourceFromFile(CONFIG_VAL(lightConfig.lightMaterial));
 }
 
 H3DRes LightComponent::LoadResourceFromFile(std::string_view resourceName) {

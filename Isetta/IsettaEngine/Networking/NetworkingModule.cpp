@@ -123,7 +123,8 @@ void NetworkingModule::ShutDown() {
   ShutdownYojimbo();
 
   client->~Client();
-  MemoryManager::FreeOnFreeList(clientSendBuffer);
+  MemoryManager::DeleteArrOnFreeList<RingBuffer<yojimbo::Message*>>(
+      CONFIG_VAL(networkConfig.clientQueueSize), clientSendBuffer);
   clientAllocator->~NetworkAllocator();
 }
 

@@ -285,9 +285,10 @@ inline void Array<T>::ReservePow2(int inCapacity) {
   T *tmpData = MemoryManager::NewArrOnFreeList<T>(inCapacity);
   for (int i = 0; i < size; ++i) {
     tmpData[i] = std::move(data[i]);
-    data[i].~T();
   }
-  if (capacity > 0) MemoryManager::FreeOnFreeList(data);
+  if (capacity > 0) {
+    MemoryManager::DeleteArrOnFreeList<T>(capacity, data);
+  }
   capacity = inCapacity;
   data = tmpData;
   tmpData = nullptr;
@@ -299,25 +300,24 @@ inline void Array<T>::Reserve(int inCapacity) {
   T *tmpData = MemoryManager::NewArrOnFreeList<T>(inCapacity);
   for (int i = 0; i < size; ++i) {
     tmpData[i] = std::move(data[i]);
-    data[i].~T();
   }
-  if (capacity > 0) MemoryManager::FreeOnFreeList(data);
+  if (capacity > 0) {
+    MemoryManager::DeleteArrOnFreeList<T>(capacity, data);
+  }
   capacity = inCapacity;
   data = tmpData;
 }
 template <typename T>
 inline void Array<T>::Shrink() {
   if (size == capacity) return;
-  // TODO(Jacob) + TODO(Yidi) + TODO(Caleb) can I just shift the pointer?
-  // realloc free list
-  // MemoryManager::FreeOnFreeList(data + size * sizeof(T));
+  // TODO(YIDI): Use realloc
   T *tmpData = MemoryManager::NewArrOnFreeList<T>(size);
   for (int i = 0; i < size; ++i) {
     tmpData[i] = std::move(data[i]);
-    data[i].~T();
   }
-  for (int i = size; i < capacity; ++i) data[i].~T();
-  if (capacity > 0) MemoryManager::FreeOnFreeList(data);
+  if (capacity > 0) {
+    MemoryManager::DeleteArrOnFreeList<T>(capacity, data);
+  }
   capacity = size;
   data = tmpData;
 }
