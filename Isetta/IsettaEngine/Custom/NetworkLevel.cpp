@@ -82,7 +82,7 @@ void RegisterExampleMessageFunctions() {
             Entity* entity = NetworkManager::Instance().GetNetworkEntity(
                 spawnMessage->netId);
             if (!entity) {
-              Entity* e = Entity::CreateEntity(
+              Entity* e = Entity::Instantiate(
                   Util::StrFormat("NetworkEntity (%d)", spawnMessage->netId));
               NetworkId* netId =
                   e->AddComponent<NetworkId>(spawnMessage->netId);
@@ -116,7 +116,7 @@ void RegisterExampleMessageFunctions() {
                 reinterpret_cast<SpawnMessage*>(message);
 
             if (!spawnMessage->netId) {
-              Entity* e = Entity::CreateEntity(
+              Entity* e = Entity::Instantiate(
                   Util::StrFormat("NetworkEntity%d", count++));
               NetworkId* netId = e->AddComponent<NetworkId>();
               netId->clientAuthorityId = clientIdx;
@@ -317,7 +317,7 @@ void NetworkLevel::OnLevelLoad() {
   });
 
   // Camera
-  Entity* cameraEntity{Entity::CreateEntity("Camera")};
+  Entity* cameraEntity{Entity::Instantiate("Camera")};
   cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->AddComponent<AudioListener>();
   cameraEntity->AddComponent<FlyController>();
@@ -325,7 +325,7 @@ void NetworkLevel::OnLevelLoad() {
                              Math::Vector3::one);
 
   // Light
-  Entity* lightEntity{Entity::CreateEntity("Light")};
+  Entity* lightEntity{Entity::Instantiate("Light")};
   lightEntity->AddComponent<LightComponent>();
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);

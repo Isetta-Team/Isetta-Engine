@@ -30,24 +30,24 @@
 namespace Isetta {
 
 void CollisionSolverLevel::OnLevelLoad() {
-  Entity *debugEntity{Entity::CreateEntity("Debug")};
+  Entity *debugEntity{Entity::Instantiate("Debug")};
   debugEntity->AddComponent<FrameReporter>();
 
   // Camera
-  Entity *cameraEntity = Entity::CreateEntity("Camera");
+  Entity *cameraEntity = Entity::Instantiate("Camera");
   cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->SetTransform(Math::Vector3{0, 10, 6}, Math::Vector3{-45, 0, 0},
                              Math::Vector3::one);
   cameraEntity->AddComponent<FlyController>(false);
 
   // Light
-  Entity *lightEntity{Entity::CreateEntity("Light")};
+  Entity *lightEntity{Entity::Instantiate("Light")};
   lightEntity->AddComponent<LightComponent>();
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
   lightEntity->AddComponent<EditorComponent>();
 
-  Entity *grid{Entity::CreateEntity("Grid")};
+  Entity *grid{Entity::Instantiate("Grid")};
   grid->AddComponent<GridComponent>();
   grid->AddComponent<RaycastClick>();
 
@@ -55,7 +55,7 @@ void CollisionSolverLevel::OnLevelLoad() {
   const int COLLIDERS = 3;
   Entity *staticCol[COLLIDERS];
 
-  staticCol[0] = Entity::CreateEntity("box-collider", nullptr, true);
+  staticCol[0] = Entity::Instantiate("box-collider", nullptr, true);
   staticCol[0]->SetTransform(Math::Vector3{0, 1, 0}, Math::Vector3{0, 0, 0});
   BoxCollider *bCol = staticCol[0]->AddComponent<BoxCollider>();
   bCol->mass = 100;
@@ -65,13 +65,13 @@ void CollisionSolverLevel::OnLevelLoad() {
   });
   staticCol[0]->AddComponent<DebugCollision>();
 
-  staticCol[1] = Entity::CreateEntity("sphere-collider", nullptr, true);
+  staticCol[1] = Entity::Instantiate("sphere-collider", nullptr, true);
   staticCol[1]->SetTransform(Math::Vector3{0, 1, -4});
   SphereCollider *sCol = staticCol[1]->AddComponent<SphereCollider>();
   Collider *c = staticCol[1]->GetComponent<Collider>();
   c->mass = 1;
 
-  staticCol[2] = Entity::CreateEntity("capsule-collider", nullptr, true);
+  staticCol[2] = Entity::Instantiate("capsule-collider", nullptr, true);
   staticCol[2]->SetTransform(Math::Vector3{0, 1, -8});
   CapsuleCollider *cCol = staticCol[2]->AddComponent<CapsuleCollider>(
       false, Math::Vector3::zero, 0.5, 2, CapsuleCollider::Direction::X_AXIS);
@@ -79,18 +79,18 @@ void CollisionSolverLevel::OnLevelLoad() {
   cCol->mass = 50;
 
   //// DYNAMIC
-  static Entity *box{Entity::CreateEntity("box-collider-dynamic")};
+  static Entity *box{Entity::Instantiate("box-collider-dynamic")};
   box->SetTransform(Math::Vector3{3, 1, 0}, Math::Vector3{0, 0, 0});
   // box->transform->SetLocalRot(-45 * Math::Vector3::up);
   box->AddComponent<BoxCollider>();
   box->AddComponent<KeyTransform>();
 
-  static Entity *sphere{Entity::CreateEntity("sphere-collider-dynamic")};
+  static Entity *sphere{Entity::Instantiate("sphere-collider-dynamic")};
   sphere->SetTransform(Math::Vector3{3, 1, -4});
   sphere->AddComponent<SphereCollider>();
   sphere->AddComponent<KeyTransform>()->SetActive(false);
 
-  static Entity *capsule{Entity::CreateEntity("capsule-collider-dynamic")};
+  static Entity *capsule{Entity::Instantiate("capsule-collider-dynamic")};
   capsule->transform->SetLocalPos(Math::Vector3{3, 1, -8});
   capsule->transform->SetLocalRot(-30 * Math::Vector3::up);
 

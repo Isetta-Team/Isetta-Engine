@@ -114,7 +114,7 @@ Entity::~Entity() {
   CheckDestroy();
 }
 
-Entity* Entity::CreateEntity(const std::string name, Entity *parent, const bool entityStatic) {
+Entity* Entity::Instantiate(const std::string name, Entity *parent, const bool entityStatic) {
   return LevelManager::Instance().loadedLevel->AddEntity(name, parent, entityStatic);
 }
 

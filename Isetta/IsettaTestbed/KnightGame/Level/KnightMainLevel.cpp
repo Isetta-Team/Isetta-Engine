@@ -25,21 +25,21 @@ using LightProperty = LightComponent::Property;
 void KnightMainLevel::OnLevelLoad() {
   Logger::channelMask.set(static_cast<int>(Debug::Channel::Memory), false);
 
-  Entity* cameraEntity = Entity::CreateEntity("Camera");
+  Entity* cameraEntity = Entity::Instantiate("Camera");
   CameraComponent* camComp = cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
 
-  Entity* lightEntity = Entity::CreateEntity("Light");
+  Entity* lightEntity = Entity::Instantiate("Light");
   LightComponent* lightComp = lightEntity->AddComponent<LightComponent>(
       "materials/light.material.xml", "LIGHT_1");
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
 
-  Entity* editor{Entity::CreateEntity("Editor")};
+  Entity* editor{Entity::Instantiate("Editor")};
   editor->AddComponent<GridComponent>();
 
-  Entity* knight = Entity::CreateEntity("Knight");
+  Entity* knight = Entity::Instantiate("Knight");
   MeshComponent* mesh =
       knight->AddComponent<MeshComponent>(KNIGHT_PATH + "idle.scene.xml");
   AnimationComponent* animation =
@@ -50,7 +50,7 @@ void KnightMainLevel::OnLevelLoad() {
   bool follow[3] = {true, false, false};
   cameraEntity->AddComponent<FollowComponent>(knight, follow);
 
-  Entity* sword = Entity::CreateEntity("Sword");
+  Entity* sword = Entity::Instantiate("Sword");
   sword->transform->SetParent(knight->transform);
   sword->AddComponent<MeshComponent>(KNIGHT_PATH + "sword.scene.xml");
   sword->AddComponent<SwordController>(mesh);

@@ -11,7 +11,7 @@
 
 namespace Isetta {
 Entity* Primitive::Create(Type type, bool withCollider) {
-  Entity* entity = Entity::CreateEntity("");
+  Entity* entity = Entity::Instantiate("");
   switch (type) {
     case Type::Capsule:
       entity->SetName("Capsule");

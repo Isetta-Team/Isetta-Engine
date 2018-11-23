@@ -22,7 +22,7 @@ void GameManager::Start() {
 void GameManager::OnEnable() {
   zombies.reserve(poolSize);
   for (int i = 0; i < poolSize; i++) {
-    Entity* zombie{Entity::CreateEntity(Util::StrFormat("Zombie (%d)", i))};
+    Entity* zombie{Entity::Instantiate(Util::StrFormat("Zombie (%d)", i))};
     zombie->AddComponent<Zombie, true>();
     zombie->SetActive(false);
     zombies.push_back(zombie);

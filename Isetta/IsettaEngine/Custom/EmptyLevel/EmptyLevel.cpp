@@ -12,7 +12,7 @@
 namespace Isetta {
 
 void EmptyLevel::OnLevelLoad() {
-  Entity* cameraEntity{Entity::CreateEntity("Camera")};
+  Entity* cameraEntity{Entity::Instantiate("Camera")};
   cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);

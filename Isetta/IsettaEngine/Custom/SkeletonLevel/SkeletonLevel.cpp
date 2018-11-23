@@ -8,8 +8,8 @@
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
 #include "Core/Config/Config.h"
-#include "Custom/EscapeExit.h"
 #include "Core/IsettaCore.h"
+#include "Custom/EscapeExit.h"
 #include "Events/Events.h"
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
@@ -17,22 +17,22 @@
 namespace Isetta {
 
 void SkeletonLevel::OnLevelLoad() {
-  Entity *cameraEntity{Entity::CreateEntity("Camera")};
-      cameraEntity->AddComponent<CameraComponent>();
+  Entity *cameraEntity{Entity::Instantiate("Camera")};
+  cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
   cameraEntity->AddComponent<FlyController>();
 
-  Entity *lightEntity{Entity::CreateEntity("Light")};
+  Entity *lightEntity{Entity::Instantiate("Light")};
   lightEntity->AddComponent<LightComponent>();
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
 
-  Entity *grid{Entity::CreateEntity("Grid")};
+  Entity *grid{Entity::Instantiate("Grid")};
   grid->AddComponent<GridComponent>();
   grid->AddComponent<EditorComponent>();
 
-  Entity *zombie{Entity::CreateEntity("Zombie")};
+  Entity *zombie{Entity::Instantiate("Zombie")};
   MeshComponent *mesh =
       zombie->AddComponent<MeshComponent>("Zombie/Zombie.scene.xml");
   mesh->SetActive(false);
@@ -41,7 +41,7 @@ void SkeletonLevel::OnLevelLoad() {
   animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
   zombie->SetTransform(Math::Vector3::zero, Math::Vector3::zero,
                        Math::Vector3::one * 0.01f);
-  Entity *zombie2{Entity::CreateEntity("Zombie")};
+  Entity *zombie2{Entity::Instantiate("Zombie")};
   MeshComponent *mesh2 =
       zombie2->AddComponent<MeshComponent>("Zombie/Zombie.scene.xml");
   AnimationComponent *animation2 =
@@ -50,43 +50,44 @@ void SkeletonLevel::OnLevelLoad() {
   zombie2->SetTransform({1, 0, 0}, Math::Vector3::zero,
                         Math::Vector3::one * 0.01f);
 
-  Entity *head{Entity::CreateEntity("Head")};
+  Entity *head{Entity::Instantiate("Head")};
   head->AddComponent<MeshComponent>("primitives/Cube.scene.xml");
   head->transform->SetParent(zombie->transform);
   head->transform->SetWorldScale({0.1, 0.1, 0.1});
-  Entity *hips{Entity::CreateEntity("Hips")};
+  Entity *hips{Entity::Instantiate("Hips")};
   hips->AddComponent<MeshComponent>("primitives/Cube.scene.xml");
   hips->transform->SetParent(zombie->transform);
   hips->transform->SetWorldScale({0.1, 0.1, 0.1});
-  Entity *leftShoulder{Entity::CreateEntity("LeftShoulder")};
+  Entity *leftShoulder{Entity::Instantiate("LeftShoulder")};
   leftShoulder->AddComponent<MeshComponent>("primitives/Cube.scene.xml");
   leftShoulder->transform->SetParent(zombie->transform);
   leftShoulder->transform->SetWorldScale({0.1, 0.1, 0.1});
-  Entity *rightShoulder{Entity::CreateEntity("RightShoulder")};
+  Entity *rightShoulder{Entity::Instantiate("RightShoulder")};
   rightShoulder->AddComponent<MeshComponent>("primitives/Cube.scene.xml");
   rightShoulder->transform->SetParent(zombie->transform);
   rightShoulder->transform->SetWorldScale({0.1, 0.1, 0.1});
-  Entity *leftHand{Entity::CreateEntity("LeftHand")};
+  Entity *leftHand{Entity::Instantiate("LeftHand")};
   leftHand->AddComponent<MeshComponent>("primitives/Cube.scene.xml");
   leftHand->transform->SetParent(zombie->transform);
   leftHand->transform->SetWorldScale({0.1, 0.1, 0.1});
-  Entity *rightHand{Entity::CreateEntity("RightHand")};
+  Entity *rightHand{Entity::Instantiate("RightHand")};
   rightHand->AddComponent<MeshComponent>("primitives/Cube.scene.xml");
   rightHand->transform->SetParent(zombie->transform);
   rightHand->transform->SetWorldScale({0.1, 0.1, 0.1});
-  Entity *leftFoot{Entity::CreateEntity("LeftFoot")};
+  Entity *leftFoot{Entity::Instantiate("LeftFoot")};
   leftFoot->AddComponent<MeshComponent>("primitives/Cube.scene.xml");
   leftFoot->transform->SetParent(zombie->transform);
   leftFoot->transform->SetWorldScale({0.1, 0.1, 0.1});
-  Entity *rightFoot{Entity::CreateEntity("RightFoot")};
+  Entity *rightFoot{Entity::Instantiate("RightFoot")};
   rightFoot->AddComponent<MeshComponent>("primitives/Cube.scene.xml");
   rightFoot->transform->SetParent(zombie->transform);
   rightFoot->transform->SetWorldScale({0.1, 0.1, 0.1});
 
   Events::Instance().RegisterEventListener(
       "CustomUpdate", [=](const EventObject &object) {
-        auto positionFunc = [](MeshComponent* mesh, Entity* jointEntity) {
-          auto [pos, rot] = mesh->GetJointWorldTransform(jointEntity->GetName());
+        auto positionFunc = [](MeshComponent *mesh, Entity *jointEntity) {
+          auto [pos, rot] =
+              mesh->GetJointWorldTransform(jointEntity->GetName());
           jointEntity->transform->SetWorldPos(pos);
           jointEntity->transform->SetWorldRot(rot);
         };
