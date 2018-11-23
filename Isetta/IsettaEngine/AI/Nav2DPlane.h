@@ -9,9 +9,10 @@
 #include "Core/Math/Vector2Int.h"
 #include "Core/math/Vector2.h"
 #include "Nav2DObstacle.h"
+#include "ISETTA_API.h"
 
 namespace Isetta {
-class Nav2DPlane {
+class ISETTA_API Nav2DPlane {
   Array<U8> costMatrix;
   Array<Math::Vector2> dirMatrix;
   Array<bool> isObstacle;
