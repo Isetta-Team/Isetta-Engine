@@ -115,9 +115,9 @@ void PlayerController::Shoot() {
       break;
     }
   }
-
-  bullet->SetActive(true);
+  
   if (bullet != nullptr) {
+    bullet->SetActive(true);
     bullet->GetComponent<Bullet>()->Reactivate(
         transform->GetWorldPos() + transform->GetForward() * 0.7 -
             transform->GetLeft() * 0.1 + transform->GetUp() * 1.5,

@@ -33,7 +33,7 @@ class ISETTA_API LevelManager {
 
   static LevelManager& Instance();
 
-  bool Register(const std::string&, Func<class Level*>);
+  bool Register(const std::string, Func<class Level*>);
 
   LevelManager() = default;
   ~LevelManager() = default;

@@ -4,6 +4,9 @@
 #include "Level1.h"
 #include "Audio/AudioListener.h"
 #include "CameraController.h"
+#include "Components/Editor/EditorComponent.h"
+#include "Components/FlyController.h"
+#include "Core/Config/Config.h"
 #include "Custom/EscapeExit.h"
 #include "GameManager.h"
 #include "Graphics/AnimationComponent.h"
@@ -49,6 +52,7 @@ void Level1::OnLevelLoad() {
   Entity* gameManager{Entity::CreateEntity("Game Manager")};
   gameManager->AddComponent<GameManager>();
   gameManager->AddComponent<EscapeExit>();
+  gameManager->AddComponent<EditorComponent>();
 
   // for (int i = 0; i < 10; i++) {
   // Entity* zombie {AddEntity("Zombie")};
