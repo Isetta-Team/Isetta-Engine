@@ -5,7 +5,7 @@
 #include "Components/Editor/EditorComponent.h"
 #include "Components/FlyController.h"
 #include "Core/Config/Config.h"
-#include "Custom/IsettaCore.h"
+#include "Core/IsettaCore.h"
 #include "Graphics/CameraComponent.h"
 #include "Scene/Entity.h"
 #include "Week10MiniGame/W10NetworkManager.h"

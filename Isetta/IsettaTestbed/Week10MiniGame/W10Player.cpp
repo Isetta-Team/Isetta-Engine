@@ -3,7 +3,7 @@
  */
 #include "Week10MiniGame/W10Player.h"
 #include "Core/Time/Time.h"
-#include "Custom/IsettaCore.h"
+#include "Core/IsettaCore.h"
 #include "Events/Events.h"
 #include "Networking/NetworkId.h"
 #include "Networking/NetworkManager.h"

@@ -3,7 +3,7 @@
  */
 #include "Week10MiniGame/W10NetworkPlayer.h"
 #include "Networking/NetworkTransform.h"
-#include "Custom/IsettaCore.h"
+#include "Core/IsettaCore.h"
 #include "Events/EventObject.h"
 #include "Events/Events.h"
 #include "Networking/NetworkId.h"

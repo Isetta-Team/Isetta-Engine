@@ -3,7 +3,7 @@
  */
 #include "Zombie.h"
 #include "Core/Math/Random.h"
-#include "Custom/IsettaCore.h"
+#include "Core/IsettaCore.h"
 #include "GameManager.h"
 #include "Graphics/AnimationComponent.h"
 #include "Graphics/MeshComponent.h"

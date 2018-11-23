@@ -3,7 +3,7 @@
  */
 #include "PlayerController.h"
 #include "Bullet.h"
-#include "Custom/IsettaCore.h"
+#include "Core/IsettaCore.h"
 
 namespace Isetta {
 PlayerController* PlayerController::instance;
