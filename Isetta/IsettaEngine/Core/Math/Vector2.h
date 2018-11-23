@@ -60,7 +60,7 @@ class ISETTA_API Vector2 {
 
   // Conversions
 
-  explicit Vector2(const class Vector3Int& inIntVector);
+  explicit Vector2(const class Vector2Int& inIntVector);
 
   ~Vector2() {}
 

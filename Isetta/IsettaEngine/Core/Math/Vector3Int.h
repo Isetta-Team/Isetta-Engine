@@ -66,7 +66,7 @@ class ISETTA_API Vector3Int {
 
   // Conversions
 
-  explicit Vector3Int(const class Vector3& inIntVector);
+  explicit Vector3Int(const class Vector3& inVector);
   Vector3Int(const class Vector2Int& inVector, int inZ);
 
   explicit operator class Vector2Int();

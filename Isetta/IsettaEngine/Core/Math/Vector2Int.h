@@ -58,7 +58,7 @@ class ISETTA_API Vector2Int {
 
   // Conversions
 
-  explicit Vector2Int(const class Vector2& inIntVector);
+  explicit Vector2Int(const class Vector2& inVector);
   // Vector2(const Vector2& inVector, float inZ);
 
   ~Vector2Int() {}
