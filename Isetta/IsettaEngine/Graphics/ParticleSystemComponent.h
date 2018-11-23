@@ -2,10 +2,9 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-
-#include <Horde3D.h>
-#include "Scene/Component.h"
 #include "Core/DataStructures/Array.h"
+#include "Horde3D/Horde3D/Bindings/C++/Horde3D.h"
+#include "Scene/Component.h"
 
 namespace Isetta {
 BEGIN_COMPONENT(ParticleSystemComponent, Component, false)
@@ -34,4 +33,4 @@ friend class RenderModule;
 static inline class RenderModule* renderModule;
 
 END_COMPONENT(ParticleSystemComponent, Component)
-}
+}  // namespace Isetta

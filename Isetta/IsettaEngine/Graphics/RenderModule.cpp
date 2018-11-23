@@ -5,14 +5,13 @@
 
 #include <exception>
 #include <filesystem>
+#include <string>
 #include "Core/Config/Config.h"
 #include "Core/Filesystem.h"
-#include "Core/Math/Vector3.h"
 #include "Graphics/AnimationComponent.h"
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
 #include "Graphics/ParticleSystemComponent.h"
-#include "Horde3DUtils.h"
 #include "Scene/Entity.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
 
@@ -36,10 +35,6 @@ void RenderModule::Update(float deltaTime) {
   for (const auto& mesh : meshComponents) {
     bool isTransformDirty = mesh->entity->GetAttribute(
         Entity::EntityAttributes::IS_TRANSFORM_DIRTY);
-    // TODO(YIDI): Remove this when finish debugging
-#if _DEBUG
-    isTransformDirty = true;
-#endif
     if (isTransformDirty) {
       mesh->UpdateTransform();
     }

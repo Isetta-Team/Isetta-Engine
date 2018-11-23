@@ -3,9 +3,6 @@
  */
 #pragma once
 
-#ifndef __  // GLAD must be placed first
-#include <glad/glad.h>
-#endif
 #include <GLFW/glfw3.h>
 
 #include "Core/Color.h"

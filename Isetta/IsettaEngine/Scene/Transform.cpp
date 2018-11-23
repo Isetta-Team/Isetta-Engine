@@ -6,11 +6,11 @@
 #include "Core/Debug/Logger.h"
 #include "Core/Math/Matrix3.h"
 #include "Core/Math/Vector4.h"
+#include "Horde3D/Horde3D/Bindings/C++/Horde3D.h"
 #include "Scene/Entity.h"
 #include "Scene/Level.h"
 #include "Scene/LevelManager.h"
 #include "Util.h"
-#include "Horde3D.h"
 
 namespace Isetta {
 Transform::Transform(Entity* const entity) : entity(entity) {}

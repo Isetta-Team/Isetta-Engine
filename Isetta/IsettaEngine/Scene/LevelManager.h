@@ -3,6 +3,7 @@
  */
 #pragma once
 #include <unordered_map>
+#include <vector>
 #include "Core/Config/CVar.h"
 #include "Core/IsettaAlias.h"
 #include "ISETTA_API.h"
@@ -17,6 +18,7 @@ class LevelRegistry {
 
 class ISETTA_API LevelManager {
  private:
+  std::vector<std::string> levelNames;
   std::unordered_map<StringId, Func<class Level*>> levels;
   class Level* pendingLoadLevel{nullptr};
 
@@ -33,7 +35,8 @@ class ISETTA_API LevelManager {
 
   static LevelManager& Instance();
 
-  bool Register(const std::string, Func<class Level*>);
+  bool Register(const std::string_view, Func<class Level*>);
+  std::vector<std::string> GetLevelNames() const;
 
   LevelManager() = default;
   ~LevelManager() = default;

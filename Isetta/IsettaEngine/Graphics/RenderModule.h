@@ -4,10 +4,9 @@
 #pragma once
 
 #include <list>
-#include <string>
 #include "Core/Config/CVar.h"
 #include "GLFW/glfw3.h"
-#include "Horde3D.h"
+#include "Horde3D/Horde3D/Bindings/C++/Horde3D.h"
 
 namespace Isetta {
 class ISETTA_API_DECLARE RenderModule {

@@ -12,9 +12,14 @@ LevelManager& LevelManager::Instance() {
   return instance;
 }
 
-bool LevelManager::Register(const std::string name, Func<Level*> level) {
-  levels.insert_or_assign(SID(name.c_str()), level);
+bool LevelManager::Register(const std::string_view name, Func<Level*> level) {
+  levels.insert_or_assign(SID(name.data()), level);
+  levelNames.push_back(name.data());
   return true;
+}
+
+std::vector<std::string> LevelManager::GetLevelNames() const {
+  return levelNames;
 }
 
 void LevelManager::LoadLevel() {

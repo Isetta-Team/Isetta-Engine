@@ -5,7 +5,7 @@
 #include <string>
 #include "Core/Color.h"
 #include "Core/Config/CVar.h"
-#include "Horde3D.h"
+#include "Horde3D/Horde3D/Bindings/C++/Horde3D.h"
 #include "Scene/Component.h"
 
 namespace Isetta {

@@ -8,6 +8,7 @@
 
 #include "Components/Editor/EditorComponent.h"
 #include "Custom/EscapeExit.h"
+#include "Custom/LevelLoader.h"
 
 #include "Scene/Primitive.h"
 
@@ -15,7 +16,7 @@ namespace Isetta {
 
 void EditorLevel::OnLevelLoad() {
   Entity* cameraEntity{Entity::Instantiate("Camera")};
-      cameraEntity->AddComponent<CameraComponent>();
+  cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
 
@@ -25,8 +26,6 @@ void EditorLevel::OnLevelLoad() {
   // Inspector* inspector = editor->AddComponent<Inspector>("Inspector", false);
   // editor->AddComponent<Hierarchy>("Hierarchy", true, inspector);
   editor->AddComponent<EscapeExit>();
-
-  Primitive::Create(Primitive::Type::Cube);
-  Primitive::Create(Primitive::Type::Cube);
+  editor->AddComponent<LevelLoader>();
 }
 }  // namespace Isetta

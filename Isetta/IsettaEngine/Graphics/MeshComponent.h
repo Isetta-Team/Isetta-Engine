@@ -2,10 +2,9 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include <Horde3D.h>
 #include <string>
-#include <string_view>
 #include "Core/Math/Math.h"
+#include "Horde3D/Horde3D/Bindings/C++/Horde3D.h"
 #include "SID/sid.h"
 #include "Scene/Component.h"
 

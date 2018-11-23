@@ -622,8 +622,8 @@ class ISETTA_API GUI {
   */
 
   // TEXT
-  static void Text(const RectTransform& transform, const std::string& format,
-                   const TextStyle& style = {});
+  static void Text(const RectTransform& transform,
+                   const std::string_view format, const TextStyle& style = {});
   ////////////////////////////////////////
   // TODO(Jacob) NOT PART OF GAME NEEDS //
   ////////////////////////////////////////
