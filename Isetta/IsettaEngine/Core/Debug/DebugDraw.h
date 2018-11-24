@@ -72,9 +72,10 @@ class ISETTA_API_DECLARE DebugDraw {
                           const Color& color = Color::white,
                           float thickness = 1.0f, float duration = 0,
                           bool depthTest = true);
-  static void Grid(const Math::Matrix4& transformation = Math::Matrix4::zero,
-                   int lines = 30, const Color& color = Color::lightGrey,
-                   float thickness = 1.0f, float duration = 0);
+  static void Grid(
+      const Math::Matrix4& transformation = Math::Matrix4::identity,
+      int lines = 30, const Color& color = Color::lightGrey,
+      float thickness = 1.0f, float duration = 0);
   static void Axis(
       const Math::Matrix4& transformation = Math::Matrix4::identity,
       const Color& xColor = Color::red, const Color& yColor = Color::green,
