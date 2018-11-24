@@ -402,7 +402,7 @@ inline void Array<T>::Assign(std::initializer_list<T> list) {
   if (list.size() > capacity) ReservePow2(list.size());
   size = list.size();
   iterator itThis = begin();
-  for (auto it = list.begin(); it != list.end(); +++it, ++itThis) {
+  for (auto it = list.begin(); it != list.end(); ++it, ++itThis) {
     (*itThis).~T();
     *itThis = *it;
   }
