@@ -77,6 +77,8 @@ class ISETTA_API FreeListAllocator {
   Size sizeUsed{0};
   Size numOfNews{0};
   Size numOfDeletes{0};
+  Size numOfArrNews{0};
+  Size numOfArrDeletes{0};
   Size numOfAllocs{0};
   Size numOfFrees{0};
   using Allocations = std::pair<std::string, U16>;
@@ -122,11 +124,13 @@ template <typename T>
 void FreeListAllocator::Delete(T* t) {
 #if _DEBUG
   numOfDeletes++;
-  std::string name = typeid(T).name();
+  std::string name;
 
   if (std::is_base_of<class Component, T>::value) {
     U64 vPointer = *reinterpret_cast<U64*>(t);
     name = vtableToNameMap.find(vPointer)->second;
+  } else {
+    name = typeid(T).name();
   }
 
   StringId sid = SID(name.c_str());
@@ -141,41 +145,52 @@ void FreeListAllocator::Delete(T* t) {
   }
   t->~T();
 
-  PtrInt allocHeaderAdd = reinterpret_cast<PtrInt>(t) - headerSize;
-  auto* allocHeader = reinterpret_cast<AllocHeader*>(allocHeaderAdd);
-  sizeUsed -= allocHeader->size;
-  PtrInt nodeAddress = allocHeaderAdd - allocHeader->adjustment;
-  auto* newNode =
-      new (reinterpret_cast<void*>(nodeAddress)) Node(allocHeader->size);
-  memset(newNode + 1, 0xD, newNode->size - nodeSize);
+  monitorPureAlloc = false;
+  Free(static_cast<void*>(t));
+  monitorPureAlloc = true;
+  // PtrInt allocHeaderAdd = reinterpret_cast<PtrInt>(t) - headerSize;
+  // auto* allocHeader = reinterpret_cast<AllocHeader*>(allocHeaderAdd);
+  // sizeUsed -= allocHeader->size;
+  // PtrInt nodeAddress = allocHeaderAdd - allocHeader->adjustment;
+  // auto* newNode =
+  // new (reinterpret_cast<void*>(nodeAddress)) Node(allocHeader->size);
+  // memset(newNode + 1, 0xD, newNode->size - nodeSize);
 
-  InsertNode(newNode);
+  // InsertNode(newNode);
 #else
   t->~T();
-  Free(t);
+  Free(static_cast<void*>(t));
 #endif
 }
 
 template <typename T>
 T* FreeListAllocator::NewArr(Size length, const U8 alignment) {
 #if _DEBUG
-  numOfNews += length;
   monitorPureAlloc = false;
   void* alloc = Alloc(sizeof(T) * length, alignment);
   monitorPureAlloc = true;
 
+  numOfArrNews++;
   std::string name = typeid(T).name();
+
+  if (std::is_base_of<class Component, T>::value) {
+    U64 vPointer = *reinterpret_cast<U64*>(alloc);
+    vtableToNameMap.insert({vPointer, name});
+  }
+
+  name += "Array (Size = ";
+  name += std::to_string(length);
+  name += ")";
 
   StringId sid = SID(name.c_str());
   auto it = monitor.find(sid);
   if (it != monitor.end()) {
     Allocations allocations = it->second;
-    allocations.second += length;
+    allocations.second++;
     it->second = allocations;
   } else {
-    monitor.insert({sid, {name, length}});
+    monitor.insert({sid, {name, 1}});
   }
-
 #else
   void* alloc = Alloc(sizeof(T) * length, alignment);
 #endif
@@ -187,13 +202,24 @@ T* FreeListAllocator::NewArr(Size length, const U8 alignment) {
 
 template <typename T>
 void FreeListAllocator::DeleteArr(const Size length, T* ptrToDelete) {
-  for (int i = 0; i < length; ++i) ptrToDelete[i].~T();
 #if _DEBUG
-  numOfDeletes += length;
-  std::string name = typeid(T).name();
+  numOfArrDeletes++;
+  std::string name;
+
+  if (std::is_base_of<class Component, T>::value) {
+    U64 vPointer = *reinterpret_cast<U64*>(ptrToDelete);
+    name = vtableToNameMap.find(vPointer)->second;
+  } else {
+    name = typeid(T).name();
+  }
+
+  name += "Array (Size = ";
+  name += std::to_string(length);
+  name += ")";
 
   StringId sid = SID(name.c_str());
   auto it = monitor.find(sid);
+
   // ASSERT(it != monitor.end());
   if (it != monitor.end()) {
     Allocations allocations = it->second;
@@ -205,11 +231,14 @@ void FreeListAllocator::DeleteArr(const Size length, T* ptrToDelete) {
       it->second = allocations;
     }
   }
+
+  for (Size i = 0; i < length; ++i) ptrToDelete[i].~T();
   monitorPureAlloc = false;
   Free(static_cast<void*>(ptrToDelete));
   monitorPureAlloc = true;
 #else
-  Free(static_cast<void*>)ptrToDelete));
+  for (Size i = 0; i < length; ++i) ptrToDelete[i].~T();
+  Free(static_cast<void*>(ptrToDelete));
 #endif
 }
 

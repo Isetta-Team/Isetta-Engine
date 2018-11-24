@@ -6,42 +6,39 @@
 #include <initializer_list>
 #include "Core/Memory/MemoryManager.h"
 #include "ISETTA_API.h"
+#include "Core/DataStructures/Array.h"
 
 namespace Isetta {
 template <typename T>
 class ISETTA_API_DECLARE RingBuffer {
  public:
   // Constructors
-
-  // TODO(Caleb): Update for the custom mem alloc
   RingBuffer();
   explicit RingBuffer(int n);
-  explicit RingBuffer(std::initializer_list<T> il);
+  RingBuffer(std::initializer_list<T> il);
   explicit RingBuffer(std::initializer_list<T> il, int n);
   ~RingBuffer() { MemoryManager::DeleteArrOnFreeList<T>(size, buffer); }
 
   // Copy and move constructors
-
   RingBuffer(const RingBuffer<T>& rb);
-  RingBuffer(RingBuffer<T>&& rb);
+  RingBuffer(RingBuffer<T>&& rb) noexcept;
   RingBuffer<T>& operator=(const RingBuffer<T>& rb);
 
   // Accessors and mutators
-
   T Get();
   void Put(T o);
   T GetBack();
   void PutFront(T o);
-  inline void Clear() { head = tail; }
-  T* ToList() const;
+  void Clear() { head = tail; }
+  Array<T> ToArray() const;
 
   // Property accessors
 
-  inline bool IsEmpty() const { return head == tail; }
-  inline bool IsFull() const { return (tail + 1) % size == head; }
+  bool IsEmpty() const { return head == tail; }
+  bool IsFull() const { return (tail + 1) % size == head; }
 
-  inline int GetCapacity() const { return size - 1; }
-  inline int GetLength() const { return abs(head - tail); }
+  int GetCapacity() const { return size - 1; }
+  int GetLength() const { return abs(head - tail); }
 
  private:
   T* buffer;
@@ -104,17 +101,11 @@ RingBuffer<T>::RingBuffer(std::initializer_list<T> il, int n) : size{n + 1} {
 }
 
 template <typename T>
-RingBuffer<T>::RingBuffer(const RingBuffer<T>& rb) : size{rb.GetCapacity()} {
-  if (buffer) {
-    MemoryManager::FreeOnFreeList(buffer);
-  }
+RingBuffer<T>::RingBuffer(const RingBuffer<T>& rb) : size(rb.GetCapacity()) {
   buffer = MemoryManager::NewArrOnFreeList<T>(size);
-
-  T* copyList = rb.ToList();
-  for (int i = 0; i < rb.GetLength(); ++i) {
-    Put(copyList[i]);
+  for (auto it : rb.ToArray()) {
+    Put(it);
   }
-  MemoryManager::FreeOnFreeList(copyList);
 }
 
 template <typename T>
@@ -123,27 +114,21 @@ RingBuffer<T>& RingBuffer<T>::operator=(const RingBuffer<T>& rb) {
     return *this;
   }
 
-  size = rb.GetCapacity();
-
   if (buffer) {
-    MemoryManager::FreeOnFreeList(buffer);
+    MemoryManager::DeleteArrOnFreeList<T>(size, buffer);
   }
+  size = rb.GetCapacity();
   buffer = MemoryManager::NewArrOnFreeList<T>(size);
 
-  T* copyList = rb.ToList();
-  for (int i = 0; i < rb.GetLength(); ++i) {
-    Put(copyList[i]);
+  for (auto it : rb.ToArray()) {
+    Put(it);
   }
-  MemoryManager::FreeOnFreeList(copyList);
 
   return *this;
 }
 
 template <typename T>
-RingBuffer<T>::RingBuffer(RingBuffer<T>&& rb) : size{rb.GetCapacity()} {
-  if (buffer) {
-    MemoryManager::FreeOnFreeList(buffer);
-  }
+RingBuffer<T>::RingBuffer(RingBuffer<T>&& rb) noexcept : size{rb.GetCapacity()} {
   buffer = MemoryManager::NewArrOnFreeList<T>(size);
 
   while (!rb.IsEmpty()) {
@@ -179,7 +164,6 @@ T RingBuffer<T>::GetBack() {
     throw std::out_of_range{"RingBuffer::getBack => Buffer is empty."};
   }
 
-  int idx = tail;
   tail = std::abs(static_cast<int>((tail - 1) % size));
 
   return buffer[tail];
@@ -196,16 +180,17 @@ void RingBuffer<T>::PutFront(T o) {
 }
 
 template <typename T>
-T* RingBuffer<T>::ToList() const {
-  T* list = MemoryManager::NewArrOnFreeList<T>(GetLength());
+Array<T> RingBuffer<T>::ToArray() const {
+  Array<T> arr;
+  arr.Reserve(GetLength());
   int count = 0;
   int idx = head;
   while (idx != tail) {
-    list[count] = buffer[idx];
+    arr[count] = buffer[idx];
     idx = (idx + 1) % size;
     ++count;
   }
-  return list;
+  return arr;
 }
 
 }  // namespace Isetta

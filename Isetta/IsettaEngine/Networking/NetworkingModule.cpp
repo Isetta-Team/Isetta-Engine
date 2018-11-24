@@ -289,9 +289,9 @@ void NetworkingModule::CloseServer() {
         "running.");
   }
   server->Stop();
-  server->~Server();
-  MemoryManager::FreeOnFreeList(server);
-  MemoryManager::FreeOnFreeList(serverSendBufferArray);
+  MemoryManager::DeleteOnFreeList<yojimbo::Server>(server);
+  MemoryManager::DeleteArrOnFreeList<RingBuffer<yojimbo::Message*>>(
+      CONFIG_VAL(networkConfig.maxClients), serverSendBufferArray);
   serverAllocator->~NetworkAllocator();
 }
 }  // namespace Isetta

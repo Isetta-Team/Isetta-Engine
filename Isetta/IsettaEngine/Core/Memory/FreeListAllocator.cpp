@@ -21,8 +21,11 @@ FreeListAllocator::~FreeListAllocator() {
   }
 
 #if _DEBUG
-  LOG_INFO(Debug::Channel::Memory, "You did %I64u news and %I64u deletes", numOfNews, numOfDeletes);
-  LOG_INFO(Debug::Channel::Memory, "You did %I64u allocs and %I64u frees", numOfAllocs, numOfFrees);
+  LOG_INFO(Debug::Channel::Memory,
+           "You did %I64u news and %I64u deletes; %I64u newArrs and %I64u "
+           "deleteArrs %I64u allocs and %I64u frees.",
+           numOfNews, numOfDeletes, numOfArrNews, numOfArrDeletes, numOfAllocs,
+           numOfFrees);
   if (sizeUsed > 0) {
     LOG_WARNING(Debug::Channel::Memory,
                 "Memory leak of %I64u detected on freelist", sizeUsed);
