@@ -17,6 +17,10 @@ LevelLoader::LevelLoader() : levels{LevelManager::Instance().GetLevelNames()} {}
 void LevelLoader::OnEnable() {
   if (instance) return;
   instance = this;
+  if (handle >= 0) {
+    GLFWInput::UnegisterKeyCallback(handle);
+  }
+
   handle = GLFWInput::RegisterKeyCallback(
       [&](GLFWwindow*, int key, int, int action, int) {
         if (key == GLFW_KEY_F1 && action == GLFW_PRESS) {

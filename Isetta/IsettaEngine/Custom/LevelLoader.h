@@ -9,7 +9,7 @@ namespace Isetta {
 BEGIN_COMPONENT(LevelLoader, Component, true)
 private:
 Array<std::string> levels;
-int handle;
+static inline int handle = -1;
 bool showWindow;
 static LevelLoader* instance;
 
