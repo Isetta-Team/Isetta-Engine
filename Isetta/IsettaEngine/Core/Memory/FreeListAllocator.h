@@ -194,16 +194,17 @@ void FreeListAllocator::DeleteArr(const Size length, T* ptrToDelete) {
 
   StringId sid = SID(name.c_str());
   auto it = monitor.find(sid);
-  ASSERT(it != monitor.end());
-  Allocations allocations = it->second;
-  allocations.second -= length;
-  ASSERT(allocations.second >= 0);
-  if (allocations.second == 0) {
-    monitor.erase(it);
-  } else {
-    it->second = allocations;
+  // ASSERT(it != monitor.end());
+  if (it != monitor.end()) {
+    Allocations allocations = it->second;
+    allocations.second -= length;
+    ASSERT(allocations.second >= 0);
+    if (allocations.second == 0) {
+      monitor.erase(it);
+    } else {
+      it->second = allocations;
+    }
   }
-
   monitorPureAlloc = false;
   Free(static_cast<void*>(ptrToDelete));
   monitorPureAlloc = true;
