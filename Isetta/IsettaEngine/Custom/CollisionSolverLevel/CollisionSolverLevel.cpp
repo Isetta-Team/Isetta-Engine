@@ -79,18 +79,18 @@ void CollisionSolverLevel::OnLevelLoad() {
   cCol->mass = 50;
 
   //// DYNAMIC
-  static Entity *box{Entity::Instantiate("box-collider-dynamic")};
+  box = Entity::Instantiate("box-collider-dynamic");
   box->SetTransform(Math::Vector3{3, 1, 0}, Math::Vector3{0, 0, 0});
   // box->transform->SetLocalRot(-45 * Math::Vector3::up);
   box->AddComponent<BoxCollider>();
   box->AddComponent<KeyTransform>();
 
-  static Entity *sphere{Entity::Instantiate("sphere-collider-dynamic")};
+  sphere = Entity::Instantiate("sphere-collider-dynamic");
   sphere->SetTransform(Math::Vector3{3, 1, -4});
   sphere->AddComponent<SphereCollider>();
   sphere->AddComponent<KeyTransform>()->SetActive(false);
 
-  static Entity *capsule{Entity::Instantiate("capsule-collider-dynamic")};
+  capsule = Entity::Instantiate("capsule-collider-dynamic");
   capsule->transform->SetLocalPos(Math::Vector3{3, 1, -8});
   capsule->transform->SetLocalRot(-30 * Math::Vector3::up);
 

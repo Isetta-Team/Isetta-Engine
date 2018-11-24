@@ -26,6 +26,7 @@ class ISETTA_API_DECLARE DebugDraw {
  public:
   static void StartUp();
   static void Update();
+  static void Clear();
   static void ShutDown();
 
   static void Point(const Math::Vector3 point,
