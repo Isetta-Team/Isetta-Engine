@@ -31,8 +31,7 @@ void KnightMainLevel::OnLevelLoad() {
                              Math::Vector3::one);
 
   Entity* lightEntity = Entity::Instantiate("Light");
-  LightComponent* lightComp = lightEntity->AddComponent<LightComponent>(
-      "materials/light.material.xml", "LIGHT_1");
+  LightComponent* lightComp = lightEntity->AddComponent<LightComponent>();
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
 
