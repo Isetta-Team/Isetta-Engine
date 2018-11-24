@@ -51,8 +51,7 @@ void AudioClip::UnloadAll() {
   while (!clips.empty()) {
     auto nameClipPair = clips.begin();
     AudioClip* clip = nameClipPair->second;
-    AudioModule::CheckStatus(clip->fmodSound->release());
-    MemoryManager::FreeOnFreeList(clip);
+    MemoryManager::DeleteOnFreeList<AudioClip>(clip);
   }
   clips.clear();
 }

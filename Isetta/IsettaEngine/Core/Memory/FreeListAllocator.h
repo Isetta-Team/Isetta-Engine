@@ -122,7 +122,7 @@ template <typename T>
 void FreeListAllocator::Delete(T* t) {
 #if _DEBUG
   numOfDeletes++;
-  std::string name = typeid(t).name();
+  std::string name = typeid(T).name();
 
   if (std::is_base_of<class Component, T>::value) {
     U64 vPointer = *reinterpret_cast<U64*>(t);
