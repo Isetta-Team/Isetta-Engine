@@ -11,7 +11,7 @@ set tools=Tools\
 
 REM Engine Parameters
 set engine=IsettaEngine\
-set resourceFolders=font primitives textures
+set resourceFolders=fonts primitives textures pipelines
 
 set externalFolders[0].folder=brofiler\ProfilerCore\
 set externalFolders[0].files=Brofiler.h
@@ -30,8 +30,8 @@ REM Header Files
 robocopy %base%\%engine% %include%\%header% /S *.h /XD Custom
 
 REM Resource Files
-(for %%folder in (%resourceFolders%) do ( 
-   robocopy %base%\%engine%\Resources%%%folder%% %include%\%resources%\%%folder%% /S *
+(for %%f in (%resourceFolders%) do ( 
+   call robocopy %base%\%engine%\Resources\%%f %include%\%resources%\%%f /S *
 ))
 
 REM Build Files
