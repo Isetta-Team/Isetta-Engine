@@ -240,6 +240,11 @@ void DebugDraw::Update() {
     }
   }
 }
+
+void DebugDraw::Clear() {
+  durationDraw.clear();
+}
+
 void DebugDraw::ShutDown() {
   glDeleteVertexArrays(1, &VAO);
   glDeleteBuffers(1, &VBO);

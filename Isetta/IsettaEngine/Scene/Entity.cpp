@@ -92,7 +92,9 @@ void Entity::CheckDestroy() {
 void Entity::OnDisable() {
   PROFILE
   for (auto &comp : components) {
-    comp->OnDisable();
+    if (comp->GetActive()) {
+      comp->OnDisable();
+    }
   }
 }
 
@@ -115,7 +117,7 @@ Entity::Entity(const std::string &name, const bool entityStatic)
 }
 
 Entity::~Entity() {
-  OnDisable();
+  // OnDisable();
   Destroy(this);
   CheckDestroy();
 }

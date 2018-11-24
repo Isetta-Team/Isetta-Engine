@@ -29,7 +29,10 @@ void LevelLoader::OnEnable() {
       });
 }
 
-void LevelLoader::OnDisable() { instance = nullptr; }
+void LevelLoader::OnDisable() {
+  showWindow = false;
+  instance = nullptr;
+}
 
 void LevelLoader::GuiUpdate() {
   GUI::Window(
