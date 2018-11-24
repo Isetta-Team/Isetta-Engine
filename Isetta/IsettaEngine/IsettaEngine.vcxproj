@@ -377,6 +377,7 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClInclude Include="Core\DataStructures\Delegate.h" />
     <ClInclude Include="Core\DataStructures\HandleBin.h" />
     <ClInclude Include="Core\DataStructures\PriorityQueue.h" />
+    <ClInclude Include="Core\IsettaCore.h" />
     <ClInclude Include="Custom\AILevel\AITestAgent.h" />
     <ClInclude Include="Custom\AILevel\AITestComponent.h" />
     <ClInclude Include="Custom\AILevel\AITestLevel.h" />
@@ -437,7 +438,6 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClInclude Include="Custom\GameMgtLevel\GameMgtLevel.h" />
     <ClInclude Include="Custom\LevelLoader.h" />
     <ClInclude Include="Custom\MeshAnimLevel\MeshAnimLevel.h" />
-    <ClInclude Include="Custom\IsettaCore.h" />
     <ClInclude Include="Custom\KeyTransform.h" />
     <ClInclude Include="Custom\LoadNextLevel.h" />
     <ClInclude Include="Custom\NetworkLevel.h" />

@@ -62,6 +62,9 @@ void Entity::CheckDestroy() {
   PROFILE
   if (GetAttribute(EntityAttributes::NEED_DESTROY)) {
     // Destroy itself
+    if (GetActive()) {
+      OnDisable();
+    }
     DestroyImmediately(this);
   } else {
     // Destroy components
@@ -70,8 +73,11 @@ void Entity::CheckDestroy() {
     while (typeIter != componentTypes.end() && compIter != components.end()) {
       Component *comp = *compIter;
       if (comp->GetAttribute(Component::ComponentAttributes::NEED_DESTROY)) {
-        comp->~Component();
+        if (comp->GetActive()) {
+          comp->OnDisable();
+        }
         comp->OnDestroy();
+        comp->~Component();
         MemoryManager::DeleteOnFreeList<Component>(comp);
         components.Erase(compIter);
         componentTypes.erase(typeIter);
@@ -98,7 +104,7 @@ bool Entity::GetAttribute(EntityAttributes attr) const {
   return attributes.test(static_cast<int>(attr));
 }
 
-Entity::Entity(const std::string& name, const bool entityStatic)
+Entity::Entity(const std::string &name, const bool entityStatic)
     : internalTransform(this),
       attributes{0b101},
       entityName{name},
@@ -114,8 +120,10 @@ Entity::~Entity() {
   CheckDestroy();
 }
 
-Entity* Entity::Instantiate(const std::string name, Entity *parent, const bool entityStatic) {
-  return LevelManager::Instance().loadedLevel->AddEntity(name, parent, entityStatic);
+Entity *Entity::Instantiate(const std::string name, Entity *parent,
+                            const bool entityStatic) {
+  return LevelManager::Instance().loadedLevel->AddEntity(name, parent,
+                                                         entityStatic);
 }
 
 void Entity::Destroy(Entity *entity) {
