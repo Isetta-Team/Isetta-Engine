@@ -3,8 +3,10 @@
  */
 #pragma once
 
+#include "ISETTA_API.h"
+
 namespace Isetta {
-class Collisions {
+class ISETTA_API_DECLARE Collisions {
  public:
   static bool Raycast(const class Ray &ray, class RaycastHit *const hitInfo,
                       float maxDistance = 0);
