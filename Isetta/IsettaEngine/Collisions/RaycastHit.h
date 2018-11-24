@@ -6,7 +6,7 @@
 #include "Core/Math/Vector3.h"
 
 namespace Isetta {
-class RaycastHit {
+class ISETTA_API_DECLARE RaycastHit {
  private:
   class Collider* collider;
   float distance{INFINITY};
