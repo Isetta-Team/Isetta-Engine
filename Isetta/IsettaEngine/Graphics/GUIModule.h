@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include <GLFW/glfw3.h>
+#include "GLFW/include/GLFW/glfw3.h"
 
 #include "Core/Color.h"
 #include "Core/Config/CVar.h"

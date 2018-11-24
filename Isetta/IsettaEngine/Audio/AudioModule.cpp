@@ -120,5 +120,7 @@ void AudioModule::Play(AudioSource* const source) const {
   CheckStatus(source->fmodChannel->setLoopCount(source->loopCount));
   CheckStatus(
       source->fmodChannel->setMute(source->GetProperty(Property::IS_MUTE)));
+  CheckStatus(source->fmodChannel->set3DMinMaxDistance(
+      source->minMaxDistance.x, source->minMaxDistance.y));
 }
 }  // namespace Isetta

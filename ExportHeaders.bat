@@ -11,18 +11,22 @@ set tools=Tools\
 
 REM Engine Parameters
 set engine=IsettaEngine\
-set resourceFolders=fonts primitives textures pipelines
+set resourceFolders=fonts primitives textures pipelines materials
 
 set externalFolders[0].folder=brofiler\ProfilerCore\
 set externalFolders[0].files=Brofiler.h
 set externalFolders[1].folder=FMOD\inc\
-set externalFolders[1].files=*.h
+set externalFolders[1].files=*.h*
 set externalFolders[2].folder=Horde3D\Horde3D\Bindings\C++\
 set externalFolders[2].files=*.h
 set externalFolders[3].folder=imgui\
-set externalFolders[3].files=imgui.h imgconfig.h
+set externalFolders[3].files=imgui.h imconfig.h
 set externalFolders[4].folder=SID\
 set externalFolders[4].files=sid.h
+set externalFolders[5].folder=GLFW\include\GLFW\
+set externalFolders[5].files=*.h
+set externalFolders[6].folder=yojimbo\
+set externalFolders[6].files=yojimbo.h
 
 if NOT "%1"=="" base=%1
 

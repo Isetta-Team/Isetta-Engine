@@ -23,8 +23,8 @@ AudioClip::AudioClip(const std::string_view filePath,
   clips.insert({SID(this->name.data()), this});
 }
 
-AudioClip* AudioClip::LoadClip(std::string_view filePath,
-                               std::string_view soundName) {
+AudioClip* AudioClip::Load(std::string_view filePath,
+                           std::string_view soundName) {
   auto nameClipPair = clips.find(SID(soundName.data()));
   if (nameClipPair == clips.end()) {
     return MemoryManager::NewOnFreeList<AudioClip>(filePath, soundName);
@@ -32,9 +32,12 @@ AudioClip* AudioClip::LoadClip(std::string_view filePath,
   return nameClipPair->second;
 }
 
-AudioClip::~AudioClip() { AudioModule::CheckStatus(fmodSound->release()); }
+AudioClip::~AudioClip() {
+  AudioModule::CheckStatus(fmodSound->release());
+  clips.erase(SID(name.c_str()));
+}
 
-AudioClip* AudioClip::GetClip(const std::string_view name) {
+AudioClip* AudioClip::Find(const std::string_view name) {
   auto nameClipPair = clips.find(SID(name.data()));
   if (nameClipPair == clips.end()) {
     LOG_ERROR(Debug::Channel::Sound,
@@ -48,8 +51,8 @@ void AudioClip::UnloadAll() {
   while (!clips.empty()) {
     auto nameClipPair = clips.begin();
     AudioClip* clip = nameClipPair->second;
-    MemoryManager::DeleteOnFreeList<AudioClip>(clip);
-    clips.erase(nameClipPair);
+    AudioModule::CheckStatus(clip->fmodSound->release());
+    MemoryManager::FreeOnFreeList(clip);
   }
   clips.clear();
 }

@@ -3,6 +3,7 @@
  */
 #pragma once
 #include "Core/IsettaAlias.h"
+#include "Core/Math/Vector2.h"
 #include "Scene/Component.h"
 
 namespace FMOD {
@@ -37,6 +38,10 @@ void Stop() const;
 
 void SetVolume(float);
 float GetVolume() const;
+
+void SetMinMaxDistance(Math::Vector2 minMax);
+Math::Vector2 GetMinMaxDistance() const;
+
 /**
  * \brief Change speed of music, only supports MOD/S3M/XM/IT/MIDI file formats
  */
@@ -59,8 +64,9 @@ bool IsChannelValid() const;
 bool IsSoundValid() const;
 bool IsValidHandle() const;
 
-float volume, speed;
-int loopCount;
+float volume = 1.f, speed = 1.f;
+int loopCount = 0;
+Math::Vector2 minMaxDistance = Math::Vector2{1.f, 1000.f};
 std::bitset<3> properties;
 
 static class AudioModule* audioModule;

@@ -2,8 +2,8 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Zombie.h"
-#include "Core/Math/Random.h"
 #include "Core/IsettaCore.h"
+#include "Core/Math/Random.h"
 #include "GameManager.h"
 #include "Graphics/AnimationComponent.h"
 #include "Graphics/MeshComponent.h"
@@ -19,7 +19,8 @@ void Zombie::OnEnable() {
     AnimationComponent* animation =
         entity->AddComponent<AnimationComponent>(mesh);
     animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
-    audio = entity->AddComponent<AudioSource>(AudioClip::LoadClip("Sound\\zombie-death.mp3"));
+    audio = entity->AddComponent<AudioSource>(
+        AudioClip::Load("Sound\\zombie-death.mp3"));
     isInitialized = true;
   }
   entity->GetComponent<AnimationComponent>()->Play();

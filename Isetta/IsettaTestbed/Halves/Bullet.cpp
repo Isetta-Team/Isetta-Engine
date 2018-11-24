@@ -23,7 +23,7 @@ void Bullet::OnEnable() {
     entity->AddComponent<MeshComponent>("Bullet/Bullet.scene.xml");
     initialized = true;
     audio = entity->AddComponent<AudioSource>(
-        AudioClip::LoadClip("Sound/bullet-impact.wav"));
+        AudioClip::Load("Sound/bullet-impact.wav"));
   }
   elapsedTime = 0.f;
 }

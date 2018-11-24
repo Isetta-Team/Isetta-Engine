@@ -5,7 +5,7 @@
 
 #include <string>
 #include "Core/Config/CVar.h"
-#include "GLFW/glfw3.h"
+#include "GLFW/include/GLFW/glfw3.h"
 
 namespace Isetta::Math {
 class Vector2;

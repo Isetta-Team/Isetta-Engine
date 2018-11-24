@@ -3,9 +3,9 @@
  */
 #include "Input/InputModule.h"
 
-#include <GLFW/glfw3.h>
 #include "Core/Debug/Logger.h"
 #include "Core/Math/Vector2.h"
+#include "GLFW/include/GLFW/glfw3.h"
 #include "Input/GLFWInput.h"
 #include "Input/Input.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
