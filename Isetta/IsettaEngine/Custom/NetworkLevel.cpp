@@ -52,7 +52,7 @@ void RegisterExampleMessageFunctions() {
                   "Server says we should stop the animation!");
             }
             if (handleMessage->handle == 2) {
-              AudioSource audio(AudioClip::LoadClip("Sound\gunshot.aiff"));
+              AudioSource audio(AudioClip::Load("Sound\gunshot.aiff"));
               audio.Play();
             }
           });

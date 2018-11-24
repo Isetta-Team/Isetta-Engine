@@ -11,7 +11,8 @@ PlayerController* PlayerController::instance;
 void PlayerController::OnEnable() {
   instance = this;
   if (shootAudio == nullptr) {
-    shootAudio = entity->AddComponent<AudioSource>(AudioClip::LoadClip("Sound/gunshot.aiff"));
+    shootAudio = entity->AddComponent<AudioSource>(
+        AudioClip::Load("Sound/gunshot.aiff"));
   }
 
   shootAudio->SetVolume(1.f);
@@ -115,7 +116,7 @@ void PlayerController::Shoot() {
       break;
     }
   }
-  
+
   if (bullet != nullptr) {
     bullet->SetActive(true);
     bullet->GetComponent<Bullet>()->Reactivate(

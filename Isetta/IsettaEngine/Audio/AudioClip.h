@@ -19,9 +19,9 @@ class ISETTA_API AudioClip {
   // Developers should only use LoadClip and never use the constructor,
   // cause we assumed they are on free list but developer may not create them on
   // freelist
-  static AudioClip* LoadClip(std::string_view filePath,
-                             std::string_view soundName = "");
-  static AudioClip* GetClip(std::string_view name);
+  static AudioClip* Load(std::string_view filePath,
+                         std::string_view soundName = "");
+  static AudioClip* Find(std::string_view name);
 
  private:
   explicit AudioClip(std::string_view filePath, std::string_view name);

@@ -5,7 +5,7 @@
 
 #include <list>
 #include "Core/Config/CVar.h"
-#include "GLFW/glfw3.h"
+#include "GLFW/include/GLFW/glfw3.h"
 #include "Horde3D/Horde3D/Bindings/C++/Horde3D.h"
 
 namespace Isetta {

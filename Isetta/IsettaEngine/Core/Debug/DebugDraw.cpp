@@ -3,8 +3,8 @@
  */
 #include "Core/Debug/DebugDraw.h"
 
-#include <GLFW/glfw3.h>
-#include <glad/glad.h>
+#include "GLFW/include/GLFW/glfw3.h"
+#include "glad/glad.h"
 
 #include "Core/Debug/Logger.h"
 #include "Core/Math/Matrix4.h"
@@ -655,11 +655,11 @@ void DebugDraw::DrawGrid(const Math::Matrix4& transformation, int lines,
       CameraComponent::Main()
           ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
           .Transpose() *
-      CameraComponent::Main()->transform->GetWorldToLocalMatrix();
+      CameraComponent::Main()->transform->GetWorldToLocalMatrix() *
+      transformation;
   glUniformMatrix4fv(modelViewProjectionLoc, 1, GL_FALSE,
                      mvpMat.Transpose().data);
   glUniform4fv(colorLoc, 1, color.rgba);
-  // glUniformMatrix4fv(modelLoc, 1, GL_FALSE, model.data);
   GLError();
 
   glEnable(GL_DEPTH_TEST);

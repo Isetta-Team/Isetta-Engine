@@ -3,12 +3,11 @@
  */
 #pragma once
 
-#include <GLFW/glfw3.h>
-#include <list>
 #include <unordered_map>
 #include <utility>
 #include "Core/DataStructures/Delegate.h"
 #include "Core/IsettaAlias.h"
+#include "GLFW/include/GLFW/glfw3.h"
 #include "Input/KeyCode.h"
 #include "Util.h"
 

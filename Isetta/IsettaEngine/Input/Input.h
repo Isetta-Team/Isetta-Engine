@@ -3,7 +3,6 @@
  */
 #pragma once
 
-#include <GLFW/glfw3.h>
 #include "Core/IsettaAlias.h"
 #include "Core/Math/Vector2.h"
 #include "Input/KeyCode.h"

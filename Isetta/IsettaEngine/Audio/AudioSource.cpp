@@ -11,18 +11,12 @@
 namespace Isetta {
 AudioModule* AudioSource::audioModule;
 
-AudioSource::AudioSource()
-    : volume{1.f}, speed{1.f}, loopCount{-1}, properties{0b100} {}
+AudioSource::AudioSource() : properties{0b100} {}
 
-AudioSource::AudioSource(AudioClip* clip)
-    : clip{clip}, volume{1.f}, speed{1.f}, loopCount{-1}, properties{0b100} {}
+AudioSource::AudioSource(AudioClip* clip) : clip{clip}, properties{0b100} {}
 
 AudioSource::AudioSource(const std::bitset<3>& properties, AudioClip* clip)
-    : clip{clip},
-      volume{1.f},
-      speed{1.f},
-      loopCount{-1},
-      properties{properties} {}
+    : clip{clip}, properties{properties} {}
 
 void AudioSource::Update() {
   if (IsValidHandle() && IsPlaying() && GetProperty(Property::IS_3D)) {
@@ -95,6 +89,16 @@ void AudioSource::SetVolume(const float inVolume) {
 }
 
 float AudioSource::GetVolume() const { return volume; }
+
+void AudioSource::SetMinMaxDistance(Math::Vector2 minMax) {
+  minMaxDistance = minMax;
+  if (IsValidHandle()) {
+    AudioModule::CheckStatus(
+        fmodChannel->set3DMinMaxDistance(minMax.x, minMax.y));
+  }
+}
+
+Math::Vector2 AudioSource::GetMinMaxDistance() const { return minMaxDistance; }
 
 // void AudioSource::SetSpeed(const float inSpeed) {
 //  speed = inSpeed;
