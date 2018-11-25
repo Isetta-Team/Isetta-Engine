@@ -1,0 +1,4 @@
+<Model name="Cylinder" geometry="primitives/Cylinder/Cylinder.geo">
+
+	<Mesh name="Cylinder" material="primitives/Cylinder/Cylinder.material.xml" batchStart="0" batchCount="240" vertRStart="0" vertREnd="124" />
+</Model>

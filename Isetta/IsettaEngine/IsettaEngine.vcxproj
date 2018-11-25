@@ -258,6 +258,7 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClCompile Include="Core\DataStructures\HandleBin.cpp" />
     <ClCompile Include="Core\DataStructures\Trie.cpp" />
     <ClCompile Include="Core\SystemInfo.cpp" />
+    <ClCompile Include="Core\EngineResource.cpp" />
     <ClCompile Include="Custom\AILevel\AITestComponent.cpp" />
     <ClCompile Include="Custom\AILevel\AITestLevel.cpp" />
     <ClCompile Include="Custom\AudioLevel\AudioLevel.cpp" />
@@ -380,6 +381,7 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClInclude Include="Core\DataStructures\Delegate.h" />
     <ClInclude Include="Core\DataStructures\HandleBin.h" />
     <ClInclude Include="Core\DataStructures\PriorityQueue.h" />
+    <ClInclude Include="Core\EngineResource.h" />
     <ClInclude Include="Core\IsettaCore.h" />
     <ClInclude Include="Core\SystemInfo.h" />
     <ClInclude Include="Custom\AILevel\AITestAgent.h" />
@@ -504,7 +506,6 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
   <ItemGroup>
     <None Include="config.cfg" />
     <None Include="cpp.hint" />
-    <None Include="Resources\test\Low-Poly-Racing-Car.geo" />
     <None Include="user.cfg" />
   </ItemGroup>
   <ItemGroup>
@@ -516,8 +517,6 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <Xml Include="Resources\pipelines\globalSettings.material.xml" />
     <Xml Include="Resources\pipelines\hdr.pipeline.xml" />
     <Xml Include="Resources\pipelines\postHDR.material.xml" />
-    <Xml Include="Resources\test\Low-Poly-Racing-Car.scene.xml" />
-    <Xml Include="Resources\test\m0DefaultMaterial.material.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\External\brofiler\ProfilerCore\ProfilerCore.vcxproj">

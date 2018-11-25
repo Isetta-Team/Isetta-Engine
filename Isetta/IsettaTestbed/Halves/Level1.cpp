@@ -19,7 +19,7 @@
 namespace Isetta {
 
 void Level1::OnLevelLoad() {
-  Font::AddFontFromFile("Fonts/CONSOLA.TTF", 13.0f);
+  Font::AddFontFromFile("Halves/CONSOLA.TTF", 13.0f);
 
   Entity* cameraEntity{Entity::Instantiate("Camera")};
   cameraEntity->AddComponent<CameraController>();
@@ -38,31 +38,20 @@ void Level1::OnLevelLoad() {
   player->SetTransform(Math::Vector3{0, 0, 0}, Math::Vector3{0, 90, 0},
                        0.03f * Math::Vector3::one);
   MeshComponent* playerMesh =
-      player->AddComponent<MeshComponent>("Soldier/Soldier.scene.xml");
+      player->AddComponent<MeshComponent>("Halves/Soldier/Soldier.scene.xml");
   player->AddComponent<PlayerController>();
 
   AnimationComponent* ani =
       player->AddComponent<AnimationComponent>(playerMesh);
-  ani->AddAnimation("Soldier/Soldier_Idle.anim", 0, "", false);
-  ani->AddAnimation("Soldier/Soldier.anim", 0, "", false);
+  ani->AddAnimation("Halves/Soldier/Soldier_Idle.anim", 0, "", false);
+  ani->AddAnimation("Halves/Soldier/Soldier.anim", 0, "", false);
 
   Entity* ground{Entity::Instantiate("Ground")};
-  ground->AddComponent<MeshComponent>("Ground/Level.scene.xml");
+  ground->AddComponent<MeshComponent>("Halves/Ground/Level.scene.xml");
 
   Entity* gameManager{Entity::Instantiate("Game Manager")};
   gameManager->AddComponent<GameManager>();
   gameManager->AddComponent<EscapeExit>();
   gameManager->AddComponent<EditorComponent>();
-
-  // for (int i = 0; i < 10; i++) {
-  // Entity* zombie {AddEntity("Zombie")};
-  // zombie->SetTransform(Math::Vector3::forward, Math::Vector3::zero,
-  // Math::Vector3::one * 0.01f); MeshComponent* mesh =
-  // zombie->AddComponent<MeshComponent>(true, "Zombie/Zombie.scene.xml");
-  // AnimationComponent* animation =
-  // zombie->AddComponent<AnimationComponent>(true, mesh);
-  // animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
-  // zombie->AddComponent<Zombie>();
-  // }
 }
 }  // namespace Isetta

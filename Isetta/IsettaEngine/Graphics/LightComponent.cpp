@@ -9,6 +9,7 @@
 #include "Scene/Transform.h"
 #include "Util.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
+#include "Core/EngineResource.h"
 
 namespace Isetta {
 
@@ -18,15 +19,22 @@ LightComponent::LightComponent() : name{entity->GetEntityIdString()} {
   ASSERT(renderModule != nullptr);
   renderModule->lightComponents.push_back(this);
 
-  renderResource = LoadResourceFromFile(CONFIG_VAL(lightConfig.lightMaterial));
+  renderResource = LoadResourceFromFile(EngineResource::defaultLightMat, true);
 }
 
-H3DRes LightComponent::LoadResourceFromFile(std::string_view resourceName) {
+LightComponent::LightComponent(std::string_view lightMaterial) {
+  ASSERT(renderModule != nullptr);
+  renderModule->lightComponents.push_back(this);
+
+  renderResource = LoadResourceFromFile(lightMaterial, false);
+}
+
+H3DRes LightComponent::LoadResourceFromFile(std::string_view resourceName, bool isEngineResource) {
   H3DRes lightMatRes =
       h3dAddResource(H3DResTypes::Material, resourceName.data(), 0);
 
   RenderModule::LoadResourceFromDisk(
-      lightMatRes, false,
+      lightMatRes, isEngineResource,
       Util::StrFormat("LightComponent::LoadResourceFromFile => "
                       "Cannot load the resource from %s",
                       resourceName.data()));

@@ -20,10 +20,10 @@ void Bullet::Reactivate(const Math::Vector3& pos, const Math::Vector3& flyDir) {
 
 void Bullet::OnEnable() {
   if (!initialized) {
-    entity->AddComponent<MeshComponent>("Bullet/Bullet.scene.xml");
+    entity->AddComponent<MeshComponent>("Halves/Bullet/Bullet.scene.xml");
     initialized = true;
     audio = entity->AddComponent<AudioSource>(
-        AudioClip::Load("Sound/bullet-impact.wav"));
+        AudioClip::Load("Halves/Sound/bullet-impact.wav"));
   }
   elapsedTime = 0.f;
 }

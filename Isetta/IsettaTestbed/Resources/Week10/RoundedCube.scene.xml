@@ -1,0 +1,4 @@
+<Model name="RoundedCube" geometry="Week10/RoundedCube.geo">
+
+	<Mesh name="pCube1" material="Week10/lambert1.material.xml" batchStart="0" batchCount="4356" vertRStart="0" vertREnd="803" />
+</Model>

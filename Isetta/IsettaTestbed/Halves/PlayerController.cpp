@@ -12,7 +12,7 @@ void PlayerController::OnEnable() {
   instance = this;
   if (shootAudio == nullptr) {
     shootAudio = entity->AddComponent<AudioSource>(
-        AudioClip::Load("Sound/gunshot.aiff"));
+        AudioClip::Load("Halves/Sound/gunshot.aiff"));
   }
 
   shootAudio->SetVolume(1.f);

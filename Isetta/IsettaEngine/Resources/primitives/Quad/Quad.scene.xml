@@ -1,0 +1,4 @@
+<Model name="Quad" geometry="primitives/Quad/Quad.geo">
+
+	<Mesh name="Plane" material="primitives/Quad/Quad.material.xml" batchStart="0" batchCount="6" vertRStart="0" vertREnd="3" />
+</Model>
