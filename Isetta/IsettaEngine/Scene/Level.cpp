@@ -49,7 +49,7 @@ void Level::AddComponentToStart(Component* component) {
 void Level::StartComponents() {
   PROFILE
   while (!componentsToStart.empty()) {
-    componentsToStart.top()->Start();
+    componentsToStart.front()->Start();
     componentsToStart.pop();
   }
 }

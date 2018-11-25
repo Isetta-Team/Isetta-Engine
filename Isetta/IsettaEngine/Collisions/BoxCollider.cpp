@@ -16,9 +16,9 @@ namespace Isetta {
 void BoxCollider::Update() {
   DebugDraw::WireCube(
       Math::Matrix4::Translate(transform->GetWorldPos() + center) *
+          (Math::Matrix4)transform->GetWorldRot() *
           Math::Matrix4::Scale(
-              Math::Vector3::Scale(transform->GetWorldScale(), size)) *
-          (Math::Matrix4)transform->GetWorldRot(),
+              Math::Vector3::Scale(transform->GetWorldScale(), size)),
       debugColor);
 }
 #endif

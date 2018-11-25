@@ -35,7 +35,8 @@ void BVTree::Node::SwapOutChild(Node *const oldChild, Node *const newChild) {
   }
 }
 
-BVTree::BVTree() : nodePool(CONFIG_VAL(collisionConfig.bvTreeNodeSize),
+BVTree::BVTree()
+    : nodePool(CONFIG_VAL(collisionConfig.bvTreeNodeSize),
                CONFIG_VAL(memoryConfig.defaultPoolIncrement)) {}
 
 void BVTree::AddCollider(Collider *const collider) {
@@ -319,9 +320,9 @@ void BVTree::DebugDraw() const {
     if (cur->IsLeaf()) {
 #if _EDITOR
       // if (collisionSet.find(cur->collider) != collisionSet.end()) {
-        color = Color::red;
+      color = Color::red;
       // } else {
-        color = Color::green;
+      color = Color::green;
       // }
       DebugDraw::WireCube(Math::Matrix4::Translate(cur->aabb.GetCenter()) *
                               Math::Matrix4::Scale({cur->aabb.GetSize()}),

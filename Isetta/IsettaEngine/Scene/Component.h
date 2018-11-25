@@ -31,6 +31,11 @@
       Component::RegisterComponent(std::type_index(typeid(NAME)),        \
                                    std::type_index(typeid(BASE)), Unique);
 
+#define REGISTER_COMPONENT(NAME, BASE, UNIQUE)                           \
+  bool Isetta::ComponentRegistry<NAME, BASE, UNIQUE>::NAME##Registered = \
+      Component::RegisterComponent(std::type_index(typeid(NAME)),        \
+                                   std::type_index(typeid(BASE)), UNIQUE);
+
 namespace Isetta {
 
 template <typename Curr, typename Base, bool Exclude>

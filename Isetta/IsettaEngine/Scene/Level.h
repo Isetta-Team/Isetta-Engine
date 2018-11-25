@@ -3,11 +3,11 @@
  */
 #pragma once
 #include <list>
+#include <queue>
 #include <set>
-#include <stack>
 #include <string>
-#include "ISETTA_API.h"
 #include "Core/Memory/TemplatePoolAllocator.h"
+#include "ISETTA_API.h"
 
 #define CREATE_LEVEL(NAME)                                                \
   class NAME : public Isetta::Level, public Isetta::LevelRegistry<NAME> { \
@@ -50,7 +50,7 @@ class ISETTA_API Level {
 
  protected:
   std::list<class Entity*> entities;
-  std::stack<class Component*> componentsToStart;
+  std::queue<class Component*> componentsToStart;
   std::set<class Component*> componentsToDestroy;
 
  public:

@@ -27,6 +27,7 @@ void LevelLoader::OnEnable() {
           if (!instance) {
             Entity* entity = Entity::Instantiate("Load Level");
             entity->AddComponent<LevelLoader>();
+            GLFWInput::UnegisterKeyCallback(handle);
           }
           instance->showWindow = !instance->showWindow;
         }

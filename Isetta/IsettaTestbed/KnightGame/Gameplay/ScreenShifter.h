@@ -7,20 +7,20 @@
 using namespace Isetta;
 
 namespace Isetta {
-class MeshComponent;
-}
+class CollisionHandler;
+}  // namespace Isetta
 
 namespace KnightGame {
-BEGIN_COMPONENT(SwordController, Component, true)
+BEGIN_COMPONENT(ScreenShifter, Component, true)
 private:
-MeshComponent* knight;
+float speed = 0.6f;
 
 public:
-SwordController(MeshComponent* knight) : knight{knight} {}
+ScreenShifter() = default;
 
 void Update() override;
 };  // namespace KnightGame
 }  // namespace KnightGame
 
 using namespace KnightGame;
-REGISTER_COMPONENT(SwordController, Component, true)
+REGISTER_COMPONENT(ScreenShifter, Component, true)

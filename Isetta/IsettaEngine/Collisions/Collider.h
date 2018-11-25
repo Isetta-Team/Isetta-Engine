@@ -33,11 +33,10 @@ namespace Isetta {
 
 BEGIN_COMPONENT(Collider, Component, false)
 public:
-
- bool isTrigger = false;
- Math::Vector3 center;
- Color debugColor = Color::green;
- float mass = 1;
+bool isTrigger = false;
+Math::Vector3 center;
+Color debugColor = Color::green;
+float mass = 1;
 
 // TODO(Jacob) virtual Math::Vector3 ClosestPoint(Math::Vector3 point) = 0;
 // TODO(Jacob) Math::Vector3 ClosestPointOnAABB(Math::Vector3 point);
@@ -73,12 +72,10 @@ friend class CollisionSolverModule;
 protected:
 inline static float fatFactor = 0.2f;
 
-Collider(const Math::Vector3& center) : center{center}, isTrigger{false} {}
+Collider(const Math::Vector3& center) : center{center} {}
 Collider(const bool trigger = false,
          const Math::Vector3& center = Math::Vector3::zero)
-    : center{center} {
-  isTrigger = trigger;
-}
+    : center{center}, isTrigger{trigger} {}
 virtual ~Collider() = default;
 
 friend class BoxCollider;

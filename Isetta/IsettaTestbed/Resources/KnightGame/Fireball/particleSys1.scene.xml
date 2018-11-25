@@ -1,0 +1,5 @@
+<Group>
+	<Emitter name="ParticleSystem2" material="particles/particleSys1/particle2.material.xml" particleEffect="particles/particleSys1/particle2.particle.xml"
+			 maxCount="500" respawnCount="-1" delay="0.5" emissionRate="100" spreadAngle="20"
+			 forceX="0" forceY="-1.5" forceZ="0" />
+</Group>

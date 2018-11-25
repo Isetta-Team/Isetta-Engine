@@ -6,11 +6,12 @@
 #include <bitset>
 #include <string>
 #include <unordered_map>
+#include "ISETTA_API.h"
 
 class StringId;
 
 namespace Isetta {
-class Layers {
+class ISETTA_API Layers {
  public:
   static const int LAYERS_CAPACITY = 32;
   static const int READONLY_LAYERS = 2;
@@ -19,6 +20,7 @@ class Layers {
   static std::string
       layers[LAYERS_CAPACITY]; /* = { "Default", "Ignore Raycast" };*/
   static std::unordered_map<StringId, int> layerIndex;
+  static int size;
 
   Layers() = default;
 
@@ -28,8 +30,9 @@ class Layers {
   static Constructor construct;
 
  public:
-  static void NameLayer(int layer, std::string layerName);
-  static int NameToLayer(std::string layerName);
+  static int NewLayer(const std::string_view layerName);
+
+  static int NameToLayer(const std::string_view layerName);
   static std::string LayerToName(int layer);
   static int CheckLayer(int layer);
 

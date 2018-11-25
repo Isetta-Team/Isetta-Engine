@@ -154,7 +154,8 @@ void FreeListAllocator::Free(void* memPtr) {
   PtrInt nodeAddress = allocHeaderAdd - allocHeader->adjustment;
   auto* newNode =
       new (reinterpret_cast<void*>(nodeAddress)) Node(allocHeader->size);
-  memset(newNode + 1, 0xD, newNode->size - nodeSize);
+
+  memset(newNode + 1, 0x0, newNode->size - nodeSize);
 
   InsertNode(newNode);
 }
@@ -239,7 +240,7 @@ void FreeListAllocator::TryMergeWithNext(Node* node) {
     // if the adjacent next address is a node
     node->size += node->next->size;
     node->next = node->next->next;
-    memset(node + 1, 0xD, node->size - nodeSize);
+    memset(node + 1, 0x0, node->size - nodeSize);
     // the original node->next is effectively deleted cause no one has reference
     // to it
   }

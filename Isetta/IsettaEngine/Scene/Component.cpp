@@ -11,7 +11,8 @@ bool Component::isFlattened = false;
 Entity* Component::curEntity = nullptr;
 Transform* Component::curTransform = nullptr;
 
-bool Component::RegisterComponent(std::type_index curr, std::type_index base, bool isUnique) {
+bool Component::RegisterComponent(std::type_index curr, std::type_index base,
+                                  bool isUnique) {
   if (isUnique) uniqueComponents().insert(curr);
   std::unordered_map<std::type_index, std::list<std::type_index>>& children =
       childrenTypes();
@@ -81,7 +82,8 @@ void Component::SetActive(bool value) {
       SetAttribute(ComponentAttributes::HAS_AWAKEN, true);
     }
     OnEnable();
-  } else if (isActive && !value) {
+  } else if (isActive && !value &&
+             GetAttribute(ComponentAttributes::HAS_AWAKEN)) {
     OnDisable();
   }
 }
