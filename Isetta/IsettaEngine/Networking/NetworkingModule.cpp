@@ -359,23 +359,23 @@ void NetworkingModule::CloseServer() {
 }
 
 bool NetworkingModule::IsClient() const {
-  return client->IsConnected() && server == nullptr && !server->IsRunning();
+  return client->IsConnected() && !server || (server && !server->IsRunning());
 }
 
 bool NetworkingModule::IsHost() const {
-  return client->IsConnected() && server != nullptr && server->IsRunning();
+  return client->IsConnected() && server && server->IsRunning();
 }
 
 bool NetworkingModule::IsServer() const {
-  return !client->IsConnected() && server != nullptr && server->IsRunning();
+  return !client->IsConnected() && server && server->IsRunning();
 }
 
 bool NetworkingModule::IsClientRunning() const {
-  return client != nullptr && client->IsConnected();
+  return client && client->IsConnected();
 }
 
 bool NetworkingModule::IsServerRunning() const {
-  return server != nullptr && server->IsRunning();
+  return server && server->IsRunning();
 }
 
 bool NetworkingModule::IsClientConnected(const int clientIndex) const {
