@@ -504,7 +504,6 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
   <ItemGroup>
     <None Include="config.cfg" />
     <None Include="cpp.hint" />
-    <None Include="Resources\test\Low-Poly-Racing-Car.geo" />
     <None Include="user.cfg" />
   </ItemGroup>
   <ItemGroup>
@@ -516,8 +515,6 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <Xml Include="Resources\pipelines\globalSettings.material.xml" />
     <Xml Include="Resources\pipelines\hdr.pipeline.xml" />
     <Xml Include="Resources\pipelines\postHDR.material.xml" />
-    <Xml Include="Resources\test\Low-Poly-Racing-Car.scene.xml" />
-    <Xml Include="Resources\test\m0DefaultMaterial.material.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\External\brofiler\ProfilerCore\ProfilerCore.vcxproj">

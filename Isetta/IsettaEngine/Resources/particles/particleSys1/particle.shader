@@ -38,7 +38,7 @@ OpenGL4
 [[VS_SHADOWMAP]]
 // =================================================================================================
 
-#include "utility/vertParticle.glsl"
+#include "shaderutility/vertParticle.glsl"
 
 uniform mat4 viewProjMat;
 uniform vec4 lightPos;
@@ -69,7 +69,7 @@ void main( void )
 [[VS_TRANSLUCENT]]
 // =================================================================================================
 
-#include "utility/vertParticle.glsl"
+#include "shaderutility/vertParticle.glsl"
 
 uniform mat4 viewProjMat;
 attribute vec2 texCoords0;
@@ -86,7 +86,7 @@ void main(void)
 [[VS_TRANSLUCENT_GL4]]
 // =================================================================================================
 
-#include "utility/vertParticleGL4.glsl"
+#include "shaderutility/vertParticleGL4.glsl"
 
 uniform mat4 viewProjMat;
 

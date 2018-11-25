@@ -1,0 +1,4 @@
+<Model name="Bullet" geometry="Halves/Bullet/Bullet.geo">
+
+	<Mesh name="Sphere" material="Halves/Bullet/Bullet.material.xml" rx="-0" ry="-90" rz="0" sx="0.254942" sy="0.0606306" sz="0.0606306" batchStart="0" batchCount="11520" vertRStart="0" vertREnd="11519" />
+</Model>

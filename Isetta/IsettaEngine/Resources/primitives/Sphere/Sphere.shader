@@ -13,12 +13,12 @@
 // Samplers
 sampler2D albedoMap = sampler_state
 {
-	Texture = "utility/white.tga";
+	Texture = "shaderutility/white.tga";
 };
 
 sampler2D normalMap = sampler_state
 {
-	Texture = "utility/defnorm.tga";
+	Texture = "shaderutility/defnorm.tga";
 };
 
 samplerCube ambientMap = sampler_state
@@ -111,10 +111,10 @@ OpenGL4
 	#define _F02_NormalMapping
 #endif
 
-#include "utility/vertCommon.glsl"
+#include "shaderutility/vertCommon.glsl"
 
 #ifdef _F01_Skinning
-	#include "utility/vertSkinning.glsl"
+	#include "shaderutility/vertSkinning.glsl"
 #endif
 
 uniform mat4 viewProjMat;
@@ -194,10 +194,10 @@ void main( void )
 	#define _F02_NormalMapping
 #endif
 
-#include "utility/vertCommon.glsl"
+#include "shaderutility/vertCommon.glsl"
 
 #ifdef _F01_Skinning
-	#include "utility/vertSkinningGL4.glsl"
+	#include "shaderutility/vertSkinningGL4.glsl"
 #endif
 
 uniform mat4 viewProjMat;
@@ -278,7 +278,7 @@ void main( void )
 	#define _F02_NormalMapping
 #endif
 
-#include "utility/fragDeferredWrite.glsl" 
+#include "shaderutility/fragDeferredWrite.glsl" 
 
 uniform vec3 viewerPos;
 uniform vec4 matDiffuseCol;
@@ -355,7 +355,7 @@ void main( void )
 	#define _F02_NormalMapping
 #endif
 
-#include "utility/fragDeferredWriteGL4.glsl" 
+#include "shaderutility/fragDeferredWriteGL4.glsl" 
 
 uniform vec3 viewerPos;
 uniform vec4 matDiffuseCol;
@@ -428,8 +428,8 @@ void main( void )
 [[VS_SHADOWMAP]]
 // =================================================================================================
 	
-#include "utility/vertCommon.glsl"
-#include "utility/vertSkinning.glsl"
+#include "shaderutility/vertCommon.glsl"
+#include "shaderutility/vertSkinning.glsl"
 
 uniform mat4 viewProjMat;
 uniform vec4 lightPos;
@@ -460,8 +460,8 @@ void main( void )
 [[VS_SHADOWMAP_GL4]]
 // =================================================================================================
 	
-#include "utility/vertCommon.glsl"
-#include "utility/vertSkinningGL4.glsl"
+#include "shaderutility/vertCommon.glsl"
+#include "shaderutility/vertSkinningGL4.glsl"
 
 uniform mat4 viewProjMat;
 uniform vec4 lightPos;
@@ -553,7 +553,7 @@ void main( void )
 	#define _F02_NormalMapping
 #endif
 
-#include "utility/fragLighting.glsl" 
+#include "shaderutility/fragLighting.glsl" 
 
 uniform vec4 matDiffuseCol;
 uniform vec4 matSpecParams;
@@ -627,7 +627,7 @@ void main( void )
 	#define _F02_NormalMapping
 #endif
 
-#include "utility/fragLightingGL4.glsl" 
+#include "shaderutility/fragLightingGL4.glsl" 
 
 uniform vec4 matDiffuseCol;
 uniform vec4 matSpecParams;
@@ -703,7 +703,7 @@ void main( void )
 	#define _F02_NormalMapping
 #endif
 
-#include "utility/fragLighting.glsl" 
+#include "shaderutility/fragLighting.glsl" 
 
 uniform sampler2D albedoMap;
 uniform samplerCube ambientMap;
@@ -777,7 +777,7 @@ void main( void )
 	#define _F02_NormalMapping
 #endif
 
-#include "utility/fragLightingGL4.glsl" 
+#include "shaderutility/fragLightingGL4.glsl" 
 
 uniform sampler2D albedoMap;
 uniform samplerCube ambientMap;

@@ -6,7 +6,7 @@
 
 namespace Isetta {
 BEGIN_COMPONENT(ExampleComponent, Component, true)
-public : void OnEnable() override;
+public:
 void Update() override;
 END_COMPONENT(ExampleComponent, Component)
 }  // namespace Isetta

@@ -9,6 +9,7 @@
 #include "Custom/EscapeExit.h"
 #include "Custom/KeyTransform.h"
 #include "Graphics/ParticleSystemComponent.h"
+#include "Scene/Primitive.h"
 
 void Isetta::AITestLevel::OnLevelLoad() {
   Entity *camera = Entity::Instantiate("Camera");
@@ -23,16 +24,12 @@ void Isetta::AITestLevel::OnLevelLoad() {
   camera->AddComponent<EscapeExit>();
   // camera->AddComponent<EditorComponent>();
 
-  Entity *moveCube{Entity::Instantiate("Move")};
+  Entity *moveCube{Primitive::Create(Primitive::Type::Cube)};
   moveCube->SetTransform(Math::Vector3{5, 0, 5}, Math::Vector3::zero,
                          Math::Vector3::one * 0.2);
-  moveCube->AddComponent<MeshComponent>("primitives/Cube/Cube.scene.xml");
   auto p = moveCube->AddComponent<ParticleSystemComponent>();
   Input::RegisterKeyPressCallback(KeyCode::L, [p]() { p->SetActive(false); });
   Input::RegisterKeyPressCallback(KeyCode::O, [p]() { p->SetActive(true); });
 
   moveCube->AddComponent<KeyTransform>();
-
-  auto ai = camera->AddComponent<AITestComponent>(
-      Math::Rect{0, 0, 10, 10}, Math::Vector2Int{20, 20}, moveCube->transform);
 }

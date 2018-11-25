@@ -9,6 +9,7 @@
 #include "Networking/NetworkManager.h"
 #include "Networking/NetworkTransform.h"
 #include "W10NetworkManager.h"
+#include "Scene/Primitive.h"
 
 W10Player::W10Player(const bool isRight, const int swordNetID,
                      const int clientAuthorityID)
@@ -34,9 +35,8 @@ W10Player::W10Player(const bool isRight, const int swordNetID,
       swordNetId(swordNetID) {}
 
 void W10Player::Awake() {
-  entity->AddComponent<Isetta::MeshComponent>("blockFencing/Player.scene.xml");
-  swordEntity = Isetta::Entity::Instantiate("Sword");
-  swordEntity->AddComponent<Isetta::MeshComponent>("primitive/cube.scene.xml");
+  entity->AddComponent<Isetta::MeshComponent>("Week10/Player.scene.xml");
+  swordEntity = Isetta::Primitive::Create(Isetta::Primitive::Type::Cube);
   auto networkId = swordEntity->AddComponent<Isetta::NetworkId>(swordNetId);
   networkId->clientAuthorityId = clientAuthorityId;
   swordEntity->AddComponent<Isetta::NetworkTransform>();
