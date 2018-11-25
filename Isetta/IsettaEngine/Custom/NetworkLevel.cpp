@@ -20,7 +20,8 @@
 #include "Networking/NetworkId.h"
 #include "Networking/NetworkTransform.h"
 #include "Scene/Entity.h"
-#include "GameMgtLevel/GameMgtTestComp.h"
+#include "GameMgtLevel/NetworkTestComp.h"
+#include "Networking/NetworkDiscovery.h"
 
 using namespace Isetta;
 
@@ -229,15 +230,6 @@ void NetworkLevel::OnLevelLoad() {
     }
   });
 
-  // if (CONFIG_VAL(networkConfig.runServer) &&
-  // CONFIG_VAL(networkConfig.connectToServer)) {
-  // NetworkManager::Instance().StartHost(
-  // CONFIG_VAL(networkConfig.defaultServerIP));
-  // } else {
-  // NetworkManager::Instance().StartClient(
-  // CONFIG_VAL(networkConfig.defaultServerIP));
-  // }
-
   // Spawn across network
   Input::RegisterKeyPressCallback(KeyCode::Y, []() {
     if (NetworkManager::Instance().IsClientRunning()) {
@@ -345,5 +337,6 @@ void NetworkLevel::OnLevelLoad() {
   debugEntity->AddComponent<GridComponent>();
   debugEntity->AddComponent<EditorComponent>();
   debugEntity->AddComponent<EscapeExit>();
-  debugEntity->AddComponent<GameMgtTestComp>();
+  debugEntity->AddComponent<NetworkTestComp>();
+  debugEntity->AddComponent<NetworkDiscovery>();
 }

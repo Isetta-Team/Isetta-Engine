@@ -257,6 +257,7 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClCompile Include="Components\Editor\Hierarchy.cpp" />
     <ClCompile Include="Core\DataStructures\HandleBin.cpp" />
     <ClCompile Include="Core\DataStructures\Trie.cpp" />
+    <ClCompile Include="Core\SystemInfo.cpp" />
     <ClCompile Include="Core\EngineResource.cpp" />
     <ClCompile Include="Custom\AILevel\AITestComponent.cpp" />
     <ClCompile Include="Custom\AILevel\AITestLevel.cpp" />
@@ -290,7 +291,7 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClCompile Include="Custom\EventTestLevel\EventSenderComponent.cpp" />
     <ClCompile Include="Custom\EventTestLevel\EventTestLevel.cpp" />
     <ClCompile Include="Custom\GameMgtLevel\GameMgtLevel.cpp" />
-    <ClCompile Include="Custom\GameMgtLevel\GameMgtTestComp.cpp" />
+    <ClCompile Include="Custom\GameMgtLevel\NetworkTestComp.cpp" />
     <ClCompile Include="Custom\LevelLoader.cpp" />
     <ClCompile Include="Custom\MeshAnimLevel\MeshAnimLevel.cpp" />
     <ClCompile Include="Custom\KeyTransform.cpp" />
@@ -337,6 +338,7 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClCompile Include="Core\Memory\PoolAllocator.cpp" />
     <ClCompile Include="Graphics\Window.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Networking\NetworkDiscovery.cpp" />
     <ClCompile Include="Networking\NetworkId.cpp" />
     <ClCompile Include="Networking\NetworkingModule.cpp" />
     <ClCompile Include="Networking\NetworkManager.cpp" />
@@ -382,6 +384,7 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClInclude Include="Core\DataStructures\PriorityQueue.h" />
     <ClInclude Include="Core\EngineResource.h" />
     <ClInclude Include="Core\IsettaCore.h" />
+    <ClInclude Include="Core\SystemInfo.h" />
     <ClInclude Include="Custom\AILevel\AITestAgent.h" />
     <ClInclude Include="Custom\AILevel\AITestComponent.h" />
     <ClInclude Include="Custom\AILevel\AITestLevel.h" />
@@ -440,7 +443,7 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClInclude Include="Custom\EventTestLevel\EventSenderComponent.h" />
     <ClInclude Include="Custom\EventTestLevel\EventTestLevel.h" />
     <ClInclude Include="Custom\GameMgtLevel\GameMgtLevel.h" />
-    <ClInclude Include="Custom\GameMgtLevel\GameMgtTestComp.h" />
+    <ClInclude Include="Custom\GameMgtLevel\NetworkTestComp.h" />
     <ClInclude Include="Custom\LevelLoader.h" />
     <ClInclude Include="Custom\MeshAnimLevel\MeshAnimLevel.h" />
     <ClInclude Include="Custom\KeyTransform.h" />
@@ -472,6 +475,7 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClInclude Include="Input\GLFWInput.h" />
     <ClInclude Include="ISETTA_API.h" />
     <ClInclude Include="Networking\Messages.h" />
+    <ClInclude Include="Networking\NetworkDiscovery.h" />
     <ClInclude Include="Networking\NetworkId.h" />
     <ClInclude Include="Networking\NetworkingModule.h" />
     <ClInclude Include="Input\Input.h" />
