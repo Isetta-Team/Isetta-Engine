@@ -53,7 +53,7 @@ void CollisionsLevel::OnLevelLoad() {
 
   Entity* grid = Entity::Instantiate("Grid");
   grid->AddComponent<GridComponent>();
-  grid->AddComponent<RaycastClick>();
+  grid->AddComponent<RaycastClick>(true);
 
   // STATIC
   const int COLLIDERS = 3;

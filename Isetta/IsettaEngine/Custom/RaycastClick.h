@@ -6,7 +6,11 @@
 
 namespace Isetta {
 BEGIN_COMPONENT(RaycastClick, Component, true)
+private:
+ bool useRaycastAll = false;
+
 public:
-  void OnEnable() override;
+ RaycastClick(bool raycastAll = false);
+ void OnEnable() override;
 END_COMPONENT(RaycastClick, Component)
 }  // namespace Isetta
