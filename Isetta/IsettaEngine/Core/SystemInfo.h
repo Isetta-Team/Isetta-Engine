@@ -9,6 +9,7 @@
 namespace Isetta {
 class ISETTA_API SystemInfo {
  public:
+  static std::string GetSubnetIPAddress();
   static Array<std::string> GetIPAddresses();
   static std::string GetMachineName();
   static std::string GetSystemUserName();

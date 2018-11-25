@@ -7,6 +7,18 @@
 
 namespace Isetta {
 
+std::string SystemInfo::GetSubnetIPAddress() {
+  for (auto ipAddress : GetIPAddresses()) {
+    if (ipAddress.find(CONFIG_VAL(networkConfig.ipPrefix)) == 0) {
+      return ipAddress;
+    }
+  }
+  LOG_ERROR(Debug::Channel::Networking,
+            "Did find a good subnet ip that starts with %s",
+            CONFIG_VAL(networkConfig.ipPrefix));
+  return std::string{};
+}
+
 // Adapted from: https://tangentsoft.net/wskfaq/examples/ipaddr.html
 Array<std::string> SystemInfo::GetIPAddresses() {
   Array<std::string> ipAddresses;
