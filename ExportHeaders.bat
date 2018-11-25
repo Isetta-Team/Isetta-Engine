@@ -40,7 +40,8 @@ REM Resource Files
 
 REM Build Files
 robocopy "%base%\Build\IsettaEngine-x64-Debug DLL" %include%\%build%\Debug\ *.dll *.lib
-robocopy "%base%\Build\IsettaEngine-x64-Release DLL" %include%\%build%\Release\ *.dll *.lib
+robocopy "%base%\Build\IsettaEngine-x64-Release DLL" %include%\%build%\Release\ *.dll *
+robocopy "%base%\Build\IsettaEngine-x64-ReleaseEditor DLL" %include%\%build%\ReleaseEditor\ *.dll *.lib
 
 REM Tool Files (can add more like resources)
 robocopy %base% %include%%tools% *.exe
