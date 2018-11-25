@@ -1,0 +1,4 @@
+<Model name="Grid" geometry="primitives/Grid/Grid.geo">
+
+	<Mesh name="Grid" material="primitives/Grid/Grid.material.xml" batchStart="0" batchCount="486" vertRStart="0" vertREnd="99" />
+</Model>

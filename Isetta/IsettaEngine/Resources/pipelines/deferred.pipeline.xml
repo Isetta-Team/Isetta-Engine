@@ -17,7 +17,7 @@
 			
 			<!-- Copy depth buffer to allow occlusion culling of lights -->
 			<BindBuffer sampler="depthBuf" sourceRT="GBUFFER" bufIndex="32" />
-			<DrawQuad material="materials/light.material.xml" context="COPY_DEPTH" />
+			<DrawQuad material="lights/light.material.xml" context="COPY_DEPTH" />
 			<UnbindBuffers />
 			
 			<BindBuffer sampler="gbuf0" sourceRT="GBUFFER" bufIndex="0" />
@@ -25,7 +25,7 @@
 			<BindBuffer sampler="gbuf2" sourceRT="GBUFFER" bufIndex="2" />
 			<BindBuffer sampler="gbuf3" sourceRT="GBUFFER" bufIndex="3" />
 			
-			<DrawQuad material="materials/light.material.xml" context="AMBIENT" />
+			<DrawQuad material="lights/light.material.xml" context="AMBIENT" />
 			<DoDeferredLightLoop />
 			
 			<UnbindBuffers />

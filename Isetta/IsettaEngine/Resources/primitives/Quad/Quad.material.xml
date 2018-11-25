@@ -1,0 +1,6 @@
+<Material>
+	<Shader source="primitives/Quad/Quad.shader" />
+
+	<Uniform name="matDiffuseCol" a="0.64" b="0.64" c="0.64" d="1" />
+	<Uniform name="matSpecParams" a="0.25" b="0.25" c="0.25" d="0.390625" />
+</Material>
