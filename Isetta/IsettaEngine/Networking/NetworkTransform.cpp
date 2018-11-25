@@ -69,7 +69,7 @@ void NetworkTransform::Start() {
             serverScaleTimestamps[positionMessage->netId] =
                 positionMessage->timestamp;
             NetworkManager::Instance()
-                .SendAllMessageFromServer<PositionMessage>(positionMessage);
+                .SendMessageFromServerToAll<PositionMessage>(positionMessage);
           }
         });
 
@@ -119,7 +119,7 @@ void NetworkTransform::Start() {
             serverScaleTimestamps[rotationMessage->netId] =
                 rotationMessage->timestamp;
             NetworkManager::Instance()
-                .SendAllMessageFromServer<RotationMessage>(rotationMessage);
+                .SendMessageFromServerToAll<RotationMessage>(rotationMessage);
           }
         });
 
@@ -166,7 +166,7 @@ void NetworkTransform::Start() {
               scaleMessage->timestamp) {
             serverScaleTimestamps[scaleMessage->netId] =
                 scaleMessage->timestamp;
-            NetworkManager::Instance().SendAllMessageFromServer<ScaleMessage>(
+            NetworkManager::Instance().SendMessageFromServerToAll<ScaleMessage>(
                 scaleMessage);
           }
         });
@@ -277,7 +277,7 @@ void NetworkTransform::Start() {
           TransformMessage* transformMessage =
               reinterpret_cast<TransformMessage*>(message);
 
-          NetworkManager::Instance().SendAllMessageFromServer<TransformMessage>(
+          NetworkManager::Instance().SendMessageFromServerToAll<TransformMessage>(
               transformMessage);
         });
 
@@ -310,7 +310,7 @@ void NetworkTransform::Start() {
               reinterpret_cast<ParentMessage*>(message);
 
           NetworkManager::Instance()
-              .SendAllButClientMessageFromServer<ParentMessage>(clientIdx,
+              .SendMessageFromServerToAllButClient<ParentMessage>(clientIdx,
                                                                 parentMessage);
         });
 

@@ -67,7 +67,7 @@ void RegisterExampleMessageFunctions() {
             LOG(Debug::Channel::Networking, "Client %d sends handle #%d",
                 clientIdx, handleMessage->handle);
 
-            NetworkManager::Instance().SendAllMessageFromServer<HandleMessage>(
+            NetworkManager::Instance().SendMessageFromServerToAll<HandleMessage>(
                 handleMessage);
           });
 
@@ -144,7 +144,7 @@ void RegisterExampleMessageFunctions() {
               }
             }
 
-            NetworkManager::Instance().SendAllMessageFromServer<SpawnMessage>(
+            NetworkManager::Instance().SendMessageFromServerToAll<SpawnMessage>(
                 spawnMessage);
           });
 
@@ -177,7 +177,7 @@ void RegisterExampleMessageFunctions() {
               return;
             }
 
-            NetworkManager::Instance().SendAllMessageFromServer<DespawnMessage>(
+            NetworkManager::Instance().SendMessageFromServerToAll<DespawnMessage>(
                 despawnMessage);
 
             Entity* entity = NetworkManager::Instance().GetNetworkEntity(
@@ -210,12 +210,17 @@ void NetworkLevel::OnLevelLoad() {
   // Networking preparation
   RegisterExampleMessageFunctions();
 
-  Input::RegisterKeyPressCallback(KeyCode::NUM1, []() {
+  Input::RegisterKeyPressCallback(KeyCode::F1, []() {
     NetworkManager::Instance().StartHost(
         CONFIG_VAL(networkConfig.defaultServerIP));
   });
 
-  Input::RegisterKeyPressCallback(KeyCode::NUM2, []() {
+  Input::RegisterKeyPressCallback(KeyCode::F2, []() {
+    NetworkManager::Instance().StartServer(
+        CONFIG_VAL(networkConfig.defaultServerIP));
+  });
+
+  Input::RegisterKeyPressCallback(KeyCode::F3, []() {
     NetworkManager::Instance().StartClient(
         CONFIG_VAL(networkConfig.defaultServerIP));
   });
@@ -337,5 +342,4 @@ void NetworkLevel::OnLevelLoad() {
   debugEntity->AddComponent<EditorComponent>();
   debugEntity->AddComponent<EscapeExit>();
   debugEntity->AddComponent<GameMgtTestComp>();
-
 }

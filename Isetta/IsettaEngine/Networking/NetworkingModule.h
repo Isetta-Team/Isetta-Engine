@@ -90,6 +90,7 @@ class NetworkingModule {
   /// Queue of messages to be sent from the local server in the next network
   /// update.
   RingBuffer<yojimbo::Message*>* serverSendBufferArray;
+  NetworkManager* networkManager;
 
   // Constructors
 
@@ -124,7 +125,7 @@ class NetworkingModule {
    * @param message Pointer to a Message object that should have been created by
    * a MessageFactory.
    */
-  void AddClientToServerMessage(yojimbo::Message* message);
+  void AddClientToServerMessage(yojimbo::Message* message) const;
   /**
    * @brief Adds the given Message into the local Server's send queue to the
    * given client.
@@ -149,26 +150,26 @@ class NetworkingModule {
    * @brief Sends the local Client's queued messages.
    *
    */
-  void SendClientToServerMessages();
+  void SendClientToServerMessages() const;
   /**
    * @brief Sends the local Server's queued messages for the given client.
    *
    * @param clientIdx Index of the client who will receive the sent messages.
    */
-  void SendServerToClientMessages(int clientIdx);
+  void SendServerToClientMessages(int clientIdx) const;
   /**
    * @brief Receives the remote Client's messages as packets, constructs them
    * into Message objects, then handles them depending on their type and data.
    *
    * @param clientIdx Index of the client who sent the received messages.
    */
-  void ProcessClientToServerMessages(int clientIdx);
+  void ProcessClientToServerMessages(int clientIdx) const;
   /**
    * @brief Receives the remote Server's messages as packets, constructs them
    * into Message objects, then handles them depending on their type and data.
    *
    */
-  void ProcessServerToClientMessages();
+  void ProcessServerToClientMessages() const;
 
   /**
    * @brief Attempts to connect the local Client to a server at the given
@@ -210,10 +211,9 @@ class NetworkingModule {
   
   bool IsClientRunning() const;
   bool IsServerRunning() const;
-  bool IsClientConnected(int clientId) const;
+  bool IsClientConnected(int clientIndex) const;
 
-
-  // Other
+  void RegisterBuiltinCallbacks();
 
   friend class NetworkManager;
   friend class EngineLoop;

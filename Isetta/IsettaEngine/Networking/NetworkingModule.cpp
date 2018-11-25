@@ -7,12 +7,10 @@
 #include <list>
 #include <utility>
 
-#include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
-#include "Graphics/AnimationComponent.h"
-#include "NetworkTransform.h"
+#include "Networking/BuiltinMessages.h"
 #include "Networking/NetworkManager.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
 
@@ -28,7 +26,7 @@ CustomAdapter NetworkingModule::NetworkAdapter;
 
 void NetworkingModule::StartUp() {
   NetworkManager::Instance().networkingModule = this;
-
+  networkManager = &NetworkManager::Instance();
   if (!InitializeYojimbo()) {
     throw std::exception(
         "NetworkingModule::StartUp => Could not initialize yojimbo.");
@@ -78,6 +76,8 @@ void NetworkingModule::StartUp() {
   clientSendBuffer =
       MemoryManager::NewArrOnFreeList<RingBuffer<yojimbo::Message*>>(
           CONFIG_VAL(networkConfig.clientQueueSize));
+
+  RegisterBuiltinCallbacks();
 }
 
 void NetworkingModule::Update(float deltaTime) {
@@ -132,7 +132,13 @@ void NetworkingModule::ShutDown() {
 // NOTE: Deletes the oldest message in the queue if the queue is
 // overflowing--it would be nice to return it, but then we wouldn't
 // be able to guarantee the memory is reused
-void NetworkingModule::AddClientToServerMessage(yojimbo::Message* message) {
+void NetworkingModule::AddClientToServerMessage(
+    yojimbo::Message* message) const {
+  if (!IsClientRunning()) {
+    LOG_ERROR(Debug::Channel::Networking,
+              "Cannot send message from client cause client is not running");
+    return;
+  }
   if (clientSendBuffer->IsFull()) {
     client->ReleaseMessage(
         clientSendBuffer->Get());  // This may be horribly wrong
@@ -145,6 +151,11 @@ void NetworkingModule::AddClientToServerMessage(yojimbo::Message* message) {
 // be able to guarantee the memory is reused
 void NetworkingModule::AddServerToClientMessage(int clientIdx,
                                                 yojimbo::Message* message) {
+  if (!IsServerRunning()) {
+    LOG_ERROR(Debug::Channel::Networking,
+              "Cannot send message from server cause server is not running");
+    return;
+  }
   if (serverSendBufferArray[clientIdx].IsFull()) {
     server->ReleaseMessage(
         clientIdx,
@@ -173,7 +184,7 @@ void NetworkingModule::PumpClientServerUpdate(double time) {
   }
 }
 
-void NetworkingModule::SendClientToServerMessages() {
+void NetworkingModule::SendClientToServerMessages() const {
   const int channelIdx = 0;  // TODO(Caleb): Upgrade the channel indexing
   while (!clientSendBuffer->IsEmpty()) {
     if (!client->CanSendMessage(channelIdx)) {
@@ -185,7 +196,7 @@ void NetworkingModule::SendClientToServerMessages() {
   }
 }
 
-void NetworkingModule::SendServerToClientMessages(int clientIdx) {
+void NetworkingModule::SendServerToClientMessages(int clientIdx) const {
   const int channelIdx = 0;  // TODO(Caleb): Upgrade the channel indexing
   while (!serverSendBufferArray[clientIdx].IsEmpty()) {
     if (!server->CanSendMessage(clientIdx, channelIdx)) {
@@ -197,7 +208,7 @@ void NetworkingModule::SendServerToClientMessages(int clientIdx) {
   }
 }
 
-void NetworkingModule::ProcessClientToServerMessages(int clientIdx) {
+void NetworkingModule::ProcessClientToServerMessages(int clientIdx) const {
   const int channelIdx = 0;  // TODO(Caleb): Upgrade the channel indexing
   for (;;) {
     yojimbo::Message* message = server->ReceiveMessage(clientIdx, channelIdx);
@@ -216,7 +227,7 @@ void NetworkingModule::ProcessClientToServerMessages(int clientIdx) {
   }
 }
 
-void NetworkingModule::ProcessServerToClientMessages() {
+void NetworkingModule::ProcessServerToClientMessages() const {
   const int channelIdx = 0;  // TODO(Caleb): Upgrade the channel indexing
   for (;;) {
     yojimbo::Message* message = client->ReceiveMessage(channelIdx);
@@ -246,14 +257,21 @@ void NetworkingModule::Connect(const char* serverAddress, int serverPort,
   yojimbo::Address address(serverAddress, serverPort);
   if (!address.IsValid()) {
     if (IsClientRunning()) {
-    LOG_ERROR(Debug::Channel::Networking,
-              "IP Address for StartClient is invalid");
+      LOG_ERROR(Debug::Channel::Networking,
+                "IP Address for StartClient is invalid");
+      return;
+    }
     return;
   }
-    return;
-  }
-
-  client->InsecureConnect(privateKey, clientId, address, callback);
+  Action<bool> internalCallback = [=](const bool success) {
+    if (callback != nullptr) {
+      callback(success);
+    }
+    NetworkManager::Instance().SendMessageFromClient(
+        NetworkManager::Instance()
+            .GenerateMessageFromClient<ClientConnectedMessage>());
+  };
+  client->InsecureConnect(privateKey, clientId, address, internalCallback);
   onConnectedToServer.Invoke();
 }
 
@@ -333,8 +351,15 @@ bool NetworkingModule::IsServerRunning() const {
   return server != nullptr && server->IsRunning();
 }
 
-bool NetworkingModule::IsClientConnected(const int clientId) const {
-  return IsServerRunning() && server->IsClientConnected(clientId);
+bool NetworkingModule::IsClientConnected(const int clientIndex) const {
+  return IsServerRunning() && server->IsClientConnected(clientIndex);
+}
+
+void NetworkingModule::RegisterBuiltinCallbacks() {
+  NetworkManager::Instance().RegisterServerCallback<ClientConnectedMessage>(
+      [this](const int clientIndex, yojimbo::Message*) {
+        this->onClientConnected.Invoke(clientIndex);
+      });
 }
 
 }  // namespace Isetta

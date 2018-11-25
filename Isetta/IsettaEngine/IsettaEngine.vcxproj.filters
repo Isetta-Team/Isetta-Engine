@@ -870,6 +870,9 @@
     <ClInclude Include="Custom\GameMgtLevel\GameMgtTestComp.h">
       <Filter>Custom\GameMgtLevel</Filter>
     </ClInclude>
+    <ClInclude Include="BuiltinMessages.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

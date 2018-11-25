@@ -30,7 +30,7 @@ void W10NetworkManager::HandleReadyMessage(int clientIdx,
       spawn->swordNetId = netIdBin.GetHandle();
 
       Isetta::NetworkManager::Instance()
-          .SendAllMessageFromServer<W10SpawnMessage>(spawn);
+          .SendMessageFromServerToAll<W10SpawnMessage>(spawn);
     }
   }
 }
@@ -89,7 +89,7 @@ void W10NetworkManager::ServerHandleAttackAttemptMessage(
   lastAttemptClient = clientIdx;
   clientPosX.clear();
   Isetta::NetworkManager::Instance()
-      .SendAllMessageFromServer<W10AttackAttemptMessage>(message);
+      .SendMessageFromServerToAll<W10AttackAttemptMessage>(message);
 }
 
 void W10NetworkManager::HandlePositionReport(int clientIdx,
@@ -240,7 +240,7 @@ void W10NetworkManager::Awake() {
       [&](int clientId, yojimbo::Message* message) {
         clientSwordPos.insert_or_assign(lastAttemptClient, 0);
         Isetta::NetworkManager::Instance()
-            .SendAllButClientMessageFromServer<W10CollectMessage>(clientId,
+            .SendMessageFromServerToAllButClient<W10CollectMessage>(clientId,
                                                                   message);
       });
 

@@ -4,9 +4,11 @@
 #include "GameMgtTestComp.h"
 #include "Core/IsettaCore.h"
 #include "Networking/NetworkManager.h"
+#include "Networking/BuiltinMessages.h"
 
 namespace Isetta {
 void GameMgtTestComp::Start() {
+
   NetworkManager::Instance().AddClientConnectedListener([](const int clientId) {
     LOG_INFO(Debug::Channel::Networking, "Client %d is connected", clientId);
   });
@@ -21,6 +23,11 @@ void GameMgtTestComp::Start() {
 
   NetworkManager::Instance().AddDisconnectedFromServerListener([]() {
     LOG_INFO(Debug::Channel::Networking, "Successfully disconnected from server");
+  });
+
+  Input::RegisterKeyPressCallback(KeyCode::NUM1, []() {
+    NetworkManager::Instance().SendMessageFromClient(
+      NetworkManager::Instance().GenerateMessageFromClient<ClientConnectedMessage>());
   });
 }
 
