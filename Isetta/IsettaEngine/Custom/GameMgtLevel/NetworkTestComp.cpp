@@ -1,14 +1,14 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "GameMgtTestComp.h"
+#include "Custom/GameMgtLevel/NetworkTestComp.h"
 #include "Core/IsettaCore.h"
 #include "Core/SystemInfo.h"
 #include "Networking/BuiltinMessages.h"
 #include "Networking/NetworkManager.h"
 
 namespace Isetta {
-void GameMgtTestComp::Start() {
+void NetworkTestComp::Start() {
   NetworkManager::Instance().AddClientConnectedListener([](const int clientId) {
     LOG_INFO(Debug::Channel::Networking, "Client %d is connected", clientId);
   });
@@ -27,15 +27,9 @@ void GameMgtTestComp::Start() {
     LOG_INFO(Debug::Channel::Networking,
              "Successfully disconnected from server");
   });
-
-  Input::RegisterKeyPressCallback(KeyCode::NUM1, []() {
-    NetworkManager::Instance().SendMessageFromClient(
-        NetworkManager::Instance()
-            .GenerateMessageFromClient<ClientConnectedMessage>());
-  });
 }
 
-void GameMgtTestComp::GuiUpdate() {
+void NetworkTestComp::GuiUpdate() {
   std::string log = "Invalid";
 
   if (NetworkManager::Instance().IsClient()) {
@@ -54,13 +48,15 @@ void GameMgtTestComp::GuiUpdate() {
       [=]() {
         GUI::Text(RectTransform{Math::Rect{5, 0, 200, 50}},
                   Util::StrFormat("Network role is %s", log.c_str()));
-        GUI::Text(RectTransform{Math::Rect{5, 50, 200, 50}},
+        GUI::Text(RectTransform{Math::Rect{5, 20, 200, 50}},
                   Util::StrFormat("MachineName: %s",
                                   SystemInfo::GetMachineName().c_str()));
-
-        GUI::Text(RectTransform{Math::Rect{5, 100, 200, 50}},
+        GUI::Text(RectTransform{Math::Rect{5, 40, 200, 50}},
                   Util::StrFormat("User Name: %s",
                                   SystemInfo::GetSystemUserName().c_str()));
+        GUI::Text(
+            RectTransform{Math::Rect{5, 60, 200, 50}},
+            Util::StrFormat("IP: %s", SystemInfo::GetIPAddresses()[1].c_str()));
       },
       &isOpen);
 }

@@ -5,9 +5,9 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(GameMgtTestComp, Component, true)
+BEGIN_COMPONENT(NetworkTestComp, Component, true)
 public:
 void Start() override;
 void GuiUpdate() override;
-END_COMPONENT(GameMgtTestComp, Component)
+END_COMPONENT(NetworkTestComp, Component)
 }  // namespace Isetta

@@ -20,7 +20,7 @@
 #include "Networking/NetworkId.h"
 #include "Networking/NetworkTransform.h"
 #include "Scene/Entity.h"
-#include "GameMgtLevel/GameMgtTestComp.h"
+#include "GameMgtLevel/NetworkTestComp.h"
 
 using namespace Isetta;
 
@@ -345,5 +345,5 @@ void NetworkLevel::OnLevelLoad() {
   debugEntity->AddComponent<GridComponent>();
   debugEntity->AddComponent<EditorComponent>();
   debugEntity->AddComponent<EscapeExit>();
-  debugEntity->AddComponent<GameMgtTestComp>();
+  debugEntity->AddComponent<NetworkTestComp>();
 }
