@@ -370,6 +370,9 @@
     <ClCompile Include="Custom\LevelLoader.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
+    <ClCompile Include="Custom\GameMgtLevel\GameMgtTestComp.cpp">
+      <Filter>Custom\GameMgtLevel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -863,6 +866,9 @@
     </ClInclude>
     <ClInclude Include="Core\IsettaCore.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\GameMgtLevel\GameMgtTestComp.h">
+      <Filter>Custom\GameMgtLevel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

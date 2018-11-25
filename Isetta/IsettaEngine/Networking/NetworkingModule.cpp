@@ -12,6 +12,7 @@
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
 #include "Graphics/AnimationComponent.h"
+#include "NetworkTransform.h"
 #include "Networking/NetworkManager.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
 
@@ -262,6 +263,7 @@ void NetworkingModule::CreateServer(const char* address, int port) {
         "NetworkingModule::CreateServer => Cannot create a server while one is "
         "already running.");
   }
+
   serverSendBufferArray =
       MemoryManager::NewArrOnFreeList<RingBuffer<yojimbo::Message*>>(
           CONFIG_VAL(networkConfig.maxClients));
@@ -283,15 +285,30 @@ void NetworkingModule::CreateServer(const char* address, int port) {
 }
 
 void NetworkingModule::CloseServer() {
-  if (!server || !server->IsRunning()) {
+  if (server == nullptr || !server->IsRunning()) {
     throw std::exception(
         "NetworkingModule::CloseServer() Cannot close the server if it is not "
         "running.");
   }
+
   server->Stop();
   MemoryManager::DeleteOnFreeList<yojimbo::Server>(server);
+  server = nullptr;
   MemoryManager::DeleteArrOnFreeList<RingBuffer<yojimbo::Message*>>(
       CONFIG_VAL(networkConfig.maxClients), serverSendBufferArray);
   serverAllocator->~NetworkAllocator();
 }
+
+bool NetworkingModule::IsClient() const {
+  return client->IsConnected() && server == nullptr && !server->IsRunning();
+}
+
+bool NetworkingModule::IsHost() const {
+  return client->IsConnected() && server != nullptr && server->IsRunning();
+}
+
+bool NetworkingModule::IsServer() const {
+  return !client->IsConnected() && server != nullptr && server->IsRunning();
+}
+
 }  // namespace Isetta

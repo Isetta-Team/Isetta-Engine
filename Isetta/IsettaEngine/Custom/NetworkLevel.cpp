@@ -5,6 +5,7 @@
 
 #include "Audio/AudioClip.h"
 #include "Audio/AudioListener.h"
+#include "Audio/AudioSource.h"
 #include "Components/Editor/EditorComponent.h"
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
@@ -19,6 +20,7 @@
 #include "Networking/NetworkId.h"
 #include "Networking/NetworkTransform.h"
 #include "Scene/Entity.h"
+#include "GameMgtLevel/GameMgtTestComp.h"
 
 using namespace Isetta;
 
@@ -52,7 +54,7 @@ void RegisterExampleMessageFunctions() {
                   "Server says we should stop the animation!");
             }
             if (handleMessage->handle == 2) {
-              AudioSource audio(AudioClip::Load("Sound\gunshot.aiff"));
+              auto audio = AudioSource(AudioClip::Load("Sound/gunshot.aiff", "Gunshot"));
               audio.Play();
             }
           });
@@ -329,7 +331,11 @@ void NetworkLevel::OnLevelLoad() {
   lightEntity->AddComponent<LightComponent>();
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
-  lightEntity->AddComponent<GridComponent>();
-  lightEntity->AddComponent<EditorComponent>();
-  lightEntity->AddComponent<EscapeExit>();
+
+  Entity* debugEntity = Entity::Instantiate("Debug");
+  debugEntity->AddComponent<GridComponent>();
+  debugEntity->AddComponent<EditorComponent>();
+  debugEntity->AddComponent<EscapeExit>();
+  debugEntity->AddComponent<GameMgtTestComp>();
+
 }

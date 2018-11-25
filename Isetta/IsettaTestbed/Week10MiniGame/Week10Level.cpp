@@ -3,7 +3,6 @@
  */
 #include "Week10MiniGame/Week10Level.h"
 #include "Components/Editor/EditorComponent.h"
-#include "Components/FlyController.h"
 #include "Core/Config/Config.h"
 #include "Core/IsettaCore.h"
 #include "Graphics/CameraComponent.h"

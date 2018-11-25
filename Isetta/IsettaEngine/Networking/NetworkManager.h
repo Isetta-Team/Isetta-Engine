@@ -17,46 +17,11 @@ namespace Isetta {
 
 class Entity;
 class NetworkId;
-
 /**
  * @brief Wrapper class for NetworkingModule so that other engine components can
  * use networking features.
  */
 class ISETTA_API_DECLARE NetworkManager {
- private:
-  NetworkManager();
-
-  yojimbo::Message* CreateClientMessage(int messageId) const;
-  yojimbo::Message* CreateServerMessage(int clientIdx, int messageId) const;
-
-  template <typename T>
-  int GetMessageTypeId();
-  std::list<std::pair<U16, Action<yojimbo::Message*>>> GetClientFunctions(
-      int type);
-  std::list<std::pair<U16, Action<int, yojimbo::Message*>>> GetServerFunctions(
-      int type);
-  U32 CreateNetworkId(NetworkId* networkId);
-  U32 AssignNetworkId(U32 netId, NetworkId* networkId);
-  void RemoveNetworkId(NetworkId* networkId);
-  static U16 GetServerPort();
-
-  class NetworkingModule* networkingModule;
-
-  int messageTypeCount = 0;
-  U16 functionCount = 0;
-  HandleBin networkIds;
-  std::unordered_map<int, std::pair<U64, Func<yojimbo::Message*, void*>>>
-      factories;
-  std::unordered_map<std::type_index, int> typeMap;
-
-  std::unordered_map<int, std::list<std::pair<U16, Action<yojimbo::Message*>>>>
-      clientCallbacks;
-  std::unordered_map<int,
-                     std::list<std::pair<U16, Action<int, yojimbo::Message*>>>>
-      serverCallbacks;
-
-  std::unordered_map<U32, NetworkId*> networkIdToComponentMap;
-
  public:
   static NetworkManager& Instance();
 
@@ -93,8 +58,7 @@ class ISETTA_API_DECLARE NetworkManager {
    *
    * \param serverIP Address of the server.
    */
-  void StartServer(const char* serverIP) const;
-  void StartServer(const std::string& serverIP) const;
+  void StartServer(std::string_view serverIP) const;
   /**
    * \brief Closes the local Server object and deallocates its allocated memory.
    *
@@ -108,17 +72,20 @@ class ISETTA_API_DECLARE NetworkManager {
    * succeeds or fails. Passes a boolean indicating the success of the
    * connection.
    */
-  void StartClient(const char* serverIP,
-                   const Action<bool>& onStarted = nullptr) const;
-  void StartClient(const std::string& serverIP,
+  void StartClient(std::string_view serverIP,
                    const Action<bool>& onStarted = nullptr) const;
   /**
    * \brief Disconnects the local Client from the server it is connected to.
    */
   void StopClient() const;
-  void StartHost(const char* hostIP) const;
-  void StartHost(const std::string& hostIP) const;
+  void StartHost(std::string_view hostIP) const;
   void StopHost() const;
+
+  bool IsClient() const;
+  bool IsHost() const;
+  bool IsServer() const;
+
+  void NetworkLoadLevel(std::string_view levelName);
 
   bool LocalClientIsConnected() const;
   bool ClientIsConnected(int clientIdx) const;
@@ -127,6 +94,49 @@ class ISETTA_API_DECLARE NetworkManager {
   int GetClientIndex() const;
 
   ~NetworkManager() = default;
+
+  U64 AddConnectedToServerListener(const Action<>& listener);
+  void RemoveConnectedToServerListener(U64 handle);
+  U64 AddDisconnectedFromServerListener(const Action<>& listener);
+  void RemoveDisconnectedFromServerListener(U64 handle);
+  U64 AddClientConnectedListener(const Action<int>& listener);
+  void RemoveClientConnectedListener(U64 handle);
+  U64 AddClientDisconnectedListener(const Action<int>& listener);
+  void RemoveClientDisconnectedListener(U64 handle);
+
+ private:
+  NetworkManager();
+
+  yojimbo::Message* CreateClientMessage(int messageId) const;
+  yojimbo::Message* CreateServerMessage(int clientIdx, int messageId) const;
+
+  template <typename T>
+  int GetMessageTypeId();
+  std::list<std::pair<U16, Action<yojimbo::Message*>>> GetClientFunctions(
+      int type);
+  std::list<std::pair<U16, Action<int, yojimbo::Message*>>> GetServerFunctions(
+      int type);
+  U32 CreateNetworkId(NetworkId* networkId);
+  U32 AssignNetworkId(U32 netId, NetworkId* networkId);
+  void RemoveNetworkId(NetworkId* networkId);
+  static U16 GetServerPort();
+
+  class NetworkingModule* networkingModule;
+
+  int messageTypeCount = 0;
+  U16 functionCount = 0;
+  HandleBin networkIds;
+  std::unordered_map<int, std::pair<U64, Func<yojimbo::Message*, void*>>>
+      factories;
+  std::unordered_map<std::type_index, int> typeMap;
+
+  std::unordered_map<int, std::list<std::pair<U16, Action<yojimbo::Message*>>>>
+      clientCallbacks;
+  std::unordered_map<int,
+                     std::list<std::pair<U16, Action<int, yojimbo::Message*>>>>
+      serverCallbacks;
+
+  std::unordered_map<U32, NetworkId*> networkIdToComponentMap;
 
   friend class NetworkId;
   friend class NetworkingModule;

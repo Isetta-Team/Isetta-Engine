@@ -47,41 +47,40 @@ int NetworkManager::GetClientIndex() const {
   return networkingModule->client->GetClientIndex();
 }
 
-void NetworkManager::StartServer(const char* serverIP) const {
-  networkingModule->CreateServer(serverIP, GetServerPort());
-}
-
-void NetworkManager::StartServer(const std::string& serverIP) const {
-  StartServer(serverIP.c_str());
+void NetworkManager::StartServer(std::string_view serverIP) const {
+  networkingModule->CreateServer(serverIP.data(), GetServerPort());
 }
 
 void NetworkManager::StopServer() const { networkingModule->CloseServer(); }
 
-void NetworkManager::StartClient(const char* serverIP,
+void NetworkManager::StartClient(std::string_view serverIP,
                                  const Action<bool>& onStarted) const {
-  networkingModule->Connect(serverIP, GetServerPort(), onStarted);
-}
-
-void NetworkManager::StartClient(const std::string& serverIP,
-                                 const Action<bool>& onStarted) const {
-  StartClient(serverIP.c_str(), onStarted);
+  networkingModule->Connect(serverIP.data(), GetServerPort(), onStarted);
 }
 
 void NetworkManager::StopClient() const { networkingModule->Disconnect(); }
 
-void NetworkManager::StartHost(const char* hostIP) const {
-  networkingModule->CreateServer(hostIP, GetServerPort());
-  networkingModule->Connect(hostIP, GetServerPort());
-  LOG_INFO(Debug::Channel::Networking, "Host Started on %s", hostIP);
-}
-
-void NetworkManager::StartHost(const std::string& hostIP) const {
-  StartHost(hostIP.c_str());
+void NetworkManager::StartHost(std::string_view hostIP) const {
+  networkingModule->CreateServer(hostIP.data(), GetServerPort());
+  networkingModule->Connect(hostIP.data(), GetServerPort());
+  LOG_INFO(Debug::Channel::Networking, "Host Started on %s", hostIP.data());
 }
 
 void NetworkManager::StopHost() const {
   networkingModule->Disconnect();
   networkingModule->CloseServer();
+}
+
+bool NetworkManager::IsClient() const {
+  return networkingModule->IsClient();
+}
+
+bool NetworkManager::IsHost() const {
+  return networkingModule->IsHost();
+}
+
+bool NetworkManager::IsServer() const {
+  return networkingModule->IsServer();
 }
 
 std::list<std::pair<U16, Action<yojimbo::Message*>>>

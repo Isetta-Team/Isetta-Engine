@@ -262,7 +262,7 @@ void W10NetworkManager::Awake() {
         "UITextChange",
         {Isetta::Util::StrFormat(
             "Connected to %s as client!",
-            CONFIG_VAL(networkConfig.defaultServerIP).c_str())}});
+            CONFIG_VAL(networkConfig.defaultServerIP))}});
   });
 
   // if (CONFIG_VAL(networkConfig.runServer)) {
