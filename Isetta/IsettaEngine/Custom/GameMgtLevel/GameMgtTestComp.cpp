@@ -3,6 +3,7 @@
  */
 #include "GameMgtTestComp.h"
 #include "Core/IsettaCore.h"
+#include "Core/SystemInfo.h"
 #include "Networking/BuiltinMessages.h"
 #include "Networking/NetworkManager.h"
 
@@ -46,13 +47,21 @@ void GameMgtTestComp::GuiUpdate() {
   }
 
   static bool isOpen = true;
-  GUI::Window(RectTransform{Math::Rect{0, 80, 200, 50}, GUI::Pivot::Top,
-                            GUI::Pivot::Top},
-              "Network Monitor",
-              [=]() {
-                GUI::Text(RectTransform{Math::Rect{0, 0, 200, 50}},
-                          Util::StrFormat("Network role is %s", log.c_str()));
-              },
-              &isOpen);
+  GUI::Window(
+      RectTransform{Math::Rect{0, 80, 200, 300}, GUI::Pivot::Top,
+                    GUI::Pivot::Top},
+      "Network Monitor",
+      [=]() {
+        GUI::Text(RectTransform{Math::Rect{5, 0, 200, 50}},
+                  Util::StrFormat("Network role is %s", log.c_str()));
+        GUI::Text(RectTransform{Math::Rect{5, 50, 200, 50}},
+                  Util::StrFormat("MachineName: %s",
+                                  SystemInfo::GetMachineName().c_str()));
+
+        GUI::Text(RectTransform{Math::Rect{5, 100, 200, 50}},
+                  Util::StrFormat("User Name: %s",
+                                  SystemInfo::GetSystemUserName().c_str()));
+      },
+      &isOpen);
 }
 }  // namespace Isetta

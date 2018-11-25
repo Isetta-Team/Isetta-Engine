@@ -373,6 +373,9 @@
     <ClCompile Include="Custom\GameMgtLevel\GameMgtTestComp.cpp">
       <Filter>Custom\GameMgtLevel</Filter>
     </ClCompile>
+    <ClCompile Include="Core\SystemInfo.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -872,6 +875,9 @@
     </ClInclude>
     <ClInclude Include="BuiltinMessages.h">
       <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\SystemInfo.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
