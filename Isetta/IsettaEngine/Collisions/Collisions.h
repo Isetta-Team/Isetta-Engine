@@ -4,12 +4,14 @@
 #pragma once
 
 #include "ISETTA_API.h"
+#include "Core/DataStructures/Array.h"
 
 namespace Isetta {
 class ISETTA_API_DECLARE Collisions {
  public:
   static bool Raycast(const class Ray &ray, class RaycastHit *const hitInfo,
                       float maxDistance = 0);
+  static Array<RaycastHit> RaycastAll(const class Ray &ray, float maxDistance = 0);
   // TODO(Jacob) ColliderCasts? LineCast
   // TODO(Jacob) CheckCollider - check for overlap
   // TODO(Jacob) OverlapCollider - touching or inside

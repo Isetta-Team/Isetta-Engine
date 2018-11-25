@@ -40,6 +40,7 @@ class CollisionsModule {
 
   bool Raycast(const class Ray &ray, class RaycastHit *const hitInfo,
                float maxDistance = 0);
+  Array<RaycastHit> RaycastAll(const class Ray &ray, float maxDistance = 0);
 
   static float ClosestPtRaySegment(const class Ray &, const Math::Vector3 &,
                                    const Math::Vector3 &, float *const,

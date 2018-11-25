@@ -4,6 +4,7 @@
 #include "Collisions/Collisions.h"
 
 #include "Collisions/CollisionsModule.h"
+#include "Collisions/RaycastHit.h"
 
 namespace Isetta {
 CollisionsModule* Collisions::collisionsModule{nullptr};
@@ -11,6 +12,9 @@ CollisionsModule* Collisions::collisionsModule{nullptr};
 bool Collisions::Raycast(const Ray& ray, RaycastHit* const hitInfo,
                          float maxDistance) {
   return collisionsModule->Raycast(ray, hitInfo, maxDistance);
+}
+Array<RaycastHit> Collisions::RaycastAll(const Ray& ray, float maxDistance) {
+  return collisionsModule->RaycastAll(ray, maxDistance);
 }
 bool Collisions::GetIgnoreLayerCollision(int layer1, int layer2) const {
   return collisionsModule->GetIgnoreLayerCollision(layer1, layer2);
