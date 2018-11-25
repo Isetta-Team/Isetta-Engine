@@ -221,8 +221,12 @@ void NetworkLevel::OnLevelLoad() {
   });
 
   Input::RegisterKeyPressCallback(KeyCode::F3, []() {
+    if (NetworkManager::Instance().IsClientRunning()) {
+      NetworkManager::Instance().StopClient();
+    } else {
     NetworkManager::Instance().StartClient(
         CONFIG_VAL(networkConfig.defaultServerIP));
+    }
   });
 
   // if (CONFIG_VAL(networkConfig.runServer) &&

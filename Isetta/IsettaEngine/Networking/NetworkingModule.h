@@ -90,10 +90,12 @@ class NetworkingModule {
   /// Queue of messages to be sent from the local server in the next network
   /// update.
   RingBuffer<yojimbo::Message*>* serverSendBufferArray;
-  NetworkManager* networkManager;
+
+  // State monitoring
+  bool lastFrameClientRunning;
+  bool* lastFrameClientConnected;
 
   // Constructors
-
   NetworkingModule() = default;
   ~NetworkingModule() = default;
 
@@ -189,7 +191,7 @@ class NetworkingModule {
    * exception if the Client is not already connected to a server.
    *
    */
-  void Disconnect();
+  void Disconnect() const;
 
   /**
    * @brief Initializes the local Server object with the given address and port.
