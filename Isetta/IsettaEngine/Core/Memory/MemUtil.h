@@ -31,6 +31,22 @@ class MemUtil {
    * \brief Free the properly aligned memory address
    */
   static void Free(void*);
+  template<typename T>
+  static std::string GetNameForType() {
+    std::string name = typeid(T).name();
+    auto pos = name.find("::");
+    if (pos != std::string::npos) {
+      name = name.substr(pos + 2);
+    }
+
+    pos = name.find(" * __ptr64");
+    if (pos != std::string::npos) {
+      name = name.substr(0, pos);
+      name += "*";
+    }
+    
+    return name;
+  }
 };
 
 }  // namespace Isetta
