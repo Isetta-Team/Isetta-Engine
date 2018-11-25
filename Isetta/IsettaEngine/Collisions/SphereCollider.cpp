@@ -6,19 +6,21 @@
 #include "Collisions/CapsuleCollider.h"
 #include "Collisions/CollisionsModule.h"
 
-#include "Collisions/Ray.h"
 #include "Core/Debug/DebugDraw.h"
+#include "Core/Geometry/Ray.h"
 #include "Core/Math/Matrix4.h"
 #include "Scene/Transform.h"
 
 namespace Isetta {
+#if _EDITOR
 void SphereCollider::Update() {
   DebugDraw::AxisSphere(
-      Math::Matrix4::Translate(GetTransform().GetWorldPos() + center) *
+      Math::Matrix4::Translate(transform->GetWorldPos() + center) *
           Math::Matrix4::Scale(
-              Math::Vector3{radius * GetTransform().GetWorldScale().Max()}),
+              Math::Vector3{radius * transform->GetWorldScale().Max()}),
       debugColor, debugColor, debugColor);
 }
+#endif
 
 bool SphereCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
                              float maxDistance) {
@@ -36,6 +38,14 @@ bool SphereCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
   Math::Vector3 pt = ray.GetPoint(t);
   RaycastHitCtor(hitInfo, t, pt, pt - GetWorldCenter());
   return true;
+}
+
+AABB SphereCollider::GetFatAABB() {
+  return AABB{GetWorldCenter(),
+              2 * GetWorldRadius() * Math::Vector3::one * (1 + fatFactor)};
+}
+AABB SphereCollider::GetAABB() {
+  return AABB{GetWorldCenter(), 2 * GetWorldRadius() * Math::Vector3::one};
 }
 
 INTERSECTION_TEST(SphereCollider)

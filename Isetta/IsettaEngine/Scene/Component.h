@@ -3,40 +3,43 @@
  */
 #pragma once
 #include <bitset>
+#include <set>
 #include <typeindex>
 #include <unordered_map>
 #include "ISETTA_API.h"
 
-#define CREATE_COMPONENT_BEGIN(NAME, BASE)                                     \
-  template <typename Dummy>                                                    \
-  class ISETTA_API_DECLARE ComponentRegistry<class NAME, BASE, Dummy> {        \
-   protected:                                                                  \
-    static bool NAME##Registered;                                              \
-  };                                                                           \
-  class ISETTA_API_DECLARE NAME : public BASE,                                 \
-                                  public ComponentRegistry<NAME, BASE, void> { \
-   protected:                                                                  \
-    static bool isRegistered() { return NAME##Registered; }                    \
-                                                                               \
+#define BEGIN_COMPONENT(NAME, BASE, UNIQUE)                    \
+  template <bool Unique>                                       \
+  class ISETTA_API_DECLARE                                     \
+      Isetta::ComponentRegistry<class NAME, BASE, Unique> {    \
+   protected:                                                  \
+    static bool NAME##Registered;                              \
+  };                                                           \
+  class ISETTA_API_DECLARE NAME                                \
+      : public BASE,                                           \
+        public Isetta::ComponentRegistry<NAME, BASE, UNIQUE> { \
+   protected:                                                  \
+    static bool isRegistered() { return NAME##Registered; }    \
+                                                               \
    private:
 
-#define CREATE_COMPONENT_END(NAME, BASE)                          \
-  }                                                               \
-  ;                                                               \
-  template <typename Dummy>                                       \
-  bool ComponentRegistry<NAME, BASE, Dummy>::NAME##Registered =   \
-      Component::RegisterComponent(std::type_index(typeid(NAME)), \
-                                   std::type_index(typeid(BASE)));
+#define END_COMPONENT(NAME, BASE)                                        \
+  }                                                                      \
+  ;                                                                      \
+  template <bool Unique>                                                 \
+  bool Isetta::ComponentRegistry<NAME, BASE, Unique>::NAME##Registered = \
+      Component::RegisterComponent(std::type_index(typeid(NAME)),        \
+                                   std::type_index(typeid(BASE)), Unique);
 
 namespace Isetta {
 
-template <typename Curr, typename Base, typename Dummy>
+template <typename Curr, typename Base, bool Exclude>
 struct ISETTA_API_DECLARE ComponentRegistry {};
 
-class ISETTA_API_DECLARE Component {
+class ISETTA_API Component {
   friend class Entity;
 
-  std::bitset<4> attributes;
+  std::bitset<7> attributes;
 
   static std::unordered_map<std::type_index, std::list<std::type_index>>&
   childrenTypes() {
@@ -45,14 +48,27 @@ class ISETTA_API_DECLARE Component {
     return children;
   }
 
- protected:
-  class Entity* entity;
+  static std::set<std::type_index>& uniqueComponents() {
+    static std::set<std::type_index> uniques{};
+    return uniques;
+  }
 
+  static void FlattenComponentList();
+  static void FlattenHelper(std::type_index parent, std::type_index curr);
+  static bool isFlattened;
+
+  static class Entity* curEntity;
+  static class Transform* curTransform;
+
+ protected:
   enum class ComponentAttributes {
     IS_ACTIVE,
-    HAS_STARTED,
+    HAS_AWAKEN,
     NEED_DESTROY,
-    NEED_UPDATE
+    NEED_GUI_UPDATE,
+    NEED_UPDATE,
+    NEED_LATE_UPDATE,
+    NEED_FIXED_UPDATE,
   };
 
   Component();
@@ -65,42 +81,29 @@ class ISETTA_API_DECLARE Component {
   virtual ~Component() = default;
   void SetActive(bool value);
   bool GetActive() const;
-  class Transform& GetTransform() const;
-  class Entity* GetEntity() const;
-  // TODO(Jacob) possibly remove?
-  template <typename CheckType, typename InstanceType>
-  bool IsInstanceOf(const InstanceType& instance) {
-    return (dynamic_cast<CheckType*>(&instance) != NULL);
-  }
-
-  // TODO(Jacob) do we want?
-  // template <typename T>
-  // T* GetComponent();
-  // template <typename T>
-  // std::vector<T*> GetComponents();
-  // template <typename T>
-  // T* GetComponentInParent();
-  // template <typename T>
-  // std::vector<T*> GetComponentsInParent();
-  // template <typename T>
-  // T* GetComponentInChildren();
-  // template <typename T>
-  // std::vector<T*> GetComponentsInChildren();
-  // template <typename T>
-  // T* GetComponentInDescendant();
-  // template <typename T>
-  // std::vector<T*> GetComponentsInDescendant();
-
-  static bool RegisterComponent(std::type_index curr, std::type_index base);
+  class Entity* const entity;
+  class Transform* const transform;
 
   virtual void OnEnable() {}
+  virtual void Awake() {}
   virtual void Start() {}
-  virtual void GuiUpdate() {}
-  virtual void Update() {}
-  virtual void LateUpdate() {}
-  virtual void FixedUpdate() {}
+  virtual void GuiUpdate() {
+    SetAttribute(ComponentAttributes::NEED_GUI_UPDATE, false);
+  }
+  virtual void Update() {
+    SetAttribute(ComponentAttributes::NEED_UPDATE, false);
+  }
+  virtual void LateUpdate() {
+    SetAttribute(ComponentAttributes::NEED_LATE_UPDATE, false);
+  }
+  virtual void FixedUpdate() {
+    SetAttribute(ComponentAttributes::NEED_FIXED_UPDATE, false);
+  }
   virtual void OnDestroy() {}
   virtual void OnDisable() {}
+
+  static bool RegisterComponent(std::type_index curr, std::type_index base,
+                                bool isExclude);
 };
 
 }  // namespace Isetta

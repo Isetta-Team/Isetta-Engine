@@ -5,31 +5,37 @@
 #include "Collisions/Collider.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(SphereCollider, Collider)
+BEGIN_COMPONENT(SphereCollider, Collider, false)
 private:
+#if _EDITOR
 void Update() override;
+#endif
 
 protected:
-const ColliderType GetType() const override {
-  return Collider::ColliderType::SPHERE;
-}
+ColliderType GetType() const final { return ColliderType::SPHERE; }
 
 public:
 float radius;
 
-explicit SphereCollider(float radius = 0.5) : Collider{}, radius{radius} {}
-SphereCollider(const Math::Vector3& center, float radius = 0.5)
+explicit SphereCollider(const float radius = 0.5)
+    : Collider{}, radius{radius} {}
+
+explicit SphereCollider(const Math::Vector3& center, const float radius = 0.5)
     : Collider{center}, radius{radius} {}
-SphereCollider(bool isStatic, bool isTrigger, const Math::Vector3& center,
+SphereCollider(bool trigger, const Math::Vector3& center,
                float radius = 0.5)
-    : Collider{isStatic, isTrigger, center}, radius{radius} {}
+    : Collider{trigger, center}, radius{radius} {}
 
 bool Raycast(const Ray& ray, RaycastHit* const hitInfo,
-             float maxDistance = 0) override;
+             float maxDistance = 0) final;
 
-inline float GetWorldRadius() const {
-  return radius * GetTransform().GetWorldScale().Max();
+float GetWorldRadius() const {
+  return radius * transform->GetWorldScale().Max();
 }
-bool Intersection(Collider* const other) override;
-CREATE_COMPONENT_END(SphereCollider, Collider)
+
+AABB GetFatAABB() final;
+AABB GetAABB() final;
+
+bool Intersection(Collider* const other) final;
+END_COMPONENT(SphereCollider, Collider)
 }  // namespace Isetta

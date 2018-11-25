@@ -4,8 +4,8 @@
 #pragma once
 #include <unordered_map>
 #include <unordered_set>
-#include <vector>
-#include "Util.h"
+#include "Collisions/BVTree.h"
+#include "Scene/Layers.h"
 
 namespace Isetta::Math {
 class Vector3;
@@ -14,6 +14,11 @@ class Vector3;
 namespace Isetta {
 class CollisionsModule {
  public:
+  struct CollisionConfig {
+    CVar<float> fatFactor{"collision_fat_factor", 0.2f};
+    CVar<Size> bvTreeNodeSize{"bv_tree_node_size", 200};
+  };
+
   static bool Intersection(const class BoxCollider &,
                            const class BoxCollider &);
   static bool Intersection(const class BoxCollider &,
@@ -46,23 +51,24 @@ class CollisionsModule {
   CollisionsModule() = default;
   ~CollisionsModule() = default;
 
-  // BVTree tree;
-  // TODO(Jacob) remove
-  std::vector<class Collider *> colliders;
+  // probably mark them as "still colliding"
+  CollisionUtil::ColliderPairSet collidingPairs;
+  CollisionUtil::ColliderPairSet ignoreColliderPairs;
 
-  std::unordered_set<std::pair<int, int>> collisionPairs;
-  // TODO(Jacob) only for color as of now
-  std::unordered_map<int, int> collisions{};
+  BVTree bvTree;
+  std::bitset<static_cast<int>(0.5f * Layers::LAYERS_CAPACITY *
+                               (Layers::LAYERS_CAPACITY + 1))>
+      ignoreCollisionLayer = 0;
 
   void StartUp();
   void Update(float deltaTime);
   void ShutDown();
-
-  friend class EngineLoop;
-  friend class Collider;
-  friend class Collisions;
+  Array<Collider*> GetPossibleColliders(Collider* collider) const;
 
   // Utilities
+  bool GetIgnoreLayerCollision(int layer1, int layer2) const;
+  void SetIgnoreLayerCollision(int layer1, int layer2, bool ignoreLayer = true);
+
   static bool Intersection(const Math::Vector3 &, const Math::Vector3 &,
                            const class AABB &);
   static float SqDistPointSegment(const Math::Vector3 &, const Math::Vector3 &,
@@ -73,7 +79,7 @@ class CollisionsModule {
   static Math::Vector3 ClosestPtPointSegment(const Math::Vector3 &point,
                                              const Math::Vector3 &p0,
                                              const Math::Vector3 &p1,
-                                             float *const t);
+                                             float *);
   // static float ClosestPtRaySegment(const Ray &, const Math::Vector3 &,
   //                                 const Math::Vector3 &, float *const,
   //                                 float *const, Math::Vector3 *const,
@@ -84,7 +90,7 @@ class CollisionsModule {
                                        const Math::Vector3 &, float *const,
                                        float *const, Math::Vector3 *const,
                                        Math::Vector3 *const);
-  static Math::Vector3 ClossetPtPointAABB(const Math::Vector3 &,
+  static Math::Vector3 ClosestPtPointAABB(const Math::Vector3 &,
                                           const class AABB &);
   static Math::Vector3 ClosestPtPointOBB(const Math::Vector3 &,
                                          const class BoxCollider &);
@@ -110,12 +116,11 @@ class CollisionsModule {
   static Math::Vector3 ClosestPtSegmentOBB(const Math::Vector3 &,
                                            const Math::Vector3 &,
                                            const class BoxCollider &);
-  inline std::pair<int, int> CollisionPair(int i, int j) {
-    if (i < j) {
-      return std::make_pair(i, j);
-    } else {
-      return std::make_pair(j, i);
-    }
-  }
+
+  friend class EngineLoop;
+  friend class Collider;
+  friend class Collisions;
+  friend class CollisionSolverModule;
+  friend class StackAllocator;
 };
 }  // namespace Isetta

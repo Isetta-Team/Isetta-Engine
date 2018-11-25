@@ -33,18 +33,18 @@ class ISETTA_API EngineLoop {
   class GUIModule* guiModule;
   class NetworkingModule* networkingModule;
   class CollisionsModule* collisionsModule;
+  class CollisionSolverModule* collisionSolverModule;
+  class Events* events;
 
   void Run();
   void StartUp();
   void Update();
-  void FixedUpdate(float deltaTime);
-  void VariableUpdate(float deltaTime);
+  void FixedUpdate(float deltaTime) const;
+  void VariableUpdate(float deltaTime) const;
   void ShutDown();
 
   void StartGameClock() const;
 
-  class TestInitalization;
-  friend class TestInitialization;
   friend class Application;
 };
 }  // namespace Isetta

@@ -5,18 +5,23 @@
 #include "Core/Debug/DebugDraw.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Math/Matrix3.h"
-#include "Scene/Component.h"
+#include "Core/Math/Vector4.h"
+#include "Horde3D/Horde3D/Bindings/C++/Horde3D.h"
 #include "Scene/Entity.h"
+#include "Scene/Level.h"
+#include "Scene/LevelManager.h"
 #include "Util.h"
-#if _DEBUG
-#include "Graphics/GUI.h"
-#include "Graphics/RectTransform.h"
-#include "imgui/imgui.h"
-#endif
 
 namespace Isetta {
+Transform::Transform(Entity* const entity) : entity(entity) {}
 
-Transform::Transform(Entity* entity) : entity(entity) {}
+void Transform::SetLocalToWorldMatrix(const Math::Matrix4& newMatrix) {
+  localToWorldMatrix = newMatrix;
+  for (int i = 0; i < Math::Matrix3::ROW_COUNT; ++i) {
+    axis[i] = localToWorldMatrix.GetCol(i).GetVector3().Normalized();
+  }
+  SetDirty();
+}
 
 Math::Vector3 Transform::GetWorldPos() {
   return GetLocalToWorldMatrix().GetCol(3).GetVector3();
@@ -24,7 +29,6 @@ Math::Vector3 Transform::GetWorldPos() {
 
 Math::Vector3 Transform::GetLocalPos() const { return localPos; }
 
-// TODO(YIDI): test this
 void Transform::SetWorldPos(const Math::Vector3& newWorldPos) {
   SetDirty();
 
@@ -93,17 +97,14 @@ void Transform::SetLocalRot(const Math::Vector3& localEulers) {
   SetLocalRot(Math::Quaternion::FromEulerAngles(localEulers));
 }
 
-// passed
 void Transform::RotateWorld(const Math::Vector3& eulerAngles) {
   SetWorldRot(Math::Quaternion::FromEulerAngles(eulerAngles) * GetWorldRot());
 }
 
-// passed
 void Transform::RotateWorld(const Math::Vector3& axis, const float angle) {
   SetWorldRot(Math::Quaternion::FromAngleAxis(axis, angle) * GetWorldRot());
 }
 
-// passed
 void Transform::RotateLocal(const Math::Vector3& eulerAngles) {
   // first, get the basis vectors in local space
   bool hasParent = GetParent() != nullptr;
@@ -126,7 +127,6 @@ void Transform::RotateLocal(const Math::Vector3& eulerAngles) {
               localRot);
 }
 
-// passed
 void Transform::RotateLocal(const Math::Vector3& axisWorldSpace,
                             const float angle) {
   // transform the axis from world space to the space that
@@ -137,14 +137,20 @@ void Transform::RotateLocal(const Math::Vector3& axisWorldSpace,
   SetLocalRot(Math::Quaternion::FromAngleAxis(localAxis, angle) * localRot);
 }
 
-// passed
 void Transform::RotateLocal(const Math::Quaternion& rotation) {
   SetLocalRot(rotation * localRot);
 }
 
-Math::Vector3 Transform::GetWorldScale() const {
-  // TODO(YIDI):  implement this
-  return localScale;
+Math::Vector3 Transform::GetWorldScale() {
+  // Potential reading:
+  // https://math.stackexchange.com/questions/237369/given-this-transformation-matrix-how-do-i-decompose-it-into-translation-rotati
+  if (parent == nullptr) {
+    worldScale = localScale;
+  } else {
+    worldScale = Math::Vector3::Scale(parent->GetWorldScale(), localScale);
+  }
+
+  return worldScale;
 }
 
 Math::Vector3 Transform::GetLocalScale() const { return localScale; }
@@ -154,27 +160,45 @@ void Transform::SetLocalScale(const Math::Vector3& newScale) {
   SetDirty();
 }
 
-// TODO(YIDI): Test this
-void Transform::SetParent(Transform* transform) {
-  if (parent == transform) {
-    LOG_ERROR(Debug::Channel::Graphics,
-              "You are trying to set (%s)'s parent to (%s), whose is already "
-              "their parent",
-              GetName().c_str(), transform->GetName().c_str());
+void Transform::SetWorldScale(const Math::Vector3& newWorldScale) {
+  worldScale = newWorldScale;
+  SetDirty();
+
+  if (parent == nullptr) {
+    localScale = worldScale;
+  } else {
+    localScale =
+        Math::Vector3::ReverseScale(worldScale, parent->GetWorldScale());
+  }
+}
+
+void Transform::SetParent(Transform* const transform) {
+  Transform* targetTransform = transform;
+  if (transform == nullptr) {
+    targetTransform =
+        LevelManager::Instance().loadedLevel->levelRoot->transform;
+  }
+  if (parent == targetTransform) {
+    LOG_WARNING(Debug::Channel::Graphics,
+                "You are trying to set (%s)'s parent to (%s), whose is already "
+                "their parent",
+                GetName().c_str(), targetTransform->GetName().c_str());
     return;
   }
   Math::Vector3 originalPos = GetWorldPos();
   Math::Quaternion originalRot = GetWorldRot();
+  Math::Vector3 originalScale = GetWorldScale();
 
   if (parent != nullptr) {
     parent->RemoveChild(this);
   }
-  if (transform != nullptr) {
-    transform->AddChild(this);
+  if (targetTransform != nullptr) {
+    targetTransform->AddChild(this);
   }
-  parent = transform;
+  parent = targetTransform;
   SetWorldPos(originalPos);
   SetWorldRot(originalRot);
+  SetWorldScale(originalScale);
   SetDirty();
 }
 
@@ -203,7 +227,7 @@ Math::Vector3 Transform::GetLeft() {
   return axis[0];
 }
 
-Math::Vector3 Transform::GetAxis(int i) {
+Math::Vector3 Transform::GetAxis(const int i) {
   GetLocalToWorldMatrix();
   return axis[i];
 }
@@ -283,69 +307,6 @@ void Transform::SetH3DNodeTransform(const H3DNode node, Transform& transform) {
   h3dSetNodeTransMat(node, transform.GetLocalToWorldMatrix().Transpose().data);
 }
 
-void Transform::InspectorGUI() {
-  static RectTransform rectTrans{{0, 0, 350, 300}, GUI::Pivot::TopRight};
-  static bool isOpen = true;
-  GUI::Window(
-      rectTrans, "Inspector",
-      [&]() {
-        std::string parentName = parent == nullptr ? "null" : parent->GetName();
-
-        float height = 5;
-        float padding = 15;
-        GUI::Text(RectTransform{Math::Rect{padding, height, 300, 100}},
-                  GetName(), GUI::TextStyle{Color::white});
-        height += 15;
-
-        std::string content =
-            "World Position: " + GetWorldPos().ToString() + "\n" +
-            "Local Position: " + GetLocalPos().ToString() + "\n" +
-            "World Rotation: " + GetWorldEulerAngles().ToString() + "\n" +
-            "Local Rotation: " + GetLocalEulerAngles().ToString() + "\n" +
-            "Local Scale: " + GetLocalScale().ToString() + "\n" +
-            "Parent: " + parentName;
-
-        GUI::Text(RectTransform{Math::Rect{padding, height, 300, 100}},
-                  content);
-
-        height += 90;
-
-        if (GUI::Button(RectTransform{Math::Rect{padding, height, 300, 30}},
-                        "Reset")) {
-          // if (ImGui::Button("Reset", (ImVec2)Math::Vector2{300, 30})) {
-          SetLocalRot(Math::Quaternion::identity);
-          SetLocalPos(Math::Vector3::zero);
-          SetLocalScale(Math::Vector3::one);
-        }
-
-        height += 50;
-
-        GUI::Text(RectTransform{Math::Rect{padding, height, 300, 100}},
-                  "Components", GUI::TextStyle{Color::white});
-
-        height += padding;
-
-        for (const auto& component : entity->GetComponents()) {
-          Component& comp = *component;
-          GUI::Text(RectTransform{Math::Rect{padding, height, 300, 100}},
-                    typeid(comp).name());
-          height += padding;
-        }
-      },
-      &isOpen);
-
-  Math::Matrix4 temp{};
-  temp.SetTopLeftMatrix3(localRot.GetMatrix3());  // rotation
-  temp.SetCol(3, localPos, 1);
-
-  if (parent != nullptr) {
-    temp = parent->GetLocalToWorldMatrix() * temp;
-  }
-
-  DebugDraw::Axis(temp);
-  DebugDraw::AxisSphere(temp);
-}
-
 const Math::Matrix4& Transform::GetLocalToWorldMatrix() {
   if (isDirty) {
     RecalculateLocalToWorldMatrix();
@@ -361,7 +322,6 @@ const Math::Matrix4& Transform::GetWorldToLocalMatrix() {
   }
   return worldToLocalMatrix;
 }
-
 void Transform::RecalculateLocalToWorldMatrix() {
   Math::Matrix4 localToParentMatrix{};
   localToParentMatrix.SetTopLeftMatrix3(localRot.GetMatrix3());  // rotation
@@ -375,20 +335,20 @@ void Transform::RecalculateLocalToWorldMatrix() {
   } else {
     localToWorldMatrix = localToParentMatrix;
   }
-  for (int i = 0; i < Math::Matrix3::ROW_COUNT; i++) {
+  for (int i = 0; i < Math::Matrix3::ROW_COUNT; ++i) {
     axis[i] = localToWorldMatrix.GetCol(i).GetVector3().Normalized();
   }
 }
 
 void Transform::AddChild(Transform* transform) {
   // duplicate child check is in SetParent
-  children.push_back(transform);
+  children.PushBack(transform);
 }
 
 void Transform::RemoveChild(Transform* transform) {
   for (auto it = children.begin(); it != children.end(); ++it) {
     if (*it == transform) {
-      children.erase(it);
+      children.Erase(it);
       return;
     }
   }
@@ -402,6 +362,7 @@ void Transform::SetDirty() {
   // TODO(YIDI): Don't need to traverse all children, if one child is dirty, all
   // children all also dirty
   isDirty = true;
+  isWorldToLocalDirty = true;
   ForDescendants([](Transform* trans) {
     trans->isDirty = true;
     trans->isWorldToLocalDirty = true;

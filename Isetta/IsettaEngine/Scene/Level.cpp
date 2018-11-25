@@ -2,20 +2,17 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Scene/Level.h"
-#include <algorithm>
-#include "Core/Math/Rect.h"
-#include "Core/Memory/MemoryManager.h"
-#include "Graphics/GUI.h"
-#include "Graphics/RectTransform.h"
+#include "Audio/AudioModule.h"
+#include "Core/Config/Config.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 
 Entity* Level::GetEntityByName(const std::string& name) {
-  StringId inID{SID(name.c_str())};
   for (const auto& entity : entities) {
-    if (entity->entityID == inID) {
+    if (entity->entityName == name) {
       return entity;
     }
   }
@@ -25,104 +22,91 @@ Entity* Level::GetEntityByName(const std::string& name) {
 
 std::list<Entity*> Level::GetEntitiesByName(const std::string& name) {
   std::list<Entity*> returnEntities;
-  StringId inID{SID(name.c_str())};
   for (const auto& entity : entities) {
-    if (entity->entityID == inID) {
+    if (entity->entityName == name) {
       returnEntities.emplace_back(entity);
     }
   }
   return returnEntities;
 }
 
+std::list<class Entity*> Level::GetEntities() const { return entities; }
+
 void Level::UnloadLevel() {
+  PROFILE
+  OnLevelUnload();
+  pool.Free(levelRoot);
   for (auto& entity : entities) {
-    entity->~Entity();
-    MemoryManager::FreeOnFreeList(entity);
+    pool.Free(entity);
+    entity = nullptr;
   }
-  levelRoot->~Entity();
-  MemoryManager::FreeOnFreeList(levelRoot);
 }
 
-Entity* Level::AddEntity(std::string name) {
-  return AddEntity(name, levelRoot);
+void Level::AddComponentToStart(Component* component) {
+  componentsToStart.push(component);
 }
 
-Entity* Level::AddEntity(std::string name, Entity* parent) {
-  Entity* entity = MemoryManager::NewOnFreeList<Entity>(name);
+void Level::StartComponents() {
+  PROFILE
+  while (!componentsToStart.empty()) {
+    componentsToStart.top()->Start();
+    componentsToStart.pop();
+  }
+}
+
+Entity* Level::AddEntity(std::string name, Entity* parent, bool entityStatic) {
+  PROFILE
+  Entity* entity = pool.Get(name, entityStatic);
+  entity->transform->SetParent(parent != nullptr ? parent->transform
+                                                 : levelRoot->transform);
   entities.push_back(entity);
-  // TODO(YIDI): Change it when transform returns pointer
-  entity->transform.SetParent(&(parent->transform));
   return entity;
 }
 
 void Level::Update() {
+  BROFILER_CATEGORY("Level Update", Profiler::Color::GoldenRod);
+
+  StartComponents();
   for (const auto& entity : entities) {
-    entity->Update();
+    if (entity->GetActive()) entity->Update();
+  }
+}
+
+void Level::FixedUpdate() {
+  BROFILER_CATEGORY("Level Fixed Update", Profiler::Color::DarkSeaGreen);
+
+  StartComponents();
+  for (const auto& entity : entities) {
+    entity->FixedUpdate();
   }
 }
 
 void Level::GUIUpdate() {
+  PROFILE
   for (const auto& entity : entities) {
     entity->GuiUpdate();
   }
-
-#if _DEBUG
-  static RectTransform rectTrans{{0, 20, 200, 500}};
-  bool isOpen = true;
-  GUI::Window(
-      rectTrans, "Heirarchy",
-      [&]() {
-        float buttonHeight = 20;
-        float buttonWidth = 200;
-        float height = 10;
-        float left = 5;
-        float padding = 20;
-        static Transform* transform = nullptr;
-
-        for (const auto& entity : entities) {
-          Func<int, Transform*> countLevel = [](Transform* trans) -> int {
-            int i = 0;
-            while (trans->GetParent() != nullptr) {
-              trans = trans->GetParent();
-              i++;
-            }
-            return i;
-          };
-
-          Action<Transform*> action = [&](Transform* tran) {
-            int level = countLevel(tran);
-            if (GUI::Button(RectTransform{Math::Rect{
-                                left + level * padding, height,
-                                buttonWidth - level * padding, buttonHeight}},
-                            tran->GetName())) {
-              transform = transform == tran ? nullptr : tran;
-            }
-            height += 1.25f * buttonHeight;
-          };
-
-          entity->GetTransform().ForDescendants(action);
-        }
-
-        if (transform != nullptr) {
-          transform->InspectorGUI();
-        }
-      },
-      NULL, GUI::WindowStyle{},
-      GUI::WindowFlags::NoMove | GUI::WindowFlags::NoResize);
-#endif
 }
 
 void Level::LateUpdate() {
+  BROFILER_CATEGORY("Level Late Update", Profiler::Color::LightCyan);
+
   for (const auto& entity : entities) {
     entity->LateUpdate();
   }
-  entities.remove_if([](Entity*& entity) {
-    return entity->GetAttribute(Entity::EntityAttributes::NEED_DESTROY);
-  });
+
+  for (auto& entity : entities) {
+    if (entity->GetAttribute(Entity::EntityAttributes::NEED_DESTROY)) {
+      pool.Free(entity);
+      entity = nullptr;
+    }
+  }
+
+  entities.remove_if([](Entity*& entity) { return entity == nullptr; });
 }
 
-Level::Level() {
-  Entity* entity = MemoryManager::NewOnFreeList<Entity>("Root");
-  levelRoot = entity;
-}
+Level::Level()
+    : pool(CONFIG_VAL(memoryConfig.entityPoolInitialSize),
+           CONFIG_VAL(memoryConfig.entityPoolIncrement)),
+      levelRoot(pool.Get("Root")) {}
 }  // namespace Isetta

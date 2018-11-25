@@ -57,6 +57,8 @@ void Vector3::Normalize() noexcept {
 
 std::string Vector3::ToString() const {
   std::ostringstream oss;
+  oss.precision(3);
+  oss << std::fixed;
   oss << "(" << x << ", " << y << ", " << z << ")";
   return oss.str();
 }
@@ -92,6 +94,11 @@ Vector3 Vector3::Reflect(const Vector3& inVector, const Vector3& inNormal) {
 Vector3 Vector3::Scale(const Vector3& a, const Vector3& b) {
   return Vector3(a.x * b.x, a.y * b.y, a.z * b.z);
 }
+
+Vector3 Vector3::ReverseScale(const Vector3& a, const Vector3& b) {
+  return Vector3(a.x / b.x, a.y / b.y, a.z / b.z);
+}
+
 Vector3 Vector3::Slerp(const Vector3& start, const Vector3& end, float time) {
   float dot = Dot(start, end);
   dot = dot < -1.f ? -1.f : (dot > 1.f ? 1.f : dot);
@@ -99,10 +106,10 @@ Vector3 Vector3::Slerp(const Vector3& start, const Vector3& end, float time) {
   Vector3 relativeVector = end - start * dot;
   return start * cosf(theta) + relativeVector * sinf(theta);
 }
-Vector3 Vector3::FromString(const std::string& str) {
+Vector3 Vector3::FromString(const std::string_view str) {
   Vector3 vec;
   char c;
-  std::istringstream is(str);
+  std::istringstream is(str.data());
   (is >> std::skipws) >> c >> vec.x >> c >> vec.y >> c >> vec.z;
 
   return vec;

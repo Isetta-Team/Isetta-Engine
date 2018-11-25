@@ -2,20 +2,23 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include "Core/DataStructures/Array.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Math/Matrix4.h"
 #include "Core/Math/Quaternion.h"
 #include "Core/Math/Vector3.h"
-#include "Core/Math/Vector4.h"
-#include "Horde3D.h"
 
 namespace Isetta {
 class ISETTA_API_DECLARE Transform {
+  friend class Entity;
+
  public:
   // constructors
   Transform() = delete;
-  explicit Transform(class Entity* entity);
+  explicit Transform(class Entity* const entity);
   ~Transform() = default;
+
+  void SetLocalToWorldMatrix(const Math::Matrix4& newMatrix);
 
   // position
   Math::Vector3 GetWorldPos();
@@ -43,12 +46,13 @@ class ISETTA_API_DECLARE Transform {
   void RotateLocal(const Math::Quaternion& rotation);
 
   // scale
-  Math::Vector3 GetWorldScale() const;
+  Math::Vector3 GetWorldScale();
   Math::Vector3 GetLocalScale() const;
   void SetLocalScale(const Math::Vector3& newScale);
+  void SetWorldScale(const Math::Vector3& newWorldScale);
 
   // hierarchy
-  void SetParent(Transform* transform);
+  void SetParent(Transform* const transform);
   Transform* GetParent() const { return parent; }
   Transform* GetRoot() const;
 
@@ -57,16 +61,15 @@ class ISETTA_API_DECLARE Transform {
   Math::Vector3 GetUp();
   Math::Vector3 GetLeft();
   Math::Vector3 GetAxis(int i);
+  const Math::Matrix4& GetLocalToWorldMatrix();
+  const Math::Matrix4& GetWorldToLocalMatrix();
 
   // other
   void LookAt(const Math::Vector3& target,
               const Math::Vector3& worldUp = Math::Vector3::up);
   void LookAt(Transform& target,
               const Math::Vector3& worldUp = Math::Vector3::up);
-  class Entity* GetEntity() const {
-    return entity;
-  }
-  Size GetChildCount() const { return children.size(); }
+  Size GetChildCount() const { return children.Size(); }
   Transform* GetChild(U16 childIndex);
   inline std::string GetName() const;
 
@@ -84,39 +87,41 @@ class ISETTA_API_DECLARE Transform {
                          const Math::Vector3& inScale);
 
   // more utilities
-  // TODO(YIDI): Decide if they should stay here
-  static void SetH3DNodeTransform(H3DNode node, Transform& transform);
-
-#if _DEBUG
-  void InspectorGUI();
-#endif
-  const Math::Matrix4& GetLocalToWorldMatrix();
-  const Math::Matrix4& GetWorldToLocalMatrix();
+  typedef int H3DNode;
+  static void SetH3DNodeTransform(int node, Transform& transform);
 
   // iterator
-  typedef std::vector<Transform*>::iterator iterator;
-  typedef std::vector<Transform*>::const_iterator const_iterator;
+  typedef Array<Transform*>::iterator iterator;
+  typedef Array<Transform*>::const_iterator const_iterator;
 
-  inline iterator begin() { return children.begin(); }
-  inline const_iterator begin() const { return children.begin(); }
-  inline iterator end() { return children.end(); }
-  inline const_iterator end() const { return children.end(); }
-
- private:
-  void RecalculateLocalToWorldMatrix();
+  iterator begin() { return children.begin(); }
+  const_iterator begin() const { return children.begin(); }
+  iterator end() { return children.end(); }
+  const_iterator end() const { return children.end(); }
 
   // both called by SetParent
   void AddChild(Transform* transform);
   void RemoveChild(Transform* transform);
+  class Entity* const entity{nullptr};
 
-  Math::Quaternion worldRot;  // only for query
+ private:
+  void RecalculateLocalToWorldMatrix();
 
+  // cached results
+  Math::Quaternion worldRot;
+  Math::Vector3 worldScale;
   Math::Matrix4 localToWorldMatrix{};
   Math::Matrix4 worldToLocalMatrix{};
-  Math::Vector3 localPos{Math::Vector3::zero};  // part of local storage
-  Math::Quaternion localRot{
-      Math::Quaternion::identity};               // part of local storage
-  Math::Vector3 localScale{Math::Vector3::one};  // part of local storage
+  // union
+  Math::Vector3 axis[3];
+  Math::Vector3& left = axis[0];
+  Math::Vector3& up = axis[1];
+  Math::Vector3& forward = axis[2];
+
+  // local storage
+  Math::Vector3 localPos{Math::Vector3::zero};
+  Math::Quaternion localRot{ Math::Quaternion::identity};
+  Math::Vector3 localScale{Math::Vector3::one};
 
   // marked when anything local changed
   // cleared when matrix recalculated
@@ -124,11 +129,8 @@ class ISETTA_API_DECLARE Transform {
   bool isDirty{true};
   bool isWorldToLocalDirty{true};
 
-  class Entity* entity{nullptr};
-  Transform* root{nullptr};
   Transform* parent{nullptr};
-  std::vector<Transform*> children;
+  Array<Transform*> children;
 
-  Math::Vector3 axis[3];
 };
 }  // namespace Isetta

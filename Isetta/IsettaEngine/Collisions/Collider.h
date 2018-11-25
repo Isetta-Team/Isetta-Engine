@@ -8,6 +8,10 @@
 #include "Scene/Component.h"
 #include "Scene/Transform.h"
 
+namespace Isetta::Math {
+class Ray;
+}
+
 namespace Isetta {
 #define INTERSECTION_TEST(TYPE)                             \
   bool TYPE::Intersection(Collider* const other) {          \
@@ -27,66 +31,65 @@ namespace Isetta {
     };                                                      \
   }
 
-CREATE_COMPONENT_BEGIN(Collider, Component)
+BEGIN_COMPONENT(Collider, Component, false)
 public:
-enum class Attributes { IS_STATIC, IS_TRIGGER };
-inline void SetAttribute(Attributes attr, bool value) {
-  attributes.set(static_cast<int>(attr), value);
-}
-inline bool GetAttribute(Attributes attr) const {
-  return attributes.test(static_cast<int>(attr));
-}
 
-Math::Vector3 center;  // TODO(JACOB) remove
+ bool isTrigger = false;
+ Math::Vector3 center;
+ Color debugColor = Color::green;
+ float mass = 1;
 
-// virtual Math::Vector3 ClosestPoint(Math::Vector3 point) = 0;
-// Math::Vector3 ClosestPointOnAABB(Math::Vector3 point);
+// TODO(Jacob) virtual Math::Vector3 ClosestPoint(Math::Vector3 point) = 0;
+// TODO(Jacob) Math::Vector3 ClosestPointOnAABB(Math::Vector3 point);
 virtual bool Raycast(const class Ray& ray, class RaycastHit* const hitInfo,
                      float maxDistance = 0) = 0;
 
-inline Math::Vector3 GetWorldCenter() const {
-  return center + GetTransform().GetWorldPos();
+Math::Vector3 GetWorldCenter() const {
+  return transform->WorldPosFromLocalPos(center);
 }
 
-void OnDisable() override;
+void Start() override;
 void OnEnable() override;
+void OnDisable() override;
 
- private:
-  std::bitset<2> attributes;
-  class CollisionHandler* handler{nullptr};
+virtual AABB GetFatAABB() = 0;
+virtual AABB GetAABB() = 0;
 
-  inline class CollisionHandler* GetHandler() { return handler; }
-  inline void SetHandler(class CollisionHandler* const h) { handler = h; }
+private:
+int hierarchyHandle;
+class CollisionHandler* handler{nullptr};
 
-  static class CollisionsModule* collisionsModule;
-  friend class CollisionsModule;
-  friend class CollisionHandler;
+class CollisionHandler* GetHandler() const {
+  return handler;
+}
+void SetHandler(class CollisionHandler* const h) { handler = h; }
+void FindHandler();
+
+static class CollisionsModule* collisionsModule;
+friend class CollisionsModule;
+friend class CollisionHandler;
+friend class CollisionSolverModule;
 
 protected:
-AABB* bounding;
+inline static float fatFactor = 0.2f;
 
-Color debugColor = Color::green;
-
-Collider(const Math::Vector3& center) : center{center} {
-  attributes[(int)Attributes::IS_STATIC] = 0;
-  attributes[(int)Attributes::IS_TRIGGER] = 0;
-}
-Collider(bool isStatic = false, bool isTrigger = false,
+Collider(const Math::Vector3& center) : center{center}, isTrigger{false} {}
+Collider(const bool trigger = false,
          const Math::Vector3& center = Math::Vector3::zero)
     : center{center} {
-  attributes[(int)Attributes::IS_STATIC] = isStatic;
-  attributes[(int)Attributes::IS_TRIGGER] = isTrigger;
+  isTrigger = trigger;
 }
 virtual ~Collider() = default;
 
-enum class ColliderType { BOX, SPHERE, CAPSULE };
 friend class BoxCollider;
 friend class SphereCollider;
 friend class CapsuleCollider;
-virtual const ColliderType GetType() const = 0;
 
-  virtual bool Intersection(Collider* const other) = 0;
-  void RaycastHitCtor(class RaycastHit* const hitInfo, float distance,
-                      const Math::Vector3& point, const Math::Vector3& normal);
-CREATE_COMPONENT_END(Collider, Component)
+enum class ColliderType { BOX, SPHERE, CAPSULE };
+virtual ColliderType GetType() const = 0;
+
+virtual bool Intersection(Collider* other) = 0;
+void RaycastHitCtor(class RaycastHit* hitInfo, float distance,
+                    const Math::Vector3& point, const Math::Vector3& normal);
+END_COMPONENT(Collider, Component)
 }  // namespace Isetta

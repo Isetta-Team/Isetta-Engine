@@ -2,9 +2,11 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Graphics/AnimationComponent.h"
-#include <Horde3D.h>
+
 #include "Core/Config/Config.h"
+#include "Horde3D/Horde3D/Bindings/C++/Horde3D.h"
 #include "Util.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 RenderModule* AnimationComponent::renderModule{nullptr};
@@ -19,23 +21,24 @@ AnimationComponent::AnimationComponent(MeshComponent* model)
   renderModule->animationComponents.push_back(this);
 }
 
-int AnimationComponent::AddAnimation(std::string animationFilename, int layer,
-                                     std::string startNode, bool additive) {
-  totalStates++;
+int AnimationComponent::AddAnimation(std::string_view animationFilename,
+                                     int layer, std::string_view startNode,
+                                     bool additive) {
   return AddAnimation(animationFilename, layer, startNode, additive,
-                      totalStates - 1);
+                      totalStates++);
 }
 
-int AnimationComponent::AddAnimation(std::string animationFilename, int layer,
-                                     std::string startNode, bool additive,
-                                     int stateIndex) {
+int AnimationComponent::AddAnimation(std::string_view animationFilename,
+                                     int layer, std::string_view startNode,
+                                     bool additive, int stateIndex) {
   H3DRes res = LoadResourceFromFile(animationFilename);
   h3dSetupModelAnimStage(animatedModel->renderNode, stateIndex, res, layer,
-                         startNode.c_str(), additive);
+                         startNode.data(), additive);
   return stateIndex;
 }
 
 void AnimationComponent::UpdateAnimation(float deltaTime) {
+  PROFILE
   if (isPlaying) {
     // TODO(Chaojie): Animation frame rate;
     animationTime += deltaTime * 30;
@@ -74,13 +77,17 @@ void AnimationComponent::OnEnable() {
   isPlaying = true;
 }
 void AnimationComponent::OnDisable() { isPlaying = false; }
+void AnimationComponent::OnDestroy() {
+  renderModule->animationComponents.remove(this);
+}
 
-H3DRes AnimationComponent::LoadResourceFromFile(std::string resourceName) {
-  H3DRes res = h3dAddResource(H3DResTypes::Animation, resourceName.c_str(), 0);
+H3DRes AnimationComponent::LoadResourceFromFile(std::string_view resourceName) {
+  H3DRes res = h3dAddResource(H3DResTypes::Animation, resourceName.data(), 0);
   RenderModule::LoadResourceFromDisk(
-      res, Util::StrFormat("AnimationComponent::LoadResourceFromFile => Cannot "
-                           "load the resource from %s",
-                           resourceName.c_str()));
+      res, false,
+      Util::StrFormat("AnimationComponent::LoadResourceFromFile => Cannot "
+                      "load the resource from %s",
+                      resourceName.data()));
   return res;
 }
 }  // namespace Isetta

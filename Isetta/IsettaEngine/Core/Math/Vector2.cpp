@@ -7,7 +7,7 @@
 #include <cmath>
 #include <sstream>
 #include <stdexcept>
-#include "Vector3Int.h"
+#include "Vector2Int.h"
 
 namespace Isetta::Math {
 
@@ -20,7 +20,7 @@ const Vector2 Vector2::left = Vector2(-1.f, 0.f);
 
 Vector2::Vector2(float inX, float inY) : x{inX}, y{inY} {}
 
-Vector2::Vector2(const Vector3Int& inIntVector)
+Vector2::Vector2(const Vector2Int& inIntVector)
     : x{static_cast<float>(inIntVector.x)},
       y{static_cast<float>(inIntVector.y)} {}
 
@@ -34,10 +34,12 @@ float Vector2::Magnitude() const { return sqrtf(SqrMagnitude()); }
 float Vector2::SqrMagnitude() const { return x * x + y * y; }
 Vector2 Vector2::Normalized() const {
   float length{Magnitude()};
+  if (length == 0) return zero;
   return Vector2(x / length, y / length);
 }
 void Vector2::Normalize() noexcept {
   float length{Magnitude()};
+  if (length == 0) return;
   x /= length;
   y /= length;
 }

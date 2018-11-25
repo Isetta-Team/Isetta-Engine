@@ -16,7 +16,7 @@ TEST_METHOD(Atan2) {
   Assert::AreEqual(atan2f(2.f, 2.f), Math::Util::Atan2(2.f, 2.f));
 }
 TEST_METHOD(Ceil) { Assert::AreEqual(2.f, Math::Util::Ceil(1.8f)); }
-TEST_METHOD(CeilToInt) { Assert::AreEqual(2, Math::Util::CellToInt(1.8f)); }
+TEST_METHOD(CeilToInt) { Assert::AreEqual(2, Math::Util::CeilToInt(1.8f)); }
 TEST_METHOD(Clamp) { Assert::AreEqual(1.f, Math::Util::Clamp(0.f, 1.f, 1.5f)); }
 TEST_METHOD(ClampInt) { Assert::AreEqual(1, Math::Util::Clamp(0, 1, 3)); }
 TEST_METHOD(Clamp01) { Assert::AreEqual(0.f, Math::Util::Clamp01(-1.f)); }

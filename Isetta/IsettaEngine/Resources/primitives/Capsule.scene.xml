@@ -1,0 +1,4 @@
+<Model name="Capsule" geometry="primitives/Capsule.geo">
+
+	<Mesh name="Capsule" material="primitives/Material_003.material.xml" batchStart="0" batchCount="3072" vertRStart="0" vertREnd="513" />
+</Model>

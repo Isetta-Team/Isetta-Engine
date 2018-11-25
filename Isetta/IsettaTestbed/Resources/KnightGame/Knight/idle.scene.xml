@@ -1,0 +1,79 @@
+<Model name="idle" geometry="KnightGame/Knight/idle.geo">
+	<Joint name="Hips" tx="0.00527225" ty="0.93652" tz="-0.0219769" rx="4.86108" ry="-15.7101" rz="-1.12574" sx="0.01" sy="0.01" sz="0.01" jointIndex="1">
+		<Joint name="Spine" tx="0" ty="14.6525" tz="0.432472" rx="23.0298" ry="4.72479" rz="1.47611" jointIndex="2">
+			<Joint name="Spine1" tx="0" ty="10.3725" tz="0.047685" rx="3.69613" ry="1.2467" rz="-0.762898" jointIndex="3">
+				<Joint name="Spine2" tx="0" ty="10.085" tz="0.302715" rx="3.68959" ry="1.31354" rz="-0.757381" jointIndex="4">
+					<Joint name="Neck" tx="0" ty="31.685" tz="0.246449" rx="-12.6935" ry="1.15438" rz="2.03053" jointIndex="5">
+						<Joint name="Head" tx="0" ty="11.4089" tz="1.9209" rx="-13.9548" ry="8.06692" rz="-5.25859" jointIndex="6">
+							<Joint name="HeadTop_End" tx="0.060379" ty="36.9925" tz="6.66944" jointIndex="7" />
+						</Joint>
+					</Joint>
+					<Joint name="LeftShoulder" tx="10.9129" ty="26.7327" tz="-2.70563" rx="7.29327" ry="-21.1289" rz="6.93911" jointIndex="8">
+						<Joint name="LeftArm" tx="13.8949" ty="-9.01691" tz="1.21567" rx="-35.7284" ry="-17.0682" rz="-75.8146" jointIndex="9">
+							<Joint name="LeftForeArm" tx="32.2462" ty="-0.183667" tz="-2.28566" rx="-0.267801" ry="-37.7418" rz="1.65529" jointIndex="10">
+								<Joint name="LeftHand" tx="28.0135" ty="0.183364" tz="0.670486" rx="-24.3119" ry="-13.481" rz="-7.20606" jointIndex="11">
+									<Joint name="LeftHandIndex1" tx="18.1097" ty="-3.8e-05" tz="5e-05" rx="-4.60759" ry="11.4129" rz="-76.6451" jointIndex="12">
+										<Joint name="LeftHandIndex2" tx="4.18372" ty="-2.6e-05" tz="-5e-06" rx="-0.182086" ry="3.68576" rz="-45.4562" jointIndex="13">
+											<Joint name="LeftHandIndex3" tx="3.83024" ty="-0.09805" tz="0.058395" rx="-4.73262" ry="-0.362258" rz="-80.2025" jointIndex="14">
+												<Joint name="LeftHandIndex4" tx="4.86362" ty="-5.7e-05" tz="-3.4e-05" jointIndex="15" />
+											</Joint>
+										</Joint>
+									</Joint>
+									<Joint name="LeftHandThumb1" tx="6.27397" ty="-3.20702" tz="3.85941" rx="-7.46295" ry="1.88125" rz="-7.41489" jointIndex="16">
+										<Joint name="LeftHandThumb2" tx="5.06012" ty="-2.92144" tz="2.92161" rx="27.2195" ry="31.0632" rz="10.8979" jointIndex="17">
+											<Joint name="LeftHandThumb3" tx="5.8091" ty="-3.35383" tz="3.35391" rx="75.1101" ry="63.587" rz="51.8596" jointIndex="18">
+												<Joint name="LeftHandThumb4" tx="3.76635" ty="-2.17438" tz="2.17452" jointIndex="19" />
+											</Joint>
+										</Joint>
+									</Joint>
+								</Joint>
+							</Joint>
+						</Joint>
+					</Joint>
+					<Joint name="RightShoulder" tx="-10.9129" ty="26.7327" tz="-2.70563" rx="12.3474" ry="27.9419" rz="-17.0212" jointIndex="20">
+						<Joint name="RightArm" tx="-13.8949" ty="-9.01691" tz="1.21567" rx="-43.0405" ry="25.1024" rz="68.0423" jointIndex="21">
+							<Joint name="RightForeArm" tx="-32.2196" ty="-0.171897" tz="-2.63414" rx="-0.438489" ry="51.8067" rz="-13.3409" jointIndex="22">
+								<Joint name="RightHand" tx="-28.0192" ty="0.180876" tz="0.369207" rx="-29.1226" ry="20.1858" rz="-1.4062" jointIndex="23">
+									<Joint name="RightHandIndex1" tx="-18.1044" ty="0.000443" tz="-0.195428" rx="16.7511" ry="-0.490292" rz="31.9615" jointIndex="24">
+										<Joint name="RightHandIndex2" tx="-4.91621" ty="0.00019" tz="-0.053088" rx="-0.360164" ry="-0.984696" rz="112.811" jointIndex="25">
+											<Joint name="RightHandIndex3" tx="-4.30139" ty="-4e-06" tz="-0.013916" rx="1.21539" ry="-0.843155" rz="32.9202" jointIndex="26">
+												<Joint name="RightHandIndex4" tx="-3.72229" ty="-0.026285" tz="-0.040356" jointIndex="27" />
+											</Joint>
+										</Joint>
+									</Joint>
+									<Joint name="RightHandThumb1" tx="-6.34448" ty="-3.30354" tz="3.65745" rx="10.1388" ry="-7.17682" rz="-16.7729" jointIndex="28">
+										<Joint name="RightHandThumb2" tx="-4.31701" ty="-3.09583" tz="3.80193" rx="11.8241" ry="-40.6759" rz="1.49728" jointIndex="29">
+											<Joint name="RightHandThumb3" tx="-4.96881" ty="-4.08047" tz="3.86047" rx="27.8775" ry="-53.2996" rz="-24.5318" jointIndex="30">
+												<Joint name="RightHandThumb4" tx="-3.10835" ty="-2.35401" tz="2.90494" jointIndex="31" />
+											</Joint>
+										</Joint>
+									</Joint>
+								</Joint>
+							</Joint>
+						</Joint>
+					</Joint>
+				</Joint>
+			</Joint>
+		</Joint>
+		<Joint name="LeftUpLeg" tx="13.0259" ty="-7.13823" tz="0.858406" rx="-35.0201" ry="3.2665" rz="8.16134" jointIndex="32">
+			<Joint name="LeftLeg" tx="0.124313" ty="-35.7658" tz="3.14457" rx="29.7296" ry="5.38685" rz="4.12582" jointIndex="33">
+				<Joint name="LeftFoot" tx="-0.111785" ty="-40.1736" tz="-5.70924" rx="1.07006" ry="0.387275" rz="-6.41727" jointIndex="34">
+					<Joint name="LeftToeBase" tx="1.28438" ty="-16.831" tz="16.7568" rx="-0.359304" ry="-1.37984" rz="-0.229933" jointIndex="35">
+						<Joint name="LeftToe_End" tx="0.114757" ty="0.399008" tz="13.3766" jointIndex="36" />
+					</Joint>
+				</Joint>
+			</Joint>
+		</Joint>
+		<Joint name="RightUpLeg" tx="-13.0259" ty="-7.13823" tz="0.858406" rx="-14.5489" ry="-10.8655" rz="-10.2858" jointIndex="37">
+			<Joint name="RightLeg" tx="-0.124313" ty="-35.7658" tz="3.14457" rx="29.3165" ry="-7.36438" rz="-2.16486" jointIndex="38">
+				<Joint name="RightFoot" tx="0.111785" ty="-40.1736" tz="-5.70924" rx="-16.7796" ry="-2.56235" rz="12.6107" jointIndex="39">
+					<Joint name="RightToeBase" tx="-1.28438" ty="-16.831" tz="16.7568" rx="-1.22582" ry="1.21659" rz="-0.242704" jointIndex="40">
+						<Joint name="RightToe_End" tx="-0.114757" ty="0.399008" tz="13.3766" jointIndex="41" />
+					</Joint>
+				</Joint>
+			</Joint>
+		</Joint>
+	</Joint>
+
+	<Mesh name="Guard03_Mesh" material="KnightGame/Knight/Guard_03.material.xml" batchStart="0" batchCount="13260" vertRStart="0" vertREnd="12533" />
+</Model>

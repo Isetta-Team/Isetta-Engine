@@ -7,7 +7,7 @@
 
 namespace Isetta::Math {
 
-class ISETTA_API_DECLARE Vector2 {
+class ISETTA_API Vector2 {
  public:
   // Constants
   static const Vector2 zero;
@@ -47,12 +47,12 @@ class ISETTA_API_DECLARE Vector2 {
 
   Vector2(const Vector2& inVector) : x{inVector.x}, y{inVector.y} {}
   Vector2(Vector2&& inVector) noexcept : x{inVector.x}, y{inVector.y} {}
-  inline Vector2& operator=(const Vector2& inVector) {
+  Vector2& operator=(const Vector2& inVector) {
     x = inVector.x;
     y = inVector.y;
     return *this;
   }
-  inline Vector2& operator=(Vector2&& inVector) noexcept {
+  Vector2& operator=(Vector2&& inVector) noexcept {
     x = inVector.x;
     y = inVector.y;
     return *this;
@@ -60,7 +60,7 @@ class ISETTA_API_DECLARE Vector2 {
 
   // Conversions
 
-  explicit Vector2(const class Vector3Int& inIntVector);
+  explicit Vector2(const class Vector2Int& inIntVector);
 
   ~Vector2() {}
 
@@ -83,7 +83,7 @@ class ISETTA_API_DECLARE Vector2 {
   inline Vector2 operator-(const Vector2& rhs) const {
     return Vector2(x - rhs.x, y - rhs.y);
   }
-  inline friend Vector2 operator-(float scalar, Vector2 rhs) {
+  inline friend Vector2 operator-(float, Vector2 rhs) {
     return Vector2(-rhs.x, -rhs.y);
   }
   inline Vector2& operator-=(const Vector2& rhs) {

@@ -201,6 +201,7 @@ class ISETTA_API Vector3 {
    * \param scalar The scalar vector
    */
   static Vector3 Scale(const Vector3& a, const Vector3& b);
+  static Vector3 ReverseScale(const Vector3& a, const Vector3& b);
   /**
    * \brief Spherically interpolates between two vectors
    * \param start The starting vector
@@ -212,7 +213,7 @@ class ISETTA_API Vector3 {
    * \brief Create a vector from the string
    * \param str Reference string
    */
-  static Vector3 FromString(const std::string& str);
+  static Vector3 FromString(const std::string_view str);
   static float AngleDeg(const Vector3& a, const Vector3& b);
   static float AngleRad(const Vector3& a, const Vector3& b);
 };

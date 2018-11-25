@@ -26,6 +26,7 @@ class ISETTA_API_DECLARE DebugDraw {
  public:
   static void StartUp();
   static void Update();
+  static void Clear();
   static void ShutDown();
 
   static void Point(const Math::Vector3 point,
@@ -72,9 +73,10 @@ class ISETTA_API_DECLARE DebugDraw {
                           const Color& color = Color::white,
                           float thickness = 1.0f, float duration = 0,
                           bool depthTest = true);
-  static void Grid(const Math::Matrix4& transformation = Math::Matrix4::zero,
-                   const Color& color = Color::lightGrey,
-                   float thickness = 1.0f, float duration = 0);
+  static void Grid(
+      const Math::Matrix4& transformation = Math::Matrix4::identity,
+      int lines = 30, const Color& color = Color::lightGrey,
+      float thickness = 1.0f, float duration = 0);
   static void Axis(
       const Math::Matrix4& transformation = Math::Matrix4::identity,
       const Color& xColor = Color::red, const Color& yColor = Color::green,
@@ -100,9 +102,7 @@ class ISETTA_API_DECLARE DebugDraw {
   static const char* vertexShaderSource;
   static const char* fragmentShaderSource;
 
-  static int projectionLoc;
-  static int viewLoc;
-  static int modelLoc;
+  static int modelViewProjectionLoc;
   static int colorLoc;
   static unsigned int VBO;
   static unsigned int VAO;
@@ -130,8 +130,8 @@ class ISETTA_API_DECLARE DebugDraw {
   static void DrawWireCapsule(const Math::Matrix4& transformation, float radius,
                               float height, const Color& color, float thickness,
                               bool depthTest);
-  static void DrawGrid(const Math::Matrix4& transformation, const Color& color,
-                       float thickness);
+  static void DrawGrid(const Math::Matrix4& transformation, int lines,
+                       const Color& color, float thickness);
   static void DrawAxisSphere(const Math::Matrix4& transformation,
                              const Color& xColor, const Color& yColor,
                              const Color& zColor, float thickness,

@@ -5,8 +5,8 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(DebugComponent, Component)
+BEGIN_COMPONENT(DebugComponent, Component, true)
 public:
 void Update() override;
-CREATE_COMPONENT_END(DebugComponent, Component)
+END_COMPONENT(DebugComponent, Component)
 }  // namespace Isetta

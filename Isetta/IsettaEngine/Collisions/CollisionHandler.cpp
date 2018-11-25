@@ -4,41 +4,48 @@
 #include "Collisions/CollisionHandler.h"
 
 #include "Collisions/Collider.h"
+#include "Core/DataStructures/Array.h"
 #include "Scene/Component.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 
 namespace Isetta {
 void CollisionHandler::OnEnable() {
-  std::vector<Collider*> colliders = entity->GetComponents<Collider>();
-  for (int i = 0; i < colliders.size(); i++) {
+  Array<Collider*> colliders = entity->GetComponents<Collider>();
+  for (int i = 0; i < colliders.Size(); ++i) {
     colliders[i]->SetHandler(this);
   }
-  GetTransform().ForChildren(
-      std::bind(&CollisionHandler::ColliderHandle, std::placeholders::_1,
-                [&](Collider* c) { c->SetHandler(this); }));
+  Action<Collider*> action = [&](Collider* c) { c->SetHandler(this); };
+  for (auto& t : *transform) {
+    SetColliderHandler(t, action);
+  }
 }
 void CollisionHandler::OnDisable() {
   CollisionHandler* handler = nullptr;
-  Transform* parent = GetTransform().GetParent();
+  Transform* parent = transform->GetParent();
   while (parent && !handler) {
-    handler = parent->GetEntity()->GetComponent<CollisionHandler>();
+    handler = parent->entity->GetComponent<CollisionHandler>();
     parent = parent->GetParent();
   }
-  GetTransform().ForChildren(
-      std::bind(&CollisionHandler::ColliderHandle, std::placeholders::_1,
-                [&handler](Collider* c) { c->SetHandler(handler); }));
+  Array<Collider*> colliders = entity->GetComponents<Collider>();
+  for (int i = 0; i < colliders.Size(); ++i) {
+    colliders[i]->SetHandler(this);
+  }
+  Action<Collider*> action = [&](Collider* c) { c->SetHandler(handler); };
+  for (auto& t : *transform) {
+    SetColliderHandler(t, action);
+  }
 }
-void CollisionHandler::ColliderHandle(Transform* t,
-                                      const Action<Collider*>& action) {
-  Entity* e = t->GetEntity();
-  // TODO(Jacob) might need to optimize
+void CollisionHandler::SetColliderHandler(
+    Transform* transform, const Action<Collider* const>& action) {
+  Entity* e = transform->entity;
   if (!e->GetComponent<CollisionHandler>()) {
-    t->ForChildren(std::bind(&CollisionHandler::ColliderHandle,
-                             std::placeholders::_1, action));
-    Collider* col = e->GetComponent<Collider>();
-    if (col) {
-      action(col);
+    for (auto& t : *transform) {
+      SetColliderHandler(t, action);
+    }
+    Collider* collider = e->GetComponent<Collider>();
+    if (collider) {
+      action(collider);
     }
   }
 }
@@ -58,20 +65,23 @@ void CollisionHandler::OnCollisionCallback(
     callback.second(col);
   }
 }
-U16 CollisionHandler::RegisterOnEnter(Action<Collider*> action) {
-  int handle = handles++;
+U16 CollisionHandler::RegisterOnEnter(
+    const Action<class Collider* const>& action) {
+  int handle = ++handles;
   onEnter.insert(std::make_pair(handle, action));
   return handle;
 }
 void CollisionHandler::UnregisterOnEnter(U16 handle) { onEnter.erase(handle); }
-U16 CollisionHandler::RegisterOnStay(Action<Collider*> action) {
-  int handle = handles++;
+U16 CollisionHandler::RegisterOnStay(
+    const Action<class Collider* const>& action) {
+  int handle = ++handles;
   onStay.insert(std::make_pair(handle, action));
   return handle;
 }
 void CollisionHandler::UnregisterOnStay(U16 handle) { onStay.erase(handle); }
-U16 CollisionHandler::RegisterOnExit(Action<Collider*> action) {
-  int handle = handles++;
+U16 CollisionHandler::RegisterOnExit(
+    const Action<class Collider* const>& action) {
+  int handle = ++handles;
   onExit.insert(std::make_pair(handle, action));
   return handle;
 }

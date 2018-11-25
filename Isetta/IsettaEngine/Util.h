@@ -2,10 +2,13 @@
 #include <algorithm>
 #include <cstdarg>
 #include <cstdio>
+#include "Core/DataStructures/Array.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Time/StopWatch.h"
 
 namespace Isetta::Util {
+#define BIND_1(callback, reference) \
+  std::bind(&callback, reference, std::placeholders::_1)
 
 inline const char* StrFormat(const char* format, ...) {
   const int MAX_CHARS = 1023;
@@ -20,20 +23,31 @@ inline const char* StrFormat(const char* format, ...) {
   return charBuffer;
 }
 
+inline int FormatStringV(char* buf, size_t size, const char* format,
+                         va_list args) {
+  int w = vsnprintf(buf, size, format, args);
+  if (buf == NULL) return w;
+  if (w == -1 || w >= (int)size) w = (int)size - 1;
+  buf[w] = 0;
+  return w;
+}
+
 inline void StrRemoveSpaces(std::string* str) {
   str->erase(std::remove_if(str->begin(), str->end(), isspace), str->end());
 }
 
-inline std::vector<std::string> StrSplit(const std::string& inStr, const char separator) {
-  std::vector<std::string> results;
+inline Array<std::string> StrSplit(const std::string& inStr,
+                                   const char separator) {
+  if (inStr.empty()) return Array<std::string>{};
+  Array<std::string> results;
   Size lastPos = -1;
   Size sepPos = inStr.find(separator);
   while (sepPos != std::string::npos) {
-    results.push_back(inStr.substr(lastPos + 1, sepPos - lastPos - 1));
+    results.PushBack(inStr.substr(lastPos + 1, sepPos - lastPos - 1));
     lastPos = sepPos;
     sepPos = inStr.find(separator, sepPos + 1);
   }
-  results.push_back(inStr.substr(lastPos + 1, inStr.length() - lastPos - 1));
+  results.PushBack(inStr.substr(lastPos + 1, inStr.length() - lastPos - 1));
   return results;
 }
 
@@ -63,13 +77,18 @@ inline unsigned int CountSetBits(int N) {
   return cnt;
 }
 
-}  // namespace Isetta::Util
-
-namespace std {
-template <>
-struct hash<std::pair<int, int>> {
-  std::size_t operator()(const std::pair<int, int>& p) const {
-    return std::hash<int>()(p.first) ^ std::hash<int>()(p.second);
+struct UnorderedPairHash {
+  template <typename T>
+  std::size_t operator()(std::pair<T, T> const& p) const {
+    return (std::hash<T>()(p.first) ^ std::hash<T>()(p.second));
   }
 };
-}  // namespace std
+struct PairHash {
+  template <typename T, typename S>
+  std::size_t operator()(std::pair<T, S> const& p) const {
+    return (std::hash<T>()(p.first) ^
+            (std::hash<S>()(p.second) << sizeof(p.first)));
+  }
+};
+
+}  // namespace Isetta::Util

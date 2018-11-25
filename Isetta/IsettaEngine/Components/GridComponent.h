@@ -2,15 +2,13 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-
-#pragma once
 #include "Core/Math/Vector2.h"
 #include "ISETTA_API.h"
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(GridComponent, Component)
+BEGIN_COMPONENT(GridComponent, Component, false)
 public:
-  void Update() override;
-CREATE_COMPONENT_END(GridComponent, Component)
+void Update() override;
+END_COMPONENT(GridComponent, Component)
 }  // namespace Isetta

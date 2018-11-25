@@ -147,26 +147,14 @@
     <ClCompile Include="Core\Filesystem.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Custom\AxisDrawer.cpp">
-      <Filter>Custom</Filter>
-    </ClCompile>
-    <ClCompile Include="Custom\InEngineTestLevel.cpp">
-      <Filter>Custom</Filter>
-    </ClCompile>
     <ClCompile Include="Custom\OscillateMove.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
     <ClCompile Include="Custom\KeyTransform.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
-    <ClCompile Include="Custom\CollisionsLevel.cpp">
-      <Filter>Custom</Filter>
-    </ClCompile>
     <ClInclude Include="Core\Time\Time.h">
       <Filter>Core\Time</Filter>
-    </ClInclude>
-    <ClInclude Include="Custom\InEngineTestLevel.h">
-      <Filter>Custom</Filter>
     </ClInclude>
     <ClInclude Include="Collisions\BoxCollider.h">
       <Filter>Collisions</Filter>
@@ -186,32 +174,17 @@
     <ClInclude Include="Core\DataStructures\AVLTree.h">
       <Filter>Core\DataStructures</Filter>
     </ClInclude>
-    <ClInclude Include="Collisions\Ray.h">
-      <Filter>Collisions</Filter>
-    </ClInclude>
     <ClInclude Include="Custom\OscillateMove.h">
       <Filter>Custom</Filter>
     </ClInclude>
     <ClInclude Include="Custom\KeyTransform.h">
       <Filter>Custom</Filter>
     </ClInclude>
-    <ClInclude Include="Collisions\Plane.h">
-      <Filter>Collisions</Filter>
-    </ClInclude>
-    <ClInclude Include="Custom\CollisionsLevel.h">
-      <Filter>Custom</Filter>
-    </ClInclude>
-    <ClCompile Include="Networking\NetworkIdentity.cpp">
-      <Filter>Networking</Filter>
-    </ClCompile>
     <ClCompile Include="Components\FlyController.cpp">
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="Components\GridComponent.cpp">
       <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Collisions\Plane.cpp">
-      <Filter>Collisions</Filter>
     </ClCompile>
     <ClCompile Include="Collisions\SphereCollider.cpp">
       <Filter>Collisions</Filter>
@@ -219,16 +192,16 @@
     <ClCompile Include="Collisions\CollisionsModule.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
-    <ClCompile Include="Collisions\Collider.cpp">
-      <Filter>Collisions</Filter>
-    </ClCompile>
     <ClCompile Include="Collisions\CapsuleCollider.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
-    <ClCompile Include="Collisions\AABB.cpp">
+    <ClCompile Include="Collisions\Collider.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
     <ClCompile Include="Collisions\BoxCollider.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Collisions\AABB.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
     <ClCompile Include="Custom\NetworkLevel.cpp">
@@ -238,6 +211,168 @@
       <Filter>Custom\EmptyLevel</Filter>
     </ClCompile>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Custom\RaycastClick.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Collisions\Collisions.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Collisions\CollisionHandler.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Collisions\BVTree.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Texture.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Layers.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Events\EventObject.cpp">
+      <Filter>Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\DebugCollision.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Events\Events.cpp">
+      <Filter>Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\EventTestLevel\EventTestLevel.cpp">
+      <Filter>Custom\EventTestLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\EventTestLevel\EventSenderComponent.cpp">
+      <Filter>Custom\EventTestLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\EventTestLevel\EventListenerComponent.cpp">
+      <Filter>Custom\EventTestLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Networking\NetworkId.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\EscapeExit.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\BVHTestLevel\RandomMover.cpp">
+      <Filter>Custom\BVHTestLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\BVHTestLevel\BVHLevel.cpp">
+      <Filter>Custom\BVHTestLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\AxisDrawer.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\EditorLevel\EditorLevel.cpp">
+      <Filter>Custom\EditorLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Editor\Inspector.cpp">
+      <Filter>Components\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Editor\Console.cpp">
+      <Filter>Components\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Editor\Hierarchy.cpp">
+      <Filter>Components\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DataStructures\Trie.cpp">
+      <Filter>Core\DataStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="Networking\NetworkTransform.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DataStructures\HandleBin.cpp">
+      <Filter>Core\DataStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Editor\EditorComponent.cpp">
+      <Filter>Components\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\FontExample.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\Nav2DPlane.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\AILevel\AITestLevel.cpp">
+      <Filter>Custom\AILevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\AILevel\AITestComponent.cpp">
+      <Filter>Custom\AILevel</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\Nav2DObstacle.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\Nav2DAgent.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\LoadNextLevel.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\GLFWInput.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\ParticleSystemComponent.cpp">
+      <Filter>Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Collisions\CollisionSolverModule.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\CollisionSolverLevel\CollisionSolverLevel.cpp">
+      <Filter>Custom\CollisionSolverLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Editor\FrameReporter.cpp">
+      <Filter>Components\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\MeshAnimLevel\MeshAnimLevel.cpp">
+      <Filter>Custom\MeshAnimLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\CollisionsLevel\CollisionsLevel.cpp">
+      <Filter>Custom\CollisionsLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Geometry\Plane.cpp">
+      <Filter>Core\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\AudioListener.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\AudioLevel\AudioLevel.cpp">
+      <Filter>Custom\AudioLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Font.cpp">
+      <Filter>Graphics\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\AudioClip.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\AudioPlay.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Primitive.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\PrimitiveLevel\PrimitiveLevel.cpp">
+      <Filter>Custom\PrimitiveLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\SkeletonLevel\SkeletonLevel.cpp">
+      <Filter>Custom\SkeletonLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\NoCameraLevel\NoCameraLevel.cpp">
+      <Filter>Custom\NoCameraLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\NoCameraLevel\NoCameraComponent.cpp">
+      <Filter>Custom\NoCameraLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\SkeletonLevel\SkeletonLevel.cpp">
+      <Filter>Custom\SkeletonLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\GameMgtLevel\GameMgtLevel.cpp">
+      <Filter>Custom\GameMgtLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\LevelLoader.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\GameMgtLevel\GameMgtTestComp.cpp">
+      <Filter>Custom\GameMgtLevel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -306,6 +441,57 @@
     <Filter Include="Custom\EmptyLevel">
       <UniqueIdentifier>{41a303ff-7dcc-4225-b47b-6d0aae3ea40f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{34d6b88a-6954-4a27-b89f-3559dfd83508}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\EventTestLevel">
+      <UniqueIdentifier>{c9dcfdd8-b385-4b0e-ab14-7ab7792fc31d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\BVHTestLevel">
+      <UniqueIdentifier>{d6dd3b2a-276f-4d5e-8016-f458080f209b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\EditorLevel">
+      <UniqueIdentifier>{48eaf7c9-0b50-4561-bbca-2c68a5456570}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Editor">
+      <UniqueIdentifier>{810b8627-00c8-4ae3-9a0d-ba5ac1948eb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI">
+      <UniqueIdentifier>{26d9eeab-63d0-4452-af57-de69b9db1c79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\AILevel">
+      <UniqueIdentifier>{c2ec0a3b-7c7e-4727-a06c-c0efe1d53754}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\CollisionSolverLevel">
+      <UniqueIdentifier>{f54c709b-be6b-4035-87e9-f6043119f744}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\CollisionsLevel">
+      <UniqueIdentifier>{d2906e91-cd20-4cc1-83fc-0fea4a771d7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Geometry">
+      <UniqueIdentifier>{be68b692-0a9b-4c08-aa62-a06b16b48fb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\MeshAnimLevel">
+      <UniqueIdentifier>{d17fab49-2b9b-4414-8c02-f508f9b79890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\AudioLevel">
+      <UniqueIdentifier>{6d7a5ecf-3f90-4d5e-a963-184ec35d68e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\PrimitiveLevel">
+      <UniqueIdentifier>{0b6e1da6-cd48-4704-81c7-c7fc5d36def2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\SkeletonLevel">
+      <UniqueIdentifier>{33133f07-dc65-44ed-bb04-78b420645ffb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\NoCameraLevel">
+      <UniqueIdentifier>{29db0a17-3bdd-4334-8a99-896a2d5da961}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\SkeletonLevel">
+      <UniqueIdentifier>{33133f07-dc65-44ed-bb04-78b420645ffb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\GameMgtLevel">
+      <UniqueIdentifier>{a7ac400a-86be-4a10-b47d-bb0a5d18a9da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Math\Matrix3.h">
@@ -369,9 +555,6 @@
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Input\Input.h">
-      <Filter>Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Input\InputEnum.h">
       <Filter>Input</Filter>
     </ClInclude>
     <ClInclude Include="Input\InputModule.h">
@@ -479,15 +662,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="ISETTA_API.h" />
-    <ClInclude Include="Custom\AxisDrawer.h">
-      <Filter>Custom</Filter>
-    </ClInclude>
-    <ClInclude Include="Custom\IsettaCore.h">
-      <Filter>Custom</Filter>
-    </ClInclude>
-    <ClInclude Include="Networking\NetworkIdentity.h">
-      <Filter>Networking</Filter>
-    </ClInclude>
     <ClInclude Include="Components\FlyController.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -506,7 +680,196 @@
     <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h">
       <Filter>Custom\EmptyLevel</Filter>
     </ClInclude>
+    <ClInclude Include="Custom\RaycastClick.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\Collisions.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\BVTree.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Layers.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\DebugCollision.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Collisions\CollisionHandler.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Texture.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\EventObject.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\Events.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\EventTestLevel\EventTestLevel.h">
+      <Filter>Custom\EventTestLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\EventTestLevel\EventSenderComponent.h">
+      <Filter>Custom\EventTestLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\EventTestLevel\EventListenerComponent.h">
+      <Filter>Custom\EventTestLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Networking\NetworkId.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\CollisionUtil.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\KeyCode.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\Trie.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\EscapeExit.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\BVHTestLevel\RandomMover.h">
+      <Filter>Custom\BVHTestLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\BVHTestLevel\BVHLevel.h">
+      <Filter>Custom\BVHTestLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\AxisDrawer.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\EditorLevel\EditorLevel.h">
+      <Filter>Custom\EditorLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Editor\Hierarchy.h">
+      <Filter>Components\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Editor\Inspector.h">
+      <Filter>Components\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Editor\Console.h">
+      <Filter>Components\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\Array.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="Networking\NetworkTransform.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\HandleBin.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Editor\EditorComponent.h">
+      <Filter>Components\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\FontExample.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Font.h">
+      <Filter>Graphics\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\PriorityQueue.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\Nav2DPlane.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\AILevel\AITestLevel.h">
+      <Filter>Custom\AILevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\AILevel\AITestComponent.h">
+      <Filter>Custom\AILevel</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\Nav2DObstacle.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\Nav2DAgent.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\AILevel\AITestAgent.h">
+      <Filter>Custom\AILevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\LoadNextLevel.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\GLFWInput.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\ParticleSystemComponent.h">
+      <Filter>Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\CollisionSolverModule.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\CollisionSolverLevel\CollisionSolverLevel.h">
+      <Filter>Custom\CollisionSolverLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Editor\FrameReporter.h">
+      <Filter>Components\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\MeshAnimLevel\MeshAnimLevel.h">
+      <Filter>Custom\MeshAnimLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\CollisionsLevel\CollisionsLevel.h">
+      <Filter>Custom\CollisionsLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions\RaycastHit.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Ray.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Geometry\Plane.h">
+      <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioListener.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\AudioLevel\AudioLevel.h">
+      <Filter>Custom\AudioLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioClip.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\AudioPlay.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Primitive.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\PrimitiveLevel\PrimitiveLevel.h">
+      <Filter>Custom\PrimitiveLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\SkeletonLevel\SkeletonLevel.h">
+      <Filter>Custom\SkeletonLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\NoCameraLevel\NoCameraLevel.h">
+      <Filter>Custom\NoCameraLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\NoCameraLevel\NoCameraComponent.h">
+      <Filter>Custom\NoCameraLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\SkeletonLevel\SkeletonLevel.h">
+      <Filter>Custom\SkeletonLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\GameMgtLevel\GameMgtLevel.h">
+      <Filter>Custom\GameMgtLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\Delegate.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\LevelLoader.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IsettaCore.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\GameMgtLevel\GameMgtTestComp.h">
+      <Filter>Custom\GameMgtLevel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -577,6 +940,7 @@
       <Filter>Resources\test</Filter>
     </None>
     <None Include="config.cfg" />
+    <None Include="cpp.hint" />
     <None Include="user.cfg" />
   </ItemGroup>
   <ItemGroup>

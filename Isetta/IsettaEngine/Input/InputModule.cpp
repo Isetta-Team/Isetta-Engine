@@ -3,70 +3,66 @@
  */
 #include "Input/InputModule.h"
 
-#include <GLFW/glfw3.h>
 #include "Core/Debug/Logger.h"
 #include "Core/Math/Vector2.h"
+#include "GLFW/include/GLFW/glfw3.h"
+#include "Input/GLFWInput.h"
 #include "Input/Input.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
-using CBMap = std::unordered_map<int, std::list<std::pair<U16, Action<>>>>;
+// using CBMap = std::unordered_map<int, std::list<std::pair<U16, Action<>>>>;
+Delegate<> InputModule::windowCloseCallbacks{};
+InputModule::KeyMap InputModule::keyPressDelegates{};
+InputModule::KeyMap InputModule::keyReleaseDelegates{};
+InputModule::MouseMap InputModule::mousePressDelegates{};
+InputModule::MouseMap InputModule::mouseReleaseDelegates{};
+Delegate<int, int> InputModule::windowSizeCallbacks;
+Delegate<double, double> InputModule::scrollCallbacks;
+Delegate<int, int> InputModule::gamepadConnectionCallbacks;
 
-std::list<Action<>> InputModule::windowCloseCallbacks{};
-CBMap InputModule::keyPressCallbacks{};
-CBMap InputModule::keyReleaseCallbacks{};
-CBMap InputModule::mousePressCallbacks{};
-CBMap InputModule::mouseReleaseCallbacks{};
-
-std::unordered_map<U16, Action<GLFWwindow*, int, int, int>>
-    InputModule::mouseButtonGLFWCallbacks;
-std::unordered_map<U16, Action<GLFWwindow*, int, int, int, int>>
-    InputModule::keyGLFWCallbacks;
-std::unordered_map<U16, Action<GLFWwindow*, double, double>>
-    InputModule::scrollGLFWCallbacks;
-std::unordered_map<U16, Action<GLFWwindow*, unsigned int>>
-    InputModule::charGLFWCallbacks;
-std::unordered_map<U16, Action<int, int>> InputModule::windowSizeCallbacks;
-std::unordered_map<U16, Action<double, double>> InputModule::scrollCallbacks;
-std::unordered_map<U16, Action<int, int>>
-    InputModule::gamepadConnectionCallbacks;
-
-U16 InputModule::totalHandle{};
+// GLFW
+Delegate<GLFWwindow*, int, int, int> InputModule::mouseButtonGLFWCallbacks;
+Delegate<GLFWwindow*, int, int, int, int> InputModule::keyGLFWCallbacks;
+Delegate<GLFWwindow*, double, double> InputModule::scrollGLFWCallbacks;
+Delegate<GLFWwindow*, unsigned int> InputModule::charGLFWCallbacks;
+Delegate<GLFWwindow*> InputModule::windowCloseGLFWCallbacks;
+Delegate<GLFWwindow*, int, int> InputModule::windowSizeGLFWCallbacks;
 
 GLFWwindow* InputModule::winHandle{nullptr};
 
 void InputModule::RegisterWindowCloseCallback(const Action<>& callback) {
-  windowCloseCallbacks.push_back(callback);
+  windowCloseCallbacks.Subscribe(callback);
 }
-U16 InputModule::RegisterWindowSizeCallback(const Action<int, int>& callback) {
-  U16 handle = totalHandle++;
-  windowSizeCallbacks.insert(std::make_pair(handle, callback));
-  return handle;
+U64 InputModule::RegisterWindowSizeCallback(const Action<int, int>& callback) {
+  return windowSizeCallbacks.Subscribe(callback);
 }
-void InputModule::UnegisterWindowSizeCallback(U16 handle) {
-  windowSizeCallbacks.erase(handle);
+void InputModule::UnegisterWindowSizeCallback(U64 handle) {
+  windowSizeCallbacks.Unsubscribe(handle);
 }
 bool InputModule::IsKeyPressed(KeyCode key) const {
   int glfwKey = KeyCodeToGlfwKey(key);
   return glfwGetKey(winHandle, glfwKey) == GLFW_PRESS;
 }
 
-U16 InputModule::RegisterKeyPressCallback(KeyCode key,
+U64 InputModule::RegisterKeyPressCallback(KeyCode key, ModifierKeys mods,
                                           const Action<>& callback) {
-  return RegisterCallback(KeyCodeToGlfwKey(key), callback, &keyPressCallbacks);
+  return RegisterCallback(KeyCodeToGlfwKey(key), mods, callback,
+                          &keyPressDelegates);
+}
+void InputModule::UnregisterKeyPressCallback(KeyCode key, ModifierKeys mods,
+                                             U64 handle) {
+  UnregisterCallback(KeyCodeToGlfwKey(key), mods, handle, &keyPressDelegates);
 }
 
-void InputModule::UnregisterKeyPressCallback(KeyCode key, U16 handle) {
-  UnregisterCallback(KeyCodeToGlfwKey(key), handle, &keyPressCallbacks);
-}
-
-U16 InputModule::RegisterKeyReleaseCallback(KeyCode key,
+U64 InputModule::RegisterKeyReleaseCallback(KeyCode key, ModifierKeys mods,
                                             const Action<>& callback) {
-  return RegisterCallback(KeyCodeToGlfwKey(key), callback,
-                          &keyReleaseCallbacks);
+  return RegisterCallback(KeyCodeToGlfwKey(key), mods, callback,
+                          &keyReleaseDelegates);
 }
-
-void InputModule::UnregisterKeyReleaseCallback(KeyCode key, U16 handle) {
-  UnregisterCallback(KeyCodeToGlfwKey(key), handle, &keyReleaseCallbacks);
+void InputModule::UnregisterKeyReleaseCallback(KeyCode key, ModifierKeys mods,
+                                               U64 handle) {
+  UnregisterCallback(KeyCodeToGlfwKey(key), mods, handle, &keyReleaseDelegates);
 }
 
 Math::Vector2 InputModule::GetMousePosition() const {
@@ -80,83 +76,85 @@ bool InputModule::IsMouseButtonPressed(MouseButtonCode mouseButton) const {
   return state == GLFW_PRESS;
 }
 
-U16 InputModule::RegisterMousePressCallback(MouseButtonCode mouseButton,
+U64 InputModule::RegisterMousePressCallback(MouseButtonCode mouseButton,
                                             const Action<>& callback) {
   return RegisterCallback(MouseButtonToGlfwKey(mouseButton), callback,
-                          &mousePressCallbacks);
+                          &mousePressDelegates);
 }
 
 void InputModule::UnregisterMousePressCallback(MouseButtonCode mouseButton,
-                                               U16 handle) {
+                                               U64 handle) {
   UnregisterCallback(MouseButtonToGlfwKey(mouseButton), handle,
-                     &mousePressCallbacks);
+                     &mousePressDelegates);
 }
 
-U16 InputModule::RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
+U64 InputModule::RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
                                               const Action<>& callback) {
   return RegisterCallback(MouseButtonToGlfwKey(mouseButton), callback,
-                          &mouseReleaseCallbacks);
+                          &mouseReleaseDelegates);
 }
 
 void InputModule::UnregisterMouseReleaseCallback(MouseButtonCode mouseButton,
-                                                 U16 handle) {
+                                                 U64 handle) {
   UnregisterCallback(MouseButtonToGlfwKey(mouseButton), handle,
-                     &mouseReleaseCallbacks);
+                     &mouseReleaseDelegates);
 }
 
-U16 InputModule::RegisterScrollCallback(
+U64 InputModule::RegisterScrollCallback(
     const Action<double, double>& callback) {
-  U16 handle = totalHandle++;
-  scrollCallbacks.insert(std::make_pair(handle, callback));
-  return handle;
+  return scrollCallbacks.Subscribe(callback);
 }
 
-void InputModule::UnregisterScrollCallback(U16 handle) {
-  windowSizeCallbacks.erase(handle);
+void InputModule::UnregisterScrollCallback(U64 handle) {
+  scrollCallbacks.Unsubscribe(handle);
 }
 
-U16 InputModule::RegisterMouseButtonGLFWCallback(
+void InputModule::RegisterWindowCloseGLFWCallback(
+    const Action<GLFWwindow*>& callback) {
+  windowCloseGLFWCallbacks.Subscribe(callback);
+}
+U64 InputModule::RegisterWindowSizeGLFWCallback(
+    const Action<GLFWwindow*, int, int>& callback) {
+  return windowSizeGLFWCallbacks.Subscribe(callback);
+}
+void InputModule::UnegisterWindowSizeGLFWCallback(U64 handle) {
+  windowSizeCallbacks.Unsubscribe(handle);
+}
+
+U64 InputModule::RegisterMouseButtonGLFWCallback(
     const Action<GLFWwindow*, int, int, int>& callback) {
-  U16 handle = totalHandle++;
-  mouseButtonGLFWCallbacks.insert(std::make_pair(handle, callback));
-  return handle;
+  return mouseButtonGLFWCallbacks.Subscribe(callback);
 }
 
-void InputModule::UnregisterMouseButtonGLFWCallback(U16 handle) {
-  mouseButtonGLFWCallbacks.erase(handle);
+void InputModule::UnregisterMouseButtonGLFWCallback(U64 handle) {
+  mouseButtonGLFWCallbacks.Unsubscribe(handle);
 }
 
-U16 InputModule::RegisterKeyGLFWCallback(
+U64 InputModule::RegisterKeyGLFWCallback(
     const Action<GLFWwindow*, int, int, int, int>& callback) {
-  U16 handle = totalHandle++;
-  keyGLFWCallbacks.insert(std::make_pair(handle, callback));
-  return handle;
+  return keyGLFWCallbacks.Subscribe(callback);
 }
 
-void InputModule::UnegisterKeyGLFWCallback(U16 handle) {
-  keyGLFWCallbacks.erase(handle);
+void InputModule::UnegisterKeyGLFWCallback(U64 handle) {
+  keyGLFWCallbacks.Unsubscribe(handle);
 }
 
-U16 InputModule::RegisterScrollGLFWCallback(
+U64 InputModule::RegisterScrollGLFWCallback(
     const Action<GLFWwindow*, double, double>& callback) {
-  U16 handle = totalHandle++;
-  scrollGLFWCallbacks.insert(std::make_pair(handle, callback));
-  return handle;
+  return scrollGLFWCallbacks.Subscribe(callback);
 }
 
-void InputModule::UnregisterScrollGLFWCallback(U16 handle) {
-  scrollGLFWCallbacks.erase(handle);
+void InputModule::UnregisterScrollGLFWCallback(U64 handle) {
+  scrollGLFWCallbacks.Unsubscribe(handle);
 }
 
-U16 InputModule::RegisterCharGLFWCallback(
+U64 InputModule::RegisterCharGLFWCallback(
     const Action<GLFWwindow*, unsigned int>& callback) {
-  U16 handle = totalHandle++;
-  charGLFWCallbacks.insert(std::make_pair(handle, callback));
-  return handle;
+  return charGLFWCallbacks.Subscribe(callback);
 }
 
-void InputModule::UnegisterCharGLFWCallback(U16 handle) {
-  charGLFWCallbacks.erase(handle);
+void InputModule::UnegisterCharGLFWCallback(U64 handle) {
+  charGLFWCallbacks.Unsubscribe(handle);
 }
 
 float InputModule::GetGamepadAxis(GamepadAxis axis) {
@@ -166,6 +164,7 @@ float InputModule::GetGamepadAxis(GamepadAxis axis) {
 void InputModule::StartUp(GLFWwindow* win) {
   winHandle = win;
   Input::inputModule = this;
+  GLFWInput::inputModule = this;
   glfwSetInputMode(winHandle, GLFW_STICKY_KEYS, 1);
   glfwSetInputMode(winHandle, GLFW_STICKY_MOUSE_BUTTONS, 1);
   glfwSetWindowCloseCallback(winHandle, WindowCloseListener);
@@ -178,105 +177,80 @@ void InputModule::StartUp(GLFWwindow* win) {
 }
 
 void InputModule::Update(float deltaTime) {
+  BROFILER_CATEGORY("Input Update", Profiler::Color::FireBrick);
+
   glfwPollEvents();
   UpdateGamepadState();
 }
 
 void InputModule::ShutDown() {}
 
-U16 InputModule::RegisterCallback(int key, const Action<>& callback,
-                                  CBMap* callbackMap) {
-  auto& callbackList = (*callbackMap)[key];
-  U16 handle = totalHandle++;
-  callbackList.push_back(std::make_pair(handle, callback));
+U64 InputModule::RegisterCallback(int key, ModifierKeys mods,
+                                  const Action<>& callback,
+                                  KeyMap* callbackMap) {
+  auto& callbackList = (*callbackMap)[std::make_pair(key, mods)];
+  U64 handle = callbackList.Subscribe(callback);
   return handle;
 }
+void InputModule::UnregisterCallback(int key, ModifierKeys mods, U64 handle,
+                                     KeyMap* callbackMap) {
+  auto& callbackList = (*callbackMap)[std::make_pair(key, mods)];
+  callbackList.Unsubscribe(handle);
+}
 
-void InputModule::UnregisterCallback(int key, U16 handle, CBMap* callbackMap) {
+U64 InputModule::RegisterCallback(int key, const Action<>& callback,
+                                  MouseMap* callbackMap) {
   auto& callbackList = (*callbackMap)[key];
-  callbackList.remove_if(
-      [handle](std::pair<U16, Action<>> item) { return item.first == handle; });
+  U64 handle = callbackList.Subscribe(callback);
+  return handle;
+}
+void InputModule::UnregisterCallback(int key, U64 handle,
+                                     MouseMap* callbackMap) {
+  auto& callbackList = (*callbackMap)[key];
+  callbackList.Unsubscribe(handle);
 }
 
 void InputModule::WindowCloseListener(GLFWwindow* win) {
-  for (const auto& callback : windowCloseCallbacks) {
-    callback();
-  }
+  windowCloseCallbacks.Invoke();
+  windowCloseGLFWCallbacks.Invoke(win);
 }
 
 void InputModule::KeyEventListener(GLFWwindow* win, int key, int scancode,
                                    int action, int mods) {
-  // static std::list<Action<)>> currCallbacks;
   if (action == GLFW_PRESS) {
-    for (const auto& handleCallback : keyPressCallbacks[key]) {
-      // currCallbacks.push_back(callback.second);
-      handleCallback.second();
-    }
+    keyPressDelegates[{key, static_cast<ModifierKeys>(mods)}].Invoke();
   } else if (action == GLFW_RELEASE) {
-    for (const auto& handleCallback : keyReleaseCallbacks[key]) {
-      // currCallbacks.push_back(callback.second);
-      handleCallback.second();
-    }
+    keyReleaseDelegates[{key, static_cast<ModifierKeys>(mods)}].Invoke();
   }
-  // for (const auto& callback : currCallbacks) {
-  //  callback();
-  //}
-  // currCallbacks.clear();
-  // TODO(Chaojie + Jacob): can we pass this information to all the functions?
-  for (const auto& handleCallback : keyGLFWCallbacks) {
-    handleCallback.second(win, key, scancode, action, mods);
-  }
+  keyGLFWCallbacks.Invoke(win, key, scancode, action, mods);
 }
 
 void InputModule::MouseEventListener(GLFWwindow* win, int button, int action,
                                      int mods) {
-  static std::list<Action<>> currCallbacks;
   if (action == GLFW_PRESS) {
-    for (const auto& handleCallback : mousePressCallbacks[button]) {
-      // currCallbacks.push_back(callback.second);
-      handleCallback.second();
-    }
+    mousePressDelegates[button].Invoke();
   } else if (action == GLFW_RELEASE) {
-    for (const auto& handleCallback : mouseReleaseCallbacks[button]) {
-      // currCallbacks.push_back(callback.second);
-      handleCallback.second();
-    }
+    mouseReleaseDelegates[button].Invoke();
   }
-  // for (const auto& callback : currCallbacks) {
-  //  callback();
-  //}
-  // currCallbacks.clear();
-  // TODO(Chaojie + Jacob): can we pass this information to all the functions?
-  for (const auto& handleCallback : mouseButtonGLFWCallbacks) {
-    handleCallback.second(win, button, action, mods);
-  }
+  mouseButtonGLFWCallbacks.Invoke(win, button, action, mods);
 }
 
 void InputModule::CharEventListener(GLFWwindow* win, unsigned int c) {
-  for (const auto& handleCallback : charGLFWCallbacks) {
-    handleCallback.second(win, c);
-  }
+  charGLFWCallbacks.Invoke(win, c);
 }
 void InputModule::ScrollEventListener(GLFWwindow* win, double xoffset,
                                       double yoffset) {
-  for (const auto& handleCallback : scrollCallbacks) {
-    handleCallback.second(xoffset, yoffset);
-  }
-  for (const auto& handleCallback : scrollGLFWCallbacks) {
-    handleCallback.second(win, xoffset, yoffset);
-  }
+  scrollCallbacks.Invoke(xoffset, yoffset);
+  scrollGLFWCallbacks.Invoke(win, xoffset, yoffset);
 }
 
 void InputModule::WindowSizeListener(GLFWwindow* win, int width, int height) {
-  for (const auto& handleCallback : windowSizeCallbacks) {
-    handleCallback.second(width, height);
-  }
+  windowSizeCallbacks.Invoke(width, height);
+  windowSizeGLFWCallbacks.Invoke(win, width, height);
 }
 
 void InputModule::GamepadEventListener(int gamepadID, int gamepadEvent) {
-  for (const auto& handleCallback : gamepadConnectionCallbacks) {
-    handleCallback.second(gamepadID, gamepadEvent);
-  }
+  gamepadConnectionCallbacks.Invoke(gamepadID, gamepadEvent);
 }
 
 int InputModule::KeyCodeToGlfwKey(KeyCode key) const {
@@ -463,14 +437,22 @@ bool InputModule::IsGamepadButtonPressed(GamepadButton button) {
   return gamepadState.buttons[static_cast<int>(button)];
 }
 
-U16 InputModule::RegisterGamepadConnectionCallback(
+U64 InputModule::RegisterGamepadConnectionCallback(
     const Action<int, int>& callback) {
-  U16 handle = totalHandle++;
-  gamepadConnectionCallbacks.insert(std::make_pair(handle, callback));
-  return handle;
+  return gamepadConnectionCallbacks.Subscribe(callback);
 }
 
-void InputModule::UnegisterGamepadConnectionCallback(U16 handle) {
-  gamepadConnectionCallbacks.erase(handle);
+void InputModule::UnegisterGamepadConnectionCallback(U64 handle) {
+  gamepadConnectionCallbacks.Unsubscribe(handle);
+}
+void InputModule::Clear() {
+  windowCloseCallbacks.Clear();
+  keyPressDelegates.clear();
+  keyReleaseDelegates.clear();
+  mousePressDelegates.clear();
+  mouseReleaseDelegates.clear();
+  windowSizeCallbacks.Clear();
+  scrollCallbacks.Clear();
+  gamepadConnectionCallbacks.Clear();
 }
 }  // namespace Isetta

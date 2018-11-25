@@ -2,45 +2,57 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include <Horde3D.h>
 #include <string>
 #include "Core/Color.h"
+#include "Core/Config/CVar.h"
+#include "Horde3D/Horde3D/Bindings/C++/Horde3D.h"
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(LightComponent, Component)
- public:
-  enum class Property {
-    RADIUS,
-    FOV,
-    SHADOW_MAP_COUNT,
-    SHADOW_MAP_BIAS,
-    COLOR,
-    COLOR_MULTIPLIER
-  };
+BEGIN_COMPONENT(LightComponent, Component, true)
+public:
+struct LightConfig {
+  CVarString lightMaterial{"light_material", "materials/light.material.xml"};
+  CVar<float> radius{"light_radius", 2500};
+  CVar<float> fieldOfView{"light_fov", 180};
+  CVar<float> colorMultiplier{"color_multiplier", 1.0f};
+  CVarVector3 color{"light_color"};
+  CVar<int> shadowMapCount{"shadow_map_count", 1};
+  CVar<float> shadowMapBias{"shadow_map_bias", 0.01f};
+};
 
-  void OnEnable() override;
-  void OnDisable() override;
-  void OnDestroy() override;
+enum class Property {
+  RADIUS,
+  FOV,
+  SHADOW_MAP_COUNT,
+  SHADOW_MAP_BIAS,
+  COLOR,
+  COLOR_MULTIPLIER
+};
 
-  LightComponent(const std::string& resourceName, std::string lightName);
+void Start() override;
+void OnEnable() override;
+void OnDisable() override;
+void OnDestroy() override;
 
-  template <Property Attr, typename T>
-  void SetProperty(T value);
+LightComponent();
 
-  template <Property Attr, typename T>
-  T GetProperty() const;
+template <Property Attr, typename T>
+void SetProperty(T value);
 
- private:
-  static H3DRes LoadResourceFromFile(const std::string& resourceName);
+template <Property Attr, typename T>
+T GetProperty() const;
 
-  static class RenderModule* renderModule;
-  friend class RenderModule;
-  void UpdateH3DTransform() const;
-  std::string name;
-  H3DNode renderNode{0};
-  H3DRes renderResource{0};
-CREATE_COMPONENT_END(LightComponent, Component)
+private:
+static H3DRes LoadResourceFromFile(std::string_view resourceName);
+
+static class RenderModule* renderModule;
+friend class RenderModule;
+void UpdateH3DTransform() const;
+std::string_view name;
+H3DNode renderNode{0};
+H3DRes renderResource{0};
+END_COMPONENT(LightComponent, Component)
 
 template <LightComponent::Property Attr, typename T>
 void LightComponent::SetProperty(T value) {

@@ -2,33 +2,43 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include <Horde3D.h>
 #include <string>
+#include "Core/Math/Math.h"
+#include "Horde3D/Horde3D/Bindings/C++/Horde3D.h"
+#include "SID/sid.h"
 #include "Scene/Component.h"
 
 namespace Isetta {
-CREATE_COMPONENT_BEGIN(MeshComponent, Component)
-  H3DNode renderNode{0};
-  H3DRes renderResource{0};
+BEGIN_COMPONENT(MeshComponent, Component, false)
+H3DNode renderNode{0};
+H3DRes renderResource{0};
 
-  explicit MeshComponent(const std::string& resourceName);
-  ~MeshComponent();
+std::unordered_map<StringId, H3DNode> joints;
 
-  void UpdateTransform() const; 
+explicit MeshComponent(std::string_view resourceName,
+                       bool isEngineResource = false);
+~MeshComponent();
 
- protected:
-  static H3DRes LoadResourceFromFile(const std::string& resourceName);
+void UpdateTransform() const;
 
-  void OnEnable() override;
-  void OnDisable() override;
-  void OnDestroy() override;
+protected:
+static H3DRes LoadResourceFromFile(std::string_view resourceName,
+                                   bool isEngineResource);
 
-  friend class AnimationComponent;
-  friend class Entity;
-  friend class MemoryManager;
-  friend class FreeListAllocator;
-  friend class RenderModule;
+void OnEnable() override;
+void OnDisable() override;
+void OnDestroy() override;
 
-  static class RenderModule* renderModule;
-CREATE_COMPONENT_END(MeshComponent, Component)
+friend class AnimationComponent;
+friend class Entity;
+friend class MemoryManager;
+friend class FreeListAllocator;
+friend class RenderModule;
+
+public:
+std::tuple<Math::Vector3, Math::Quaternion> GetJointWorldTransform(
+    std::string jointName);
+
+static class RenderModule* renderModule;
+END_COMPONENT(MeshComponent, Component)
 }  // namespace Isetta

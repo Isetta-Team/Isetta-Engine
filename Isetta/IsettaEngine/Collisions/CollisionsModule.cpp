@@ -4,13 +4,13 @@
 #include "Collisions/CollisionsModule.h"
 
 #include "Collisions/AABB.h"
-#include "Collisions/Ray.h"
-#include "Core/Debug/DebugDraw.h"
-#include "Core/IsettaAlias.h"
+#include "Core/Geometry/Ray.h"
 #include "Core/Math/Matrix3.h"
 #include "Core/Math/Vector3.h"
+#include "Core/Math/Vector4.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 #include "Collisions/BoxCollider.h"
 #include "Collisions/CapsuleCollider.h"
@@ -19,101 +19,104 @@
 #include "Collisions/Collisions.h"
 #include "Collisions/SphereCollider.h"
 
+#include "Collisions/CollisionSolverModule.h"
+#include "Core/Config/Config.h"
+
 namespace Isetta {
 void CollisionsModule::StartUp() {
   Collider::collisionsModule = this;
+  Collider::fatFactor = CONFIG_VAL(collisionConfig.fatFactor);
   Collisions::collisionsModule = this;
+  CollisionSolverModule::collisionsModule = this;
 }
 
 void CollisionsModule::Update(float deltaTime) {
-  /*
-   * TODO(Yidi)Broadphase check
-   */
-  // Collider obj1, obj2;
-  // if (obj1.isTrigger && obj2.isTrigger) {
-  //}  // TODO
-  // else if (Intersection(obj1, obj2)) {
-  //  if (obj1.isTrigger || obj2.isTrigger) {
-  //    obj1.owner->OnTrigger(Collider::EntityKey{}, &obj2);
-  //    obj2.owner->OnTrigger(Collider::EntityKey{}, &obj1);
-  //  } else {
-  //    obj1.owner->OnCollision(Collider::EntityKey{}, &obj2);
-  //    obj2.owner->OnCollision(Collider::EntityKey{}, &obj1);
-  //  }
-  //}
-  for (int i = 0; i < colliders.size(); i++) {
-    if (colliders[i]->GetAttribute(Collider::Attributes::IS_STATIC)) continue;
-    for (int j = 0; j < colliders.size(); j++) {
-      if (colliders[i] == colliders[j]) continue;
-      CollisionHandler *handlerI = colliders[i]->GetHandler();
-      CollisionHandler *handlerJ = colliders[j]->GetHandler();
-      if (handlerI && handlerJ && handlerI == handlerJ) continue;
-      if (colliders[i]->Intersection(colliders[j])) {
-        if (collisionPairs.find(CollisionPair(i, j)) != collisionPairs.end()) {
-          // TODO(Jacob) Collision Stay
-          if (handlerI) handlerI->OnCollisionStay(colliders[j]);
-          if (handlerJ) handlerJ->OnCollisionStay(colliders[i]);
-        } else {
-          // TODO(Jacob) Collision Enter
-          if (handlerI) handlerI->OnCollisionEnter(colliders[j]);
-          if (handlerJ) handlerJ->OnCollisionEnter(colliders[i]);
-          collisionPairs.insert(CollisionPair(i, j));
-          // TODO(Jacob) remove
-          if (collisions.find(i) != collisions.end()) {
-            collisions[i]++;
-          } else {
-            collisions.insert(std::make_pair(i, 1));
-          }
-          if (collisions.find(j) != collisions.end()) {
-            collisions[j]++;
-          } else {
-            collisions.insert(std::make_pair(j, 1));
-          }
-          //
-        }
-        colliders[i]->debugColor = Color::red;
-        colliders[j]->debugColor = Color::red;
-      } else if (collisionPairs.find(CollisionPair(i, j)) !=
-                 collisionPairs.end()) {
-        // TODO(Jacob) Collision Exit
-        if (handlerI) handlerI->OnCollisionExit(colliders[j]);
-        if (handlerJ) handlerJ->OnCollisionExit(colliders[i]);
-        collisionPairs.erase(CollisionPair(i, j));
-        // TODO(Jacob) remove
-        collisions[i]--;
-        collisions[j]--;
-        if (collisions[i] == 0) {
-          colliders[i]->debugColor = Color::green;
-        }
-        if (collisions[j] == 0) {
-          colliders[j]->debugColor = Color::green;
-        }
-        //
+  BROFILER_CATEGORY("Collision Update", Profiler::Color::Orchid);
+
+  bvTree.Update();
+
+  // By the end of the checking loop, pairs left in the lastFramePairs
+  // are those who are no longer colliding
+  auto lastFramePairs = collidingPairs;
+
+  collidingPairs.clear();
+
+  for (const auto &pair : bvTree.GetCollisionPairs()) {
+    Collider *collider1 = pair.first;
+    Collider *collider2 = pair.second;
+    // Ignore Single/Layer Collisions continue
+    if (ignoreColliderPairs.find(pair) != ignoreColliderPairs.end() ||
+        GetIgnoreLayerCollision(collider1->entity->GetLayerIndex(),
+                                collider2->entity->GetLayerIndex()))
+      continue;
+
+    CollisionHandler *handler1 = collider1->GetHandler();
+    CollisionHandler *handler2 = collider2->GetHandler();
+
+    // Trigger colliders with no handler shouldn't even be intersection tested
+    if ((collider1->isTrigger || collider2->isTrigger) && handler1 &&
+        handler2 && handler1 == handler2)
+      continue;
+
+    if (collider1->Intersection(collider2)) {
+      collidingPairs.insert(pair);
+
+      // Colliders with the same handler shouldn't have their functions called
+      if (handler1 == handler2) continue;
+
+      // if they do collide
+      auto it = lastFramePairs.find(pair);
+
+      if (it != lastFramePairs.end()) {
+        // pair was colliding last frame
+        if (handler1) handler1->OnCollisionStay(collider2);
+        if (handler2) handler2->OnCollisionStay(collider1);
+        lastFramePairs.erase(it);
+      } else {
+        // pair is new
+        if (handler1) handler1->OnCollisionEnter(collider2);
+        if (handler2) handler2->OnCollisionEnter(collider1);
       }
     }
+  }
+
+  for (const auto &pair : lastFramePairs) {
+    Collider *collider1 = pair.first;
+    Collider *collider2 = pair.second;
+
+    CollisionHandler *handler1 = collider1->GetHandler();
+    CollisionHandler *handler2 = collider2->GetHandler();
+
+    if (handler1) handler1->OnCollisionExit(collider2);
+    if (handler2) handler2->OnCollisionExit(collider1);
   }
 }
 
 void CollisionsModule::ShutDown() {}
 
+Array<Collider *> CollisionsModule::GetPossibleColliders(
+    Collider *collider) const {
+  return bvTree.GetPossibleColliders(collider);
+}
+
 bool CollisionsModule::Intersection(const BoxCollider &a,
                                     const BoxCollider &b) {
+  PROFILE
   float ra, rb;
   Math::Matrix3 rot, absRot;
 
-  // TODO(all) is there a better way to do this?
-  for (int i = 0; i < Math::Matrix3::ROW_COUNT; i++) {
-    for (int j = 0; j < Math::Matrix3::ROW_COUNT; j++) {
-      rot[i][j] = Math::Vector3::Dot(a.GetTransform().GetAxis(i),
-                                     b.GetTransform().GetAxis(j));
+  for (int i = 0; i < Math::Matrix3::ROW_COUNT; ++i) {
+    for (int j = 0; j < Math::Matrix3::ROW_COUNT; ++j) {
+      rot[i][j] =
+          Math::Vector3::Dot(a.transform->GetAxis(i), b.transform->GetAxis(j));
     }
   }
   Math::Vector3 t = b.GetWorldCenter() - a.GetWorldCenter();
-  t = Math::Vector3{Math::Vector3::Dot(t, a.GetTransform().GetLeft()),
-                    Math::Vector3::Dot(t, a.GetTransform().GetUp()),
-                    Math::Vector3::Dot(t, a.GetTransform().GetForward())};
-  for (int i = 0; i < Math::Matrix3::ROW_COUNT; i++) {
-    for (int j = 0; j < Math::Matrix3::ROW_COUNT; j++) {
+  t = Math::Vector3{Math::Vector3::Dot(t, a.transform->GetLeft()),
+                    Math::Vector3::Dot(t, a.transform->GetUp()),
+                    Math::Vector3::Dot(t, a.transform->GetForward())};
+  for (int i = 0; i < Math::Matrix3::ROW_COUNT; ++i) {
+    for (int j = 0; j < Math::Matrix3::ROW_COUNT; ++j) {
       absRot[i][j] = Math::Util::Abs(rot[i][j]) + Math::Util::EPSILON;
     }
   }
@@ -121,14 +124,14 @@ bool CollisionsModule::Intersection(const BoxCollider &a,
   Math::Vector3 aExtents = a.GetWorldExtents();
   Math::Vector3 bExtents = b.GetWorldExtents();
   // Test axes L = A0, L = A1, L = A2
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < 3; ++i) {
     ra = aExtents[i];
     rb = bExtents[0] * absRot[i][0] + bExtents[1] * absRot[i][1] +
          bExtents[2] * absRot[i][2];
     if (Math::Util::Abs(t[i]) > ra + rb) return 0;
   }
   // Test axes L = B0, L = B1, L = B2
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < 3; ++i) {
     ra = aExtents[0] * absRot[0][i] + aExtents[1] * absRot[1][i] +
          aExtents[2] * absRot[2][i];
     rb = bExtents[i];
@@ -197,6 +200,7 @@ bool CollisionsModule::Intersection(const BoxCollider &a,
 
 bool CollisionsModule::Intersection(const BoxCollider &box,
                                     const SphereCollider &sphere) {
+  PROFILE
   Math::Vector3 center = sphere.GetWorldCenter();
   Math::Vector3 pt = ClosestPtPointOBB(center, box);
   Math::Vector3 to = pt - center;
@@ -205,20 +209,25 @@ bool CollisionsModule::Intersection(const BoxCollider &box,
 }
 bool CollisionsModule::Intersection(const BoxCollider &box,
                                     const CapsuleCollider &capsule) {
+  PROFILE
   Math::Matrix4 rot, scale;
   float radiusScale = capsule.GetWorldCapsule(&rot, &scale);
-  Math::Vector3 dir = (Math::Vector3)(
-      rot * scale *
-      Math::Matrix4::Scale(Math::Vector3{capsule.height - 2 * capsule.radius}) *
-      Math::Vector4{0, 1, 0, 0});
+  Math::Vector3 dir =
+      (Math::Vector3)(rot * scale *
+                      Math::Matrix4::Scale(
+                          Math::Vector3{capsule.height - 2 * capsule.radius}) *
+                      Math::Vector4{0, 1, 0, 0}) *
+      .5;
   Math::Vector3 p0 = capsule.GetWorldCenter() - dir;
   Math::Vector3 p1 = capsule.GetWorldCenter() + dir;
   return SqDistSegmentOBB(p0, p1, box) <=
          Math::Util::Square(capsule.radius * radiusScale);
 
+  // https://github.com/vancegroup-mirrors/open-dynamics-engine-svnmirror/blob/master/ode/src/capsule.cpp
+
   // Not working
-  // Math::Vector3 localP0 = box.GetTransform().LocalPosFromWorldPos(p0);
-  // Math::Vector3 localP1 = box.GetTransform().LocalPosFromWorldPos(p1);
+  // Math::Vector3 localP0 = box.transform->LocalPosFromWorldPos(p0);
+  // Math::Vector3 localP1 = box.transform->LocalPosFromWorldPos(p1);
 
   // float t;
   // bool intersect =
@@ -230,40 +239,50 @@ bool CollisionsModule::Intersection(const BoxCollider &box,
 }
 bool CollisionsModule::Intersection(const SphereCollider &a,
                                     const SphereCollider &b) {
+  PROFILE
   return (a.GetWorldCenter() - b.GetWorldCenter()).SqrMagnitude() <=
          Math::Util::Square(a.GetWorldRadius() + b.GetWorldRadius());
 }
 bool CollisionsModule::Intersection(const SphereCollider &sphere,
                                     const BoxCollider &box) {
+  PROFILE
   return Intersection(box, sphere);
 }
 bool CollisionsModule::Intersection(const SphereCollider &sphere,
                                     const CapsuleCollider &capsule) {
+  PROFILE
   Math::Matrix4 rot, scale;
   float radiusScale = capsule.GetWorldCapsule(&rot, &scale);
-  Math::Vector3 dir = (Math::Vector3)(
-      rot * scale *
-      Math::Matrix4::Scale(Math::Vector3{capsule.height - 2 * capsule.radius}) *
-      Math::Vector4{0, 1, 0, 0});
+  Math::Vector3 dir =
+      (Math::Vector3)(rot * scale *
+                      Math::Matrix4::Scale(
+                          Math::Vector3{capsule.height - 2 * capsule.radius}) *
+                      Math::Vector4{0, 1, 0, 0}) *
+      .5;
   Math::Vector3 p0 = capsule.GetWorldCenter() - dir;
   Math::Vector3 p1 = capsule.GetWorldCenter() + dir;
   float distSq = SqDistPointSegment(p0, p1, sphere.GetWorldCenter());
-  return distSq <= Math::Util::Square(sphere.radius * sphere.GetWorldRadius() +
+  return distSq <= Math::Util::Square(sphere.GetWorldRadius() +
                                       capsule.radius * radiusScale);
 }
 bool CollisionsModule::Intersection(const CapsuleCollider &a,
                                     const CapsuleCollider &b) {
+  PROFILE
   Math::Matrix4 aRot, aScale, bRot, bScale;
   float arScale = a.GetWorldCapsule(&aRot, &aScale);
   float brScale = b.GetWorldCapsule(&bRot, &bScale);
-  Math::Vector3 aDir = (Math::Vector3)(
-      aRot * aScale *
-      Math::Matrix4::Scale(Math::Vector3{a.height - 2 * a.radius}) *
-      Math::Vector4{0, 1, 0, 0});
-  Math::Vector3 bDir = (Math::Vector3)(
-      bRot * bScale *
-      Math::Matrix4::Scale(Math::Vector3{b.height - 2 * b.radius}) *
-      Math::Vector4{0, 1, 0, 0});
+  Math::Vector3 aDir =
+      (Math::Vector3)(
+          aRot * aScale *
+          Math::Matrix4::Scale(Math::Vector3{a.height - 2 * a.radius}) *
+          Math::Vector4{0, 1, 0, 0}) *
+      .5;
+  Math::Vector3 bDir =
+      (Math::Vector3)(
+          bRot * bScale *
+          Math::Matrix4::Scale(Math::Vector3{b.height - 2 * b.radius}) *
+          Math::Vector4{0, 1, 0, 0}) *
+      .5;
   Math::Vector3 aP0 = a.GetWorldCenter() - aDir;
   Math::Vector3 aP1 = a.GetWorldCenter() + aDir;
   Math::Vector3 bP0 = b.GetWorldCenter() - bDir;
@@ -277,23 +296,45 @@ bool CollisionsModule::Intersection(const CapsuleCollider &a,
 }
 bool CollisionsModule::Intersection(const CapsuleCollider &capsule,
                                     const BoxCollider &box) {
+  PROFILE
   return Intersection(box, capsule);
 }
 bool CollisionsModule::Intersection(const CapsuleCollider &capsule,
                                     const SphereCollider &sphere) {
+  PROFILE
   return Intersection(sphere, capsule);
 }
 bool CollisionsModule::Raycast(const Ray &ray, RaycastHit *const hitInfo,
                                float maxDistance) {
-  for (int i = 0; i < colliders.size(); i++) {
-    RaycastHit hit{};
-    if (colliders[i]->Raycast(ray, &hit, maxDistance)) {
-      if (hit.GetDistance() < hitInfo->GetDistance()) {
-        *hitInfo = hit;
-      }
-    }
-  }
-  return hitInfo->GetDistance() < INFINITY;
+  PROFILE
+  // TODO(YIDI) + TODO(JACOB) raycast bvtree
+  // for (auto &col : colliders) {
+  //  RaycastHit hit{};
+  //  if (col->Raycast(ray, &hit, maxDistance)) {
+  //    if (hit.GetDistance() < hitInfo->GetDistance()) {
+  //      *hitInfo = hit;
+  //    }
+  //  }
+  //}
+  // return hitInfo->GetDistance() < INFINITY;
+  return bvTree.Raycast(ray, hitInfo, maxDistance);
+}
+bool CollisionsModule::GetIgnoreLayerCollision(int layer1, int layer2) const {
+  Layers::CheckLayer(layer1);
+  Layers::CheckLayer(layer2);
+  if (layer1 < layer2)
+    return ignoreCollisionLayer.test(layer1 * Layers::LAYERS_CAPACITY + layer2);
+  else
+    return ignoreCollisionLayer.test(layer2 * Layers::LAYERS_CAPACITY + layer1);
+}
+void CollisionsModule::SetIgnoreLayerCollision(int layer1, int layer2,
+                                               bool ignoreLayer) {
+  if (layer1 < layer2)
+    ignoreCollisionLayer.set(layer1 * Layers::LAYERS_CAPACITY + layer2,
+                             ignoreLayer);
+  else
+    ignoreCollisionLayer.set(layer2 * Layers::LAYERS_CAPACITY + layer1,
+                             ignoreLayer);
 }
 bool CollisionsModule::Intersection(const Math::Vector3 &p0,
                                     const Math::Vector3 &p1, const AABB &aabb) {
@@ -372,7 +413,7 @@ float CollisionsModule::SqDistSegmentOBB(const Math::Vector3 &p0,
 }
 Math::Vector3 CollisionsModule::ClosestPtPointSegment(
     const Math::Vector3 &point, const Math::Vector3 &p0,
-    const Math::Vector3 &p1, float *const _t) {
+    const Math::Vector3 &p1, float *_t) {
   float &t = *_t;
   Math::Vector3 to = p1 - p0;
   t = Math::Vector3::Dot(point - p0, to) / Math::Vector3::Dot(to, to);
@@ -461,9 +502,10 @@ float CollisionsModule::ClosestPtRaySegment(
   Math::Vector3 r = p0 - ray.GetOrigin();
   float a = Math::Vector3::Dot(
       d, d);  // Squared length of segment S1, always nonnegative
-  float e = Math::Vector3::Dot(
-      ray.GetDirection(),
-      ray.GetDirection());  // Squared length of segment S2, always nonnegative
+  float e =
+      Math::Vector3::Dot(ray.GetDirection(),
+                         ray.GetDirection());  // Squared length of segment
+                                               // S2, always nonnegative
   float f = Math::Vector3::Dot(ray.GetDirection(), r);
 
   if (a <= Math::Util::EPSILON) {
@@ -499,7 +541,7 @@ float CollisionsModule::ClosestPtRaySegment(
   cSeg = p0 + d * tSeg;
   return Math::Vector3::Dot(cRay - cSeg, cRay - cSeg);
 }
-Math::Vector3 CollisionsModule::ClossetPtPointAABB(const Math::Vector3 &point,
+Math::Vector3 CollisionsModule::ClosestPtPointAABB(const Math::Vector3 &point,
                                                    const AABB &aabb) {
   Math::Vector3 pt;
   pt.x = Math::Util::Min(Math::Util::Max(point.x, aabb.GetMin().x),
@@ -508,7 +550,7 @@ Math::Vector3 CollisionsModule::ClossetPtPointAABB(const Math::Vector3 &point,
                          aabb.GetMax().y);
   pt.z = Math::Util::Min(Math::Util::Max(point.z, aabb.GetMin().z),
                          aabb.GetMax().z);
-  return Math::Vector3();
+  return pt;
 }
 Math::Vector3 CollisionsModule::ClosestPtPointOBB(const Math::Vector3 &point,
                                                   const BoxCollider &box) {
@@ -516,33 +558,31 @@ Math::Vector3 CollisionsModule::ClosestPtPointOBB(const Math::Vector3 &point,
   Math::Vector3 pt = box.GetWorldCenter();
 
   Math::Vector3 extents = box.GetWorldExtents();
-  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
-    float dist = Math::Vector3::Dot(d, box.GetTransform().GetAxis(i));
+  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
+    float dist = Math::Vector3::Dot(d, box.transform->GetAxis(i));
     if (dist > extents[i]) {
       dist = extents[i];
-    }
-    if (dist < -extents[i]) {
+    } else if (dist < -extents[i]) {
       dist = -extents[i];
     }
-    pt += dist * box.GetTransform().GetAxis(i);
+    pt += dist * box.transform->GetAxis(i);
   }
   return pt;
 }
 Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
                                                  const BoxCollider &box,
                                                  float *_t, float *_distSq) {
-  Math::Vector3 o = box.GetTransform().LocalPosFromWorldPos(line.GetOrigin());
-  Math::Vector3 dir =
-      box.GetTransform().LocalDirFromWorldDir(line.GetDirection());
+  Math::Vector3 o = box.transform->LocalPosFromWorldPos(line.GetOrigin());
+  Math::Vector3 dir = box.transform->LocalDirFromWorldDir(line.GetDirection());
   float &t = *_t;
   float &distSq = *_distSq;
   distSq = 0;
 
   int perp = 0;
-  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
+  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
     if (Math::Util::Abs(Math::Vector3::Dot(
             dir, Math::Matrix3::identity.GetRow(i))) < Math::Util::EPSILON)
-      perp++;
+      ++perp;
   }
   switch (perp) {
     case 3:
@@ -552,7 +592,7 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
     case 2: {
       // LOG_INFO(Debug::Channel::Collisions, "Case 2");
       int x = -1;
-      for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
+      for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
         if (Math::Util::Abs(
                 Math::Vector3::Dot(dir, Math::Matrix3::identity.GetRow(i))) >
             Math::Util::EPSILON) {
@@ -589,12 +629,12 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
         pt[z] = extents[z];
       }
       // dist = 0 means intersection
-      return box.GetTransform().WorldPosFromLocalPos(pt);
+      return box.transform->WorldPosFromLocalPos(pt);
     }
     case 1: {
       // LOG_INFO(Debug::Channel::Collisions, "Case 1");
       int z = -1;
-      for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
+      for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
         if (Math::Util::Abs(
                 Math::Vector3::Dot(dir, Math::Matrix3::identity.GetRow(i))) <
             Math::Util::EPSILON) {
@@ -630,7 +670,7 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
       p0[z] = pt[z];
       distSq = INFINITY;
       // TODO(Jacob) could be optimized maybe
-      for (int i = 0; i < 2; i++) {
+      for (int i = 0; i < 2; ++i) {
         p1 = p0;
         float tRay, tSeg;
         Math::Vector3 ptRay, ptSeg;
@@ -644,7 +684,7 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
         }
       }
       t /= line.GetDirection().Magnitude();
-      return box.GetTransform().WorldPosFromLocalPos(pt);
+      return box.transform->WorldPosFromLocalPos(pt);
     }
     case 0: {  // assuming line is positive
       // LOG_INFO(Debug::Channel::Collisions, "Case 0");
@@ -675,7 +715,7 @@ Math::Vector3 CollisionsModule::ClosestPtLineOBB(const Line &line,
           pt = Face(2, Line{o, dir}, box, minusExtents, &t, &distSq);
         }
       }
-      return box.GetTransform().WorldPosFromLocalPos(pt);
+      return box.transform->WorldPosFromLocalPos(pt);
     }
   };
 }
@@ -874,12 +914,12 @@ bool CollisionsModule::CapsuleAABBIntersect(const Math::Vector3 &start,
 
   Math::Vector3 ineg[Math::Vector3::ELEMENT_COUNT];
   Math::Vector3 ipos[Math::Vector3::ELEMENT_COUNT];
-  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
+  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
     ineg[i] = cneg[i] * to + start;
     ipos[i] = cpos[i] * to + start;
   }
 
-  for (int x = 0; x < Math::Vector3::ELEMENT_COUNT; x++) {
+  for (int x = 0; x < Math::Vector3::ELEMENT_COUNT; ++x) {
     int y = (x + 1) % 3;
     int z = (x + 2) % 3;
     if (Math::Util::Abs(ineg[x][y]) > extents[y] ||
@@ -1049,7 +1089,7 @@ float CollisionsModule::SqDistanceToAABB(const Math::Vector3 &min,
                                          const Math::Vector3 &max,
                                          const Math::Vector3 &center) {
   float t, distSq = 0;
-  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++) {
+  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
     if (center[i] < min[i]) {
       t = center[i] - min[i];
       distSq += t * t;
@@ -1063,8 +1103,8 @@ float CollisionsModule::SqDistanceToAABB(const Math::Vector3 &min,
 Math::Vector3 CollisionsModule::ClosestPtSegmentOBB(const Math::Vector3 &p0,
                                                     const Math::Vector3 &p1,
                                                     const BoxCollider &box) {
-  Math::Vector3 q0 = box.GetTransform().LocalPosFromWorldPos(p0);
-  Math::Vector3 q1 = box.GetTransform().LocalPosFromWorldPos(p1);
+  Math::Vector3 q0 = box.transform->LocalPosFromWorldPos(p0);
+  Math::Vector3 q1 = box.transform->LocalPosFromWorldPos(p1);
   Line line = Line{q0, q1 - q0};
   float t, distSq;
   return ClosestPtLineOBB(line, box, &t, &distSq);

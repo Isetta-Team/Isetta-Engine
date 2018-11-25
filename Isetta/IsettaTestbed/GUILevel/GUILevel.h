@@ -9,6 +9,5 @@
 using namespace Isetta;
 
 CREATE_LEVEL(GUILevel)
-void LoadLevel() override;
-}
-;
+void OnLevelLoad() override;
+CREATE_LEVEL_END

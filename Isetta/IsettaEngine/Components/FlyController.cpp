@@ -2,17 +2,19 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Components/FlyController.h"
-#include "Custom/IsettaCore.h"
+#include "Core/IsettaCore.h"
 
 namespace Isetta {
+
+FlyController::FlyController(bool inControl) : enableLook{inControl} {};
 
 void FlyController::OnEnable() {
   SetAttribute(ComponentAttributes::NEED_UPDATE, true);
   lastFrameMousePos = Input::GetMousePosition();
   Input::RegisterKeyPressCallback(KeyCode::F,
                                   [&]() { enableLook = !enableLook; });
-  Input::RegisterKeyPressCallback(KeyCode::KP_1, [&]() {
-    GetTransform().SetWorldPos(Math::Vector3::zero);
+  Input::RegisterKeyPressCallback(KeyCode::KP_0, ModifierKeys::CTRL, [&]() {
+    transform->SetWorldPos(Math::Vector3::zero);
   });
   Input::RegisterScrollCallback([&](double xOffset, double yOffset) {
     flyMultiplier += yOffset;
@@ -30,27 +32,29 @@ void FlyController::Update() {
   }
 
   if (Input::IsKeyPressed(KeyCode::W)) {
-    GetTransform().TranslateWorld(-GetTransform().GetForward() * dt * flySpeed);
+    transform->TranslateWorld(-transform->GetForward() * dt *
+                                   flySpeed);
   }
 
   if (Input::IsKeyPressed(KeyCode::S)) {
-    GetTransform().TranslateWorld(GetTransform().GetForward() * dt * flySpeed);
+    transform->TranslateWorld(transform->GetForward() * dt *
+                                   flySpeed);
   }
 
   if (Input::IsKeyPressed(KeyCode::D)) {
-    GetTransform().TranslateWorld(GetTransform().GetLeft() * dt * flySpeed);
+    transform->TranslateWorld(transform->GetLeft() * dt * flySpeed);
   }
 
   if (Input::IsKeyPressed(KeyCode::A)) {
-    GetTransform().TranslateWorld(-GetTransform().GetLeft() * dt * flySpeed);
+    transform->TranslateWorld(-transform->GetLeft() * dt * flySpeed);
   }
 
   if (Input::IsKeyPressed(KeyCode::E)) {
-    GetTransform().TranslateWorld(GetTransform().GetUp() * dt * flySpeed);
+    transform->TranslateWorld(transform->GetUp() * dt * flySpeed);
   }
 
   if (Input::IsKeyPressed(KeyCode::Q)) {
-    GetTransform().TranslateWorld(-GetTransform().GetUp() * dt * flySpeed);
+    transform->TranslateWorld(-transform->GetUp() * dt * flySpeed);
   }
 
   if (enableLook) {
@@ -58,9 +62,9 @@ void FlyController::Update() {
     rotX += mouseDelta.x * lookRotationSpeed;
     rotY += mouseDelta.y * lookRotationSpeed;
 
-    GetTransform().SetLocalRot(
+    transform->SetLocalRot(
         Math::Quaternion::FromAngleAxis(Math::Vector3::up, rotX));
-    GetTransform().RotateLocal(GetTransform().GetLeft(), rotY);
+    transform->RotateLocal(transform->GetLeft(), rotY);
   }
   lastFrameMousePos = Input::GetMousePosition();
 }

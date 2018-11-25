@@ -6,9 +6,10 @@
 #include <functional>
 #include "Core/Config/CVar.h"
 #include "Core/DataStructures/RingBuffer.h"
-#include "Networking/Messages.h"
 #include "Core/Time/Clock.h"
+#include "Networking/Messages.h"
 #include "yojimbo/yojimbo.h"
+#include "Core/DataStructures/Delegate.h"
 
 namespace Isetta {
 /**
@@ -45,10 +46,19 @@ class NetworkingModule {
     /// Number of messages the server can have in its send queue to an
     /// individual client before messages will be overwritten.
     CVar<int> serverQueueSizePerClient{"server_queue_size_per_client", 256};
+    /// Number of possible networked IDs
+    CVar<int> maxNetID{"max_network_id", 65000};
+    /// Timeout for client disconnect
+    CVar<int> timeout{"network_timeout", 20};
   };
 
  private:
   static CustomAdapter NetworkAdapter;
+
+  Delegate<> onConnectedToServer;
+  Delegate<> onDisconnectedFromServer;
+  Delegate<int> onClientConnected;
+  Delegate<int> onClientDisconnected;
 
   /// Keeps time for the client and server. Mainly used for timeouts.
   Clock clock;
@@ -63,7 +73,7 @@ class NetworkingModule {
   yojimbo::Server* server;
   /// Configuration data for both the network and the client. This should
   /// probably stay the same among connected clients and servers.
-  yojimbo::ClientServerConfig networkConfig;
+  yojimbo::ClientServerConfig yojimboConfig;
   /// TODO(Caleb): Figure out how to allocate server at runtime instead of at
   /// startup
   NetworkAllocator* clientAllocator;
@@ -194,10 +204,14 @@ class NetworkingModule {
    *
    */
   void CloseServer();
+  bool IsClient() const;
+  bool IsHost() const;
+  bool IsServer() const;
 
   // Other
 
   friend class NetworkManager;
   friend class EngineLoop;
+  friend class StackAllocator;
 };
 }  // namespace Isetta

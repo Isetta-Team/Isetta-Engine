@@ -1,0 +1,4 @@
+<Model name="sword" geometry="KnightGame/Knight/sword.geo">
+
+	<Mesh name="Paladin_J_Nordstrom_Sword" material="KnightGame/Knight/Paladin_MAT_001.material.xml" batchStart="0" batchCount="684" vertRStart="0" vertREnd="224" />
+</Model>

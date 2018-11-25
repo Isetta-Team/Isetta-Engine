@@ -1,0 +1,13 @@
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define INTERSECTION_TEST(TYPE) bool TYPE::Intersection(Collider* const other) { switch (other->GetType()) { case Collider::ColliderType::BOX: return collisionsModule->Intersection( *this, dynamic_cast<BoxCollider&>(*other)); break; case Collider::ColliderType::SPHERE: return collisionsModule->Intersection( *this, dynamic_cast<SphereCollider&>(*other)); break; case Collider::ColliderType::CAPSULE: return collisionsModule->Intersection( *this, dynamic_cast<CapsuleCollider&>(*other)); break; }; }
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define BEGIN_COMPONENT(NAME, BASE, UNIQUE) template <bool Unique> class ISETTA_API_DECLARE Isetta::ComponentRegistry<class NAME, BASE, Unique> { protected: static bool NAME##Registered; }; class ISETTA_API_DECLARE NAME : public BASE, public Isetta::ComponentRegistry<NAME, BASE, UNIQUE> { protected: static bool isRegistered() { return NAME##Registered; } private:
+#define END_COMPONENT(NAME, BASE) }; template <bool Unique> bool Isetta::ComponentRegistry<NAME, BASE, Unique>::NAME##Registered =  Component::RegisterComponent(std::type_index(typeid(NAME)), std::type_index(typeid(BASE)), Unique);
+#define CREATE_LEVEL(NAME) class NAME : public Isetta::Level, public Isetta::LevelRegistry<NAME> { public: bool IsRegisteredInLevelManager() const { return registered; } static inline Isetta::Func<NAME*> CreateMethod = []() { return Isetta::MemoryManager::NewOnStack<NAME>(); }; static std::string GetLevelName() { return #NAME; } private:
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984

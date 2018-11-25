@@ -3,6 +3,7 @@
  */
 #include "Graphics/Window.h"
 #include "Core/Config/Config.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 void Isetta::WindowModule::StartUp() {
@@ -10,7 +11,14 @@ void Isetta::WindowModule::StartUp() {
   InitRenderConfig();
   InitWindow();
 }
-void WindowModule::Update(float deltaTime) { glfwSwapBuffers(winHandle); }
+void WindowModule::Update(float deltaTime) {
+  BROFILER_CATEGORY("Window Update", Profiler::Color::Silver);
+
+  if (glfwWindowShouldClose(winHandle)) {
+    Application::Exit();
+  }
+  glfwSwapBuffers(winHandle);
+}
 
 void WindowModule::ShutDown() {
   glfwDestroyWindow(winHandle);
@@ -71,4 +79,5 @@ void WindowModule::InitRenderConfig() {
   winFullScreen = Config::Instance().windowConfig.windowFullScreen.GetVal();
   winShowCursor = Config::Instance().windowConfig.windowShowCursor.GetVal();
 }
+
 }  // namespace Isetta

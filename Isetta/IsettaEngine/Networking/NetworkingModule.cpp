@@ -5,9 +5,6 @@
 #include "Networking/NetworkingModule.h"
 
 #include <list>
-#include <stdexcept>
-#include <string>
-#include <unordered_map>
 #include <utility>
 
 #include "Audio/AudioSource.h"
@@ -15,7 +12,9 @@
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
 #include "Graphics/AnimationComponent.h"
+#include "NetworkTransform.h"
 #include "Networking/NetworkManager.h"
+#include "brofiler/ProfilerCore/Brofiler.h"
 
 // F Windows
 #ifdef SendMessage
@@ -34,34 +33,34 @@ void NetworkingModule::StartUp() {
     throw std::exception(
         "NetworkingModule::StartUp => Could not initialize yojimbo.");
   }
-  srand((unsigned int)time(NULL));
+  srand(static_cast<unsigned int>(time(nullptr)));
 
   // TODO(Caleb): Figure out some more robust channel settings
-  networkConfig.numChannels = 2;
-  networkConfig.channel[0].type = yojimbo::CHANNEL_TYPE_UNRELIABLE_UNORDERED;
-  networkConfig.channel[1].type = yojimbo::CHANNEL_TYPE_RELIABLE_ORDERED;
-  networkConfig.timeout = 20;
+  yojimboConfig.numChannels = 2;
+  yojimboConfig.channel[0].type = yojimbo::CHANNEL_TYPE_UNRELIABLE_UNORDERED;
+  yojimboConfig.channel[1].type = yojimbo::CHANNEL_TYPE_RELIABLE_ORDERED;
+  yojimboConfig.timeout = CONFIG_VAL(networkConfig.timeout);
 
   privateKey = new (MemoryManager::AllocOnStack(
-      sizeof(U8) * Config::Instance().networkConfig.keyBytes.GetVal()))
-      U8[Config::Instance().networkConfig.keyBytes.GetVal()];
+      sizeof(U8) * CONFIG_VAL(networkConfig.keyBytes)))
+      U8[CONFIG_VAL(networkConfig.keyBytes)];
   // TODO(Caleb): Need to do something more insightful with the private key
   // than all 0s
-  memset(privateKey, 0, Config::Instance().networkConfig.keyBytes.GetVal());
+  memset(privateKey, 0, CONFIG_VAL(networkConfig.keyBytes));
 
   clientId = 0;
   yojimbo::random_bytes(reinterpret_cast<U8*>(&clientId), 8);
 
   void* memPointer =
-      MemoryManager::AllocOnStack(networkConfig.clientMemory + 1_MB);
+      MemoryManager::AllocOnStack(yojimboConfig.clientMemory + 1_MB);
   clientAllocator = new (MemoryManager::AllocOnStack(sizeof(NetworkAllocator)))
-      NetworkAllocator(memPointer, (Size)networkConfig.clientMemory + 1_MB);
+      NetworkAllocator(memPointer,
+                       static_cast<Size>(yojimboConfig.clientMemory) + 1_MB);
 
-  if (Config::Instance().networkConfig.runServer.GetVal()) {
-    Size serverMemorySize =
-        (networkConfig.serverPerClientMemory +
-         networkConfig.serverGlobalMemory) *
-        (Config::Instance().networkConfig.maxClients.GetVal() + 1);
+  if (CONFIG_VAL(networkConfig.runServer)) {
+    Size serverMemorySize = (yojimboConfig.serverPerClientMemory +
+                             yojimboConfig.serverGlobalMemory) *
+                            (CONFIG_VAL(networkConfig.maxClients) + 1);
 
     memPointer = MemoryManager::AllocOnStack(serverMemorySize);
     serverAllocator =
@@ -72,17 +71,18 @@ void NetworkingModule::StartUp() {
   client = new (MemoryManager::AllocOnStack(sizeof(yojimbo::Client)))
       yojimbo::Client(
           clientAllocator,
-          yojimbo::Address(
-              Config::Instance().networkConfig.defaultClientIP.GetVal().c_str(),
-              Config::Instance().networkConfig.clientPort.GetVal()),
-          networkConfig, NetworkAdapter, clock.GetElapsedTime());
+          yojimbo::Address(CONFIG_VAL(networkConfig.defaultClientIP).c_str(),
+                           CONFIG_VAL(networkConfig.clientPort)),
+          yojimboConfig, NetworkAdapter, clock.GetElapsedTime());
 
   clientSendBuffer =
       MemoryManager::NewArrOnFreeList<RingBuffer<yojimbo::Message*>>(
-          Config::Instance().networkConfig.clientQueueSize.GetVal());
+          CONFIG_VAL(networkConfig.clientQueueSize));
 }
 
 void NetworkingModule::Update(float deltaTime) {
+  BROFILER_CATEGORY("Network Update", Profiler::Color::Orange);
+
   clock.UpdateTime();
 
   // Check for new connections
@@ -91,8 +91,7 @@ void NetworkingModule::Update(float deltaTime) {
   // Send out our messages
   SendClientToServerMessages();
   if (server) {
-    for (int i = 0; i < Config::Instance().networkConfig.maxClients.GetVal();
-         i++) {
+    for (int i = 0; i < CONFIG_VAL(networkConfig.maxClients); ++i) {
       SendServerToClientMessages(i);
     }
   }
@@ -105,8 +104,7 @@ void NetworkingModule::Update(float deltaTime) {
   }
 
   if (server) {
-    for (int i = 0; i < Config::Instance().networkConfig.maxClients.GetVal();
-         i++) {
+    for (int i = 0; i < CONFIG_VAL(networkConfig.maxClients); ++i) {
       ProcessClientToServerMessages(i);
     }
   }
@@ -115,17 +113,19 @@ void NetworkingModule::Update(float deltaTime) {
 void NetworkingModule::ShutDown() {
   try {
     Disconnect();
-  } catch (std::exception e) {
+  } catch (std::exception& e) {
   }
 
   try {
     CloseServer();
-  } catch (std::exception e) {
+  } catch (std::exception& e) {
   }
 
   ShutdownYojimbo();
 
   client->~Client();
+  MemoryManager::DeleteArrOnFreeList<RingBuffer<yojimbo::Message*>>(
+      CONFIG_VAL(networkConfig.clientQueueSize), clientSendBuffer);
   clientAllocator->~NetworkAllocator();
 }
 
@@ -156,6 +156,7 @@ void NetworkingModule::AddServerToClientMessage(int clientIdx,
 }
 
 void NetworkingModule::PumpClientServerUpdate(double time) {
+  PROFILE
   client->SendPackets();
   if (server) {
     server->SendPackets();
@@ -245,14 +246,15 @@ void NetworkingModule::Connect(const char* serverAddress, int serverPort,
 }
 
 void NetworkingModule::Disconnect() {
-  if (!client->IsConnecting()) {
+  if (client->IsConnected()) {
+    client->Disconnect();
+  } else if (!client->IsConnecting()) {
     return;
-  } else if (!client->IsConnected()) {
+  } else {
     throw std::exception(
         "NetworkingModule::Disconnect => Cannot disconnect the client if it is "
         "not already connected.");
   }
-  client->Disconnect();
 }
 
 void NetworkingModule::CreateServer(const char* address, int port) {
@@ -261,20 +263,20 @@ void NetworkingModule::CreateServer(const char* address, int port) {
         "NetworkingModule::CreateServer => Cannot create a server while one is "
         "already running.");
   }
+
   serverSendBufferArray =
       MemoryManager::NewArrOnFreeList<RingBuffer<yojimbo::Message*>>(
-          Config::Instance().networkConfig.maxClients.GetVal());
-  for (int i = 0; i < Config::Instance().networkConfig.maxClients.GetVal();
-       i++) {
+          CONFIG_VAL(networkConfig.maxClients));
+  for (int i = 0; i < CONFIG_VAL(networkConfig.maxClients); ++i) {
     serverSendBufferArray[i] = RingBuffer<yojimbo::Message*>(
-        Config::Instance().networkConfig.serverQueueSizePerClient.GetVal());
+        CONFIG_VAL(networkConfig.serverQueueSizePerClient));
   }
 
   serverAddress = yojimbo::Address(address, port);
   server = MemoryManager::NewOnFreeList<yojimbo::Server>(
-      serverAllocator, privateKey, serverAddress, networkConfig,
+      serverAllocator, privateKey, serverAddress, yojimboConfig,
       &NetworkingModule::NetworkAdapter, clock.GetElapsedTime());
-  server->Start(Config::Instance().networkConfig.maxClients.GetVal());
+  server->Start(CONFIG_VAL(networkConfig.maxClients));
 
   if (!server->IsRunning()) {
     throw std::exception(
@@ -283,15 +285,30 @@ void NetworkingModule::CreateServer(const char* address, int port) {
 }
 
 void NetworkingModule::CloseServer() {
-  if (!server || !server->IsRunning()) {
+  if (server == nullptr || !server->IsRunning()) {
     throw std::exception(
         "NetworkingModule::CloseServer() Cannot close the server if it is not "
         "running.");
   }
+
   server->Stop();
-  server->~Server();
-  MemoryManager::FreeOnFreeList(server);
-  MemoryManager::FreeOnFreeList(serverSendBufferArray);
+  MemoryManager::DeleteOnFreeList<yojimbo::Server>(server);
+  server = nullptr;
+  MemoryManager::DeleteArrOnFreeList<RingBuffer<yojimbo::Message*>>(
+      CONFIG_VAL(networkConfig.maxClients), serverSendBufferArray);
   serverAllocator->~NetworkAllocator();
 }
+
+bool NetworkingModule::IsClient() const {
+  return client->IsConnected() && server == nullptr && !server->IsRunning();
+}
+
+bool NetworkingModule::IsHost() const {
+  return client->IsConnected() && server != nullptr && server->IsRunning();
+}
+
+bool NetworkingModule::IsServer() const {
+  return !client->IsConnected() && server != nullptr && server->IsRunning();
+}
+
 }  // namespace Isetta

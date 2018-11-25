@@ -13,8 +13,10 @@ StackAllocator::StackAllocator(const Size stackSize)
     : top(0), totalSize(stackSize) {
   bottom = std::malloc(stackSize);
   bottomAddress = reinterpret_cast<PtrInt>(bottom);
-  LOG_INFO(Debug::Channel::Memory,
-           "A new stack allocator is created with size: %I64u", stackSize);
+}
+
+StackAllocator::~StackAllocator() {
+  std::free(bottom);
 }
 
 void* StackAllocator::Alloc(const Size size, const U8 alignment) {
@@ -38,8 +40,4 @@ void* StackAllocator::Alloc(const Size size, const U8 alignment) {
   return reinterpret_cast<void*>(alignedAddress);
 }
 
-void StackAllocator::Erase() {
-  Clear();
-  std::free(bottom);
-}
 }  // namespace Isetta

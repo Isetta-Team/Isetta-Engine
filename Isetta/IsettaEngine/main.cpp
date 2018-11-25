@@ -1,6 +1,10 @@
 /*
  * Copyright (c) 2018 Isetta
  */
+// #define _CRTDBG_MAP_ALLOC
+// #include <crtdbg.h>
+// #include <stdlib.h>
+
 #include "Application.h"
 
 using namespace Isetta;
@@ -21,6 +25,8 @@ Between our own hands-on process and sage advice from veteran engineers, we hope
 to give newcomers a clearer representation of the engine-building process.
 */
 int main() {
+  // _CrtSetBreakAlloc(1199);
+  // _CrtSetBreakAlloc(3607);
   Application::Start();
   return 0;
 }

@@ -3,22 +3,14 @@
  */
 #pragma once
 
-#ifndef __  // GLAD must be placed first
-#include <glad/glad.h>
-#endif
-#include <GLFW/glfw3.h>
-#include <list>
-#include <string>
-#include <unordered_map>
+#include "GLFW/include/GLFW/glfw3.h"
 
+#include "Core/Color.h"
 #include "Core/Config/CVar.h"
-#include "Core/IsettaAlias.h"
+#include "Util.h"
 
-#include "imgui/imgui.h"
-
-class ImVec4;
 namespace Isetta::Math {
-class Vector2;
+class Vector2Int;
 }
 
 namespace Isetta {
@@ -68,11 +60,8 @@ class GUIModule {
     CVar<Color> NavWindowingHighlight{"nav_windowing_highlight_style", Color{}};
     CVar<Color> NavWindowingDimBg{"nav_windowing_dim_bg_style", Color{}};
     CVar<Color> ModalWindowDimBg{"modal_window_dim_bg_style", Color{}};
+    CVar<float> EngineFontSize{"engine_font_size", 16.f};
   };
-
-  inline Math::Vector2 GetWindowSize() const {
-    return Math::Vector2(winWidth, winHeight);
-  }
 
  private:
   GUIModule() = default;
@@ -89,5 +78,6 @@ class GUIModule {
   int winWidth, winHeight;
 
   friend class EngineLoop;
+  friend class StackAllocator;
 };
 }  // namespace Isetta

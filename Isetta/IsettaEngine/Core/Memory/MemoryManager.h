@@ -21,6 +21,10 @@ class ISETTA_API MemoryManager {
                                            10_MB};
     CVar<Size> dynamicArenaSize{"dynamic_arena_size", 10_MB};
     CVar<Size> freeListAllocatorSize{"free_list_allocator_size", 10_MB};
+    CVar<Size> freeListIncrement{"free_list_increment", 10_MB};
+    CVar<Size> defaultPoolIncrement{"default_pool_increment", 50};
+    CVar<Size> entityPoolInitialSize{"entity_pool_initial_size", 100};
+    CVar<Size> entityPoolIncrement{"entity_pool_increment", 50};
   };
 
   /**
@@ -43,8 +47,8 @@ class ISETTA_API MemoryManager {
    * \tparam T type of object to create
    * \return
    */
-  template <typename T, typename... args>
-  static T* NewOnSingleFrame(args...);
+  template <typename T, typename... Args>
+  static T* NewOnSingleFrame(Args&&...);
 
   template <typename T>
   static T* NewArrOnSingleFrame(Size length, U8 alignment = MemUtil::ALIGNMENT);
@@ -69,8 +73,8 @@ class ISETTA_API MemoryManager {
    *
    * \tparam T type of object to create \return
    */
-  template <typename T, typename... args>
-  static T* NewOnDoubleBuffered(args...);
+  template <typename T, typename... Args>
+  static T* NewOnDoubleBuffered(Args&&...);
 
   template <typename T>
   static T* NewArrOnDoubleBuffered(Size length,
@@ -81,22 +85,27 @@ class ISETTA_API MemoryManager {
   // make sure you don't put data in wrong places
   static void* AllocOnStack(Size size, U8 alignment = MemUtil::ALIGNMENT);
 
-  template <typename T, typename... args>
-  static T* NewOnStack(args...);
+  template <typename T, typename... Args>
+  static T* NewOnStack(Args&&...);
 
   template <typename T>
   static T* NewArrOnStack(Size length, U8 alignment = MemUtil::ALIGNMENT);
 
   // TODO(YIDI): Use different freelist allocators for different stage
   static void* AllocOnFreeList(Size size, U8 alignment = MemUtil::ALIGNMENT);
+  static void* ReallocOnFreeList(void* memPtr, Size newSize,
+                                 U8 alignment = MemUtil::ALIGNMENT);
+  static void FreeOnFreeList(void* memPtr);
 
-  template <typename T, typename... args>
-  static T* NewOnFreeList(args... argList);
+  template <typename T, typename... Args>
+  static T* NewOnFreeList(Args&&... argList);
+  template <typename T>
+  static void DeleteOnFreeList(T* ptrToDelete);
 
   template <typename T>
   static T* NewArrOnFreeList(Size length, U8 alignment = MemUtil::ALIGNMENT);
-
-  static void FreeOnFreeList(void* memPtr);
+  template <typename T>
+  static void DeleteArrOnFreeList(Size length, T* ptrToDelete);
 
   /**
    * \brief Create an object that will sit on the dynamic memory area. You need
@@ -107,8 +116,8 @@ class ISETTA_API MemoryManager {
    * \tparam T Type of the object you want to create
    * \return
    */
-  template <typename T, typename... args>
-  static ObjectHandle<T> NewDynamic(args...);
+  template <typename T, typename... Args>
+  static ObjectHandle<T> NewDynamic(Args&&...);
 
   /**
    * \brief Delete an object that was created with `NewDynamic`. The memory will
@@ -121,15 +130,17 @@ class ISETTA_API MemoryManager {
   static void DeleteDynamic(const ObjectHandle<T>& objToDelete);
 
  private:
-  MemoryManager();
-  ~MemoryManager() = default;
-
   /**
    * \brief Start up the memory manager. This creates the single frame
    * allocator, the double buffered allocator, and the dynamic arena. Their
    * specific sizes can be specified in engine config
    */
-  void StartUp();
+  MemoryManager();
+  /**
+   * \brief Free all memory, any further attempt to use objects managed by the
+   * memory manager will crash the game
+   */
+  ~MemoryManager() = default;
 
   /**
    * \brief Update the memory manager. This needs to be called in simulation
@@ -137,12 +148,6 @@ class ISETTA_API MemoryManager {
    * buffered allocators and defragment the dynamic memory arena
    */
   void Update();
-
-  /**
-   * \brief Free all memory, any further attempt to use objects managed by the
-   * memory manager will crash the game
-   */
-  void ShutDown();
 
   // set the marker to clear to when finishing a level
   // TODO(YIDI): Someone please call this
@@ -155,19 +160,22 @@ class ISETTA_API MemoryManager {
   static void DefragmentTest();
 
   static MemoryManager* instance;
-  StackAllocator lsrAndLevelAllocator{};
+  StackAllocator lsrAndLevelAllocator;
   Size lvlMemStartMarker{};
-  StackAllocator singleFrameAllocator{};
-  DoubleBufferedAllocator doubleBufferedAllocator{};
-  MemoryArena dynamicArena{};
-  FreeListAllocator freeListAllocator{};
+  StackAllocator singleFrameAllocator;
+  DoubleBufferedAllocator doubleBufferedAllocator;
+  MemoryArena dynamicArena;
+  FreeListAllocator freeListAllocator;
 
   friend class EngineLoop;
+
+  friend class TestInitialization;
 };
 
-template <typename T, typename... args>
-T* MemoryManager::NewOnSingleFrame(args... argList) {
-  return GetInstance()->singleFrameAllocator.New<T>(argList...);
+template <typename T, typename... Args>
+T* MemoryManager::NewOnSingleFrame(Args&&... argList) {
+  return GetInstance()->singleFrameAllocator.New<T>(
+      std::forward<Args>(argList)...);
 }
 
 template <typename T>
@@ -175,9 +183,10 @@ T* MemoryManager::NewArrOnSingleFrame(const Size length, const U8 alignment) {
   return GetInstance()->singleFrameAllocator.NewArr<T>(length, alignment);
 }
 
-template <typename T, typename... args>
-T* MemoryManager::NewOnDoubleBuffered(args... argList) {
-  return GetInstance()->doubleBufferedAllocator.New<T>(argList...);
+template <typename T, typename... Args>
+T* MemoryManager::NewOnDoubleBuffered(Args&&... argList) {
+  return GetInstance()->doubleBufferedAllocator.New<T>(
+      std::forward<Args>(argList)...);
 }
 
 template <typename T>
@@ -186,9 +195,10 @@ T* MemoryManager::NewArrOnDoubleBuffered(const Size length,
   return GetInstance()->doubleBufferedAllocator.NewArr<T>(length, alignment);
 }
 
-template <typename T, typename... args>
-T* MemoryManager::NewOnStack(args... argList) {
-  return GetInstance()->lsrAndLevelAllocator.New<T>(argList...);
+template <typename T, typename... Args>
+T* MemoryManager::NewOnStack(Args&&... argList) {
+  return GetInstance()->lsrAndLevelAllocator.New<T>(
+      std::forward<Args>(argList)...);
 }
 
 template <typename T>
@@ -196,9 +206,15 @@ T* MemoryManager::NewArrOnStack(const Size length, const U8 alignment) {
   return GetInstance()->lsrAndLevelAllocator.NewArr<T>(length, alignment);
 }
 
-template <typename T, typename... args>
-T* MemoryManager::NewOnFreeList(args... argList) {
-  return GetInstance()->freeListAllocator.New<T>(argList...);
+template <typename T, typename... Args>
+T* MemoryManager::NewOnFreeList(Args&&... argList) {
+  return GetInstance()->freeListAllocator.New<T>(
+      std::forward<Args>(argList)...);
+}
+
+template <typename T>
+void MemoryManager::DeleteOnFreeList(T* ptrToDelete) {
+  GetInstance()->freeListAllocator.Delete(ptrToDelete);
 }
 
 template <typename T>
@@ -206,9 +222,15 @@ T* MemoryManager::NewArrOnFreeList(const Size length, const U8 alignment) {
   return GetInstance()->freeListAllocator.NewArr<T>(length, alignment);
 }
 
-template <typename T, typename... args>
-ObjectHandle<T> MemoryManager::NewDynamic(args... argList) {
-  return GetInstance()->dynamicArena.NewDynamic<T>(argList...);
+template <typename T>
+void MemoryManager::DeleteArrOnFreeList(Size length, T* ptrToDelete) {
+  GetInstance()->freeListAllocator.DeleteArr(length, ptrToDelete);
+}
+
+template <typename T, typename... Args>
+ObjectHandle<T> MemoryManager::NewDynamic(Args&&... argList) {
+  return GetInstance()->dynamicArena.NewDynamic<T>(
+      std::forward<Args>(argList)...);
 }
 
 template <typename T>

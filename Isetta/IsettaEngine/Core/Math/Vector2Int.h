@@ -5,7 +5,7 @@
 #include "ISETTA_API.h"
 
 namespace Isetta::Math {
-class ISETTA_API_DECLARE Vector2Int {
+class ISETTA_API Vector2Int {
  public:
   // Constants
   static const Vector2Int zero;
@@ -58,7 +58,7 @@ class ISETTA_API_DECLARE Vector2Int {
 
   // Conversions
 
-  explicit Vector2Int(const class Vector2& inIntVector);
+  explicit Vector2Int(const class Vector2& inVector);
   // Vector2(const Vector2& inVector, float inZ);
 
   ~Vector2Int() {}
@@ -92,7 +92,7 @@ class ISETTA_API_DECLARE Vector2Int {
   inline Vector2Int operator*(int scalar) const {
     return Vector2Int(x * scalar, y * scalar);
   }
-  inline friend Vector2Int operator*(float scalar, Vector2Int v) {
+  inline friend Vector2Int operator*(int scalar, Vector2Int v) {
     return v * scalar;
   }
   inline Vector2Int& operator*=(int scalar) {
