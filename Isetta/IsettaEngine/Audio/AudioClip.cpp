@@ -25,7 +25,9 @@ AudioClip::AudioClip(const std::string_view filePath,
 
 AudioClip* AudioClip::Load(std::string_view filePath,
                            std::string_view soundName) {
-  auto nameClipPair = clips.find(SID(soundName.data()));
+  StringId sid = SID(soundName.data());
+  if (soundName.empty()) sid = SID(filePath.data());
+  auto nameClipPair = clips.find(sid);
   if (nameClipPair == clips.end()) {
     return MemoryManager::NewOnFreeList<AudioClip>(filePath, soundName);
   }
