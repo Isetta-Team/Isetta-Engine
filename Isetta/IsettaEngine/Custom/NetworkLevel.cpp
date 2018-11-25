@@ -74,7 +74,7 @@ void RegisterExampleMessageFunctions() {
   exampleClientSpawn =
       NetworkManager::Instance().RegisterClientCallback<SpawnMessage>(
           [](yojimbo::Message* message) {
-            if (NetworkManager::Instance().ServerIsRunning()) {
+            if (NetworkManager::Instance().IsServerRunning()) {
               return;
             }
 
@@ -151,7 +151,7 @@ void RegisterExampleMessageFunctions() {
   exampleClientDespawn =
       NetworkManager::Instance().RegisterClientCallback<DespawnMessage>(
           [](yojimbo::Message* message) {
-            if (NetworkManager::Instance().ServerIsRunning()) {
+            if (NetworkManager::Instance().IsServerRunning()) {
               return;
             }
 
@@ -231,7 +231,7 @@ void NetworkLevel::OnLevelLoad() {
 
   // Spawn across network
   Input::RegisterKeyPressCallback(KeyCode::Y, []() {
-    if (NetworkManager::Instance().LocalClientIsConnected()) {
+    if (NetworkManager::Instance().IsClientRunning()) {
       SpawnMessage* m =
           NetworkManager::Instance().GenerateMessageFromClient<SpawnMessage>();
       m->a = 0;
@@ -243,7 +243,7 @@ void NetworkLevel::OnLevelLoad() {
 
   // Despawn across network, only the one who spawned it can despawn it
   Input::RegisterKeyPressCallback(KeyCode::H, []() {
-    if (NetworkManager::Instance().LocalClientIsConnected()) {
+    if (NetworkManager::Instance().IsClientRunning()) {
       if (despawnCounter > spawnCounter) {
         return;
       }
@@ -258,7 +258,7 @@ void NetworkLevel::OnLevelLoad() {
 
   // Spawn one and set its parent to the latest one spawned by this client
   Input::RegisterKeyPressCallback(KeyCode::U, []() {
-    if (NetworkManager::Instance().LocalClientIsConnected()) {
+    if (NetworkManager::Instance().IsClientRunning()) {
       SpawnMessage* m =
           NetworkManager::Instance().GenerateMessageFromClient<SpawnMessage>();
       m->a = spawnedEntities.back()->GetComponent<NetworkId>()->id;
@@ -270,7 +270,7 @@ void NetworkLevel::OnLevelLoad() {
 
   // Parent to the previously spawned one
   Input::RegisterKeyPressCallback(KeyCode::I, []() {
-    if (NetworkManager::Instance().LocalClientIsConnected()) {
+    if (NetworkManager::Instance().IsClientRunning()) {
       auto it = spawnedEntities.end();
       it = std::prev(it);
       it = std::prev(it);
@@ -282,7 +282,7 @@ void NetworkLevel::OnLevelLoad() {
 
   // Unparent
   Input::RegisterKeyPressCallback(KeyCode::K, []() {
-    if (NetworkManager::Instance().LocalClientIsConnected()) {
+    if (NetworkManager::Instance().IsClientRunning()) {
       spawnedEntities.back()
           ->GetComponent<NetworkTransform>()
           ->SetNetworkedParentToRoot();
@@ -292,7 +292,7 @@ void NetworkLevel::OnLevelLoad() {
   });
 
   Input::RegisterKeyPressCallback(KeyCode::P, []() {
-    if (NetworkManager::Instance().LocalClientIsConnected()) {
+    if (NetworkManager::Instance().IsClientRunning()) {
       HandleMessage* handleMessage =
           NetworkManager::Instance().GenerateMessageFromClient<HandleMessage>();
       handleMessage->handle = 0;
@@ -301,7 +301,7 @@ void NetworkLevel::OnLevelLoad() {
   });
 
   Input::RegisterKeyPressCallback(KeyCode::O, []() {
-    if (NetworkManager::Instance().LocalClientIsConnected()) {
+    if (NetworkManager::Instance().IsClientRunning()) {
       HandleMessage* handleMessage =
           NetworkManager::Instance().GenerateMessageFromClient<HandleMessage>();
       handleMessage->handle = 1;
@@ -310,7 +310,7 @@ void NetworkLevel::OnLevelLoad() {
   });
 
   Input::RegisterMousePressCallback(MouseButtonCode::MOUSE_LEFT, []() {
-    if (NetworkManager::Instance().LocalClientIsConnected()) {
+    if (NetworkManager::Instance().IsClientRunning()) {
       HandleMessage* handleMessage =
           NetworkManager::Instance().GenerateMessageFromClient<HandleMessage>();
       handleMessage->handle = 2;

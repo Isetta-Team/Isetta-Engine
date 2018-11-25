@@ -81,28 +81,32 @@ class ISETTA_API_DECLARE NetworkManager {
   void StartHost(std::string_view hostIP) const;
   void StopHost() const;
 
+  // Following three checks "pure role". i.e. a Host is not a Server
   bool IsClient() const;
   bool IsHost() const;
   bool IsServer() const;
 
   void NetworkLoadLevel(std::string_view levelName);
 
-  bool LocalClientIsConnected() const;
-  bool ClientIsConnected(int clientIdx) const;
-  bool ServerIsRunning() const;
+  bool IsClientRunning() const;
+  bool IsServerRunning() const;
+  bool IsClientConnected(int clientIdx) const;
+  
   static int GetMaxClients();
   int GetClientIndex() const;
 
   ~NetworkManager() = default;
 
-  U64 AddConnectedToServerListener(const Action<>& listener);
-  void RemoveConnectedToServerListener(U64 handle);
-  U64 AddDisconnectedFromServerListener(const Action<>& listener);
-  void RemoveDisconnectedFromServerListener(U64 handle);
-  U64 AddClientConnectedListener(const Action<int>& listener);
-  void RemoveClientConnectedListener(U64 handle);
-  U64 AddClientDisconnectedListener(const Action<int>& listener);
-  void RemoveClientDisconnectedListener(U64 handle);
+  U64 AddConnectedToServerListener(const Action<>& listener) const;
+  void RemoveConnectedToServerListener(U64 handle) const;
+  U64 AddDisconnectedFromServerListener(const Action<>& listener) const;
+  void RemoveDisconnectedFromServerListener(U64 handle) const;
+  // int parameter in Action is ClientID
+  U64 AddClientConnectedListener(const Action<int>& listener) const;
+  void RemoveClientConnectedListener(U64 handle) const;
+  // int parameter in Action is ClientID
+  U64 AddClientDisconnectedListener(const Action<int>& listener) const;
+  void RemoveClientDisconnectedListener(U64 handle) const;
 
  private:
   NetworkManager();
@@ -159,7 +163,7 @@ int NetworkManager::GetMessageTypeId() {
 template <typename T>
 void NetworkManager::SendAllMessageFromServer(yojimbo::Message* refMessage) {
   for (int i = 0; i < GetMaxClients(); ++i) {
-    if (!ClientIsConnected(i)) {
+    if (!IsClientConnected(i)) {
       continue;
     }
 
@@ -172,7 +176,7 @@ template <typename T>
 void NetworkManager::SendAllButClientMessageFromServer(
     int clientIdx, yojimbo::Message* refMessage) {
   for (int i = 0; i < GetMaxClients(); ++i) {
-    if (!ClientIsConnected(i) || i == clientIdx) {
+    if (!IsClientConnected(i) || i == clientIdx) {
       continue;
     }
 
