@@ -80,12 +80,13 @@ void NetworkDiscovery::BroadcasterInitialize() {
          sizeof(broadcasterAddress));
   broadcasterAddress.sin_family = AF_INET;
   broadcasterAddress.sin_port = htons(PORT);
-  broadcasterAddress.sin_addr.s_addr =
-      inet_addr(SystemInfo::GetSubnetIPAddress().c_str());
+  broadcasterAddress.sin_addr.s_addr = inet_addr(
+      SystemInfo::GetIpAddressWithPrefix(CONFIG_VAL(networkConfig.ipPrefix))
+          .c_str());
 
-  int bindResult = bind(broadcasterSocket,
-                        reinterpret_cast<struct sockaddr *>(&broadcasterAddress),
-                        sizeOfAddress);
+  int bindResult = bind(
+      broadcasterSocket,
+      reinterpret_cast<struct sockaddr *>(&broadcasterAddress), sizeOfAddress);
   ASSERT(bindResult >= 0);
 
   LOG_INFO(Debug::Channel::Networking, "Broadcaster initialized");

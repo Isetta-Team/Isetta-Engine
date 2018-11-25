@@ -15,7 +15,6 @@ void Update() override;
 void OnDestroy() override;
 
 private:
-	
 inline static u_long BLOCKING = 0;
 inline static u_long NON_BLOCKING = 1;
 const int PORT = 45936;
