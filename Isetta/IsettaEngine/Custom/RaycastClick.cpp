@@ -15,21 +15,37 @@
 #include "Scene/Entity.h"
 
 namespace Isetta {
+RaycastClick::RaycastClick(bool raycastAll) : useRaycastAll{raycastAll} {}
+
 void RaycastClick::OnEnable() {
-  Input::RegisterMousePressCallback(MouseButtonCode::MOUSE_LEFT, []() {
+  Input::RegisterMousePressCallback(MouseButtonCode::MOUSE_LEFT, [&]() {
     Ray r =
         CameraComponent::Main()->ScreenPointToRay(Input::GetMousePosition());
-    RaycastHit hitInfo;
     DebugDraw::Line(r.GetOrigin(), r.GetPoint(100.0f), Color::red, 1.5f, 5);
     DebugDraw::Cube(
         CameraComponent::Main()->transform->GetLocalToWorldMatrix(),
-        Color::red, 5);
-    if (Collisions::Raycast(r, &hitInfo)) {
-      DebugDraw::Point(hitInfo.GetPoint(), Color::red, 5, 5);
-      LOG_INFO(Debug::Channel::Collisions, "Raycast Hit: %s",
-               hitInfo.GetCollider()->entity->GetName());
+                    Color::red, 5);
+
+    if (useRaycastAll) {
+      Array<RaycastHit> hits = Collisions::RaycastAll(r);
+      LOG_INFO(Debug::Channel::Collisions, "Raycast Hits:");
+      if (hits.Size() == 0) {
+        LOG_INFO(Debug::Channel::Collisions, "~~~ None");
+      } else {
+        for (auto& hit : hits) {
+          LOG_INFO(Debug::Channel::Collisions, "--- %s",
+                   hit.GetCollider()->entity->GetName().c_str());
+        }
+      }
     } else {
-      DebugDraw::Point(r.GetPoint(20), Color::brown, 5, 5);
+      RaycastHit hitInfo;
+      if (Collisions::Raycast(r, &hitInfo)) {
+        DebugDraw::Point(hitInfo.GetPoint(), Color::red, 5, 5);
+        LOG_INFO(Debug::Channel::Collisions, "Raycast Hit: %s",
+                 hitInfo.GetCollider()->entity->GetName().c_str());
+      } else {
+        DebugDraw::Point(r.GetPoint(20), Color::brown, 5, 5);
+      }
     }
   });
 }

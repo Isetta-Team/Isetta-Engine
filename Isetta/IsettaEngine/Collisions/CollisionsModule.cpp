@@ -4,6 +4,7 @@
 #include "Collisions/CollisionsModule.h"
 
 #include "Collisions/AABB.h"
+#include "Collisions/RaycastHit.h"
 #include "Core/Geometry/Ray.h"
 #include "Core/Math/Matrix3.h"
 #include "Core/Math/Vector3.h"
@@ -318,6 +319,10 @@ bool CollisionsModule::Raycast(const Ray &ray, RaycastHit *const hitInfo,
   //}
   // return hitInfo->GetDistance() < INFINITY;
   return bvTree.Raycast(ray, hitInfo, maxDistance);
+}
+Array<RaycastHit> CollisionsModule::RaycastAll(const Ray &ray, float maxDistance) {
+  PROFILE
+  return bvTree.RaycastAll(ray, maxDistance);
 }
 bool CollisionsModule::GetIgnoreLayerCollision(int layer1, int layer2) const {
   Layers::CheckLayer(layer1);

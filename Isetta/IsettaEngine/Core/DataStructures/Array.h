@@ -220,6 +220,7 @@ class ISETTA_API_DECLARE Array {
   inline void Assign(iterator begin, iterator end);
   inline void Assign(const T *begin, const T *end);
   inline void Assign(std::initializer_list<T> list);
+  inline void PushBack(value_type &&val);
   inline void PushBack(const value_type &val);
   inline void PopBack();
   inline iterator Insert(iterator position, const value_type &val);
@@ -407,6 +408,11 @@ inline void Array<T>::Assign(std::initializer_list<T> list) {
     *itThis = *it;
   }
   for (; itThis != end(); ++itThis) (*itThis).~T();
+}
+template <typename T>
+inline void Array<T>::PushBack(value_type &&val) {
+  if (size + 1 > capacity) ReservePow2(size + 1);
+  data[size++] = std::move(val);
 }
 template <typename T>
 inline void Array<T>::PushBack(const value_type &val) {

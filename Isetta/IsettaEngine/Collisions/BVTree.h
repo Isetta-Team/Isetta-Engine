@@ -53,6 +53,9 @@ class BVTree {
                float maxDistance) const;
   bool Raycast(Node* node, const Ray& ray, class RaycastHit* hitInfo,
                float maxDistance) const;
+  Array<RaycastHit> RaycastAll(const Ray& ray, float maxDistance) const;
+  void RaycastAll(Node* node, Array<RaycastHit>* hits, const Ray& ray,
+                               float maxDistance) const;
 
   const CollisionUtil::ColliderPairSet& GetCollisionPairs();
   Array<Collider*> GetPossibleColliders(class Collider* collider) const;
