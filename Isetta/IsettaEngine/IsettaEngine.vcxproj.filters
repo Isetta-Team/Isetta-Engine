@@ -370,14 +370,17 @@
     <ClCompile Include="Custom\LevelLoader.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
-    <ClCompile Include="Custom\GameMgtLevel\GameMgtTestComp.cpp">
-      <Filter>Custom\GameMgtLevel</Filter>
-    </ClCompile>
     <ClCompile Include="Core\SystemInfo.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Core\EngineResource.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\GameMgtLevel\NetworkTestComp.cpp">
+      <Filter>Custom\GameMgtLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Networking\NetworkDiscovery.cpp">
+      <Filter>Networking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -881,6 +884,12 @@
     </ClInclude>
     <ClInclude Include="Core\SystemInfo.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\GameMgtLevel\NetworkTestComp.h">
+      <Filter>Custom\GameMgtLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Networking\NetworkDiscovery.h">
+      <Filter>Networking</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
