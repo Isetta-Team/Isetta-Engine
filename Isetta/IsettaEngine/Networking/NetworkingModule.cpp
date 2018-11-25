@@ -237,17 +237,30 @@ void NetworkingModule::ProcessServerToClientMessages() {
 
 void NetworkingModule::Connect(const char* serverAddress, int serverPort,
                                Action<bool> callback) {
+  if (IsClientRunning()) {
+    LOG_ERROR(Debug::Channel::Networking,
+              "Already running as client. Cannot StartClient again");
+    return;
+  }
+
   yojimbo::Address address(serverAddress, serverPort);
   if (!address.IsValid()) {
+    if (IsClientRunning()) {
+    LOG_ERROR(Debug::Channel::Networking,
+              "IP Address for StartClient is invalid");
+    return;
+  }
     return;
   }
 
   client->InsecureConnect(privateKey, clientId, address, callback);
+  onConnectedToServer.Invoke();
 }
 
 void NetworkingModule::Disconnect() {
   if (client->IsConnected()) {
     client->Disconnect();
+    onDisconnectedFromServer.Invoke();
   } else if (!client->IsConnecting()) {
     return;
   } else {
@@ -258,8 +271,9 @@ void NetworkingModule::Disconnect() {
 }
 
 void NetworkingModule::CreateServer(const char* address, int port) {
-  if (server && server->IsRunning()) {
-    throw std::exception(
+  if (IsServerRunning()) {
+    LOG_ERROR(
+        Debug::Channel::Networking,
         "NetworkingModule::CreateServer => Cannot create a server while one is "
         "already running.");
   }
@@ -285,7 +299,7 @@ void NetworkingModule::CreateServer(const char* address, int port) {
 }
 
 void NetworkingModule::CloseServer() {
-  if (server == nullptr || !server->IsRunning()) {
+  if (!IsServerRunning()) {
     throw std::exception(
         "NetworkingModule::CloseServer() Cannot close the server if it is not "
         "running.");
@@ -309,6 +323,18 @@ bool NetworkingModule::IsHost() const {
 
 bool NetworkingModule::IsServer() const {
   return !client->IsConnected() && server != nullptr && server->IsRunning();
+}
+
+bool NetworkingModule::IsClientRunning() const {
+  return client != nullptr && client->IsConnected();
+}
+
+bool NetworkingModule::IsServerRunning() const {
+  return server != nullptr && server->IsRunning();
+}
+
+bool NetworkingModule::IsClientConnected(const int clientId) const {
+  return IsServerRunning() && server->IsClientConnected(clientId);
 }
 
 }  // namespace Isetta

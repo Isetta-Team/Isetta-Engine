@@ -207,6 +207,11 @@ class NetworkingModule {
   bool IsClient() const;
   bool IsHost() const;
   bool IsServer() const;
+  
+  bool IsClientRunning() const;
+  bool IsServerRunning() const;
+  bool IsClientConnected(int clientId) const;
+
 
   // Other
 

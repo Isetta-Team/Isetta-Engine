@@ -27,16 +27,16 @@ void NetworkManager::SendMessageFromServer(const int clientIdx,
   networkingModule->AddServerToClientMessage(clientIdx, message);
 }
 
-bool NetworkManager::LocalClientIsConnected() const {
-  return networkingModule->client->IsConnected();
+bool NetworkManager::IsClientRunning() const {
+  return networkingModule->IsClientRunning();
 }
 
-bool NetworkManager::ClientIsConnected(const int clientIdx) const {
-  return networkingModule->server->IsClientConnected(clientIdx);
+bool NetworkManager::IsServerRunning() const {
+  return networkingModule->IsServerRunning();
 }
 
-bool NetworkManager::ServerIsRunning() const {
-  return networkingModule->server && networkingModule->server->IsRunning();
+bool NetworkManager::IsClientConnected(const int clientIdx) const {
+  return networkingModule->IsClientConnected(clientIdx);
 }
 
 int NetworkManager::GetMaxClients() {
@@ -47,14 +47,55 @@ int NetworkManager::GetClientIndex() const {
   return networkingModule->client->GetClientIndex();
 }
 
+U64 NetworkManager::AddConnectedToServerListener(
+    const Action<>& listener) const {
+  return networkingModule->onConnectedToServer.Subscribe(listener);
+}
+
+void NetworkManager::RemoveConnectedToServerListener(const U64 handle) const {
+  networkingModule->onConnectedToServer.Unsubscribe(handle);
+}
+
+U64 NetworkManager::AddDisconnectedFromServerListener(
+    const Action<>& listener) const {
+  return networkingModule->onDisconnectedFromServer.Subscribe(listener);
+}
+
+void NetworkManager::RemoveDisconnectedFromServerListener(
+    const U64 handle) const {
+  networkingModule->onDisconnectedFromServer.Unsubscribe(handle);
+}
+
+U64 NetworkManager::AddClientConnectedListener(
+    const Action<int>& listener) const {
+  return networkingModule->onClientConnected.Subscribe(listener);
+}
+
+void NetworkManager::RemoveClientConnectedListener(const U64 handle) const {
+  networkingModule->onClientConnected.Unsubscribe(handle);
+}
+
+U64 NetworkManager::AddClientDisconnectedListener(
+    const Action<int>& listener) const {
+  return networkingModule->onClientDisconnected.Subscribe(listener);
+}
+
+void NetworkManager::RemoveClientDisconnectedListener(const U64 handle) const {
+  networkingModule->onClientDisconnected.Unsubscribe(handle);
+}
+
 void NetworkManager::StartServer(std::string_view serverIP) const {
   networkingModule->CreateServer(serverIP.data(), GetServerPort());
 }
 
-void NetworkManager::StopServer() const { networkingModule->CloseServer(); }
+void NetworkManager::StopServer() const {
+  networkingModule->CloseServer();
+}
 
 void NetworkManager::StartClient(std::string_view serverIP,
                                  const Action<bool>& onStarted) const {
+  if (IsClientRunning()) {
+  }
   networkingModule->Connect(serverIP.data(), GetServerPort(), onStarted);
 }
 
@@ -71,17 +112,11 @@ void NetworkManager::StopHost() const {
   networkingModule->CloseServer();
 }
 
-bool NetworkManager::IsClient() const {
-  return networkingModule->IsClient();
-}
+bool NetworkManager::IsClient() const { return networkingModule->IsClient(); }
 
-bool NetworkManager::IsHost() const {
-  return networkingModule->IsHost();
-}
+bool NetworkManager::IsHost() const { return networkingModule->IsHost(); }
 
-bool NetworkManager::IsServer() const {
-  return networkingModule->IsServer();
-}
+bool NetworkManager::IsServer() const { return networkingModule->IsServer(); }
 
 std::list<std::pair<U16, Action<yojimbo::Message*>>>
 NetworkManager::GetClientFunctions(const int type) {
@@ -119,7 +154,7 @@ NetworkId* NetworkManager::GetNetworkId(const U32 id) {
 }
 
 U32 NetworkManager::CreateNetworkId(NetworkId* networkId) {
-  if (!ServerIsRunning()) {
+  if (!IsServerRunning()) {
     throw std::exception("Cannot create a new network id on a client");
   }
   U32 netId = networkIds.GetHandle();
