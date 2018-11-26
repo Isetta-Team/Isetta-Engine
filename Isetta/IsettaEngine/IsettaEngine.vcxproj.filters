@@ -876,9 +876,6 @@
     <ClInclude Include="Core\EngineResource.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Custom\GameMgtLevel\GameMgtTestComp.h">
-      <Filter>Custom\GameMgtLevel</Filter>
-    </ClInclude>
     <ClInclude Include="BuiltinMessages.h">
       <Filter>Networking</Filter>
     </ClInclude>
@@ -889,6 +886,9 @@
       <Filter>Custom\GameMgtLevel</Filter>
     </ClInclude>
     <ClInclude Include="Networking\NetworkDiscovery.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Networking\ClientInfo.h">
       <Filter>Networking</Filter>
     </ClInclude>
   </ItemGroup>

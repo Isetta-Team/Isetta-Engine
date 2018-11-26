@@ -10,6 +10,7 @@
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
+#include "Core/SystemInfo.h"
 #include "Networking/BuiltinMessages.h"
 #include "Networking/NetworkManager.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
@@ -119,7 +120,7 @@ void NetworkingModule::Update(float deltaTime) {
     for (int i = 0; i < maxClients; ++i) {
       if (lastFrameClientConnected[i] && !IsClientConnected(i)) {
         // client just disconnected
-        onClientDisconnected.Invoke(i);
+        onClientDisconnected.Invoke(clientInfos[i]);
       }
       lastFrameClientConnected[i] = IsClientConnected(i);
     }
@@ -283,10 +284,15 @@ void NetworkingModule::Connect(const char* serverAddress, int serverPort,
       callback(success);
     }
     if (success) {
-      NetworkManager::Instance().SendMessageFromClient(
-          NetworkManager::Instance()
-              .GenerateMessageFromClient<ClientConnectedMessage>());
-      onConnectedToServer.Invoke();
+      auto message = NetworkManager::Instance()
+                         .GenerateMessageFromClient<ClientConnectedMessage>();
+      strcpy_s(message->ip, SystemInfo::GetIpAddressWithPrefix(
+                                CONFIG_VAL(networkConfig.ipPrefix))
+                                .c_str());
+      strcpy_s(message->machineName, SystemInfo::GetMachineName().c_str());
+      NetworkManager::Instance().SendMessageFromClient(message);
+
+      this->onConnectedToServer.Invoke();
       this->lastFrameClientRunning = true;
     } else {
       LOG_ERROR(Debug::Channel::Networking,
@@ -340,6 +346,8 @@ void NetworkingModule::CreateServer(const char* address, int port) {
   for (int i = 0; i < maxClients; ++i) {
     lastFrameClientConnected[i] = false;
   }
+
+  clientInfos = MemoryManager::NewArrOnStack<ClientInfo>(maxClients);
 }
 
 void NetworkingModule::CloseServer() {
@@ -383,8 +391,15 @@ bool NetworkingModule::IsClientConnected(const int clientIndex) const {
 
 void NetworkingModule::RegisterBuiltinCallbacks() {
   NetworkManager::Instance().RegisterServerCallback<ClientConnectedMessage>(
-      [this](const int clientIndex, yojimbo::Message*) {
-        this->onClientConnected.Invoke(clientIndex);
+      [this](const int clientIndex, yojimbo::Message* inMessage) {
+        const ClientConnectedMessage* message =
+            reinterpret_cast<const ClientConnectedMessage*>(inMessage);
+        ClientInfo info;
+        info.ip = message->ip;
+        info.machineName = message->machineName;
+        info.clientIndex = clientIndex;
+        clientInfos[clientIndex] = info;
+        this->onClientConnected.Invoke(info);
       });
 }
 
