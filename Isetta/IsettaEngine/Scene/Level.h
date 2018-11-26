@@ -41,6 +41,8 @@ class ISETTA_API Level {
   void FixedUpdate();
   void LateUpdate();
 
+  bool isLevelLoaded = false;
+
   TemplatePoolAllocator<Entity> pool;
 
   friend class Entity;
@@ -65,5 +67,6 @@ class ISETTA_API Level {
 
   virtual void OnLevelLoad() = 0;
   virtual void OnLevelUnload() {}
+  inline bool IsLevelLoaded() const;
 };
 }  // namespace Isetta

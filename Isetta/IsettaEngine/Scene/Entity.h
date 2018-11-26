@@ -82,6 +82,8 @@ class ISETTA_API_DECLARE Entity {
   void SetActive(bool inActive);
   bool GetActive() const;
 
+  inline bool IsMoveable() const;
+
   template <typename T, typename... Args>
   T *AddComponent(Args &&... args);
   template <typename T, bool IsActive, typename... Args>

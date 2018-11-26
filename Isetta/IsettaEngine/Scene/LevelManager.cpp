@@ -29,6 +29,7 @@ void LevelManager::LoadLevel() {
     LOG("Loading......%s", loadedLevel->GetName().c_str());
     loadedLevel->OnLevelLoad();
     LOG("Loading Complete");
+    loadedLevel->isLevelLoaded = true;
   }
 }
 
