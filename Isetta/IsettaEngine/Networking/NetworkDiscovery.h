@@ -15,22 +15,22 @@ void Update() override;
 void OnDestroy() override;
 
 private:
-const Size BUFFER_SIZE = 2048;
+inline static u_long BLOCKING = 0;
+inline static u_long NON_BLOCKING = 1;
 const int PORT = 45936;
+const Size BUFFER_SIZE = 2048;
 
-// Server stuff
-void ServerInitialize();
-void ServerUpdate();
-struct sockaddr_in myAddress {}; /* our address */
-struct sockaddr_in remoteAddress {};
-int addressLength = sizeof(myAddress); /* length of addresses */
-int serverSocket{};                    /* our socket */
-char buf[2048]{};                      /* receive buffer */
+char buf[2048]{};
 
-// Client stuff
-void ClientInitialize();
-void SendMessageToServer(std::string_view message);
-int clientSocket{};
-struct sockaddr_in clientAddress {};
+// Listener stuff
+void ListenerInitialize();
+void ListenerUpdate();
+int sizeOfAddress = sizeof(struct sockaddr_in);
+int listenerSocket{};
+
+// Broadcaster stuff
+void BroadcasterInitialize();
+void BroadcastMessage(std::string_view message);
+int broadcasterSocket{};
 END_COMPONENT(NetworkDiscovery, Component)
 }  // namespace Isetta

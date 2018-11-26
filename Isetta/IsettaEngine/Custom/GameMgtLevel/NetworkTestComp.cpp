@@ -2,9 +2,9 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Custom/GameMgtLevel/NetworkTestComp.h"
+#include "Core/Config/Config.h"
 #include "Core/IsettaCore.h"
 #include "Core/SystemInfo.h"
-#include "Networking/BuiltinMessages.h"
 #include "Networking/NetworkManager.h"
 
 namespace Isetta {
@@ -56,7 +56,9 @@ void NetworkTestComp::GuiUpdate() {
                                   SystemInfo::GetSystemUserName().c_str()));
         GUI::Text(
             RectTransform{Math::Rect{5, 60, 200, 50}},
-            Util::StrFormat("IP: %s", SystemInfo::GetIPAddresses()[1].c_str()));
+            Util::StrFormat("IP: %s", SystemInfo::GetIpAddressWithPrefix(
+                                          CONFIG_VAL(networkConfig.ipPrefix))
+                                          .c_str()));
       },
       &isOpen);
 }

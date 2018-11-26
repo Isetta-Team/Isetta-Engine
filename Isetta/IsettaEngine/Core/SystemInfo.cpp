@@ -7,15 +7,20 @@
 
 namespace Isetta {
 
-// Adapted from: https://tangentsoft.net/wskfaq/examples/ipaddr.html
+std::string SystemInfo::GetIpAddressWithPrefix(const std::string_view prefix) {
+  for (auto ipAddress : GetIPAddresses()) {
+    if (ipAddress.find(prefix) == 0) {
+      return ipAddress;
+    }
+  }
+  LOG_ERROR(Debug::Channel::Networking,
+            "Did find a good subnet ip that starts with %s", prefix.data());
+  return std::string{};
+}
+
+// Reference: https://tangentsoft.net/wskfaq/examples/ipaddr.html
 Array<std::string> SystemInfo::GetIPAddresses() {
   Array<std::string> ipAddresses;
-
-  WSAData wsaData{};
-  if (WSAStartup(MAKEWORD(1, 1), &wsaData) != 0) {
-    LOG_ERROR(Debug::Channel::Networking, "Cannot get IP info.");
-    return ipAddresses;
-  }
 
   struct hostent* hostInfo = gethostbyname(GetMachineName().c_str());
   if (hostInfo == nullptr) {
@@ -29,7 +34,6 @@ Array<std::string> SystemInfo::GetIPAddresses() {
     ipAddresses.PushBack(std::string{inet_ntoa(address)});
   }
 
-  WSACleanup();
   return ipAddresses;
 }
 

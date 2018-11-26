@@ -15,19 +15,21 @@
 #include "Scene/Entity.h"
 
 namespace Isetta {
-RaycastClick::RaycastClick(bool raycastAll) : useRaycastAll{raycastAll} {}
+RaycastClick::RaycastClick(bool raycastAll, float maxDistance)
+    : useRaycastAll{raycastAll}, maxRayDistance{maxDistance} {}
 
 void RaycastClick::OnEnable() {
   Input::RegisterMousePressCallback(MouseButtonCode::MOUSE_LEFT, [&]() {
     Ray r =
         CameraComponent::Main()->ScreenPointToRay(Input::GetMousePosition());
-    DebugDraw::Line(r.GetOrigin(), r.GetPoint(100.0f), Color::red, 1.5f, 5);
-    DebugDraw::Cube(
-        CameraComponent::Main()->transform->GetLocalToWorldMatrix(),
+    DebugDraw::Line(r.GetOrigin(),
+                    r.GetPoint(maxRayDistance <= 0 ? 100.0f : maxRayDistance),
+                    Color::red, 1.5f, 5);
+    DebugDraw::Cube(CameraComponent::Main()->transform->GetLocalToWorldMatrix(),
                     Color::red, 5);
 
     if (useRaycastAll) {
-      Array<RaycastHit> hits = Collisions::RaycastAll(r);
+      Array<RaycastHit> hits = Collisions::RaycastAll(r, maxRayDistance);
       LOG_INFO(Debug::Channel::Collisions, "Raycast Hits:");
       if (hits.Size() == 0) {
         LOG_INFO(Debug::Channel::Collisions, "~~~ None");
@@ -39,7 +41,7 @@ void RaycastClick::OnEnable() {
       }
     } else {
       RaycastHit hitInfo;
-      if (Collisions::Raycast(r, &hitInfo)) {
+      if (Collisions::Raycast(r, &hitInfo, maxRayDistance)) {
         DebugDraw::Point(hitInfo.GetPoint(), Color::red, 5, 5);
         LOG_INFO(Debug::Channel::Collisions, "Raycast Hit: %s",
                  hitInfo.GetCollider()->entity->GetName().c_str());

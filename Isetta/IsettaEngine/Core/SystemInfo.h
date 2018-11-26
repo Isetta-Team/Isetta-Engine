@@ -3,12 +3,13 @@
  */
 #pragma once
 #include <string>
-#include "ISETTA_API.h"
 #include "DataStructures/Array.h"
+#include "ISETTA_API.h"
 
 namespace Isetta {
 class ISETTA_API SystemInfo {
  public:
+  static std::string GetIpAddressWithPrefix(std::string_view prefix);
   static Array<std::string> GetIPAddresses();
   static std::string GetMachineName();
   static std::string GetSystemUserName();

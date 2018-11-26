@@ -11,85 +11,98 @@
 namespace Isetta {
 
 void NetworkDiscovery::Start() {
-  ServerInitialize();
-  ClientInitialize();
+  ListenerInitialize();
+  BroadcasterInitialize();
+
   Input::RegisterKeyPressCallback(KeyCode::NUM1, [this]() {
-    this->SendMessageToServer("Hello from the other side");
+    this->BroadcastMessage("Hello from the other side");
   });
 }
 
-void NetworkDiscovery::Update() { ServerUpdate(); }
+void NetworkDiscovery::Update() { ListenerUpdate(); }
 
 void NetworkDiscovery::OnDestroy() {
-  closesocket(serverSocket);
-  closesocket(clientSocket);
+  closesocket(listenerSocket);
+  closesocket(broadcasterSocket);
 }
 
-void NetworkDiscovery::ServerInitialize() {
-  if ((serverSocket = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-    LOG_ERROR(Debug::Channel::Networking, "cannot create socket\n");
-    return;
+void NetworkDiscovery::ListenerInitialize() {
+  listenerSocket = socket(AF_INET, SOCK_DGRAM, 0);
+  ASSERT(listenerSocket >= 0);
+
+  int result = ioctlsocket(listenerSocket, FIONBIO, &NON_BLOCKING);
+  ASSERT(result == NO_ERROR);
+
+  char broadcast = '1';
+  if (setsockopt(listenerSocket, SOL_SOCKET, SO_BROADCAST, &broadcast,
+                 sizeof(broadcast)) < 0) {
+    LOG_ERROR(Debug::Channel::Networking, "Error in setting Broadcast option");
   }
 
-  memset(reinterpret_cast<char *>(&myAddress), 0, sizeof(myAddress));
-  myAddress.sin_family = AF_INET;
-  myAddress.sin_addr.s_addr = htonl(INADDR_ANY);
-  myAddress.sin_port = htons(PORT);
+  struct sockaddr_in listenerAddress {};
+  memset(reinterpret_cast<char *>(&listenerAddress), 0,
+         sizeof(listenerAddress));
+  listenerAddress.sin_family = AF_INET;
+  listenerAddress.sin_addr.s_addr = htonl(INADDR_ANY);
+  listenerAddress.sin_port = htons(PORT);
 
-  if (bind(serverSocket, reinterpret_cast<struct sockaddr *>(&myAddress),
-           sizeof(myAddress)) < 0) {
-    LOG_ERROR(Debug::Channel::Networking, "bind failed");
-    return;
-  }
+  int bindResult = bind(listenerSocket,
+                        reinterpret_cast<struct sockaddr *>(&listenerAddress),
+                        sizeOfAddress);
+  ASSERT(bindResult >= 0);
 
-  // If iMode = 0, blocking is enabled;
-  // If iMode != 0, non-blocking mode is enabled.
-  u_long mode = 1;
-  int result = ioctlsocket(serverSocket, FIONBIO, &mode);
-  if (result != NO_ERROR) {
-    LOG_ERROR(Debug::Channel::Networking,
-              "Set socket to non-blocking failed: %ld\n", result);
-  }
-
-  LOG_INFO(Debug::Channel::Networking, "Server initialized");
+  LOG_INFO(Debug::Channel::Networking, "Listener initialized");
 }
 
-void NetworkDiscovery::ServerUpdate() {
-  int msgLength = recvfrom(serverSocket, buf, BUFFER_SIZE, 0,
-                           reinterpret_cast<struct sockaddr *>(&remoteAddress),
-                           &addressLength);
-
+void NetworkDiscovery::ListenerUpdate() {
+  struct sockaddr_in fromAddress;
+  int msgLength = recvfrom(listenerSocket, buf, BUFFER_SIZE, 0,
+                           reinterpret_cast<struct sockaddr *>(&fromAddress),
+                           &sizeOfAddress);
   if (msgLength > 0) {
     buf[msgLength] = 0;
     LOG_INFO(Debug::Channel::Networking, "Received message from %s {%s}",
-             inet_ntoa(remoteAddress.sin_addr), buf);
+             inet_ntoa(fromAddress.sin_addr), buf);
   }
 }
 
-void NetworkDiscovery::ClientInitialize() {
-  clientSocket = socket(AF_INET, SOCK_DGRAM, 0);
+void NetworkDiscovery::BroadcasterInitialize() {
+  broadcasterSocket = socket(AF_INET, SOCK_DGRAM, 0);
+  int result = ioctlsocket(broadcasterSocket, FIONBIO, &NON_BLOCKING);
+  ASSERT(result == NO_ERROR);
 
-  struct hostent *hp = gethostbyname(SystemInfo::GetMachineName().c_str());
-  memset(reinterpret_cast<char *>(&clientAddress), 0, sizeof(clientAddress));
-  clientAddress.sin_family = AF_INET;
-  clientAddress.sin_port = htons(PORT);
+  char broadcastPermission = '1';
+  setsockopt(broadcasterSocket, SOL_SOCKET, SO_BROADCAST, &broadcastPermission,
+             sizeof(broadcastPermission));
 
-  memcpy(static_cast<void *>(&clientAddress.sin_addr), hp->h_addr_list[1],
-         hp->h_length);
+  struct sockaddr_in broadcasterAddress {};
+  memset(reinterpret_cast<char *>(&broadcasterAddress), 0,
+         sizeof(broadcasterAddress));
+  broadcasterAddress.sin_family = AF_INET;
+  broadcasterAddress.sin_port = htons(PORT);
+  broadcasterAddress.sin_addr.s_addr = inet_addr(
+      SystemInfo::GetIpAddressWithPrefix(CONFIG_VAL(networkConfig.ipPrefix))
+          .c_str());
 
-  u_long mode = 1;
-  int result = ioctlsocket(serverSocket, FIONBIO, &mode);
-  if (result != NO_ERROR) {
-    LOG_ERROR(Debug::Channel::Networking,
-              "Set socket to non-blocking failed: %ld\n", result);
-  }
-  LOG_INFO(Debug::Channel::Networking, "Client initialized");
+  int bindResult = bind(
+      broadcasterSocket,
+      reinterpret_cast<struct sockaddr *>(&broadcasterAddress), sizeOfAddress);
+  ASSERT(bindResult >= 0);
+
+  LOG_INFO(Debug::Channel::Networking, "Broadcaster initialized");
 }
 
-void NetworkDiscovery::SendMessageToServer(std::string_view message) {
+void NetworkDiscovery::BroadcastMessage(std::string_view message) {
+  struct sockaddr_in targetAddress;
+  memset(reinterpret_cast<char *>(&targetAddress), 0, sizeOfAddress);
+  targetAddress.sin_family = AF_INET;
+  targetAddress.sin_port = htons(PORT);
+  targetAddress.sin_addr.s_addr = inet_addr("255.255.255.255");
+
   int sendResult = sendto(
-      clientSocket, message.data(), strlen(message.data()), 0,
-      reinterpret_cast<struct sockaddr *>(&clientAddress), addressLength);
+      broadcasterSocket, message.data(), strlen(message.data()), 0,
+      reinterpret_cast<struct sockaddr *>(&targetAddress), sizeOfAddress);
+
   if (sendResult < 0) {
     LOG_ERROR(Debug::Channel::Networking, "Send failed");
   } else {

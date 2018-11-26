@@ -25,7 +25,8 @@ void BoxCollider::Update() {
 
 bool BoxCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
                           float maxDistance) {
-  float tmin = -INFINITY, tmax = maxDistance > 0 ? maxDistance : INFINITY;
+  maxDistance = maxDistance <= 0 ? INFINITY : maxDistance;
+  float tmin = -INFINITY, tmax = INFINITY;
   Math::Vector3 e = GetWorldExtents();
   Math::Vector3 o = transform->LocalPosFromWorldPos(ray.GetOrigin());
   Math::Vector3 d = transform->LocalDirFromWorldDir(ray.GetDirection());
@@ -42,7 +43,7 @@ bool BoxCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
   tmax =
       Math::Util::Min({Math::Util::Max(t[0], t[1]), Math::Util::Max(t[2], t[3]),
                        Math::Util::Max(t[4], t[5])});
-  if (tmax < 0 || tmin > tmax) return false;
+  if (tmax < 0 || tmin > tmax || tmax > maxDistance) return false;
   if (tmin < 0) tmin = tmax;
 
   Math::Vector3 pt = transform->WorldPosFromLocalPos(o) +

@@ -300,7 +300,6 @@ void NetworkingModule::Connect(const char* serverAddress, int serverPort,
 void NetworkingModule::Disconnect() const {
   if (client->IsConnected()) {
     client->Disconnect();
-    onDisconnectedFromServer.Invoke();
   } else if (!client->IsConnecting()) {
     return;
   } else {
@@ -388,18 +387,6 @@ void NetworkingModule::RegisterBuiltinCallbacks() {
       [this](const int clientIndex, yojimbo::Message*) {
         this->onClientConnected.Invoke(clientIndex);
       });
-}
-
-bool NetworkingModule::IsClientRunning() const {
-  return client != nullptr && client->IsConnected();
-}
-
-bool NetworkingModule::IsServerRunning() const {
-  return server != nullptr && server->IsRunning();
-}
-
-bool NetworkingModule::IsClientConnected(const int clientId) const {
-  return IsServerRunning() && server->IsClientConnected(clientId);
 }
 
 }  // namespace Isetta
