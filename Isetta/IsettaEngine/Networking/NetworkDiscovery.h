@@ -16,14 +16,17 @@ void OnDestroy() override;
 
 void StartBroadcasting(const std::string &data, float duration, float interval);
 void StopBroadcasting();
+bool IsBroadcasting() const;
 
 void StartListening();
 void StopListening();
+bool IsListening() const;
 
 U64 AddOnMessageReceivedListener(
     const std::function<void(const char *data, const char *fromIP)>
         &onMessageReceived);
 void RemoveOnMessageReceivedListener(U64 handle);
+void RemoveAllOnMessageReceivedListeners();
 
 private:
 std::string broadcastContent{};
@@ -46,15 +49,12 @@ int sizeOfAddress = sizeof(struct sockaddr_in);
 void CreateListenerSocket();
 void CloseListenerSocket();
 void ListenToBroadcasts();
-bool IsListenerRunning() const;
 int listenerSocket{-1};
 
 // Broadcaster stuff
 void CreateBroadcasterSocket();
 void CloseBroadcasterSocket();
 void BroadcastMessage(std::string_view message) const;
-bool IsBroadcasterRunning() const;
 int broadcasterSocket{-1};
-
 END_COMPONENT(NetworkDiscovery, Component)
 }  // namespace Isetta

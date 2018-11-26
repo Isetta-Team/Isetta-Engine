@@ -11,11 +11,11 @@
 namespace Isetta {
 
 void NetworkDiscovery::FixedUpdate() {
-  if (IsListenerRunning()) {
+  if (IsListening()) {
     ListenToBroadcasts();
   }
 
-  if (IsBroadcasterRunning()) {
+  if (IsBroadcasting()) {
     if (broadcastElapsedTotal <= broadcastDuration) {
       if (broadcastElapsed >= broadcastInterval) {
         BroadcastMessage(broadcastContent);
@@ -30,8 +30,8 @@ void NetworkDiscovery::FixedUpdate() {
 }
 
 void NetworkDiscovery::OnDestroy() {
-  if (IsListenerRunning()) CloseListenerSocket();
-  if (IsBroadcasterRunning()) CloseBroadcasterSocket();
+  if (IsListening()) CloseListenerSocket();
+  if (IsBroadcasting()) CloseBroadcasterSocket();
 }
 
 void NetworkDiscovery::StartBroadcasting(const std::string &data,
@@ -43,7 +43,7 @@ void NetworkDiscovery::StartBroadcasting(const std::string &data,
     return;
   }
 
-  if (IsBroadcasterRunning()) {
+  if (IsBroadcasting()) {
     LOG_WARNING(
         Debug::Channel::Networking,
         "There was another broadcaster running, terminated the old one");
@@ -59,7 +59,7 @@ void NetworkDiscovery::StartBroadcasting(const std::string &data,
 }
 
 void NetworkDiscovery::StopBroadcasting() {
-  if (!IsBroadcasterRunning()) {
+  if (!IsBroadcasting()) {
     LOG_WARNING(Debug::Channel::Networking,
                 "Broadcaster is not running, there's nothing to close");
     return;
@@ -73,8 +73,12 @@ void NetworkDiscovery::StopBroadcasting() {
   broadcastElapsedTotal = 0.f;
 }
 
+bool NetworkDiscovery::IsBroadcasting() const {
+  return broadcasterSocket != -1;
+}
+
 void NetworkDiscovery::StartListening() {
-  if (IsListenerRunning()) {
+  if (IsListening()) {
     LOG_WARNING(Debug::Channel::Networking, "Listener already running");
     return;
   }
@@ -91,8 +95,12 @@ void NetworkDiscovery::RemoveOnMessageReceivedListener(const U64 handle) {
   onMsgReceived.Unsubscribe(handle);
 }
 
+void NetworkDiscovery::RemoveAllOnMessageReceivedListeners() {
+  onMsgReceived.Clear();
+}
+
 void NetworkDiscovery::StopListening() {
-  if (!IsListenerRunning()) {
+  if (!IsListening()) {
     LOG_WARNING(Debug::Channel::Networking,
                 "Listener is not running, nothing to close");
     return;
@@ -100,9 +108,7 @@ void NetworkDiscovery::StopListening() {
   CloseListenerSocket();
 }
 
-bool NetworkDiscovery::IsListenerRunning() const {
-  return listenerSocket != -1;
-}
+bool NetworkDiscovery::IsListening() const { return listenerSocket != -1; }
 
 void NetworkDiscovery::CreateListenerSocket() {
   listenerSocket = socket(AF_INET, SOCK_DGRAM, 0);
@@ -186,7 +192,7 @@ void NetworkDiscovery::CloseBroadcasterSocket() {
 }
 
 void NetworkDiscovery::BroadcastMessage(std::string_view message) const {
-  ASSERT(IsBroadcasterRunning());
+  ASSERT(IsBroadcasting());
   struct sockaddr_in targetAddress {};
   memset(reinterpret_cast<char *>(&targetAddress), 0, sizeOfAddress);
   targetAddress.sin_family = AF_INET;
@@ -200,9 +206,5 @@ void NetworkDiscovery::BroadcastMessage(std::string_view message) const {
   if (sendResult < 0) {
     LOG_ERROR(Debug::Channel::Networking, "Send failed");
   }
-}
-
-bool NetworkDiscovery::IsBroadcasterRunning() const {
-  return broadcasterSocket != -1;
 }
 }  // namespace Isetta
