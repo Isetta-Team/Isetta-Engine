@@ -54,11 +54,11 @@ void RegisterExampleMessageFunctions() {
               LOG(Debug::Channel::Networking,
                   "Server says we should stop the animation!");
             }
-            if (handleMessage->handle == 2) {
-              auto audio =
-                  AudioSource(AudioClip::Load("Sound/gunshot.aiff", "Gunshot"));
-              audio.Play();
-            }
+            // if (handleMessage->handle == 2) {
+            //   auto audio =
+            //       AudioSource(AudioClip::Load("Sound/gunshot.aiff", "Gunshot"));
+            //   audio.Play();
+            // }
           });
 
   exampleServerHandleId =
