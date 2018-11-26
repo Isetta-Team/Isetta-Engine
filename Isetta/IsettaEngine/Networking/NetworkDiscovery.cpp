@@ -6,32 +6,112 @@
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
 #include "Core/SystemInfo.h"
-#include "Input/Input.h"
+#include "Core/Time/Time.h"
 
 namespace Isetta {
 
-void NetworkDiscovery::Start() {
-  ListenerInitialize();
-  BroadcasterInitialize();
+void NetworkDiscovery::FixedUpdate() {
+  if (IsListenerRunning()) {
+    ListenToBroadcasts();
+  }
 
-  Input::RegisterKeyPressCallback(KeyCode::NUM1, [this]() {
-    this->BroadcastMessage("Hello from the other side");
-  });
+  if (IsBroadcasterRunning()) {
+    if (broadcastElapsedTotal <= broadcastDuration) {
+      if (broadcastElapsed >= broadcastInterval) {
+        BroadcastMessage(broadcastContent);
+        broadcastElapsed -= broadcastInterval;
+      }
+      broadcastElapsed += Time::GetFixedDeltaTime();
+      broadcastElapsedTotal += Time::GetFixedDeltaTime();
+    } else {
+      StopBroadcasting();
+    }
+  }
 }
-
-void NetworkDiscovery::Update() { ListenerUpdate(); }
 
 void NetworkDiscovery::OnDestroy() {
-  closesocket(listenerSocket);
-  closesocket(broadcasterSocket);
+  if (IsListenerRunning()) CloseListenerSocket();
+  if (IsBroadcasterRunning()) CloseBroadcasterSocket();
 }
 
-void NetworkDiscovery::ListenerInitialize() {
+void NetworkDiscovery::StartBroadcasting(const std::string &data,
+                                         const float duration,
+                                         const float interval) {
+  if (data.length() + 1 >= BUFFER_SIZE) {
+    LOG_ERROR(Debug::Channel::Networking,
+              "byteLength too big, consider broadcasting smaller messages");
+    return;
+  }
+
+  if (IsBroadcasterRunning()) {
+    LOG_WARNING(
+        Debug::Channel::Networking,
+        "There was another broadcaster running, terminated the old one");
+    CloseBroadcasterSocket();
+  }
+
+  CreateBroadcasterSocket();
+  broadcastContent = data;
+  broadcastDuration = duration;
+  broadcastInterval = interval;
+  broadcastElapsed = interval;
+  broadcastElapsedTotal = 0.f;
+}
+
+void NetworkDiscovery::StopBroadcasting() {
+  if (!IsBroadcasterRunning()) {
+    LOG_WARNING(Debug::Channel::Networking,
+                "Broadcaster is not running, there's nothing to close");
+    return;
+  }
+
+  CloseBroadcasterSocket();
+  broadcastContent.clear();
+  broadcastDuration = 0;
+  broadcastInterval = 0;
+  broadcastElapsed = 0.f;
+  broadcastElapsedTotal = 0.f;
+}
+
+void NetworkDiscovery::StartListening() {
+  if (IsListenerRunning()) {
+    LOG_WARNING(Debug::Channel::Networking, "Listener already running");
+    return;
+  }
+  CreateListenerSocket();
+}
+
+U64 NetworkDiscovery::AddOnMessageReceivedListener(
+    const std::function<void(const char *data, const char *fromIP)>
+        &onMessageReceived) {
+  return onMsgReceived.Subscribe(onMessageReceived);
+}
+
+void NetworkDiscovery::RemoveOnMessageReceivedListener(const U64 handle) {
+  onMsgReceived.Unsubscribe(handle);
+}
+
+void NetworkDiscovery::StopListening() {
+  if (!IsListenerRunning()) {
+    LOG_WARNING(Debug::Channel::Networking,
+                "Listener is not running, nothing to close");
+    return;
+  }
+  CloseListenerSocket();
+}
+
+bool NetworkDiscovery::IsListenerRunning() const {
+  return listenerSocket != -1;
+}
+
+void NetworkDiscovery::CreateListenerSocket() {
   listenerSocket = socket(AF_INET, SOCK_DGRAM, 0);
-  ASSERT(listenerSocket >= 0);
 
   int result = ioctlsocket(listenerSocket, FIONBIO, &NON_BLOCKING);
-  ASSERT(result == NO_ERROR);
+  if (result != NO_ERROR) {
+    LOG_ERROR(Debug::Channel::Networking,
+              "Failed to set socket to non-blocking");
+  }
 
   char broadcast = '1';
   if (setsockopt(listenerSocket, SOL_SOCKET, SO_BROADCAST, &broadcast,
@@ -49,27 +129,35 @@ void NetworkDiscovery::ListenerInitialize() {
   int bindResult = bind(listenerSocket,
                         reinterpret_cast<struct sockaddr *>(&listenerAddress),
                         sizeOfAddress);
-  ASSERT(bindResult >= 0);
-
-  LOG_INFO(Debug::Channel::Networking, "Listener initialized");
-}
-
-void NetworkDiscovery::ListenerUpdate() {
-  struct sockaddr_in fromAddress;
-  int msgLength = recvfrom(listenerSocket, buf, BUFFER_SIZE, 0,
-                           reinterpret_cast<struct sockaddr *>(&fromAddress),
-                           &sizeOfAddress);
-  if (msgLength > 0) {
-    buf[msgLength] = 0;
-    LOG_INFO(Debug::Channel::Networking, "Received message from %s {%s}",
-             inet_ntoa(fromAddress.sin_addr), buf);
+  if (bindResult < 0) {
+    LOG_ERROR(Debug::Channel::Networking, "Error binding broadcaster socket");
   }
 }
 
-void NetworkDiscovery::BroadcasterInitialize() {
+void NetworkDiscovery::ListenToBroadcasts() {
+  struct sockaddr_in fromAddress {};
+  int msgLength = recvfrom(listenerSocket, buf, BUFFER_SIZE, 0,
+                           reinterpret_cast<struct sockaddr *>(&fromAddress),
+                           &sizeOfAddress);
+
+  if (msgLength > 0) {
+    buf[msgLength] = 0;
+    onMsgReceived.Invoke(buf, inet_ntoa(fromAddress.sin_addr));
+  }
+}
+
+void NetworkDiscovery::CloseListenerSocket() {
+  closesocket(listenerSocket);
+  listenerSocket = -1;
+}
+
+void NetworkDiscovery::CreateBroadcasterSocket() {
   broadcasterSocket = socket(AF_INET, SOCK_DGRAM, 0);
   int result = ioctlsocket(broadcasterSocket, FIONBIO, &NON_BLOCKING);
-  ASSERT(result == NO_ERROR);
+  if (result != NO_ERROR) {
+    LOG_ERROR(Debug::Channel::Networking,
+              "Failed to set socket to non-blocking");
+  }
 
   char broadcastPermission = '1';
   setsockopt(broadcasterSocket, SOL_SOCKET, SO_BROADCAST, &broadcastPermission,
@@ -87,13 +175,19 @@ void NetworkDiscovery::BroadcasterInitialize() {
   int bindResult = bind(
       broadcasterSocket,
       reinterpret_cast<struct sockaddr *>(&broadcasterAddress), sizeOfAddress);
-  ASSERT(bindResult >= 0);
-
-  LOG_INFO(Debug::Channel::Networking, "Broadcaster initialized");
+  if (bindResult < 0) {
+    LOG_ERROR(Debug::Channel::Networking, "Error binding broadcaster socket");
+  }
 }
 
-void NetworkDiscovery::BroadcastMessage(std::string_view message) {
-  struct sockaddr_in targetAddress;
+void NetworkDiscovery::CloseBroadcasterSocket() {
+  closesocket(broadcasterSocket);
+  broadcasterSocket = -1;
+}
+
+void NetworkDiscovery::BroadcastMessage(std::string_view message) const {
+  ASSERT(IsBroadcasterRunning());
+  struct sockaddr_in targetAddress {};
   memset(reinterpret_cast<char *>(&targetAddress), 0, sizeOfAddress);
   targetAddress.sin_family = AF_INET;
   targetAddress.sin_port = htons(PORT);
@@ -105,8 +199,10 @@ void NetworkDiscovery::BroadcastMessage(std::string_view message) {
 
   if (sendResult < 0) {
     LOG_ERROR(Debug::Channel::Networking, "Send failed");
-  } else {
-    LOG_INFO(Debug::Channel::Networking, "Message {%s} sent", message.data());
   }
+}
+
+bool NetworkDiscovery::IsBroadcasterRunning() const {
+  return broadcasterSocket != -1;
 }
 }  // namespace Isetta

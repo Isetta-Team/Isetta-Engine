@@ -1,6 +1,7 @@
 #pragma once
 #include "Core/Time/Clock.h"
 #include "EngineLoop.h"
+#include "Core/Config/Config.h"
 
 namespace Isetta {
 class Time {
@@ -10,6 +11,10 @@ class Time {
   }
   static double GetDeltaTime() {
     return EngineLoop::GetGameClock().GetDeltaTime();
+  }
+  static double GetFixedDeltaTime() {
+    static double fixedDeltaTime = 1.0 / CONFIG_VAL(loopConfig.maxFps);
+    return fixedDeltaTime;
   }
   static double GetElapsedUnscaledTime() {
     return EngineLoop::GetGameClock().GetElapsedUnscaledTime();
