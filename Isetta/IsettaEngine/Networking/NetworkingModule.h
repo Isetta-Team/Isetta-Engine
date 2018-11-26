@@ -24,7 +24,7 @@ class NetworkingModule {
    *
    */
   struct NetworkConfig {
-    CVarString ipPrefix{"ip_prefix", "128.2"};
+    CVarString ipPrefix{"ip_prefix", "128"};
     /// Default client IP address
     CVarString defaultClientIP{"default_client_ip", "0.0.0.0"};
     /// Default server IP address

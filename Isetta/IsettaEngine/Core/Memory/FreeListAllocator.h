@@ -147,15 +147,6 @@ void FreeListAllocator::Delete(T* t) {
   monitorPureAlloc = false;
   Free(static_cast<void*>(t));
   monitorPureAlloc = true;
-  // PtrInt allocHeaderAdd = reinterpret_cast<PtrInt>(t) - headerSize;
-  // auto* allocHeader = reinterpret_cast<AllocHeader*>(allocHeaderAdd);
-  // sizeUsed -= allocHeader->size;
-  // PtrInt nodeAddress = allocHeaderAdd - allocHeader->adjustment;
-  // auto* newNode =
-  // new (reinterpret_cast<void*>(nodeAddress)) Node(allocHeader->size);
-  // memset(newNode + 1, 0xD, newNode->size - nodeSize);
-
-  // InsertNode(newNode);
 #else
   t->~T();
   Free(static_cast<void*>(t));
