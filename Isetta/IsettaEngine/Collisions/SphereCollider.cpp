@@ -12,7 +12,7 @@
 #include "Scene/Transform.h"
 
 namespace Isetta {
-#if _EDITOR
+#ifdef _EDITOR
 void SphereCollider::Update() {
   DebugDraw::AxisSphere(
       Math::Matrix4::Translate(transform->GetWorldPos() + center) *

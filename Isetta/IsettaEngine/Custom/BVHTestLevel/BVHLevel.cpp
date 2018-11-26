@@ -9,10 +9,10 @@
 #include "Components/GridComponent.h"
 #include "Core/Config/Config.h"
 #include "Core/DataStructures/Array.h"
+#include "Core/IsettaCore.h"
 #include "Core/Math/Random.h"
 #include "Custom/BVHTestLevel/RandomMover.h"
 #include "Custom/DebugCollision.h"
-#include "Core/IsettaCore.h"
 #include "Custom/RaycastClick.h"
 
 #include "Components/Editor/EditorComponent.h"
@@ -77,10 +77,12 @@ void BVHLevel::OnLevelLoad() {
   Input::RegisterKeyPressCallback(KeyCode::KP_5, [&]() {
     for (int i = 0; i < 100; ++i) {
       ++count;
-      Entity* sphere{Entity::Instantiate(Util::StrFormat("Sphere (%d)", count))};
+      Entity* sphere{
+          Entity::Instantiate(Util::StrFormat("Sphere (%d)", count))};
       randomMovers.PushBack(sphere->AddComponent<RandomMover>());
       randomMovers.Back()->SetActive(enable);
       randomMovers.Back()->range = range;
+      sphere->AddComponent<SphereCollider>();
       sphere->AddComponent<CollisionHandler>();
       sphere->AddComponent<DebugCollision>();
       const float size = 20;

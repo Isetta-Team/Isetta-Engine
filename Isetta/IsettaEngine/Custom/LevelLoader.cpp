@@ -24,10 +24,11 @@ void LevelLoader::OnEnable() {
   handle = GLFWInput::RegisterKeyCallback(
       [&](GLFWwindow*, int key, int, int action, int) {
         if (key == GLFW_KEY_F1 && action == GLFW_PRESS) {
+          LOG_INFO(Isetta::Debug::Channel::General, "Loading %d", handle);
           if (!instance) {
+            GLFWInput::UnegisterKeyCallback(handle);
             Entity* entity = Entity::Instantiate("Load Level");
             entity->AddComponent<LevelLoader>();
-            GLFWInput::UnegisterKeyCallback(handle);
           }
           instance->showWindow = !instance->showWindow;
         }

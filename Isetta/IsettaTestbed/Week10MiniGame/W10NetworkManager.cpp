@@ -241,7 +241,7 @@ void W10NetworkManager::Awake() {
         clientSwordPos.insert_or_assign(lastAttemptClient, 0);
         Isetta::NetworkManager::Instance()
             .SendMessageFromServerToAllButClient<W10CollectMessage>(clientId,
-                                                                  message);
+                                                                    message);
       });
 
   // Networking connection
@@ -249,8 +249,10 @@ void W10NetworkManager::Awake() {
   Isetta::Events::Instance().RaiseImmediateEvent(
       Isetta::EventObject{"UITextChange", {std::string{"Waiting!"}}});
   Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::NUM1, []() {
-    Isetta::NetworkManager::Instance().StartHost(
-        CONFIG_VAL(networkConfig.defaultServerIP));
+    LOG_INFO(Isetta::Debug::Channel::General, "%s",
+             CONFIG_VAL(networkConfig.defaultServerIP).c_str());
+
+    Isetta::NetworkManager::Instance().StartHost("128.2.236.243");
     Isetta::Events::Instance().RaiseImmediateEvent(
         Isetta::EventObject{"UITextChange", {std::string{"Started as host!"}}});
   });
@@ -260,9 +262,8 @@ void W10NetworkManager::Awake() {
         CONFIG_VAL(networkConfig.defaultServerIP));
     Isetta::Events::Instance().RaiseImmediateEvent(Isetta::EventObject{
         "UITextChange",
-        {Isetta::Util::StrFormat(
-            "Connected to %s as client!",
-            CONFIG_VAL(networkConfig.defaultServerIP))}});
+        {Isetta::Util::StrFormat("Connected to %s as client!",
+                                 CONFIG_VAL(networkConfig.defaultServerIP))}});
   });
 
   // if (CONFIG_VAL(networkConfig.runServer)) {

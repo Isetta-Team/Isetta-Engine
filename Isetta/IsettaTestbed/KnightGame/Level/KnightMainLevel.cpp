@@ -102,8 +102,7 @@ void KnightMainLevel::OnLevelLoad() {
   swordBox->isTrigger = true;
 
   Entity* fireball = Entity::Instantiate("Fireball");
-  fireball->AddComponent<ParticleSystemComponent, false>(
-      "KnightGame/Fireball/particleSys1.scene.xml");
+  fireball->AddComponent<ParticleSystemComponent, false>();
   FireballCircle* fireCircle =
       fireball->AddComponent<FireballCircle, false>(knight->transform, spin);
 

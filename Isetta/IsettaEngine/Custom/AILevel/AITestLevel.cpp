@@ -32,4 +32,6 @@ void Isetta::AITestLevel::OnLevelLoad() {
   Input::RegisterKeyPressCallback(KeyCode::O, [p]() { p->SetActive(true); });
 
   moveCube->AddComponent<KeyTransform>();
+  camera->AddComponent<AITestComponent>(
+      Math::Rect{0, 0, 10, 10}, Math::Vector2Int{20, 20}, moveCube->transform);
 }
