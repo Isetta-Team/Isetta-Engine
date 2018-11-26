@@ -207,4 +207,8 @@ void NetworkDiscovery::BroadcastMessage(std::string_view message) const {
     LOG_ERROR(Debug::Channel::Networking, "Send failed");
   }
 }
+
+bool NetworkDiscovery::IsBroadcasterRunning() const {
+  return broadcasterSocket != -1;
+}
 }  // namespace Isetta

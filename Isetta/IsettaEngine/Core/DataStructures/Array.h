@@ -170,6 +170,7 @@ class ISETTA_API_DECLARE Array {
     return *this;
   }
   inline Array &operator=(Array &&inVector) noexcept {
+    if (this->data && this->data != inVector.data) MemoryManager::DeleteArrOnFreeList<T>(capacity, data);
     capacity = inVector.capacity;
     size = inVector.size;
     data = inVector.data;
@@ -196,6 +197,7 @@ class ISETTA_API_DECLARE Array {
   }
 
   inline bool operator==(const Array &rhs) const;
+  inline bool operator!=(const Array &rhs) const;
 
   inline size_type Size() const { return size; }
   inline size_type MaxSize() const { return std::numeric_limits<U64>::max{}; }
@@ -266,9 +268,24 @@ inline bool Array<T>::operator==(const Array &rhs) const {
   if (size != rhs.size) return false;
   for (const_iterator lhsIt = begin(), rhsIt = rhs.begin();
        lhsIt != end(), rhsIt != rhs.end(); ++lhsIt, ++rhsIt) {
-    if (*lhsIt != *rhsIt) return false;
+    if (lhsIt != rhsIt) return false;
   }
   return true;
+}
+
+template <typename T>
+inline bool operator==(const Array<T> &lhs, const Array<T> &rhs) {
+  return lhs.operator==(rhs);
+}
+
+template <typename T>
+inline bool Array<T>::operator!=(const Array &rhs) const {
+  return !(this == rhs);
+}
+
+template <typename T>
+inline bool operator!=(const Array<T> &lhs, const Array<T> &rhs) {
+  return lhs.operator!=(rhs);
 }
 
 template <typename T>
