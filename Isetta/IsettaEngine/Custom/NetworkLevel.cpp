@@ -212,25 +212,6 @@ void NetworkLevel::OnLevelLoad() {
   // Networking preparation
   RegisterExampleMessageFunctions();
 
-  Input::RegisterKeyPressCallback(KeyCode::F1, []() {
-    NetworkManager::Instance().StartHost(
-        CONFIG_VAL(networkConfig.defaultServerIP));
-  });
-
-  Input::RegisterKeyPressCallback(KeyCode::F2, []() {
-    NetworkManager::Instance().StartServer(
-        CONFIG_VAL(networkConfig.defaultServerIP));
-  });
-
-  Input::RegisterKeyPressCallback(KeyCode::F3, []() {
-    if (NetworkManager::Instance().IsClientRunning()) {
-      NetworkManager::Instance().StopClient();
-    } else {
-      NetworkManager::Instance().StartClient(
-          CONFIG_VAL(networkConfig.defaultServerIP));
-    }
-  });
-
   // Spawn across network
   Input::RegisterKeyPressCallback(KeyCode::Y, []() {
     if (NetworkManager::Instance().IsClientRunning()) {
@@ -339,10 +320,5 @@ void NetworkLevel::OnLevelLoad() {
   debugEntity->AddComponent<EditorComponent>();
   debugEntity->AddComponent<EscapeExit>();
   debugEntity->AddComponent<NetworkTestComp>();
-  auto discovery = debugEntity->AddComponent<NetworkDiscovery>();
-  discovery->StartBroadcasting("Hello from the other size", 10, 1);
-  discovery->StartListening();
-  discovery->AddOnMessageReceivedListener([](const char* data, const char* ip) {
-    LOG_INFO(Debug::Channel::Networking, "[%s] said {%s}", ip, data);
-  });
+  debugEntity->AddComponent<NetworkDiscovery>();
 }
