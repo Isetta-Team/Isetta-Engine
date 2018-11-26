@@ -11,6 +11,7 @@
 #include "Core/DataStructures/HandleBin.h"
 #include "Core/IsettaAlias.h"
 #include "ISETTA_API.h"
+#include "Networking/ClientInfo.h"
 #include "yojimbo/yojimbo.h"
 
 namespace Isetta {
@@ -36,7 +37,7 @@ class ISETTA_API_DECLARE NetworkManager {
   void SendMessageFromServerToAll(yojimbo::Message* refMessage);
   template <typename T>
   void SendMessageFromServerToAllButClient(int clientIdx,
-                                         yojimbo::Message* refMessage);
+                                           yojimbo::Message* refMessage);
 
   U16 GetMessageTypeCount() const { return messageTypeCount; }
   template <typename T>
@@ -91,7 +92,7 @@ class ISETTA_API_DECLARE NetworkManager {
   bool IsClientRunning() const;
   bool IsServerRunning() const;
   bool IsClientConnected(int clientIdx) const;
-  
+
   static int GetMaxClients();
   int GetClientIndex() const;
 
@@ -102,10 +103,10 @@ class ISETTA_API_DECLARE NetworkManager {
   U64 AddDisconnectedFromServerListener(const Action<>& listener) const;
   void RemoveDisconnectedFromServerListener(U64 handle) const;
   // int parameter in Action is ClientID
-  U64 AddClientConnectedListener(const Action<int>& listener) const;
+  U64 AddClientConnectedListener(const Action<ClientInfo>& listener) const;
   void RemoveClientConnectedListener(U64 handle) const;
   // int parameter in Action is ClientID
-  U64 AddClientDisconnectedListener(const Action<int>& listener) const;
+  U64 AddClientDisconnectedListener(const Action<ClientInfo>& listener) const;
   void RemoveClientDisconnectedListener(U64 handle) const;
 
  private:

@@ -67,7 +67,7 @@ void NetworkManager::RemoveDisconnectedFromServerListener(
 }
 
 U64 NetworkManager::AddClientConnectedListener(
-    const Action<int>& listener) const {
+    const Action<ClientInfo>& listener) const {
   return networkingModule->onClientConnected.Subscribe(listener);
 }
 
@@ -76,7 +76,7 @@ void NetworkManager::RemoveClientConnectedListener(const U64 handle) const {
 }
 
 U64 NetworkManager::AddClientDisconnectedListener(
-    const Action<int>& listener) const {
+    const Action<ClientInfo>& listener) const {
   return networkingModule->onClientDisconnected.Subscribe(listener);
 }
 

@@ -474,6 +474,7 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClInclude Include="Graphics\Window.h" />
     <ClInclude Include="Input\GLFWInput.h" />
     <ClInclude Include="ISETTA_API.h" />
+    <ClInclude Include="Networking\ClientInfo.h" />
     <ClInclude Include="Networking\Messages.h" />
     <ClInclude Include="Networking\NetworkDiscovery.h" />
     <ClInclude Include="Networking\NetworkId.h" />

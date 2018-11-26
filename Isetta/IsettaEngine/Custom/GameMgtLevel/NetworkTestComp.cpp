@@ -10,15 +10,17 @@
 
 namespace Isetta {
 void NetworkTestComp::Start() {
-  NetworkManager::Instance().AddClientConnectedListener([](const int clientId) {
-    LOG_INFO(Debug::Channel::Networking, "Client %d is connected", clientId);
+  NetworkManager::Instance().AddClientConnectedListener([](ClientInfo info) {
+    LOG_INFO(Debug::Channel::Networking,
+             "Client [%s] with IP [%s] is connected", info.machineName.c_str(),
+             info.ip.c_str());
   });
 
-  NetworkManager::Instance().AddClientDisconnectedListener(
-      [](const int clientId) {
-        LOG_INFO(Debug::Channel::Networking, "Client %d is disconnected",
-                 clientId);
-      });
+  NetworkManager::Instance().AddClientDisconnectedListener([](ClientInfo info) {
+    LOG_INFO(Debug::Channel::Networking,
+             "Client [%s] with IP [%s] is disconnected",
+             info.machineName.c_str(), info.ip.c_str());
+  });
 
   NetworkManager::Instance().AddConnectedToServerListener([]() {
     LOG_INFO(Debug::Channel::Networking, "Successfully connected to server");
@@ -51,7 +53,9 @@ void NetworkTestComp::Start() {
   Input::RegisterKeyPressCallback(KeyCode::NUM1, [this]() {
     this->entity->GetComponent<NetworkDiscovery>()->StartBroadcasting(
         "Hello from the other side", 60, 1);
-    LOG_INFO(Debug::Channel::Networking, "Broadcasting started (duration=%.1fs, interval=%.1fs)", 60.f, 1.f);
+    LOG_INFO(Debug::Channel::Networking,
+             "Broadcasting started (duration=%.1fs, interval=%.1fs)", 60.f,
+             1.f);
   });
 
   Input::RegisterKeyPressCallback(KeyCode::NUM2, [this]() {
