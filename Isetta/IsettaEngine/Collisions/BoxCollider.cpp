@@ -43,8 +43,9 @@ bool BoxCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
   tmax =
       Math::Util::Min({Math::Util::Max(t[0], t[1]), Math::Util::Max(t[2], t[3]),
                        Math::Util::Max(t[4], t[5])});
-  if (tmax < 0 || tmin > tmax || tmax > maxDistance) return false;
+  if (tmax < 0 || tmin > tmax) return false;
   if (tmin < 0) tmin = tmax;
+  if (tmin > maxDistance) return false;
 
   Math::Vector3 pt = transform->WorldPosFromLocalPos(o) +
                      transform->WorldDirFromLocalDir(d) * tmin;

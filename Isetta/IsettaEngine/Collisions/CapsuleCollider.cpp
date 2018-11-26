@@ -134,7 +134,7 @@ bool CapsuleCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
   float tmin = -(b + sqrtDiscrim) * denom;
   float tmax = (-b + sqrtDiscrim) * denom;
   if (tmin > tmax) std::swap(tmin, tmax);
-  if (tmax > maxDistance) return false;
+  if (tmin > maxDistance) return false;
 
   float tkMin = tmin * m + n;
   if (tkMin < 0.f) {
