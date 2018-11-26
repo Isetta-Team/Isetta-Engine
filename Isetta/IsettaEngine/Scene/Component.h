@@ -62,9 +62,6 @@ class ISETTA_API Component {
   static void FlattenHelper(std::type_index parent, std::type_index curr);
   static bool isFlattened;
 
-  static class Entity* curEntity;
-  static class Transform* curTransform;
-
  protected:
   enum class ComponentAttributes {
     IS_ACTIVE,

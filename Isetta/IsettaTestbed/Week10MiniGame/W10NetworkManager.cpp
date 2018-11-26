@@ -249,10 +249,8 @@ void W10NetworkManager::Awake() {
   Isetta::Events::Instance().RaiseImmediateEvent(
       Isetta::EventObject{"UITextChange", {std::string{"Waiting!"}}});
   Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::NUM1, []() {
-    LOG_INFO(Isetta::Debug::Channel::General, "%s",
-             CONFIG_VAL(networkConfig.defaultServerIP).c_str());
-
-    Isetta::NetworkManager::Instance().StartHost("128.2.236.243");
+    Isetta::NetworkManager::Instance().StartHost(
+        CONFIG_VAL(networkConfig.defaultServerIP));
     Isetta::Events::Instance().RaiseImmediateEvent(
         Isetta::EventObject{"UITextChange", {std::string{"Started as host!"}}});
   });

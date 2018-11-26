@@ -36,7 +36,7 @@ void Level1::OnLevelLoad() {
 
   Entity* player{Entity::Instantiate("Player")};
   player->SetTransform(Math::Vector3{0, 0, 0}, Math::Vector3{0, 90, 0},
-                       0.03f * Math::Vector3::one);
+                       0.01f * Math::Vector3::one);
   MeshComponent* playerMesh =
       player->AddComponent<MeshComponent>("Halves/Soldier/Soldier.scene.xml");
   player->AddComponent<PlayerController>();

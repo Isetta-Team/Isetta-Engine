@@ -30,6 +30,10 @@ std::list<Entity*> Level::GetEntitiesByName(const std::string& name) {
   return returnEntities;
 }
 
+bool Level::IsLevelLoaded() const {
+  return isLevelLoaded;
+}
+
 std::list<class Entity*> Level::GetEntities() const { return entities; }
 
 void Level::UnloadLevel() {

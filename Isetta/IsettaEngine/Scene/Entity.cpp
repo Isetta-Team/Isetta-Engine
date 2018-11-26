@@ -181,6 +181,10 @@ bool Entity::GetActive() const {
   return GetAttribute(EntityAttributes::IS_ACTIVE);
 }
 
+bool Entity::IsMoveable() const {
+  return !isStatic || !LevelManager::Instance().loadedLevel->IsLevelLoaded();
+}
+
 void Entity::SetTransform(const Math::Vector3 &worldPos,
                           const Math::Vector3 &worldEulerAngles,
                           const Math::Vector3 &localScale) {
