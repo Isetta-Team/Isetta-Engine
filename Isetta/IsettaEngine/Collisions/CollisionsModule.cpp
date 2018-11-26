@@ -38,7 +38,7 @@ void CollisionsModule::Update(float deltaTime) {
 
   // By the end of the checking loop, pairs left in the lastFramePairs
   // are those who are no longer colliding
-  auto lastFramePairs = collidingPairs;
+  lastFramePairs = collidingPairs;
 
   collidingPairs.clear();
 
@@ -60,25 +60,30 @@ void CollisionsModule::Update(float deltaTime) {
         handler2 && handler1 == handler2)
       continue;
 
-    if (collider1->Intersection(collider2)) {
-      collidingPairs.insert(pair);
+    if (collider1->Intersection(collider2)) collidingPairs.insert(pair);
+  }
+}
 
-      // Colliders with the same handler shouldn't have their functions called
-      if (handler1 == handler2) continue;
+void CollisionsModule::LateUpdate(float deltaTime) {
+  for (const auto &pair : collidingPairs) {
+    Collider *collider1 = pair.first;
+    Collider *collider2 = pair.second;
 
-      // if they do collide
-      auto it = lastFramePairs.find(pair);
+    CollisionHandler *handler1 = collider1->GetHandler();
+    CollisionHandler *handler2 = collider2->GetHandler();
+    if (handler1 == handler2) continue;
 
-      if (it != lastFramePairs.end()) {
-        // pair was colliding last frame
-        if (handler1) handler1->OnCollisionStay(collider2);
-        if (handler2) handler2->OnCollisionStay(collider1);
-        lastFramePairs.erase(it);
-      } else {
-        // pair is new
-        if (handler1) handler1->OnCollisionEnter(collider2);
-        if (handler2) handler2->OnCollisionEnter(collider1);
-      }
+    auto it = lastFramePairs.find(pair);
+
+    if (it != lastFramePairs.end()) {
+      // pair was colliding last frame
+      if (handler1) handler1->OnCollisionStay(collider2);
+      if (handler2) handler2->OnCollisionStay(collider1);
+      lastFramePairs.erase(it);
+    } else {
+      // pair is new
+      if (handler1) handler1->OnCollisionEnter(collider2);
+      if (handler2) handler2->OnCollisionEnter(collider1);
     }
   }
 
@@ -322,7 +327,8 @@ bool CollisionsModule::Raycast(const Ray &ray, RaycastHit *const hitInfo,
   // return hitInfo->GetDistance() < INFINITY;
   return bvTree.Raycast(ray, hitInfo, maxDistance);
 }
-Array<RaycastHit> CollisionsModule::RaycastAll(const Ray &ray, float maxDistance) {
+Array<RaycastHit> CollisionsModule::RaycastAll(const Ray &ray,
+                                               float maxDistance) {
   PROFILE
   return bvTree.RaycastAll(ray, maxDistance);
 }

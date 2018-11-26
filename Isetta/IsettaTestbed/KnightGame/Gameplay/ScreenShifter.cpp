@@ -11,7 +11,6 @@ using namespace Isetta;
 
 namespace KnightGame {
 void ScreenShifter::Update() {
-  transform->TranslateWorld(-Math::Vector3::right * speed *
-                            Time::GetDeltaTime());
+  transform->TranslateWorld(Math::Vector3::left * speed * Time::GetDeltaTime());
 }
 }  // namespace KnightGame

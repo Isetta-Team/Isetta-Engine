@@ -9,7 +9,7 @@
 #include "Core/Memory/MemoryManager.h"
 #include "Graphics/GUIModule.h"
 #include "Graphics/RenderModule.h"
-#include "Graphics/Window.h"
+#include "Graphics/WindowModule.h"
 #include "Input/InputModule.h"
 #include "Networking/NetworkingModule.h"
 
@@ -113,6 +113,7 @@ void EngineLoop::FixedUpdate(const float deltaTime) const {
   networkingModule->Update(deltaTime);
   collisionsModule->Update(deltaTime);
   collisionSolverModule->Update();
+  collisionsModule->LateUpdate(deltaTime);
   LevelManager::Instance().loadedLevel->FixedUpdate();
 }
 void EngineLoop::VariableUpdate(const float deltaTime) const {

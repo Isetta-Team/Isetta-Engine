@@ -28,13 +28,12 @@ void KnightController::Update() {
       Input::GetGamepadAxis(GamepadAxis::L_VERTICAL) * Math::Vector3::forward;
   float moveMag = movement.Magnitude();
   if (moveMag > 0.0f) movement /= moveMag;
-  // float lookDir = Input::GetGamepadAxis(GamepadAxis::R_HORIZONTAL);
 
   float t = 0;
-  if (moveMag > runAxis) {
+  if (canRun && moveMag > runAxis) {
     t = 1;
     animation->TransitToAnimationState(run, 0.1f);
-  } else if (moveMag > walkAxis) {
+  } else if (canRun && moveMag > walkAxis) {
     const float div = 1.f / (runAxis - walkAxis);
     t = (moveMag - walkAxis) / div;
   } else if (moveMag != 0.f) {

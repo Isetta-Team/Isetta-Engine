@@ -86,6 +86,9 @@
     <ClCompile Include="KnightGame\Gameplay\ScreenShifter.cpp">
       <Filter>KnightGame\Gameplay</Filter>
     </ClCompile>
+    <ClCompile Include="KnightGame\Gameplay\ScoreManager.cpp">
+      <Filter>KnightGame\Gameplay</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
@@ -207,6 +210,9 @@
       <Filter>KnightGame\Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="KnightGame\Gameplay\ScreenShifter.h">
+      <Filter>KnightGame\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="KnightGame\Gameplay\ScoreManager.h">
       <Filter>KnightGame\Gameplay</Filter>
     </ClInclude>
   </ItemGroup>

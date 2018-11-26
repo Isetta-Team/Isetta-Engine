@@ -62,9 +62,6 @@
     <ClCompile Include="Audio\AudioSource.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Window.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Networking\NetworkingModule.cpp">
       <Filter>Networking</Filter>
     </ClCompile>
@@ -382,6 +379,12 @@
     <ClCompile Include="Networking\NetworkDiscovery.cpp">
       <Filter>Networking</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\WindowModule.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Window.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -556,9 +559,6 @@
     </ClInclude>
     <ClInclude Include="Core\Memory\StackAllocator.h">
       <Filter>Core\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Window.h">
-      <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Input\Input.h">
       <Filter>Input</Filter>
@@ -890,6 +890,12 @@
     </ClInclude>
     <ClInclude Include="Networking\ClientInfo.h">
       <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\WindowModule.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Window.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

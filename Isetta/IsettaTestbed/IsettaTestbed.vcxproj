@@ -232,6 +232,7 @@
     <ClCompile Include="Halves\Zombie.cpp" />
     <ClCompile Include="InputLevel\InputLevel.cpp" />
     <ClCompile Include="InputLevel\InputTestComponent.cpp" />
+    <ClCompile Include="KnightGame\Gameplay\ScoreManager.cpp" />
     <ClCompile Include="KnightGame\Gameplay\ScreenShifter.cpp" />
     <ClCompile Include="KnightGame\Gameplay\FireballCircle.cpp" />
     <ClCompile Include="KnightGame\Gameplay\FollowComponent.cpp" />
@@ -269,6 +270,7 @@
     <ClInclude Include="InputLevel\InputLevel.h" />
     <ClInclude Include="InputLevel\InputTestComponent.h" />
     <ClInclude Include="KnightGame\Constants.h" />
+    <ClInclude Include="KnightGame\Gameplay\ScoreManager.h" />
     <ClInclude Include="KnightGame\Gameplay\ScreenShifter.h" />
     <ClInclude Include="KnightGame\Gameplay\FireballCircle.h" />
     <ClInclude Include="KnightGame\Gameplay\FollowComponent.h" />

@@ -7,10 +7,15 @@
 using namespace Isetta;
 
 namespace Isetta {
+class CapsuleCollider;
 class Collider;
 class CollisionHandler;
+
 class AudioClip;
 class AudioSource;
+
+class Entity;
+class MeshComponent;
 }  // namespace Isetta
 
 namespace KnightGame {
@@ -20,6 +25,9 @@ CollisionHandler* handler;
 int handle;
 AudioSource* src;
 AudioClip* const swordClip;
+Entity* deadBody;
+MeshComponent* mesh;
+CapsuleCollider* capsule;
 
 public:
 Enemy() = default;
@@ -31,6 +39,7 @@ void OnDisable() override;
 void OnCollisionEnter(Collider* const collider);
 
 void Explode();
+void Reset();
 };  // namespace KnightGame
 }  // namespace KnightGame
 

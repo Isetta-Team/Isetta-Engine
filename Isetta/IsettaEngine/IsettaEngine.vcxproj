@@ -317,6 +317,7 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClCompile Include="Graphics\MeshComponent.cpp" />
     <ClCompile Include="Graphics\ParticleSystemComponent.cpp" />
     <ClCompile Include="Graphics\RenderModule.cpp" />
+    <ClCompile Include="Graphics\Window.cpp" />
     <ClCompile Include="Graphics\Texture.cpp" />
     <ClCompile Include="Input\GLFWInput.cpp" />
     <ClCompile Include="Input\InputModule.cpp" />
@@ -336,7 +337,7 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClCompile Include="Core\Debug\DebugDraw.cpp" />
     <ClCompile Include="Core\Memory\StackAllocator.cpp" />
     <ClCompile Include="Core\Memory\PoolAllocator.cpp" />
-    <ClCompile Include="Graphics\Window.cpp" />
+    <ClCompile Include="Graphics\WindowModule.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Networking\NetworkDiscovery.cpp" />
     <ClCompile Include="Networking\NetworkId.cpp" />
@@ -470,8 +471,9 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClInclude Include="Graphics\ParticleSystemComponent.h" />
     <ClInclude Include="Graphics\RectTransform.h" />
     <ClInclude Include="Graphics\RenderModule.h" />
-    <ClInclude Include="Graphics\Texture.h" />
     <ClInclude Include="Graphics\Window.h" />
+    <ClInclude Include="Graphics\Texture.h" />
+    <ClInclude Include="Graphics\WindowModule.h" />
     <ClInclude Include="Input\GLFWInput.h" />
     <ClInclude Include="ISETTA_API.h" />
     <ClInclude Include="Networking\ClientInfo.h" />
