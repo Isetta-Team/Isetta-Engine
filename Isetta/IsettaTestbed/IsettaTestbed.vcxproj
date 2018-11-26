@@ -119,6 +119,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)IsettaEngine;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>_EDITOR;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL\*.lib;$(SolutionDir)External\imgui\lib\$(Configuration)\imgui.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib</AdditionalDependencies>
@@ -180,7 +181,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_EDITOR;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -204,7 +205,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_EDITOR;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -231,7 +232,10 @@
     <ClCompile Include="Halves\Zombie.cpp" />
     <ClCompile Include="InputLevel\InputLevel.cpp" />
     <ClCompile Include="InputLevel\InputTestComponent.cpp" />
+    <ClCompile Include="KnightGame\Gameplay\ScreenShifter.cpp" />
+    <ClCompile Include="KnightGame\Gameplay\FireballCircle.cpp" />
     <ClCompile Include="KnightGame\Gameplay\FollowComponent.cpp" />
+    <ClCompile Include="KnightGame\Gameplay\Enemy.cpp" />
     <ClCompile Include="KnightGame\Gameplay\KnightController.cpp" />
     <ClCompile Include="KnightGame\Gameplay\SpinAttack.cpp" />
     <ClCompile Include="KnightGame\Gameplay\SwordController.cpp" />
@@ -265,7 +269,10 @@
     <ClInclude Include="InputLevel\InputLevel.h" />
     <ClInclude Include="InputLevel\InputTestComponent.h" />
     <ClInclude Include="KnightGame\Constants.h" />
+    <ClInclude Include="KnightGame\Gameplay\ScreenShifter.h" />
+    <ClInclude Include="KnightGame\Gameplay\FireballCircle.h" />
     <ClInclude Include="KnightGame\Gameplay\FollowComponent.h" />
+    <ClInclude Include="KnightGame\Gameplay\Enemy.h" />
     <ClInclude Include="KnightGame\Gameplay\KnightController.h" />
     <ClInclude Include="KnightGame\Gameplay\SpinAttack.h" />
     <ClInclude Include="KnightGame\Gameplay\SwordController.h" />

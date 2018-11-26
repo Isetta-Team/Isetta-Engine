@@ -1,0 +1,4 @@
+<Model name="Cube" geometry="Week10/Ground.geo">
+
+	<Mesh name="Cube" material="Week10/Ground.material.xml" sx="0.5" sy="0.5" sz="0.5" batchStart="0" batchCount="36" vertRStart="0" vertREnd="23" />
+</Model>

@@ -19,7 +19,7 @@ namespace Isetta {
 class InputModule {
   // using CBMap = std::unordered_map<int, std::list<std::pair<U16, Action<>>>>;
   using KeyMap = std::unordered_map<std::pair<int, ModifierKeys>, Delegate<>,
-                                    Util::PairHash>;
+                                    Util::PairHash, Util::PairHash>;
   using MouseMap = std::unordered_map<int, Delegate<>>;
 
  public:

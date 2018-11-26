@@ -26,7 +26,7 @@ void Week10Level::OnLevelLoad() {
   debug->AddComponent<EditorComponent>();
 
   Entity* ground{Entity::Instantiate("Ground")};
-  ground->AddComponent<MeshComponent>("blockFencing/Ground.scene.xml");
+  ground->AddComponent<MeshComponent>("Week10/Ground.scene.xml");
   ground->SetTransform(Math::Vector3{0, -5.25, 0}, Math::Vector3::zero,
                        Math::Vector3{4.0f, 10.0f, 1});
 

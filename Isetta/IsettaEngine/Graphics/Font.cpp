@@ -9,7 +9,8 @@
 
 namespace Isetta {
 GUIModule* Font::guiModule;
-std::unordered_map<std::pair<StringId, float>, Font*, Util::PairHash>
+std::unordered_map<std::pair<StringId, float>, Font*, Util::PairHash,
+                   Util::PairHash>
     Font::fonts;
 
 Font* Font::GetDefaultFont() {

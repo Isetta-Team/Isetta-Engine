@@ -11,7 +11,7 @@ set tools=Tools\
 
 REM Engine Parameters
 set engine=IsettaEngine\
-set resourceFolders=fonts primitives textures pipelines materials shaders
+set resourceFolders=fonts primitives lights particles pipelines shaderutility
 
 set externalFolders[0].folder=brofiler\ProfilerCore\
 set externalFolders[0].files=Brofiler.h
@@ -40,7 +40,8 @@ REM Resource Files
 
 REM Build Files
 robocopy "%base%\Build\IsettaEngine-x64-Debug DLL" %include%\%build%\Debug\ *.dll *.lib
-robocopy "%base%\Build\IsettaEngine-x64-Release DLL" %include%\%build%\Release\ *.dll *.lib
+robocopy "%base%\Build\IsettaEngine-x64-Release DLL" %include%\%build%\Release\ *.dll *
+robocopy "%base%\Build\IsettaEngine-x64-ReleaseEditor DLL" %include%\%build%\ReleaseEditor\ *.dll *.lib
 
 REM Tool Files (can add more like resources)
 robocopy %base% %include%%tools% *.exe

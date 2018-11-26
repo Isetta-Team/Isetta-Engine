@@ -1,5 +1,5 @@
 <Material>
-	<Shader source="shaders/postHDR.shader"/>
+	<Shader source="pipelines/postHDR.shader"/>
 	
 	<Uniform name="hdrExposure" a="2.0" />
 	<Uniform name="hdrBrightThres" a="0.6" />

@@ -182,7 +182,6 @@ void RingBuffer<T>::PutFront(T o) {
 template <typename T>
 Array<T> RingBuffer<T>::ToArray() const {
   Array<T> arr;
-  arr.Reserve(GetLength());
   int count = 0;
   int idx = head;
   while (idx != tail) {

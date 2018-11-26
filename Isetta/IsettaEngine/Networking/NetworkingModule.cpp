@@ -7,12 +7,10 @@
 #include <list>
 #include <utility>
 
-#include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
-#include "Graphics/AnimationComponent.h"
-#include "NetworkTransform.h"
+#include "Networking/BuiltinMessages.h"
 #include "Networking/NetworkManager.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
 
@@ -28,7 +26,6 @@ CustomAdapter NetworkingModule::NetworkAdapter;
 
 void NetworkingModule::StartUp() {
   NetworkManager::Instance().networkingModule = this;
-
   if (!InitializeYojimbo()) {
     throw std::exception(
         "NetworkingModule::StartUp => Could not initialize yojimbo.");
@@ -48,25 +45,13 @@ void NetworkingModule::StartUp() {
   // than all 0s
   memset(privateKey, 0, CONFIG_VAL(networkConfig.keyBytes));
 
+  // Initialize client
   clientId = 0;
   yojimbo::random_bytes(reinterpret_cast<U8*>(&clientId), 8);
 
-  void* memPointer =
-      MemoryManager::AllocOnStack(yojimboConfig.clientMemory + 1_MB);
-  clientAllocator = new (MemoryManager::AllocOnStack(sizeof(NetworkAllocator)))
-      NetworkAllocator(memPointer,
-                       static_cast<Size>(yojimboConfig.clientMemory) + 1_MB);
-
-  if (CONFIG_VAL(networkConfig.runServer)) {
-    Size serverMemorySize = (yojimboConfig.serverPerClientMemory +
-                             yojimboConfig.serverGlobalMemory) *
-                            (CONFIG_VAL(networkConfig.maxClients) + 1);
-
-    memPointer = MemoryManager::AllocOnStack(serverMemorySize);
-    serverAllocator =
-        new (MemoryManager::AllocOnStack(sizeof(NetworkAllocator)))
-            NetworkAllocator(memPointer, serverMemorySize);
-  }
+  clientAllocator = MemoryManager::NewOnStack<NetworkAllocator>(
+      MemoryManager::AllocOnStack(yojimboConfig.clientMemory + 1_MB),
+      static_cast<Size>(yojimboConfig.clientMemory) + 1_MB);
 
   client = new (MemoryManager::AllocOnStack(sizeof(yojimbo::Client)))
       yojimbo::Client(
@@ -78,6 +63,20 @@ void NetworkingModule::StartUp() {
   clientSendBuffer =
       MemoryManager::NewArrOnFreeList<RingBuffer<yojimbo::Message*>>(
           CONFIG_VAL(networkConfig.clientQueueSize));
+
+  // Initialize server
+  if (CONFIG_VAL(networkConfig.runServer)) {
+    Size serverMemorySize = (yojimboConfig.serverPerClientMemory +
+                             yojimboConfig.serverGlobalMemory) *
+                            (CONFIG_VAL(networkConfig.maxClients) + 1);
+
+    serverAllocator =
+        new (MemoryManager::AllocOnStack(sizeof(NetworkAllocator)))
+            NetworkAllocator(MemoryManager::AllocOnStack(serverMemorySize),
+                             serverMemorySize);
+  }
+
+  RegisterBuiltinCallbacks();
 }
 
 void NetworkingModule::Update(float deltaTime) {
@@ -90,8 +89,9 @@ void NetworkingModule::Update(float deltaTime) {
 
   // Send out our messages
   SendClientToServerMessages();
+  int maxClients = CONFIG_VAL(networkConfig.maxClients);
   if (server) {
-    for (int i = 0; i < CONFIG_VAL(networkConfig.maxClients); ++i) {
+    for (int i = 0; i < maxClients; ++i) {
       SendServerToClientMessages(i);
     }
   }
@@ -104,8 +104,25 @@ void NetworkingModule::Update(float deltaTime) {
   }
 
   if (server) {
-    for (int i = 0; i < CONFIG_VAL(networkConfig.maxClients); ++i) {
+    for (int i = 0; i < maxClients; ++i) {
       ProcessClientToServerMessages(i);
+    }
+  }
+
+  // State monitor
+  if (lastFrameClientRunning && !IsClientRunning()) {
+    // client dropped out
+    onDisconnectedFromServer.Invoke();
+  }
+  lastFrameClientRunning = IsClientRunning();
+
+  if (IsServerRunning()) {
+    for (int i = 0; i < maxClients; ++i) {
+      if (lastFrameClientConnected[i] && !IsClientConnected(i)) {
+        // client just disconnected
+        onClientDisconnected.Invoke(i);
+      }
+      lastFrameClientConnected[i] = IsClientConnected(i);
     }
   }
 }
@@ -122,7 +139,6 @@ void NetworkingModule::ShutDown() {
   }
 
   ShutdownYojimbo();
-
   client->~Client();
   MemoryManager::DeleteArrOnFreeList<RingBuffer<yojimbo::Message*>>(
       CONFIG_VAL(networkConfig.clientQueueSize), clientSendBuffer);
@@ -132,7 +148,13 @@ void NetworkingModule::ShutDown() {
 // NOTE: Deletes the oldest message in the queue if the queue is
 // overflowing--it would be nice to return it, but then we wouldn't
 // be able to guarantee the memory is reused
-void NetworkingModule::AddClientToServerMessage(yojimbo::Message* message) {
+void NetworkingModule::AddClientToServerMessage(
+    yojimbo::Message* message) const {
+  if (!IsClientRunning()) {
+    LOG_ERROR(Debug::Channel::Networking,
+              "Cannot send message from client cause client is not running");
+    return;
+  }
   if (clientSendBuffer->IsFull()) {
     client->ReleaseMessage(
         clientSendBuffer->Get());  // This may be horribly wrong
@@ -145,6 +167,11 @@ void NetworkingModule::AddClientToServerMessage(yojimbo::Message* message) {
 // be able to guarantee the memory is reused
 void NetworkingModule::AddServerToClientMessage(int clientIdx,
                                                 yojimbo::Message* message) {
+  if (!IsServerRunning()) {
+    LOG_ERROR(Debug::Channel::Networking,
+              "Cannot send message from server cause server is not running");
+    return;
+  }
   if (serverSendBufferArray[clientIdx].IsFull()) {
     server->ReleaseMessage(
         clientIdx,
@@ -173,7 +200,7 @@ void NetworkingModule::PumpClientServerUpdate(double time) {
   }
 }
 
-void NetworkingModule::SendClientToServerMessages() {
+void NetworkingModule::SendClientToServerMessages() const {
   const int channelIdx = 0;  // TODO(Caleb): Upgrade the channel indexing
   while (!clientSendBuffer->IsEmpty()) {
     if (!client->CanSendMessage(channelIdx)) {
@@ -185,7 +212,7 @@ void NetworkingModule::SendClientToServerMessages() {
   }
 }
 
-void NetworkingModule::SendServerToClientMessages(int clientIdx) {
+void NetworkingModule::SendServerToClientMessages(int clientIdx) const {
   const int channelIdx = 0;  // TODO(Caleb): Upgrade the channel indexing
   while (!serverSendBufferArray[clientIdx].IsEmpty()) {
     if (!server->CanSendMessage(clientIdx, channelIdx)) {
@@ -197,7 +224,7 @@ void NetworkingModule::SendServerToClientMessages(int clientIdx) {
   }
 }
 
-void NetworkingModule::ProcessClientToServerMessages(int clientIdx) {
+void NetworkingModule::ProcessClientToServerMessages(int clientIdx) const {
   const int channelIdx = 0;  // TODO(Caleb): Upgrade the channel indexing
   for (;;) {
     yojimbo::Message* message = server->ReceiveMessage(clientIdx, channelIdx);
@@ -216,7 +243,7 @@ void NetworkingModule::ProcessClientToServerMessages(int clientIdx) {
   }
 }
 
-void NetworkingModule::ProcessServerToClientMessages() {
+void NetworkingModule::ProcessServerToClientMessages() const {
   const int channelIdx = 0;  // TODO(Caleb): Upgrade the channel indexing
   for (;;) {
     yojimbo::Message* message = client->ReceiveMessage(channelIdx);
@@ -246,18 +273,31 @@ void NetworkingModule::Connect(const char* serverAddress, int serverPort,
   yojimbo::Address address(serverAddress, serverPort);
   if (!address.IsValid()) {
     if (IsClientRunning()) {
-    LOG_ERROR(Debug::Channel::Networking,
-              "IP Address for StartClient is invalid");
+      LOG_ERROR(Debug::Channel::Networking,
+                "IP Address for StartClient is invalid");
+      return;
+    }
     return;
   }
-    return;
-  }
-
-  client->InsecureConnect(privateKey, clientId, address, callback);
-  onConnectedToServer.Invoke();
+  Action<bool> internalCallback = [=](const bool success) {
+    if (callback != nullptr) {
+      callback(success);
+    }
+    if (success) {
+      NetworkManager::Instance().SendMessageFromClient(
+          NetworkManager::Instance()
+              .GenerateMessageFromClient<ClientConnectedMessage>());
+      onConnectedToServer.Invoke();
+      this->lastFrameClientRunning = true;
+    } else {
+      LOG_ERROR(Debug::Channel::Networking,
+                "Failed to connected to %s as a client", serverAddress);
+    }
+  };
+  client->InsecureConnect(privateKey, clientId, address, internalCallback);
 }
 
-void NetworkingModule::Disconnect() {
+void NetworkingModule::Disconnect() const {
   if (client->IsConnected()) {
     client->Disconnect();
     onDisconnectedFromServer.Invoke();
@@ -278,9 +318,10 @@ void NetworkingModule::CreateServer(const char* address, int port) {
         "already running.");
   }
 
+  int maxClients = CONFIG_VAL(networkConfig.maxClients);
   serverSendBufferArray =
       MemoryManager::NewArrOnFreeList<RingBuffer<yojimbo::Message*>>(
-          CONFIG_VAL(networkConfig.maxClients));
+          maxClients);
   for (int i = 0; i < CONFIG_VAL(networkConfig.maxClients); ++i) {
     serverSendBufferArray[i] = RingBuffer<yojimbo::Message*>(
         CONFIG_VAL(networkConfig.serverQueueSizePerClient));
@@ -290,11 +331,16 @@ void NetworkingModule::CreateServer(const char* address, int port) {
   server = MemoryManager::NewOnFreeList<yojimbo::Server>(
       serverAllocator, privateKey, serverAddress, yojimboConfig,
       &NetworkingModule::NetworkAdapter, clock.GetElapsedTime());
-  server->Start(CONFIG_VAL(networkConfig.maxClients));
+  server->Start(maxClients);
 
   if (!server->IsRunning()) {
     throw std::exception(
         "NetworkingModule::CreateServer => Unable to run server.");
+  }
+
+  lastFrameClientConnected = MemoryManager::NewArrOnStack<bool>(maxClients);
+  for (int i = 0; i < maxClients; ++i) {
+    lastFrameClientConnected[i] = false;
   }
 }
 
@@ -314,15 +360,34 @@ void NetworkingModule::CloseServer() {
 }
 
 bool NetworkingModule::IsClient() const {
-  return client->IsConnected() && server == nullptr && !server->IsRunning();
+  return client->IsConnected() && !server || (server && !server->IsRunning());
 }
 
 bool NetworkingModule::IsHost() const {
-  return client->IsConnected() && server != nullptr && server->IsRunning();
+  return client->IsConnected() && server && server->IsRunning();
 }
 
 bool NetworkingModule::IsServer() const {
-  return !client->IsConnected() && server != nullptr && server->IsRunning();
+  return !client->IsConnected() && server && server->IsRunning();
+}
+
+bool NetworkingModule::IsClientRunning() const {
+  return client && client->IsConnected();
+}
+
+bool NetworkingModule::IsServerRunning() const {
+  return server && server->IsRunning();
+}
+
+bool NetworkingModule::IsClientConnected(const int clientIndex) const {
+  return IsServerRunning() && server->IsClientConnected(clientIndex);
+}
+
+void NetworkingModule::RegisterBuiltinCallbacks() {
+  NetworkManager::Instance().RegisterServerCallback<ClientConnectedMessage>(
+      [this](const int clientIndex, yojimbo::Message*) {
+        this->onClientConnected.Invoke(clientIndex);
+      });
 }
 
 bool NetworkingModule::IsClientRunning() const {

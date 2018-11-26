@@ -22,8 +22,5 @@ void Update() override;
 };  // namespace KnightGame
 }  // namespace KnightGame
 
-bool Isetta::ComponentRegistry<KnightGame::SwordController, Component,
-                               true>::SwordControllerRegistered =
-    Component::RegisterComponent(
-        std::type_index(typeid(KnightGame::SwordController)),
-        std::type_index(typeid(Component)), true);
+using namespace KnightGame;
+REGISTER_COMPONENT(SwordController, Component, true)

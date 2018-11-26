@@ -62,7 +62,8 @@ Collision CollisionSolverModule::Solve(Collider* collider,
       hitPoint[maxAxis] =
           Math::Util::Sign(hitPoint[maxAxis]) * extents[maxAxis];
 
-      collision.hitPoint = box->transform->WorldPosFromLocalPos(hitPoint);
+      collision.hitPoint =
+          box->transform->WorldPosFromLocalPos(hitPoint) + box->center;
       collision.pushDir = Math::Vector3::zero;
       collision.pushDir[maxAxis] = 1;
       collision.pushDir =
@@ -80,7 +81,8 @@ Collision CollisionSolverModule::Solve(Collider* collider,
       cdir = (Math::Vector3)(rot * scale *
                              Math::Matrix4::Scale(Math::Vector3{
                                  capsule->height - 2 * capsule->radius}) *
-                             Math::Vector4{0, 1, 0, 0}) * .5;
+                             Math::Vector4{0, 1, 0, 0}) *
+             .5;
       cp0 = capsule->GetWorldCenter() - cdir;
       cp1 = capsule->GetWorldCenter() + cdir;
 
@@ -177,22 +179,21 @@ void CollisionSolverModule::Update() {
 
       switch (staticSwitch) {
         case 0: {  // Neither collider is static
-        
-          float massRatio = collider2->mass / (collider1->mass + collider2->mass);
+
+          float massRatio =
+              collider2->mass / (collider1->mass + collider2->mass);
 
           collider1->transform->TranslateWorld(response * massRatio);
           collider2->transform->TranslateWorld(-response * (1 - massRatio));
 #if _EDITOR
           DebugDraw::Line(collision1.hitPoint,
-                          collision1.hitPoint + response * massRatio, Color::cyan, 3,
-                          .1);
+                          collision1.hitPoint + response * massRatio,
+                          Color::cyan, 3, .1);
           DebugDraw::Line(collision2.hitPoint,
                           collision2.hitPoint - response * (1 - massRatio),
-                          Color::cyan, 3,
-                          .1);
+                          Color::cyan, 3, .1);
 #endif
-       }
-          break;
+        } break;
 
         case 1:  // Collider 1 is static
           collider2->transform->TranslateWorld(-response);

@@ -2,6 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include "Core/IsettaAlias.h"
 #include "Core/Math/Vector2.h"
 #include "Scene/Component.h"
 
@@ -19,8 +20,13 @@ bool started = false, extended = false;
 int direction = 0;
 const float anglePercision = 0.25f;
 
+bool callbackInProgress;
+Action<> callback;
+
 public:
 void Update() override;
+
+void SetCallback(Action<> callback);
 };  // namespace KnightGame
 }  // namespace KnightGame
 

@@ -82,12 +82,22 @@ struct UnorderedPairHash {
   std::size_t operator()(std::pair<T, T> const& p) const {
     return (std::hash<T>()(p.first) ^ std::hash<T>()(p.second));
   }
+  template <typename T>
+  bool operator()(const std::pair<T, T>& a, const std::pair<T, T>& b) const {
+    if (a.first == b.first && a.second == b.second) return true;
+    if (a.first == b.second && a.second == b.first) return true;
+    return false;
+  }
 };
 struct PairHash {
   template <typename T, typename S>
   std::size_t operator()(std::pair<T, S> const& p) const {
     return (std::hash<T>()(p.first) ^
             (std::hash<S>()(p.second) << sizeof(p.first)));
+  }
+  template <typename T, typename S>
+  bool operator()(const std::pair<T, S>& a, const std::pair<T, S>& b) const {
+    return (a.first == b.first && a.second == b.second);
   }
 };
 

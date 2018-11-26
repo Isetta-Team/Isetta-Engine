@@ -1,0 +1,122 @@
+<Model name="Soldier" geometry="Halves/Soldier/Soldier.geo">
+	<Joint name="mixamorig_Hips" tx="-0.057571" ty="85.1904" tz="0.49187" rx="9.27632" ry="-14.1639" rz="-3.01619" jointIndex="1">
+		<Joint name="mixamorig_Spine" tx="-0.038121" ty="9.49051" tz="-1.39206" rx="9.00374" ry="-3.21687" rz="2.47748" jointIndex="2">
+			<Joint name="mixamorig_Spine1" tx="-0.044231" ty="11.0723" tz="-1.62407" rx="3.36749" ry="-0.994129" rz="-0.136083" jointIndex="3">
+				<Joint name="mixamorig_Spine2" tx="-0.050549" ty="12.654" tz="-1.85608" rx="3.35923" ry="-1.01163" rz="-0.145839" jointIndex="4">
+					<Joint name="mixamorig_Neck" tx="-0.056868" ty="14.2358" tz="-2.08809" rx="4.21688" ry="3.67452" rz="1.54557" jointIndex="5">
+						<Joint name="mixamorig_Head" tx="0" ty="3.28022" tz="0.313332" rx="-4.15754" ry="16.1284" rz="11.434" jointIndex="6">
+							<Joint name="mixamorig_HeadTop_End" tx="0" ty="25.6535" tz="2.45046" jointIndex="7" />
+						</Joint>
+					</Joint>
+					<Joint name="mixamorig_LeftShoulder" tx="6.72877" ty="11.7566" tz="-2.05846" rx="1.73983" ry="-10.8589" rz="12.3272" jointIndex="8">
+						<Joint name="mixamorig_LeftArm" tx="14.0947" ty="-3.17874" tz="0.059263" rx="-65.2162" ry="-90.192" rz="24.4307" jointIndex="9">
+							<Joint name="mixamorig_LeftForeArm" tx="23.1603" ty="2.9e-05" tz="-4e-06" rx="0.151261" ry="-30.283" rz="-0.0409093" jointIndex="10">
+								<Joint name="mixamorig_LeftHand" tx="24.0718" ty="3.1e-05" tz="-1.6e-05" rx="-47.527" ry="163.516" rz="-153.188" jointIndex="11">
+									<Joint name="mixamorig_LeftHandThumb1" tx="4.17339" ty="-1.92506" tz="1.5109" rx="4.5431" ry="9.63016" rz="3.9161" jointIndex="12">
+										<Joint name="mixamorig_LeftHandThumb2" tx="2.998" ty="-1.73088" tz="1.73085" rx="19.5374" ry="-1.49186" rz="7.13285" jointIndex="13">
+											<Joint name="mixamorig_LeftHandThumb3" tx="3.64887" ty="-2.10666" tz="2.10664" rx="-4.41281" ry="-9.63104" rz="2.26194" jointIndex="14">
+												<Joint name="mixamorig_LeftHandThumb4" tx="2.967" ty="-1.71299" tz="1.71297" jointIndex="15" />
+											</Joint>
+										</Joint>
+									</Joint>
+									<Joint name="mixamorig_LeftHandIndex1" tx="14.6694" ty="-0.395988" tz="2.85588" rx="-0.213026" ry="3.89318" rz="-36.7656" jointIndex="16">
+										<Joint name="mixamorig_LeftHandIndex2" tx="3.24862" ty="-6e-06" tz="3.6e-05" rx="2.90327" ry="5.0375" rz="-59.8912" jointIndex="17">
+											<Joint name="mixamorig_LeftHandIndex3" tx="2.65958" ty="-7e-06" tz="4.2e-05" rx="0.50845" ry="2.37832" rz="-24.1315" jointIndex="18">
+												<Joint name="mixamorig_LeftHandIndex4" tx="3.63318" ty="1e-06" tz="1.9e-05" jointIndex="19" />
+											</Joint>
+										</Joint>
+									</Joint>
+									<Joint name="mixamorig_LeftHandMiddle1" tx="14.4098" ty="1e-06" tz="4e-06" rx="0.390646" ry="5.45323" rz="-52.4201" jointIndex="20">
+										<Joint name="mixamorig_LeftHandMiddle2" tx="3.25907" ty="-4e-06" tz="3.5e-05" rx="3.34115" ry="5.26752" rz="-64.7518" jointIndex="21">
+											<Joint name="mixamorig_LeftHandMiddle3" tx="2.63986" ty="-1e-06" tz="2.5e-05" rx="0.279261" ry="1.78055" rz="-17.8254" jointIndex="22">
+												<Joint name="mixamorig_LeftHandMiddle4" tx="3.67386" ty="2e-06" tz="3.5e-05" jointIndex="23" />
+											</Joint>
+										</Joint>
+									</Joint>
+									<Joint name="mixamorig_LeftHandRing1" tx="13.1915" ty="0.31885" tz="-3.30526" rx="-0.0930484" ry="5.67192" rz="-61.0748" jointIndex="24">
+										<Joint name="mixamorig_LeftHandRing2" tx="2.71763" ty="-3e-06" tz="1.8e-05" rx="3.99819" ry="5.53044" rz="-71.7098" jointIndex="25">
+											<Joint name="mixamorig_LeftHandRing3" tx="2.13446" ty="1.5e-05" tz="-4.2e-05" rx="0.576692" ry="2.52511" rz="-25.7247" jointIndex="26">
+												<Joint name="mixamorig_LeftHandRing4" tx="2.78687" ty="-1e-06" tz="1.6e-05" jointIndex="27" />
+											</Joint>
+										</Joint>
+									</Joint>
+									<Joint name="mixamorig_LeftHandPinky1" tx="11.6363" ty="-0.521951" tz="-5.61372" rx="-6.56585" ry="4.4663" rz="-72.9454" jointIndex="28">
+										<Joint name="mixamorig_LeftHandPinky2" tx="1.55938" ty="3e-06" tz="-5e-06" rx="3.25506" ry="5.22597" rz="-63.8125" jointIndex="29">
+											<Joint name="mixamorig_LeftHandPinky3" tx="1.54061" ty="-4e-06" tz="1.3e-05" rx="0.173664" ry="1.4106" rz="-14.0359" jointIndex="30">
+												<Joint name="mixamorig_LeftHandPinky4" tx="1.6687" ty="-3e-06" tz="7e-06" jointIndex="31" />
+											</Joint>
+										</Joint>
+									</Joint>
+								</Joint>
+							</Joint>
+						</Joint>
+					</Joint>
+					<Joint name="mixamorig_RightShoulder" tx="-6.82378" ty="11.7566" tz="-2.11772" rx="0.684357" ry="4.97018" rz="1.93796" jointIndex="32">
+						<Joint name="mixamorig_RightArm" tx="-14.0575" ty="-3.18355" tz="-0.05926" rx="-45.3517" ry="53.2441" rz="43.5493" jointIndex="33">
+							<Joint name="mixamorig_RightForeArm" tx="-23.1602" ty="-1e-05" tz="1e-06" rx="0.287168" ry="106.836" rz="0.386869" jointIndex="34">
+								<Joint name="mixamorig_RightHand" tx="-24.1434" ty="-1.7e-05" tz="-1.7e-05" rx="-22.3424" ry="-40.2671" rz="-11.972" jointIndex="35">
+									<Joint name="mixamorig_RightHandThumb1" tx="-4.19259" ty="-2.02733" tz="1.47237" rx="8.2693" ry="-5.02281" rz="10.2664" jointIndex="36">
+										<Joint name="mixamorig_RightHandThumb2" tx="-3.02664" ty="-1.74744" tz="1.74745" rx="20.4645" ry="-19.5498" rz="-25.4423" jointIndex="37">
+											<Joint name="mixamorig_RightHandThumb3" tx="-3.67778" ty="-2.12338" tz="2.1234" rx="-0.630839" ry="-49.8856" rz="-31.8611" jointIndex="38">
+												<Joint name="mixamorig_RightHandThumb4" tx="-2.93385" ty="-1.69388" tz="1.69391" jointIndex="39" />
+											</Joint>
+										</Joint>
+									</Joint>
+									<Joint name="mixamorig_RightHandIndex1" tx="-14.6369" ty="-0.408015" tz="3.08301" rx="-0.895054" ry="1.70157" rz="12.4072" jointIndex="40">
+										<Joint name="mixamorig_RightHandIndex2" tx="-3.21623" ty="-7e-06" tz="2.7e-05" rx="0.738334" ry="-2.50282" rz="32.8681" jointIndex="41">
+											<Joint name="mixamorig_RightHandIndex3" tx="-2.63826" ty="-1.3e-05" tz="4.5e-05" rx="0.60769" ry="-2.28798" rz="29.7455" jointIndex="42">
+												<Joint name="mixamorig_RightHandIndex4" tx="-3.65331" ty="-1e-05" tz="2.7e-05" jointIndex="43" />
+											</Joint>
+										</Joint>
+									</Joint>
+									<Joint name="mixamorig_RightHandMiddle1" tx="-14.5304" ty="3.3e-05" tz="-2.4e-05" rx="3.35877" ry="-7.1624" rz="51.2322" jointIndex="44">
+										<Joint name="mixamorig_RightHandMiddle2" tx="-3.12674" ty="1e-06" tz="-4e-06" rx="6.20228" ry="-4.33185" rz="110.164" jointIndex="45">
+											<Joint name="mixamorig_RightHandMiddle3" tx="-2.67247" ty="-1e-06" tz="1.4e-05" rx="0.578124" ry="-2.48491" rz="17.9986" jointIndex="46">
+												<Joint name="mixamorig_RightHandMiddle4" tx="-3.13084" ty="-0.042626" tz="0.057592" jointIndex="47" />
+											</Joint>
+										</Joint>
+									</Joint>
+									<Joint name="mixamorig_RightHandRing1" tx="-12.7711" ty="0.195778" tz="-2.96601" rx="-3.35268" ry="-2.52839" rz="57.1627" jointIndex="48">
+										<Joint name="mixamorig_RightHandRing2" tx="-2.5128" ty="1e-05" tz="-3.9e-05" rx="5.35757" ry="-4.55482" rz="99.2712" jointIndex="49">
+											<Joint name="mixamorig_RightHandRing3" tx="-2.19707" ty="-1.2e-05" tz="4.1e-05" rx="1.66565" ry="-3.54843" rz="50.2812" jointIndex="50">
+												<Joint name="mixamorig_RightHandRing4" tx="-3.06845" ty="0" tz="-5e-06" jointIndex="51" />
+											</Joint>
+										</Joint>
+									</Joint>
+									<Joint name="mixamorig_RightHandPinky1" tx="-11.7508" ty="-0.461516" tz="-5.65059" rx="-4.0056" ry="-3.22565" rz="64.8243" jointIndex="52">
+										<Joint name="mixamorig_RightHandPinky2" tx="-1.67952" ty="-7e-06" tz="2.7e-05" rx="3.99664" ry="-4.57344" rz="82.2917" jointIndex="53">
+											<Joint name="mixamorig_RightHandPinky3" tx="-1.36408" ty="-6e-06" tz="2.2e-05" rx="2.28189" ry="-3.98085" rz="59.6304" jointIndex="54">
+												<Joint name="mixamorig_RightHandPinky4" tx="-1.66821" ty="-1.2e-05" tz="3.9e-05" jointIndex="55" />
+											</Joint>
+										</Joint>
+									</Joint>
+								</Joint>
+							</Joint>
+						</Joint>
+					</Joint>
+				</Joint>
+			</Joint>
+		</Joint>
+		<Joint name="mixamorig_LeftUpLeg" tx="9.61827" ty="-5.2723" tz="-1.01089" rx="-45.9959" ry="10.4666" rz="-0.184908" jointIndex="56">
+			<Joint name="mixamorig_LeftLeg" tx="0.116408" ty="-43.3445" tz="1.32329" rx="76.3735" ry="163.399" rz="161.301" jointIndex="57">
+				<Joint name="mixamorig_LeftFoot" tx="-0.102314" ty="-44.2921" tz="-4.21978" rx="-18.3971" ry="7.53251" rz="4.90422" jointIndex="58">
+					<Joint name="mixamorig_LeftToeBase" tx="2.59946" ty="-11.8143" tz="15.8139" rx="-1.23746" ry="0" rz="0" jointIndex="59">
+						<Joint name="mixamorig_LeftToe_End" tx="1.22305" ty="0.044496" tz="7.97364" jointIndex="60" />
+					</Joint>
+				</Joint>
+			</Joint>
+		</Joint>
+		<Joint name="mixamorig_RightUpLeg" tx="-9.94097" ty="-5.27273" tz="-1.21166" rx="-32.8387" ry="2.62178" rz="10.2384" jointIndex="61">
+			<Joint name="mixamorig_RightLeg" tx="-0.103975" ty="-43.3048" tz="2.0317" rx="66.6433" ry="-10.1714" rz="-13.5729" jointIndex="62">
+				<Joint name="mixamorig_RightFoot" tx="0.117103" ty="-44.3314" tz="-4.72719" rx="-41.2045" ry="-24.4099" rz="15.5706" jointIndex="63">
+					<Joint name="mixamorig_RightToeBase" tx="-2.59947" ty="-11.8145" tz="15.9998" rx="-6.15007" ry="0" rz="0" jointIndex="64">
+						<Joint name="mixamorig_RightToe_End" tx="-1.22305" ty="0.044394" tz="7.92706" jointIndex="65" />
+					</Joint>
+				</Joint>
+			</Joint>
+		</Joint>
+	</Joint>
+
+	<Mesh name="vanguard_visor" material="Halves/Soldier/Vanguard_VisorMat.material.xml" batchStart="0" batchCount="570" vertRStart="0" vertREnd="569" />
+	<Mesh name="vanguard_Mesh" material="Halves/Soldier/VanguardBodyMat.material.xml" batchStart="570" batchCount="33558" vertRStart="570" vertREnd="30965" />
+</Model>

@@ -65,7 +65,7 @@ bool IsSoundValid() const;
 bool IsValidHandle() const;
 
 float volume = 1.f, speed = 1.f;
-int loopCount = 0;
+int loopCount = -1;
 Math::Vector2 minMaxDistance = Math::Vector2{1.f, 1000.f};
 std::bitset<3> properties;
 

@@ -20,7 +20,8 @@
 #include "Networking/NetworkId.h"
 #include "Networking/NetworkTransform.h"
 #include "Scene/Entity.h"
-#include "GameMgtLevel/GameMgtTestComp.h"
+#include "GameMgtLevel/NetworkTestComp.h"
+#include "Networking/NetworkDiscovery.h"
 
 using namespace Isetta;
 
@@ -67,7 +68,7 @@ void RegisterExampleMessageFunctions() {
             LOG(Debug::Channel::Networking, "Client %d sends handle #%d",
                 clientIdx, handleMessage->handle);
 
-            NetworkManager::Instance().SendAllMessageFromServer<HandleMessage>(
+            NetworkManager::Instance().SendMessageFromServerToAll<HandleMessage>(
                 handleMessage);
           });
 
@@ -144,7 +145,7 @@ void RegisterExampleMessageFunctions() {
               }
             }
 
-            NetworkManager::Instance().SendAllMessageFromServer<SpawnMessage>(
+            NetworkManager::Instance().SendMessageFromServerToAll<SpawnMessage>(
                 spawnMessage);
           });
 
@@ -177,7 +178,7 @@ void RegisterExampleMessageFunctions() {
               return;
             }
 
-            NetworkManager::Instance().SendAllMessageFromServer<DespawnMessage>(
+            NetworkManager::Instance().SendMessageFromServerToAll<DespawnMessage>(
                 despawnMessage);
 
             Entity* entity = NetworkManager::Instance().GetNetworkEntity(
@@ -210,24 +211,24 @@ void NetworkLevel::OnLevelLoad() {
   // Networking preparation
   RegisterExampleMessageFunctions();
 
-  Input::RegisterKeyPressCallback(KeyCode::NUM1, []() {
+  Input::RegisterKeyPressCallback(KeyCode::F1, []() {
     NetworkManager::Instance().StartHost(
         CONFIG_VAL(networkConfig.defaultServerIP));
   });
 
-  Input::RegisterKeyPressCallback(KeyCode::NUM2, []() {
-    NetworkManager::Instance().StartClient(
+  Input::RegisterKeyPressCallback(KeyCode::F2, []() {
+    NetworkManager::Instance().StartServer(
         CONFIG_VAL(networkConfig.defaultServerIP));
   });
 
-  // if (CONFIG_VAL(networkConfig.runServer) &&
-  // CONFIG_VAL(networkConfig.connectToServer)) {
-  // NetworkManager::Instance().StartHost(
-  // CONFIG_VAL(networkConfig.defaultServerIP));
-  // } else {
-  // NetworkManager::Instance().StartClient(
-  // CONFIG_VAL(networkConfig.defaultServerIP));
-  // }
+  Input::RegisterKeyPressCallback(KeyCode::F3, []() {
+    if (NetworkManager::Instance().IsClientRunning()) {
+      NetworkManager::Instance().StopClient();
+    } else {
+    NetworkManager::Instance().StartClient(
+        CONFIG_VAL(networkConfig.defaultServerIP));
+    }
+  });
 
   // Spawn across network
   Input::RegisterKeyPressCallback(KeyCode::Y, []() {
@@ -336,6 +337,6 @@ void NetworkLevel::OnLevelLoad() {
   debugEntity->AddComponent<GridComponent>();
   debugEntity->AddComponent<EditorComponent>();
   debugEntity->AddComponent<EscapeExit>();
-  debugEntity->AddComponent<GameMgtTestComp>();
-
+  debugEntity->AddComponent<NetworkTestComp>();
+  debugEntity->AddComponent<NetworkDiscovery>();
 }

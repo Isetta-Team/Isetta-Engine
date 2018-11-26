@@ -33,9 +33,9 @@ class ISETTA_API_DECLARE NetworkManager {
   void SendMessageFromClient(yojimbo::Message* message) const;
   void SendMessageFromServer(int clientIdx, yojimbo::Message* message) const;
   template <typename T>
-  void SendAllMessageFromServer(yojimbo::Message* refMessage);
+  void SendMessageFromServerToAll(yojimbo::Message* refMessage);
   template <typename T>
-  void SendAllButClientMessageFromServer(int clientIdx,
+  void SendMessageFromServerToAllButClient(int clientIdx,
                                          yojimbo::Message* refMessage);
 
   U16 GetMessageTypeCount() const { return messageTypeCount; }
@@ -125,7 +125,7 @@ class ISETTA_API_DECLARE NetworkManager {
   void RemoveNetworkId(NetworkId* networkId);
   static U16 GetServerPort();
 
-  class NetworkingModule* networkingModule;
+  class NetworkingModule* networkingModule{nullptr};
 
   int messageTypeCount = 0;
   U16 functionCount = 0;
@@ -161,7 +161,7 @@ int NetworkManager::GetMessageTypeId() {
   return typeMap[std::type_index(typeid(T))];
 }
 template <typename T>
-void NetworkManager::SendAllMessageFromServer(yojimbo::Message* refMessage) {
+void NetworkManager::SendMessageFromServerToAll(yojimbo::Message* refMessage) {
   for (int i = 0; i < GetMaxClients(); ++i) {
     if (!IsClientConnected(i)) {
       continue;
@@ -173,7 +173,7 @@ void NetworkManager::SendAllMessageFromServer(yojimbo::Message* refMessage) {
   }
 }
 template <typename T>
-void NetworkManager::SendAllButClientMessageFromServer(
+void NetworkManager::SendMessageFromServerToAllButClient(
     int clientIdx, yojimbo::Message* refMessage) {
   for (int i = 0; i < GetMaxClients(); ++i) {
     if (!IsClientConnected(i) || i == clientIdx) {

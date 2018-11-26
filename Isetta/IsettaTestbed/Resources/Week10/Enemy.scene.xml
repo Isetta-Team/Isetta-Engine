@@ -1,0 +1,4 @@
+<Model name="Player" geometry="Week10/Enemy.geo">
+
+	<Mesh name="pCube1" material="Week10/Enemy.material.xml" sx="0.25" sy="0.5" sz="0.25" batchStart="0" batchCount="4356" vertRStart="0" vertREnd="803" />
+</Model>

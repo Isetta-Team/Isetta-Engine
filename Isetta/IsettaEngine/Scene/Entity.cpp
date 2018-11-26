@@ -73,9 +73,7 @@ void Entity::CheckDestroy() {
     while (typeIter != componentTypes.end() && compIter != components.end()) {
       Component *comp = *compIter;
       if (comp->GetAttribute(Component::ComponentAttributes::NEED_DESTROY)) {
-        if (comp->GetActive()) {
-          comp->OnDisable();
-        }
+        if (comp->GetActive()) comp->OnDisable();
         comp->OnDestroy();
         comp->~Component();
         MemoryManager::DeleteOnFreeList<Component>(comp);
@@ -92,9 +90,7 @@ void Entity::CheckDestroy() {
 void Entity::OnDisable() {
   PROFILE
   for (auto &comp : components) {
-    if (comp->GetActive()) {
-      comp->OnDisable();
-    }
+    if (comp->GetActive()) comp->OnDisable();
   }
 }
 
@@ -117,7 +113,6 @@ Entity::Entity(const std::string &name, const bool entityStatic)
 }
 
 Entity::~Entity() {
-  // OnDisable();
   Destroy(this);
   CheckDestroy();
 }

@@ -12,6 +12,7 @@ H3DNode renderNode{0};
 Array<H3DNode> emitters;
 H3DRes renderResource{0};
 
+ParticleSystemComponent();
 explicit ParticleSystemComponent(std::string_view resourceName);
 // ~ParticleSystemComponent();
 
@@ -19,7 +20,7 @@ void UpdateTransform() const;
 void UpdateEmitter(float deltaTime) const;
 
 protected:
-static H3DRes LoadResourceFromFile(std::string_view resourceName);
+static H3DRes LoadResourceFromFile(std::string_view resourceName, bool isEngineResource);
 void Awake() override;
 void OnEnable() override;
 void OnDisable() override;

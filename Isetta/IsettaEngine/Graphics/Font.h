@@ -25,7 +25,8 @@ struct ISETTA_API Font : private ImFont {
  private:
   static void AddFontToMap(const std::string_view fontName, float size,
                            Font* const font);
-  static std::unordered_map<std::pair<StringId, float>, Font*, Util::PairHash>
+  static std::unordered_map<std::pair<StringId, float>, Font*, Util::PairHash,
+                            Util::PairHash>
       fonts;
 
   static class GUIModule* guiModule;

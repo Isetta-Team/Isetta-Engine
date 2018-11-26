@@ -12,7 +12,6 @@ namespace Isetta {
 BEGIN_COMPONENT(LightComponent, Component, true)
 public:
 struct LightConfig {
-  CVarString lightMaterial{"light_material", "materials/light.material.xml"};
   CVar<float> radius{"light_radius", 2500};
   CVar<float> fieldOfView{"light_fov", 180};
   CVar<float> colorMultiplier{"color_multiplier", 1.0f};
@@ -36,6 +35,7 @@ void OnDisable() override;
 void OnDestroy() override;
 
 LightComponent();
+explicit LightComponent(std::string_view lightMaterial);
 
 template <Property Attr, typename T>
 void SetProperty(T value);
@@ -44,7 +44,7 @@ template <Property Attr, typename T>
 T GetProperty() const;
 
 private:
-static H3DRes LoadResourceFromFile(std::string_view resourceName);
+static H3DRes LoadResourceFromFile(std::string_view resourceName, bool isEngineResource);
 
 static class RenderModule* renderModule;
 friend class RenderModule;

@@ -370,8 +370,17 @@
     <ClCompile Include="Custom\LevelLoader.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
-    <ClCompile Include="Custom\GameMgtLevel\GameMgtTestComp.cpp">
+    <ClCompile Include="Core\SystemInfo.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\EngineResource.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\GameMgtLevel\NetworkTestComp.cpp">
       <Filter>Custom\GameMgtLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Networking\NetworkDiscovery.cpp">
+      <Filter>Networking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -395,9 +404,6 @@
     </Filter>
     <Filter Include="Resources\pipelines">
       <UniqueIdentifier>{699798ff-ad5f-4318-af31-8a9533e02e91}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\test">
-      <UniqueIdentifier>{5cc071fc-c36c-4764-9a4a-d63b2bc31c86}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resources\materials">
       <UniqueIdentifier>{8af1aad8-15c3-4b54-89a8-fddd75efab44}</UniqueIdentifier>
@@ -867,8 +873,23 @@
     <ClInclude Include="Core\IsettaCore.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Core\EngineResource.h">
+      <Filter>Core</Filter>
+    </ClInclude>
     <ClInclude Include="Custom\GameMgtLevel\GameMgtTestComp.h">
       <Filter>Custom\GameMgtLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="BuiltinMessages.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\SystemInfo.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\GameMgtLevel\NetworkTestComp.h">
+      <Filter>Custom\GameMgtLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Networking\NetworkDiscovery.h">
+      <Filter>Networking</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -936,20 +957,11 @@
     </Media>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\test\Low-Poly-Racing-Car.geo">
-      <Filter>Resources\test</Filter>
-    </None>
     <None Include="config.cfg" />
     <None Include="cpp.hint" />
     <None Include="user.cfg" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="Resources\test\Low-Poly-Racing-Car.scene.xml">
-      <Filter>Resources\test</Filter>
-    </Xml>
-    <Xml Include="Resources\test\m0DefaultMaterial.material.xml">
-      <Filter>Resources\test</Filter>
-    </Xml>
     <Xml Include="Resources\pipelines\deferred.pipeline.xml">
       <Filter>Resources\pipelines</Filter>
     </Xml>

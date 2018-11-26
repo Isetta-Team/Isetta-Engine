@@ -77,6 +77,15 @@
     <ClCompile Include="KnightGame\Gameplay\FollowComponent.cpp">
       <Filter>KnightGame\Gameplay</Filter>
     </ClCompile>
+    <ClCompile Include="KnightGame\Gameplay\FireballCircle.cpp">
+      <Filter>KnightGame\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="KnightGame\Gameplay\Enemy.cpp">
+      <Filter>KnightGame\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="KnightGame\Gameplay\ScreenShifter.cpp">
+      <Filter>KnightGame\Gameplay</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
@@ -189,6 +198,15 @@
       <Filter>KnightGame\Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="KnightGame\Gameplay\FollowComponent.h">
+      <Filter>KnightGame\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="KnightGame\Gameplay\FireballCircle.h">
+      <Filter>KnightGame\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="KnightGame\Gameplay\Enemy.h">
+      <Filter>KnightGame\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="KnightGame\Gameplay\ScreenShifter.h">
       <Filter>KnightGame\Gameplay</Filter>
     </ClInclude>
   </ItemGroup>

@@ -11,6 +11,7 @@
 #include "Custom/EscapeExit.h"
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
+#include "Scene/Primitive.h"
 
 namespace Isetta {
 
@@ -33,15 +34,14 @@ void MeshAnimLevel::OnLevelLoad() {
 
   Entity *zombie{Entity::Instantiate("Zombie")};
   MeshComponent *mesh =
-      zombie->AddComponent<MeshComponent>("Zombie/Zombie.scene.xml");
+      zombie->AddComponent<MeshComponent>("Halves/Zombie/Zombie.scene.xml");
   AnimationComponent *animation =
       zombie->AddComponent<AnimationComponent>(mesh);
-  animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
+  animation->AddAnimation("Halves/Zombie/Zombie.anim", 0, "", false);
   zombie->SetTransform(Math::Vector3::zero, Math::Vector3::zero,
                        Math::Vector3::one * 0.01f);
 
-  Entity *cube{Entity::Instantiate("Cube")};
-  cube->AddComponent<MeshComponent>("primitives/Cube.scene.xml");
+  Entity *cube = Primitive::Create(Primitive::Type::Cube);
   cube->transform->SetParent(zombie->transform);
   cube->transform->SetLocalPos(2.f * Math::Vector3::up);
 }

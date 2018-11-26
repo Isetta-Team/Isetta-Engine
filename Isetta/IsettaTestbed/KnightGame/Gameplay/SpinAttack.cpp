@@ -13,6 +13,7 @@ using namespace Isetta;
 
 namespace KnightGame {
 void SpinAttack::Update() {
+  // if (!callbackInProgress) {
   Math::Vector2 spin =
       Input::GetGamepadAxis(GamepadAxis::R_HORIZONTAL) * Math::Vector2::left +
       Input::GetGamepadAxis(GamepadAxis::R_VERTICAL) * Math::Vector2::up;
@@ -35,8 +36,11 @@ void SpinAttack::Update() {
       if (direction != 0 &&
           Math::Util::Abs(angle - startAngle) < anglePercision) {
         LOG("COMPLETED");
+        callbackInProgress = true;
+        callback();
         started = false;
         direction = 0;
+        elapsedTime = 0;
       }
     } else if (delta > 0) {
       if (direction == -1)
@@ -56,5 +60,8 @@ void SpinAttack::Update() {
     // LOG("Failed");
     started = false;
   }
+  //}
 }
+
+void SpinAttack::SetCallback(Action<> callback) { this->callback = callback; }
 }  // namespace KnightGame

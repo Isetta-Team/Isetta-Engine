@@ -6,11 +6,16 @@
 #include "Scene/Transform.h"
 #include "Util.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
+#include "Core/EngineResource.h"
+
+Isetta::ParticleSystemComponent::ParticleSystemComponent() : Component() {
+  renderResource = LoadResourceFromFile(EngineResource::defaultParticle, true);
+}
 
 Isetta::ParticleSystemComponent::ParticleSystemComponent(
     std::string_view resourceName)
     : Component() {
-  renderResource = LoadResourceFromFile(resourceName);
+  renderResource = LoadResourceFromFile(resourceName, false);
 }
 
 void Isetta::ParticleSystemComponent::UpdateTransform() const {
@@ -24,12 +29,12 @@ void Isetta::ParticleSystemComponent::UpdateEmitter(float deltaTime) const {
 }
 
 H3DRes Isetta::ParticleSystemComponent::LoadResourceFromFile(
-    std::string_view resourceName) {
+    std::string_view resourceName, bool isEngineResource) {
   H3DRes renderResource =
       h3dAddResource(H3DResTypes::SceneGraph, resourceName.data(), 0);
 
   RenderModule::LoadResourceFromDisk(
-      renderResource, false,
+      renderResource, isEngineResource,
       Util::StrFormat("ParticleSystemComponent::LoadResourceFromFile => "
                       "Cannot load the resource from %s",
                       resourceName.data()));

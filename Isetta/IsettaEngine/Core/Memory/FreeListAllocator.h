@@ -98,8 +98,7 @@ T* FreeListAllocator::New(Args... args) {
   monitorPureAlloc = false;
   T* ret = new (Alloc(sizeof(T), MemUtil::ALIGNMENT)) T(args...);
   monitorPureAlloc = true;
-  std::string name = typeid(T).name();
-
+  std::string name = MemUtil::GetNameForType<T>();
   if (std::is_base_of<class Component, T>::value) {
     U64 vPointer = *reinterpret_cast<U64*>(ret);
     vtableToNameMap.insert({vPointer, name});
@@ -130,7 +129,7 @@ void FreeListAllocator::Delete(T* t) {
     U64 vPointer = *reinterpret_cast<U64*>(t);
     name = vtableToNameMap.find(vPointer)->second;
   } else {
-    name = typeid(T).name();
+    name = MemUtil::GetNameForType<T>();
   }
 
   StringId sid = SID(name.c_str());
@@ -165,22 +164,22 @@ void FreeListAllocator::Delete(T* t) {
 
 template <typename T>
 T* FreeListAllocator::NewArr(Size length, const U8 alignment) {
+  ASSERT(length != 0);
 #if _DEBUG
   monitorPureAlloc = false;
   void* alloc = Alloc(sizeof(T) * length, alignment);
   monitorPureAlloc = true;
 
   numOfArrNews++;
-  std::string name = typeid(T).name();
-
+  std::string name = MemUtil::GetNameForType<T>();
   if (std::is_base_of<class Component, T>::value) {
     U64 vPointer = *reinterpret_cast<U64*>(alloc);
     vtableToNameMap.insert({vPointer, name});
   }
 
-  name += "Array (Size = ";
+  name += " Array[";
   name += std::to_string(length);
-  name += ")";
+  name += "]";
 
   StringId sid = SID(name.c_str());
   auto it = monitor.find(sid);
@@ -210,12 +209,12 @@ void FreeListAllocator::DeleteArr(const Size length, T* ptrToDelete) {
     U64 vPointer = *reinterpret_cast<U64*>(ptrToDelete);
     name = vtableToNameMap.find(vPointer)->second;
   } else {
-    name = typeid(T).name();
+    name = MemUtil::GetNameForType<T>();
   }
 
-  name += "Array (Size = ";
+  name += " Array[";
   name += std::to_string(length);
-  name += ")";
+  name += "]";
 
   StringId sid = SID(name.c_str());
   auto it = monitor.find(sid);
@@ -223,7 +222,7 @@ void FreeListAllocator::DeleteArr(const Size length, T* ptrToDelete) {
   // ASSERT(it != monitor.end());
   if (it != monitor.end()) {
     Allocations allocations = it->second;
-    allocations.second -= length;
+    allocations.second--;
     ASSERT(allocations.second >= 0);
     if (allocations.second == 0) {
       monitor.erase(it);

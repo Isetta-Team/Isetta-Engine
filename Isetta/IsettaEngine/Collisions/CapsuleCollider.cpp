@@ -21,8 +21,8 @@ void CapsuleCollider::Update() {
   Math::Matrix4 rotation;
   GetWorldCapsule(&rotation, &scale);
   DebugDraw::WireCapsule(
-      Math::Matrix4::Translate(transform->GetWorldPos() + center) * scale *
-          rotation,
+      Math::Matrix4::Translate(transform->GetWorldPos() + center) * rotation *
+          scale,
       radius, height, debugColor);
 
   Math::Vector3 dir =

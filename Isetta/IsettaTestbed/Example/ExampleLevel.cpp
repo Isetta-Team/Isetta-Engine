@@ -27,12 +27,11 @@ void ExampleLevel::OnLevelLoad() {
 
   Entity* man = Entity::Instantiate("PushAnim");
   man->SetTransform(Math::Vector3{0, 0, 0}, Math::Vector3{0, 90, 0});
-  // man->AddComponent<PlayerController, true>();
   MeshComponent* pushMesh =
-      man->AddComponent<MeshComponent>("push/Pushing.scene.xml");
+      man->AddComponent<MeshComponent>("Example/Pushing.scene.xml");
 
   AnimationComponent* ani = man->AddComponent<AnimationComponent>(pushMesh);
-  ani->AddAnimation("push/Pushing.anim", 0, "", false);
+  ani->AddAnimation("Example/Pushing.anim", 0, "", false);
 
   Entity* customEntity = Entity::Instantiate("custom");
   customEntity->AddComponent<ExampleComponent>();

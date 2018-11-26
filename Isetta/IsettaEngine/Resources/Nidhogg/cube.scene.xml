@@ -1,4 +1,0 @@
-<Model name="cube" geometry="Nidhogg/cube.geo">
-
-	<Mesh name="Cube" material="Nidhogg/Material.material.xml" sx="0.5" sy="0.5" sz="0.5" batchStart="0" batchCount="36" vertRStart="0" vertREnd="23" />
-</Model>

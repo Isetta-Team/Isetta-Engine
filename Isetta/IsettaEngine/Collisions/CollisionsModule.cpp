@@ -42,7 +42,8 @@ void CollisionsModule::Update(float deltaTime) {
 
   collidingPairs.clear();
 
-  for (const auto &pair : bvTree.GetCollisionPairs()) {
+  auto pairs = bvTree.GetCollisionPairs();
+  for (const auto &pair : pairs) {
     Collider *collider1 = pair.first;
     Collider *collider2 = pair.second;
     // Ignore Single/Layer Collisions continue
@@ -84,6 +85,7 @@ void CollisionsModule::Update(float deltaTime) {
   for (const auto &pair : lastFramePairs) {
     Collider *collider1 = pair.first;
     Collider *collider2 = pair.second;
+    if (!collider1->entity || !collider2->entity) continue;
 
     CollisionHandler *handler1 = collider1->GetHandler();
     CollisionHandler *handler2 = collider2->GetHandler();
@@ -325,8 +327,6 @@ Array<RaycastHit> CollisionsModule::RaycastAll(const Ray &ray, float maxDistance
   return bvTree.RaycastAll(ray, maxDistance);
 }
 bool CollisionsModule::GetIgnoreLayerCollision(int layer1, int layer2) const {
-  Layers::CheckLayer(layer1);
-  Layers::CheckLayer(layer2);
   if (layer1 < layer2)
     return ignoreCollisionLayer.test(layer1 * Layers::LAYERS_CAPACITY + layer2);
   else
