@@ -145,8 +145,8 @@ T *Entity::AddComponent(Args &&... args) {
     }
 
     // Set the data so the next Component can pick them up in constructor
-    T::curEntity = this;
-    T::curTransform = transform;
+    Component::curEntity = this;
+    Component::curTransform = transform;
 
     T *component = MemoryManager::NewOnFreeList<T>(std::forward<Args>(args)...);
     component->SetActive(IsActive);
