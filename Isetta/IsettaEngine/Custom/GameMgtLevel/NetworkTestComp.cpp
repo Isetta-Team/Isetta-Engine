@@ -50,7 +50,8 @@ void NetworkTestComp::Start() {
 
   Input::RegisterKeyPressCallback(KeyCode::NUM1, [this]() {
     this->entity->GetComponent<NetworkDiscovery>()->StartBroadcasting(
-        "Hello from the other size", 60, 1);
+        "Hello from the other side", 60, 1);
+    LOG_INFO(Debug::Channel::Networking, "Broadcasting started (duration=%.1fs, interval=%.1fs)", 60.f, 1.f);
   });
 
   Input::RegisterKeyPressCallback(KeyCode::NUM2, [this]() {
@@ -59,6 +60,7 @@ void NetworkTestComp::Start() {
         ->AddOnMessageReceivedListener([](const char* data, const char* ip) {
           LOG_INFO(Debug::Channel::Networking, "[%s] said {%s}", ip, data);
         });
+    LOG_INFO(Debug::Channel::Networking, "Started listening to broadcasts");
   });
 }
 
