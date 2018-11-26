@@ -33,9 +33,8 @@ void NetworkingModule::StartUp() {
   srand(static_cast<unsigned int>(time(nullptr)));
 
   // TODO(Caleb): Figure out some more robust channel settings
-  yojimboConfig.numChannels = 2;
+  yojimboConfig.numChannels = 1;
   yojimboConfig.channel[0].type = yojimbo::CHANNEL_TYPE_UNRELIABLE_UNORDERED;
-  yojimboConfig.channel[1].type = yojimbo::CHANNEL_TYPE_RELIABLE_ORDERED;
   yojimboConfig.timeout = CONFIG_VAL(networkConfig.timeout);
 
   privateKey = new (MemoryManager::AllocOnStack(
