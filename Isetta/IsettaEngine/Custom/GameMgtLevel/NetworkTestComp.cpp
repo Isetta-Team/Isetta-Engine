@@ -42,7 +42,7 @@ void NetworkTestComp::GuiUpdate() {
 
   static bool isOpen = true;
   GUI::Window(
-      RectTransform{Math::Rect{0, 80, 200, 300}, GUI::Pivot::Top,
+      RectTransform{Math::Rect{180, 80, 200, 300}, GUI::Pivot::Top,
                     GUI::Pivot::Top},
       "Network Monitor",
       [=]() {

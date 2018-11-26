@@ -13,15 +13,15 @@
 #include "Core/Math/Math.h"
 #include "Custom/KeyTransform.h"
 #include "EscapeExit.h"
+#include "GameMgtLevel/NetworkTestComp.h"
 #include "Graphics/AnimationComponent.h"
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
 #include "Input/Input.h"
+#include "Networking/NetworkDiscovery.h"
 #include "Networking/NetworkId.h"
 #include "Networking/NetworkTransform.h"
 #include "Scene/Entity.h"
-#include "GameMgtLevel/NetworkTestComp.h"
-#include "Networking/NetworkDiscovery.h"
 
 using namespace Isetta;
 
@@ -55,7 +55,8 @@ void RegisterExampleMessageFunctions() {
                   "Server says we should stop the animation!");
             }
             if (handleMessage->handle == 2) {
-              auto audio = AudioSource(AudioClip::Load("Sound/gunshot.aiff", "Gunshot"));
+              auto audio =
+                  AudioSource(AudioClip::Load("Sound/gunshot.aiff", "Gunshot"));
               audio.Play();
             }
           });
@@ -68,8 +69,8 @@ void RegisterExampleMessageFunctions() {
             LOG(Debug::Channel::Networking, "Client %d sends handle #%d",
                 clientIdx, handleMessage->handle);
 
-            NetworkManager::Instance().SendMessageFromServerToAll<HandleMessage>(
-                handleMessage);
+            NetworkManager::Instance()
+                .SendMessageFromServerToAll<HandleMessage>(handleMessage);
           });
 
   exampleClientSpawn =
@@ -178,8 +179,8 @@ void RegisterExampleMessageFunctions() {
               return;
             }
 
-            NetworkManager::Instance().SendMessageFromServerToAll<DespawnMessage>(
-                despawnMessage);
+            NetworkManager::Instance()
+                .SendMessageFromServerToAll<DespawnMessage>(despawnMessage);
 
             Entity* entity = NetworkManager::Instance().GetNetworkEntity(
                 despawnMessage->netId);
@@ -225,8 +226,8 @@ void NetworkLevel::OnLevelLoad() {
     if (NetworkManager::Instance().IsClientRunning()) {
       NetworkManager::Instance().StopClient();
     } else {
-    NetworkManager::Instance().StartClient(
-        CONFIG_VAL(networkConfig.defaultServerIP));
+      NetworkManager::Instance().StartClient(
+          CONFIG_VAL(networkConfig.defaultServerIP));
     }
   });
 
@@ -338,5 +339,10 @@ void NetworkLevel::OnLevelLoad() {
   debugEntity->AddComponent<EditorComponent>();
   debugEntity->AddComponent<EscapeExit>();
   debugEntity->AddComponent<NetworkTestComp>();
-  debugEntity->AddComponent<NetworkDiscovery>();
+  auto discovery = debugEntity->AddComponent<NetworkDiscovery>();
+  discovery->StartBroadcasting("Hello from the other size", 10, 1);
+  discovery->StartListening();
+  discovery->AddOnMessageReceivedListener([](const char* data, const char* ip) {
+    LOG_INFO(Debug::Channel::Networking, "[%s] said {%s}", ip, data);
+  });
 }
