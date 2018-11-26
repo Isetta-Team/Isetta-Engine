@@ -320,6 +320,7 @@ void NetworkingModule::CreateServer(const char* address, int port) {
         Debug::Channel::Networking,
         "NetworkingModule::CreateServer => Cannot create a server while one is "
         "already running.");
+    return;
   }
 
   int maxClients = CONFIG_VAL(networkConfig.maxClients);
@@ -347,7 +348,7 @@ void NetworkingModule::CreateServer(const char* address, int port) {
     lastFrameClientConnected[i] = false;
   }
 
-  clientInfos = MemoryManager::NewArrOnStack<ClientInfo>(maxClients);
+  clientInfos = MemoryManager::NewArrOnFreeList<ClientInfo>(maxClients);
 }
 
 void NetworkingModule::CloseServer() {
@@ -357,6 +358,8 @@ void NetworkingModule::CloseServer() {
         "running.");
   }
 
+  MemoryManager::DeleteArrOnFreeList<ClientInfo>(CONFIG_VAL(networkConfig.maxClients), clientInfos);
+  clientInfos = nullptr;
   server->Stop();
   MemoryManager::DeleteOnFreeList<yojimbo::Server>(server);
   server = nullptr;
