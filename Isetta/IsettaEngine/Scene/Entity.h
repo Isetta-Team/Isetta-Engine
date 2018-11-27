@@ -82,7 +82,7 @@ class ISETTA_API_DECLARE Entity {
   void SetActive(bool inActive);
   bool GetActive() const;
 
-  inline bool IsMoveable() const;
+  bool IsMoveable() const;
 
   template <typename T, typename... Args>
   T *AddComponent(Args &&... args);
@@ -143,12 +143,9 @@ T *Entity::AddComponent(Args &&... args) {
           "Entity::AddComponent => Adding multiple excluded components %s",
           typeIndex.name()));
     }
-
-    // Set the data so the next Component can pick them up in constructor
-    Component::curEntity = this;
-    Component::curTransform = transform;
-
     T *component = MemoryManager::NewOnFreeList<T>(std::forward<Args>(args)...);
+    (Entity*&)(component->entity) = this;
+    (Transform*&)(component->transform) = transform;
     component->SetActive(IsActive);
     if (IsActive) {
       component->Awake();

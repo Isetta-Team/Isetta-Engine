@@ -67,6 +67,6 @@ class ISETTA_API Level {
 
   virtual void OnLevelLoad() = 0;
   virtual void OnLevelUnload() {}
-  inline bool IsLevelLoaded() const;
+  bool IsLevelLoaded() const;
 };
 }  // namespace Isetta

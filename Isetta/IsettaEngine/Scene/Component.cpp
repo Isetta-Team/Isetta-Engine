@@ -8,8 +8,6 @@
 namespace Isetta {
 
 bool Component::isFlattened = false;
-Entity* Component::curEntity = nullptr;
-Transform* Component::curTransform = nullptr;
 
 bool Component::RegisterComponent(std::type_index curr, std::type_index base,
                                   bool isUnique) {
@@ -59,7 +57,7 @@ void Component::FlattenHelper(std::type_index parent, std::type_index curr) {
 }
 
 Component::Component()
-    : attributes{0b1111001}, entity{curEntity}, transform(curTransform) {
+    : attributes{0b1111001}, entity{nullptr}, transform(nullptr) {
   if (!isFlattened) {
     FlattenComponentList();
   }
