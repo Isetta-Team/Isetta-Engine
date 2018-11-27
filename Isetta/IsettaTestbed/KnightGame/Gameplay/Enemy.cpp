@@ -51,12 +51,11 @@ void Enemy::Explode() {
 
 void Enemy::Reset() {
   Math::Vector3 position = transform->GetWorldPos();
-  // position.x += 3.f * enemyPool;
-  position.x += 9.f;
+  position.x += 3.f * enemyPool;
   position.z = (2.f * Math::Random::GetRandom01() - 1.f) * 4.5f;
   transform->SetWorldPos(position);
-  // deadBody->SetActive(false);
-  // capsule->SetActive(true);
+  deadBody->SetActive(false);
+  capsule->SetActive(true);
   mesh->SetActive(true);
 }
 }  // namespace KnightGame

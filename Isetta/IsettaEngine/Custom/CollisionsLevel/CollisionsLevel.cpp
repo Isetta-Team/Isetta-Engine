@@ -26,6 +26,8 @@
 #include "Components/Editor/FrameReporter.h"
 #include "Core/IsettaCore.h"
 
+#include "Scene/Primitive.h"
+
 namespace Isetta {
 
 void CollisionsLevel::OnLevelLoad() {
@@ -44,17 +46,21 @@ void CollisionsLevel::OnLevelLoad() {
   lightEntity->AddComponent<LightComponent>();
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
-  // lightComp->SetProperty<LightProperty::RADIUS>(2500);
-  // lightComp->SetProperty<LightProperty::FOV>(180);
-  // lightComp->SetProperty<LightProperty::COLOR>(Color::white);
-  // lightComp->SetProperty<LightProperty::COLOR_MULTIPLIER>(1.0f);
-  // lightComp->SetProperty<LightProperty::SHADOW_MAP_COUNT>(1);
-  // lightComp->SetProperty<LightProperty::SHADOW_MAP_BIAS>(0.01f);
 
   Entity* grid = Entity::Instantiate("Grid");
   grid->AddComponent<GridComponent>();
   grid->AddComponent<RaycastClick>(true, 5);
 
+  Entity* cube = Entity::Instantiate("Cube");
+  BoxCollider* cubeCol = cube->AddComponent<BoxCollider>(
+      Math::Vector3{-8, 1.5f, 0}, Math::Vector3{1, 3, 10});
+  cube->AddComponent<KeyTransform>();
+
+  Entity* capsule = Entity::Instantiate("Capsule");
+  CapsuleCollider* capsuleCol = capsule->AddComponent<CapsuleCollider>();
+  capsule->transform->SetWorldPos(Math::Vector3{0, 1.f, 0});
+
+  /*
   // STATIC
   const int COLLIDERS = 3;
   Entity* staticCol[COLLIDERS];
@@ -121,8 +127,8 @@ void CollisionsLevel::OnLevelLoad() {
       capsule->AddComponent<DebugCollision>();
     }
 
-    Input::RegisterKeyPressCallback(KeyCode::ESCAPE,
-                                    []() { Application::Exit(); });
-  }
+    */
+  Input::RegisterKeyPressCallback(KeyCode::ESCAPE,
+                                  []() { Application::Exit(); });
 }
 }  // namespace Isetta

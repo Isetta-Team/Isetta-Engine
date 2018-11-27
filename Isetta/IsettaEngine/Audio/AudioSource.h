@@ -62,7 +62,6 @@ FMOD::Channel* fmodChannel{};
 
 bool IsChannelValid() const;
 bool IsSoundValid() const;
-bool IsValidHandle() const;
 
 float volume = 1.f, speed = 1.f;
 int loopCount = -1;
