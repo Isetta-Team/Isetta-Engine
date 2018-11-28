@@ -301,9 +301,6 @@
     <ClCompile Include="Custom\EmptyLevel\EmptyLevel.cpp">
       <Filter>Custom\EmptyLevel</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Cursor.cpp">
-      <Filter>Graphics\GUI</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -704,9 +701,6 @@
     </ClInclude>
     <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h">
       <Filter>Custom\EmptyLevel</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Cursor.h">
-      <Filter>Graphics\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

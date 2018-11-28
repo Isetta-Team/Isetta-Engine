@@ -285,7 +285,6 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClCompile Include="Events\Events.cpp" />
     <ClCompile Include="Graphics\AnimationComponent.cpp" />
     <ClCompile Include="Graphics\CameraComponent.cpp" />
-    <ClCompile Include="Graphics\Cursor.cpp" />
     <ClCompile Include="Graphics\Font.cpp" />
     <ClCompile Include="Graphics\GUI.cpp" />
     <ClCompile Include="Graphics\GUIModule.cpp" />
@@ -413,7 +412,6 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClInclude Include="Events\Events.h" />
     <ClInclude Include="Graphics\AnimationComponent.h" />
     <ClInclude Include="Graphics\CameraComponent.h" />
-    <ClInclude Include="Graphics\Cursor.h" />
     <ClInclude Include="Graphics\Font.h" />
     <ClInclude Include="Graphics\GUI.h" />
     <ClInclude Include="Graphics\GUIModule.h" />

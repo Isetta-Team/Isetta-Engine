@@ -24,6 +24,9 @@ std::vector<std::string> LevelManager::GetLevelNames() const {
 
 void LevelManager::LoadLevel() {
   if (pendingLoadLevel != nullptr) {
+    if (loadedLevel != nullptr) {
+      UnloadLevel();
+    }
     loadedLevel = pendingLoadLevel;
     pendingLoadLevel = nullptr;
     LOG("Loading......%s", loadedLevel->GetName().c_str());
