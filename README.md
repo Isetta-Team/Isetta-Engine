@@ -67,11 +67,11 @@ There are currently 3 configuration options with this solution of the engine:
   
 There are different levels available in the projects of the solution; ones in IsettaEngine have most recent/testing features, ones in IsettaTestbed are functional tech demos and games. To run any level built within the engine, use Debug or Release and set startup project as IsettaEngine (right-click the IsettaEngine project and select "Set as Startup Project"). To run any level within IsettaTestbed, the configuration must be Debug DLL (to build the engine into a DLL), the startup project should then be IsettaTestbed.
 
-`Debug DLL` will build the `.dll` for you to use and export. To use your version of the engine in another solution/project, build with `Debug DLL` and use those `.dll` and `.lib` built files in your project (follow [Isetta-Game](https://github.com/Isetta-Team/Isetta-Game) instructions for more information). You will also need to export your changed header files, use this command in a command line: `rsync -a --include '*/' --include '*.h' --exclude '*' Isetta/IsettaEngine/ Target_Directory/`. This command is to be run in the top level of the git folder, but source and target directory can be changed as needed.
+`Debug DLL` will build the `.dll` for you to use and export. To use your version of the engine in another solution/project, build with `Debug DLL` and use those `.dll` and `.lib` built files in your project (follow [Isetta-Game](https://github.com/Isetta-Team/Isetta-Game) instructions for more information). You will also need to export your changed header files, external library headers, resources, etc. Use the `ExportHeaders.bat` batch script, located in the top level of the repo, which will export all of the necessary files to a folder labeled includes. You can alter the batch script as needed to include more/less of the engine.
 
 ### Configuration
 The configuration settings of the engine are placed with `config.cfg` within the IsettaEngine folder.
-For personal configuration settings, create a `user.cfg` in the same folder as `config.cfg
+For personal configuration settings, create a `user.cfg` in the same folder as `config.cfg`
 If you want any personal options when using the engine (such as selecting a level for your computer to run) without changing the `config.cfg` you will need a `user.cfg`. You will need a `user.cfg` for each project (ie. IsettaEngine, IsettaTest, and IsettaTestbed), this fill needs to be placed at the root directory of the project (not the .sln).
 
 ### Selectable Levels
@@ -82,31 +82,33 @@ start_level = LEVEL_NAME
 ```
 `LEVEL_NAME` can then be replaced with any of these options:
 - When running IsettaEngine:
+
 |	Level Name			|	Level Description																|	Level Inputs	|
 |		:-:				|			:-:																		|		:-:			|
 |	`NoCameraLevel`		|	Level that may be used when the user doesn't have a camera in their own level	|	N/a 			|
 
 - When running IsettaTestBed:
+
 |	Level Name			|	Level Description																|	Level Inputs	|
 |		:-:				|			:-:																		|		:-:			|
 |	`AILevel`			|																					|					|
-|	`AudioLevel`		|	Level with 2D and 3D audio looping and one shot 								|	`NUM2`: 2D audio play/pause loop;`NUM3`: 3D audio play/pause one shot	|
+|	`AudioLevel`		|	Level with 2D and 3D audio looping and one shot 								|	`NUM2`: 2D audio play/pause loop <br> `NUM3`: 3D audio play/pause one shot	|
 |	`BVHLevel`			|	Level testing our dynamic AABB tree												|					|
 |	`CollisionsLevel`	|	Level testing our collision intersections										|					|
 |	`Debug Level`		|	Level demoing our debug drawing capabilities									|	`FlyController`	|
-|	`EditorLevel`		|	Level showing the editor components: inspector, heirarchy, and console and level loading menu 			|	`ESC`: close window;`F1`:level menu;`CTRL+SHIFT+`: `H`-hierarchy, `I`-inspector, `F`-frame reporter, `C`-console, `M`-menu	|
+|	`EditorLevel`		|	Level showing the editor components: inspector, heirarchy, and console and level loading menu 			|	`ESC`: close window <br> `F1`:level menu <br> `CTRL+SHIFT+`: `H`-hierarchy, `I`-inspector, `F`-frame reporter, `C`-console, `M`-menu	|
 |	`EmptyLevel`		|	Empty level to be used as a starting point for user created levels				|	N/a				|
 |	`EventLevel`		|	Level demoing our event messaging system with sender and listener components	|					|
 |	`Example`			|	Level with an animating model and example component								|					|
 |	`GUILevel`			|	Level demoing some of our GUI capabilities										|	N/a				|
-|	`InputLevel`		|	Level demoing some of the input capabilities 									|	`A`: press/release messages;`MOUSE_LEFT`: message on 1st click;`GAMEPAD_{X,B,MOUSE_MIDDLE}`: message while pressed/down				|
+|	`InputLevel`		|	Level demoing some of the input capabilities 									|	`A`: press/release messages <br> `MOUSE_LEFT`: message on 1st click <br> `GAMEPAD_{X,B,MOUSE_MIDDLE}`: message while pressed/down				|
 |	`MeshAnimLevel`		|	Level with a mesh that is being animated 										|	`FlyController`				|
 |	`NetworkLevel`		|																					|					|
 |	`PrimitiveLevel`	|	Level displaying all the types of primitive objects 							|	`FlyController`				|
 |	`SkeletonLevel`		|	Level displaying a mesh and entities used to follow the skeleton 				|					|
 |		:-:				|			:-:																		|		:-:			|
 |	`Halves`			|	First demo twin-stick shooter game we created!									|					|
-|	`KnightGame`		|	Game with a knight and a sword, can you take down the most training dummies?	|	`LEFT_STICK`: moves knight;`RIGHT_TRIGGER`: raises/lowers sword;`RIGHT_STICK`: spin it in a complete circle for flame protection	|
+|	`KnightGame`		|	Game with a knight and a sword, can you take down the most training dummies?	|	`LEFT_STICK`: moves knight <br> `RIGHT_TRIGGER`: raises/lowers sword <br> `RIGHT_STICK`: spin it in a complete circle for flame protection	|
 |	`Week10MiniGame`	|																					|					|
 
 
