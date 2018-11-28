@@ -298,6 +298,12 @@
     <ClCompile Include="Custom\LevelLoadingMenu.cpp">
       <Filter>Custom</Filter>
     </ClCompile>
+    <ClCompile Include="Custom\EmptyLevel\EmptyLevel.cpp">
+      <Filter>Custom\EmptyLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Cursor.cpp">
+      <Filter>Graphics\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -374,6 +380,9 @@
     </Filter>
     <Filter Include="Custom\NoCameraLevel">
       <UniqueIdentifier>{417576ed-b238-485f-ab8d-a9c460c2f92a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\EmptyLevel">
+      <UniqueIdentifier>{33133f07-dc65-44ed-bb04-78b420645ffb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -692,6 +701,12 @@
     </ClInclude>
     <ClInclude Include="Custom\LevelLoadingMenu.h">
       <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h">
+      <Filter>Custom\EmptyLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Cursor.h">
+      <Filter>Graphics\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

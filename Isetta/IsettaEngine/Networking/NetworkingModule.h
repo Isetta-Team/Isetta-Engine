@@ -188,7 +188,7 @@ class NetworkingModule {
    * connection.
    */
   void Connect(const char* serverAddress, int serverPort,
-               Action<bool> callback = nullptr);
+               Action<NetworkManager::ClientState> callback = nullptr);
   /**
    * @brief Disconnects the local Client from its connected server, or throws an
    * exception if the Client is not already connected to a server.

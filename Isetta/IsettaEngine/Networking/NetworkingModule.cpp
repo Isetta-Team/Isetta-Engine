@@ -263,27 +263,27 @@ void NetworkingModule::ProcessServerToClientMessages() const {
 }
 
 void NetworkingModule::Connect(const char* serverAddress, int serverPort,
-                               Action<bool> callback) {
+                               Action<NetworkManager::ClientState> callback) {
   if (IsClientRunning()) {
     LOG_ERROR(Debug::Channel::Networking,
-              "Already running as client. Cannot StartClient again");
+              "NetworkingModule::Connect => Already running as client. Cannot "
+              "StartClient again");
     return;
   }
 
   yojimbo::Address address(serverAddress, serverPort);
   if (!address.IsValid()) {
-    if (IsClientRunning()) {
-      LOG_ERROR(Debug::Channel::Networking,
-                "IP Address for StartClient is invalid");
-      return;
-    }
+    LOG_ERROR(
+        Debug::Channel::Networking,
+        "NetworkingModule::Connect => IP Address for StartClient is invalid");
     return;
   }
-  Action<bool> internalCallback = [=](const bool success) {
+
+  Action<int> internalCallback = [=](const int state) {
     if (callback != nullptr) {
-      callback(success);
+      callback(static_cast<NetworkManager::ClientState>(state));
     }
-    if (success) {
+    if (state == static_cast<int>(NetworkManager::ClientState::Connected)) {
       auto message = NetworkManager::Instance()
                          .GenerateMessageFromClient<ClientConnectedMessage>();
       strcpy_s(message->ip, SystemInfo::GetIpAddressWithPrefix(
@@ -294,9 +294,11 @@ void NetworkingModule::Connect(const char* serverAddress, int serverPort,
 
       this->onConnectedToServer.Invoke();
       this->lastFrameClientRunning = true;
-    } else {
+    } else if (state < 0) {
       LOG_ERROR(Debug::Channel::Networking,
-                "Failed to connected to %s as a client", serverAddress);
+                "NetworkingModule::Connect => Failed to connected to %s as a "
+                "client, Client State: %d",
+                serverAddress, state);
     }
   };
   client->InsecureConnect(privateKey, clientId, address, internalCallback);
@@ -358,7 +360,8 @@ void NetworkingModule::CloseServer() {
         "running.");
   }
 
-  MemoryManager::DeleteArrOnFreeList<ClientInfo>(CONFIG_VAL(networkConfig.maxClients), clientInfos);
+  MemoryManager::DeleteArrOnFreeList<ClientInfo>(
+      CONFIG_VAL(networkConfig.maxClients), clientInfos);
   clientInfos = nullptr;
   server->Stop();
   MemoryManager::DeleteOnFreeList<yojimbo::Server>(server);

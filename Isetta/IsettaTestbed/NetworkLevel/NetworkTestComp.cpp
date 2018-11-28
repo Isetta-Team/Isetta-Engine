@@ -6,6 +6,7 @@
 #include "Core/Config/Config.h"
 #include "Core/IsettaCore.h"
 #include "Core/SystemInfo.h"
+#include "Input/KeyCode.h"
 #include "Networking/NetworkDiscovery.h"
 #include "Networking/NetworkManager.h"
 
@@ -66,6 +67,17 @@ void NetworkTestComp::Start() {
           LOG_INFO(Debug::Channel::Networking, "[%s] said {%s}", ip, data);
         });
     LOG_INFO(Debug::Channel::Networking, "Started listening to broadcasts");
+  });
+
+  Input::RegisterKeyPressCallback(KeyCode::C, []() {
+    const std::string hostIp = "";
+    if (!NetworkManager::Instance().IsClient() && !hostIp.size())
+      NetworkManager::Instance().StartClient(hostIp);
+  });
+
+  Input::RegisterKeyPressCallback(KeyCode::D, []() {
+    if (NetworkManager::Instance().IsClient())
+      NetworkManager::Instance().StopClient();
   });
 }
 

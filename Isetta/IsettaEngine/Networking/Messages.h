@@ -91,7 +91,7 @@ class NetworkAllocator : public yojimbo::Allocator {
     if (!p) {
       return;
     }
-
+    nextAvailable = reinterpret_cast<Size>(memPointer);
     // TrackFree(p, file, line);  // This causes a 64 byte memory leak
 
     // Do nothing I guess? This is only supposed to be an LSR allocator

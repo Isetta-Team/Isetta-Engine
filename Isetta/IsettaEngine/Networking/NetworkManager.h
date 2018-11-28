@@ -26,6 +26,19 @@ class ISETTA_API_DECLARE NetworkManager {
  public:
   static NetworkManager& Instance();
 
+  enum class ClientState {
+    ConnectTokenExpired = -6,
+    InvalidConnectToken = -5,
+    ConnectionTimedOut = -4,
+    ConnectionResponseTimedOut = -3,
+    ConnectionRequestTimedOut = -2,
+    ConnectionDenied = -1,
+    Disconnected = 0,
+    SendingConnectionRequest = 1,
+    SendingConnectionResponse = 2,
+    Connected = 3,
+  };
+
   template <typename T>
   T* GenerateMessageFromClient();
   template <typename T>
@@ -74,7 +87,7 @@ class ISETTA_API_DECLARE NetworkManager {
    * connection.
    */
   void StartClient(std::string_view serverIP,
-                   const Action<bool>& onStarted = nullptr) const;
+                   const Action<ClientState>& onStarted = nullptr) const;
   /**
    * \brief Disconnects the local Client from the server it is connected to.
    */

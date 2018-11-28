@@ -22,15 +22,15 @@ int Window::GetHeight() {
   return height;
 }
 
-void Window::SetIcon(const Texture& icon) {
-  GLFWimage image;
-  unsigned int tex = icon.GetTexture();
-  // TODO(Jacob) Test, may not work as expected
-  image.pixels = reinterpret_cast<unsigned char*>(&tex);
-  image.width = icon.GetWidth();
-  image.height = icon.GetHeight();
-  glfwSetWindowIcon(windowModule->winHandle, 1, &image);
-}
+// void Window::SetIcon(const Texture& icon) {
+//  GLFWimage image[1];
+//  unsigned int tex = icon.GetTexture();
+//  // TODO(Jacob) Does not work
+//  image[0].pixels = reinterpret_cast<unsigned char*>(&tex);
+//  image[0].width = icon.GetWidth();
+//  image[0].height = icon.GetHeight();
+//  glfwSetWindowIcon(windowModule->winHandle, 1, image);
+//}
 
 void Window::SetTitle(const std::string_view title) {
   glfwSetWindowTitle(windowModule->winHandle, title.data());
