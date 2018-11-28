@@ -4,6 +4,7 @@
 
 #include "Networking/NetworkManager.h"
 #include "Core/Config/Config.h"
+#include "Networking/BuiltinMessages.h"
 #include "Networking/NetworkId.h"
 #include "Networking/NetworkTransform.h"
 #include "Networking/NetworkingModule.h"
@@ -113,6 +114,22 @@ bool NetworkManager::IsClient() const { return networkingModule->IsClient(); }
 bool NetworkManager::IsHost() const { return networkingModule->IsHost(); }
 
 bool NetworkManager::IsServer() const { return networkingModule->IsServer(); }
+
+void NetworkManager::NetworkLoadLevel(std::string_view levelName) {
+  if (!IsServerRunning()) {
+    LOG_ERROR(Debug::Channel::Networking,
+              "NetworkLevel can only be called when server running");
+    return;
+  }
+  SendMessageFromServerToAll<LoadLevelMessage>(
+      [levelName](LoadLevelMessage* inMessage) {
+        strcpy_s(inMessage->levelName, levelName.data());
+      });
+
+  if (!IsClientRunning()) {
+    LevelManager::Instance().LoadLevel(levelName);
+  }
+}
 
 std::list<std::pair<U16, Action<yojimbo::Message*>>>
 NetworkManager::GetClientFunctions(const int type) {

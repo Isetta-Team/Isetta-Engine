@@ -1,5 +1,6 @@
 #pragma once
 #include "Networking/Messages.h"
+#include "Core/Config/Config.h"
 
 RPC_MESSAGE_DEFINE(ClientConnectedMessage)
 template <typename Stream>
@@ -23,4 +24,19 @@ char ip[16];
 char machineName[16];
 int clientIndex;
 
+RPC_MESSAGE_FINISH
+
+RPC_MESSAGE_DEFINE(LoadLevelMessage)
+template <typename Stream>
+bool Serialize(Stream* stream) {
+  serialize_string(stream, levelName, sizeof(levelName));
+  return true;
+}
+
+void Copy(const yojimbo::Message* otherMessage) override {
+  auto* message = reinterpret_cast<const LoadLevelMessage*>(otherMessage);
+  strcpy_s(levelName, message->levelName);
+}
+
+char levelName[32];
 RPC_MESSAGE_FINISH

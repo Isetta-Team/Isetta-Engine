@@ -301,9 +301,6 @@
     <ClCompile Include="Custom\EmptyLevel\EmptyLevel.cpp">
       <Filter>Custom\EmptyLevel</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Cursor.cpp">
-      <Filter>Graphics\GUI</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -382,7 +379,7 @@
       <UniqueIdentifier>{417576ed-b238-485f-ab8d-a9c460c2f92a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Custom\EmptyLevel">
-      <UniqueIdentifier>{33133f07-dc65-44ed-bb04-78b420645ffb}</UniqueIdentifier>
+      <UniqueIdentifier>{ac6cf8dc-347b-4205-b550-8269c693fb36}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -675,9 +672,6 @@
     <ClInclude Include="Core\EngineResource.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="BuiltinMessages.h">
-      <Filter>Networking</Filter>
-    </ClInclude>
     <ClInclude Include="Core\SystemInfo.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -702,11 +696,11 @@
     <ClInclude Include="Custom\LevelLoadingMenu.h">
       <Filter>Custom</Filter>
     </ClInclude>
+    <ClInclude Include="Networking\BuiltinMessages.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
     <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h">
       <Filter>Custom\EmptyLevel</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Cursor.h">
-      <Filter>Graphics\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

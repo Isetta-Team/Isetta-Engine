@@ -75,8 +75,6 @@ void NetworkingModule::StartUp() {
             NetworkAllocator(MemoryManager::AllocOnStack(serverMemorySize),
                              serverMemorySize);
   }
-
-  RegisterBuiltinCallbacks();
 }
 
 void NetworkingModule::Update(float deltaTime) {
@@ -110,19 +108,19 @@ void NetworkingModule::Update(float deltaTime) {
   }
 
   // State monitor
-  if (lastFrameClientRunning && !IsClientRunning()) {
+  if (wasClientRunningLastFrame && !IsClientRunning()) {
     // client dropped out
     onDisconnectedFromServer.Invoke();
   }
-  lastFrameClientRunning = IsClientRunning();
+  wasClientRunningLastFrame = IsClientRunning();
 
   if (IsServerRunning()) {
     for (int i = 0; i < maxClients; ++i) {
-      if (lastFrameClientConnected[i] && !IsClientConnected(i)) {
+      if (wasClientConnectedLastFrame[i] && !IsClientConnected(i)) {
         // client just disconnected
         onClientDisconnected.Invoke(clientInfos[i]);
       }
-      lastFrameClientConnected[i] = IsClientConnected(i);
+      wasClientConnectedLastFrame[i] = IsClientConnected(i);
     }
   }
 }
@@ -293,7 +291,7 @@ void NetworkingModule::Connect(const char* serverAddress, int serverPort,
       NetworkManager::Instance().SendMessageFromClient(message);
 
       this->onConnectedToServer.Invoke();
-      this->lastFrameClientRunning = true;
+      this->wasClientRunningLastFrame = true;
     } else if (state < 0) {
       LOG_ERROR(Debug::Channel::Networking,
                 "NetworkingModule::Connect => Failed to connected to %s as a "
@@ -302,11 +300,24 @@ void NetworkingModule::Connect(const char* serverAddress, int serverPort,
     }
   };
   client->InsecureConnect(privateKey, clientId, address, internalCallback);
+
+  // Register callbacks
+  loadLevelCallbackHandle =
+      NetworkManager::Instance().RegisterClientCallback<LoadLevelMessage>(
+          [](yojimbo::Message* inMessage) {
+            auto* loadLevelMessage =
+                reinterpret_cast<LoadLevelMessage*>(inMessage);
+            LevelManager::Instance().LoadLevel(loadLevelMessage->levelName);
+          });
 }
 
 void NetworkingModule::Disconnect() const {
   if (client->IsConnected()) {
     client->Disconnect();
+    // Unregister callbacks
+    NetworkManager::Instance().UnregisterClientCallback<LoadLevelMessage>(
+        loadLevelCallbackHandle);
+
   } else if (!client->IsConnecting()) {
     return;
   } else {
@@ -345,12 +356,25 @@ void NetworkingModule::CreateServer(const char* address, int port) {
         "NetworkingModule::CreateServer => Unable to run server.");
   }
 
-  lastFrameClientConnected = MemoryManager::NewArrOnStack<bool>(maxClients);
+  wasClientConnectedLastFrame = MemoryManager::NewArrOnStack<bool>(maxClients);
   for (int i = 0; i < maxClients; ++i) {
-    lastFrameClientConnected[i] = false;
+    wasClientConnectedLastFrame[i] = false;
   }
 
   clientInfos = MemoryManager::NewArrOnFreeList<ClientInfo>(maxClients);
+
+  clientConnectedCallbackHandle =
+      NetworkManager::Instance().RegisterServerCallback<ClientConnectedMessage>(
+          [this](const int clientIndex, yojimbo::Message* inMessage) {
+            const ClientConnectedMessage* message =
+                reinterpret_cast<const ClientConnectedMessage*>(inMessage);
+            ClientInfo info;
+            info.ip = message->ip;
+            info.machineName = message->machineName;
+            info.clientIndex = clientIndex;
+            clientInfos[clientIndex] = info;
+            this->onClientConnected.Invoke(info);
+          });
 }
 
 void NetworkingModule::CloseServer() {
@@ -369,6 +393,9 @@ void NetworkingModule::CloseServer() {
   MemoryManager::DeleteArrOnFreeList<RingBuffer<yojimbo::Message*>>(
       CONFIG_VAL(networkConfig.maxClients), serverSendBufferArray);
   serverAllocator->~NetworkAllocator();
+
+  NetworkManager::Instance().UnregisterClientCallback<ClientConnectedMessage>(
+      clientConnectedCallbackHandle);
 }
 
 bool NetworkingModule::IsClient() const {
@@ -394,19 +421,4 @@ bool NetworkingModule::IsServerRunning() const {
 bool NetworkingModule::IsClientConnected(const int clientIndex) const {
   return IsServerRunning() && server->IsClientConnected(clientIndex);
 }
-
-void NetworkingModule::RegisterBuiltinCallbacks() {
-  NetworkManager::Instance().RegisterServerCallback<ClientConnectedMessage>(
-      [this](const int clientIndex, yojimbo::Message* inMessage) {
-        const ClientConnectedMessage* message =
-            reinterpret_cast<const ClientConnectedMessage*>(inMessage);
-        ClientInfo info;
-        info.ip = message->ip;
-        info.machineName = message->machineName;
-        info.clientIndex = clientIndex;
-        clientInfos[clientIndex] = info;
-        this->onClientConnected.Invoke(info);
-      });
-}
-
 }  // namespace Isetta
