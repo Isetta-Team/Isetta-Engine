@@ -237,6 +237,7 @@
     <ClCompile Include="Custom\KeyTransform.cpp" />
     <ClCompile Include="LevelLoadingLevel\LoadNextLevel.cpp" />
     <ClCompile Include="MeshAnimLevel\MeshAnimLevel.cpp" />
+    <ClCompile Include="NetworkLevel\EmptyLevelForNetworkLoadLevel.cpp" />
     <ClCompile Include="NetworkLevel\NetworkLevel.cpp" />
     <ClCompile Include="Custom\OscillateMove.cpp" />
     <ClCompile Include="NetworkLevel\NetworkTestComp.cpp" />
@@ -301,6 +302,7 @@
     <ClInclude Include="Custom\KeyTransform.h" />
     <ClInclude Include="LevelLoadingLevel\LoadNextLevel.h" />
     <ClInclude Include="MeshAnimLevel\MeshAnimLevel.h" />
+    <ClInclude Include="NetworkLevel\EmptyLevelForNetworkLoadLevel.h" />
     <ClInclude Include="NetworkLevel\NetworkLevel.h" />
     <ClInclude Include="Custom\OscillateMove.h" />
     <ClInclude Include="NetworkLevel\NetworkTestComp.h" />

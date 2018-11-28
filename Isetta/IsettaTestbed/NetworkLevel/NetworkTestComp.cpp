@@ -79,6 +79,14 @@ void NetworkTestComp::Start() {
     if (NetworkManager::Instance().IsClient())
       NetworkManager::Instance().StopClient();
   });
+
+  Input::RegisterKeyPressCallback(KeyCode::KP_7, []() {
+    NetworkManager::Instance().NetworkLoadLevel("NetworkLevel");
+  });
+
+  Input::RegisterKeyPressCallback(KeyCode::KP_8, []() {
+    NetworkManager::Instance().NetworkLoadLevel("EmptyLevelForNetworkLoadLevel");
+  });
 }
 
 void NetworkTestComp::GuiUpdate() {

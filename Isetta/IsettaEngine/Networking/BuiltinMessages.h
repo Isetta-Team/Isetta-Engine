@@ -38,5 +38,5 @@ void Copy(const yojimbo::Message* otherMessage) override {
   strcpy_s(levelName, message->levelName);
 }
 
-char levelName[32];
+char levelName[64];
 RPC_MESSAGE_FINISH

@@ -165,6 +165,9 @@
     <ClCompile Include="NetworkLevel\NetworkTestComp.cpp">
       <Filter>NetworkLevel</Filter>
     </ClCompile>
+    <ClCompile Include="NetworkLevel\EmptyLevelForNetworkLoadLevel.cpp">
+      <Filter>NetworkLevel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
@@ -412,6 +415,9 @@
       <Filter>NetworkLevel</Filter>
     </ClInclude>
     <ClInclude Include="NetworkLevel\NetworkTestComp.h">
+      <Filter>NetworkLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkLevel\EmptyLevelForNetworkLoadLevel.h">
       <Filter>NetworkLevel</Filter>
     </ClInclude>
   </ItemGroup>
