@@ -21,16 +21,14 @@ void W10NetworkManager::HandleReadyMessage(int clientIdx,
   if (clientCount == 2) {
     for (const auto& swordPair : clientSwordPos) {
       int potentialClient = swordPair.first;
-      W10SpawnMessage* spawn =
-          Isetta::NetworkManager::Instance()
-              .GenerateMessageFromServer<W10SpawnMessage>(potentialClient);
-      spawn->netId = netIdBin.GetHandle();
-      spawn->clientAuthorityId = potentialClient;
-      spawn->isOnRight = potentialClient % 2;
-      spawn->swordNetId = netIdBin.GetHandle();
-
       Isetta::NetworkManager::Instance()
-          .SendMessageFromServerToAll<W10SpawnMessage>(spawn);
+          .SendMessageFromServerToAll<W10SpawnMessage>(
+              [potentialClient, this](W10SpawnMessage* message) {
+                message->netId = this->netIdBin.GetHandle();
+                message->clientAuthorityId = potentialClient;
+                message->isOnRight = potentialClient % 2;
+                message->swordNetId = this->netIdBin.GetHandle();
+              });
     }
   }
 }
@@ -74,13 +72,15 @@ void W10NetworkManager::HandleSwordPosMessage(int clientIdx,
 
 void W10NetworkManager::ClientHandleAttackAttemptMessage(
     yojimbo::Message* message) {
-  W10PositionReportMessage* posMessage =
-      Isetta::NetworkManager::Instance()
-          .GenerateMessageFromClient<W10PositionReportMessage>();
   if (gameManager->player != nullptr) {
-    posMessage->positionX = gameManager->player->transform->GetWorldPos().x;
     LOG_INFO(Isetta::Debug::Channel::General, "Client send position report");
-    Isetta::NetworkManager::Instance().SendMessageFromClient(posMessage);
+
+    Isetta::NetworkManager::Instance()
+        .SendMessageFromClient<W10PositionReportMessage>(
+            [this](W10PositionReportMessage* posMessage) {
+              posMessage->positionX =
+                  this->gameManager->player->transform->GetWorldPos().x;
+            });
   }
 }
 
@@ -110,20 +110,18 @@ void W10NetworkManager::HandlePositionReport(int clientIdx,
           if (distance > killDistance) {
             return;
           }
-          W10AttackResultMessage* resultMessage1{
-              Isetta::NetworkManager::Instance()
-                  .GenerateMessageFromServer<W10AttackResultMessage>(
-                      lastAttemptClient)};
-          W10AttackResultMessage* resultMessage2{
-              Isetta::NetworkManager::Instance()
-                  .GenerateMessageFromServer<W10AttackResultMessage>(
-                      swordPos.first)};
-          resultMessage1->result = 0;
-          resultMessage2->result = 1;
-          Isetta::NetworkManager::Instance().SendMessageFromServer(
-              lastAttemptClient, resultMessage1);
-          Isetta::NetworkManager::Instance().SendMessageFromServer(
-              swordPos.first, resultMessage2);
+          Isetta::NetworkManager::Instance()
+              .SendMessageFromServer<W10AttackResultMessage>(
+                  lastAttemptClient, [](W10AttackResultMessage* resultMessage) {
+                    resultMessage->result = 0;
+                  });
+
+          Isetta::NetworkManager::Instance()
+              .SendMessageFromServer<W10AttackResultMessage>(
+                  swordPos.first, [](W10AttackResultMessage* resultMessage) {
+                    resultMessage->result = 1;
+                  });
+
           clientSwordPos.insert_or_assign(lastAttemptClient, 0);
           clientSwordPos.insert_or_assign(swordPos.first, 0);
           LOG_INFO(Isetta::Debug::Channel::General, "Server: HIT!");
@@ -131,21 +129,21 @@ void W10NetworkManager::HandlePositionReport(int clientIdx,
           if (distance > blockDistance) {
             return;
           }
-          W10AttackResultMessage* resultMessage1{
-              Isetta::NetworkManager::Instance()
-                  .GenerateMessageFromServer<W10AttackResultMessage>(
-                      lastAttemptClient)};
-          resultMessage1->result = 2;
-          W10AttackResultMessage* resultMessage2{
-              Isetta::NetworkManager::Instance()
-                  .GenerateMessageFromServer<W10AttackResultMessage>(
-                      swordPos.first)};
-          resultMessage2->result = 3;
+
           clientSwordPos.insert_or_assign(lastAttemptClient, -1);
-          Isetta::NetworkManager::Instance().SendMessageFromServer(
-              lastAttemptClient, resultMessage1);
-          Isetta::NetworkManager::Instance().SendMessageFromServer(
-              swordPos.first, resultMessage2);
+
+          Isetta::NetworkManager::Instance()
+              .SendMessageFromServer<W10AttackResultMessage>(
+                  lastAttemptClient, [](W10AttackResultMessage* resultMessage) {
+                    resultMessage->result = 2;
+                  });
+
+          Isetta::NetworkManager::Instance()
+              .SendMessageFromServer<W10AttackResultMessage>(
+                  swordPos.first, [](W10AttackResultMessage* resultMessage) {
+                    resultMessage->result = 3;
+                  });
+
           LOG_INFO(Isetta::Debug::Channel::General, "Server: Not HIT!");
         }
         break;
@@ -237,7 +235,7 @@ void W10NetworkManager::Awake() {
                          });
 
   Isetta::NetworkManager::Instance().RegisterServerCallback<W10CollectMessage>(
-      [&](int clientId, yojimbo::Message* message) {
+      [&](const int clientId, yojimbo::Message* message) {
         clientSwordPos.insert_or_assign(lastAttemptClient, 0);
         Isetta::NetworkManager::Instance()
             .SendMessageFromServerToAllButClient<W10CollectMessage>(clientId,
@@ -283,9 +281,8 @@ void W10NetworkManager::Awake() {
   Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::R, []() {
     Isetta::Events::Instance().RaiseImmediateEvent(
         Isetta::EventObject{"UITextChange", {std::string{"Ready!"}}});
-    W10ReadyMessage* m = Isetta::NetworkManager::Instance()
-                             .GenerateMessageFromClient<W10ReadyMessage>();
-    Isetta::NetworkManager::Instance().SendMessageFromClient(m);
+    Isetta::NetworkManager::Instance().SendMessageFromClient<W10ReadyMessage>(
+        [](W10ReadyMessage* message) {});
   });
 
   // // For debug use

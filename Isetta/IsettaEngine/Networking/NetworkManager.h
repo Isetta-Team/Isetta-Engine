@@ -41,17 +41,16 @@ class ISETTA_API_DECLARE NetworkManager {
   };
 
   template <typename T>
-  T* GenerateMessageFromClient();
+  void SendMessageFromClient(Action<T*> messageInitializer);
   template <typename T>
-  T* GenerateMessageFromServer(int clientIdx);
-  // TODO(Caleb) Consider merging the generate and send functions
-  void SendMessageFromClient(yojimbo::Message* message) const;
+  void SendMessageFromServer(int clientIndex, Action<T*> messageInitializer);
 
-  void SendMessageFromServer(int clientIdx, yojimbo::Message* message) const;
-  template <typename T>
-  void SendMessageFromServerToAll(yojimbo::Message* refMessage);
   template <typename T>
   void SendMessageFromServerToAll(Action<T*> messageInitializer);
+
+  // The following two are called when the user already have a message
+  template <typename T>
+  void SendMessageFromServerToAll(yojimbo::Message* refMessage);
   template <typename T>
   void SendMessageFromServerToAllButClient(int clientIdx,
                                            yojimbo::Message* refMessage);
@@ -116,15 +115,21 @@ class ISETTA_API_DECLARE NetworkManager {
   void RemoveConnectedToServerListener(U64 handle) const;
   U64 AddDisconnectedFromServerListener(const Action<>& listener) const;
   void RemoveDisconnectedFromServerListener(U64 handle) const;
-  // int parameter in Action is ClientID
   U64 AddClientConnectedListener(const Action<ClientInfo>& listener) const;
   void RemoveClientConnectedListener(U64 handle) const;
-  // int parameter in Action is ClientID
   U64 AddClientDisconnectedListener(const Action<ClientInfo>& listener) const;
   void RemoveClientDisconnectedListener(U64 handle) const;
 
  private:
   NetworkManager();
+
+  template <typename T>
+  T* GenerateMessageFromServer(int clientIdx);
+  void SendMessageFromServer(int clientIdx, yojimbo::Message* message) const;
+
+  template <typename T>
+  T* GenerateMessageFromClient();
+  void SendMessageFromClient(yojimbo::Message* message) const;
 
   template <typename T>
   bool RegisterMessageType(U64 size, Func<yojimbo::Message*, void*> factory);
@@ -177,6 +182,22 @@ T* NetworkManager::GenerateMessageFromServer(int clientIdx) {
   return reinterpret_cast<T*>(
       CreateServerMessage(clientIdx, GetMessageTypeId<T>()));
 }
+
+template <typename T>
+void NetworkManager::SendMessageFromClient(Action<T*> messageInitializer) {
+  yojimbo::Message* newMessage = GenerateMessageFromClient<T>();
+  messageInitializer(reinterpret_cast<T*>(newMessage));
+  SendMessageFromClient(newMessage);
+}
+
+template <typename T>
+void NetworkManager::SendMessageFromServer(const int clientIndex,
+                                           Action<T*> messageInitializer) {
+  yojimbo::Message* newMessage = GenerateMessageFromServer<T>(clientIndex);
+  messageInitializer(reinterpret_cast<T*>(newMessage));
+  SendMessageFromServer(clientIndex, newMessage);
+}
+
 template <typename T>
 int NetworkManager::GetMessageTypeId() {
   return typeMap[std::type_index(typeid(T))];

@@ -282,13 +282,15 @@ void NetworkingModule::Connect(const char* serverAddress, int serverPort,
       callback(static_cast<NetworkManager::ClientState>(state));
     }
     if (state == static_cast<int>(NetworkManager::ClientState::Connected)) {
-      auto message = NetworkManager::Instance()
-                         .GenerateMessageFromClient<ClientConnectedMessage>();
-      strcpy_s(message->ip, SystemInfo::GetIpAddressWithPrefix(
-                                CONFIG_VAL(networkConfig.ipPrefix))
-                                .c_str());
-      strcpy_s(message->machineName, SystemInfo::GetMachineName().c_str());
-      NetworkManager::Instance().SendMessageFromClient(message);
+      NetworkManager::Instance().SendMessageFromClient<ClientConnectedMessage>(
+          [](ClientConnectedMessage* message) {
+            const char* ip = SystemInfo::GetIpAddressWithPrefix(
+                                 CONFIG_VAL(networkConfig.ipPrefix))
+                                 .c_str();
+            const char* machineName = SystemInfo::GetMachineName().c_str();
+            strcpy_s(message->ip, ip);
+            strcpy_s(message->machineName, machineName);
+          });
 
       this->onConnectedToServer.Invoke();
       this->wasClientRunningLastFrame = true;

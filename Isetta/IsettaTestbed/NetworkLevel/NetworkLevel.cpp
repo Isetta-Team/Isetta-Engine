@@ -217,11 +217,8 @@ void NetworkLevel::OnLevelLoad() {
   // Spawn across network
   Input::RegisterKeyPressCallback(KeyCode::Y, []() {
     if (NetworkManager::Instance().IsClientRunning()) {
-      SpawnMessage* m =
-          NetworkManager::Instance().GenerateMessageFromClient<SpawnMessage>();
-      m->a = 0;
-      NetworkManager::Instance().SendMessageFromClient(m);
-
+      NetworkManager::Instance().SendMessageFromClient<SpawnMessage>(
+          [](SpawnMessage* message) { message->a = 0; });
       ++spawnCounter;
     }
   });
@@ -232,10 +229,8 @@ void NetworkLevel::OnLevelLoad() {
       if (despawnCounter > spawnCounter) {
         return;
       }
-      DespawnMessage* m = NetworkManager::Instance()
-                              .GenerateMessageFromClient<DespawnMessage>();
-      m->netId = despawnCounter;
-      NetworkManager::Instance().SendMessageFromClient(m);
+      NetworkManager::Instance().SendMessageFromClient<DespawnMessage>(
+          [](DespawnMessage* message) { message->netId = despawnCounter; });
 
       ++despawnCounter;
     }
@@ -244,10 +239,10 @@ void NetworkLevel::OnLevelLoad() {
   // Spawn one and set its parent to the latest one spawned by this client
   Input::RegisterKeyPressCallback(KeyCode::U, []() {
     if (NetworkManager::Instance().IsClientRunning()) {
-      SpawnMessage* m =
-          NetworkManager::Instance().GenerateMessageFromClient<SpawnMessage>();
-      m->a = spawnedEntities.back()->GetComponent<NetworkId>()->id;
-      NetworkManager::Instance().SendMessageFromClient(m);
+      NetworkManager::Instance().SendMessageFromClient<SpawnMessage>(
+          [](SpawnMessage* message) {
+            message->a = spawnedEntities.back()->GetComponent<NetworkId>()->id;
+          });
 
       ++spawnCounter;
     }
@@ -278,28 +273,22 @@ void NetworkLevel::OnLevelLoad() {
 
   Input::RegisterKeyPressCallback(KeyCode::P, []() {
     if (NetworkManager::Instance().IsClientRunning()) {
-      HandleMessage* handleMessage =
-          NetworkManager::Instance().GenerateMessageFromClient<HandleMessage>();
-      handleMessage->handle = 0;
-      NetworkManager::Instance().SendMessageFromClient(handleMessage);
+      NetworkManager::Instance().SendMessageFromClient<HandleMessage>(
+          [](HandleMessage* message) { message->handle = 0; });
     }
   });
 
   Input::RegisterKeyPressCallback(KeyCode::O, []() {
     if (NetworkManager::Instance().IsClientRunning()) {
-      HandleMessage* handleMessage =
-          NetworkManager::Instance().GenerateMessageFromClient<HandleMessage>();
-      handleMessage->handle = 1;
-      NetworkManager::Instance().SendMessageFromClient(handleMessage);
+      NetworkManager::Instance().SendMessageFromClient<HandleMessage>(
+          [](HandleMessage* message) { message->handle = 1; });
     }
   });
 
   Input::RegisterMousePressCallback(MouseButtonCode::MOUSE_LEFT, []() {
     if (NetworkManager::Instance().IsClientRunning()) {
-      HandleMessage* handleMessage =
-          NetworkManager::Instance().GenerateMessageFromClient<HandleMessage>();
-      handleMessage->handle = 2;
-      NetworkManager::Instance().SendMessageFromClient(handleMessage);
+      NetworkManager::Instance().SendMessageFromClient<HandleMessage>(
+          [](HandleMessage* message) { message->handle = 2; });
     }
   });
 
