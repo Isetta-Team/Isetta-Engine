@@ -42,7 +42,7 @@ void SetProperty(T value);
 template <Property Attr, typename T>
 T GetProperty() const;
 
-static const CameraComponent* Main() { return _main; }
+static inline const CameraComponent* Main() { return _main; }
 
 Math::Matrix4 GetHordeTransform() const {
   const float* transformPtr;
@@ -64,7 +64,7 @@ void UpdateH3DTransform() const;
 void ResizeViewport(int width, int height);
 void SetupCameraViewport() const;
 
-static CameraComponent* _main;
+static inline CameraComponent* _main;
 
 static class RenderModule* renderModule;
 friend class RenderModule;

@@ -82,17 +82,33 @@ start_level = LEVEL_NAME
 ```
 `LEVEL_NAME` can then be replaced with any of these options:
 - When running IsettaEngine:
-	- `InEngineTestLevel`: Level with a fly camera, light, and model loading
-	- `CollisionsLevel`: Level testing our collision intersections
-	- `BVHLevel`: Level testing our dynamic AABB tree
-	- `EditorLevel`: Level showing the editor components: inspector, heirarchy, and console
-	- `EmptyLevel`: Empty level to be used as a starting point for user created levels
-	- `EventTestLevel`: Level testing our event messaging system
+|	Level Name			|	Level Description																|	Level Inputs	|
+|		:-:				|			:-:																		|		:-:			|
+|	`NoCameraLevel`		|	Level that may be used when the user doesn't have a camera in their own level	|	N/a 			|
+
 - When running IsettaTestBed:
-	- `ExampleLevel`: Level with an animating model and example component
-	- `Level1`: First demo twin-stick shooter game we created!
-	- `DebugLevel`: Level demoing our debug drawing capabilities
-	- `GUILevel`: Level demoing our GUI capabilities
+|	Level Name			|	Level Description																|	Level Inputs	|
+|		:-:				|			:-:																		|		:-:			|
+|	`AILevel`			|																					|					|
+|	`AudioLevel`		|	Level with 2D and 3D audio looping and one shot 								|	`NUM2`: 2D audio play/pause loop;`NUM3`: 3D audio play/pause one shot	|
+|	`BVHLevel`			|	Level testing our dynamic AABB tree												|					|
+|	`CollisionsLevel`	|	Level testing our collision intersections										|					|
+|	`Debug Level`		|	Level demoing our debug drawing capabilities									|	`FlyController`	|
+|	`EditorLevel`		|	Level showing the editor components: inspector, heirarchy, and console and level loading menu 			|	`ESC`: close window;`F1`:level menu;`CTRL+SHIFT+`: `H`-hierarchy, `I`-inspector, `F`-frame reporter, `C`-console, `M`-menu	|
+|	`EmptyLevel`		|	Empty level to be used as a starting point for user created levels				|	N/a				|
+|	`EventLevel`		|	Level demoing our event messaging system with sender and listener components	|					|
+|	`Example`			|	Level with an animating model and example component								|					|
+|	`GUILevel`			|	Level demoing some of our GUI capabilities										|	N/a				|
+|	`InputLevel`		|	Level demoing some of the input capabilities 									|	`A`: press/release messages;`MOUSE_LEFT`: message on 1st click;`GAMEPAD_{X,B,MOUSE_MIDDLE}`: message while pressed/down				|
+|	`MeshAnimLevel`		|	Level with a mesh that is being animated 										|	`FlyController`				|
+|	`NetworkLevel`		|																					|					|
+|	`PrimitiveLevel`	|	Level displaying all the types of primitive objects 							|	`FlyController`				|
+|	`SkeletonLevel`		|	Level displaying a mesh and entities used to follow the skeleton 				|					|
+|		:-:				|			:-:																		|		:-:			|
+|	`Halves`			|	First demo twin-stick shooter game we created!									|					|
+|	`KnightGame`		|	Game with a knight and a sword, can you take down the most training dummies?	|	`LEFT_STICK`: moves knight;`RIGHT_TRIGGER`: raises/lowers sword;`RIGHT_STICK`: spin it in a complete circle for flame protection	|
+|	`Week10MiniGame`	|																					|					|
+
 
 ## Dependencies/Plugins
 - [imgui](https://github.com/Isetta-Team/imgui)

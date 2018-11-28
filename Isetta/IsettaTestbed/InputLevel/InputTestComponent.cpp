@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "InputLevel/InputTestComponent.h"
+#include "InputTestComponent.h"
+
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
 #include "Input/Input.h"
@@ -31,7 +32,8 @@ void InputTestComponent::Update() {
   if (Isetta::Input::IsKeyPressed(Isetta::KeyCode::B)) {
     LOG_INFO(Isetta::Debug::Channel::General, "B pressing");
   }
-  if (Isetta::Input::IsMouseButtonPressed(Isetta::MouseButtonCode::MOUSE_MIDDLE)) {
+  if (Isetta::Input::IsMouseButtonPressed(
+          Isetta::MouseButtonCode::MOUSE_MIDDLE)) {
     LOG_INFO(Isetta::Debug::Channel::General, "Middle pressing");
   }
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "DebugLevel/DebugComponent.h"
+#include "DebugComponent.h"
 
 #include "Core/Debug/DebugDraw.h"
 #include "Core/Math/Matrix4.h"

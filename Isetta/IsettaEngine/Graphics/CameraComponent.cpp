@@ -20,7 +20,6 @@
 
 namespace Isetta {
 RenderModule* CameraComponent::renderModule{nullptr};
-CameraComponent* CameraComponent::_main{nullptr};
 
 CameraComponent::CameraComponent() : renderNode(NULL), renderResource(NULL) {
   ASSERT(renderModule != nullptr);

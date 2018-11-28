@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "InputLevel/InputLevel.h"
+#include "InputLevel.h"
+
 #include "Core/Config/Config.h"
 #include "Graphics/CameraComponent.h"
 #include "InputTestComponent.h"

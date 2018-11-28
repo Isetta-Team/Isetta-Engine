@@ -5,7 +5,7 @@
 #include "Scene/IsettaLevel.h"
 
 namespace Isetta {
-CREATE_LEVEL(ExampleLevel)
+CREATE_LEVEL(AILevel)
 void OnLevelLoad() override;
 CREATE_LEVEL_END
 }  // namespace Isetta

@@ -1,13 +1,14 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "DebugLevel/DebugLevel.h"
+#include "DebugLevel.h"
 
 #include "Components/FlyController.h"
 #include "Core/Config/Config.h"
-#include "DebugLevel/DebugComponent.h"
 #include "Graphics/CameraComponent.h"
 #include "Scene/Entity.h"
+
+#include "DebugComponent.h"
 
 using namespace Isetta;
 void DebugLevel::OnLevelLoad() {
