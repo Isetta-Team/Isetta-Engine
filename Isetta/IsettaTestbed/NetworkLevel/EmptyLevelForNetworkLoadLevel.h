@@ -10,6 +10,6 @@
  */
 namespace Isetta {
 CREATE_LEVEL(EmptyLevelForNetworkLoadLevel)
-void OnLevelLoad() override;
+void Load() override;
 CREATE_LEVEL_END
 }  // namespace Isetta
