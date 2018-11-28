@@ -2,7 +2,9 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+#include <initializer_list>
 #include <unordered_map>
+#include "Core/DataStructures/Array.h"
 #include "Util.h"
 #include "imgui/imgui.h"
 
@@ -15,18 +17,23 @@ struct ISETTA_API Font : private ImFont {
   static void AddDefaultFont(Font* const font);
   static Font* GetFont(const std::string_view fontName, float size);
   static Font* AddFontFromFile(const std::string& filename, float fontSize,
-                               const std::string_view& fontName = "");
+                               const std::string_view& fontName);
+  static void AddFontFromFile(const std::string& filename,
+                              std::initializer_list<float> fontSizes,
+                              const std::string_view& fontName);
+  static void AddFontFromFile(const std::string& filename,
+                              const std::string_view& fontName);
   static Font* AddFontFromMemory(void* fontBuffer, float fontSize, float pixels,
+                                 const std::string_view& filename,
                                  const std::string_view& fontName);
   static void PushFont(const std::string_view fontName, float fontSize);
   static void PushFont(Font* const font);
   static void PopFont();
 
  private:
-  static void AddFontToMap(const std::string_view fontName, float size,
-                           Font* const font);
-  static std::unordered_map<std::pair<StringId, float>, Font*, Util::PairHash,
-                            Util::PairHash>
+  // Name -> <filepath, size -> Font>
+  static std::unordered_map<
+      StringId, std::pair<std::string, std::unordered_map<float, Font*>>>
       fonts;
 
   static class GUIModule* guiModule;

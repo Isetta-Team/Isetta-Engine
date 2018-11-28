@@ -3,6 +3,7 @@
  */
 #pragma once
 #include <string>
+#include "Core/Math/Vector2Int.h"
 #include "ISETTA_API.h"
 
 namespace Isetta::Math {
@@ -19,7 +20,7 @@ class ISETTA_API Window {
   static int GetWidth();
   static int GetHeight();
 
-  static void SetIcon(const class Texture &icon);
+  // static void SetIcon(const class Texture &icon);
   static void SetTitle(const std::string_view title);
   /**
    * @brief Set the Size Limits object

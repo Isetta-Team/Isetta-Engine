@@ -374,23 +374,6 @@ class ISETTA_API GUI {
     RootAndChildWindows = RootWindow | ChildWindows
   };
 
-  enum class ISETTA_API MouseCursor {
-    None = -1,
-    Arrow = 0,
-    TextInput,   // When hovering over InputText, etc.
-    ResizeAll,   // (Unused by imgui functions)
-    ResizeNS,    // When hovering over an horizontal border
-    ResizeEW,    // When hovering over a vertical border or a
-                 // column
-    ResizeNESW,  // When hovering over the bottom-left corner of
-                 // a window // TODO(Jacob) doesn't work
-    ResizeNWSE,  // When hovering over the bottom-right corner of
-                 // a window // TODO(Jacob) doesn't work
-    Hand,        // (Unused by imgui functions. Use for e.g.
-                 // hyperlinks)
-    COUNT
-  };
-
   enum class ISETTA_API Cond : U8 {
     Always = 1 << 0,        // Set the variable
     Once = 1 << 1,          // Set the variable once per runtime session (only

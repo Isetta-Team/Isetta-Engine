@@ -88,14 +88,10 @@ void NetworkManager::StartServer(std::string_view serverIP) const {
   networkingModule->CreateServer(serverIP.data(), GetServerPort());
 }
 
-void NetworkManager::StopServer() const {
-  networkingModule->CloseServer();
-}
+void NetworkManager::StopServer() const { networkingModule->CloseServer(); }
 
 void NetworkManager::StartClient(std::string_view serverIP,
-                                 const Action<bool>& onStarted) const {
-  if (IsClientRunning()) {
-  }
+                                 const Action<ClientState>& onStarted) const {
   networkingModule->Connect(serverIP.data(), GetServerPort(), onStarted);
 }
 
