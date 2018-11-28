@@ -4,16 +4,18 @@
 #pragma once
 #include "Scene/Component.h"
 
+/**
+ * @brief Loads the next level specified in constructor
+ *
+ */
 namespace Isetta {
 BEGIN_COMPONENT(LoadNextLevel, Component, true)
 private:
 std::string loadLevel;
-int handle;
 
 public:
 LoadNextLevel(std::string_view loadLevel) : loadLevel{loadLevel} {}
 
-void OnEnable() override;
-void OnDisable() override;
+void GuiUpdate() override;
 END_COMPONENT(LoadNextLevel, Component)
 }  // namespace Isetta

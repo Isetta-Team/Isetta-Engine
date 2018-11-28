@@ -210,7 +210,7 @@ void DeregisterExampleMessageFunctions() {
       exampleServerDespawn);
 }
 
-void NetworkLevel::OnLevelLoad() {
+void NetworkLevel::Load() {
   // Networking preparation
   RegisterExampleMessageFunctions();
 

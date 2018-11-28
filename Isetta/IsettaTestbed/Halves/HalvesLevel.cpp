@@ -19,7 +19,7 @@
 
 namespace Isetta {
 
-void HalvesLevel::OnLevelLoad() {
+void HalvesLevel::Load() {
   Font::AddFontFromFile("Fonts\\CONSOLA.TTF", 13.0f, "Consola");
 
   Entity* cameraEntity{Entity::Instantiate("Camera")};

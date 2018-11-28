@@ -11,7 +11,7 @@
 #include "Graphics/ParticleSystemComponent.h"
 #include "Scene/Primitive.h"
 
-void Isetta::AILevel::OnLevelLoad() {
+void Isetta::AILevel::Load() {
   Entity *camera = Entity::Instantiate("Camera");
   camera->SetTransform(Math::Vector3{5, 5, 16}, Math::Vector3{-20, 0, 0},
                        Math::Vector3::one);

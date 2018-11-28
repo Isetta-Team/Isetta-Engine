@@ -9,7 +9,7 @@
 
 namespace Isetta {
 CREATE_LEVEL(NetworkLevel)
-void OnLevelLoad() override;
+void Load() override;
 };  // namespace Isetta
 
 /**

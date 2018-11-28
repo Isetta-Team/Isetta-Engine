@@ -6,6 +6,6 @@
 
 namespace Isetta {
 CREATE_LEVEL(AILevel)
-void OnLevelLoad() override;
+void Load() override;
 CREATE_LEVEL_END
 }  // namespace Isetta

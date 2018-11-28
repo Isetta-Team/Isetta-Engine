@@ -43,7 +43,7 @@ using namespace Isetta;
 namespace KnightGame {
 using LightProperty = LightComponent::Property;
 
-void KnightMainLevel::OnLevelLoad() {
+void KnightMainLevel::Load() {
   Logger::channelMask.set(static_cast<int>(Debug::Channel::Memory), false);
   knightLayer = Layers::NewLayer(KNIGHT_LAYER);
   Collisions::SetIgnoreLayerCollision(knightLayer, knightLayer);

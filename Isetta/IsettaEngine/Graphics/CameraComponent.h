@@ -51,6 +51,9 @@ Math::Matrix4 GetHordeTransform() const {
 }
 
 Ray ScreenPointToRay(const Math::Vector2& position) const;
+Math::Vector2 ScreenToViewportPoint(const Math::Vector2& position) const;
+Math::Vector2 ViewportToScreenPoint(const Math::Vector2& position) const;
+Ray ViewportPointToRay(const Math::Vector2& position) const;
 // TODO(all) ScreenToViewportPoint
 // TODO(all) ScreenToWorldPoint
 // TODO(all) ViewportPointToRay

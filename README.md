@@ -95,13 +95,14 @@ start_level = LEVEL_NAME
 |	`AudioLevel`		|	Level with 2D and 3D audio looping and one shot 								|	`NUM2`: 2D audio play/pause loop <br> `NUM3`: 3D audio play/pause one shot	|
 |	`BVHLevel`			|	Level testing our dynamic AABB tree												|					|
 |	`CollisionsLevel`	|	Level testing our collision intersections										|					|
-|	`Debug Level`		|	Level demoing our debug drawing capabilities									|	`FlyController`	|
+|	`Debug Level`		|	Level demoing our debug drawing capabilities									|	`FlyController` <br> `V`: Draw ray in a circle while pressed <br> `B`: Draw plane while pressed	|
 |	`EditorLevel`		|	Level showing the editor components: inspector, heirarchy, and console and level loading menu 			|	`ESC`: close window <br> `F1`:level menu <br> `CTRL+SHIFT+`: `H`-hierarchy, `I`-inspector, `F`-frame reporter, `C`-console, `M`-menu	|
 |	`EmptyLevel`		|	Empty level to be used as a starting point for user created levels				|	N/a				|
 |	`EventLevel`		|	Level demoing our event messaging system with sender and listener components	|					|
 |	`Example`			|	Level with an animating model and example component								|					|
 |	`GUILevel`			|	Level demoing some of our GUI capabilities										|	N/a				|
 |	`InputLevel`		|	Level demoing some of the input capabilities 									|	`A`: press/release messages <br> `MOUSE_LEFT`: message on 1st click <br> `GAMEPAD_{X,B,MOUSE_MIDDLE}`: message while pressed/down				|
+|	`LevelLoadingLevel`		|	Level showing a menu to browse levels and load specific level 										|	`ESC`: close window				|
 |	`MeshAnimLevel`		|	Level with a mesh that is being animated 										|	`FlyController`				|
 |	`NetworkLevel`		|																					|					|
 |	`PrimitiveLevel`	|	Level displaying all the types of primitive objects 							|	`FlyController`				|

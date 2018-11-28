@@ -11,7 +11,7 @@
 
 using namespace Isetta;
 
-void EventLevel::OnLevelLoad() {
+void EventLevel::Load() {
   Entity* cameraEntity = Entity::Instantiate("Camera");
   cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},

@@ -11,6 +11,6 @@ CREATE_LEVEL(CollisionSolverLevel)
 Entity* box = nullptr;
 Entity* capsule = nullptr;
 Entity* sphere = nullptr;
-void OnLevelLoad() override;
+void Load() override;
 CREATE_LEVEL_END
 }  // namespace Isetta
