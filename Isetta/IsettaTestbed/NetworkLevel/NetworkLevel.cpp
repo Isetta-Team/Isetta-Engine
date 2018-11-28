@@ -98,7 +98,7 @@ void RegisterExampleMessageFunctions() {
               // Zombie
               e->transform->SetLocalScale(Math::Vector3::one * .01);
               MeshComponent* mesh = e->AddComponent<MeshComponent, true>(
-                  "Zombie/Zombie.scene.xml");
+                  "Halves/Zombie/Zombie.scene.xml");
               if (netId->HasClientAuthority()) {
                 e->AddComponent<KeyTransform>();
               }
@@ -133,7 +133,7 @@ void RegisterExampleMessageFunctions() {
               // Zombie
               e->transform->SetLocalScale(Math::Vector3::one * .01);
               MeshComponent* mesh = e->AddComponent<MeshComponent, true>(
-                  "Zombie/Zombie.scene.xml");
+                  "Halves/Zombie/Zombie.scene.xml");
               if (netId->HasClientAuthority()) {
                 e->AddComponent<KeyTransform>();
               }

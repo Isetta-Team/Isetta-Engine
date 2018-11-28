@@ -16,7 +16,7 @@ std::vector<Entity*> GameManager::zombies;
 int GameManager::score = 0;
 
 void GameManager::Start() {
-  font = Font::AddFontFromFile("Halves/ZOMBIE.TTF", 48.0f);
+  font = Font::AddFontFromFile("Halves/ZOMBIE.TTF", 48.0f, "Zombie");
 }
 
 void GameManager::OnEnable() {

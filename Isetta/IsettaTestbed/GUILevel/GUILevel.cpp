@@ -14,7 +14,7 @@
 using namespace Isetta;
 
 void GUILevel::OnLevelLoad() {
-  Font::AddFontFromFile("Fonts\\CONSOLA.TTF", 13.0f);
+  Font::AddFontFromFile("Fonts\\CONSOLA.TTF", 13.0f, "Consola");
 
   Entity* cameraEntity = Entity::Instantiate("Camera");
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
