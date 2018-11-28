@@ -71,7 +71,7 @@ There are different levels available in the projects of the solution; ones in Is
 
 ### Configuration
 The configuration settings of the engine are placed with `config.cfg` within the IsettaEngine folder.
-For personal configuration settings, create a `user.cfg` in the same folder as `config.cfg
+For personal configuration settings, create a `user.cfg` in the same folder as `config.cfg`
 If you want any personal options when using the engine (such as selecting a level for your computer to run) without changing the `config.cfg` you will need a `user.cfg`. You will need a `user.cfg` for each project (ie. IsettaEngine, IsettaTest, and IsettaTestbed), this fill needs to be placed at the root directory of the project (not the .sln).
 
 ### Selectable Levels
