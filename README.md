@@ -82,11 +82,13 @@ start_level = LEVEL_NAME
 ```
 `LEVEL_NAME` can then be replaced with any of these options:
 - When running IsettaEngine:
+
 |	Level Name			|	Level Description																|	Level Inputs	|
 |		:-:				|			:-:																		|		:-:			|
 |	`NoCameraLevel`		|	Level that may be used when the user doesn't have a camera in their own level	|	N/a 			|
 
 - When running IsettaTestBed:
+
 |	Level Name			|	Level Description																|	Level Inputs	|
 |		:-:				|			:-:																		|		:-:			|
 |	`AILevel`			|																					|					|
