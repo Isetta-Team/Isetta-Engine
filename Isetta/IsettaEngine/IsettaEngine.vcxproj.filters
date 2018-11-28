@@ -274,9 +274,6 @@
     <ClCompile Include="Scene\Primitive.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Custom\SkeletonLevel\SkeletonLevel.cpp">
-      <Filter>Custom\SkeletonLevel</Filter>
-    </ClCompile>
     <ClCompile Include="Core\SystemInfo.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -371,9 +368,6 @@
     </Filter>
     <Filter Include="Core\Geometry">
       <UniqueIdentifier>{be68b692-0a9b-4c08-aa62-a06b16b48fb2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Custom\SkeletonLevel">
-      <UniqueIdentifier>{33133f07-dc65-44ed-bb04-78b420645ffb}</UniqueIdentifier>
     </Filter>
     <Filter Include="Custom">
       <UniqueIdentifier>{83ba69ee-3097-42f0-808c-beda8ea5b991}</UniqueIdentifier>
@@ -662,9 +656,6 @@
     </ClInclude>
     <ClInclude Include="Scene\Primitive.h">
       <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Custom\SkeletonLevel\SkeletonLevel.h">
-      <Filter>Custom\SkeletonLevel</Filter>
     </ClInclude>
     <ClInclude Include="Core\DataStructures\Delegate.h">
       <Filter>Core\DataStructures</Filter>
