@@ -301,6 +301,9 @@
     <ClCompile Include="Custom\EmptyLevel\EmptyLevel.cpp">
       <Filter>Custom\EmptyLevel</Filter>
     </ClCompile>
+    <ClCompile Include="Components\NetworkMonitor.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -701,6 +704,9 @@
     </ClInclude>
     <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h">
       <Filter>Custom\EmptyLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\NetworkMonitor.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
