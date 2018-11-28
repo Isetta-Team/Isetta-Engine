@@ -13,7 +13,8 @@
 
 using namespace Isetta;
 
-void GUILevel::OnLevelLoad() {
+void GUILevel::Load() {
+  // Load font at filepath at size(s)
   Font::AddFontFromFile("Fonts\\CONSOLA.TTF", 13.0f);
 
   Entity* cameraEntity = Entity::Instantiate("Camera");
@@ -22,6 +23,8 @@ void GUILevel::OnLevelLoad() {
   cameraEntity->AddComponent<CameraComponent>();
 
   Entity* guiEntity = Entity::Instantiate("GUI");
+  // Display some of GUI functionality
   guiEntity->AddComponent<GUIComponent>();
+  // Display use of font in GUI
   guiEntity->AddComponent<FontExample>(16.f);
 }

@@ -9,7 +9,7 @@
 
 namespace Isetta {
 CREATE_LEVEL(BVHLevel)
-void OnLevelLoad() override;
+void Load() override;
 
 private:
 std::queue<Entity*> spheres;

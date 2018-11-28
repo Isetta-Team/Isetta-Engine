@@ -4,6 +4,10 @@
 #pragma once
 #include "Scene/Component.h"
 
+/**
+ * @brief Some of the GUI functionality
+ *
+ */
 namespace Isetta {
 BEGIN_COMPONENT(GUIComponent, Component, false)
 private:

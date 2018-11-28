@@ -35,7 +35,7 @@ class ISETTA_API Level {
   class Entity* AddEntity(std::string name, class Entity* parent,
                           bool entityStatic = false);
 
-  void UnloadLevel();
+  void Unload();
   void Update();
   void GUIUpdate();
   void FixedUpdate();
@@ -65,8 +65,8 @@ class ISETTA_API Level {
   class std::list<class Entity*> GetEntitiesByName(const std::string&);
   class std::list<class Entity*> GetEntities() const;
 
-  virtual void OnLevelLoad() = 0;
-  virtual void OnLevelUnload() {}
+  virtual void Load() = 0;
+  virtual void OnUnload() {}
   bool IsLevelLoaded() const;
 };
 }  // namespace Isetta

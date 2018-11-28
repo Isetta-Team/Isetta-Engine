@@ -20,7 +20,7 @@
 
 namespace Isetta {
 
-void BVHLevel::OnLevelLoad() {
+void BVHLevel::Load() {
   Input::RegisterKeyPressCallback(KeyCode::ESCAPE,
                                   []() { Application::Exit(); });
 

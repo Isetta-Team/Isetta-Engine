@@ -5,6 +5,11 @@
 #include "Scene/IsettaLevel.h"
 
 using namespace Isetta;
+
+/**
+ * @brief Level demoing some of the input capabilities
+ *
+ */
 CREATE_LEVEL(InputLevel)
-void OnLevelLoad() override;
+void Load() override;
 CREATE_LEVEL_END

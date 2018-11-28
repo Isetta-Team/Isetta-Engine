@@ -4,6 +4,10 @@
 #pragma once
 #include "Scene/IsettaLevel.h"
 
+/**
+ * @brief
+ *
+ */
 namespace Isetta {
 CREATE_LEVEL(MeshAnimLevel)
 void OnLevelLoad() override;

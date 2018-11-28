@@ -28,7 +28,7 @@
 
 namespace Isetta {
 
-void CollisionsLevel::OnLevelLoad() {
+void CollisionsLevel::Load() {
   // Camera
   Entity* cameraEntity{Entity::Instantiate("Camera")};
   cameraEntity->AddComponent<CameraComponent>();

@@ -29,7 +29,7 @@
 
 namespace Isetta {
 
-void CollisionSolverLevel::OnLevelLoad() {
+void CollisionSolverLevel::Load() {
   Entity *debugEntity{Entity::Instantiate("Debug")};
   debugEntity->AddComponent<FrameReporter>();
 

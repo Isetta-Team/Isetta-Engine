@@ -30,15 +30,13 @@ std::list<Entity*> Level::GetEntitiesByName(const std::string& name) {
   return returnEntities;
 }
 
-bool Level::IsLevelLoaded() const {
-  return isLevelLoaded;
-}
+bool Level::IsLevelLoaded() const { return isLevelLoaded; }
 
 std::list<class Entity*> Level::GetEntities() const { return entities; }
 
-void Level::UnloadLevel() {
+void Level::Unload() {
   PROFILE
-  OnLevelUnload();
+  OnUnload();
   pool.Free(levelRoot);
   for (auto& entity : entities) {
     pool.Free(entity);

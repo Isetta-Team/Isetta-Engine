@@ -7,5 +7,5 @@
 #include "Scene/LevelManager.h"
 
 CREATE_LEVEL(EventLevel)
-void OnLevelLoad() override;
+void Load() override;
 CREATE_LEVEL_END

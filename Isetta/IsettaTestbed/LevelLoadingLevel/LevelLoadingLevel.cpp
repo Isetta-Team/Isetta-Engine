@@ -11,16 +11,18 @@
 #include "LoadNextLevel.h"
 
 namespace Isetta {
-void LevelLoadingLevel::OnLevelLoad() {
+void LevelLoadingLevel::Load() {
   Entity* cameraEntity = Entity::Instantiate("Camera");
   cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
   cameraEntity->AddComponent<EscapeExit>();
 
-  // Level Menu entity, brings up a menu to browse other levels
   Entity* levelMenu{Entity::Instantiate("Level Menu")};
+  // LevelLoadingMenu brings up a menu to browse other levels
   levelMenu->AddComponent<LevelLoadingMenu>();
+  // LoadNextLevel loads the level of specified string,
+  //  throws exception if level doesn't exist
   levelMenu->AddComponent<LoadNextLevel>("EditorLevel");
 }
 }  // namespace Isetta
