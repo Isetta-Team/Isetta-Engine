@@ -56,9 +56,6 @@ class ISETTA_API_DECLARE NetworkManager {
   void SendMessageFromServerToAllButClient(int clientIdx,
                                            yojimbo::Message* refMessage);
 
-  U16 GetMessageTypeCount() const { return messageTypeCount; }
-  template <typename T>
-  bool RegisterMessageType(U64 size, Func<yojimbo::Message*, void*> factory);
   template <typename T>
   int RegisterServerCallback(Action<int, yojimbo::Message*> func);
   template <typename T>
@@ -129,6 +126,9 @@ class ISETTA_API_DECLARE NetworkManager {
  private:
   NetworkManager();
 
+  template <typename T>
+  bool RegisterMessageType(U64 size, Func<yojimbo::Message*, void*> factory);
+  U16 GetMessageTypeCount() const { return messageTypeCount; }
   yojimbo::Message* CreateClientMessage(int messageId) const;
   yojimbo::Message* CreateServerMessage(int clientIdx, int messageId) const;
 
@@ -163,6 +163,9 @@ class ISETTA_API_DECLARE NetworkManager {
   friend class NetworkId;
   friend class NetworkingModule;
   friend class NetworkMessageFactory;
+  friend class CustomAdapter;
+  template <typename T>
+  friend class NetworkMessageRegistry;
 };
 
 template <typename T>
