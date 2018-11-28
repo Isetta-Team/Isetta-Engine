@@ -72,6 +72,24 @@ Ray Isetta::CameraComponent::ScreenPointToRay(
   return Ray{o, dir};
 }
 
+Math::Vector2 CameraComponent::ScreenToViewportPoint(
+    const Math::Vector2& position) const {
+  int width, height;
+  glfwGetWindowSize(renderModule->winHandle, &width, &height);
+  return {position.x / width, position.y / height};
+}
+
+Math::Vector2 CameraComponent::ViewportToScreenPoint(
+    const Math::Vector2& position) const {
+  int width, height;
+  glfwGetWindowSize(renderModule->winHandle, &width, &height);
+  return {position.x * width, position.y * height};
+}
+
+Ray CameraComponent::ViewportPointToRay(const Math::Vector2& position) const {
+  return ScreenPointToRay(ViewportToScreenPoint(position));
+}
+
 void CameraComponent::UpdateH3DTransform() const {
   PROFILE
   Transform::SetH3DNodeTransform(renderNode, *transform);
