@@ -10,11 +10,13 @@
 
 void EventSenderComponent::Start() {
   handleA = Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::A, [&]() {
+    // Define an event object with name, parameters, time frame and priority
     Isetta::EventParam param{std::string{"RaiseEvent In Queue"}};
     Isetta::EventObject eventObject{"RaiseEvent",
                                     Isetta::Time::GetTimeFrame(),
                                     Isetta::EventPriority::MEDIUM,
                                     {param}};
+    // Raise a queued event
     Isetta::Events::Instance().RaiseQueuedEvent(eventObject);
     Isetta::Input::UnregisterKeyPressCallback(Isetta::KeyCode::A, handleA);
   });
@@ -24,6 +26,7 @@ void EventSenderComponent::Start() {
                                     Isetta::Time::GetTimeFrame(),
                                     Isetta::EventPriority::MEDIUM,
                                     {param}};
+    // Raise an immediate event
     Isetta::Events::Instance().RaiseImmediateEvent(eventObject);
     Isetta::Input::UnregisterKeyPressCallback(Isetta::KeyCode::S, handleB);
   });
@@ -48,6 +51,8 @@ void EventSenderComponent::Start() {
     Isetta::Events::Instance().RaiseQueuedEvent(eventObject1);
     Isetta::Events::Instance().RaiseQueuedEvent(eventObject2);
     Isetta::Events::Instance().RaiseQueuedEvent(eventObject3);
+    // The first event should go first, then the second and the third
+    // It's sorted based on it's time frame first and the priority second
     Isetta::Input::UnregisterKeyPressCallback(Isetta::KeyCode::D, handleC);
   });
 }

@@ -15,6 +15,8 @@ Isetta::AITestComponent::AITestComponent(const Math::Rect& gridSurface,
     : navPlane(gridSurface, divideNums), trackingEntity(tracking) {}
 
 void Isetta::AITestComponent::Update() {
+  // The UpdateRoute function updates the internal state of the navigation
+  // plane, based on its targets' position
   navPlane.UpdateRoute();
 #ifdef _EDITOR
   navPlane.DebugDisplay();
@@ -24,6 +26,7 @@ void Isetta::AITestComponent::Update() {
 void Isetta::AITestComponent::Awake() {
   Input::RegisterKeyPressCallback(KeyCode::J, [&]() {
     auto entity = Entity::Instantiate("Agent");
+    // See comment in test agent
     entity->AddComponent<AITestAgent>(&navPlane);
     float randomX = Math::Random::GetRandom01() * 10;
     float randomY = Math::Random::GetRandom01() * 10;
@@ -41,9 +44,11 @@ void Isetta::AITestComponent::Awake() {
   });
   auto zero = Entity::Instantiate("Zero entity");
   zero->SetTransform({0.3, 0, 0.3});
+  // Add targets to the navigation plane
   navPlane.AddTarget(zero->transform);
   navPlane.AddTarget(trackingEntity);
 
   Input::RegisterKeyPressCallback(
+    // And remove it
       KeyCode::P, [&, zero]() { navPlane.RemoveTarget(zero->transform); });
 }
