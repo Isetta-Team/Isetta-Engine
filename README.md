@@ -91,14 +91,14 @@ start_level = LEVEL_NAME
 
 |	Level Name			|	Level Description																|	Level Inputs	|
 |		:-:				|			:-:																		|		:-:			|
-|	`AILevel`			|	TODO(Chaojie)	                                                                |	TODO(Chaojie)				|
+|	`AILevel`			|	Level showing how navigation module works in the engine and how to use the particle system                                                               |	`WASD`: Move the cube around <br> `J`: Spawn one navigation agent <br> `K`: Spawn one hundred navigation agent <br> `L`: Turn off the fire <br> `O`: Turn on the fire <br> `P`: Remove the top left target				|
 |	`AudioLevel`		|	Level with 2D and 3D audio looping and one shot 								|	`NUM2`: 2D audio play/pause loop <br> `NUM3`: 3D audio play/pause one shot	|
 |	`BVHLevel`			|	Level testing our dynamic AABB tree												|	`FlyController` <br> `Keypad5`: Spawn 100 entities each with their sphere collider <br> `Keypad6`: Spawn 1 entity with sphere collider <br> `Keypad4`: Destroy an eneity spawn with `Keypad4` <br> `KaypadEnter`: Show/Hide AABB of spheres <br> `Space`: Start/Stop spheres from moving <br> `Keypad7`: Decrease spheres' movement range <br> `Keypad9`: Increase spheres' movement range |
 |	`CollisionsLevel`	|	Level testing our collision intersections										|	TODO(Caleb)			|
 |	`Debug Level`		|	Level demoing our debug drawing capabilities									|	`FlyController` <br> `V`: Draw ray in a circle while pressed <br> `B`: Draw plane while pressed	|
 |	`EditorLevel`		|	Level showing the editor components: inspector, heirarchy, and console and level loading menu  |	`ESC`: close window <br> `F1`:level menu <br> `CTRL+SHIFT+`: `H`-hierarchy, `I`-inspector, `F`-frame reporter, `C`-console, `M`-menu	|
 |	`EmptyLevel`		|	Empty level to be used as a starting point for user created levels				|	N/a				|
-|	`EventLevel`		|	Level demoing our event messaging system with sender and listener components	|	TODO(Chaojie)				|
+|	`EventLevel`		|	Level demoing our event messaging system with sender and listener components	|	`A`: Raise a queued event <br> `S`: Raise an immediate event <br> `D` Raise three queued events with different priorities and timeframes				|
 |	`Example`			|	Level with an animating model and example component								|	`FlyController` <br> `UpArrow`: Move the wire box forward <br> `DownArrow`: Move the wire box backward <br> `LeftArrow`: Make the wire box turn left <br> `RightArrow`: Make the wire box turn Right |
 |	`GUILevel`			|	Level demoing some of our GUI capabilities										|	N/a				|
 |	`InputLevel`		|	Level demoing some of the input capabilities 									|	`A`: press/release messages <br> `MOUSE_LEFT`: message on 1st click <br> `GAMEPAD_{X,B,MOUSE_MIDDLE}`: message while pressed/down				|
@@ -109,7 +109,7 @@ start_level = LEVEL_NAME
 |	`SkeletonLevel`		|	Level displaying a mesh and entities used to follow the skeleton 				|	N/a				|
 |	`Halves`			|	First demo twin-stick shooter game we created! Only support gamepads			| `LFET_STICK`: move around <br> `RIGHT_STICK`: shoot |
 |	`KnightGame`		|	Game with a knight and a sword, can you take down the most training dummies?	|	`LEFT_STICK`: moves knight <br> `RIGHT_TRIGGER`: raises/lowers sword <br> `RIGHT_STICK`: spin it in a complete circle for flame protection	|
-|	`Week10MiniGame`	|	TODO(Chaojie)																				|	TODO(Chaojie)				|
+|	`Week10MiniGame`	|	First demo game with networking. Fool your enemy with your sword young man!		|	`NUM1`: Start as a host <br> `NUM2`: Start as a client <br> `R`: Ready for the fight <br> `AD`: Move left or right <br> `Up/Down Arrow`: Switch the sword position <br> `Space`: Stab!				|
 
 
 ## Dependencies/Plugins
