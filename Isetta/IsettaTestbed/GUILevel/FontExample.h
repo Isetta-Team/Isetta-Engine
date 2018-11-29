@@ -7,12 +7,11 @@
 namespace Isetta {
 BEGIN_COMPONENT(FontExample, Component, true)
 private:
-class Font* font;
 float fontSize;
 
 public:
 FontExample(float fontSize,
-            const std::string_view fontName);
+            const std::string_view fontName = "Fonts\\CONSOLA.TTF");
 
 void GuiUpdate() override;
 END_COMPONENT(FontExample, Component)

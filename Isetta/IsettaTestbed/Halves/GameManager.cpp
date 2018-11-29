@@ -4,8 +4,8 @@
 #include "GameManager.h"
 
 #include "Bullet.h"
-#include "Core/Math/Random.h"
 #include "Core/IsettaCore.h"
+#include "Core/Math/Random.h"
 #include "Graphics/Font.h"
 #include "Graphics/GUI.h"
 #include "PlayerController.h"
@@ -16,7 +16,7 @@ std::vector<Entity*> GameManager::zombies;
 int GameManager::score = 0;
 
 void GameManager::Start() {
-  font = Font::AddFontFromFile("Halves/ZOMBIE.TTF", 48.0f, "Zombie");
+  Font::AddFontFromFile("Halves/ZOMBIE.TTF", 48.0f, "Zombie");
 }
 
 void GameManager::OnEnable() {
@@ -38,6 +38,8 @@ void GameManager::Update() {
 }
 
 void GameManager::GuiUpdate() {
+  if (!font) font = Font::GetFont("Zombie", 48.f);
+
   float base = 230;
   float padding = 20;
   GUI::SliderFloat(RectTransform{Math::Rect{-200, base, 300, 100},

@@ -10,8 +10,12 @@
 #include "Custom/LevelLoadingMenu.h"
 #include "LoadNextLevel.h"
 
+#include "Graphics/Font.h"
+
 namespace Isetta {
 void LevelLoadingLevel::Load() {
+  Font::AddFontFromFile("Fonts\\CONSOLA.TTF", 13.0f, "Consola");
+
   Entity* cameraEntity = Entity::Instantiate("Camera");
   cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},

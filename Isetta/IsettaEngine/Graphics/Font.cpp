@@ -12,6 +12,7 @@ GUIModule* Font::guiModule;
 std::unordered_map<StringId,
                    std::pair<std::string, std::unordered_map<float, Font*>>>
     Font::fonts;
+std::stack<std::tuple<StringId, std::string, float>> Font::loadFonts;
 
 Font* Font::GetDefaultFont() {
   return reinterpret_cast<Font*>(ImGui::GetDefaultFont());
@@ -48,66 +49,61 @@ Font* Font::GetFont(const std::string_view fontName, float size) {
   return nullptr;
 }
 
-void Font::AddFontFromFile(const std::string& filename,
+void Font::AddFontFromFile(const std::string_view& filename,
                            std::initializer_list<float> fontSizes,
                            const std::string_view& fontName) {
   const auto fontList = fonts.find(SID(fontName.data()));
-  const char* filepath =
-      std::string{CONFIG_VAL(resourcePath) + "\\" + filename}.c_str();
-  std::unordered_map<float, Font*> fontSizeMap;
+  StringId fontId;
+  const std::string filepath =
+      CONFIG_VAL(resourcePath) + "\\" + filename.data();
   if (fontList == fonts.end()) {
-    fonts.insert({SID(fontName.data()), {filepath, fontSizeMap}});
+    fontId = SID(fontName.data());
+    fonts.insert(
+        {fontId, {filepath.c_str(), std::unordered_map<float, Font*>()}});
   } else {
-    fontSizeMap = fontList->second.second;
+    fontId = fontList->first;
   }
   for (const auto& size : fontSizes) {
     if (GetFont(fontName, size)) continue;
-    auto font = reinterpret_cast<Font*>(
-        ImGui::GetIO().Fonts->AddFontFromFileTTF(filepath, size));
-    fontSizeMap.insert({size, font});
+    loadFonts.push({fontId, filepath, size});
   }
 }
 
-void Font::AddFontFromFile(const std::string& filename,
+void Font::AddFontFromFile(const std::string_view& filename,
                            const std::string_view& fontName) {
   const auto fontList = fonts.find(SID(fontName.data()));
-  const char* filepath =
-      std::string{CONFIG_VAL(resourcePath) + "\\" + filename}.c_str();
+  const std::string filepath =
+      CONFIG_VAL(resourcePath) + "\\" + filename.data();
   std::unordered_map<float, Font*> fontSizeMap;
   if (fontList == fonts.end()) {
-    fonts.insert({SID(fontName.data()), {filepath, fontSizeMap}});
+    fonts.insert({SID(fontName.data()), {filepath.c_str(), fontSizeMap}});
   }
 }
 
-Font* Font::AddFontFromFile(const std::string& filename, float fontSize,
-                            const std::string_view& fontName) {
+void Font::AddFontFromFile(const std::string_view& filename, float fontSize,
+                           const std::string_view& fontName) {
   const auto fontList = fonts.find(SID(fontName.data()));
-  std::string filepath =
-      std::string{CONFIG_VAL(resourcePath) + "\\" + filename};
+  const std::string filepath =
+      CONFIG_VAL(resourcePath) + "\\" + filename.data();
   Font* font;
   if (fontList == fonts.end()) {
-    std::unordered_map<float, Font*> fontSizeMap;
-    font = reinterpret_cast<Font*>(
-        ImGui::GetIO().Fonts->AddFontFromFileTTF(filepath.c_str(), fontSize));
-    fontSizeMap.insert({fontSize, font});
-    fonts.insert({SID(fontName.data()), {filepath, fontSizeMap}});
+    StringId fontId = SID(fontName.data());
+    fonts.insert({fontId, {filepath, std::unordered_map<float, Font*>()}});
+    loadFonts.push({fontId, filepath, fontSize});
   } else {
     auto& fontSizeMap = fontList->second.second;
     const auto findSize = fontSizeMap.find(fontSize);
     if (findSize == fontSizeMap.end()) {
-      font = reinterpret_cast<Font*>(
-          ImGui::GetIO().Fonts->AddFontFromFileTTF(filepath.c_str(), fontSize));
-      fontSizeMap.insert({fontSize, font});
-    } else {
-      font = findSize->second;
+      loadFonts.push({fontList->first, filepath, fontSize});
     }
   }
-  return font;
 }
 
 Font* Font::AddFontFromMemory(void* fontBuffer, float fontSize, float pixels,
                               const std::string_view& filename,
                               const std::string_view& fontName) {
+  // TODO(Jacob) currently not available/implemented
+  return nullptr;
   const auto fontList = fonts.find(SID(fontName.data()));
   Font* font;
   if (fontList == fonts.end()) {
