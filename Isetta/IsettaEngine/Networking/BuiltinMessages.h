@@ -39,4 +39,7 @@ void Copy(const yojimbo::Message* otherMessage) override {
 }
 
 char levelName[64];
+
+public:
+inline const static int levelNameMaxLength = 64;
 RPC_MESSAGE_FINISH

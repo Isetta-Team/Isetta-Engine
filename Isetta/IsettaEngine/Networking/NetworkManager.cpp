@@ -120,6 +120,13 @@ void NetworkManager::NetworkLoadLevel(std::string_view levelName) {
               "NetworkLevel can only be called when server running");
     return;
   }
+  if (levelName.length() >= LoadLevelMessage::levelNameMaxLength) {
+    LOG_ERROR(Debug::Channel::Networking,
+              "Level name [%s] is too long and cannot be sent over network, "
+              "consider giving it a short name",
+              levelName.data());
+    return;
+  }
   SendMessageFromServerToAll<LoadLevelMessage>(
       [levelName](LoadLevelMessage* inMessage) {
         strcpy_s(inMessage->levelName, levelName.data());
