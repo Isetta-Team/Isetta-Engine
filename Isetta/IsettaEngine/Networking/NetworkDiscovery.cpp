@@ -91,7 +91,7 @@ U64 NetworkDiscovery::AddOnMessageReceivedListener(
   return onMsgReceived.Subscribe(onMessageReceived);
 }
 
-void NetworkDiscovery::RemoveOnMessageReceivedListener(const U64 handle) {
+void NetworkDiscovery::RemoveOnMessageReceivedListener(U64& handle) {
   onMsgReceived.Unsubscribe(handle);
 }
 

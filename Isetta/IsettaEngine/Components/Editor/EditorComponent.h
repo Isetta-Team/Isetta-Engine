@@ -3,6 +3,7 @@
  */
 #pragma once
 #include "Scene/Component.h"
+#include "Core/IsettaAlias.h"
 
 namespace Isetta {
 BEGIN_COMPONENT(EditorComponent, Component, true)
@@ -12,7 +13,7 @@ class Inspector* inspector;
 class Hierarchy* hierarchy;
 class FrameReporter* frameReporter;
 
-int menuHandle, consoleHandle, inspectorHandle, hierarchyHandle,
+U64 menuHandle, consoleHandle, inspectorHandle, hierarchyHandle,
     frameReporterHandle;
 bool isOpen, menuOpen{true};
 

@@ -53,7 +53,7 @@ U64 NetworkManager::AddConnectedToServerListener(
   return networkingModule->onConnectedToServer.Subscribe(listener);
 }
 
-void NetworkManager::RemoveConnectedToServerListener(const U64 handle) const {
+void NetworkManager::RemoveConnectedToServerListener(U64& handle) const {
   networkingModule->onConnectedToServer.Unsubscribe(handle);
 }
 
@@ -62,8 +62,7 @@ U64 NetworkManager::AddDisconnectedFromServerListener(
   return networkingModule->onDisconnectedFromServer.Subscribe(listener);
 }
 
-void NetworkManager::RemoveDisconnectedFromServerListener(
-    const U64 handle) const {
+void NetworkManager::RemoveDisconnectedFromServerListener(U64& handle) const {
   networkingModule->onDisconnectedFromServer.Unsubscribe(handle);
 }
 
@@ -72,7 +71,7 @@ U64 NetworkManager::AddClientConnectedListener(
   return networkingModule->onClientConnected.Subscribe(listener);
 }
 
-void NetworkManager::RemoveClientConnectedListener(const U64 handle) const {
+void NetworkManager::RemoveClientConnectedListener(U64& handle) const {
   networkingModule->onClientConnected.Unsubscribe(handle);
 }
 
@@ -81,7 +80,7 @@ U64 NetworkManager::AddClientDisconnectedListener(
   return networkingModule->onClientDisconnected.Subscribe(listener);
 }
 
-void NetworkManager::RemoveClientDisconnectedListener(const U64 handle) const {
+void NetworkManager::RemoveClientDisconnectedListener(U64& handle) const {
   networkingModule->onClientDisconnected.Unsubscribe(handle);
 }
 

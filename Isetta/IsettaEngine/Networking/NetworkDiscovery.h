@@ -25,7 +25,7 @@ bool IsListening() const;
 U64 AddOnMessageReceivedListener(
     const std::function<void(const char *data, const char *fromIP)>
         &onMessageReceived);
-void RemoveOnMessageReceivedListener(U64 handle);
+void RemoveOnMessageReceivedListener(U64& handle);
 void RemoveAllOnMessageReceivedListeners();
 
 private:

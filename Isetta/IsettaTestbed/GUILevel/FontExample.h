@@ -12,7 +12,7 @@ float fontSize;
 
 public:
 FontExample(float fontSize,
-            const std::string_view fontName = "Lato-Regular.ttf");
+            const std::string_view fontName);
 
 void GuiUpdate() override;
 END_COMPONENT(FontExample, Component)

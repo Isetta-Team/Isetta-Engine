@@ -9,7 +9,7 @@
 namespace Isetta {
 
 HandleBin::HandleBin()
-    : topHandle{0ll}, maxHandle{std::numeric_limits<U64>::max()} {};
+    : topHandle{1ll}, maxHandle{std::numeric_limits<U64>::max()} {};
 HandleBin::HandleBin(U64 start)
     : topHandle{start}, maxHandle{std::numeric_limits<U64>::max()} {};
 HandleBin::HandleBin(U64 start, U64 max) : topHandle{start}, maxHandle{max} {};
@@ -58,6 +58,6 @@ bool HandleBin::RemoveHandle(U64 handle) {
 
 void HandleBin::Clear() {
   handles.clear();
-  topHandle = 0ll;
+  topHandle = 1ll;
 }
 }  // namespace Isetta

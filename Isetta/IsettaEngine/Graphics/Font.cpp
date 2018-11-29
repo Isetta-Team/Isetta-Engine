@@ -82,13 +82,13 @@ void Font::AddFontFromFile(const std::string& filename,
 Font* Font::AddFontFromFile(const std::string& filename, float fontSize,
                             const std::string_view& fontName) {
   const auto fontList = fonts.find(SID(fontName.data()));
-  const char* filepath =
-      std::string{CONFIG_VAL(resourcePath) + "\\" + filename}.c_str();
+  std::string filepath =
+      std::string{CONFIG_VAL(resourcePath) + "\\" + filename};
   Font* font;
   if (fontList == fonts.end()) {
     std::unordered_map<float, Font*> fontSizeMap;
     font = reinterpret_cast<Font*>(
-        ImGui::GetIO().Fonts->AddFontFromFileTTF(filepath, fontSize));
+        ImGui::GetIO().Fonts->AddFontFromFileTTF(filepath.c_str(), fontSize));
     fontSizeMap.insert({fontSize, font});
     fonts.insert({SID(fontName.data()), {filepath, fontSizeMap}});
   } else {
@@ -96,7 +96,7 @@ Font* Font::AddFontFromFile(const std::string& filename, float fontSize,
     const auto findSize = fontSizeMap.find(fontSize);
     if (findSize == fontSizeMap.end()) {
       font = reinterpret_cast<Font*>(
-          ImGui::GetIO().Fonts->AddFontFromFileTTF(filepath, fontSize));
+          ImGui::GetIO().Fonts->AddFontFromFileTTF(filepath.c_str(), fontSize));
       fontSizeMap.insert({fontSize, font});
     } else {
       font = findSize->second;

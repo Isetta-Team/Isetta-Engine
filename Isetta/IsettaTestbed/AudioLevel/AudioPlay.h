@@ -10,7 +10,7 @@ BEGIN_COMPONENT(AudioPlay, Component, true)
 private:
 class AudioSource* const src = nullptr;
 KeyCode key;
-int handle;
+U64 handle;
 
 public:
 AudioPlay(KeyCode key, class AudioSource* const src) : key{key}, src{src} {}

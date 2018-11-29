@@ -26,5 +26,5 @@ void GUILevel::Load() {
   // Display some of GUI functionality
   guiEntity->AddComponent<GUIComponent>();
   // Display use of font in GUI
-  guiEntity->AddComponent<FontExample>(16.f);
+  guiEntity->AddComponent<FontExample>(16.f, "Halves/ZOMBIE.TTF");
 }

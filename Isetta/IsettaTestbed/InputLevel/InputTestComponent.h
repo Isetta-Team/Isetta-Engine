@@ -3,6 +3,7 @@
  */
 #pragma once
 #include "Scene/Component.h"
+#include "Core/IsettaAlias.h"
 
 using namespace Isetta;
 
@@ -12,7 +13,7 @@ using namespace Isetta;
  */
 BEGIN_COMPONENT(InputTestComponent, Component, false)
 private:
-int handleA, handleB, handleC;
+U64 handleA, handleB, handleC;
 
 public:
 void OnEnable() override;

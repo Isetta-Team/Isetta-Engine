@@ -29,7 +29,7 @@ class InputModule {
    */
   void RegisterWindowCloseCallback(const Action<>& callback);
   U64 RegisterWindowSizeCallback(const Action<int, int>& callback);
-  void UnegisterWindowSizeCallback(U64 handle);
+  void UnegisterWindowSizeCallback(U64& handle);
   /**
    * \brief Check if the key is pressed
    * \param key The keycode to detect
@@ -48,7 +48,7 @@ class InputModule {
    * \param key The key to detect
    * \param handle The handle to unregister
    */
-  void UnregisterKeyPressCallback(KeyCode key, ModifierKeys mods, U64 handle);
+  void UnregisterKeyPressCallback(KeyCode key, ModifierKeys mods, U64& handle);
   /**
    * \brief Register a callback function to the key release event and return its
    * handle
@@ -62,7 +62,7 @@ class InputModule {
    * \param key The key to detect
    * \param handle The handle to unregister
    */
-  void UnregisterKeyReleaseCallback(KeyCode key, ModifierKeys mods, U64 handle);
+  void UnregisterKeyReleaseCallback(KeyCode key, ModifierKeys mods, U64& handle);
   /**
    * \brief Get the position of the mouse
    */
@@ -85,7 +85,7 @@ class InputModule {
    * \param mouseButton The mouse button to detect
    * \param handle The handle to unregister
    */
-  void UnregisterMousePressCallback(MouseButtonCode mouseButton, U64 handle);
+  void UnregisterMousePressCallback(MouseButtonCode mouseButton, U64& handle);
   /**
    * \brief Register a callback function to the mouse release event and return
    * its handle
@@ -99,15 +99,15 @@ class InputModule {
    * \param mouseButton The mouse button to detect
    * \param handle The handle to unregister
    */
-  void UnregisterMouseReleaseCallback(MouseButtonCode mouseButton, U64 handle);
+  void UnregisterMouseReleaseCallback(MouseButtonCode mouseButton, U64& handle);
 
   U64 RegisterScrollCallback(const Action<double, double>& callback);
-  void UnregisterScrollCallback(U64 handle);
+  void UnregisterScrollCallback(U64& handle);
 
   float GetGamepadAxis(GamepadAxis axis);
   bool IsGamepadButtonPressed(GamepadButton button);
   U64 RegisterGamepadConnectionCallback(const Action<int, int>& callback);
-  void UnegisterGamepadConnectionCallback(U64 handle);
+  void UnegisterGamepadConnectionCallback(U64& handle);
 
   void Clear();
 
@@ -116,19 +116,19 @@ class InputModule {
   void RegisterWindowCloseGLFWCallback(const Action<GLFWwindow*>& callback);
   U64 RegisterWindowSizeGLFWCallback(
       const Action<GLFWwindow*, int, int>& callback);
-  void UnegisterWindowSizeGLFWCallback(U64 handle);
+  void UnegisterWindowSizeGLFWCallback(U64& handle);
   U64 RegisterMouseButtonGLFWCallback(
       const Action<GLFWwindow*, int, int, int>& callback);
-  void UnregisterMouseButtonGLFWCallback(U64 handle);
+  void UnregisterMouseButtonGLFWCallback(U64& handle);
   U64 RegisterKeyGLFWCallback(
       const Action<GLFWwindow*, int, int, int, int>& callback);
-  void UnegisterKeyGLFWCallback(U64 handle);
+  void UnegisterKeyGLFWCallback(U64& handle);
   U64 RegisterScrollGLFWCallback(
       const Action<GLFWwindow*, double, double>& callback);
-  void UnregisterScrollGLFWCallback(U64 handle);
+  void UnregisterScrollGLFWCallback(U64& handle);
   U64 RegisterCharGLFWCallback(
       const Action<GLFWwindow*, unsigned int>& callback);
-  void UnegisterCharGLFWCallback(U64 handle);
+  void UnegisterCharGLFWCallback(U64& handle);
 
  private:
   static GLFWwindow* winHandle;
@@ -142,11 +142,11 @@ class InputModule {
 
   U64 RegisterCallback(int key, ModifierKeys mods, const Action<>& callback,
                        KeyMap* delegateMap);
-  void UnregisterCallback(int key, ModifierKeys mods, U64 handle,
+  void UnregisterCallback(int key, ModifierKeys mods, U64& handle,
                           KeyMap* delegateMap);
   U64 RegisterCallback(int key, const Action<>& callback,
                        MouseMap* delegateMap);
-  void UnregisterCallback(int key, U64 handle, MouseMap* delegateMap);
+  void UnregisterCallback(int key, U64& handle, MouseMap* delegateMap);
   int KeyCodeToGlfwKey(KeyCode key) const;
   int MouseButtonToGlfwKey(MouseButtonCode mouseButton) const;
   GLFWgamepadstate gamepadState;

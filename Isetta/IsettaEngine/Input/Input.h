@@ -16,7 +16,7 @@ class ISETTA_API_DECLARE Input {
    */
   static void RegisterWindowCloseCallback(const Action<>& callback);
   static U16 RegisterWindowSizeCallback(const Action<int, int>& callback);
-  static void UnegisterWindowSizeCallback(U16 handle);
+  static void UnegisterWindowSizeCallback(U64& handle);
   /**
    * \brief Check if the key is pressed
    * \param key The keycode to detect
@@ -36,9 +36,9 @@ class ISETTA_API_DECLARE Input {
    * \param key The key to detect
    * \param handle The handle to unregister
    */
-  static void UnregisterKeyPressCallback(KeyCode key, U64 handle);
+  static void UnregisterKeyPressCallback(KeyCode key, U64& handle);
   static void UnregisterKeyPressCallback(KeyCode key, ModifierKeys mods,
-                                         U64 handle);
+                                         U64& handle);
   /**
    * \brief Register a callback function to the key release event and return its
    * handle
@@ -53,9 +53,9 @@ class ISETTA_API_DECLARE Input {
    * \param key The key to detect
    * \param handle The handle to unregister
    */
-  static void UnregisterKeyReleaseCallback(KeyCode key, U64 handle);
+  static void UnregisterKeyReleaseCallback(KeyCode key, U64& handle);
   static void UnregisterKeyReleaseCallback(KeyCode key, ModifierKeys mods,
-                                           U64 handle);
+                                           U64& handle);
   /**
    * \brief Get the position of the mouse
    */
@@ -79,7 +79,7 @@ class ISETTA_API_DECLARE Input {
    * \param handle The handle to unregister
    */
   static void UnregisterMousePressCallback(MouseButtonCode mouseButton,
-                                           U64 handle);
+                                           U64& handle);
   /**
    * \brief Register a callback function to the mouse release event and return
    * its handle
@@ -94,10 +94,10 @@ class ISETTA_API_DECLARE Input {
    * \param handle The handle to unregister
    */
   static void UnregisterMouseReleaseCallback(MouseButtonCode mouseButton,
-                                             U64 handle);
+                                             U64& handle);
 
   static U16 RegisterScrollCallback(const Action<double, double>& callback);
-  static void UnregisterScrollCallback(U16 handle);
+  static void UnregisterScrollCallback(U64& handle);
 
   static float GetGamepadAxis(GamepadAxis axis);
   static bool IsGamepadButtonPressed(GamepadButton button);
