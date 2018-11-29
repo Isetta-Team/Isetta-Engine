@@ -34,7 +34,6 @@ class ISETTA_API_DECLARE NetworkManager {
     ConnectionResponseTimedOut = -3,
     ConnectionRequestTimedOut = -2,
     ConnectionDenied = -1,
-    Disconnected = 0,
     SendingConnectionRequest = 1,
     SendingConnectionResponse = 2,
     Connected = 3,
