@@ -22,7 +22,7 @@ void Entity::GuiUpdate() {
   PROFILE
   for (auto &comp : components) {
     if (comp && comp->GetActive() &&
-        comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
+        comp->GetAttribute(Component::ComponentAttributes::NEED_GUI_UPDATE)) {
       comp->GuiUpdate();
     }
   }
@@ -42,7 +42,7 @@ void Entity::FixedUpdate() {
   PROFILE
   for (auto &comp : components) {
     if (comp->GetActive() &&
-        comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
+        comp->GetAttribute(Component::ComponentAttributes::NEED_FIXED_UPDATE)) {
       comp->FixedUpdate();
     }
   }
@@ -52,7 +52,7 @@ void Entity::LateUpdate() {
   PROFILE
   for (auto &comp : components) {
     if (comp->GetActive() &&
-        comp->GetAttribute(Component::ComponentAttributes::NEED_UPDATE)) {
+        comp->GetAttribute(Component::ComponentAttributes::NEED_LATE_UPDATE)) {
       comp->LateUpdate();
     }
   }
@@ -98,16 +98,11 @@ bool Entity::GetAttribute(EntityAttributes attr) const {
   return attributes.test(static_cast<int>(attr));
 }
 
-Entity::Entity(const std::string &name)
-    : transform(this), attributes{0b101}, entityName{name}, isStatic{false} {
-  CoCreateGuid(&entityId);
-  OnEnable();
-}
-
-Entity::Entity(const std::string &name, const bool &entityStatic)
-    : transform(this),
+Entity::Entity(const std::string& name, const bool entityStatic)
+    : internalTransform(this),
       attributes{0b101},
       entityName{name},
+      transform(&internalTransform),
       isStatic{entityStatic} {
   CoCreateGuid(&entityId);
   OnEnable();
@@ -119,12 +114,16 @@ Entity::~Entity() {
   CheckDestroy();
 }
 
+Entity* Entity::CreateEntity(const std::string name, Entity *parent, const bool entityStatic) {
+  return LevelManager::Instance().loadedLevel->AddEntity(name, parent, entityStatic);
+}
+
 void Entity::Destroy(Entity *entity) {
   if (entity->GetAttribute(EntityAttributes::NEED_DESTROY)) {
     return;
   }
-  if (entity->GetTransform()->GetParent()) {
-    entity->GetTransform()->GetParent()->RemoveChild(&entity->transform);
+  if (entity->transform->GetParent()) {
+    entity->transform->GetParent()->RemoveChild(entity->transform);
   }
   DestroyHelper(entity);
 }
@@ -132,14 +131,14 @@ void Entity::Destroy(Entity *entity) {
 void Entity::DestroyHelper(Entity *entity) {
   Array<Transform *> removingChildren;
   entity->SetAttribute(EntityAttributes::NEED_DESTROY, true);
-  for (Transform *child : entity->transform.children) {
+  for (Transform *child : entity->transform->children) {
     removingChildren.PushBack(child);
-    DestroyHelper(child->GetEntity());
+    DestroyHelper(child->entity);
   }
   for (Transform *child : removingChildren) {
-    entity->transform.RemoveChild(child);
+    entity->transform->RemoveChild(child);
   }
-  entity->GetTransform()->parent = nullptr;
+  entity->transform->parent = nullptr;
 }
 
 void Entity::DestroyImmediately(Entity *entity) {
@@ -150,8 +149,8 @@ void Entity::DestroyImmediately(Entity *entity) {
     MemoryManager::DeleteOnFreeList<Component>(comp);
   }
   entity->components.Clear();
-  if (entity->GetTransform()->GetParent()) {
-    entity->GetTransform()->GetParent()->RemoveChild(&entity->transform);
+  if (entity->transform->GetParent()) {
+    entity->transform->GetParent()->RemoveChild(entity->transform);
   }
 }
 
@@ -163,7 +162,7 @@ std::list<Entity *> Entity::GetEntitiesByName(const std::string &name) {
   return LevelManager::Instance().loadedLevel->GetEntitiesByName(name);
 }
 
-void Entity::SetActive(bool inActive) {
+void Entity::SetActive(const bool inActive) {
   bool isActive = GetAttribute(EntityAttributes::IS_ACTIVE);
   SetAttribute(EntityAttributes::IS_ACTIVE, inActive);
   if (!isActive && inActive) {
@@ -182,11 +181,12 @@ void Entity::SetTransform(const Math::Vector3 &worldPos,
                           const Math::Vector3 &localScale) {
   PROFILE
   SetAttribute(EntityAttributes::IS_TRANSFORM_DIRTY, true);
-  // TODO(YIDI): Test this
-  transform.SetWorldTransform(worldPos, worldEulerAngles, localScale);
+  transform->SetWorldTransform(worldPos, worldEulerAngles, localScale);
 }
-void Entity::SetLayer(int layer) { this->layer = Layers::CheckLayer(layer); }
-void Entity::SetLayer(std::string layer) {
+void Entity::SetLayer(const int layer) {
+  this->layer = Layers::CheckLayer(layer);
+}
+void Entity::SetLayer(const std::string layer) {
   this->layer = Layers::NameToLayer(layer);
 }
 int Entity::GetLayerIndex() const { return layer; }

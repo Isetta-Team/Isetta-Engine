@@ -10,11 +10,18 @@
 #include "Scene/Level.h"
 #include "Scene/LevelManager.h"
 #include "Util.h"
+#include "Horde3D.h"
 
 namespace Isetta {
 Transform::Transform(Entity* const entity) : entity(entity) {}
 
-Transform::~Transform() {}
+void Transform::SetLocalToWorldMatrix(const Math::Matrix4& newMatrix) {
+  localToWorldMatrix = newMatrix;
+  for (int i = 0; i < Math::Matrix3::ROW_COUNT; ++i) {
+    axis[i] = localToWorldMatrix.GetCol(i).GetVector3().Normalized();
+  }
+  SetDirty();
+}
 
 Math::Vector3 Transform::GetWorldPos() {
   return GetLocalToWorldMatrix().GetCol(3).GetVector3();
@@ -169,7 +176,7 @@ void Transform::SetParent(Transform* const transform) {
   Transform* targetTransform = transform;
   if (transform == nullptr) {
     targetTransform =
-        LevelManager::Instance().loadedLevel->levelRoot->GetTransform();
+        LevelManager::Instance().loadedLevel->levelRoot->transform;
   }
   if (parent == targetTransform) {
     LOG_WARNING(Debug::Channel::Graphics,
@@ -328,7 +335,7 @@ void Transform::RecalculateLocalToWorldMatrix() {
   } else {
     localToWorldMatrix = localToParentMatrix;
   }
-  for (int i = 0; i < Math::Matrix3::ROW_COUNT; i++) {
+  for (int i = 0; i < Math::Matrix3::ROW_COUNT; ++i) {
     axis[i] = localToWorldMatrix.GetCol(i).GetVector3().Normalized();
   }
 }

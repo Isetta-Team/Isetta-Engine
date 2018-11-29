@@ -12,7 +12,7 @@
 #include "Core/Math/Random.h"
 #include "Custom/BVHTestLevel/RandomMover.h"
 #include "Custom/DebugCollision.h"
-#include "Custom/IsettaCore.h"
+#include "Core/IsettaCore.h"
 #include "Custom/RaycastClick.h"
 
 #include "Components/Editor/EditorComponent.h"
@@ -20,46 +20,29 @@
 
 namespace Isetta {
 
-using LightProperty = LightComponent::Property;
-using CameraProperty = CameraComponent::Property;
-
-void BVHLevel::LoadLevel() {
+void BVHLevel::OnLevelLoad() {
   Input::RegisterKeyPressCallback(KeyCode::ESCAPE,
                                   []() { Application::Exit(); });
 
-  Entity* lightEntity{AddEntity("Light")};
-  LightComponent* lightComp = lightEntity->AddComponent<LightComponent, true>(
-      "materials/light.material.xml", "LIGHT_1");
+  Entity* lightEntity = Entity::CreateEntity("Light");
+  lightEntity->AddComponent<LightComponent>();
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
-  lightComp->SetProperty<LightProperty::RADIUS>(2500);
-  lightComp->SetProperty<LightProperty::FOV>(180);
-  lightComp->SetProperty<LightProperty::COLOR>(Color::white);
-  lightComp->SetProperty<LightProperty::COLOR_MULTIPLIER>(1.0f);
-  lightComp->SetProperty<LightProperty::SHADOW_MAP_COUNT>(1);
-  lightComp->SetProperty<LightProperty::SHADOW_MAP_BIAS>(0.01f);
 
-  Entity* cameraEntity{AddEntity("Camera")};
-  CameraComponent* camComp =
-      cameraEntity->AddComponent<CameraComponent, true>("Camera");
+  Entity* cameraEntity = Entity::CreateEntity("Camera");
+  cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
   cameraEntity->AddComponent<FlyController>();
-  camComp->SetProperty<CameraProperty::FOV>(
-      CONFIG_VAL(renderConfig.fieldOfView));
-  camComp->SetProperty<CameraProperty::NEAR_PLANE>(
-      CONFIG_VAL(renderConfig.nearClippingPlane));
-  camComp->SetProperty<CameraProperty::FAR_PLANE>(
-      CONFIG_VAL(renderConfig.farClippingPlane));
 
   cameraEntity->AddComponent<LoadNextLevel>("EmptyLevel");
 
-  Entity* debug{ADD_ENTITY("Debug")};
+  Entity* debug = Entity::CreateEntity("Debug");
   debug->AddComponent<GridComponent>();
   debug->AddComponent<EditorComponent>();
   debug->AddComponent<FrameReporter>();
   debug->AddComponent<RaycastClick>();
-  
+
   Config::Instance().drawConfig.bvtDrawAABBs.SetVal("1");
 
   static bool enable = true;
@@ -92,9 +75,9 @@ void BVHLevel::LoadLevel() {
   });
 
   Input::RegisterKeyPressCallback(KeyCode::KP_5, [&]() {
-    for (int i = 0; i < 100; i++) {
-      count++;
-      Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
+    for (int i = 0; i < 100; ++i) {
+      ++count;
+      Entity* sphere{Entity::CreateEntity(Util::StrFormat("Sphere (%d)", count))};
       randomMovers.PushBack(sphere->AddComponent<RandomMover>());
       randomMovers.Back()->SetActive(enable);
       randomMovers.Back()->range = range;
@@ -110,8 +93,8 @@ void BVHLevel::LoadLevel() {
   });
 
   Input::RegisterKeyPressCallback(KeyCode::KP_6, [&]() {
-    count++;
-    Entity* sphere{ADD_ENTITY(Util::StrFormat("Sphere (%d)", count))};
+    ++count;
+    Entity* sphere{Entity::CreateEntity(Util::StrFormat("Sphere (%d)", count))};
     randomMovers.PushBack(sphere->AddComponent<RandomMover>());
     randomMovers.Back()->SetActive(enable);
     randomMovers.Back()->range = range;

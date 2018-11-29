@@ -19,9 +19,6 @@
 #include "Core/Filesystem.h"
 #include "Core/Time/Clock.h"
 #include "Events/Events.h"
-#include "Input/Input.h"
-#include "Input/KeyCode.h"
-#include "Networking/NetworkManager.h"
 #include "Scene/Entity.h"
 #include "Scene/Level.h"
 #include "Scene/LevelManager.h"
@@ -35,45 +32,48 @@ EngineLoop& EngineLoop::Instance() {
 }
 
 EngineLoop::EngineLoop() {
-  memoryManager = new MemoryManager{};
-  windowModule = new WindowModule{};
-  renderModule = new RenderModule{};
-  inputModule = new InputModule{};
-  guiModule = new GUIModule{};
-  collisionsModule = new CollisionsModule{};
-  collisionSolverModule = new CollisionSolverModule{};
-  audioModule = new AudioModule{};
-  networkingModule = new NetworkingModule{};
-  events = new Events{};
-}
-EngineLoop::~EngineLoop() {
-  delete memoryManager;
-  delete windowModule;
-  delete renderModule;
-  delete inputModule;
-  delete guiModule;
-  delete collisionsModule;
-  delete collisionSolverModule;
-  delete audioModule;
-  delete networkingModule;
-  delete events;
-}
-
-void EngineLoop::StartUp() {
-  BROFILER_EVENT("Start Up");
-
   Logger::NewSession();
   Config::Instance().Read("config.cfg");
   if (Filesystem::Instance().FileExists("user.cfg")) {
     Config::Instance().Read("user.cfg");
   }
 
+  // Memory manager must start before everything else
+  memoryManager = new MemoryManager{};
+  windowModule = MemoryManager::NewOnStack<WindowModule>();
+  renderModule = MemoryManager::NewOnStack<RenderModule>();
+  inputModule = MemoryManager::NewOnStack<InputModule>();
+  guiModule = MemoryManager::NewOnStack<GUIModule>();
+  collisionsModule = MemoryManager::NewOnStack<CollisionsModule>();
+  collisionSolverModule = MemoryManager::NewOnStack<CollisionSolverModule>();
+  audioModule = MemoryManager::NewOnStack<AudioModule>();
+  networkingModule = MemoryManager::NewOnStack<NetworkingModule>();
+  events = MemoryManager::NewOnStack<Events>();
+}
+
+EngineLoop::~EngineLoop() {
+  windowModule->~WindowModule();
+  renderModule->~RenderModule();
+  inputModule->~InputModule();
+  guiModule->~GUIModule();
+  collisionsModule->~CollisionsModule();
+  collisionSolverModule->~CollisionSolverModule();
+  audioModule->~AudioModule();
+  networkingModule->~NetworkingModule();
+  events->~Events();
+  delete memoryManager;
+}
+
+void EngineLoop::StartUp() {
+  BROFILER_EVENT("Start Up");
+
   intervalTime = 1.0 / Config::Instance().loopConfig.maxFps.GetVal();
   maxSimulationCount = Config::Instance().loopConfig.maxSimCount.GetVal();
 
+  // Will be set to false when Application set it to isGameRunning
   isGameRunning = true;
 
-  memoryManager->StartUp();
+  // Window module must start before things depend on it
   windowModule->StartUp();
   renderModule->StartUp(windowModule->winHandle);
   inputModule->StartUp(windowModule->winHandle);
@@ -85,9 +85,7 @@ void EngineLoop::StartUp() {
   networkingModule->StartUp();
   events->StartUp();
 
-  // LevelManager::Instance().LoadStartupLevel();
-  LevelManager::Instance().LoadLevel(
-      Config::Instance().levelConfig.startLevel.GetVal());
+  LevelManager::Instance().LoadLevel(CONFIG_VAL(levelConfig.startLevel));
   LevelManager::Instance().LoadLevel();
 
   StartGameClock();
@@ -98,29 +96,18 @@ void EngineLoop::Update() {
 
   GetGameClock().UpdateTime();
 
-  // TODO(All) Add networking update
-
-  // end Networking update
-  // LOG_INFO(Debug::Channel::General,
-  // "//////////////UpdateStart//////////////");
-
-  // Client part
   accumulateTime += GetGameClock().GetDeltaTime();
 
   for (int i = 0; i < maxSimulationCount && accumulateTime > intervalTime;
-       i++) {
+       ++i) {
     FixedUpdate(intervalTime);
-    // LOG_INFO(Debug::Channel::General,
-    // std::to_string(accumulateTime));
     accumulateTime -= intervalTime;
   }
 
   VariableUpdate(GetGameClock().GetDeltaTime());
-  // LOG_INFO(Debug::Channel::General,
-  // "//////////////UpdateEnd//////////////");
 }
 
-void EngineLoop::FixedUpdate(float deltaTime) {
+void EngineLoop::FixedUpdate(const float deltaTime) const {
   BROFILER_CATEGORY("Fixed Update", Profiler::Color::IndianRed);
 
   networkingModule->Update(deltaTime);
@@ -128,7 +115,7 @@ void EngineLoop::FixedUpdate(float deltaTime) {
   collisionSolverModule->Update();
   LevelManager::Instance().loadedLevel->FixedUpdate();
 }
-void EngineLoop::VariableUpdate(float deltaTime) {
+void EngineLoop::VariableUpdate(const float deltaTime) const {
   BROFILER_CATEGORY("Variable Update", Profiler::Color::SteelBlue);
 
   inputModule->Update(deltaTime);
@@ -142,7 +129,12 @@ void EngineLoop::VariableUpdate(float deltaTime) {
   windowModule->Update(deltaTime);
   memoryManager->Update();
 
-  LevelManager::Instance().LoadLevel();
+  if (LevelManager::Instance().pendingLoadLevel) {
+    LevelManager::Instance().UnloadLevel();
+    inputModule->Clear();
+    audioModule->UnloadLevel();
+    LevelManager::Instance().LoadLevel();
+  }
 }
 
 void EngineLoop::ShutDown() {
@@ -159,7 +151,6 @@ void EngineLoop::ShutDown() {
   inputModule->ShutDown();
   renderModule->ShutDown();
   windowModule->ShutDown();
-  memoryManager->ShutDown();
   Logger::ShutDown();
 }
 

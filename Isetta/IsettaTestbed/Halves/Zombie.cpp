@@ -15,12 +15,11 @@ float Zombie::speed = 10.f;
 void Zombie::OnEnable() {
   if (!isInitialized) {
     MeshComponent* mesh =
-        entity->AddComponent<MeshComponent, true>("Zombie/Zombie.scene.xml");
+        entity->AddComponent<MeshComponent>("Zombie/Zombie.scene.xml");
     AnimationComponent* animation =
-        entity->AddComponent<AnimationComponent, true>(mesh);
+        entity->AddComponent<AnimationComponent>(mesh);
     animation->AddAnimation("Zombie/Zombie.anim", 0, "", false);
-    audio = GetEntity()->AddComponent<AudioSource>();
-    audio->SetAudioClip("zombie-death.mp3");
+    audio = entity->AddComponent<AudioSource>(AudioClip::LoadClip("Sound\\zombie-death.mp3"));
     isInitialized = true;
   }
   entity->GetComponent<AnimationComponent>()->Play();
@@ -32,16 +31,15 @@ void Zombie::Update() {
   if (player == nullptr) return;
 
   Math::Vector3 dir =
-      player->GetTransform()->GetWorldPos() - GetTransform()->GetWorldPos();
-  GetTransform()->TranslateWorld(dir.Normalized() * Time::GetDeltaTime() *
-                                speed);
-  GetTransform()->LookAt(GetTransform()->GetWorldPos() + dir);
+      player->transform->GetWorldPos() - transform->GetWorldPos();
+  transform->TranslateWorld(dir.Normalized() * Time::GetDeltaTime() * speed);
+  transform->LookAt(transform->GetWorldPos() + dir);
 }
 
 void Zombie::TakeDamage(const float damage) {
   health -= damage;
   if (health <= 0) {
-    audio->Play(false, 1.0f);
+    audio->Play();
     GameManager::score += (Math::Random::GetRandom01() / 2 + 0.5f) * 10;
     entity->SetActive(false);
   }

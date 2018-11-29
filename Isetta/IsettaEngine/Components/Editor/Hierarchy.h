@@ -10,7 +10,7 @@ BEGIN_COMPONENT(Hierarchy, Component, true)
 private:
 std::string title;
 bool isOpen = true;
-RectTransform rectTransform{{30, 30, 140, 300}};
+RectTransform rectTransform{{30, 30, 160, 300}};
 
 public:
 class Inspector* inspector;

@@ -29,34 +29,34 @@ class ISETTA_API_DECLARE Input {
    * \param key The keycode to detect
    * \param callback The callback function
    */
-  static U16 RegisterKeyPressCallback(KeyCode key, const Action<>& callback);
-  static U16 RegisterKeyPressCallback(KeyCode key, ModifierKeys mods,
+  static U64 RegisterKeyPressCallback(KeyCode key, const Action<>& callback);
+  static U64 RegisterKeyPressCallback(KeyCode key, ModifierKeys mods,
                                       const Action<>& callback);
   /**
    * \brief Unregister a callback by the key and handle
    * \param key The key to detect
    * \param handle The handle to unregister
    */
-  static void UnregisterKeyPressCallback(KeyCode key, U16 handle);
+  static void UnregisterKeyPressCallback(KeyCode key, U64 handle);
   static void UnregisterKeyPressCallback(KeyCode key, ModifierKeys mods,
-                                         U16 handle);
+                                         U64 handle);
   /**
    * \brief Register a callback function to the key release event and return its
    * handle
    * \param key The keycode to detect
    * \param callback The callback function
    */
-  static U16 RegisterKeyReleaseCallback(KeyCode key, const Action<>& callback);
-  static U16 RegisterKeyReleaseCallback(KeyCode key, ModifierKeys mods,
+  static U64 RegisterKeyReleaseCallback(KeyCode key, const Action<>& callback);
+  static U64 RegisterKeyReleaseCallback(KeyCode key, ModifierKeys mods,
                                         const Action<>& callback);
   /**
    * \brief Unregister a callback by the key and handle
    * \param key The key to detect
    * \param handle The handle to unregister
    */
-  static void UnregisterKeyReleaseCallback(KeyCode key, U16 handle);
+  static void UnregisterKeyReleaseCallback(KeyCode key, U64 handle);
   static void UnregisterKeyReleaseCallback(KeyCode key, ModifierKeys mods,
-                                           U16 handle);
+                                           U64 handle);
   /**
    * \brief Get the position of the mouse
    */
@@ -72,7 +72,7 @@ class ISETTA_API_DECLARE Input {
    * \param mouseButton The mouse button to detect
    * \param callback The callback function
    */
-  static U16 RegisterMousePressCallback(MouseButtonCode mouseButton,
+  static U64 RegisterMousePressCallback(MouseButtonCode mouseButton,
                                         const Action<>& callback);
   /**
    * \brief Unregister a callback by the mouse button and handle
@@ -80,14 +80,14 @@ class ISETTA_API_DECLARE Input {
    * \param handle The handle to unregister
    */
   static void UnregisterMousePressCallback(MouseButtonCode mouseButton,
-                                           U16 handle);
+                                           U64 handle);
   /**
    * \brief Register a callback function to the mouse release event and return
    * its handle
    * \param mouseButton The mouse button to detect
    * \param callback The callback function
    */
-  static U16 RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
+  static U64 RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
                                           const Action<>& callback);
   /**
    * \brief Unregister a callback by the mouse button and handle
@@ -95,7 +95,7 @@ class ISETTA_API_DECLARE Input {
    * \param handle The handle to unregister
    */
   static void UnregisterMouseReleaseCallback(MouseButtonCode mouseButton,
-                                             U16 handle);
+                                             U64 handle);
 
   static U16 RegisterScrollCallback(const Action<double, double>& callback);
   static void UnregisterScrollCallback(U16 handle);

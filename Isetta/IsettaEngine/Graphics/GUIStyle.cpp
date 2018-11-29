@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Graphics/GUIStyle.h"
+#include "GUIStyle.h"
 
+#include "Font.h"
 #include "GUI.h"
-#include "Graphics/GUIModule.h"
+#include "GUIModule.h"
 #include "imgui/imgui.h"
 
 namespace Isetta {
@@ -39,7 +40,7 @@ GUIStyle::GUIStyle(bool imGuiStyle) {
   MouseCursorScale = style.MouseCursorScale;
   AntiAliasedFill = style.AntiAliasedFill;
   CurveTessellationTol = style.CurveTessellationTol;
-  for (int i = 0; i < static_cast<int>(GUI::ColorStyles::COUNT); i++) {
+  for (int i = 0; i < static_cast<int>(GUI::ColorStyles::COUNT); ++i) {
     Colors[i] = style.Colors[i];
   }
 }
@@ -54,7 +55,7 @@ GUI::InputStyle::InputStyle() {
   hovered = GetStyle().Colors[(int)ColorStyles::FrameBgHovered];
   active = GetStyle().Colors[(int)ColorStyles::FrameBgActive];
   text = GetStyle().Colors[(int)ColorStyles::Text];
-  font = GetDefaultFont();
+  font = Font::GetDefaultFont();
 }
 GUI::InputStyle::InputStyle(Font* const font) : font(font) {
   background = GetStyle().Colors[(int)ColorStyles::FrameBg];
@@ -65,12 +66,12 @@ GUI::InputStyle::InputStyle(Font* const font) : font(font) {
 GUI::InputStyle::InputStyle(const Color& background, const Color& hovered,
                             const Color& active, const Color& text)
     : background{background}, hovered{hovered}, active{active}, text{text} {
-  font = GetDefaultFont();
+  font = Font::GetDefaultFont();
 }
 GUI::LabelStyle::LabelStyle() {
   text = GetStyle().Colors[(int)ColorStyles::Text];
   background = GetStyle().Colors[(int)ColorStyles::FrameBg];
-  font = GetDefaultFont();
+  font = Font::GetDefaultFont();
 }
 GUI::LabelStyle::LabelStyle(Font* const font) : font{font} {
   text = GetStyle().Colors[(int)ColorStyles::Text];
@@ -78,7 +79,7 @@ GUI::LabelStyle::LabelStyle(Font* const font) : font{font} {
 }
 GUI::LabelStyle::LabelStyle(const Color& text, const Color& background)
     : text{text}, background{background} {
-  font = GetDefaultFont();
+  font = Font::GetDefaultFont();
 }
 GUI::ProgressBarStyle::ProgressBarStyle() {
   background = GetStyle().Colors[(int)ColorStyles::FrameBg];
@@ -104,7 +105,7 @@ GUI::TextStyle::TextStyle() {
 }
 GUI::TextStyle::TextStyle(float fontSize, const std::string_view& fontName) {
   text = GetStyle().Colors[(int)ColorStyles::Text];
-  Font* loadFont = guiModule->GetFont(fontName, fontSize);
+  Font* loadFont = Font::GetFont(fontName, fontSize);
   if (loadFont)
     font = loadFont;
   else {
@@ -120,7 +121,7 @@ GUI::TextStyle::TextStyle(Font* const font) : font{font} {
 GUI::TextStyle::TextStyle(const Color& text, float fontSize,
                           const std::string_view& fontName)
     : text{text} {
-  Font* loadFont = guiModule->GetFont(fontName, fontSize);
+  Font* loadFont = Font::GetFont(fontName, fontSize);
   if (loadFont)
     font = loadFont;
   else {

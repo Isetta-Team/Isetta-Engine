@@ -4,7 +4,6 @@
 #include "BVTree.h"
 
 #include <queue>
-#include <unordered_set>
 #include "Collisions/RaycastHit.h"
 #include "Core/Config/Config.h"
 #include "Core/DataStructures/Array.h"
@@ -36,22 +35,11 @@ void BVTree::Node::SwapOutChild(Node *const oldChild, Node *const newChild) {
   }
 }
 
-BVTree::~BVTree() {
-  std::queue<Node *> q;
-  q.push(root);
-  while (!q.empty()) {
-    Node *cur = q.front();
-    q.pop();
-    if (cur != nullptr) {
-      q.push(cur->left);
-      q.push(cur->right);
-      delete cur;
-    }
-  }
-}
+BVTree::BVTree() : nodePool(CONFIG_VAL(collisionConfig.bvTreeNodeSize),
+               CONFIG_VAL(memoryConfig.defaultPoolIncrement)) {}
 
 void BVTree::AddCollider(Collider *const collider) {
-  Node *newNode = MemoryManager::NewOnFreeList<Node>(collider);
+  Node *newNode = nodePool.Get(collider);
   colNodeMap.insert({collider, newNode});
   AddNode(newNode);
 }
@@ -127,7 +115,7 @@ const CollisionUtil::ColliderPairSet &BVTree::GetCollisionPairs() {
   colliderPairSet.clear();
 
   for (const auto &pair : colNodeMap) {
-    if (pair.first->GetEntity()->isStatic) continue;
+    if (pair.first->entity->isStatic) continue;
 
     Collider *collider = pair.first;
     AABB aabb = collider->GetFatAABB();
@@ -218,16 +206,15 @@ void BVTree::AddNode(Node *const newNode) {
 
     if (cur == root) {
       // cur is root
-      root = MemoryManager::NewOnFreeList<Node>(
-          AABB::Encapsulate(cur->aabb, newAABB));
+      root = nodePool.Get(AABB::Encapsulate(cur->aabb, newAABB));
       cur->parent = root;
       newNode->parent = root;
       root->left = cur;
       root->right = newNode;
     } else {
       // cur is actual leaf, convert cur to branch
-      Node *newBranch = MemoryManager::NewOnFreeList<Node>(
-          AABB::Encapsulate(cur->aabb, newNode->aabb));
+      Node *newBranch =
+          nodePool.Get(AABB::Encapsulate(cur->aabb, newNode->aabb));
       newBranch->parent = cur->parent;
       cur->parent->SwapOutChild(cur, newBranch);
       cur->parent = newBranch;
@@ -260,7 +247,7 @@ void BVTree::RemoveNode(Node *const node, const bool deleteNode) {
       newRoot = root->left;
     }
 
-    MemoryManager::DeleteOnFreeList<Node>(root);
+    nodePool.Free(root);
     root = newRoot;
     root->parent = nullptr;
   } else {
@@ -276,7 +263,7 @@ void BVTree::RemoveNode(Node *const node, const bool deleteNode) {
       grandParent->SwapOutChild(parent, parent->left);
     }
 
-    MemoryManager::DeleteOnFreeList<Node>(parent);
+    nodePool.Free(parent);
 
     Node *cur = grandParent;
     while (cur != nullptr) {
@@ -286,7 +273,7 @@ void BVTree::RemoveNode(Node *const node, const bool deleteNode) {
   }
 
   if (deleteNode) {
-    MemoryManager::DeleteOnFreeList<Node>(node);
+    nodePool.Free(node);
   }
 }
 
@@ -305,22 +292,23 @@ void BVTree::DebugDraw() const {
     Node *cur = q.front();
 
     Color color;
+
     if (cur->IsLeaf()) {
 #if _EDITOR
-      if (collisionSet.find(cur->collider) != collisionSet.end()) {
+      // if (collisionSet.find(cur->collider) != collisionSet.end()) {
         color = Color::red;
-      } else {
+      // } else {
         color = Color::green;
-      }
-#endif
+      // }
       DebugDraw::WireCube(Math::Matrix4::Translate(cur->aabb.GetCenter()) *
                               Math::Matrix4::Scale({cur->aabb.GetSize()}),
                           color, 1, .05);
+#endif
     } else {
       int depth = 0;
       auto parent = cur->parent;
       while (parent != nullptr) {
-        depth++;
+        ++depth;
         parent = parent->parent;
       }
       color = Color::Lerp(Color::white, Color::black,

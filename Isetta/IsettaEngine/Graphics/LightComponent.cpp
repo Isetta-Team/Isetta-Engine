@@ -3,8 +3,9 @@
  */
 #include "Graphics/LightComponent.h"
 
-#include <utility>
 #include "Core/Config/Config.h"
+#include "Core/Math/Vector4.h"
+#include "Scene/Entity.h"
 #include "Scene/Transform.h"
 #include "Util.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
@@ -13,13 +14,12 @@ namespace Isetta {
 
 RenderModule* LightComponent::renderModule{nullptr};
 
-LightComponent::LightComponent(std::string_view resourceName,
-                               std::string_view lightName)
-    : name{std::move(lightName)} {
+LightComponent::LightComponent() : name{entity->GetEntityIdString()} {
   ASSERT(renderModule != nullptr);
   renderModule->lightComponents.push_back(this);
 
-  renderResource = LoadResourceFromFile(resourceName);
+  renderResource = LoadResourceFromFile(
+      Config::Instance().lightConfig.lightMaterial.GetVal());
 }
 
 H3DRes LightComponent::LoadResourceFromFile(std::string_view resourceName) {
@@ -32,6 +32,19 @@ H3DRes LightComponent::LoadResourceFromFile(std::string_view resourceName) {
                                    resourceName.data()));
 
   return lightMatRes;
+}
+
+void LightComponent::Start() {
+  SetProperty<Property::RADIUS>(CONFIG_M_VAL(lightConfig, radius));
+  SetProperty<Property::FOV>(CONFIG_M_VAL(lightConfig, fieldOfView));
+  SetProperty<Property::COLOR>(
+      Color{Math::Vector4(CONFIG_M_VAL(lightConfig, color), 1.0f)});
+  SetProperty<Property::COLOR_MULTIPLIER>(
+      CONFIG_M_VAL(lightConfig, colorMultiplier));
+  SetProperty<Property::SHADOW_MAP_COUNT>(
+      CONFIG_M_VAL(lightConfig, shadowMapCount));
+  SetProperty<Property::SHADOW_MAP_BIAS>(
+      CONFIG_M_VAL(lightConfig, shadowMapBias));
 }
 
 void LightComponent::OnEnable() {
@@ -54,6 +67,6 @@ void LightComponent::OnDestroy() {
 
 void LightComponent::UpdateH3DTransform() const {
   PROFILE
-  Transform::SetH3DNodeTransform(renderNode, *GetTransform());
+  Transform::SetH3DNodeTransform(renderNode, *transform);
 }
 }  // namespace Isetta

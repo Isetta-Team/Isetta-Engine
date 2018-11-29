@@ -14,7 +14,7 @@ Isetta::ParticleSystemComponent::ParticleSystemComponent(
 }
 
 void Isetta::ParticleSystemComponent::UpdateTransform() const {
-  PROFILE Transform::SetH3DNodeTransform(renderNode, *GetTransform());
+  PROFILE Transform::SetH3DNodeTransform(renderNode, *transform);
 }
 
 void Isetta::ParticleSystemComponent::UpdateEmitter(float deltaTime) const {
@@ -46,7 +46,7 @@ void Isetta::ParticleSystemComponent::OnEnable() {
     renderNode = h3dAddNodes(H3DRootNode, renderResource);
     unsigned int count = h3dFindNodes(renderNode, "", H3DNodeTypes::Emitter);
     emitters.Reserve(count + 1);
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i < count; ++i) {
       emitters.PushBack(h3dGetNodeFindResult(i));
     }
   } else {

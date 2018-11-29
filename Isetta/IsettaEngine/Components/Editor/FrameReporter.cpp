@@ -10,7 +10,7 @@
 
 namespace Isetta {
 void FrameReporter::GuiUpdate() {
-  count++;
+  ++count;
   float dt = Time::GetDeltaTime();
 
   if (count >= reportInterval) {

@@ -7,7 +7,6 @@
 #include "Core/Math/Matrix4.h"
 #include "Core/Math/Quaternion.h"
 #include "Core/Math/Vector3.h"
-#include "Horde3D.h"
 
 namespace Isetta {
 class ISETTA_API_DECLARE Transform {
@@ -17,7 +16,9 @@ class ISETTA_API_DECLARE Transform {
   // constructors
   Transform() = delete;
   explicit Transform(class Entity* const entity);
-  ~Transform();
+  ~Transform() = default;
+
+  void SetLocalToWorldMatrix(const Math::Matrix4& newMatrix);
 
   // position
   Math::Vector3 GetWorldPos();
@@ -68,9 +69,6 @@ class ISETTA_API_DECLARE Transform {
               const Math::Vector3& worldUp = Math::Vector3::up);
   void LookAt(Transform& target,
               const Math::Vector3& worldUp = Math::Vector3::up);
-  class Entity* GetEntity() const {
-    return entity;
-  }
   Size GetChildCount() const { return children.Size(); }
   Transform* GetChild(U16 childIndex);
   inline std::string GetName() const;
@@ -89,7 +87,8 @@ class ISETTA_API_DECLARE Transform {
                          const Math::Vector3& inScale);
 
   // more utilities
-  static void SetH3DNodeTransform(H3DNode node, Transform& transform);
+  typedef int H3DNode;
+  static void SetH3DNodeTransform(int node, Transform& transform);
 
   // iterator
   typedef Array<Transform*>::iterator iterator;
@@ -103,6 +102,7 @@ class ISETTA_API_DECLARE Transform {
   // both called by SetParent
   void AddChild(Transform* transform);
   void RemoveChild(Transform* transform);
+  class Entity* const entity{nullptr};
 
  private:
   void RecalculateLocalToWorldMatrix();
@@ -129,7 +129,6 @@ class ISETTA_API_DECLARE Transform {
   bool isDirty{true};
   bool isWorldToLocalDirty{true};
 
-  class Entity* const entity{nullptr};
   Transform* parent{nullptr};
   Array<Transform*> children;
 

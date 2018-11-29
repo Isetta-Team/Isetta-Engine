@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include <Windows.h>
+//#include <Windows.h>
 #include <string>
 #include "Audio/AudioModule.h"
 #include "Collisions/CollisionsModule.h"
@@ -12,9 +12,10 @@
 #include "Core/DataStructures/Array.h"
 #include "Core/Debug/Logger.h"
 #include "Core/IsettaAlias.h"
-#include "Core/Math/Vector3.h"
 #include "Core/Memory/MemoryManager.h"
 #include "EngineLoop.h"
+#include "Graphics/CameraComponent.h"
+#include "Graphics/LightComponent.h"
 #include "Graphics/RenderModule.h"
 #include "Graphics/Window.h"
 #include "Networking/NetworkingModule.h"
@@ -40,30 +41,22 @@ class ISETTA_API Config {
     return instance;
   }
 
-  /// Logger configuartion CVars
   Logger::LoggerConfig logger;
-  /// WindowModule configuration CVars
   WindowModule::WindowConfig windowConfig;
-  /// EngineLoop configuration CVars
   EngineLoop::LoopConfig loopConfig;
-  /// RenderModule configuration CVars
   RenderModule::RenderConfig renderConfig;
-  /// NetworkingModule configuration CVars
+  CameraComponent::CameraConfig cameraConfig;
+  LightComponent::LightConfig lightConfig;
+
   NetworkingModule::NetworkConfig networkConfig;
-  /// MemoryManager configuration CVars
   MemoryManager::MemoryConfig memoryConfig;
-  /// AudioModule configuration CVars
   AudioModule::AudioConfig audioConfig;
   LevelManager::LevelConfig levelConfig;
   CollisionsModule::CollisionConfig collisionConfig;
   Debug::DrawConfig drawConfig;
 
-  /// Max FPS of the engine
-  CVar<int> maxFps = {"max_fps", 16};
-  /// Max simulation count of update loop
-  CVar<int> maxSimCount = {"max_simulation_count", 5};
   /// File path for the resources of game/engine
-  CVarString resourcePath{"resource_path", ""};
+  CVarString resourcePath{"resource_path", "Resources"};
 
   /**
    * @brief Use the Filesystem to read the file, then call ProcessFile to parse

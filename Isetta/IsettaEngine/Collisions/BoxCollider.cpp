@@ -15,10 +15,10 @@ namespace Isetta {
 #if _EDITOR
 void BoxCollider::Update() {
   DebugDraw::WireCube(
-      Math::Matrix4::Translate(GetTransform()->GetWorldPos() + center) *
+      Math::Matrix4::Translate(transform->GetWorldPos() + center) *
           Math::Matrix4::Scale(
-              Math::Vector3::Scale(GetTransform()->GetWorldScale(), size)) *
-          (Math::Matrix4)GetTransform()->GetWorldRot(),
+              Math::Vector3::Scale(transform->GetWorldScale(), size)) *
+          (Math::Matrix4)transform->GetWorldRot(),
       debugColor);
 }
 #endif
@@ -27,12 +27,12 @@ bool BoxCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
                           float maxDistance) {
   float tmin = -INFINITY, tmax = maxDistance > 0 ? maxDistance : INFINITY;
   Math::Vector3 e = GetWorldExtents();
-  Math::Vector3 o = GetTransform()->LocalPosFromWorldPos(ray.GetOrigin());
-  Math::Vector3 d = GetTransform()->LocalDirFromWorldDir(ray.GetDirection());
+  Math::Vector3 o = transform->LocalPosFromWorldPos(ray.GetOrigin());
+  Math::Vector3 d = transform->LocalDirFromWorldDir(ray.GetDirection());
   Math::Vector3 invD = 1.0f / d;
 
   float t[6];
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < 3; ++i) {
     t[2 * i] = -(e[i] + o[i]) * invD[i];
     t[2 * i + 1] = (e[i] - o[i]) * invD[i];
   }
@@ -45,16 +45,16 @@ bool BoxCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
   if (tmax < 0 || tmin > tmax) return false;
   if (tmin < 0) tmin = tmax;
 
-  Math::Vector3 pt = GetTransform()->WorldPosFromLocalPos(o) +
-                     GetTransform()->WorldDirFromLocalDir(d) * tmin;
+  Math::Vector3 pt = transform->WorldPosFromLocalPos(o) +
+                     transform->WorldDirFromLocalDir(d) * tmin;
   Math::Vector3 to = pt - GetWorldCenter();
   Math::Vector3 n;
   tmax = 0;
   for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
-    float tmp = Math::Vector3::Dot(to, GetTransform()->GetAxis(i));
+    float tmp = Math::Vector3::Dot(to, transform->GetAxis(i));
     if (tmp > tmax) {
       tmax = tmp;
-      n = Math::Util::Sign(tmp) * GetTransform()->GetAxis(i);
+      n = Math::Util::Sign(tmp) * transform->GetAxis(i);
     }
   }
 
@@ -70,10 +70,10 @@ AABB BoxCollider::GetFatAABB() {
 AABB BoxCollider::GetAABB() {
   const Math::Vector3 size = GetWorldSize();
   Math::Vector3 aabbSize = size;
-  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; i++)
-    aabbSize[i] = Math::Util::Abs(GetTransform()->GetLeft()[i]) * size.x +
-                  Math::Util::Abs(GetTransform()->GetUp()[i]) * size.y +
-                  Math::Util::Abs(GetTransform()->GetForward()[i]) * size.z;
+  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i)
+    aabbSize[i] = Math::Util::Abs(transform->GetLeft()[i]) * size.x +
+                  Math::Util::Abs(transform->GetUp()[i]) * size.y +
+                  Math::Util::Abs(transform->GetForward()[i]) * size.z;
   return AABB{GetWorldCenter(), aabbSize};
 }
 

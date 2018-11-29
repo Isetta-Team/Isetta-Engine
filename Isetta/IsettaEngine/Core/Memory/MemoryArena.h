@@ -11,23 +11,15 @@ template <typename T>
 class ObjectHandle;
 
 class MemoryArena {
- public:
-  /**
-   * \brief Default destructor that does nothing
-   */
-  ~MemoryArena() = default;
-
  private:
-  /**
-   * \brief Default constructor that does nothing
-   */
-  MemoryArena() = default;
+  MemoryArena() = delete;
 
   /**
    * \brief Create a new memory arena of specified size
    * \param size Size in byte
    */
   explicit MemoryArena(Size size);
+  ~MemoryArena();
 
   /**
    * \brief Create a new object on this memory arena. You need
@@ -73,12 +65,6 @@ class MemoryArena {
    * Index of the entry to move
    */
   void MoveLeft(U32 index);
-
-  /**
-   * \brief Free all memory in this memory arena. The memory arena will become
-   * unusable after calling this
-   */
-  void Erase() const;
 
   /// only for internal debugging
   void Print() const;

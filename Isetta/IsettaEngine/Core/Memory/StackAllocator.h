@@ -11,9 +11,9 @@ class ISETTA_API StackAllocator {
  public:
   typedef Size Marker;
 
-  StackAllocator() = default;
+  StackAllocator() = delete;
   explicit StackAllocator(Size stackSize);
-  ~StackAllocator() = default;
+  ~StackAllocator();
 
   /**
    * \brief Grab properly aligned memory from the stack allocator. You probably
@@ -35,33 +35,27 @@ class ISETTA_API StackAllocator {
    * \tparam args Arguments for the constructor
    * \return Pointer to new object
    */
-  template<typename T, typename ...args>
+  template <typename T, typename... args>
   T* New(args...);
 
-  template<typename T>
+  template <typename T>
   T* NewArr(Size length, U8 alignment);
 
   /**
    * \brief Free the stack allocator to a specific marker
    * \param marker Marker to free to
    */
-  void FreeToMarker(const Marker marker) { top = marker; };
+  void FreeToMarker(const Marker marker) { top = marker; }
 
   /**
    * \brief Clear the whole stack allocator to its bottom. All memory will be
    * available for new allocations again
    */
-  void Clear() { top = 0; };
-
-  /**
-   * \brief Free all memory in this stack allocator. The stack allocator will
-   * become unusable after calling this
-   */
-  void Erase();
+  void Clear() { top = 0; }
 
   /**
    * \brief Get the current marker position
-   * \return 
+   * \return
    */
   Marker GetMarker() const { return top; };
 
@@ -72,7 +66,7 @@ class ISETTA_API StackAllocator {
   PtrInt bottomAddress;
 };
 
-template <typename T, typename ... args>
+template <typename T, typename... args>
 T* StackAllocator::New(args... argList) {
   void* mem = Alloc(sizeof(T), MemUtil::ALIGNMENT);
   return new (mem) T(argList...);
@@ -82,7 +76,7 @@ template <typename T>
 T* StackAllocator::NewArr(Size length, const U8 alignment) {
   void* alloc = Alloc(sizeof(T) * length + 8, alignment);
   char* allocAddress = static_cast<char*>(alloc);
-  for (int i = 0; i < length; i++) new (allocAddress + i * sizeof(T)) T;
+  for (int i = 0; i < length; ++i) new (allocAddress + i * sizeof(T)) T;
   return static_cast<T*>(alloc);
 }
 }  // namespace Isetta

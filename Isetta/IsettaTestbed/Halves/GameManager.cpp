@@ -6,6 +6,7 @@
 #include "Bullet.h"
 #include "Core/Math/Random.h"
 #include "Custom/IsettaCore.h"
+#include "Graphics/Font.h"
 #include "Graphics/GUI.h"
 #include "PlayerController.h"
 #include "Zombie.h"
@@ -15,13 +16,13 @@ std::vector<Entity*> GameManager::zombies;
 int GameManager::score = 0;
 
 void GameManager::Start() {
-  font = GUI::AddFontFromFile("Resources/Fonts/ZOMBIE.TTF", 48.0f);
+  font = Font::AddFontFromFile("Fonts/ZOMBIE.TTF", 48.0f);
 }
 
 void GameManager::OnEnable() {
   zombies.reserve(poolSize);
   for (int i = 0; i < poolSize; i++) {
-    Entity* zombie{ADD_ENTITY(Util::StrFormat("Zombie (%d)", i))};
+    Entity* zombie{Entity::CreateEntity(Util::StrFormat("Zombie (%d)", i))};
     zombie->AddComponent<Zombie, true>();
     zombie->SetActive(false);
     zombies.push_back(zombie);
@@ -59,7 +60,7 @@ void GameManager::SpawnZombie() const {
 
   float angle = Math::Random::GetRandom01() * Math::Util::PI * 2;
   Math::Vector3 zombiePos =
-      player->GetTransform()->GetWorldPos() +
+      player->transform->GetWorldPos() +
       Math::Vector3{spawnRadius * Math::Util::Sin(angle), 0,
                     spawnRadius * Math::Util::Cos(angle)};
 

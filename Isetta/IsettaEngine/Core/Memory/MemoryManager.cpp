@@ -30,32 +30,23 @@ void* MemoryManager::AllocOnFreeList(const Size size, const U8 alignment) {
   return GetInstance()->freeListAllocator.Alloc(size, alignment);
 }
 
-void* MemoryManager::ReallocOnFreeList(void* memPtr, const Size size,
+void* MemoryManager::ReallocOnFreeList(void* memPtr, const Size newSize,
                                        const U8 alignment) {
-  return GetInstance()->freeListAllocator.Realloc(memPtr, size, alignment);
+  return GetInstance()->freeListAllocator.Realloc(memPtr, newSize, alignment);
 }
 
 void MemoryManager::FreeOnFreeList(void* memPtr) {
   GetInstance()->freeListAllocator.Free(memPtr);
 }
 
-MemoryManager::MemoryManager() {
-  // TODO(YIDI): The two allocators are still initialized here by automatically
-  // calling their default constructors, find a better way to handle this
+MemoryManager::MemoryManager()
+    : lsrAndLevelAllocator(CONFIG_VAL(memoryConfig.lsrAndLevelAllocatorSize)),
+      singleFrameAllocator(CONFIG_VAL(memoryConfig.singleFrameAllocatorSize)),
+      doubleBufferedAllocator(
+          CONFIG_VAL(memoryConfig.doubleBufferedAllocatorSize)),
+      dynamicArena(CONFIG_VAL(memoryConfig.dynamicArenaSize)),
+      freeListAllocator(CONFIG_VAL(memoryConfig.freeListAllocatorSize)) {
   instance = this;
-}
-
-void MemoryManager::StartUp() {
-  MemoryConfig& configs = Config::Instance().memoryConfig;
-  // CONFIG_VAL(memoryConfig.lsrAndLevelAllocatorSize)
-  lsrAndLevelAllocator =
-      StackAllocator(configs.lsrAndLevelAllocatorSize.GetVal());
-  singleFrameAllocator =
-      StackAllocator(configs.singleFrameAllocatorSize.GetVal());
-  doubleBufferedAllocator =
-      DoubleBufferedAllocator(configs.doubleBufferedAllocatorSize.GetVal());
-  dynamicArena = MemoryArena(configs.dynamicArenaSize.GetVal());
-  freeListAllocator = FreeListAllocator(configs.freeListAllocatorSize.GetVal());
 }
 
 // Memory Manager's update needs to be called after everything that need memory
@@ -67,14 +58,9 @@ void MemoryManager::Update() {
   doubleBufferedAllocator.SwapBuffer();
   doubleBufferedAllocator.ClearCurrentBuffer();
   dynamicArena.Defragment();
-}
-
-void MemoryManager::ShutDown() {
-  singleFrameAllocator.Erase();
-  doubleBufferedAllocator.Erase();
-  dynamicArena.Erase();
-  lsrAndLevelAllocator.Erase();
-  freeListAllocator.Erase();
+#if _DEBUG
+  // freeListAllocator.Print();
+#endif
 }
 
 void MemoryManager::FinishEngineStartupListener() {
@@ -98,7 +84,7 @@ void MemoryManager::DefragmentTest() {
   const U32 count = 1024;
   Array<ObjectHandle<U64>> arr;
 
-  for (U32 i = 0; i < count; i++) {
+  for (U32 i = 0; i < count; ++i) {
     auto ref = NewDynamic<U64>();
     *ref = i;
     arr.PushBack(ref);
@@ -106,7 +92,7 @@ void MemoryManager::DefragmentTest() {
 
   auto map = instance->dynamicArena.addressIndexMap;
 
-  for (U32 i = 0; i < count / 2; i++) {
+  for (U32 i = 0; i < count / 2; ++i) {
     int index = Math::Random::GetRandomGenerator(0, arr.Size() - 1).GetValue();
     DeleteDynamic(arr[index]);
     arr.Erase(arr.begin() + index);

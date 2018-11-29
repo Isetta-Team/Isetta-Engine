@@ -25,7 +25,7 @@ class MemUtil {
    * 128 and >= 8
    * \return A raw pointer to the newly allocated memory address
    */
-  static void* Alloc(Size size, U8 alignment);
+  static void* Alloc(Size size, U8 alignment = ALIGNMENT);
 
   /**
    * \brief Free the properly aligned memory address

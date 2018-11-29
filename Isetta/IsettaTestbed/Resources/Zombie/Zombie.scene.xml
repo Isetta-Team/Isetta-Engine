@@ -1,4 +1,4 @@
-<Model name="Zombie" geometry="Zombie.geo">
+<Model name="Zombie" geometry="Zombie/Zombie.geo">
 	<Joint name="Hips" tx="0.482839" ty="90.5102" tz="1.76339" rx="31.287" ry="8.2766" rz="5.52872" jointIndex="1">
 		<Joint name="Spine" tx="-0.002448" ty="12.7775" tz="0.315252" rx="13.9587" ry="3.64175" rz="4.37575" jointIndex="2">
 			<Joint name="Spine1" tx="-0.002856" ty="8.81951" tz="0.086597" rx="10.3834" ry="1.82603" rz="2.13127" jointIndex="3">
@@ -101,6 +101,6 @@
 		</Joint>
 	</Joint>
 
-	<Mesh name="mremireh_shoe" material="emireh_shoe_material.material.xml" batchStart="0" batchCount="492" vertRStart="0" vertREnd="491" />
-	<Mesh name="mremireh_body" material="emireh_body_material.material.xml" batchStart="492" batchCount="13152" vertRStart="492" vertREnd="12499" />
+	<Mesh name="mremireh_shoe" material="Zombie/emireh_shoe_material.material.xml" batchStart="0" batchCount="492" vertRStart="0" vertREnd="491" />
+	<Mesh name="mremireh_body" material="Zombie/emireh_body_material.material.xml" batchStart="492" batchCount="13152" vertRStart="492" vertREnd="12499" />
 </Model>

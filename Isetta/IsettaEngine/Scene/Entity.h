@@ -11,10 +11,14 @@
 #include "Component.h"
 #include "Core/DataStructures/Array.h"
 #include "Core/Memory/MemoryManager.h"
+#include "LevelManager.h"
+#include "Scene/Level.h"
+#include "Scene/LevelManager.h"
 #include "Scene/Transform.h"
 #include "Util.h"
 
 namespace Isetta {
+
 class ISETTA_API_DECLARE Entity {
  private:
   enum class EntityAttributes { IS_ACTIVE, NEED_DESTROY, IS_TRANSFORM_DIRTY };
@@ -24,7 +28,7 @@ class ISETTA_API_DECLARE Entity {
 
   std::vector<std::type_index> componentTypes;
   Array<class Component *> components;
-  Transform transform;
+  Transform internalTransform;
 
   void OnEnable();
   void GuiUpdate();
@@ -43,11 +47,17 @@ class ISETTA_API_DECLARE Entity {
   void SetAttribute(EntityAttributes attr, bool value);
   bool GetAttribute(EntityAttributes attr) const;
 
+  Entity(const std::string& name, bool entityStatic = false);
+  friend Level;
+  friend class MemoryManager;
+  friend class TemplatePoolAllocator<Entity>;
+
  public:
-  Entity(const std::string &name);
-  Entity(const std::string &name, const bool &entityStatic);
   ~Entity();
 
+  Transform *transform{};
+
+  void SetName(std::string_view name) { entityName = name; }
   std::string GetName() const { return entityName; }
   GUID GetEntityId() const { return entityId; }
   std::string GetEntityIdString() const {
@@ -61,6 +71,8 @@ class ISETTA_API_DECLARE Entity {
 
     return std::string(output.data());
   }
+  static Entity* CreateEntity(std::string name, class Entity* parent = nullptr,
+                          bool entityStatic = false);
   static void Destroy(Entity *entity);
   static void DestroyHelper(Entity *entity);
   static void DestroyImmediately(Entity *entity);
@@ -94,13 +106,6 @@ class ISETTA_API_DECLARE Entity {
   void SetTransform(const Math::Vector3 &worldPos = Math::Vector3::zero,
                     const Math::Vector3 &worldEulerAngles = Math::Vector3::zero,
                     const Math::Vector3 &localScale = Math::Vector3::one);
-  Transform *const GetTransform() { return &transform; }
-  //#if _DEBUG
-  // TODO(YIDI): Delete this! This is used for in game editor
-  // TODO(Jacob) no don't this is good
-  Array<class Component *> GetComponents() const { return components; }
-  // TODO(Chaojie): You can use GetComponents<Component> now
-  //#endif
 
   void SetLayer(int layer);
   void SetLayer(std::string layer);
@@ -136,9 +141,13 @@ T *Entity::AddComponent(Args &&... args) {
           "Entity::AddComponent => Adding multiple excluded components %s",
           typeIndex.name()));
     }
+
+    // Set the data so the next Component can pick them up in constructor
+    T::curEntity = this;
+    T::curTransform = transform;
+
     T *component = MemoryManager::NewOnFreeList<T>(std::forward<Args>(args)...);
     component->SetActive(IsActive);
-    component->entity = this;
     if (IsActive) {
       component->Awake();
       component->SetAttribute(Component::ComponentAttributes::HAS_AWAKEN, true);
@@ -157,7 +166,7 @@ T *Entity::GetComponent() {
   auto types = Component::childrenTypes();
   std::list<std::type_index> availableTypes =
       types.at(std::type_index(typeid(T)));
-  for (int i = 0; i < componentTypes.size(); i++) {
+  for (int i = 0; i < componentTypes.size(); ++i) {
     std::type_index componentType = componentTypes[i];
     if (std::any_of(std::execution::par, availableTypes.begin(),
                     availableTypes.end(), [componentType](std::type_index x) {
@@ -175,7 +184,7 @@ Array<T *> Entity::GetComponents() {
       Component::childrenTypes().at(std::type_index(typeid(T)));
   Array<T *> returnValue;
   returnValue.Reserve(componentTypes.size());
-  for (int i = 0; i < componentTypes.size(); i++) {
+  for (int i = 0; i < componentTypes.size(); ++i) {
     std::type_index componentType = componentTypes[i];
     if (std::any_of(std::execution::par, availableTypes.begin(),
                     availableTypes.end(), [componentType](std::type_index x) {
@@ -188,16 +197,17 @@ Array<T *> Entity::GetComponents() {
 }
 template <typename T>
 inline T *Entity::GetComponentInParent() {
-  return transform.parent->entity->GetComponent<T>();
+  return transform->parent->entity->GetComponent<T>();
 }
 template <typename T>
 inline Array<T *> Entity::GetComponentsInParent() {
-  return transform.parent->entity->GetComponents<T>();
+  return transform->parent->entity->GetComponents<T>();
 }
 template <typename T>
 inline T *Entity::GetComponentInChildren() {
   T *component = nullptr;
-  for (auto it = transform.begin(); it != transform.end() && !component; it++) {
+  for (auto it = transform->begin(); it != transform->end() && !component;
+       ++it) {
     // TODO Calling getcomponent on iterator could break
     component = it->GetComponent<T>();
   }
@@ -206,7 +216,7 @@ inline T *Entity::GetComponentInChildren() {
 template <typename T>
 inline Array<T *> Entity::GetComponentsInChildren() {
   Array<T *> components;
-  for (auto it = transform.begin(); it != transform.end(); it++) {
+  for (auto it = transform->begin(); it != transform->end(); ++it) {
     // TODO Calling getcomponent on iterator could break
     Array<T *> c;
     c = it->GetComponents<T>();
@@ -217,7 +227,8 @@ inline Array<T *> Entity::GetComponentsInChildren() {
 template <typename T>
 inline T *Entity::GetComponentInDescendant() {
   T *component = nullptr;
-  for (auto it = transform.begin(); it != transform.end() && !component; it++) {
+  for (auto it = transform->begin(); it != transform->end() && !component;
+       ++it) {
     // TODO Calling getcomponent on iterator could break
     component = it->GetComponent<T>();
     if (!component) component = it->GetComponentInDescendant<T>();
@@ -227,7 +238,7 @@ inline T *Entity::GetComponentInDescendant() {
 template <typename T>
 inline Array<T *> Entity::GetComponentsInDescendant() {
   Array<T *> components;
-  for (auto it = transform.begin(); it != transform.end(); it++) {
+  for (auto it = transform->begin(); it != transform->end(); ++it) {
     // TODO Calling getcomponent on iterator could break
     Array<T *> c;
     c = it->GetComponents<T>();

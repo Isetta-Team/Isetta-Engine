@@ -331,6 +331,42 @@
     <ClCompile Include="Core\Geometry\Plane.cpp">
       <Filter>Core\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="Audio\AudioListener.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\AudioLevel\AudioLevel.cpp">
+      <Filter>Custom\AudioLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Font.cpp">
+      <Filter>Graphics\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\AudioClip.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\AudioPlay.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Primitive.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\PrimitiveLevel\PrimitiveLevel.cpp">
+      <Filter>Custom\PrimitiveLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\SkeletonLevel\SkeletonLevel.cpp">
+      <Filter>Custom\SkeletonLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\NoCameraLevel\NoCameraLevel.cpp">
+      <Filter>Custom\NoCameraLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\NoCameraLevel\NoCameraComponent.cpp">
+      <Filter>Custom\NoCameraLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\SkeletonLevel\SkeletonLevel.cpp">
+      <Filter>Custom\SkeletonLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\GameMgtLevel\GameMgtLevel.cpp">
+      <Filter>Custom\GameMgtLevel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -431,6 +467,24 @@
     </Filter>
     <Filter Include="Custom\MeshAnimLevel">
       <UniqueIdentifier>{d17fab49-2b9b-4414-8c02-f508f9b79890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\AudioLevel">
+      <UniqueIdentifier>{6d7a5ecf-3f90-4d5e-a963-184ec35d68e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\PrimitiveLevel">
+      <UniqueIdentifier>{0b6e1da6-cd48-4704-81c7-c7fc5d36def2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\SkeletonLevel">
+      <UniqueIdentifier>{33133f07-dc65-44ed-bb04-78b420645ffb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\NoCameraLevel">
+      <UniqueIdentifier>{29db0a17-3bdd-4334-8a99-896a2d5da961}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\SkeletonLevel">
+      <UniqueIdentifier>{33133f07-dc65-44ed-bb04-78b420645ffb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom\GameMgtLevel">
+      <UniqueIdentifier>{a7ac400a-86be-4a10-b47d-bb0a5d18a9da}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -602,9 +656,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="ISETTA_API.h" />
-    <ClInclude Include="Custom\IsettaCore.h">
-      <Filter>Custom</Filter>
-    </ClInclude>
     <ClInclude Include="Components\FlyController.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -767,6 +818,45 @@
     </ClInclude>
     <ClInclude Include="Core\Geometry\Plane.h">
       <Filter>Core\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioListener.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\AudioLevel\AudioLevel.h">
+      <Filter>Custom\AudioLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio\AudioClip.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\AudioPlay.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Primitive.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\PrimitiveLevel\PrimitiveLevel.h">
+      <Filter>Custom\PrimitiveLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\SkeletonLevel\SkeletonLevel.h">
+      <Filter>Custom\SkeletonLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\NoCameraLevel\NoCameraLevel.h">
+      <Filter>Custom\NoCameraLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\NoCameraLevel\NoCameraComponent.h">
+      <Filter>Custom\NoCameraLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\SkeletonLevel\SkeletonLevel.h">
+      <Filter>Custom\SkeletonLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\GameMgtLevel\GameMgtLevel.h">
+      <Filter>Custom\GameMgtLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DataStructures\Delegate.h">
+      <Filter>Core\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\IsettaCore.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

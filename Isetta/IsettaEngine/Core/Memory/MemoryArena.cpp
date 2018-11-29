@@ -16,6 +16,16 @@ namespace Isetta {
 // TODO(YIDI): find a way to allow specifying from config
 HandleEntry MemoryArena::entryArr[maxHandleCount];
 
+MemoryArena::MemoryArena(const Size size) {
+  memHead = std::malloc(size);
+  leftAddress = reinterpret_cast<PtrInt>(memHead);
+  rightAddress = leftAddress + size;
+}
+
+MemoryArena::~MemoryArena() {
+  std::free(memHead);
+}
+
 // TODO(YIDI): This is only allocating from top
 void* MemoryArena::Alloc(const Size size, Size& outSize) {
   PtrInt lastAddress;
@@ -50,8 +60,8 @@ void MemoryArena::Defragment() {
   PROFILE
   if (addressIndexMap.empty()) return;
 
-  for (int i = 0; i < 6; i++) {
-    curIndex++;
+  for (int i = 0; i < 6; ++i) {
+    ++curIndex;
     if (curIndex >= addressIndexMap.size()) {
       curIndex = 0;
     }
@@ -107,8 +117,6 @@ void MemoryArena::MoveLeft(const U32 index) {
   }
 }
 
-void MemoryArena::Erase() const { std::free(memHead); }
-
 void MemoryArena::Print() const {
   LOG_INFO(Debug::Channel::Memory, "[address, index, size]");
   int count = 0;
@@ -133,12 +141,6 @@ PtrInt MemoryArena::GetUsedSize() const {
   auto lastPair = --addressIndexMap.end();
 
   return (lastAddress + lastSize) - leftAddress;
-}
-
-MemoryArena::MemoryArena(const Size size) {
-  memHead = std::malloc(size);
-  leftAddress = reinterpret_cast<PtrInt>(memHead);
-  rightAddress = leftAddress + size;
 }
 
 }  // namespace Isetta

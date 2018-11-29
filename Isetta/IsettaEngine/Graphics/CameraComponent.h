@@ -5,6 +5,7 @@
 #include "Core/Math/Matrix4.h"
 #include "Horde3D.h"
 #include "Scene/Component.h"
+#include "Core/Config/CVar.h"
 
 namespace Isetta {
 class Ray;
@@ -15,6 +16,12 @@ class Vector2;
 
 BEGIN_COMPONENT(CameraComponent, Component, true)
 public:
+struct CameraConfig {
+  CVar<float> fieldOfView{"field_of_view", 45.0};
+  CVar<float> nearClippingPlane{"near_clipping_plane", 0.1f};
+  CVar<float> farClippingPlane{"far_clipping_plane", 1000.0};
+};
+
 enum class Property {
   FOV,
   NEAR_PLANE,
@@ -22,8 +29,9 @@ enum class Property {
   PROJECTION,
 };
 
-explicit CameraComponent(std::string cameraName);
+CameraComponent();
 
+void Start() override;
 void OnEnable() override;
 void OnDisable() override;
 void OnDestroy() override;
@@ -66,7 +74,6 @@ float nearPlane{};
 float farPlane{};
 Math::Matrix4 projMat;
 
-std::string name;
 H3DNode renderNode;
 H3DRes renderResource;
 int resizeHandle;

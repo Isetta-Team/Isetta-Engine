@@ -3,14 +3,15 @@
  */
 #include "Custom/NetworkLevel.h"
 
+#include "Audio/AudioClip.h"
+#include "Audio/AudioListener.h"
 #include "Components/Editor/EditorComponent.h"
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
-#include "Core/Color.h"
 #include "Core/Config/Config.h"
 #include "Core/Math/Math.h"
 #include "Custom/KeyTransform.h"
-#include "Custom/OscillateMove.h"
+#include "EscapeExit.h"
 #include "Graphics/AnimationComponent.h"
 #include "Graphics/CameraComponent.h"
 #include "Graphics/LightComponent.h"
@@ -20,9 +21,6 @@
 #include "Scene/Entity.h"
 
 using namespace Isetta;
-
-using LightProperty = LightComponent::Property;
-using CameraProperty = CameraComponent::Property;
 
 int spawnCounter = 0;
 int despawnCounter = 0;
@@ -54,9 +52,8 @@ void RegisterExampleMessageFunctions() {
                   "Server says we should stop the animation!");
             }
             if (handleMessage->handle == 2) {
-              AudioSource audio = AudioSource();
-              audio.SetAudioClip("gunshot.aiff");
-              audio.Play(false, 1.f);
+              AudioSource audio(AudioClip::LoadClip("Sound\gunshot.aiff"));
+              audio.Play();
             }
           });
 
@@ -85,15 +82,15 @@ void RegisterExampleMessageFunctions() {
             Entity* entity = NetworkManager::Instance().GetNetworkEntity(
                 spawnMessage->netId);
             if (!entity) {
-              Entity* e = LevelManager::Instance().loadedLevel->AddEntity(
-                  Util::StrFormat("NetworkEntity%d", spawnMessage->netId));
+              Entity* e = Entity::CreateEntity(
+                  Util::StrFormat("NetworkEntity (%d)", spawnMessage->netId));
               NetworkId* netId =
                   e->AddComponent<NetworkId>(spawnMessage->netId);
               netId->clientAuthorityId = spawnMessage->clientAuthorityId;
               spawnedEntities.push_back(e);
 
-              // Zomble
-              e->GetTransform()->SetLocalScale(Math::Vector3::one * .01);
+              // Zombie
+              e->transform->SetLocalScale(Math::Vector3::one * .01);
               MeshComponent* mesh = e->AddComponent<MeshComponent, true>(
                   "Zombie/Zombie.scene.xml");
               if (netId->HasClientAuthority()) {
@@ -105,8 +102,8 @@ void RegisterExampleMessageFunctions() {
                 Entity* parent = NetworkManager::Instance().GetNetworkEntity(
                     spawnMessage->a);
 
-                e->GetTransform()->SetParent(parent->GetTransform());
-                e->GetTransform()->SetLocalScale(Math::Vector3::one);
+                e->transform->SetParent(parent->transform);
+                e->transform->SetLocalScale(Math::Vector3::one);
               }
             }
           });
@@ -119,7 +116,7 @@ void RegisterExampleMessageFunctions() {
                 reinterpret_cast<SpawnMessage*>(message);
 
             if (!spawnMessage->netId) {
-              Entity* e = LevelManager::Instance().loadedLevel->AddEntity(
+              Entity* e = Entity::CreateEntity(
                   Util::StrFormat("NetworkEntity%d", count++));
               NetworkId* netId = e->AddComponent<NetworkId>();
               netId->clientAuthorityId = clientIdx;
@@ -127,8 +124,8 @@ void RegisterExampleMessageFunctions() {
               spawnMessage->netId = netId->id;
               spawnMessage->clientAuthorityId = clientIdx;
 
-              // Zomble
-              e->GetTransform()->SetLocalScale(Math::Vector3::one * .01);
+              // Zombie
+              e->transform->SetLocalScale(Math::Vector3::one * .01);
               MeshComponent* mesh = e->AddComponent<MeshComponent, true>(
                   "Zombie/Zombie.scene.xml");
               if (netId->HasClientAuthority()) {
@@ -140,8 +137,8 @@ void RegisterExampleMessageFunctions() {
                 Entity* parent = NetworkManager::Instance().GetNetworkEntity(
                     spawnMessage->a);
 
-                e->GetTransform()->SetParent(parent->GetTransform());
-                e->GetTransform()->SetLocalScale(Math::Vector3::one);
+                e->transform->SetParent(parent->transform);
+                e->transform->SetLocalScale(Math::Vector3::one);
               }
             }
 
@@ -207,22 +204,30 @@ void DeregisterExampleMessageFunctions() {
       exampleServerDespawn);
 }
 
-void NetworkLevel::LoadLevel() {
+void NetworkLevel::OnLevelLoad() {
   // Networking preparation
   RegisterExampleMessageFunctions();
 
-  if (Config::Instance().networkConfig.runServer.GetVal()) {
-    NetworkManager::Instance().CreateServer(
-        Config::Instance().networkConfig.defaultServerIP.GetVal().c_str());
-  }
-  if (Config::Instance().networkConfig.connectToServer.GetVal()) {
-    NetworkManager::Instance().ConnectToServer(
-        Config::Instance().networkConfig.defaultServerIP.GetVal().c_str(),
-        [](bool b) {
-          LOG(Debug::Channel::Networking, "Client connection state: %d", b);
-        });
-  }
+  Input::RegisterKeyPressCallback(KeyCode::NUM1, []() {
+    NetworkManager::Instance().StartHost(
+        CONFIG_VAL(networkConfig.defaultServerIP));
+  });
 
+  Input::RegisterKeyPressCallback(KeyCode::NUM2, []() {
+    NetworkManager::Instance().StartClient(
+        CONFIG_VAL(networkConfig.defaultServerIP));
+  });
+
+  // if (CONFIG_VAL(networkConfig.runServer) &&
+  // CONFIG_VAL(networkConfig.connectToServer)) {
+  // NetworkManager::Instance().StartHost(
+  // CONFIG_VAL(networkConfig.defaultServerIP));
+  // } else {
+  // NetworkManager::Instance().StartClient(
+  // CONFIG_VAL(networkConfig.defaultServerIP));
+  // }
+
+  // Spawn across network
   Input::RegisterKeyPressCallback(KeyCode::Y, []() {
     if (NetworkManager::Instance().LocalClientIsConnected()) {
       SpawnMessage* m =
@@ -233,6 +238,8 @@ void NetworkLevel::LoadLevel() {
       ++spawnCounter;
     }
   });
+
+  // Despawn across network, only the one who spawned it can despawn it
   Input::RegisterKeyPressCallback(KeyCode::H, []() {
     if (NetworkManager::Instance().LocalClientIsConnected()) {
       if (despawnCounter > spawnCounter) {
@@ -246,6 +253,8 @@ void NetworkLevel::LoadLevel() {
       ++despawnCounter;
     }
   });
+
+  // Spawn one and set its parent to the latest one spawned by this client
   Input::RegisterKeyPressCallback(KeyCode::U, []() {
     if (NetworkManager::Instance().LocalClientIsConnected()) {
       SpawnMessage* m =
@@ -256,6 +265,8 @@ void NetworkLevel::LoadLevel() {
       ++spawnCounter;
     }
   });
+
+  // Parent to the previously spawned one
   Input::RegisterKeyPressCallback(KeyCode::I, []() {
     if (NetworkManager::Instance().LocalClientIsConnected()) {
       auto it = spawnedEntities.end();
@@ -266,12 +277,14 @@ void NetworkLevel::LoadLevel() {
           ->SetNetworkedParent((*it)->GetComponent<NetworkId>()->id);
     }
   });
+
+  // Unparent
   Input::RegisterKeyPressCallback(KeyCode::K, []() {
     if (NetworkManager::Instance().LocalClientIsConnected()) {
       spawnedEntities.back()
           ->GetComponent<NetworkTransform>()
           ->SetNetworkedParentToRoot();
-      spawnedEntities.back()->GetTransform()->SetLocalScale(
+      spawnedEntities.back()->transform->SetLocalScale(
           Math::Vector3(.01, .01, .01));
     }
   });
@@ -284,6 +297,7 @@ void NetworkLevel::LoadLevel() {
       NetworkManager::Instance().SendMessageFromClient(handleMessage);
     }
   });
+
   Input::RegisterKeyPressCallback(KeyCode::O, []() {
     if (NetworkManager::Instance().LocalClientIsConnected()) {
       HandleMessage* handleMessage =
@@ -292,6 +306,7 @@ void NetworkLevel::LoadLevel() {
       NetworkManager::Instance().SendMessageFromClient(handleMessage);
     }
   });
+
   Input::RegisterMousePressCallback(MouseButtonCode::MOUSE_LEFT, []() {
     if (NetworkManager::Instance().LocalClientIsConnected()) {
       HandleMessage* handleMessage =
@@ -302,31 +317,19 @@ void NetworkLevel::LoadLevel() {
   });
 
   // Camera
-  Entity* cameraEntity{AddEntity("Camera")};
-  CameraComponent* camComp =
-      cameraEntity->AddComponent<CameraComponent>("Camera");
+  Entity* cameraEntity{Entity::CreateEntity("Camera")};
+  cameraEntity->AddComponent<CameraComponent>();
+  cameraEntity->AddComponent<AudioListener>();
+  cameraEntity->AddComponent<FlyController>();
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
-  cameraEntity->AddComponent<FlyController>();
-  camComp->SetProperty<CameraProperty::FOV>(
-      CONFIG_VAL(renderConfig.fieldOfView));
-  camComp->SetProperty<CameraProperty::NEAR_PLANE>(
-      CONFIG_VAL(renderConfig.nearClippingPlane));
-  camComp->SetProperty<CameraProperty::FAR_PLANE>(
-      CONFIG_VAL(renderConfig.farClippingPlane));
 
   // Light
-  Entity* lightEntity{AddEntity("Light")};
-  LightComponent* lightComp = lightEntity->AddComponent<LightComponent>(
-      "materials/light.material.xml", "LIGHT_1");
+  Entity* lightEntity{Entity::CreateEntity("Light")};
+  lightEntity->AddComponent<LightComponent>();
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
-  lightComp->SetProperty<LightProperty::RADIUS>(2500);
-  lightComp->SetProperty<LightProperty::FOV>(180);
-  lightComp->SetProperty<LightProperty::COLOR>(Color::white);
-  lightComp->SetProperty<LightProperty::COLOR_MULTIPLIER>(1.0f);
-  lightComp->SetProperty<LightProperty::SHADOW_MAP_COUNT>(1);
-  lightComp->SetProperty<LightProperty::SHADOW_MAP_BIAS>(0.01f);
   lightEntity->AddComponent<GridComponent>();
   lightEntity->AddComponent<EditorComponent>();
+  lightEntity->AddComponent<EscapeExit>();
 }

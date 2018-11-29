@@ -4,21 +4,27 @@
 #include "Components/Editor/Inspector.h"
 
 #include "Core/Debug/DebugDraw.h"
-#include "Core/Math/Matrix3.h"
 #include "Graphics/GUI.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 #include "imgui/imgui.h"
+#include "Core/Math/Matrix3.h"
 
 namespace Isetta {
-Inspector::Inspector(std::string title, bool isOpen, Transform *const target)
-    : title{title}, isOpen{isOpen}, target{target} {}
+Inspector::Inspector(std::string title, const bool isOpen, Transform *const target)
+    : target{target}, title{title}, isOpen{isOpen} {}
 
 void Inspector::GuiUpdate() {
   if (!target) return;
 
+  // Happens when selected entity is destroyed
+  if (target->entity == nullptr) {
+    target = nullptr;
+    return;
+  }
+
   GUI::Window(
-      rectTransform, title.c_str(),
+      rectTransform, title,
       [&]() {
         std::string parentName =
             target->GetParent() ? target->GetParent()->GetName() : "null";
@@ -27,10 +33,10 @@ void Inspector::GuiUpdate() {
         float padding = 15;
         RectTransform rect =
             RectTransform{Math::Rect{padding, height, 300, 100}};
-        GUI::Text(rect, target->GetEntity()->GetEntityIdString());
+        GUI::Text(rect, target->entity->GetEntityIdString());
         rect.rect.y += 15;
 
-        GUI::Text(rect, target->GetEntity()->GetName());
+        GUI::Text(rect, target->entity->GetName());
         rect.rect.y += 15;
 
         GUI::Text(rect, "World Position " + target->GetWorldPos().ToString());
@@ -72,7 +78,8 @@ void Inspector::GuiUpdate() {
         GUI::Text(RectTransform{Math::Rect{padding, rect.rect.y, 300, 100}},
                   "Components");
 
-        for (const auto &component : target->GetEntity()->GetComponents()) {
+        for (const auto &component :
+             target->entity->GetComponents<Component>()) {
           Component &comp = *component;
           rect.rect.y += padding;
           GUI::Text(RectTransform{Math::Rect{padding, rect.rect.y, 300, 100}},

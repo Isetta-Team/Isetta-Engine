@@ -3,5 +3,6 @@
  */
 #include "AI/Nav2DObstacle.h"
 
- Nav2DObstacle::Nav2DObstacle(const Isetta::Array<Isetta::Math::Vector2>& points)
+Isetta::Nav2DObstacle::Nav2DObstacle(
+    const Isetta::Array<Isetta::Math::Vector2>& points)
     : obstaclePoints{points} {}

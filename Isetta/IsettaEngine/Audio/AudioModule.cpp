@@ -2,13 +2,14 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Audio/AudioModule.h"
-#include <SID/sid.h>
+
 #include <combaseapi.h>
 #include <fmod_errors.h>
 #include <algorithm>
+#include "Audio/AudioClip.h"
+#include "Audio/AudioListener.h"
 #include "Audio/AudioSource.h"
 #include "Core/Config/Config.h"
-#include "Core/DataStructures/Array.h"
 #include "Core/Debug/Logger.h"
 #include "Util.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
@@ -35,65 +36,47 @@ void AudioModule::StartUp() {
   FMOD::Debug_Initialize(FMOD_DEBUG_LEVEL_LOG, FMOD_DEBUG_MODE_CALLBACK,
                          LogAudioModule);
   FMOD::System_Create(&fmodSystem);
-  CheckStatus(fmodSystem->init(512, FMOD_INIT_NORMAL, nullptr));
+  CheckStatus(fmodSystem->init(512, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED,
+                               nullptr));
+  // fmodSystem->set3DSettings(1.f, 1.f, 1.f);
 
-  auto& config = Config::Instance();
-  soundFilesRoot = config.resourcePath.GetVal() + R"(\)" +
-                   config.audioConfig.pathUnderResource.GetVal() + R"(\)";
-  LoadAllAudioClips();
   AudioSource::audioModule = this;
+  AudioListener::audioModule = this;
+  AudioClip::audioModule = this;
 }
 
 void AudioModule::Update(float deltaTime) const {
   BROFILER_CATEGORY("Audio Update", Profiler::Color::Maroon);
 
+  if (listeners.empty()) return;
+  const AudioListener* listener = *listeners.begin();
+  const Math::Vector3 position = listener->transform->GetWorldPos();
+  const Math::Vector3 forward = listener->transform->GetForward();
+  const Math::Vector3 up = listener->transform->GetUp();
+
+  const FMOD_VECTOR fmodPosition{position.x, position.y, position.z};
+  const FMOD_VECTOR fmodForward{forward.x, forward.y, forward.z};
+  const FMOD_VECTOR fmodUp{up.x, up.y, up.z};
+  fmodSystem->set3DListenerAttributes(0, &fmodPosition, nullptr, &fmodForward,
+                                      &fmodUp);
   fmodSystem->update();
 }
 
 void AudioModule::ShutDown() {
-  for (const auto& it : soundMap) {
-    CheckStatus(it.second->release());
-  }
-
-  soundMap.clear();
+  AudioClip::UnloadAll();
   CheckStatus(fmodSystem->release());
   CoUninitialize();
 }
 
-FMOD::Sound* AudioModule::FindSound(const char* soundName) {
-  PROFILE
-  const auto strId = SID(soundName);
-  if (soundMap.find(strId) != soundMap.end()) {
-    return soundMap[strId];
-  }
-
-  throw std::exception{Util::StrFormat(
-      "AudioModule::FindSound => Sound file %s not found!", soundName)};
-}
-
-FMOD::Channel* AudioModule::Play(FMOD::Sound* sound, const bool loop,
-                                 const float volume) const {
-  FMOD::Channel* channel = nullptr;
-  sound->setMode(loop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF);
-  CheckStatus(fmodSystem->playSound(sound, nullptr, false, &channel));
-  CheckStatus(channel->setVolume(volume));
-  return channel;
-}
-
-void AudioModule::LoadAllAudioClips() {
-  PROFILE
-  std::string clipNames = CONFIG_VAL(audioConfig.audioClips);
-  Util::StrRemoveSpaces(&clipNames);
-  Array<std::string> clips;
-  if (!clipNames.empty()) clips = Util::StrSplit(clipNames, ',');
-
-  for (const auto& file : clips) {
-    FMOD::Sound* sound = nullptr;
-    std::string path = soundFilesRoot + file.data();
-    CheckStatus(
-        fmodSystem->createSound(path.c_str(), FMOD_LOWMEM, nullptr, &sound));
-
-    soundMap.insert({SID(file.data()), sound});
+void AudioModule::UnloadLevel() {
+  int channels;
+  fmodSystem->getChannelsPlaying(&channels);
+  for (int i = 0; i < channels; ++i) {
+    FMOD::Channel* channel = nullptr;
+    FMOD_RESULT res = fmodSystem->getChannel(i, &channel);
+    if (res == FMOD_OK && channel) {
+      channel->stop();
+    }
   }
 }
 
@@ -113,5 +96,29 @@ void AudioModule::CheckStatus(const FMOD_RESULT status) {
     throw std::exception{Util::StrFormat("AudioSource::CheckStatus => %s",
                                          FMOD_ErrorString(status))};
   }
+}
+
+void AudioModule::LoadClip(AudioClip* const clip) const {
+  clip->fmodSound = nullptr;
+  const std::string fullPath =
+      CONFIG_VAL(resourcePath) + R"(\)" + clip->filePath;
+  CheckStatus(fmodSystem->createSound(fullPath.c_str(), FMOD_LOWMEM, nullptr,
+                                      &clip->fmodSound));
+}
+
+void AudioModule::Play(AudioSource* const source) const {
+  using Property = AudioSource::Property;
+  U64 mode = 0;
+  mode |= source->GetProperty(Property::IS_3D) ? FMOD_3D : FMOD_2D;
+  mode |=
+      source->GetProperty(Property::LOOP) ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF;
+  CheckStatus(source->clip->fmodSound->setMode(mode));
+  source->fmodChannel = nullptr;
+  CheckStatus(fmodSystem->playSound(source->clip->fmodSound, nullptr, false,
+                                    &source->fmodChannel));
+  CheckStatus(source->fmodChannel->setVolume(source->volume));
+  CheckStatus(source->fmodChannel->setLoopCount(source->loopCount));
+  CheckStatus(
+      source->fmodChannel->setMute(source->GetProperty(Property::IS_MUTE)));
 }
 }  // namespace Isetta

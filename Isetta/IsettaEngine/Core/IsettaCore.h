@@ -2,6 +2,8 @@
 
 #pragma once
 #include "Application.h"
+#include "Audio/AudioClip.h"
+#include "Audio/AudioListener.h"
 #include "Audio/AudioSource.h"
 #include "Core/Debug/DebugDraw.h"
 #include "Core/Debug/Logger.h"
@@ -20,5 +22,3 @@
 #include "Scene/LevelManager.h"
 #include "Scene/Transform.h"
 #include "Util.h"
-#define ADD_ENTITY(name) \
-  Isetta::LevelManager::Instance().loadedLevel->AddEntity(name)

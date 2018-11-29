@@ -6,7 +6,6 @@
 #include <unordered_set>
 #include "Collisions/BVTree.h"
 #include "Scene/Layers.h"
-#include "Util.h"
 
 namespace Isetta::Math {
 class Vector3;
@@ -17,6 +16,7 @@ class CollisionsModule {
  public:
   struct CollisionConfig {
     CVar<float> fatFactor{"collision_fat_factor", 0.2f};
+    CVar<Size> bvTreeNodeSize{"bv_tree_node_size", 200};
   };
 
   static bool Intersection(const class BoxCollider &,
@@ -64,11 +64,6 @@ class CollisionsModule {
   void Update(float deltaTime);
   void ShutDown();
   Array<Collider*> GetPossibleColliders(Collider* collider) const;
-
-  friend class EngineLoop;
-  friend class Collider;
-  friend class Collisions;
-  friend class CollisionSolverModule;
 
   // Utilities
   bool GetIgnoreLayerCollision(int layer1, int layer2) const;
@@ -121,5 +116,11 @@ class CollisionsModule {
   static Math::Vector3 ClosestPtSegmentOBB(const Math::Vector3 &,
                                            const Math::Vector3 &,
                                            const class BoxCollider &);
+
+  friend class EngineLoop;
+  friend class Collider;
+  friend class Collisions;
+  friend class CollisionSolverModule;
+  friend class StackAllocator;
 };
 }  // namespace Isetta

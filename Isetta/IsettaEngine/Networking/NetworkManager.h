@@ -12,7 +12,6 @@
 #include "Core/IsettaAlias.h"
 #include "ISETTA_API.h"
 #include "yojimbo/yojimbo.h"
-#include "ISETTA_API.h"
 
 namespace Isetta {
 
@@ -27,8 +26,8 @@ class ISETTA_API_DECLARE NetworkManager {
  private:
   NetworkManager();
 
-  yojimbo::Message* CreateClientMessage(int messageId);
-  yojimbo::Message* CreateServerMessage(int clientIdx, int messageId);
+  yojimbo::Message* CreateClientMessage(int messageId) const;
+  yojimbo::Message* CreateServerMessage(int clientIdx, int messageId) const;
 
   template <typename T>
   int GetMessageTypeId();
@@ -36,9 +35,10 @@ class ISETTA_API_DECLARE NetworkManager {
       int type);
   std::list<std::pair<U16, Action<int, yojimbo::Message*>>> GetServerFunctions(
       int type);
-  U32 CreateNetworkId(NetworkId* NetworkId);
-  U32 AssignNetworkId(U32 netId, NetworkId* NetworkId);
-  void RemoveNetworkId(NetworkId* NetworkId);
+  U32 CreateNetworkId(NetworkId* networkId);
+  U32 AssignNetworkId(U32 netId, NetworkId* networkId);
+  void RemoveNetworkId(NetworkId* networkId);
+  static U16 GetServerPort();
 
   class NetworkingModule* networkingModule;
 
@@ -65,15 +65,15 @@ class ISETTA_API_DECLARE NetworkManager {
   template <typename T>
   T* GenerateMessageFromServer(int clientIdx);
   // TODO(Caleb) Consider merging the generate and send functions
-  void SendMessageFromClient(yojimbo::Message* message);
-  void SendMessageFromServer(int clientIdx, yojimbo::Message* message);
+  void SendMessageFromClient(yojimbo::Message* message) const;
+  void SendMessageFromServer(int clientIdx, yojimbo::Message* message) const;
   template <typename T>
-  void SendAllMessageFromServer(yojimbo::Message* message);
+  void SendAllMessageFromServer(yojimbo::Message* refMessage);
   template <typename T>
-  void SendAllButClientMessageFromServer(int clinetIdx,
-                                         yojimbo::Message* message);
+  void SendAllButClientMessageFromServer(int clientIdx,
+                                         yojimbo::Message* refMessage);
 
-  U16 GetMessageTypeCount() { return messageTypeCount; }
+  U16 GetMessageTypeCount() const { return messageTypeCount; }
   template <typename T>
   bool RegisterMessageType(U64 size, Func<yojimbo::Message*, void*> factory);
   template <typename T>
@@ -89,38 +89,42 @@ class ISETTA_API_DECLARE NetworkManager {
   NetworkId* GetNetworkId(const U32 id);
 
   /**
-   * @brief Connects the local Client to a server at the given address.
+   * \brief Initializes the local Server object with the given address and port.
    *
-   * @param serverAddress Address of the server to connect the local Client to.
-   * @param callback Function to call when the connection request either
+   * \param serverIP Address of the server.
+   */
+  void StartServer(const char* serverIP) const;
+  void StartServer(const std::string& serverIP) const;
+  /**
+   * \brief Closes the local Server object and deallocates its allocated memory.
+   *
+   */
+  void StopServer() const;
+  /**
+   * \brief Connects the local Client to a server at the given address.
+   *
+   * \param serverIP Address of the server to connect the local Client to.
+   * \param onStarted Function to call when the connection request either
    * succeeds or fails. Passes a boolean indicating the success of the
    * connection.
    */
-  void ConnectToServer(const char* serverAddress,
-                       Action<bool> callback = nullptr);
+  void StartClient(const char* serverIP,
+                   const Action<bool>& onStarted = nullptr) const;
+  void StartClient(const std::string& serverIP,
+                   const Action<bool>& onStarted = nullptr) const;
   /**
-   * @brief Disconnects the local Client from the server it is connected to.
-   *
+   * \brief Disconnects the local Client from the server it is connected to.
    */
-  void DisconnectFromServer();
+  void StopClient() const;
+  void StartHost(const char* hostIP) const;
+  void StartHost(const std::string& hostIP) const;
+  void StopHost() const;
 
-  /**
-   * @brief Initializes the local Server object with the given address and port.
-   *
-   * @param address Address of the server.
-   */
-  void CreateServer(const char* address);
-  /**
-   * @brief Closes the local Server object and deallocates its allocated memory.
-   *
-   */
-  void CloseServer();
-
-  bool LocalClientIsConnected();
-  bool ClientIsConnected(int clientIdx);
-  bool ServerIsRunning();
-  int GetMaxClients();
-  int GetClientIndex();
+  bool LocalClientIsConnected() const;
+  bool ClientIsConnected(int clientIdx) const;
+  bool ServerIsRunning() const;
+  static int GetMaxClients();
+  int GetClientIndex() const;
 
   ~NetworkManager() = default;
 

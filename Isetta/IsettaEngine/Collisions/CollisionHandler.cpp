@@ -12,33 +12,33 @@
 namespace Isetta {
 void CollisionHandler::OnEnable() {
   Array<Collider*> colliders = entity->GetComponents<Collider>();
-  for (int i = 0; i < colliders.Size(); i++) {
+  for (int i = 0; i < colliders.Size(); ++i) {
     colliders[i]->SetHandler(this);
   }
   Action<Collider*> action = [&](Collider* c) { c->SetHandler(this); };
-  for (auto& t : *GetTransform()) {
+  for (auto& t : *transform) {
     SetColliderHandler(t, action);
   }
 }
 void CollisionHandler::OnDisable() {
   CollisionHandler* handler = nullptr;
-  Transform* parent = GetTransform()->GetParent();
+  Transform* parent = transform->GetParent();
   while (parent && !handler) {
-    handler = parent->GetEntity()->GetComponent<CollisionHandler>();
+    handler = parent->entity->GetComponent<CollisionHandler>();
     parent = parent->GetParent();
   }
   Array<Collider*> colliders = entity->GetComponents<Collider>();
-  for (int i = 0; i < colliders.Size(); i++) {
+  for (int i = 0; i < colliders.Size(); ++i) {
     colliders[i]->SetHandler(this);
   }
   Action<Collider*> action = [&](Collider* c) { c->SetHandler(handler); };
-  for (auto& t : *GetTransform()) {
+  for (auto& t : *transform) {
     SetColliderHandler(t, action);
   }
 }
 void CollisionHandler::SetColliderHandler(
     Transform* transform, const Action<Collider* const>& action) {
-  Entity* e = transform->GetEntity();
+  Entity* e = transform->entity;
   if (!e->GetComponent<CollisionHandler>()) {
     for (auto& t : *transform) {
       SetColliderHandler(t, action);
@@ -67,21 +67,21 @@ void CollisionHandler::OnCollisionCallback(
 }
 U16 CollisionHandler::RegisterOnEnter(
     const Action<class Collider* const>& action) {
-  int handle = handles++;
+  int handle = ++handles;
   onEnter.insert(std::make_pair(handle, action));
   return handle;
 }
 void CollisionHandler::UnregisterOnEnter(U16 handle) { onEnter.erase(handle); }
 U16 CollisionHandler::RegisterOnStay(
     const Action<class Collider* const>& action) {
-  int handle = handles++;
+  int handle = ++handles;
   onStay.insert(std::make_pair(handle, action));
   return handle;
 }
 void CollisionHandler::UnregisterOnStay(U16 handle) { onStay.erase(handle); }
 U16 CollisionHandler::RegisterOnExit(
     const Action<class Collider* const>& action) {
-  int handle = handles++;
+  int handle = ++handles;
   onExit.insert(std::make_pair(handle, action));
   return handle;
 }

@@ -22,6 +22,6 @@ float timeSumForAvg{0.f};
 Size frameCountForAvg{60};
 std::queue<float> frameDurations;
 
-bool isOpen;
+bool isOpen{false};
 END_COMPONENT(FrameReporter, Component)
 }  // namespace Isetta

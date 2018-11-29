@@ -43,8 +43,8 @@ void W10NetworkManager::HandleSpawnMessage(yojimbo::Message* message) {
   if (!entity) {
     Isetta::Events::Instance().RaiseImmediateEvent(
         Isetta::EventObject{"UITextChange", {std::string{"Game Started!"}}});
-    Isetta::Entity* e =
-        ADD_ENTITY(Isetta::Util::StrFormat("Player%d", spawnMessage->netId));
+    Isetta::Entity* e = Isetta::Entity::CreateEntity(
+        Isetta::Util::StrFormat("Player%d", spawnMessage->netId));
     Isetta::NetworkId* networkId =
         e->AddComponent<Isetta::NetworkId>(spawnMessage->netId);
     networkId->clientAuthorityId = spawnMessage->clientAuthorityId;
@@ -78,8 +78,7 @@ void W10NetworkManager::ClientHandleAttackAttemptMessage(
       Isetta::NetworkManager::Instance()
           .GenerateMessageFromClient<W10PositionReportMessage>();
   if (gameManager->player != nullptr) {
-    posMessage->positionX =
-        gameManager->player->GetTransform()->GetWorldPos().x;
+    posMessage->positionX = gameManager->player->transform->GetWorldPos().x;
     LOG_INFO(Isetta::Debug::Channel::General, "Client send position report");
     Isetta::NetworkManager::Instance().SendMessageFromClient(posMessage);
   }
@@ -200,6 +199,7 @@ void W10NetworkManager::Awake() {
                         [&](int clientId, yojimbo::Message* message) {
                           HandleReadyMessage(clientId, message);
                         });
+
   spawnHandle =
       Isetta::NetworkManager::Instance()
           .RegisterClientCallback<W10SpawnMessage>(
@@ -210,27 +210,32 @@ void W10NetworkManager::Awake() {
                         [&](int clientId, yojimbo::Message* message) {
                           HandleSwordPosMessage(clientId, message);
                         });
+
   clientAttackHandle = Isetta::NetworkManager::Instance()
                            .RegisterClientCallback<W10AttackAttemptMessage>(
                                [&](yojimbo::Message* message) {
                                  ClientHandleAttackAttemptMessage(message);
                                });
+
   serverAttackHandle =
       Isetta::NetworkManager::Instance()
           .RegisterServerCallback<W10AttackAttemptMessage>(
               [&](int clientIdx, yojimbo::Message* message) {
                 ServerHandleAttackAttemptMessage(clientIdx, message);
               });
+
   positionHandle = Isetta::NetworkManager::Instance()
                        .RegisterServerCallback<W10PositionReportMessage>(
                            [&](int clientIdx, yojimbo::Message* message) {
                              HandlePositionReport(clientIdx, message);
                            });
+
   resultHandle = Isetta::NetworkManager::Instance()
                      .RegisterClientCallback<W10AttackResultMessage>(
                          [&](yojimbo::Message* message) {
                            HandleAttackResultMessage(message);
                          });
+
   Isetta::NetworkManager::Instance().RegisterServerCallback<W10CollectMessage>(
       [&](int clientId, yojimbo::Message* message) {
         clientSwordPos.insert_or_assign(lastAttemptClient, 0);
@@ -239,25 +244,42 @@ void W10NetworkManager::Awake() {
                                                                   message);
       });
 
-  if (Isetta::Config::Instance().networkConfig.runServer.GetVal()) {
-    Isetta::NetworkManager::Instance().CreateServer(
-        Isetta::Config::Instance()
-            .networkConfig.defaultServerIP.GetVal()
-            .c_str());
-  }
-  LOG_INFO(Isetta::Debug::Channel::Networking, "Server running: %d",
-           Isetta::NetworkManager::Instance().ServerIsRunning());
+  // Networking connection
 
-  if (Isetta::Config::Instance().networkConfig.connectToServer.GetVal()) {
-    Isetta::NetworkManager::Instance().ConnectToServer(
-        Isetta::Config::Instance()
-            .networkConfig.defaultServerIP.GetVal()
-            .c_str(),
-        [](bool b) {
-          LOG_INFO(Isetta::Debug::Channel::Networking,
-                   "Client connection state: %d", b);
-        });
-  }
+  Isetta::Events::Instance().RaiseImmediateEvent(
+      Isetta::EventObject{"UITextChange", {std::string{"Waiting!"}}});
+  Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::NUM1, []() {
+    Isetta::NetworkManager::Instance().StartHost(
+        CONFIG_VAL(networkConfig.defaultServerIP));
+    Isetta::Events::Instance().RaiseImmediateEvent(
+        Isetta::EventObject{"UITextChange", {std::string{"Started as host!"}}});
+  });
+
+  Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::NUM2, []() {
+    Isetta::NetworkManager::Instance().StartClient(
+        CONFIG_VAL(networkConfig.defaultServerIP));
+    Isetta::Events::Instance().RaiseImmediateEvent(Isetta::EventObject{
+        "UITextChange",
+        {Isetta::Util::StrFormat(
+            "Connected to %s as client!",
+            CONFIG_VAL(networkConfig.defaultServerIP).c_str())}});
+  });
+
+  // if (CONFIG_VAL(networkConfig.runServer)) {
+  // Isetta::NetworkManager::Instance().StartServer(
+  // CONFIG_VAL(networkConfig.defaultServerIP).c_str());
+  // }
+
+  // LOG_INFO(Isetta::Debug::Channel::Networking, "Server running: %d",
+  // Isetta::NetworkManager::Instance().ServerIsRunning());
+
+  // if (CONFIG_VAL(networkConfig.connectToServer)) {
+  // Isetta::NetworkManager::Instance().StartClient(
+  // CONFIG_VAL(networkConfig.defaultServerIP).c_str(), [](bool b) {
+  // LOG_INFO(Isetta::Debug::Channel::Networking,
+  // "Client connection state: %d", b);
+  // });
+  // }
 
   Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::R, []() {
     Isetta::Events::Instance().RaiseImmediateEvent(

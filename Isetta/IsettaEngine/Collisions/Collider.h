@@ -2,7 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include <utility>
 #include "Collisions/AABB.h"
 #include "Core/Color.h"
 #include "Core/Math/Vector3.h"
@@ -37,7 +36,8 @@ public:
 
  bool isTrigger = false;
  Math::Vector3 center;
-Color debugColor = Color::green;
+ Color debugColor = Color::green;
+ float mass = 1;
 
 // TODO(Jacob) virtual Math::Vector3 ClosestPoint(Math::Vector3 point) = 0;
 // TODO(Jacob) Math::Vector3 ClosestPointOnAABB(Math::Vector3 point);
@@ -45,7 +45,7 @@ virtual bool Raycast(const class Ray& ray, class RaycastHit* const hitInfo,
                      float maxDistance = 0) = 0;
 
 Math::Vector3 GetWorldCenter() const {
-  return center + GetTransform()->GetWorldPos();
+  return transform->WorldPosFromLocalPos(center);
 }
 
 void Start() override;

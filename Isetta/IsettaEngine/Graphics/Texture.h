@@ -22,7 +22,7 @@ class ISETTA_API Texture {
   ~Texture();
 
   Texture(const Texture& tex) : fileName{tex.fileName} {
-    if (tex.texture) LoadTexture();
+    if (tex.texture) Load();
   }
   Texture(Texture&& tex) : fileName{tex.fileName} {
     texture = tex.texture;
@@ -31,7 +31,7 @@ class ISETTA_API Texture {
   }
   inline Texture& operator=(const Texture& tex) {
     fileName = tex.fileName;
-    if (tex.texture) LoadTexture();
+    if (tex.texture) Load();
     return *this;
   }
   inline Texture& operator=(Texture&& tex) {
@@ -42,8 +42,8 @@ class ISETTA_API Texture {
     return *this;
   }
 
-  void LoadTexture();
-  void UnloadTexture();
+  void Load();
+  void Unload();
 
   inline unsigned int GetTexture() const { return texture; }
   inline int GetWidth() const { return size.x; }

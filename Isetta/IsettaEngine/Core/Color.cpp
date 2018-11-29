@@ -39,7 +39,7 @@ float Color::operator[](int i) const {
 std::istream& operator>>(std::istream& in, Color& color) {
   char c;
   in >> std::skipws;
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 4; ++i) {
     in >> c >> color;
   }
   in >> c;
