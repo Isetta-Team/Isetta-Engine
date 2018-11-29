@@ -8,6 +8,10 @@
 
 using namespace Isetta;
 
+/**
+ * @brief Level demoing our debug drawing capabilities
+ *
+ */
 CREATE_LEVEL(DebugLevel)
-void OnLevelLoad() override;
+void Load() override;
 CREATE_LEVEL_END

@@ -20,7 +20,6 @@
 
 namespace Isetta {
 RenderModule* CameraComponent::renderModule{nullptr};
-CameraComponent* CameraComponent::_main{nullptr};
 
 CameraComponent::CameraComponent() : renderNode(NULL), renderResource(NULL) {
   ASSERT(renderModule != nullptr);
@@ -71,6 +70,24 @@ Ray Isetta::CameraComponent::ScreenPointToRay(
   Math::Vector3 dir =
       transform->WorldDirFromLocalDir(Math::Vector3{px, py, -1});
   return Ray{o, dir};
+}
+
+Math::Vector2 CameraComponent::ScreenToViewportPoint(
+    const Math::Vector2& position) const {
+  int width, height;
+  glfwGetWindowSize(renderModule->winHandle, &width, &height);
+  return {position.x / width, position.y / height};
+}
+
+Math::Vector2 CameraComponent::ViewportToScreenPoint(
+    const Math::Vector2& position) const {
+  int width, height;
+  glfwGetWindowSize(renderModule->winHandle, &width, &height);
+  return {position.x * width, position.y * height};
+}
+
+Ray CameraComponent::ViewportPointToRay(const Math::Vector2& position) const {
+  return ScreenPointToRay(ViewportToScreenPoint(position));
 }
 
 void CameraComponent::UpdateH3DTransform() const {

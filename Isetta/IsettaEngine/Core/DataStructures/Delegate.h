@@ -23,7 +23,7 @@ class Delegate {
   ~Delegate() = default;
 
   U64 Subscribe(Action<const ActionArgs&...> action);
-  void Unsubscribe(U64 handle);
+  void Unsubscribe(U64& handle);
   void Invoke(const ActionArgs&... args);
   void Clear();
 };
@@ -36,12 +36,13 @@ U64 Delegate<ActionArgs...>::Subscribe(Action<const ActionArgs&...> action) {
 }
 
 template <typename... ActionArgs>
-void Delegate<ActionArgs...>::Unsubscribe(U64 handle) {
+void Delegate<ActionArgs...>::Unsubscribe(U64& handle) {
   if (std::find_if(actions.begin(), actions.end(), [handle](const KeyPair& a) {
         return a.first == handle;
       }) != actions.end()) {
     actions.remove_if(
         [handle](const KeyPair& action) { return action.first == handle; });
+    handle = 0;
   }
 }
 

@@ -47,7 +47,7 @@ class ISETTA_API_DECLARE Entity {
   void SetAttribute(EntityAttributes attr, bool value);
   bool GetAttribute(EntityAttributes attr) const;
 
-  Entity(const std::string& name, bool entityStatic = false);
+  Entity(const std::string &name, bool entityStatic = false);
   friend Level;
   friend class MemoryManager;
   friend class TemplatePoolAllocator<Entity>;
@@ -71,8 +71,8 @@ class ISETTA_API_DECLARE Entity {
 
     return std::string(output.data());
   }
-  static Entity* Instantiate(std::string name, class Entity* parent = nullptr,
-                          bool entityStatic = false);
+  static Entity *Instantiate(std::string name, class Entity *parent = nullptr,
+                             bool entityStatic = false);
   static void Destroy(Entity *entity);
   static void DestroyHelper(Entity *entity);
   static void DestroyImmediately(Entity *entity);
@@ -81,6 +81,8 @@ class ISETTA_API_DECLARE Entity {
 
   void SetActive(bool inActive);
   bool GetActive() const;
+
+  bool IsMoveable() const;
 
   template <typename T, typename... Args>
   T *AddComponent(Args &&... args);
@@ -141,12 +143,9 @@ T *Entity::AddComponent(Args &&... args) {
           "Entity::AddComponent => Adding multiple excluded components %s",
           typeIndex.name()));
     }
-
-    // Set the data so the next Component can pick them up in constructor
-    T::curEntity = this;
-    T::curTransform = transform;
-
     T *component = MemoryManager::NewOnFreeList<T>(std::forward<Args>(args)...);
+    (Entity*&)(component->entity) = this;
+    (Transform*&)(component->transform) = transform;
     component->SetActive(IsActive);
     if (IsActive) {
       component->Awake();

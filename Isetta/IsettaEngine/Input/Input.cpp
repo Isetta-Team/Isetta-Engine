@@ -15,7 +15,7 @@ void Input::RegisterWindowCloseCallback(const Action<>& callback) {
 U16 Input::RegisterWindowSizeCallback(const Action<int, int>& callback) {
   return inputModule->RegisterWindowSizeCallback(callback);
 }
-void Input::UnegisterWindowSizeCallback(U16 handle) {
+void Input::UnegisterWindowSizeCallback(U64& handle) {
   inputModule->UnegisterWindowSizeCallback(handle);
 }
 bool Input::IsKeyPressed(KeyCode key) { return inputModule->IsKeyPressed(key); }
@@ -28,11 +28,11 @@ U64 Input::RegisterKeyPressCallback(KeyCode key, ModifierKeys mods,
   return inputModule->RegisterKeyPressCallback(key, mods, callback);
 }
 
-void Input::UnregisterKeyPressCallback(KeyCode key, U64 handle) {
+void Input::UnregisterKeyPressCallback(KeyCode key, U64& handle) {
   inputModule->UnregisterKeyPressCallback(key, (ModifierKeys)0, handle);
 }
 void Input::UnregisterKeyPressCallback(KeyCode key, ModifierKeys mods,
-                                       U64 handle) {
+                                       U64& handle) {
   inputModule->UnregisterKeyPressCallback(key, mods, handle);
 }
 
@@ -45,11 +45,11 @@ U64 Input::RegisterKeyReleaseCallback(KeyCode key, ModifierKeys mods,
   return inputModule->RegisterKeyReleaseCallback(key, mods, callback);
 }
 
-void Input::UnregisterKeyReleaseCallback(KeyCode key, U64 handle) {
+void Input::UnregisterKeyReleaseCallback(KeyCode key, U64& handle) {
   inputModule->UnregisterKeyReleaseCallback(key, (ModifierKeys)0, handle);
 }
 void Input::UnregisterKeyReleaseCallback(KeyCode key, ModifierKeys mods,
-                                         U64 handle) {
+                                         U64& handle) {
   inputModule->UnregisterKeyReleaseCallback(key, mods, handle);
 }
 
@@ -67,7 +67,7 @@ U64 Input::RegisterMousePressCallback(MouseButtonCode mouseButton,
 }
 
 void Input::UnregisterMousePressCallback(MouseButtonCode mouseButton,
-                                         U64 handle) {
+                                         U64& handle) {
   inputModule->UnregisterMousePressCallback(mouseButton, handle);
 }
 
@@ -77,13 +77,13 @@ U64 Input::RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
 }
 
 void Input::UnregisterMouseReleaseCallback(MouseButtonCode mouseButton,
-                                           U64 handle) {
+                                           U64& handle) {
   inputModule->UnregisterMouseReleaseCallback(mouseButton, handle);
 }
 U16 Input::RegisterScrollCallback(const Action<double, double>& callback) {
   return inputModule->RegisterScrollCallback(callback);
 }
-void Input::UnregisterScrollCallback(U16 handle) {
+void Input::UnregisterScrollCallback(U64& handle) {
   inputModule->UnregisterScrollCallback(handle);
 }
 

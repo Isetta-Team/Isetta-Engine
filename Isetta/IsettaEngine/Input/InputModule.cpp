@@ -37,7 +37,7 @@ void InputModule::RegisterWindowCloseCallback(const Action<>& callback) {
 U64 InputModule::RegisterWindowSizeCallback(const Action<int, int>& callback) {
   return windowSizeCallbacks.Subscribe(callback);
 }
-void InputModule::UnegisterWindowSizeCallback(U64 handle) {
+void InputModule::UnegisterWindowSizeCallback(U64& handle) {
   windowSizeCallbacks.Unsubscribe(handle);
 }
 bool InputModule::IsKeyPressed(KeyCode key) const {
@@ -51,7 +51,7 @@ U64 InputModule::RegisterKeyPressCallback(KeyCode key, ModifierKeys mods,
                           &keyPressDelegates);
 }
 void InputModule::UnregisterKeyPressCallback(KeyCode key, ModifierKeys mods,
-                                             U64 handle) {
+                                             U64& handle) {
   UnregisterCallback(KeyCodeToGlfwKey(key), mods, handle, &keyPressDelegates);
 }
 
@@ -61,7 +61,7 @@ U64 InputModule::RegisterKeyReleaseCallback(KeyCode key, ModifierKeys mods,
                           &keyReleaseDelegates);
 }
 void InputModule::UnregisterKeyReleaseCallback(KeyCode key, ModifierKeys mods,
-                                               U64 handle) {
+                                               U64& handle) {
   UnregisterCallback(KeyCodeToGlfwKey(key), mods, handle, &keyReleaseDelegates);
 }
 
@@ -83,7 +83,7 @@ U64 InputModule::RegisterMousePressCallback(MouseButtonCode mouseButton,
 }
 
 void InputModule::UnregisterMousePressCallback(MouseButtonCode mouseButton,
-                                               U64 handle) {
+                                               U64& handle) {
   UnregisterCallback(MouseButtonToGlfwKey(mouseButton), handle,
                      &mousePressDelegates);
 }
@@ -95,7 +95,7 @@ U64 InputModule::RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
 }
 
 void InputModule::UnregisterMouseReleaseCallback(MouseButtonCode mouseButton,
-                                                 U64 handle) {
+                                                 U64& handle) {
   UnregisterCallback(MouseButtonToGlfwKey(mouseButton), handle,
                      &mouseReleaseDelegates);
 }
@@ -105,7 +105,7 @@ U64 InputModule::RegisterScrollCallback(
   return scrollCallbacks.Subscribe(callback);
 }
 
-void InputModule::UnregisterScrollCallback(U64 handle) {
+void InputModule::UnregisterScrollCallback(U64& handle) {
   scrollCallbacks.Unsubscribe(handle);
 }
 
@@ -117,7 +117,7 @@ U64 InputModule::RegisterWindowSizeGLFWCallback(
     const Action<GLFWwindow*, int, int>& callback) {
   return windowSizeGLFWCallbacks.Subscribe(callback);
 }
-void InputModule::UnegisterWindowSizeGLFWCallback(U64 handle) {
+void InputModule::UnegisterWindowSizeGLFWCallback(U64& handle) {
   windowSizeCallbacks.Unsubscribe(handle);
 }
 
@@ -126,7 +126,7 @@ U64 InputModule::RegisterMouseButtonGLFWCallback(
   return mouseButtonGLFWCallbacks.Subscribe(callback);
 }
 
-void InputModule::UnregisterMouseButtonGLFWCallback(U64 handle) {
+void InputModule::UnregisterMouseButtonGLFWCallback(U64& handle) {
   mouseButtonGLFWCallbacks.Unsubscribe(handle);
 }
 
@@ -135,7 +135,7 @@ U64 InputModule::RegisterKeyGLFWCallback(
   return keyGLFWCallbacks.Subscribe(callback);
 }
 
-void InputModule::UnegisterKeyGLFWCallback(U64 handle) {
+void InputModule::UnegisterKeyGLFWCallback(U64& handle) {
   keyGLFWCallbacks.Unsubscribe(handle);
 }
 
@@ -144,7 +144,7 @@ U64 InputModule::RegisterScrollGLFWCallback(
   return scrollGLFWCallbacks.Subscribe(callback);
 }
 
-void InputModule::UnregisterScrollGLFWCallback(U64 handle) {
+void InputModule::UnregisterScrollGLFWCallback(U64& handle) {
   scrollGLFWCallbacks.Unsubscribe(handle);
 }
 
@@ -153,7 +153,7 @@ U64 InputModule::RegisterCharGLFWCallback(
   return charGLFWCallbacks.Subscribe(callback);
 }
 
-void InputModule::UnegisterCharGLFWCallback(U64 handle) {
+void InputModule::UnegisterCharGLFWCallback(U64& handle) {
   charGLFWCallbacks.Unsubscribe(handle);
 }
 
@@ -192,7 +192,7 @@ U64 InputModule::RegisterCallback(int key, ModifierKeys mods,
   U64 handle = callbackList.Subscribe(callback);
   return handle;
 }
-void InputModule::UnregisterCallback(int key, ModifierKeys mods, U64 handle,
+void InputModule::UnregisterCallback(int key, ModifierKeys mods, U64& handle,
                                      KeyMap* callbackMap) {
   auto& callbackList = (*callbackMap)[std::make_pair(key, mods)];
   callbackList.Unsubscribe(handle);
@@ -204,7 +204,7 @@ U64 InputModule::RegisterCallback(int key, const Action<>& callback,
   U64 handle = callbackList.Subscribe(callback);
   return handle;
 }
-void InputModule::UnregisterCallback(int key, U64 handle,
+void InputModule::UnregisterCallback(int key, U64& handle,
                                      MouseMap* callbackMap) {
   auto& callbackList = (*callbackMap)[key];
   callbackList.Unsubscribe(handle);
@@ -442,7 +442,7 @@ U64 InputModule::RegisterGamepadConnectionCallback(
   return gamepadConnectionCallbacks.Subscribe(callback);
 }
 
-void InputModule::UnegisterGamepadConnectionCallback(U64 handle) {
+void InputModule::UnegisterGamepadConnectionCallback(U64& handle) {
   gamepadConnectionCallbacks.Unsubscribe(handle);
 }
 void InputModule::Clear() {

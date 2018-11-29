@@ -18,7 +18,7 @@
 #include "Graphics/GUIModule.h"
 #include "Graphics/LightComponent.h"
 #include "Graphics/RenderModule.h"
-#include "Graphics/Window.h"
+#include "Graphics/WindowModule.h"
 #include "Networking/NetworkingModule.h"
 #include "Scene/LevelManager.h"
 

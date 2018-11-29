@@ -13,7 +13,7 @@ class CollisionHandler;
 namespace KnightGame {
 BEGIN_COMPONENT(ScreenShifter, Component, true)
 private:
-float speed = 0.6f;
+float speed = 0.8f;
 
 public:
 ScreenShifter() = default;

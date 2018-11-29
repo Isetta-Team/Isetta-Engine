@@ -1,83 +1,50 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Graphics/Window.h"
-#include "Core/Config/Config.h"
-#include "brofiler/ProfilerCore/Brofiler.h"
+#include "Window.h"
+
+#include "Core/Math/Rect.h"
+#include "Texture.h"
+#include "WindowModule.h"
 
 namespace Isetta {
-void Isetta::WindowModule::StartUp() {
-  glfwInit();
-  InitRenderConfig();
-  InitWindow();
-}
-void WindowModule::Update(float deltaTime) {
-  BROFILER_CATEGORY("Window Update", Profiler::Color::Silver);
+WindowModule* Window::windowModule = nullptr;
 
-  if (glfwWindowShouldClose(winHandle)) {
-    Application::Exit();
-  }
-  glfwSwapBuffers(winHandle);
+int Window::GetWidth() {
+  int width;
+  glfwGetWindowSize(windowModule->winHandle, &width, nullptr);
+  return width;
 }
 
-void WindowModule::ShutDown() {
-  glfwDestroyWindow(winHandle);
-  winHandle = nullptr;
-  glfwTerminate();
+int Window::GetHeight() {
+  int height;
+  glfwGetWindowSize(windowModule->winHandle, nullptr, &height);
+  return height;
 }
 
-void WindowModule::InitWindow() {  // Create OpenGL window
-  glfwWindowHint(GLFW_RED_BITS, 8);
-  glfwWindowHint(GLFW_GREEN_BITS, 8);
-  glfwWindowHint(GLFW_BLUE_BITS, 8);
-  glfwWindowHint(GLFW_ALPHA_BITS, 8);
-  glfwWindowHint(GLFW_DEPTH_BITS, 24);
+// void Window::SetIcon(const Texture& icon) {
+//  GLFWimage image[1];
+//  unsigned int tex = icon.GetTexture();
+//  // TODO(Jacob) Does not work
+//  image[0].pixels = reinterpret_cast<unsigned char*>(&tex);
+//  image[0].width = icon.GetWidth();
+//  image[0].height = icon.GetHeight();
+//  glfwSetWindowIcon(windowModule->winHandle, 1, image);
+//}
 
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-  if (winFullScreen) {
-    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    winHandle = glfwCreateWindow(mode->width, mode->height, winTitle.c_str(),
-                                 glfwGetPrimaryMonitor(), nullptr);
-  } else {
-    winHandle = glfwCreateWindow(initWinWidth, initWinHeight, winTitle.c_str(),
-                                 nullptr, nullptr);
-  }
-
-  if (winHandle == nullptr) {
-    // Fake message box
-    glfwDestroyWindow(winHandle);
-
-    winHandle = glfwCreateWindow(800, 50,
-                                 "Unable to initialize engine - Make sure you "
-                                 "have an OpenGL 2.0 compatible graphics card",
-                                 nullptr, nullptr);
-    double startTime = glfwGetTime();
-    while (glfwGetTime() - startTime < 5.0) { /* Sleep */
-    }
-
-    throw std::exception(
-        "Render::InitWindow: Unable to initialize window. Make sure you have "
-        "an OpenGL compatible graphics card.");
-  }
-
-  glfwSetWindowUserPointer(winHandle, this);
-  glfwMakeContextCurrent(winHandle);
-  // TODO(Chaojie): Probally remove this line in the future and limit the max
-  // fps to 60fps
-  glfwSwapInterval(0);
-
-  glfwSetInputMode(winHandle, GLFW_CURSOR,
-                   winShowCursor ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
-}
-void WindowModule::InitRenderConfig() {
-  winTitle = Config::Instance().windowConfig.windowTitle.GetVal();
-  initWinWidth = Config::Instance().windowConfig.windowWidth.GetVal();
-  initWinHeight = Config::Instance().windowConfig.windowHeight.GetVal();
-  winFullScreen = Config::Instance().windowConfig.windowFullScreen.GetVal();
-  winShowCursor = Config::Instance().windowConfig.windowShowCursor.GetVal();
+void Window::SetTitle(const std::string_view title) {
+  glfwSetWindowTitle(windowModule->winHandle, title.data());
 }
 
+void Window::SetSizeLimits(const Math::Rect& size) {
+  glfwSetWindowSizeLimits(windowModule->winHandle, size.x, size.y, size.width,
+                          size.height);
+}
+
+void Window::SetFullScreen() {
+  GLFWmonitor* monitor = glfwGetWindowMonitor(windowModule->winHandle);
+  const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+  glfwSetWindowMonitor(windowModule->winHandle, monitor, 0, 0, mode->width,
+                       mode->height, mode->refreshRate);
+}
 }  // namespace Isetta

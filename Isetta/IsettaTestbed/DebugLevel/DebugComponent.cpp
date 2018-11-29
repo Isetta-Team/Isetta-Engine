@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "DebugLevel/DebugComponent.h"
+#include "DebugComponent.h"
 
 #include "Core/Debug/DebugDraw.h"
 #include "Core/Math/Matrix4.h"
@@ -15,6 +15,7 @@ using namespace Isetta;
 void DebugComponent::Update() {
   DebugDraw::Point(2 * Math::Vector3::left, Color::magenta, 20);
   DebugDraw::Line(Math::Vector3::zero, 3 * Math::Vector3::one);
+  // Rotating ray in a circle
   if (Input::IsKeyPressed(KeyCode::V)) {
     static float angle = 0.0f;
     angle += 0.4f * EngineLoop::GetGameClock().GetDeltaTime();
@@ -26,6 +27,7 @@ void DebugComponent::Update() {
         Math::Vector3{Math::Util::Cos(angle), 0, Math::Util::Sin(angle)},
         Color::cyan, 2);
   }
+  // Display plane
   if (Input::IsKeyPressed(KeyCode::B)) {
     DebugDraw::Plane(Math::Matrix4::identity, Color::blue, 2);
   }

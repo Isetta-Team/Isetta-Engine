@@ -2,14 +2,14 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Week10MiniGame/W10Player.h"
-#include "Core/Time/Time.h"
 #include "Core/IsettaCore.h"
+#include "Core/Time/Time.h"
 #include "Events/Events.h"
 #include "Networking/NetworkId.h"
 #include "Networking/NetworkManager.h"
 #include "Networking/NetworkTransform.h"
-#include "W10NetworkManager.h"
 #include "Scene/Primitive.h"
+#include "W10NetworkManager.h"
 
 W10Player::W10Player(const bool isRight, const int swordNetID,
                      const int clientAuthorityID)
@@ -94,11 +94,11 @@ void W10Player::Update() {
           Isetta::Math::Vector3((isOnRight ? 1 : -1) * 0.25f, 0, 0.25f));
       swordStabStatus = 0;
       swordPos = 0;
-      W10CollectMessage* message =
-          Isetta::NetworkManager::Instance()
-              .GenerateMessageFromClient<W10CollectMessage>();
-      message->swordNetId = swordNetId;
-      Isetta::NetworkManager::Instance().SendMessageFromClient(message);
+      Isetta::NetworkManager::Instance()
+          .SendMessageFromClient<W10CollectMessage>(
+              [this](W10CollectMessage* message) {
+                message->swordNetId = this->swordNetId;
+              });
       swordEntity->GetComponent<Isetta::NetworkTransform>()->ForceSendTransform(
           true);
     }
@@ -145,11 +145,12 @@ void W10Player::ChangeSwordVerticlePosition(int direction) {
   if (swordStabStatus != 0) return;
   swordPos += direction;
   swordPos = Isetta::Math::Util::Clamp(-1, 1, swordPos);
-  W10SwordPosMessage* swordMessage =
-      Isetta::NetworkManager::Instance()
-          .GenerateMessageFromClient<W10SwordPosMessage>();
-  swordMessage->swordPos = swordPos;
-  Isetta::NetworkManager::Instance().SendMessageFromClient(swordMessage);
+
+  Isetta::NetworkManager::Instance().SendMessageFromClient<W10SwordPosMessage>(
+      [this](W10SwordPosMessage* swordMessage) {
+        swordMessage->swordPos = this->swordPos;
+      });
+
   auto swordLocalPos = swordEntity->transform->GetLocalPos();
   swordLocalPos.y = swordPos * 0.15;
   swordEntity->transform->SetLocalPos(swordLocalPos);
@@ -174,10 +175,10 @@ void W10Player::ChangeSwordHorizontalPosition(float deltaTime) {
 
   if (swordXProgress == 1) {
     // to revoke
-    W10AttackAttemptMessage* attackMessage{
-        Isetta::NetworkManager::Instance()
-            .GenerateMessageFromClient<W10AttackAttemptMessage>()};
-    Isetta::NetworkManager::Instance().SendMessageFromClient(attackMessage);
+    Isetta::NetworkManager::Instance()
+        .SendMessageFromClient<W10AttackAttemptMessage>(
+            [](W10AttackAttemptMessage* attackMessage) {});
+
     swordStabStatus = 2;
   }
   if (swordXProgress == 0) {

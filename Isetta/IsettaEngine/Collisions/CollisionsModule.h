@@ -53,7 +53,7 @@ class CollisionsModule {
   ~CollisionsModule() = default;
 
   // probably mark them as "still colliding"
-  CollisionUtil::ColliderPairSet collidingPairs;
+  CollisionUtil::ColliderPairSet collidingPairs, lastFramePairs;
   CollisionUtil::ColliderPairSet ignoreColliderPairs;
 
   BVTree bvTree;
@@ -63,8 +63,9 @@ class CollisionsModule {
 
   void StartUp();
   void Update(float deltaTime);
+  void LateUpdate(float deltaTime);
   void ShutDown();
-  Array<Collider*> GetPossibleColliders(Collider* collider) const;
+  Array<Collider *> GetPossibleColliders(Collider *collider) const;
 
   // Utilities
   bool GetIgnoreLayerCollision(int layer1, int layer2) const;
@@ -79,8 +80,7 @@ class CollisionsModule {
                                 const BoxCollider &);
   static Math::Vector3 ClosestPtPointSegment(const Math::Vector3 &point,
                                              const Math::Vector3 &p0,
-                                             const Math::Vector3 &p1,
-                                             float *);
+                                             const Math::Vector3 &p1, float *);
   // static float ClosestPtRaySegment(const Ray &, const Math::Vector3 &,
   //                                 const Math::Vector3 &, float *const,
   //                                 float *const, Math::Vector3 *const,

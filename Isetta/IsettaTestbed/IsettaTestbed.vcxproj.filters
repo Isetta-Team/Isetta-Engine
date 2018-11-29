@@ -3,16 +3,16 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GUILevel\GUIComponent.cpp">
-      <Filter>GUI Level</Filter>
+      <Filter>GUILevel</Filter>
     </ClCompile>
     <ClCompile Include="GUILevel\GUILevel.cpp">
-      <Filter>GUI Level</Filter>
+      <Filter>GUILevel</Filter>
     </ClCompile>
     <ClCompile Include="DebugLevel\DebugComponent.cpp">
-      <Filter>Debug Level</Filter>
+      <Filter>DebugLevel</Filter>
     </ClCompile>
     <ClCompile Include="DebugLevel\DebugLevel.cpp">
-      <Filter>Debug Level</Filter>
+      <Filter>DebugLevel</Filter>
     </ClCompile>
     <ClCompile Include="Halves\Bullet.cpp">
       <Filter>Halves</Filter>
@@ -21,9 +21,6 @@
       <Filter>Halves</Filter>
     </ClCompile>
     <ClCompile Include="Halves\GameManager.cpp">
-      <Filter>Halves</Filter>
-    </ClCompile>
-    <ClCompile Include="Halves\Level1.cpp">
       <Filter>Halves</Filter>
     </ClCompile>
     <ClCompile Include="Halves\PlayerController.cpp">
@@ -39,10 +36,10 @@
       <Filter>Example</Filter>
     </ClCompile>
     <ClCompile Include="InputLevel\InputLevel.cpp">
-      <Filter>Input Level</Filter>
+      <Filter>InputLevel</Filter>
     </ClCompile>
     <ClCompile Include="InputLevel\InputTestComponent.cpp">
-      <Filter>Input Level</Filter>
+      <Filter>InputLevel</Filter>
     </ClCompile>
     <ClCompile Include="Week10MiniGame\Week10Level.cpp">
       <Filter>Week10MiniGame</Filter>
@@ -86,6 +83,91 @@
     <ClCompile Include="KnightGame\Gameplay\ScreenShifter.cpp">
       <Filter>KnightGame\Gameplay</Filter>
     </ClCompile>
+    <ClCompile Include="KnightGame\Gameplay\ScoreManager.cpp">
+      <Filter>KnightGame\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\EscapeExit.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\DebugCollision.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\KeyTransform.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\OscillateMove.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom\RaycastClick.cpp">
+      <Filter>Custom</Filter>
+    </ClCompile>
+    <ClCompile Include="EmptyLevel\EmptyLevel.cpp">
+      <Filter>EmptyLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="EventLevel\EventListenerComponent.cpp">
+      <Filter>EventLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="EventLevel\EventSenderComponent.cpp">
+      <Filter>EventLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="EventLevel\EventLevel.cpp">
+      <Filter>EventLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="BVHLevel\BVHLevel.cpp">
+      <Filter>BVHLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="BVHLevel\RandomMover.cpp">
+      <Filter>BVHLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorLevel\EditorLevel.cpp">
+      <Filter>EditorLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="AILevel\AILevel.cpp">
+      <Filter>AILevel</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionSolverLevel\CollisionSolverLevel.cpp">
+      <Filter>CollisionSolverLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionsLevel\CollisionsLevel.cpp">
+      <Filter>CollisionsLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshAnimLevel\MeshAnimLevel.cpp">
+      <Filter>MeshAnimLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioLevel\AudioLevel.cpp">
+      <Filter>AudioLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioLevel\AudioPlay.cpp">
+      <Filter>AudioLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimitiveLevel\PrimitiveLevel.cpp">
+      <Filter>PrimitiveLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonLevel\SkeletonLevel.cpp">
+      <Filter>SkeletonLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="GUILevel\FontExample.cpp">
+      <Filter>GUILevel</Filter>
+    </ClCompile>
+    <ClCompile Include="Halves\HalvesLevel.cpp">
+      <Filter>Halves</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelLoadingLevel\LevelLoadingLevel.cpp">
+      <Filter>LevelLoadingLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkLevel\NetworkLevel.cpp">
+      <Filter>NetworkLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelLoadingLevel\LoadNextLevel.cpp" />
+    <ClCompile Include="AILevel\AITestComponent.cpp">
+      <Filter>AILevel</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkLevel\NetworkTestComp.cpp">
+      <Filter>NetworkLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkLevel\EmptyLevelForNetworkLoadLevel.cpp">
+      <Filter>NetworkLevel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
@@ -93,20 +175,11 @@
     <None Include="user.cfg" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="GUI Level">
-      <UniqueIdentifier>{f2d9fe62-d581-4bf4-97ba-e5aec5129198}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Debug Level">
-      <UniqueIdentifier>{c701d3fd-d9ec-4002-8464-cf2fc751dc78}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Halves">
       <UniqueIdentifier>{4aa29f51-7ac3-496d-a336-2d7f5e1baed0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Example">
       <UniqueIdentifier>{ed8f8d87-125f-4dc1-9db0-ef26e043470d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Input Level">
-      <UniqueIdentifier>{b2aa16a6-0583-4fa7-8226-452f3aaeeb72}</UniqueIdentifier>
     </Filter>
     <Filter Include="Week10MiniGame">
       <UniqueIdentifier>{fc75b8db-ca98-41c5-9514-c1160776a012}</UniqueIdentifier>
@@ -120,19 +193,70 @@
     <Filter Include="KnightGame\Level">
       <UniqueIdentifier>{d860470e-e479-4fed-8df3-14ffca666fed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DebugLevel">
+      <UniqueIdentifier>{c701d3fd-d9ec-4002-8464-cf2fc751dc78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUILevel">
+      <UniqueIdentifier>{f2d9fe62-d581-4bf4-97ba-e5aec5129198}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Custom">
+      <UniqueIdentifier>{4ab58d30-598c-4141-a61d-7d1f0ed5122b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AILevel">
+      <UniqueIdentifier>{05f9ef7f-592c-483b-886d-b35ca644a41d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AudioLevel">
+      <UniqueIdentifier>{baf47943-1f66-4281-a8ce-cfe20b061795}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BVHLevel">
+      <UniqueIdentifier>{29147819-32b3-4960-ab02-87b8952f74c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CollisionsLevel">
+      <UniqueIdentifier>{dc3262dc-1d67-42a6-b1a6-3ef28ede6c2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CollisionSolverLevel">
+      <UniqueIdentifier>{29ec4a2c-7622-4442-9e59-3988ec76b7c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EditorLevel">
+      <UniqueIdentifier>{2de6e121-d107-465d-a151-c09407894446}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EmptyLevel">
+      <UniqueIdentifier>{b638ba36-ebb9-494c-a97b-2e1e7e9d2983}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MeshAnimLevel">
+      <UniqueIdentifier>{4f8cf1e4-1477-4357-bbd8-eedd31d9ee9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PrimitiveLevel">
+      <UniqueIdentifier>{8884d0e8-f654-410c-bffa-b3c3294e3147}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SkeletonLevel">
+      <UniqueIdentifier>{1243c439-4f81-4298-b63b-7efbc17319d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EventLevel">
+      <UniqueIdentifier>{30670968-5738-49b9-9cac-8acd6535d233}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InputLevel">
+      <UniqueIdentifier>{b2aa16a6-0583-4fa7-8226-452f3aaeeb72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetworkLevel">
+      <UniqueIdentifier>{01722b15-5c19-4b53-b6c1-510c91c98283}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LevelLoadingLevel">
+      <UniqueIdentifier>{80b5e4d7-453e-43a7-8629-1b94a7cbae69}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GUILevel\GUILevel.h">
-      <Filter>GUI Level</Filter>
+      <Filter>GUILevel</Filter>
     </ClInclude>
     <ClInclude Include="GUILevel\GUIComponent.h">
-      <Filter>GUI Level</Filter>
+      <Filter>GUILevel</Filter>
     </ClInclude>
     <ClInclude Include="DebugLevel\DebugComponent.h">
-      <Filter>Debug Level</Filter>
+      <Filter>DebugLevel</Filter>
     </ClInclude>
     <ClInclude Include="DebugLevel\DebugLevel.h">
-      <Filter>Debug Level</Filter>
+      <Filter>DebugLevel</Filter>
     </ClInclude>
     <ClInclude Include="Halves\Bullet.h">
       <Filter>Halves</Filter>
@@ -141,9 +265,6 @@
       <Filter>Halves</Filter>
     </ClInclude>
     <ClInclude Include="Halves\GameManager.h">
-      <Filter>Halves</Filter>
-    </ClInclude>
-    <ClInclude Include="Halves\Level1.h">
       <Filter>Halves</Filter>
     </ClInclude>
     <ClInclude Include="Halves\PlayerController.h">
@@ -155,14 +276,11 @@
     <ClInclude Include="Example\ExampleComponent.h">
       <Filter>Example</Filter>
     </ClInclude>
-    <ClInclude Include="Example\ExampleLevel.h">
-      <Filter>Example</Filter>
-    </ClInclude>
     <ClInclude Include="InputLevel\InputLevel.h">
-      <Filter>Input Level</Filter>
+      <Filter>InputLevel</Filter>
     </ClInclude>
     <ClInclude Include="InputLevel\InputTestComponent.h">
-      <Filter>Input Level</Filter>
+      <Filter>InputLevel</Filter>
     </ClInclude>
     <ClInclude Include="Week10MiniGame\Week10Level.h">
       <Filter>Week10MiniGame</Filter>
@@ -208,6 +326,99 @@
     </ClInclude>
     <ClInclude Include="KnightGame\Gameplay\ScreenShifter.h">
       <Filter>KnightGame\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="KnightGame\Gameplay\ScoreManager.h">
+      <Filter>KnightGame\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="Example\ExampleLevel.h">
+      <Filter>Example</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\DebugCollision.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\EscapeExit.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\KeyTransform.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\OscillateMove.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom\RaycastClick.h">
+      <Filter>Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="EmptyLevel\EmptyLevel.h">
+      <Filter>EmptyLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="EventLevel\EventListenerComponent.h">
+      <Filter>EventLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="EventLevel\EventSenderComponent.h">
+      <Filter>EventLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="EventLevel\EventLevel.h">
+      <Filter>EventLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="BVHLevel\BVHLevel.h">
+      <Filter>BVHLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="BVHLevel\RandomMover.h">
+      <Filter>BVHLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorLevel\EditorLevel.h">
+      <Filter>EditorLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="AILevel\AITestAgent.h">
+      <Filter>AILevel</Filter>
+    </ClInclude>
+    <ClInclude Include="AILevel\AITestComponent.h">
+      <Filter>AILevel</Filter>
+    </ClInclude>
+    <ClInclude Include="AILevel\AILevel.h">
+      <Filter>AILevel</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionSolverLevel\CollisionSolverLevel.h">
+      <Filter>CollisionSolverLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionsLevel\CollisionsLevel.h">
+      <Filter>CollisionsLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshAnimLevel\MeshAnimLevel.h">
+      <Filter>MeshAnimLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioLevel\AudioLevel.h">
+      <Filter>AudioLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioLevel\AudioPlay.h">
+      <Filter>AudioLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveLevel\PrimitiveLevel.h">
+      <Filter>PrimitiveLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonLevel\SkeletonLevel.h">
+      <Filter>SkeletonLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="GUILevel\FontExample.h">
+      <Filter>GUILevel</Filter>
+    </ClInclude>
+    <ClInclude Include="Halves\HalvesLevel.h">
+      <Filter>Halves</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelLoadingLevel\LevelLoadingLevel.h">
+      <Filter>LevelLoadingLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelLoadingLevel\LoadNextLevel.h">
+      <Filter>LevelLoadingLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkLevel\NetworkLevel.h">
+      <Filter>NetworkLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkLevel\NetworkTestComp.h">
+      <Filter>NetworkLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkLevel\EmptyLevelForNetworkLoadLevel.h">
+      <Filter>NetworkLevel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

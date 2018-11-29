@@ -97,7 +97,9 @@ class ISETTA_API CVarString : public ICVar {
    *
    * @return std::string the value set of the object
    */
-  inline std::string GetVal() const { return sVal; }
+  inline std::string GetVal() const {
+    return sVal;
+  }
 
  private:
   std::string sVal;

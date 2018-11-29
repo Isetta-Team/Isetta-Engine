@@ -15,7 +15,7 @@ namespace Isetta {
 
 RenderModule* LightComponent::renderModule{nullptr};
 
-LightComponent::LightComponent() : name{entity->GetEntityIdString()} {
+LightComponent::LightComponent() : name{} {
   ASSERT(renderModule != nullptr);
   renderModule->lightComponents.push_back(this);
 
@@ -57,7 +57,7 @@ void LightComponent::Start() {
 
 void LightComponent::OnEnable() {
   if (renderNode == 0) {
-    renderNode = h3dAddLightNode(H3DRootNode, name.data(), renderResource,
+    renderNode = h3dAddLightNode(H3DRootNode, entity->GetEntityIdString().data(), renderResource,
                                  "LIGHTING", "SHADOWMAP");
   } else {
     h3dSetNodeFlags(renderNode, 0, true);

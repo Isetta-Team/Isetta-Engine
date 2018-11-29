@@ -9,9 +9,10 @@
 
 namespace Isetta {
 GUIModule* Font::guiModule;
-std::unordered_map<std::pair<StringId, float>, Font*, Util::PairHash,
-                   Util::PairHash>
+std::unordered_map<StringId,
+                   std::pair<std::string, std::unordered_map<float, Font*>>>
     Font::fonts;
+std::stack<std::tuple<StringId, std::string, float>> Font::loadFonts;
 
 Font* Font::GetDefaultFont() {
   return reinterpret_cast<Font*>(ImGui::GetDefaultFont());
@@ -21,50 +22,109 @@ void Font::AddDefaultFont(const std::string_view& fontName, float size) {
   if (font)
     ImGui::GetIO().Fonts->AddFontDefault(
         reinterpret_cast<ImFont*>(font)->ConfigData);
+  else
+    LOG_WARNING(Debug::Channel::GUI,
+                "Font::AddDefaultFont => Cannot find font by name: %s",
+                fontName.data());
 }
 void Font::AddDefaultFont(Font* const font) {
   ImGui::GetIO().FontDefault = reinterpret_cast<ImFont*>(font);
 }
 Font* Font::GetFont(const std::string_view fontName, float size) {
-  auto font = fonts.find({SID(fontName.data()), size});
-  return font == fonts.end() ? nullptr : font->second;
-}
-Font* Font::AddFontFromFile(const std::string& fileName, float fontSize,
-                            const std::string_view& fontName) {
-  const std::string filePath = CONFIG_VAL(resourcePath) + "\\" + fileName;
-  if (fontName.empty()) {
-    Font* font = GetFont(fileName, fontSize);
-    if (font) return font;
-    font = reinterpret_cast<Font*>(
-        ImGui::GetIO().Fonts->AddFontFromFileTTF(filePath.c_str(), fontSize));
-    if (!font) {
-      LOG_ERROR(Debug::Channel::GUI,
-                "GUI::AddFontFromFile => Could not load font %s",
-                fileName.c_str());
-      return nullptr;
+  const auto fontList = fonts.find(SID(fontName.data()));
+  if (fontList != fonts.end()) {
+    Font* font;
+    auto fontSizeMap = fontList->second.second;
+    const auto find = fontSizeMap.find(size);
+    if (find == fontSizeMap.end()) {
+      std::string_view filepath = fontList->second.first;
+      font = reinterpret_cast<Font*>(
+          ImGui::GetIO().Fonts->AddFontFromFileTTF(filepath.data(), size));
+      fontSizeMap.insert({size, font});
+    } else {
+      font = find->second;
     }
-    AddFontToMap(fileName, fontSize, font);
-    return font;
-  } else {
-    Font* font = GetFont(fontName, fontSize);
-    if (font) return font;
-    font = reinterpret_cast<Font*>(
-        ImGui::GetIO().Fonts->AddFontFromFileTTF(filePath.c_str(), fontSize));
-    if (!font) {
-      LOG_ERROR(Debug::Channel::GUI,
-                "GUI::AddFontFromFile => Could not load font %s",
-                fileName.c_str());
-      return nullptr;
-    }
-    AddFontToMap(fontName, fontSize, font);
     return font;
   }
+  return nullptr;
 }
+
+void Font::AddFontFromFile(const std::string_view& filename,
+                           std::initializer_list<float> fontSizes,
+                           const std::string_view& fontName) {
+  const auto fontList = fonts.find(SID(fontName.data()));
+  StringId fontId;
+  const std::string filepath =
+      CONFIG_VAL(resourcePath) + "\\" + filename.data();
+  if (fontList == fonts.end()) {
+    fontId = SID(fontName.data());
+    fonts.insert(
+        {fontId, {filepath.c_str(), std::unordered_map<float, Font*>()}});
+  } else {
+    fontId = fontList->first;
+  }
+  for (const auto& size : fontSizes) {
+    if (GetFont(fontName, size)) continue;
+    loadFonts.push({fontId, filepath, size});
+  }
+}
+
+void Font::AddFontFromFile(const std::string_view& filename,
+                           const std::string_view& fontName) {
+  const auto fontList = fonts.find(SID(fontName.data()));
+  const std::string filepath =
+      CONFIG_VAL(resourcePath) + "\\" + filename.data();
+  std::unordered_map<float, Font*> fontSizeMap;
+  if (fontList == fonts.end()) {
+    fonts.insert({SID(fontName.data()), {filepath.c_str(), fontSizeMap}});
+  }
+}
+
+void Font::AddFontFromFile(const std::string_view& filename, float fontSize,
+                           const std::string_view& fontName) {
+  const auto fontList = fonts.find(SID(fontName.data()));
+  const std::string filepath =
+      CONFIG_VAL(resourcePath) + "\\" + filename.data();
+  Font* font;
+  if (fontList == fonts.end()) {
+    StringId fontId = SID(fontName.data());
+    fonts.insert({fontId, {filepath, std::unordered_map<float, Font*>()}});
+    loadFonts.push({fontId, filepath, fontSize});
+  } else {
+    auto& fontSizeMap = fontList->second.second;
+    const auto findSize = fontSizeMap.find(fontSize);
+    if (findSize == fontSizeMap.end()) {
+      loadFonts.push({fontList->first, filepath, fontSize});
+    }
+  }
+}
+
 Font* Font::AddFontFromMemory(void* fontBuffer, float fontSize, float pixels,
+                              const std::string_view& filename,
                               const std::string_view& fontName) {
-  auto font = reinterpret_cast<Font*>(
-      ImGui::GetIO().Fonts->AddFontFromMemoryTTF(fontBuffer, fontSize, pixels));
-  if (fontName.empty()) AddFontToMap(fontName, fontSize, font);
+  // TODO(Jacob) currently not available/implemented
+  return nullptr;
+  const auto fontList = fonts.find(SID(fontName.data()));
+  Font* font;
+  if (fontList == fonts.end()) {
+    const std::string filepath =
+        CONFIG_VAL(resourcePath) + "\\" + filename.data();
+    std::unordered_map<float, Font*> fontSizeMap;
+    font = reinterpret_cast<Font*>(ImGui::GetIO().Fonts->AddFontFromMemoryTTF(
+        fontBuffer, fontSize, pixels));
+    fontSizeMap.insert({fontSize, font});
+    fonts.insert({SID(fontName.data()), {filepath, fontSizeMap}});
+  } else {
+    auto& fontSizeMap = fontList->second.second;
+    const auto findSize = fontSizeMap.find(fontSize);
+    if (findSize == fontSizeMap.end()) {
+      font = reinterpret_cast<Font*>(ImGui::GetIO().Fonts->AddFontFromMemoryTTF(
+          fontBuffer, fontSize, pixels));
+      fontSizeMap.insert({fontSize, font});
+    } else {
+      font = findSize->second;
+    }
+  }
   return font;
 }
 void Font::PushFont(const std::string_view fontName, float fontSize) {
@@ -76,8 +136,4 @@ void Font::PushFont(Font* const font) {
 }
 void Font::PopFont() { ImGui::PopFont(); }
 
-void Font::AddFontToMap(const std::string_view fontName, float size,
-                        Font* const font) {
-  fonts.insert({{SID(fontName.data()), size}, font});
-}
 }  // namespace Isetta

@@ -5,11 +5,12 @@
 
 #include <functional>
 #include "Core/Config/CVar.h"
+#include "Core/DataStructures/Delegate.h"
 #include "Core/DataStructures/RingBuffer.h"
 #include "Core/Time/Clock.h"
+#include "Networking/ClientInfo.h"
 #include "Networking/Messages.h"
 #include "yojimbo/yojimbo.h"
-#include "Core/DataStructures/Delegate.h"
 
 namespace Isetta {
 /**
@@ -56,45 +57,48 @@ class NetworkingModule {
  private:
   static CustomAdapter NetworkAdapter;
 
-  Delegate<> onConnectedToServer;
-  Delegate<> onDisconnectedFromServer;
-  Delegate<int> onClientConnected;
-  Delegate<int> onClientDisconnected;
-
   /// Keeps time for the client and server. Mainly used for timeouts.
   Clock clock;
 
-  /// Local client's current address and port.
-  yojimbo::Address clientAddress;
-  /// Local client.
-  yojimbo::Client* client;
+  /// Configuration data for both the network and the client. This should
+  /// probably stay the same among connected clients and servers.
+  yojimbo::ClientServerConfig yojimboConfig;
+
+  /// Key used to join the server.
+  U8* privateKey;
+
+  // ------------------- Server Stuff -------------------
   /// Local server's current address and port.
   yojimbo::Address serverAddress;
   /// Local server.
   yojimbo::Server* server;
-  /// Configuration data for both the network and the client. This should
-  /// probably stay the same among connected clients and servers.
-  yojimbo::ClientServerConfig yojimboConfig;
-  /// TODO(Caleb): Figure out how to allocate server at runtime instead of at
-  /// startup
-  NetworkAllocator* clientAllocator;
   NetworkAllocator* serverAllocator;
-
-  /// Key used to join the server.
-  U8* privateKey;
-  /// Identifier for the client on its remote server (might be unused).
-  U64 clientId;
-
-  /// Queue of messages to be sent from the local client in the next network
-  /// update.
-  RingBuffer<yojimbo::Message*>* clientSendBuffer;
   /// Queue of messages to be sent from the local server in the next network
   /// update.
   RingBuffer<yojimbo::Message*>* serverSendBufferArray;
+  ClientInfo* clientInfos;
+  Delegate<ClientInfo> onClientConnected;
+  Delegate<ClientInfo> onClientDisconnected;
+  bool* wasClientConnectedLastFrame;
+  int clientConnectedCallbackHandle;
 
-  // State monitoring
-  bool lastFrameClientRunning;
-  bool* lastFrameClientConnected;
+  // ------------------- Client Stuff -------------------
+  /// Local client's current address and port.
+  yojimbo::Address clientAddress;
+  /// Local client.
+  yojimbo::Client* client;
+  /// TODO(Caleb): Figure out how to allocate server at runtime instead of at
+  /// startup
+  NetworkAllocator* clientAllocator;
+  /// Identifier for the client on its remote server (might be unused).
+  U64 clientId;
+  /// Queue of messages to be sent from the local client in the next network
+  /// update.
+  RingBuffer<yojimbo::Message*>* clientSendBuffer;
+  Delegate<> onConnectedToServer;
+  Delegate<> onDisconnectedFromServer;
+  bool wasClientRunningLastFrame;
+  int loadLevelCallbackHandle;
 
   // Constructors
   NetworkingModule() = default;
@@ -186,7 +190,7 @@ class NetworkingModule {
    * connection.
    */
   void Connect(const char* serverAddress, int serverPort,
-               Action<bool> callback = nullptr);
+               Action<NetworkManager::ClientState> callback = nullptr);
   /**
    * @brief Disconnects the local Client from its connected server, or throws an
    * exception if the Client is not already connected to a server.
@@ -211,12 +215,10 @@ class NetworkingModule {
   bool IsClient() const;
   bool IsHost() const;
   bool IsServer() const;
-  
+
   bool IsClientRunning() const;
   bool IsServerRunning() const;
   bool IsClientConnected(int clientIndex) const;
-
-  void RegisterBuiltinCallbacks();
 
   friend class NetworkManager;
   friend class EngineLoop;

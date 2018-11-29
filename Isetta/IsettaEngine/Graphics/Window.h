@@ -2,48 +2,33 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-
 #include <string>
-#include "Core/Config/CVar.h"
-#include "GLFW/include/GLFW/glfw3.h"
+#include "Core/Math/Vector2Int.h"
+#include "ISETTA_API.h"
 
 namespace Isetta::Math {
-class Vector2;
+class Rect;
 }
 
 namespace Isetta {
-class WindowModule {
- public:
-  struct WindowConfig {
-    CVar<int> windowWidth{"window_width", 1024};
-    CVar<int> windowHeight{"window_height", 768};
-    CVarString windowTitle{"window_title", "Game"};
-    CVar<int> windowFullScreen{"window_fullscreen", 0};
-    CVar<int> windowShowCursor{"window_show_cursor", 1};
-  };
-
+class ISETTA_API Window {
  private:
-  WindowModule() = default;
-  ~WindowModule() = default;
+  static class WindowModule *windowModule;
+  friend class WindowModule;
 
-  void StartUp();
-  void Update(float deltaTime);
-  void ShutDown();
+ public:
+  static int GetWidth();
+  static int GetHeight();
 
-  std::string winTitle;
-  int initWinWidth;
-  int initWinHeight;
-  bool winFullScreen;
-  bool winShowCursor;
-
-  void InitWindow();
-  void InitRenderConfig();
-
-  GLFWwindow* winHandle;
-
-  class RenderModule* renderModule;
-  class InputModule* inputModule;
-  friend class EngineLoop;
-  friend class StackAllocator;
+  // static void SetIcon(const class Texture &icon);
+  static void SetTitle(const std::string_view title);
+  /**
+   * @brief Set the Size Limits object
+   *
+   * @param size the minimum (x,y) and maximum (width, height) size limits, set
+   * to -1 if there is no limit in that direction
+   */
+  static void SetSizeLimits(const Math::Rect &size);
+  static void SetFullScreen();
 };
 }  // namespace Isetta

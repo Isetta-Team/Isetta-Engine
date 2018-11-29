@@ -66,6 +66,10 @@ void MeshComponent::OnDestroy() { h3dRemoveNode(renderNode); }
 
 std::tuple<Math::Vector3, Math::Quaternion>
 MeshComponent::GetJointWorldTransform(std::string jointName) {
+  if (joints.find(SID(jointName.c_str())) == joints.end()) {
+    throw std::logic_error(
+        "MeshComponent::GetJointWorldTransform => No such joint in this mesh");
+  }
   H3DNode jointNode = joints.at(SID(jointName.c_str()));
   const float* data[4];
   const float** testPtr = &data[0];

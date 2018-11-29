@@ -6,6 +6,7 @@
 #include "Core/Math/Matrix4.h"
 #include "Horde3D/Horde3D/Bindings/C++/Horde3D.h"
 #include "Scene/Component.h"
+#include "Core/IsettaAlias.h"
 
 namespace Isetta {
 class Ray;
@@ -42,7 +43,7 @@ void SetProperty(T value);
 template <Property Attr, typename T>
 T GetProperty() const;
 
-static const CameraComponent* Main() { return _main; }
+static inline const CameraComponent* Main() { return _main; }
 
 Math::Matrix4 GetHordeTransform() const {
   const float* transformPtr;
@@ -51,6 +52,9 @@ Math::Matrix4 GetHordeTransform() const {
 }
 
 Ray ScreenPointToRay(const Math::Vector2& position) const;
+Math::Vector2 ScreenToViewportPoint(const Math::Vector2& position) const;
+Math::Vector2 ViewportToScreenPoint(const Math::Vector2& position) const;
+Ray ViewportPointToRay(const Math::Vector2& position) const;
 // TODO(all) ScreenToViewportPoint
 // TODO(all) ScreenToWorldPoint
 // TODO(all) ViewportPointToRay
@@ -64,7 +68,7 @@ void UpdateH3DTransform() const;
 void ResizeViewport(int width, int height);
 void SetupCameraViewport() const;
 
-static CameraComponent* _main;
+static inline CameraComponent* _main;
 
 static class RenderModule* renderModule;
 friend class RenderModule;
@@ -76,7 +80,7 @@ Math::Matrix4 projMat;
 
 H3DNode renderNode;
 H3DRes renderResource;
-int resizeHandle;
+U64 resizeHandle;
 END_COMPONENT(CameraComponent, Component)
 
 template <CameraComponent::Property Attr, typename T>
