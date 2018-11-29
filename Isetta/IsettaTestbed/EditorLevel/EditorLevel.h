@@ -5,11 +5,11 @@
 #include "Scene/IsettaLevel.h"
 
 /**
- * @brief Level showing the editor components: inspector, heirarchy, and console
+ * @brief Level showing the editor components: inspector, hierarchy, and console
  *
  */
 namespace Isetta {
 CREATE_LEVEL(EditorLevel)
-void OnLevelLoad() override;
+void Load() override;
 CREATE_LEVEL_END
 }  // namespace Isetta

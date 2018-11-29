@@ -69,17 +69,6 @@ void NetworkTestComp::Start() {
     LOG_INFO(Debug::Channel::Networking, "Started listening to broadcasts");
   });
 
-  Input::RegisterKeyPressCallback(KeyCode::C, []() {
-    const std::string hostIp = "";
-    if (!NetworkManager::Instance().IsClient() && !hostIp.size())
-      NetworkManager::Instance().StartClient(hostIp);
-  });
-
-  Input::RegisterKeyPressCallback(KeyCode::D, []() {
-    if (NetworkManager::Instance().IsClient())
-      NetworkManager::Instance().StopClient();
-  });
-
   Input::RegisterKeyPressCallback(KeyCode::KP_7, []() {
     NetworkManager::Instance().NetworkLoadLevel("NetworkLevel");
   });

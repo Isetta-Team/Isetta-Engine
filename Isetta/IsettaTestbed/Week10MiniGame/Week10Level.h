@@ -8,6 +8,6 @@
 
 namespace Isetta {
 CREATE_LEVEL(Week10Level)
-void OnLevelLoad() override;
+void Load() override;
 CREATE_LEVEL_END
 }

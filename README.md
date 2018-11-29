@@ -91,36 +91,35 @@ start_level = LEVEL_NAME
 
 |	Level Name			|	Level Description																|	Level Inputs	|
 |		:-:				|			:-:																		|		:-:			|
-|	`AILevel`			|																					|					|
+|	`AILevel`			|	TODO(Chaojie)	                                                                |	TODO(Chaojie)				|
 |	`AudioLevel`		|	Level with 2D and 3D audio looping and one shot 								|	`NUM2`: 2D audio play/pause loop <br> `NUM3`: 3D audio play/pause one shot	|
-|	`BVHLevel`			|	Level testing our dynamic AABB tree												|					|
-|	`CollisionsLevel`	|	Level testing our collision intersections										|					|
+|	`BVHLevel`			|	Level testing our dynamic AABB tree												|	`FlyController` <br> `Keypad5`: Spawn 100 entities each with their sphere collider <br> `Keypad6`: Spawn 1 entity with sphere collider <br> `Keypad4`: Destroy an eneity spawn with `Keypad4` <br> `KaypadEnter`: Show/Hide AABB of spheres <br> `Space`: Start/Stop spheres from moving <br> `Keypad7`: Decrease spheres' movement range <br> `Keypad9`: Increase spheres' movement range |
+|	`CollisionsLevel`	|	Level testing our collision intersections										|	TODO(Caleb)			|
 |	`Debug Level`		|	Level demoing our debug drawing capabilities									|	`FlyController` <br> `V`: Draw ray in a circle while pressed <br> `B`: Draw plane while pressed	|
-|	`EditorLevel`		|	Level showing the editor components: inspector, heirarchy, and console and level loading menu 			|	`ESC`: close window <br> `F1`:level menu <br> `CTRL+SHIFT+`: `H`-hierarchy, `I`-inspector, `F`-frame reporter, `C`-console, `M`-menu	|
+|	`EditorLevel`		|	Level showing the editor components: inspector, heirarchy, and console and level loading menu  |	`ESC`: close window <br> `F1`:level menu <br> `CTRL+SHIFT+`: `H`-hierarchy, `I`-inspector, `F`-frame reporter, `C`-console, `M`-menu	|
 |	`EmptyLevel`		|	Empty level to be used as a starting point for user created levels				|	N/a				|
-|	`EventLevel`		|	Level demoing our event messaging system with sender and listener components	|					|
-|	`Example`			|	Level with an animating model and example component								|					|
+|	`EventLevel`		|	Level demoing our event messaging system with sender and listener components	|	TODO(Chaojie)				|
+|	`Example`			|	Level with an animating model and example component								|	`FlyController` <br> `UpArrow`: Move the wire box forward <br> `DownArrow`: Move the wire box backward <br> `LeftArrow`: Make the wire box turn left <br> `RightArrow`: Make the wire box turn Right |
 |	`GUILevel`			|	Level demoing some of our GUI capabilities										|	N/a				|
 |	`InputLevel`		|	Level demoing some of the input capabilities 									|	`A`: press/release messages <br> `MOUSE_LEFT`: message on 1st click <br> `GAMEPAD_{X,B,MOUSE_MIDDLE}`: message while pressed/down				|
 |	`LevelLoadingLevel`		|	Level showing a menu to browse levels and load specific level 										|	`ESC`: close window				|
 |	`MeshAnimLevel`		|	Level with a mesh that is being animated 										|	`FlyController`				|
-|	`NetworkLevel`		|																					|					|
+|	`NetworkLevel`		|	Level demoing some of our networking capabilities. The `default_server_ip` in config should be set to your LAN IP for this level to work. |	`FlyController` <br> `F1`: Start host <br> `F2`: Start pure server <br> `F3`: Start client <br> `NUM1`: Start broadcasting messages to all computers in LAN <br> `NUM2`: Start listening to broadcast messages <br> `Keypad9`: Switch to another level using `NetworkLoadLevel` <br> `Keypad7`: Switch back to NetworkLevel using `NetworkLoadLevel` |
 |	`PrimitiveLevel`	|	Level displaying all the types of primitive objects 							|	`FlyController`				|
-|	`SkeletonLevel`		|	Level displaying a mesh and entities used to follow the skeleton 				|					|
-|		:-:				|			:-:																		|		:-:			|
-|	`Halves`			|	First demo twin-stick shooter game we created!									|					|
+|	`SkeletonLevel`		|	Level displaying a mesh and entities used to follow the skeleton 				|	N/a				|
+|	`Halves`			|	First demo twin-stick shooter game we created! Only support gamepads			| `LFET_STICK`: move around <br> `RIGHT_STICK`: shoot |
 |	`KnightGame`		|	Game with a knight and a sword, can you take down the most training dummies?	|	`LEFT_STICK`: moves knight <br> `RIGHT_TRIGGER`: raises/lowers sword <br> `RIGHT_STICK`: spin it in a complete circle for flame protection	|
-|	`Week10MiniGame`	|																					|					|
+|	`Week10MiniGame`	|	TODO(Chaojie)																				|	TODO(Chaojie)				|
 
 
 ## Dependencies/Plugins
 - [imgui](https://github.com/Isetta-Team/imgui)
 - [yojimbo](https://github.com/Isetta-Team/yojimbo)
 - [brofiler](https://github.com/Isetta-Team/brofiler)
-- GLFW
-- Horde3D
-- FMOD
-- SID
+- [GLFW](https://github.com/glfw/glfw)
+- [Horde3D](https://github.com/horde3d/Horde3D)
+- [FMOD](https://www.fmod.com/api)
+- [SID (String ID](https://github.com/TheAllenChou/string-id)
 
 ## Stepping Time
 Assuming you have checked out master, you are looking at our latest work. If you would like to view the engine from the start you can use the tags feature to see the code week to week. If you are interested in a specific feature, there are branches for each of the major systems of development for you to `checkout` (the majority of development happened on those branches, we slipped up sometimes and made changes on staging).

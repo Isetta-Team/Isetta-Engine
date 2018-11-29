@@ -12,7 +12,7 @@
 
 using namespace Isetta;
 
-void Week10Level::OnLevelLoad() {
+void Week10Level::Load() {
   Entity* cameraEntity{Entity::Instantiate("Camera")};
   cameraEntity->AddComponent<CameraComponent>();
   cameraEntity->SetTransform(Math::Vector3{0, 0.25f, 3.0f});

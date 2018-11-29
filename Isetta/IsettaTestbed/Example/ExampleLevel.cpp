@@ -46,7 +46,7 @@ void ExampleLevel::Load() {
   ani->AddAnimation("Example/Pushing.anim", 0, "", false);
 
   Entity* customEntity = Entity::Instantiate("custom");
-  // Add ExampleComponent: empty component just demoing componenets
+  // Add ExampleComponent: empty component just demoing components
   customEntity->AddComponent<ExampleComponent>();
   // Add GridComponent: displays debug drawing grid
   customEntity->AddComponent<GridComponent>();

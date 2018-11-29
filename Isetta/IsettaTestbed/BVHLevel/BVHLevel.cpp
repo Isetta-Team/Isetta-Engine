@@ -17,13 +17,11 @@
 #include "Components/Editor/EditorComponent.h"
 #include "Custom/DebugCollision.h"
 #include "Custom/RaycastClick.h"
+#include "Custom/EscapeExit.h"
 
 namespace Isetta {
 
 void BVHLevel::Load() {
-  Input::RegisterKeyPressCallback(KeyCode::ESCAPE,
-                                  []() { Application::Exit(); });
-
   Entity* lightEntity = Entity::Instantiate("Light");
   lightEntity->AddComponent<LightComponent>();
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
@@ -38,6 +36,7 @@ void BVHLevel::Load() {
   Entity* debug = Entity::Instantiate("Debug");
   debug->AddComponent<GridComponent>();
   debug->AddComponent<EditorComponent>();
+  debug->AddComponent<EscapeExit>();
   debug->AddComponent<FrameReporter>();
   debug->AddComponent<RaycastClick>(true);
 
