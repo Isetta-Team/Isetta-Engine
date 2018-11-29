@@ -277,19 +277,17 @@ void NetworkingModule::Connect(const char* serverAddress, int serverPort,
     return;
   }
 
-  Action<int> internalCallback = [=](const int state) {
+  Action<int> internalCallback = [=](int state) {
     if (callback != nullptr) {
       callback(static_cast<NetworkManager::ClientState>(state));
     }
     if (state == static_cast<int>(NetworkManager::ClientState::Connected)) {
       NetworkManager::Instance().SendMessageFromClient<ClientConnectedMessage>(
           [](ClientConnectedMessage* message) {
-            const char* ip = SystemInfo::GetIpAddressWithPrefix(
+            strcpy_s(message->ip, SystemInfo::GetIpAddressWithPrefix(
                                  CONFIG_VAL(networkConfig.ipPrefix))
-                                 .c_str();
-            const char* machineName = SystemInfo::GetMachineName().c_str();
-            strcpy_s(message->ip, ip);
-            strcpy_s(message->machineName, machineName);
+                                 .c_str());
+            strcpy_s(message->machineName, SystemInfo::GetMachineName().c_str());
           });
 
       this->onConnectedToServer.Invoke();
@@ -374,7 +372,7 @@ void NetworkingModule::CreateServer(const char* address, int port) {
             info.ip = message->ip;
             info.machineName = message->machineName;
             info.clientIndex = clientIndex;
-            clientInfos[clientIndex] = info;
+            this->clientInfos[clientIndex] = info;
             this->onClientConnected.Invoke(info);
           });
 }
