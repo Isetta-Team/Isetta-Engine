@@ -3,10 +3,7 @@
  */
 #include "InputLevel.h"
 
-#include "Core/Config/Config.h"
-#include "Graphics/CameraComponent.h"
 #include "InputTestComponent.h"
-#include "Scene/Entity.h"
 
 using namespace Isetta;
 

@@ -3,9 +3,7 @@
  */
 #pragma once
 #include <queue>
-#include "Core/DataStructures/Array.h"
 #include "RandomMover.h"
-#include "Scene/IsettaLevel.h"
 
 namespace Isetta {
 CREATE_LEVEL(BVHLevel)

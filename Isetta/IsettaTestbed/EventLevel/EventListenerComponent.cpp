@@ -2,8 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #include "EventListenerComponent.h"
-#include "Core/Debug/Logger.h"
-#include "Events/Events.h"
 
 namespace Isetta {
 void EventListenerComponent::OnEnable() {

@@ -3,11 +3,6 @@
  */
 #include "EventSenderComponent.h"
 
-#include "Core/Time/Time.h"
-#include "Events/EventObject.h"
-#include "Events/Events.h"
-#include "Input/Input.h"
-
 void EventSenderComponent::Start() {
   handleA = Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::A, [&]() {
     // Define an event object with name, parameters, time frame and priority

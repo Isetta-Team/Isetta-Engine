@@ -2,9 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Scene/Component.h"
-#include "Core/IsettaAlias.h"
-
 namespace Isetta {
 BEGIN_COMPONENT(EscapeExit, Component, true)
 private:

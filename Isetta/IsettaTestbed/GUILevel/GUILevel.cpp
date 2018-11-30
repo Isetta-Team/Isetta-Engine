@@ -2,12 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #include "GUILevel.h"
-
-#include "Core/Config/Config.h"
-#include "Graphics/CameraComponent.h"
-#include "Graphics/Font.h"
-#include "Scene/Entity.h"
-
 #include "FontExample.h"
 #include "GUIComponent.h"
 

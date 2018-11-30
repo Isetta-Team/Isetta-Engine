@@ -3,9 +3,6 @@
  */
 #include "AudioPlay.h"
 
-#include "Audio/AudioSource.h"
-#include "Input/Input.h"
-
 namespace Isetta {
 void AudioPlay::OnEnable() {
   src->Play();

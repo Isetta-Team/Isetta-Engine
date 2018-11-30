@@ -11,21 +11,7 @@
 #include "Custom/OscillateMove.h"
 #include "Custom/RaycastClick.h"
 
-#include "Core/Color.h"
-#include "Core/Config/Config.h"
-#include "Core/Math/Vector3.h"
-#include "Graphics/CameraComponent.h"
-#include "Graphics/LightComponent.h"
-#include "Scene/Entity.h"
-
-#include "Application.h"
-#include "Collisions/BoxCollider.h"
-#include "Collisions/CapsuleCollider.h"
-#include "Collisions/Collider.h"
-#include "Collisions/CollisionHandler.h"
-#include "Collisions/SphereCollider.h"
 #include "Components/Editor/FrameReporter.h"
-#include "Core/IsettaCore.h"
 
 void CollisionSolverLevel::Load() {
   // Camera
@@ -63,7 +49,7 @@ void CollisionSolverLevel::Load() {
   staticCol[0]->AddComponent<DebugCollision>();  // This will let us know when
                                                  // collisions occur
 
-  // Static sphere collider                                                  
+  // Static sphere collider
   staticCol[1] = Entity::Instantiate("sphere-collider", nullptr, true);
   staticCol[1]->SetTransform(Math::Vector3{0, 1, -4});
   staticCol[1]->AddComponent<SphereCollider>();
@@ -82,8 +68,8 @@ void CollisionSolverLevel::Load() {
   box = Entity::Instantiate("box-collider-dynamic");
   box->SetTransform(Math::Vector3{3, 1, 0}, Math::Vector3{0, 0, 0});
   box->AddComponent<BoxCollider>();
-  box->AddComponent<KeyTransform>();  // We want to be able to move this collider
-                                      // using our keyboard
+  box->AddComponent<KeyTransform>();  // We want to be able to move this
+                                      // collider using our keyboard
 
   sphere = Entity::Instantiate("sphere-collider-dynamic");
   sphere->SetTransform(Math::Vector3{3, 1, -4});
@@ -95,8 +81,8 @@ void CollisionSolverLevel::Load() {
   capsule = Entity::Instantiate("capsule-collider-dynamic");
   capsule->transform->SetLocalPos(Math::Vector3{3, 1, -8});
   capsule->transform->SetLocalRot(-30 * Math::Vector3::up);
-  capsule->AddComponent<CapsuleCollider>(
-      0.5, 2, CapsuleCollider::Direction::X_AXIS);
+  capsule->AddComponent<CapsuleCollider>(0.5, 2,
+                                         CapsuleCollider::Direction::X_AXIS);
   capsule->AddComponent<KeyTransform>()->SetActive(false);
 
   // Manually registering the Escape key to exit the application

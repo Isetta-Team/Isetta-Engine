@@ -2,10 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #include "EmptyLevel.h"
-
-#include "Core/IsettaCore.h"
-#include "Graphics/CameraComponent.h"
-
 #include "Custom/EscapeExit.h"
 #include "NetworkLevel/NetworkTestComp.h"
 

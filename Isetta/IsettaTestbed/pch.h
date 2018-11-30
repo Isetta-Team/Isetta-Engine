@@ -12,6 +12,7 @@
 #include "Core/DataStructures/Array.h"
 #include "Core/DataStructures/Delegate.h"
 
+#include "Core/Color.h"
 #include "Core/IsettaAlias.h"
 
 #include "Core/Time/Time.h"
@@ -20,6 +21,8 @@
 
 #include "Core/Memory/FreeListAllocator.h"
 #include "Core/Memory/MemoryManager.h"
+
+#include "Core/Geometry/Ray.h"
 
 #include "SID/sid.h"
 #include "Util.h"
@@ -34,6 +37,9 @@
 
 #include "Networking/NetworkManager.h"
 #include "Networking/NetworkTransform.h"
+#include "Networking/NetworkId.h"
+#include "Networking/NetworkDiscovery.h"
+#include "Networking/Messages.h"
 
 #include "Audio/AudioClip.h"
 #include "Audio/AudioListener.h"
@@ -41,19 +47,21 @@
 
 #include "Graphics/AnimationComponent.h"
 #include "Graphics/CameraComponent.h"
+#include "Graphics/Font.h"
 #include "Graphics/GUI.h"
 #include "Graphics/LightComponent.h"
 #include "Graphics/MeshComponent.h"
 #include "Graphics/ParticleSystemComponent.h"
 #include "Graphics/RectTransform.h"
 #include "Graphics/Texture.h"
-#include "Graphics/Font.h"
+#include "Graphics/Window.h"
 
 #include "Collisions/BoxCollider.h"
 #include "Collisions/CapsuleCollider.h"
 #include "Collisions/CollisionHandler.h"
 #include "Collisions/RaycastHit.h"
 #include "Collisions/SphereCollider.h"
+#include "Collisions/Collisions.h"
 
 #include "Input/Input.h"
 #include "Input/KeyCode.h"

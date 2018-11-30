@@ -3,12 +3,6 @@
  */
 #include "SpinAttack.h"
 
-#include "Core/Debug/Logger.h"
-#include "Core/Math/Util.h"
-#include "Core/Time/Time.h"
-#include "Input/Input.h"
-#include "Input/KeyCode.h"
-
 using namespace Isetta;
 
 namespace KnightGame {

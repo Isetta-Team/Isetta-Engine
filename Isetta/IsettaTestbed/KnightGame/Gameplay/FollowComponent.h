@@ -2,9 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include <array>
-#include "Core/Math/Vector3.h"
-#include "Scene/Component.h"
 
 using namespace Isetta;
 

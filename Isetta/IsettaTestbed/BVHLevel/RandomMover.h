@@ -2,8 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Scene/Component.h"
-#include "Core/Math/Vector3.h"
 
 namespace Isetta {
 BEGIN_COMPONENT(RandomMover, Component, false)

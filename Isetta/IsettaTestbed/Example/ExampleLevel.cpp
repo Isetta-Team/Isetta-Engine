@@ -6,10 +6,6 @@
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
 #include "ExampleComponent.h"
-#include "Graphics/AnimationComponent.h"
-#include "Graphics/CameraComponent.h"
-#include "Graphics/LightComponent.h"
-#include "Scene/Entity.h"
 
 namespace Isetta {
 

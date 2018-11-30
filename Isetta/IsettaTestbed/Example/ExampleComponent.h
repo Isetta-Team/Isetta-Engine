@@ -2,8 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Scene/Component.h"
-
 /**
  * @brief Component demoing what a component should look like
  *  param1: Name of new component

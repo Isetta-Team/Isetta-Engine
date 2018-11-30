@@ -3,9 +3,6 @@
  */
 #include "AudioLevel.h"
 
-#include "Core/IsettaCore.h"
-#include "Graphics/CameraComponent.h"
-
 #include "AudioLevel/AudioPlay.h"
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"

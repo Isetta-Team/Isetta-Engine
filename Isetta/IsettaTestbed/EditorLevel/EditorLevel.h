@@ -2,7 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Scene/IsettaLevel.h"
 
 /**
  * @brief Level showing the editor components: inspector, hierarchy, and console

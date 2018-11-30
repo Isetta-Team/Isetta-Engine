@@ -3,11 +3,6 @@
  */
 #include "KnightController.h"
 
-#include "Core/Time/Time.h"
-#include "Graphics/AnimationComponent.h"
-#include "Input/Input.h"
-#include "Scene/Entity.h"
-
 #include "KnightGame/Constants.h"
 
 using namespace Isetta;

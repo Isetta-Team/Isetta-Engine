@@ -6,9 +6,6 @@
 #include "AITestComponent.h"
 #include "Custom/EscapeExit.h"
 #include "Custom/KeyTransform.h"
-#include "Graphics/ParticleSystemComponent.h"
-#include "Scene/Primitive.h"
-#include "Input/Input.h"
 
 void Isetta::AILevel::Load() {
   Entity *camera = Entity::Instantiate("Camera");

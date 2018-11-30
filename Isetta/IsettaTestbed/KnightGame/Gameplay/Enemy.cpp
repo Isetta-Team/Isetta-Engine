@@ -3,14 +3,6 @@
  */
 #include "Enemy.h"
 
-#include "Audio/AudioSource.h"
-#include "Collisions/CapsuleCollider.h"
-#include "Collisions/Collider.h"
-#include "Collisions/CollisionHandler.h"
-#include "Graphics/MeshComponent.h"
-#include "Scene/Entity.h"
-#include "Scene/Primitive.h"
-
 #include "KnightGame/Constants.h"
 #include "KnightGame/Gameplay/ScoreManager.h"
 #include "KnightGame/Gameplay/SwordController.h"

@@ -3,9 +3,6 @@
  */
 #pragma once
 #include <string>
-#include "Core/Debug/Logger.h"
-#include "Networking/Messages.h"
-#include "Scene/IsettaLevel.h"
 
 /**
  * @brief Level demoing some of our networking capabilities. The

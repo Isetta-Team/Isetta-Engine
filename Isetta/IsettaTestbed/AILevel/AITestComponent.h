@@ -4,7 +4,6 @@
 #pragma once
 #include "AI/Nav2DAgent.h"
 #include "AI/Nav2DPlane.h"
-#include "Core/DataStructures/Array.h"
 
 namespace Isetta {
 BEGIN_COMPONENT(AITestComponent, Component, true)

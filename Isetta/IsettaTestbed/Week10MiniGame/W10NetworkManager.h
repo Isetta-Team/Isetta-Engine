@@ -2,8 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Networking/Messages.h"
-#include "Scene/Component.h"
 #include "Week10MiniGame/W10GameManager.h"
 #include "Core/DataStructures/HandleBin.h"
 

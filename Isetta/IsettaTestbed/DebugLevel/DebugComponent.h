@@ -2,8 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Scene/Component.h"
-
 /**
  * @brief DebugDrawing example component with a number of the debug drawing
  * capabilities

@@ -2,12 +2,8 @@
  * Copyright (c) 2018 Isetta
  */
 #include "EventLevel.h"
-
-#include "Core/Config/Config.h"
-#include "Core/IsettaCore.h"
 #include "EventListenerComponent.h"
 #include "EventSenderComponent.h"
-#include "Graphics/CameraComponent.h"
 
 using namespace Isetta;
 

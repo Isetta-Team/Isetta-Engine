@@ -6,18 +6,6 @@
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
 
-#include "Core/Color.h"
-#include "Core/Config/Config.h"
-#include "Core/Math/Vector3.h"
-#include "Graphics/CameraComponent.h"
-#include "Graphics/LightComponent.h"
-#include "Scene/Entity.h"
-
-#include "Collisions/BoxCollider.h"
-#include "Collisions/CapsuleCollider.h"
-#include "Collisions/Collider.h"
-#include "Collisions/CollisionHandler.h"
-#include "Collisions/SphereCollider.h"
 #include "Components/Editor/FrameReporter.h"
 
 #include "Custom/DebugCollision.h"
