@@ -7,7 +7,7 @@
 
 namespace Isetta {
 void NetworkTestComp::Start() {
-  NetworkManager::Instance().AddClientConnectedListener([](ClientInfo info) {
+  NetworkManager::Instance().RegisterClientConnectedCallback([](ClientInfo info) {
     LOG_INFO(Debug::Channel::Networking,
              "Client [%s] with IP [%s] is connected", info.machineName.c_str(),
              info.ip.c_str());

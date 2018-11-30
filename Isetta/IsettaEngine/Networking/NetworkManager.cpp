@@ -66,7 +66,7 @@ void NetworkManager::UnregisterDisconnectedFromServerCallback(U64& handle) const
   networkingModule->onDisconnectedFromServer.Unsubscribe(handle);
 }
 
-U64 NetworkManager::AddClientConnectedListener(
+U64 NetworkManager::RegisterClientConnectedCallback(
     const Action<ClientInfo>& listener) const {
   return networkingModule->onClientConnected.Subscribe(listener);
 }
