@@ -9,7 +9,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(NetworkTransform, Component, true)
+DEFINE_COMPONENT(NetworkTransform, Component, true)
 public:
 void Start() override;
 void Update() override;
@@ -51,10 +51,10 @@ static std::unordered_map<int, float> serverScaleTimestamps;
 class NetworkId* netId;
 friend class NetworkTransform;
 friend class NetworkManager;
-END_COMPONENT(NetworkTransform, Component)
+DEFINE_COMPONENT_END(NetworkTransform, Component)
 
 // TODO(Caleb): ParentMessage
-RPC_MESSAGE_DEFINE(ParentMessage)
+DEFINE_NETWORK_MESSAGE(ParentMessage)
 template <typename Stream>
 bool Serialize(Stream* stream) {
   serialize_int(stream, netId, 0,
@@ -74,9 +74,9 @@ void Copy(const yojimbo::Message* otherMessage) override {
 int netId = 0;
 int parentNetId = 0;
 
-RPC_MESSAGE_FINISH
+DEFINE_NETWORK_MESSAGE_END
 
-RPC_MESSAGE_DEFINE(PositionMessage) template <typename Stream>
+DEFINE_NETWORK_MESSAGE(PositionMessage) template <typename Stream>
   bool Serialize(Stream* stream) {
   serialize_int(stream, netId, 0,
                 Config::Instance().networkConfig.maxNetID.GetVal());
@@ -102,9 +102,9 @@ public:
 int netId = 0;
 float timestamp = 0;
 Math::Vector3 localPos;
-RPC_MESSAGE_FINISH
+DEFINE_NETWORK_MESSAGE_END
 
-RPC_MESSAGE_DEFINE(RotationMessage)
+DEFINE_NETWORK_MESSAGE(RotationMessage)
 template <typename Stream>
 bool Serialize(Stream* stream) {
   serialize_int(stream, netId, 0,
@@ -132,9 +132,9 @@ public:
 int netId = 0;
 float timestamp = 0;
 Math::Quaternion localRot;
-RPC_MESSAGE_FINISH
+DEFINE_NETWORK_MESSAGE_END
 
-RPC_MESSAGE_DEFINE(ScaleMessage)
+DEFINE_NETWORK_MESSAGE(ScaleMessage)
 template <typename Stream>
 bool Serialize(Stream* stream) {
   serialize_int(stream, netId, 0,
@@ -161,9 +161,9 @@ public:
 int netId = 0;
 float timestamp = 0;
 Math::Vector3 localScale;
-RPC_MESSAGE_FINISH
+DEFINE_NETWORK_MESSAGE_END
 
-RPC_MESSAGE_DEFINE(TransformMessage)
+DEFINE_NETWORK_MESSAGE(TransformMessage)
 template <typename Stream>
 bool Serialize(Stream* stream) {
   serialize_int(stream, netId, 0,
@@ -207,6 +207,6 @@ bool snap = false;
 Math::Vector3 localPos;
 Math::Quaternion localRot;
 Math::Vector3 localScale;
-RPC_MESSAGE_FINISH
+DEFINE_NETWORK_MESSAGE_END
 
 }  // namespace Isetta

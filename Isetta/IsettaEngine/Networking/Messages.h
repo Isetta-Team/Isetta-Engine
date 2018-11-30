@@ -39,7 +39,7 @@ template <typename T>
 bool NetworkMessageRegistry<T>::registered =
     NetworkManager::Instance().RegisterMessageType<T>(sizeof(T), T::Create);
 
-#define RPC_MESSAGE_DEFINE(NAME)                                             \
+#define DEFINE_NETWORK_MESSAGE(NAME)                                             \
   class NAME : public yojimbo::Message,                                      \
                public Isetta::NetworkMessageRegistry<NAME> {                 \
    public:                                                                   \
@@ -47,7 +47,7 @@ bool NetworkMessageRegistry<T>::registered =
     static inline NAME* Create(void* memory) { return new (memory) NAME(); } \
     static std::string GetMessageName() { return #NAME; }
 
-#define RPC_MESSAGE_FINISH               \
+#define DEFINE_NETWORK_MESSAGE_END               \
  public:                                 \
   YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS(); \
   }                                      \

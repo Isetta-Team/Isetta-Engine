@@ -6,7 +6,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(LevelLoadingMenu, Component, true)
+DEFINE_COMPONENT(LevelLoadingMenu, Component, true)
 private:
 Array<std::string> levels;
 static inline int handle = -1;
@@ -19,5 +19,5 @@ LevelLoadingMenu();
 void OnEnable() override;
 void OnDisable() override;
 void GuiUpdate() override;
-END_COMPONENT(LevelLoadingMenu, Component)
+DEFINE_COMPONENT_END(LevelLoadingMenu, Component)
 }  // namespace Isetta

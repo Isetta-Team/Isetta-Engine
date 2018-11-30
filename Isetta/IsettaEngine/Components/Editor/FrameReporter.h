@@ -7,7 +7,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(FrameReporter, Component, false)
+DEFINE_COMPONENT(FrameReporter, Component, false)
 public:
 void GuiUpdate() override;
 void Open();
@@ -23,5 +23,5 @@ Size frameCountForAvg{60};
 std::queue<float> frameDurations;
 
 bool isOpen{false};
-END_COMPONENT(FrameReporter, Component)
+DEFINE_COMPONENT_END(FrameReporter, Component)
 }  // namespace Isetta

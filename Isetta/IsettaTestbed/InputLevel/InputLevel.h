@@ -8,6 +8,6 @@ using namespace Isetta;
  * @brief Level demoing some of the input capabilities
  *
  */
-CREATE_LEVEL(InputLevel)
+DEFINE_LEVEL(InputLevel)
 void Load() override;
-CREATE_LEVEL_END
+DEFINE_LEVEL_END

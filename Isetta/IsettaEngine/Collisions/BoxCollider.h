@@ -5,7 +5,7 @@
 #include "Collisions/Collider.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(BoxCollider, Collider, false)
+DEFINE_COMPONENT(BoxCollider, Collider, false)
 private:
 #if _EDITOR
 void Update() override;
@@ -36,5 +36,5 @@ AABB GetFatAABB() final;
 AABB GetAABB() final;
 
 bool Intersection(Collider* const other) final;
-END_COMPONENT(BoxCollider, Collider)
+DEFINE_COMPONENT_END(BoxCollider, Collider)
 }  // namespace Isetta

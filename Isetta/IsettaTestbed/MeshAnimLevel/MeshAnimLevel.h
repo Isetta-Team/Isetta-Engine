@@ -7,7 +7,7 @@
  *
  */
 namespace Isetta {
-CREATE_LEVEL(MeshAnimLevel)
+DEFINE_LEVEL(MeshAnimLevel)
 void Load() override;
-CREATE_LEVEL_END
+DEFINE_LEVEL_END
 }  // namespace Isetta

@@ -15,7 +15,7 @@ class Vector3;
 class Vector2;
 }  // namespace Math
 
-BEGIN_COMPONENT(CameraComponent, Component, true)
+DEFINE_COMPONENT(CameraComponent, Component, true)
 public:
 struct CameraConfig {
   CVar<float> fieldOfView{"field_of_view", 45.0};
@@ -81,7 +81,7 @@ Math::Matrix4 projMat;
 H3DNode renderNode;
 H3DRes renderResource;
 U64 resizeHandle;
-END_COMPONENT(CameraComponent, Component)
+DEFINE_COMPONENT_END(CameraComponent, Component)
 
 template <CameraComponent::Property Attr, typename T>
 void CameraComponent::SetProperty(T value) {

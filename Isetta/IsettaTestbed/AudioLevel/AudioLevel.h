@@ -9,7 +9,7 @@
  *
  */
 namespace Isetta {
-CREATE_LEVEL(AudioLevel)
+DEFINE_LEVEL(AudioLevel)
 void Load() override;
-CREATE_LEVEL_END
+DEFINE_LEVEL_END
 }  // namespace Isetta

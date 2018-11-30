@@ -4,7 +4,7 @@
 #pragma once
 
 namespace Isetta {
-BEGIN_COMPONENT(KeyTransform, Component, true)
+DEFINE_COMPONENT(KeyTransform, Component, true)
 private:
   float step;
   bool pressed = true;
@@ -14,5 +14,5 @@ private:
 
   void OnEnable() override;
   void Update() override;
-END_COMPONENT(KeyTransform, Component)
+DEFINE_COMPONENT_END(KeyTransform, Component)
 }  // namespace Isetta

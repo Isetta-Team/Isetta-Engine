@@ -9,7 +9,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(LightComponent, Component, true)
+DEFINE_COMPONENT(LightComponent, Component, true)
 public:
 struct LightConfig {
   CVar<float> radius{"light_radius", 2500};
@@ -52,7 +52,7 @@ void UpdateH3DTransform() const;
 std::string_view name;
 H3DNode renderNode{0};
 H3DRes renderResource{0};
-END_COMPONENT(LightComponent, Component)
+DEFINE_COMPONENT_END(LightComponent, Component)
 
 template <LightComponent::Property Attr, typename T>
 void LightComponent::SetProperty(T value) {

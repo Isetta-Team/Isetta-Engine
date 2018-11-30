@@ -7,7 +7,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(Nav2DAgent, Component, true)
+DEFINE_COMPONENT(Nav2DAgent, Component, true)
   Math::Vector2 velocity;
   Math::Vector2 linear;
   Nav2DPlane* navPlane;
@@ -26,5 +26,5 @@ BEGIN_COMPONENT(Nav2DAgent, Component, true)
   explicit Nav2DAgent(Nav2DPlane* plane, float maxAcc = 2.f, float maxV = 2.f, float timeToTarget = 0.1f, float arriving = 0.5f);
   Math::Vector2 GetAIMovement(Math::Vector2 agentPosition,
                               float deltaTime);
-END_COMPONENT(Nav2DAgent, Component)
+DEFINE_COMPONENT_END(Nav2DAgent, Component)
 }  // namespace Isetta

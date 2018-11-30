@@ -3,7 +3,7 @@
  */
 #pragma once
 namespace Isetta {
-BEGIN_COMPONENT(AudioPlay, Component, true)
+DEFINE_COMPONENT(AudioPlay, Component, true)
 private:
 class AudioSource* const src = nullptr;
 KeyCode key;
@@ -14,5 +14,5 @@ AudioPlay(KeyCode key, class AudioSource* const src) : key{key}, src{src} {}
 
 void OnEnable() override;
 void OnDisable() override;
-END_COMPONENT(AudioPlay, Component)
+DEFINE_COMPONENT_END(AudioPlay, Component)
 }  // namespace Isetta

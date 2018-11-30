@@ -4,7 +4,7 @@
 #pragma once
 
 namespace Isetta {
-BEGIN_COMPONENT(RandomMover, Component, false)
+DEFINE_COMPONENT(RandomMover, Component, false)
 public:
 void Update() override;
 
@@ -17,5 +17,5 @@ private:
 Math::Vector3 velocity;
 
 
-END_COMPONENT(RandomMover, Component)
+DEFINE_COMPONENT_END(RandomMover, Component)
 }  // namespace Isetta

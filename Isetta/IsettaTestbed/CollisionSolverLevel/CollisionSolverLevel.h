@@ -8,9 +8,9 @@ using namespace Isetta;
  * @brief Level testing our collision solving system
  *
  */
-CREATE_LEVEL(CollisionSolverLevel)
+DEFINE_LEVEL(CollisionSolverLevel)
 Entity* box = nullptr;
 Entity* capsule = nullptr;
 Entity* sphere = nullptr;
 void Load() override;
-CREATE_LEVEL_END
+DEFINE_LEVEL_END

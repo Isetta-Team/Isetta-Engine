@@ -7,7 +7,7 @@
  *
  */
 namespace Isetta {
-BEGIN_COMPONENT(LoadNextLevel, Component, true)
+DEFINE_COMPONENT(LoadNextLevel, Component, true)
 private:
 std::string loadLevel;
 
@@ -15,5 +15,5 @@ public:
 LoadNextLevel(std::string_view loadLevel) : loadLevel{loadLevel} {}
 
 void GuiUpdate() override;
-END_COMPONENT(LoadNextLevel, Component)
+DEFINE_COMPONENT_END(LoadNextLevel, Component)
 }  // namespace Isetta

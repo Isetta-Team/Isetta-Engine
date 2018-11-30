@@ -11,13 +11,13 @@
  *
  */
 namespace Isetta {
-CREATE_LEVEL(NetworkLevel)
+DEFINE_LEVEL(NetworkLevel)
 void Load() override;
 };  // namespace Isetta
 
 // HandleMessage simply sends an integer handle between 0 and 64 across the
 // network
-RPC_MESSAGE_DEFINE(HandleMessage)
+DEFINE_NETWORK_MESSAGE(HandleMessage)
 
 // IMPORTANT: The Serialize function _must_ be a template around the Stream
 // type, and it MUST return true at the end of the function. Otherwise the
@@ -42,11 +42,11 @@ void Copy(const yojimbo::Message* otherMessage) override {
 public:
 int handle = 0;  // Obviously we'll just use a handle
 
-RPC_MESSAGE_FINISH
+DEFINE_NETWORK_MESSAGE_END
 
 // SpawnMessage not only tells the machine to spawn a character, but also
 // grants it a network ID, clientAuthority, and possibly a parent network ID
-RPC_MESSAGE_DEFINE(SpawnMessage)
+DEFINE_NETWORK_MESSAGE(SpawnMessage)
 
 // Again, we HAVE to implement this function...
 template <typename Stream>
@@ -82,10 +82,10 @@ int clientAuthorityId = 0;
 int parentId = 0;
 float b = 0, c = 0;  // These are unimportant, they're just testing values
 
-RPC_MESSAGE_FINISH
+DEFINE_NETWORK_MESSAGE_END
 
 // DespawnMessage pretty much just tells the machine who to despawn
-RPC_MESSAGE_DEFINE(DespawnMessage)
+DEFINE_NETWORK_MESSAGE(DespawnMessage)
 
 DespawnMessage() { netId = 0; }
 
@@ -104,5 +104,5 @@ void Copy(const yojimbo::Message* otherMessage) override {
 
 int netId;
 
-RPC_MESSAGE_FINISH
+DEFINE_NETWORK_MESSAGE_END
 }  // namespace Isetta

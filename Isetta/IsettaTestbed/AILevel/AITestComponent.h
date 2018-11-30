@@ -6,7 +6,7 @@
 #include "AI/Nav2DPlane.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(AITestComponent, Component, true)
+DEFINE_COMPONENT(AITestComponent, Component, true)
 // A Nav2DPlane is a representation of a navigatable 2D plane
 Nav2DPlane navPlane;
 
@@ -20,5 +20,5 @@ void Update() override;
 void Awake() override;
 Transform* trackingEntity;
 Array<Nav2DAgent*> agents;
-END_COMPONENT(AITestComponent, Component)
+DEFINE_COMPONENT_END(AITestComponent, Component)
 }  // namespace Isetta

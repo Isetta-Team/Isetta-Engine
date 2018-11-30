@@ -4,7 +4,7 @@
 #pragma once
 
 namespace Isetta {
-BEGIN_COMPONENT(FontExample, Component, true)
+DEFINE_COMPONENT(FontExample, Component, true)
 private:
 float fontSize;
 
@@ -13,5 +13,5 @@ FontExample(float fontSize,
             const std::string_view fontName = "Fonts\\CONSOLA.TTF");
 
 void GuiUpdate() override;
-END_COMPONENT(FontExample, Component)
+DEFINE_COMPONENT_END(FontExample, Component)
 }  // namespace Isetta

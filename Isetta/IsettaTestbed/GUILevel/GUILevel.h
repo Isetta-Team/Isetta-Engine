@@ -8,6 +8,6 @@ using namespace Isetta;
  * @brief Level demoing some of our GUI capabilities
  *
  */
-CREATE_LEVEL(GUILevel)
+DEFINE_LEVEL(GUILevel)
 void Load() override;
-CREATE_LEVEL_END
+DEFINE_LEVEL_END

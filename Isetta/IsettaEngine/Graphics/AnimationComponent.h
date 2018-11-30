@@ -5,7 +5,7 @@
 #include "Graphics/MeshComponent.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(AnimationComponent, Component, false)
+DEFINE_COMPONENT(AnimationComponent, Component, false)
 public:
 explicit AnimationComponent(MeshComponent* model);
 int AddAnimation(std::string_view animationFilename, int layer,
@@ -47,5 +47,5 @@ float blendDuration;
 
 static class RenderModule* renderModule;
 friend class RenderModule;
-END_COMPONENT(AnimationComponent, Component)
+DEFINE_COMPONENT_END(AnimationComponent, Component)
 }  // namespace Isetta

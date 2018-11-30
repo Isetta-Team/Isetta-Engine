@@ -12,7 +12,7 @@ class AudioSource;
 }  // namespace Isetta
 
 namespace KnightGame {
-BEGIN_COMPONENT(FireballCircle, Component, true)
+DEFINE_COMPONENT(FireballCircle, Component, true)
 private:
 float elapsedTime = 0, timeUp = 3.f;
 ParticleSystemComponent* particleSys = nullptr;

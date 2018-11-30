@@ -5,7 +5,7 @@
 #include "Week10MiniGame/W10GameManager.h"
 #include "Core/DataStructures/HandleBin.h"
 
-BEGIN_COMPONENT(W10NetworkManager, Isetta::Component, true)
+DEFINE_COMPONENT(W10NetworkManager, Isetta::Component, true)
 void HandleReadyMessage(int clientIdx, yojimbo::Message* message);
 void HandleSpawnMessage(yojimbo::Message* message);
 void HandleSwordPosMessage(int clientIdx, yojimbo::Message* message);
@@ -37,18 +37,18 @@ W10GameManager* gameManager;
 public:
 void Awake() override;
 void Start() override;
-END_COMPONENT(W10NetworkManager, Isetta::Component)
+DEFINE_COMPONENT_END(W10NetworkManager, Isetta::Component)
 
-RPC_MESSAGE_DEFINE(W10ReadyMessage)
+DEFINE_NETWORK_MESSAGE(W10ReadyMessage)
 template <typename Stream>
 bool Serialize(Stream* stream) {
   return true;
 }
 
 void Copy(const yojimbo::Message* otherMessage) override {}
-RPC_MESSAGE_FINISH
+DEFINE_NETWORK_MESSAGE_END
 
-RPC_MESSAGE_DEFINE(W10SpawnMessage)
+DEFINE_NETWORK_MESSAGE(W10SpawnMessage)
 template <typename Stream>
 bool Serialize(Stream* stream) {
   serialize_int(stream, netId, 0, 256);
@@ -70,9 +70,9 @@ void Copy(const yojimbo::Message* otherMessage) override {
 
 int netId = 0, clientAuthorityId = 0, swordNetId = 0;
 bool isOnRight;
-RPC_MESSAGE_FINISH
+DEFINE_NETWORK_MESSAGE_END
 
-RPC_MESSAGE_DEFINE(W10SwordPosMessage)
+DEFINE_NETWORK_MESSAGE(W10SwordPosMessage)
 template <typename Stream>
 bool Serialize(Stream* stream) {
   serialize_int(stream, swordPos, -1, 1);
@@ -86,18 +86,18 @@ void Copy(const yojimbo::Message* otherMessage) override {
 }
 
 int swordPos = 0;
-RPC_MESSAGE_FINISH
+DEFINE_NETWORK_MESSAGE_END
 
-RPC_MESSAGE_DEFINE(W10AttackAttemptMessage)
+DEFINE_NETWORK_MESSAGE(W10AttackAttemptMessage)
 template <typename Stream>
 bool Serialize(Stream* stream) {
   return true;
 }
 
 void Copy(const yojimbo::Message* otherMessage) override {}
-RPC_MESSAGE_FINISH
+DEFINE_NETWORK_MESSAGE_END
 
-RPC_MESSAGE_DEFINE(W10PositionReportMessage)
+DEFINE_NETWORK_MESSAGE(W10PositionReportMessage)
 template <typename Stream>
 bool Serialize(Stream* stream) {
   serialize_float(stream, positionX);
@@ -111,9 +111,9 @@ void Copy(const yojimbo::Message* otherMessage) override {
 }
 
 float positionX;
-RPC_MESSAGE_FINISH
+DEFINE_NETWORK_MESSAGE_END
 
-RPC_MESSAGE_DEFINE(W10AttackResultMessage)
+DEFINE_NETWORK_MESSAGE(W10AttackResultMessage)
 template <typename Stream>
 bool Serialize(Stream* stream) {
   serialize_int(stream, result, 0, 3);
@@ -127,9 +127,9 @@ void Copy(const yojimbo::Message* otherMessage) override {
 }
 
 int result = 0;  // 0 - Win, 1 - Lose, 2 - Blocked, 3 - Block Other
-RPC_MESSAGE_FINISH
+DEFINE_NETWORK_MESSAGE_END
 
-RPC_MESSAGE_DEFINE(W10CollectMessage)
+DEFINE_NETWORK_MESSAGE(W10CollectMessage)
 template <typename Stream>
 bool Serialize(Stream* stream) {
   serialize_int(stream, swordNetId, 0, 256);
@@ -143,4 +143,4 @@ void Copy(const yojimbo::Message* otherMessage) override {
 }
 
 int swordNetId;
-RPC_MESSAGE_FINISH
+DEFINE_NETWORK_MESSAGE_END

@@ -18,7 +18,7 @@ class MeshComponent;
 }  // namespace Isetta
 
 namespace KnightGame {
-BEGIN_COMPONENT(Enemy, Component, true)
+DEFINE_COMPONENT(Enemy, Component, true)
 private:
 CollisionHandler* handler;
 int handle;

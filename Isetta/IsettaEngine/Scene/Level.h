@@ -9,7 +9,7 @@
 #include "Core/Memory/TemplatePoolAllocator.h"
 #include "ISETTA_API.h"
 
-#define CREATE_LEVEL(NAME)                                                \
+#define DEFINE_LEVEL(NAME)                                                \
   class NAME : public Isetta::Level, public Isetta::LevelRegistry<NAME> { \
    public:                                                                \
     bool IsRegisteredInLevelManager() const { return registered; }        \
@@ -21,7 +21,7 @@
                                                                           \
    private:
 
-#define CREATE_LEVEL_END \
+#define DEFINE_LEVEL_END \
   }                      \
   ;
 

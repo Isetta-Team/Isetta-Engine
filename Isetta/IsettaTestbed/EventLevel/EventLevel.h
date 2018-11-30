@@ -3,6 +3,6 @@
  */
 #pragma once
 
-CREATE_LEVEL(EventLevel)
+DEFINE_LEVEL(EventLevel)
 void Load() override;
-CREATE_LEVEL_END
+DEFINE_LEVEL_END

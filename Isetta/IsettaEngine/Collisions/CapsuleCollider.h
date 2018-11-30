@@ -9,7 +9,7 @@ class Matrix4;
 }
 
 namespace Isetta {
-BEGIN_COMPONENT(CapsuleCollider, Collider, false)
+DEFINE_COMPONENT(CapsuleCollider, Collider, false)
 private:
 #if _EDITOR
 void Update() override;
@@ -74,5 +74,5 @@ AABB GetFatAABB() final;
 AABB GetAABB() final;
 
 bool Intersection(Collider* const other) final;
-END_COMPONENT(CapsuleCollider, Collider)
+DEFINE_COMPONENT_END(CapsuleCollider, Collider)
 }  // namespace Isetta

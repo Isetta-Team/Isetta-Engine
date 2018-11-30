@@ -8,11 +8,11 @@
  *
  */
 namespace Isetta {
-BEGIN_COMPONENT(GUIComponent, Component, false)
+DEFINE_COMPONENT(GUIComponent, Component, false)
 private:
 static bool checkbox;
 
 public:
 void GuiUpdate() override;
-END_COMPONENT(GUIComponent, Component)
+DEFINE_COMPONENT_END(GUIComponent, Component)
 }  // namespace Isetta

@@ -6,7 +6,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(Inspector, Component, true)
+DEFINE_COMPONENT(Inspector, Component, true)
 public:
 class Transform* target;
 
@@ -19,5 +19,5 @@ private:
 std::string title;
 bool isOpen = true;
 RectTransform rectTransform{{30, 300, 350, 300}};
-END_COMPONENT(Inspector, Component)
+DEFINE_COMPONENT_END(Inspector, Component)
 }  // namespace Isetta

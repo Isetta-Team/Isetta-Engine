@@ -7,7 +7,7 @@
  *
  */
 namespace Isetta {
-CREATE_LEVEL(AILevel)
+DEFINE_LEVEL(AILevel)
 void Load() override;
-CREATE_LEVEL_END
+DEFINE_LEVEL_END
 }  // namespace Isetta

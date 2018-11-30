@@ -10,7 +10,7 @@ class MeshComponent;
 }
 
 namespace KnightGame {
-BEGIN_COMPONENT(SwordController, Component, true)
+DEFINE_COMPONENT(SwordController, Component, true)
 private:
 MeshComponent* const knightMesh;
 class KnightController* const knight;

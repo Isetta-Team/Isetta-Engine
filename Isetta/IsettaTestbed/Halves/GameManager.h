@@ -5,7 +5,7 @@
 #include <vector>
 
 namespace Isetta {
-BEGIN_COMPONENT(GameManager, Component, true)
+DEFINE_COMPONENT(GameManager, Component, true)
 public:
 void Start() override;
 void OnEnable() override;
@@ -22,5 +22,5 @@ float spawnRadius{10};
 float spawnInterval{2};
 float cooldown{3};
 int poolSize = 100;
-END_COMPONENT(GameManager, Component)
+DEFINE_COMPONENT_END(GameManager, Component)
 }  // namespace Isetta

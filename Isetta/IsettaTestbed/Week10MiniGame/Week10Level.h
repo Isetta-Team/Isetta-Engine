@@ -3,7 +3,7 @@
  */
 #pragma once
 namespace Isetta {
-CREATE_LEVEL(Week10Level)
+DEFINE_LEVEL(Week10Level)
 void Load() override;
-CREATE_LEVEL_END
+DEFINE_LEVEL_END
 }

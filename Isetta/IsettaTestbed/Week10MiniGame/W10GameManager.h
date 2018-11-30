@@ -5,8 +5,8 @@
 #include "W10Player.h"
 #include "W10NetworkPlayer.h"
 
-BEGIN_COMPONENT(W10GameManager, Isetta::Component, true)
+DEFINE_COMPONENT(W10GameManager, Isetta::Component, true)
 public:
 W10Player* player;
 W10NetworkPlayer* enemy;
-END_COMPONENT(W10GameManager, Isetta::Component)
+DEFINE_COMPONENT_END(W10GameManager, Isetta::Component)

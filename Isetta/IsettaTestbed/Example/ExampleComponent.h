@@ -9,8 +9,8 @@
  *  param3: Whether the component is unique on an entity (ie. [AllowMultiple=false])
  */
 namespace Isetta {
-BEGIN_COMPONENT(ExampleComponent, Component, true)
+DEFINE_COMPONENT(ExampleComponent, Component, true)
 public:
 void Update() override;
-END_COMPONENT(ExampleComponent, Component)
+DEFINE_COMPONENT_END(ExampleComponent, Component)
 }  // namespace Isetta
