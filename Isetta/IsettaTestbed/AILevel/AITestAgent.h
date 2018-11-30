@@ -5,7 +5,7 @@
 #include "AI/Nav2DAgent.h"
 #include "AI/Nav2DPlane.h"
 
-BEGIN_COMPONENT(AITestAgent, Isetta::Component, true)
+DEFINE_COMPONENT(AITestAgent, Isetta::Component, true)
 Isetta::Nav2DPlane* navPlane;
 Isetta::Nav2DAgent* navAgent;
 
@@ -27,4 +27,4 @@ void Update() override {
                           Isetta::Color::green);
 }
 
-END_COMPONENT(AITestAgent, Isetta::Component)
+DEFINE_COMPONENT_END(AITestAgent, Isetta::Component)

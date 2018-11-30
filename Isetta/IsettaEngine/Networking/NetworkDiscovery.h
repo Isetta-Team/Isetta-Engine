@@ -9,7 +9,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(NetworkDiscovery, Component, true)
+DEFINE_COMPONENT(NetworkDiscovery, Component, true)
 public:
 void FixedUpdate() override;
 void OnDestroy() override;
@@ -56,5 +56,5 @@ void CreateBroadcasterSocket();
 void CloseBroadcasterSocket();
 void BroadcastMessage(std::string_view message) const;
 int broadcasterSocket{-1};
-END_COMPONENT(NetworkDiscovery, Component)
+DEFINE_COMPONENT_END(NetworkDiscovery, Component)
 }  // namespace Isetta

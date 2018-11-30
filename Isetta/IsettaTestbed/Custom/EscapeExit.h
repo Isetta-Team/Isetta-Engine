@@ -3,12 +3,12 @@
  */
 #pragma once
 namespace Isetta {
-BEGIN_COMPONENT(EscapeExit, Component, true)
+DEFINE_COMPONENT(EscapeExit, Component, true)
 private:
 U64 handle;
 
 public:
 void OnEnable() override;
 void OnDisable() override;
-END_COMPONENT(EscapeExit, Component)
+DEFINE_COMPONENT_END(EscapeExit, Component)
 }  // namespace Isetta

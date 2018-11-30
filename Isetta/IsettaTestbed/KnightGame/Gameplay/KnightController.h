@@ -10,7 +10,7 @@ class AnimationComponent;
 }
 
 namespace KnightGame {
-BEGIN_COMPONENT(KnightController, Component, true)
+DEFINE_COMPONENT(KnightController, Component, true)
 public:
 void Start() override;
 void Update() override;

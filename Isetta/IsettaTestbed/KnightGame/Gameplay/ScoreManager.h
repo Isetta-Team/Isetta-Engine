@@ -10,7 +10,7 @@ class Font;
 }  // namespace Isetta
 
 namespace KnightGame {
-BEGIN_COMPONENT(ScoreManager, Component, true)
+DEFINE_COMPONENT(ScoreManager, Component, true)
 private:
 int score = 0;
 Font *titleFont, *scoreFont;

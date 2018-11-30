@@ -5,8 +5,8 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(NetworkMonitor, Component, true)
+DEFINE_COMPONENT(NetworkMonitor, Component, true)
 public:
 void GuiUpdate() override;
-END_COMPONENT(NetworkMonitor, Component)
+DEFINE_COMPONENT_END(NetworkMonitor, Component)
 }  // namespace Isetta

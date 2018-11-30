@@ -6,7 +6,7 @@
 #include "Core/IsettaAlias.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(EditorComponent, Component, true)
+DEFINE_COMPONENT(EditorComponent, Component, true)
 private:
 class Console* console;
 class Inspector* inspector;
@@ -25,5 +25,5 @@ EditorComponent() = default;
 
 void Awake() override;
 void OnEnable() override;
-END_COMPONENT(EditorComponent, Component)
+DEFINE_COMPONENT_END(EditorComponent, Component)
 }  // namespace Isetta

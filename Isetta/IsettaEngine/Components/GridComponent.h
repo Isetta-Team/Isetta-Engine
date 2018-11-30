@@ -7,8 +7,8 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(GridComponent, Component, false)
+DEFINE_COMPONENT(GridComponent, Component, false)
 public:
 void Update() override;
-END_COMPONENT(GridComponent, Component)
+DEFINE_COMPONENT_END(GridComponent, Component)
 }  // namespace Isetta

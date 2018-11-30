@@ -3,7 +3,7 @@
  */
 #pragma once
 namespace Isetta {
-CREATE_LEVEL(HalvesLevel)
+DEFINE_LEVEL(HalvesLevel)
 void Load() override;
-CREATE_LEVEL_END
+DEFINE_LEVEL_END
 }  // namespace Isetta

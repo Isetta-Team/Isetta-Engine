@@ -6,7 +6,7 @@
 using namespace Isetta;
 
 namespace KnightGame {
-BEGIN_COMPONENT(SpinAttack, Component, true)
+DEFINE_COMPONENT(SpinAttack, Component, true)
 private:
 const float axisMin = 0.6f;
 float startAngle = 3.14f, lastAngle;

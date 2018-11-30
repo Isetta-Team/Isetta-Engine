@@ -11,7 +11,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(Console, Component, false)
+DEFINE_COMPONENT(Console, Component, false)
 private:
 const char USER_DELIM = '|', CFG_DELIM = '=';
 
@@ -54,5 +54,5 @@ static void AddCommand(
 
 inline Array<std::string> GetHistory() { return history; }
 void Open();
-END_COMPONENT(Console, Component)
+DEFINE_COMPONENT_END(Console, Component)
 }  // namespace Isetta

@@ -2,7 +2,7 @@
 #include "Networking/Messages.h"
 #include "Core/Config/Config.h"
 
-RPC_MESSAGE_DEFINE(ClientConnectedMessage)
+DEFINE_NETWORK_MESSAGE(ClientConnectedMessage)
 template <typename Stream>
 bool Serialize(Stream* stream) {
   serialize_string(stream, ip, sizeof(ip));
@@ -24,9 +24,9 @@ char ip[16];
 char machineName[16];
 int clientIndex;
 
-RPC_MESSAGE_FINISH
+DEFINE_NETWORK_MESSAGE_END
 
-RPC_MESSAGE_DEFINE(LoadLevelMessage)
+DEFINE_NETWORK_MESSAGE(LoadLevelMessage)
 template <typename Stream>
 bool Serialize(Stream* stream) {
   serialize_string(stream, levelName, sizeof(levelName));
@@ -42,4 +42,4 @@ char levelName[64];
 
 public:
 inline const static int levelNameMaxLength = 64;
-RPC_MESSAGE_FINISH
+DEFINE_NETWORK_MESSAGE_END

@@ -3,7 +3,7 @@
  */
 #pragma once
 
-BEGIN_COMPONENT(W10Player, Isetta::Component, true)
+DEFINE_COMPONENT(W10Player, Isetta::Component, true)
 public:
 W10Player(bool isRight, int swordNetID, int clientAuthorityID);
 void Awake() override;
@@ -41,4 +41,4 @@ void ChangeSwordVerticlePosition(int direction);
 void ChangeSwordHorizontalPosition(float deltaTime);
 void SwordBlocked();
 
-END_COMPONENT(W10Player, Isetta::Component)
+DEFINE_COMPONENT_END(W10Player, Isetta::Component)

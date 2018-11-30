@@ -5,7 +5,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(NoCameraComponent, Component, true)
+DEFINE_COMPONENT(NoCameraComponent, Component, true)
 void GuiUpdate() override;
-END_COMPONENT(NoCameraComponent, Component)
+DEFINE_COMPONENT_END(NoCameraComponent, Component)
 }  // namespace Isetta

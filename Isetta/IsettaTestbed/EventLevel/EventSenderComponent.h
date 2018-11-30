@@ -3,7 +3,7 @@
  */
 #pragma once
 
-BEGIN_COMPONENT(EventSenderComponent, Isetta::Component, true)
+DEFINE_COMPONENT(EventSenderComponent, Isetta::Component, true)
 Isetta::U64 handleA{0}, handleB{0}, handleC{0};
 void Start() override;
-END_COMPONENT(EventSenderComponent, Isetta::Component)
+DEFINE_COMPONENT_END(EventSenderComponent, Isetta::Component)

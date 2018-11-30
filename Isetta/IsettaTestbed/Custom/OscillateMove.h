@@ -4,7 +4,7 @@
 #pragma once
 
 namespace Isetta {
-BEGIN_COMPONENT(OscillateMove, Component, true)
+DEFINE_COMPONENT(OscillateMove, Component, true)
 private:
 int axis = 0;
 int direction = 1;
@@ -24,5 +24,5 @@ OscillateMove(int axis = 0, float speed = 1, int direction = 1,
 
 void OnEnable() override;
 void Update() override;
-END_COMPONENT(OscillateMove, Component)
+DEFINE_COMPONENT_END(OscillateMove, Component)
 }  // namespace Isetta

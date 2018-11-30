@@ -8,7 +8,7 @@
  *
  */
 namespace Isetta {
-CREATE_LEVEL(CollisionsLevel)
+DEFINE_LEVEL(CollisionsLevel)
 void Load() override;
-CREATE_LEVEL_END
+DEFINE_LEVEL_END
 }  // namespace Isetta

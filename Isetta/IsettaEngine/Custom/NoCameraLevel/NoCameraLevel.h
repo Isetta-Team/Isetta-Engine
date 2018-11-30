@@ -6,7 +6,7 @@
 #include "Scene/Level.h"
 
 namespace Isetta {
-CREATE_LEVEL(NoCameraLevel)
+DEFINE_LEVEL(NoCameraLevel)
 void Load() override;
-CREATE_LEVEL_END
+DEFINE_LEVEL_END
 }  // namespace Isetta

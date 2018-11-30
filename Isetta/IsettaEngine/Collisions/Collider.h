@@ -31,7 +31,7 @@ namespace Isetta {
     };                                                      \
   }
 
-BEGIN_COMPONENT(Collider, Component, false)
+DEFINE_COMPONENT(Collider, Component, false)
 public:
 bool isTrigger = false;
 Math::Vector3 center;
@@ -88,5 +88,5 @@ virtual ColliderType GetType() const = 0;
 virtual bool Intersection(Collider* other) = 0;
 void RaycastHitCtor(class RaycastHit* hitInfo, float distance,
                     const Math::Vector3& point, const Math::Vector3& normal);
-END_COMPONENT(Collider, Component)
+DEFINE_COMPONENT_END(Collider, Component)
 }  // namespace Isetta

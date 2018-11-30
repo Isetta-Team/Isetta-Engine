@@ -9,7 +9,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(MeshComponent, Component, false)
+DEFINE_COMPONENT(MeshComponent, Component, false)
 H3DNode renderNode{0};
 H3DRes renderResource{0};
 
@@ -40,5 +40,5 @@ std::tuple<Math::Vector3, Math::Quaternion> GetJointWorldTransform(
     std::string jointName);
 
 static class RenderModule* renderModule;
-END_COMPONENT(MeshComponent, Component)
+DEFINE_COMPONENT_END(MeshComponent, Component)
 }  // namespace Isetta

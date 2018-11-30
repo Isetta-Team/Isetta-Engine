@@ -4,12 +4,12 @@
 #pragma once
 
 namespace Isetta {
-BEGIN_COMPONENT(EventListenerComponent, Component, true)
+DEFINE_COMPONENT(EventListenerComponent, Component, true)
 private:
 int handle;
 
 public:
 void OnEnable() override;
 void OnDisable() override;
-END_COMPONENT(EventListenerComponent, Component)
+DEFINE_COMPONENT_END(EventListenerComponent, Component)
 }  // namespace Isetta

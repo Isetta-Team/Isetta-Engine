@@ -11,7 +11,7 @@ class Channel;
 }
 
 namespace Isetta {
-BEGIN_COMPONENT(AudioSource, Component, false)
+DEFINE_COMPONENT(AudioSource, Component, false)
 public:
 enum class Property {
   IS_3D,
@@ -70,5 +70,5 @@ std::bitset<3> properties;
 
 static class AudioModule* audioModule;
 friend class AudioModule;
-END_COMPONENT(AudioSource, Component);
+DEFINE_COMPONENT_END(AudioSource, Component);
 }  // namespace Isetta

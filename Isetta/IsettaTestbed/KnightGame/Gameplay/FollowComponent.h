@@ -10,7 +10,7 @@ class Entity;
 }  // namespace Isetta
 
 namespace KnightGame {
-BEGIN_COMPONENT(FollowComponent, Component, true)
+DEFINE_COMPONENT(FollowComponent, Component, true)
 private:
 Entity* const follow;
 bool direction[3];

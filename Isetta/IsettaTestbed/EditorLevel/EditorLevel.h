@@ -8,7 +8,7 @@
  *
  */
 namespace Isetta {
-CREATE_LEVEL(EditorLevel)
+DEFINE_LEVEL(EditorLevel)
 void Load() override;
-CREATE_LEVEL_END
+DEFINE_LEVEL_END
 }  // namespace Isetta
