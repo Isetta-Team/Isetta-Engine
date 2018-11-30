@@ -20,7 +20,7 @@ void UpdateTransform() const;
 void UpdateEmitter(float deltaTime) const;
 
 protected:
-static H3DRes LoadResourceFromFile(std::string_view resourceName, bool isEngineResource);
+static H3DRes LoadResourceFromFile(std::string_view resourceName);
 void Awake() override;
 void OnEnable() override;
 void OnDisable() override;

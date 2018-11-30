@@ -81,7 +81,7 @@ void GUIModule::StartUp(const GLFWwindow* win) {
   // IM_ASSERT(font != NULL);
   const std::string fontName = "Lato-Regular";
   const std::string filepath =
-      CONFIG_VAL(enginePath) + "\\fonts\\" + fontName + ".ttf";
+      CONFIG_VAL(resourcePath) + "\\fonts\\" + fontName + ".ttf";
   const float fontSize = CONFIG_VAL(guiConfig.defaultFontSize);
   auto font = io.Fonts->AddFontFromFileTTF(filepath.c_str(), fontSize);
   std::unordered_map<float, Font*> fontSizes{

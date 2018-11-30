@@ -158,7 +158,6 @@
     <ClCompile Include="NetworkLevel\NetworkLevel.cpp">
       <Filter>NetworkLevel</Filter>
     </ClCompile>
-    <ClCompile Include="LevelLoadingLevel\LoadNextLevel.cpp" />
     <ClCompile Include="AILevel\AITestComponent.cpp">
       <Filter>AILevel</Filter>
     </ClCompile>
@@ -169,6 +168,9 @@
       <Filter>NetworkLevel</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="LevelLoadingLevel\LoadNextLevel.cpp">
+      <Filter>LevelLoadingLevel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />

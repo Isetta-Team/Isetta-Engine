@@ -23,7 +23,7 @@ class ISETTA_API_DECLARE RenderModule {
                              "pipelines/forward.pipeline.xml"};
   };
 
-  static void LoadResourceFromDisk(H3DRes resource, bool isEnginePath,
+  static void LoadResourceFromDisk(H3DRes resource,
                                    const std::string_view errorMessage);
 
   /**

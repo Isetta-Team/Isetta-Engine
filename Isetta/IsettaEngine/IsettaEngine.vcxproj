@@ -136,7 +136,9 @@
       <Command>XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(ConfigurationName)\Horde3D.dll" "$(TargetDir)"
 XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(ConfigurationName)\Horde3DUtils.dll" "$(TargetDir)"
 XCOPY  /Y /R "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"
-XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Debug\$(Platform)\*.dll" "$(TargetDir)"</Command>
+XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Debug\$(Platform)\*.dll" "$(TargetDir)"
+XCOPY /Y /R /S /I "$(ProjectDir)Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R "$(ProjectDir)*.cfg" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL|x64'">
@@ -159,8 +161,10 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Debug\$(Platform)\*.d
     <PostBuildEvent>
       <Command>XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\Debug\Horde3D.dll" "$(TargetDir)"
 XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\Debug\Horde3DUtils.dll" "$(TargetDir)"
-xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"
-XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Debug\$(Platform)\*.dll" "$(TargetDir)"</Command>
+XCOPY /Y /R "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"
+XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Debug\$(Platform)\*.dll" "$(TargetDir)"
+XCOPY /Y /R /S /I "$(ProjectDir)Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R "$(ProjectDir)*.cfg" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -184,8 +188,10 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Debug\$(Platform)\*.d
     <PostBuildEvent>
       <Command>XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(ConfigurationName)\Horde3D.dll" "$(TargetDir)"
 XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(ConfigurationName)\Horde3DUtils.dll" "$(TargetDir)"
-XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"
-XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*.dll" "$(TargetDir)"</Command>
+XCOPY /Y /R "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"
+XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*.dll" "$(TargetDir)"
+XCOPY /Y /R /S /I "$(ProjectDir)Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R "$(ProjectDir)*.cfg" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release DLL|x64'">
@@ -211,8 +217,10 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <PostBuildEvent>
       <Command>XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\Release\Horde3D.dll" "$(TargetDir)"
 XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\Release\Horde3DUtils.dll" "$(TargetDir)"
-XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"
-XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*.dll" "$(TargetDir)"</Command>
+XCOPY /Y /R "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"
+XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*.dll" "$(TargetDir)"
+XCOPY /Y /R /S /I "$(ProjectDir)Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R "$(ProjectDir)*.cfg" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor DLL|x64'">
@@ -238,8 +246,10 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <PostBuildEvent>
       <Command>XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\Release\Horde3D.dll" "$(TargetDir)"
 XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\Release\Horde3DUtils.dll" "$(TargetDir)"
-XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"
-XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*.dll" "$(TargetDir)"</Command>
+XCOPY /Y /R "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"
+XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*.dll" "$(TargetDir)"
+XCOPY /Y /R /S /I "$(ProjectDir)Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R "$(ProjectDir)*.cfg" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -4,12 +4,12 @@
 #include "Graphics/LightComponent.h"
 
 #include "Core/Config/Config.h"
+#include "Core/EngineResource.h"
 #include "Core/Math/Vector4.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 #include "Util.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
-#include "Core/EngineResource.h"
 
 namespace Isetta {
 
@@ -19,25 +19,24 @@ LightComponent::LightComponent() : name{} {
   ASSERT(renderModule != nullptr);
   renderModule->lightComponents.push_back(this);
 
-  renderResource = LoadResourceFromFile(EngineResource::defaultLightMat, true);
+  renderResource = LoadResourceFromFile(EngineResource::defaultLightMat);
 }
 
 LightComponent::LightComponent(std::string_view lightMaterial) {
   ASSERT(renderModule != nullptr);
   renderModule->lightComponents.push_back(this);
 
-  renderResource = LoadResourceFromFile(lightMaterial, false);
+  renderResource = LoadResourceFromFile(lightMaterial);
 }
 
-H3DRes LightComponent::LoadResourceFromFile(std::string_view resourceName, bool isEngineResource) {
+H3DRes LightComponent::LoadResourceFromFile(std::string_view resourceName) {
   H3DRes lightMatRes =
       h3dAddResource(H3DResTypes::Material, resourceName.data(), 0);
 
   RenderModule::LoadResourceFromDisk(
-      lightMatRes, isEngineResource,
-      Util::StrFormat("LightComponent::LoadResourceFromFile => "
-                      "Cannot load the resource from %s",
-                      resourceName.data()));
+      lightMatRes, Util::StrFormat("LightComponent::LoadResourceFromFile => "
+                                   "Cannot load the resource from %s",
+                                   resourceName.data()));
 
   return lightMatRes;
 }
@@ -57,8 +56,9 @@ void LightComponent::Start() {
 
 void LightComponent::OnEnable() {
   if (renderNode == 0) {
-    renderNode = h3dAddLightNode(H3DRootNode, entity->GetEntityIdString().data(), renderResource,
-                                 "LIGHTING", "SHADOWMAP");
+    renderNode =
+        h3dAddLightNode(H3DRootNode, entity->GetEntityIdString().data(),
+                        renderResource, "LIGHTING", "SHADOWMAP");
   } else {
     h3dSetNodeFlags(renderNode, 0, true);
   }
