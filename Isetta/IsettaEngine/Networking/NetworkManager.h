@@ -110,14 +110,14 @@ class ISETTA_API_DECLARE NetworkManager {
 
   ~NetworkManager() = default;
 
-  U64 AddConnectedToServerListener(const Action<>& listener) const;
-  void RemoveConnectedToServerListener(U64& handle) const;
-  U64 AddDisconnectedFromServerListener(const Action<>& listener) const;
-  void RemoveDisconnectedFromServerListener(U64& handle) const;
+  U64 RegisterConnectedToServerCallback(const Action<>& listener) const;
+  void UnregisterConnectedToServerCallback(U64& handle) const;
+  U64 RegisterDisconnectedFromServerCallback(const Action<>& listener) const;
+  void UnregisterDisconnectedFromServerCallback(U64& handle) const;
   U64 AddClientConnectedListener(const Action<ClientInfo>& listener) const;
-  void RemoveClientConnectedListener(U64& handle) const;
-  U64 AddClientDisconnectedListener(const Action<ClientInfo>& listener) const;
-  void RemoveClientDisconnectedListener(U64& handle) const;
+  void UnregisterClientConnectedCallback(U64& handle) const;
+  U64 RegisterClientDisconnectedCallback(const Action<ClientInfo>& listener) const;
+  void UnregisterClientDisconnectedCallback(U64& handle) const;
 
  private:
   NetworkManager();

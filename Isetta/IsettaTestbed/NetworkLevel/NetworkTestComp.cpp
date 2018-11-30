@@ -13,17 +13,17 @@ void NetworkTestComp::Start() {
              info.ip.c_str());
   });
 
-  NetworkManager::Instance().AddClientDisconnectedListener([](ClientInfo info) {
+  NetworkManager::Instance().RegisterClientDisconnectedCallback([](ClientInfo info) {
     LOG_INFO(Debug::Channel::Networking,
              "Client [%s] with IP [%s] is disconnected",
              info.machineName.c_str(), info.ip.c_str());
   });
 
-  NetworkManager::Instance().AddConnectedToServerListener([]() {
+  NetworkManager::Instance().RegisterConnectedToServerCallback([]() {
     LOG_INFO(Debug::Channel::Networking, "Successfully connected to server");
   });
 
-  NetworkManager::Instance().AddDisconnectedFromServerListener([]() {
+  NetworkManager::Instance().RegisterDisconnectedFromServerCallback([]() {
     LOG_INFO(Debug::Channel::Networking,
              "Successfully disconnected from server");
   });
