@@ -2,11 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Zombie.h"
-#include "Core/IsettaCore.h"
-#include "Core/Math/Random.h"
 #include "GameManager.h"
-#include "Graphics/AnimationComponent.h"
-#include "Graphics/MeshComponent.h"
 #include "PlayerController.h"
 
 namespace Isetta {

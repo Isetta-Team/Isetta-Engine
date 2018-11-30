@@ -2,13 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Week10MiniGame/W10Player.h"
-#include "Core/IsettaCore.h"
-#include "Core/Time/Time.h"
-#include "Events/Events.h"
-#include "Networking/NetworkId.h"
-#include "Networking/NetworkManager.h"
-#include "Networking/NetworkTransform.h"
-#include "Scene/Primitive.h"
 #include "W10NetworkManager.h"
 
 W10Player::W10Player(const bool isRight, const int swordNetID,

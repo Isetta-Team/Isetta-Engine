@@ -168,6 +168,7 @@
     <ClCompile Include="NetworkLevel\EmptyLevelForNetworkLoadLevel.cpp">
       <Filter>NetworkLevel</Filter>
     </ClCompile>
+    <ClCompile Include="pch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
@@ -420,5 +421,6 @@
     <ClInclude Include="NetworkLevel\EmptyLevelForNetworkLoadLevel.h">
       <Filter>NetworkLevel</Filter>
     </ClInclude>
+    <ClInclude Include="pch.h" />
   </ItemGroup>
 </Project>

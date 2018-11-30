@@ -3,10 +3,6 @@
  */
 #include "ScreenShifter.h"
 
-#include "Collisions/Collider.h"
-#include "Core/Time/Time.h"
-#include "Scene/Transform.h"
-
 using namespace Isetta;
 
 namespace KnightGame {

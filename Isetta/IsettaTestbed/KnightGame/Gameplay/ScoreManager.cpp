@@ -2,15 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #include "ScoreManager.h"
-
-//#include "Events/EventObject.h"
-#include "Core/Time/Time.h"
-#include "Events/Events.h"
-#include "Graphics/Font.h"
-#include "Graphics/GUI.h"
-#include "Graphics/RectTransform.h"
-#include "Graphics/Window.h"
-
 #include "KnightGame/Constants.h"
 
 using namespace Isetta;

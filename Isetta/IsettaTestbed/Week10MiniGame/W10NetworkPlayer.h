@@ -2,9 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Scene/Component.h"
-#include "Scene/Entity.h"
-
 BEGIN_COMPONENT(W10NetworkPlayer, Isetta::Component, true)
 int swordNetId;
 bool isOnRight;

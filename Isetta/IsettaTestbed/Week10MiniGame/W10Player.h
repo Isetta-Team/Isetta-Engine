@@ -2,7 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Scene/Component.h"
 
 BEGIN_COMPONENT(W10Player, Isetta::Component, true)
 public:

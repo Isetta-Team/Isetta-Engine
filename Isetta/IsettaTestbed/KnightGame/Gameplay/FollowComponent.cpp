@@ -3,9 +3,6 @@
  */
 #include "FollowComponent.h"
 
-#include "Scene/Entity.h"
-#include "Scene/Transform.h"
-
 using namespace Isetta;
 
 namespace KnightGame {

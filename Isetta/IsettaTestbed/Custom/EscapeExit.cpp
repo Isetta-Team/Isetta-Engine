@@ -3,10 +3,6 @@
  */
 #include "EscapeExit.h"
 
-#include "Application.h"
-#include "Input/Input.h"
-#include "Input/KeyCode.h"
-
 namespace Isetta {
 void EscapeExit::OnEnable() {
   handle = Input::RegisterKeyPressCallback(KeyCode::ESCAPE,

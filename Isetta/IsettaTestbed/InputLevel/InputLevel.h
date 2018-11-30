@@ -2,8 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Scene/IsettaLevel.h"
-
 using namespace Isetta;
 
 /**

@@ -2,9 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Input/KeyCode.h"
-#include "Scene/Component.h"
-
 namespace Isetta {
 BEGIN_COMPONENT(AudioPlay, Component, true)
 private:

@@ -2,11 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #include "InputTestComponent.h"
-
-#include "Core/Debug/Logger.h"
-#include "Core/IsettaAlias.h"
-#include "Input/Input.h"
-
 using namespace Isetta;
 
 void InputTestComponent::OnEnable() {

@@ -3,13 +3,6 @@
  */
 #include "SwordController.h"
 
-#include "Core/Debug/DebugDraw.h"
-#include "Core/Time/Time.h"
-#include "Graphics/MeshComponent.h"
-#include "Input/Input.h"
-#include "Input/KeyCode.h"
-#include "Scene/Transform.h"
-
 #include "KnightGame/Gameplay/KnightController.h"
 
 using namespace Isetta;

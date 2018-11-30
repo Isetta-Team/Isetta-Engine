@@ -2,7 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Scene/Component.h"
 
 BEGIN_COMPONENT(W10UIManager, Isetta::Component, true)
 int winning;

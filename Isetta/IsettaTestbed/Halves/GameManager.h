@@ -3,7 +3,6 @@
  */
 #pragma once
 #include <vector>
-#include "Scene/Component.h"
 
 namespace Isetta {
 BEGIN_COMPONENT(GameManager, Component, true)

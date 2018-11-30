@@ -2,14 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #include "GUILevel/GUIComponent.h"
-
-#include "Core/Color.h"
-#include "Core/Debug/Logger.h"
-#include "Core/Time/Clock.h"
-#include "EngineLoop.h"
-#include "Graphics/GUI.h"
-#include "Graphics/RectTransform.h"
-#include "Util.h"
 #include "imgui/imgui.h"
 
 using namespace Isetta;

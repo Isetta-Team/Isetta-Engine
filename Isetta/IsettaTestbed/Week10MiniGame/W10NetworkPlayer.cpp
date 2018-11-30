@@ -2,13 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Week10MiniGame/W10NetworkPlayer.h"
-#include "Networking/NetworkTransform.h"
-#include "Core/IsettaCore.h"
-#include "Events/EventObject.h"
-#include "Events/Events.h"
-#include "Networking/NetworkId.h"
 #include "W10NetworkManager.h"
-#include "Scene/Primitive.h"
 
 void W10NetworkPlayer::InitPosition() {
   entity->SetTransform(Isetta::Math::Vector3{isOnRight ? -1.f : 1.f, 0, 0},

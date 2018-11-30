@@ -3,15 +3,9 @@
  */
 #include "BVHLevel.h"
 
-#include "Collisions/CollisionHandler.h"
-#include "Collisions/SphereCollider.h"
 #include "Components/Editor/FrameReporter.h"
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
-#include "Core/Config/Config.h"
-#include "Core/DataStructures/Array.h"
-#include "Core/IsettaCore.h"
-#include "Core/Math/Random.h"
 
 #include "BVHLevel/RandomMover.h"
 #include "Components/Editor/EditorComponent.h"

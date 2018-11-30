@@ -2,7 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Scene/Component.h"
 
 /**
  * @brief Some of the GUI functionality

@@ -3,13 +3,8 @@
  */
 #include "PrimitiveLevel.h"
 
-#include "Core/Config/Config.h"
-#include "Graphics/CameraComponent.h"
-#include "Scene/Entity.h"
-
 #include "Components/FlyController.h"
 #include "Custom/EscapeExit.h"
-#include "Scene/Primitive.h"
 
 namespace Isetta {
 void PrimitiveLevel::Load() {

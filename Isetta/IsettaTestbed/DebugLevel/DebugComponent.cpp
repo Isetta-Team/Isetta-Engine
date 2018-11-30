@@ -3,13 +3,6 @@
  */
 #include "DebugComponent.h"
 
-#include "Core/Debug/DebugDraw.h"
-#include "Core/Math/Matrix4.h"
-#include "Core/Math/Vector3.h"
-#include "Core/Time/Time.h"
-#include "EngineLoop.h"
-#include "Input/Input.h"
-
 using namespace Isetta;
 
 void DebugComponent::Update() {

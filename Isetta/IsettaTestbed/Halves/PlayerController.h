@@ -3,10 +3,6 @@
  */
 #pragma once
 #include <vector>
-#include "Audio/AudioSource.h"
-#include "Graphics/AnimationComponent.h"
-#include "Scene/Component.h"
-
 namespace Isetta {
 BEGIN_COMPONENT(PlayerController, Component, true)
 public:

@@ -3,11 +3,6 @@
  */
 #include "KeyTransform.h"
 
-#include "Core/Math/Vector3.h"
-#include "Core/Time/Time.h"
-#include "Input/Input.h"
-#include "Scene/Transform.h"
-
 namespace Isetta {
 void KeyTransform::OnEnable() {
   // Translation
