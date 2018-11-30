@@ -41,7 +41,7 @@ H3DRes LightComponent::LoadResourceFromFile(std::string_view resourceName) {
   return lightMatRes;
 }
 
-void LightComponent::Start() {
+void LightComponent::Awake() {
   SetProperty<Property::RADIUS>(CONFIG_M_VAL(lightConfig, radius));
   SetProperty<Property::FOV>(CONFIG_M_VAL(lightConfig, fieldOfView));
   SetProperty<Property::COLOR>(

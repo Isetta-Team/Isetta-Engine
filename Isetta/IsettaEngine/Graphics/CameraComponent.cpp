@@ -29,7 +29,7 @@ CameraComponent::CameraComponent() : renderNode(NULL), renderResource(NULL) {
   }
 }
 
-void CameraComponent::Start() {
+void CameraComponent::Awake() {
   SetProperty<Property::FOV>(CONFIG_VAL(cameraConfig.fieldOfView));
   SetProperty<Property::NEAR_PLANE>(CONFIG_VAL(cameraConfig.nearClippingPlane));
   SetProperty<Property::FAR_PLANE>(CONFIG_VAL(cameraConfig.farClippingPlane));
