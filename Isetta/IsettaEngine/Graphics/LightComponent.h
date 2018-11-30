@@ -29,7 +29,7 @@ enum class Property {
   COLOR_MULTIPLIER
 };
 
-void Start() override;
+void Awake() override;
 void OnEnable() override;
 void OnDisable() override;
 void OnDestroy() override;
