@@ -44,7 +44,7 @@ template <Property Attr, typename T>
 T GetProperty() const;
 
 private:
-static H3DRes LoadResourceFromFile(std::string_view resourceName, bool isEngineResource);
+static H3DRes LoadResourceFromFile(std::string_view resourceName);
 
 static class RenderModule* renderModule;
 friend class RenderModule;

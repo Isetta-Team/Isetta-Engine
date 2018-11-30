@@ -58,7 +58,6 @@ class ISETTA_API Config {
 
   /// File path for the resources of game/engine
   CVarString resourcePath{"resource_path", "Resources"};
-  CVarString enginePath{"engine_path", "Includes"};
 
   /**
    * @brief Use the Filesystem to read the file, then call ProcessFile to parse

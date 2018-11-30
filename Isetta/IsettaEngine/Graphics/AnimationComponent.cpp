@@ -84,10 +84,9 @@ void AnimationComponent::OnDestroy() {
 H3DRes AnimationComponent::LoadResourceFromFile(std::string_view resourceName) {
   H3DRes res = h3dAddResource(H3DResTypes::Animation, resourceName.data(), 0);
   RenderModule::LoadResourceFromDisk(
-      res, false,
-      Util::StrFormat("AnimationComponent::LoadResourceFromFile => Cannot "
-                      "load the resource from %s",
-                      resourceName.data()));
+      res, Util::StrFormat("AnimationComponent::LoadResourceFromFile => Cannot "
+                           "load the resource from %s",
+                           resourceName.data()));
   return res;
 }
 }  // namespace Isetta

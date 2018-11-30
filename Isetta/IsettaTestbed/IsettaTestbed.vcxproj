@@ -98,17 +98,17 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)-intermediate\</IntDir>
+    <OutDir>$(SolutionDir)Build\$(ProjectName)-$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Build\$(ProjectName)-$(Platform)-$(Configuration)-intermediate\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)-intermediate\</IntDir>
+    <OutDir>$(SolutionDir)Build\$(ProjectName)-$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Build\$(ProjectName)-$(Platform)-$(Configuration)-intermediate\</IntDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor|x64'">
-    <OutDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)-intermediate\</IntDir>
+    <OutDir>$(SolutionDir)Build\$(ProjectName)-$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Build\$(ProjectName)-$(Platform)-$(Configuration)-intermediate\</IntDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -127,15 +127,16 @@
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL\*.lib;$(SolutionDir)External\imgui\lib\$(Configuration)\imgui.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)Build\IsettaEngine-$(Platform)-$(Configuration) DLL\*.lib;$(SolutionDir)External\imgui\lib\$(Configuration)\imgui.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>XCOPY /Y /R "$(ProjectDir)..\Build\IsettaEngine-$(Platform)-Debug DLL" "$(TargetDir)"</Command>
+      <Command>XCOPY /Y /R "$(SolutionDir)Build\IsettaEngine-$(Platform)-Debug DLL" "$(TargetDir)"</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>XCOPY /Y /R /S /I "$(SolutionDir)Build\IsettaEngine-$(Platform)-$(Configuration) DLL\Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R /S /I "$(ProjectDir)Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R "$(ProjectDir)*.cfg" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -193,12 +194,17 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL\*.lib;$(SolutionDir)External\imgui\lib\$(Configuration)\imgui.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)Build\IsettaEngine-$(Platform)-$(Configuration) DLL\*.lib;$(SolutionDir)External\imgui\lib\$(Configuration)\imgui.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>XCOPY /Y /R "$(ProjectDir)..\Build\IsettaEngine-$(Platform)-Release DLL" "$(TargetDir)"</Command>
+      <Command>XCOPY /Y /R "$(SolutionDir)Build\IsettaEngine-$(Platform)-Release DLL" "$(TargetDir)"</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>XCOPY /Y /R /S /I "$(SolutionDir)Build\IsettaEngine-$(Platform)-$(Configuration) DLL\Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R /S /I "$(ProjectDir)Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R "$(ProjectDir)*.cfg" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor|x64'">
     <ClCompile>
@@ -219,12 +225,17 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL\*.lib;$(SolutionDir)External\imgui\lib\Release\imgui.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\Release\Horde3D.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\Release\Horde3DUtils.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\Release\yojimbo.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)Build\IsettaEngine-$(Platform)-$(Configuration) DLL\*.lib;$(SolutionDir)External\imgui\lib\Release\imgui.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\Release\Horde3D.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\Release\Horde3DUtils.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\Release\yojimbo.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>XCOPY /Y /R "$(ProjectDir)..\Build\IsettaEngine-$(Platform)-ReleaseEditor DLL" "$(TargetDir)"</Command>
+      <Command>XCOPY /Y /R "$(SolutionDir)Build\IsettaEngine-$(Platform)-ReleaseEditor DLL" "$(TargetDir)"</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>XCOPY /Y /R /S /I "$(SolutionDir)Build\IsettaEngine-$(Platform)-$(Configuration) DLL\Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R /S /I "$(ProjectDir)Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R "$(ProjectDir)*.cfg" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AILevel\AILevel.cpp" />
