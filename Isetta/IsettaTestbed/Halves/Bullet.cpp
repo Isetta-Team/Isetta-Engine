@@ -2,9 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Bullet.h"
-#include "Core/IsettaCore.h"
 #include "GameManager.h"
-#include "Graphics/MeshComponent.h"
 #include "Zombie.h"
 
 namespace Isetta {

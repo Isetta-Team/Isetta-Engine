@@ -3,11 +3,6 @@
  */
 #include "GameManager.h"
 
-#include "Bullet.h"
-#include "Core/IsettaCore.h"
-#include "Core/Math/Random.h"
-#include "Graphics/Font.h"
-#include "Graphics/GUI.h"
 #include "PlayerController.h"
 #include "Zombie.h"
 

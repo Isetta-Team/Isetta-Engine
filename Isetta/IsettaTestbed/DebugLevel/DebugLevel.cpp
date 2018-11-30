@@ -2,12 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #include "DebugLevel.h"
-
 #include "Components/FlyController.h"
-#include "Core/Config/Config.h"
-#include "Graphics/CameraComponent.h"
-#include "Scene/Entity.h"
-
 #include "DebugComponent.h"
 
 using namespace Isetta;

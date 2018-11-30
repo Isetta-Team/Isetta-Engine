@@ -2,32 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #include "KnightMainLevel.h"
-
-#include "Audio/AudioClip.h"
-#include "Audio/AudioListener.h"
-#include "Audio/AudioSource.h"
-#include "Components/GridComponent.h"
-#include "Core/Math/Random.h"
-#include "Core/Time/Time.h"
-#include "Events/Events.h"
-#include "Graphics/AnimationComponent.h"
-#include "Graphics/CameraComponent.h"
-#include "Graphics/LightComponent.h"
-#include "Graphics/MeshComponent.h"
-#include "Graphics/ParticleSystemComponent.h"
-#include "Scene/Entity.h"
-#include "Scene/Layers.h"
-#include "Scene/Primitive.h"
-
-#include "Collisions/BoxCollider.h"
-#include "Collisions/CapsuleCollider.h"
-#include "Collisions/CollisionHandler.h"
-#include "Collisions/Collisions.h"
-
-#include "Components/AxisDrawer.h"
 #include "Components/Editor/EditorComponent.h"
-#include "Components/FlyController.h"
-
 #include "KnightGame/Constants.h"
 #include "KnightGame/Gameplay/Enemy.h"
 #include "KnightGame/Gameplay/FireballCircle.h"
@@ -37,6 +12,7 @@
 #include "KnightGame/Gameplay/ScreenShifter.h"
 #include "KnightGame/Gameplay/SpinAttack.h"
 #include "KnightGame/Gameplay/SwordController.h"
+#include "Components/AxisDrawer.h"
 
 using namespace Isetta;
 

@@ -3,8 +3,6 @@
  */
 #include "RandomMover.h"
 
-#include "Core/IsettaCore.h"
-
 namespace Isetta {
 void RandomMover::Update() {
   float dt = Time::GetDeltaTime();

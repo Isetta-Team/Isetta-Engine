@@ -2,9 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Audio/AudioSource.h"
-#include "Core/Math/Vector3.h"
-#include "Scene/Component.h"
 
 namespace Isetta {
 BEGIN_COMPONENT(Bullet, Component, true)

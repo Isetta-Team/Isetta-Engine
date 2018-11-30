@@ -3,12 +3,6 @@
  */
 #include "OscillateMove.h"
 
-#include "Core/Debug/DebugDraw.h"
-#include "Core/Math/Util.h"
-#include "Core/Time/Clock.h"
-#include "EngineLoop.h"
-#include "Scene/Transform.h"
-
 namespace Isetta {
 void OscillateMove::OnEnable() {
   if (axis < 0 || axis > Math::Vector3::ELEMENT_COUNT - 1) {

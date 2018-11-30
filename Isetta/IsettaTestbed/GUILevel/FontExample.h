@@ -2,7 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Scene/Component.h"
 
 namespace Isetta {
 BEGIN_COMPONENT(FontExample, Component, true)

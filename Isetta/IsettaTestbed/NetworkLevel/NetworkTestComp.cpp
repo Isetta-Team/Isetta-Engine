@@ -3,12 +3,7 @@
  */
 #include "NetworkTestComp.h"
 
-#include "Core/Config/Config.h"
-#include "Core/IsettaCore.h"
 #include "Core/SystemInfo.h"
-#include "Input/KeyCode.h"
-#include "Networking/NetworkDiscovery.h"
-#include "Networking/NetworkManager.h"
 
 namespace Isetta {
 void NetworkTestComp::Start() {

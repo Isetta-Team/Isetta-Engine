@@ -3,12 +3,6 @@
  */
 #include "DebugCollision.h"
 
-#include "Collisions/Collider.h"
-#include "Collisions/CollisionHandler.h"
-#include "Core/Color.h"
-#include "Scene/Entity.h"
-#include "Util.h"
-
 namespace Isetta {
 void DebugCollision::OnEnable() {
   colliders = entity->GetComponents<Collider>();

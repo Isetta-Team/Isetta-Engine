@@ -3,19 +3,12 @@
  */
 #include "HalvesLevel.h"
 
-#include "Audio/AudioListener.h"
 #include "CameraController.h"
 #include "Components/Editor/EditorComponent.h"
 #include "Components/FlyController.h"
-#include "Core/Config/Config.h"
 #include "Custom/EscapeExit.h"
 #include "GameManager.h"
-#include "Graphics/AnimationComponent.h"
-#include "Graphics/CameraComponent.h"
-#include "Graphics/Font.h"
-#include "Graphics/LightComponent.h"
 #include "PlayerController.h"
-#include "Scene/Entity.h"
 
 namespace Isetta {
 

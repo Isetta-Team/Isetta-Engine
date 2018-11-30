@@ -2,7 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #include "CameraController.h"
-#include "Core/IsettaCore.h"
 #include "PlayerController.h"
 
 namespace Isetta {

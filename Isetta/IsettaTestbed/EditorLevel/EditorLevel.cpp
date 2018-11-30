@@ -2,10 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #include "EditorLevel.h"
-
-#include "Core/Config/Config.h"
-#include "Core/IsettaCore.h"
-
 #include "Components/Editor/EditorComponent.h"
 #include "Custom/EscapeExit.h"
 

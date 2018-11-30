@@ -2,8 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Core/DataStructures/Array.h"
-#include "Scene/Component.h"
 
 using namespace Isetta;
 

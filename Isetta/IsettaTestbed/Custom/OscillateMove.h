@@ -2,8 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Core/Math/Vector3.h"
-#include "Scene/Component.h"
 
 namespace Isetta {
 BEGIN_COMPONENT(OscillateMove, Component, true)

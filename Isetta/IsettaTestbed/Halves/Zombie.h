@@ -2,9 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Audio/AudioSource.h"
-#include "Scene/Component.h"
-
 namespace Isetta {
 BEGIN_COMPONENT(Zombie, Component, true)
 public:

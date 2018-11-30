@@ -2,11 +2,10 @@
  * Copyright (c) 2018 Isetta
  */
 #include "EventListenerComponent.h"
-#include "Core/Debug/Logger.h"
-#include "Events/Events.h"
 
 namespace Isetta {
 void EventListenerComponent::OnEnable() {
+  // Register event listener to a specific event
   handle = Events::Instance().RegisterEventListener(
       "RaiseEvent", [](const Isetta::EventObject& eventObject) {
         std::string message{std::get<std::string>(eventObject.eventParams[0])};

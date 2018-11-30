@@ -3,18 +3,6 @@
  */
 #include "RaycastClick.h"
 
-#include "Core/Debug/DebugDraw.h"
-#include "Input/Input.h"
-#include "Scene/Transform.h"
-
-#include "Collisions/Collider.h"
-#include "Collisions/Collisions.h"
-#include "Collisions/RaycastHit.h"
-#include "Core/Debug/Logger.h"
-#include "Core/Geometry/Ray.h"
-#include "Graphics/CameraComponent.h"
-#include "Scene/Entity.h"
-
 namespace Isetta {
 RaycastClick::RaycastClick(bool raycastAll, float maxDistance)
     : useRaycastAll{raycastAll}, maxRayDistance{maxDistance} {}

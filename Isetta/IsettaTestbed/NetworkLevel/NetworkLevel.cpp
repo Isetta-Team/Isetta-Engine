@@ -2,24 +2,9 @@
  * Copyright (c) 2018 Isetta
  */
 #include "NetworkLevel.h"
-
-#include "Audio/AudioClip.h"
-#include "Audio/AudioListener.h"
-#include "Audio/AudioSource.h"
 #include "Components/Editor/EditorComponent.h"
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
-#include "Core/Config/Config.h"
-#include "Core/Math/Math.h"
-#include "Graphics/AnimationComponent.h"
-#include "Graphics/CameraComponent.h"
-#include "Graphics/LightComponent.h"
-#include "Input/Input.h"
-#include "Networking/NetworkDiscovery.h"
-#include "Networking/NetworkId.h"
-#include "Networking/NetworkTransform.h"
-#include "Scene/Entity.h"
-
 #include "Custom/EscapeExit.h"
 #include "Custom/KeyTransform.h"
 #include "NetworkLevel/NetworkTestComp.h"

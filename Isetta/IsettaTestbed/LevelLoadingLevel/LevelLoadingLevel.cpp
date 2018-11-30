@@ -2,15 +2,9 @@
  * Copyright (c) 2018 Isetta
  */
 #include "LevelLoadingLevel.h"
-
-#include "Core/IsettaCore.h"
-#include "Graphics/CameraComponent.h"
-
 #include "Custom/EscapeExit.h"
 #include "Custom/LevelLoadingMenu.h"
 #include "LoadNextLevel.h"
-
-#include "Graphics/Font.h"
 
 namespace Isetta {
 void LevelLoadingLevel::Load() {

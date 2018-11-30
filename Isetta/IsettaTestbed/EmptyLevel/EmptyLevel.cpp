@@ -2,12 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #include "EmptyLevel.h"
-
-#include "Core/IsettaCore.h"
-#include "Graphics/CameraComponent.h"
-
 #include "Custom/EscapeExit.h"
-#include "NetworkLevel/NetworkTestComp.h"
 
 namespace Isetta {
 
@@ -21,8 +16,5 @@ void EmptyLevel::Load() {
 
   // Escape Key exits application
   cameraEntity->AddComponent<EscapeExit>();
-
-  Entity* networkTestEntity = Entity::Instantiate("Network Test");
-  networkTestEntity->AddComponent<NetworkTestComp>();
 }
 }  // namespace Isetta

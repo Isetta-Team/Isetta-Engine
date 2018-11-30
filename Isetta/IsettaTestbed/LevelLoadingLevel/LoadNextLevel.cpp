@@ -3,12 +3,6 @@
  */
 #include "LoadNextLevel.h"
 
-#include "Core/Debug/Logger.h"
-#include "Graphics/GUI.h"
-#include "Graphics/RectTransform.h"
-#include "Scene/Level.h"
-#include "Scene/LevelManager.h"
-
 namespace Isetta {
 void LoadNextLevel::GuiUpdate() {
   if (GUI::Button(

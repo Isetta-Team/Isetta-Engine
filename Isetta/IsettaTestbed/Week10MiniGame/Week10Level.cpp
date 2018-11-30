@@ -3,10 +3,6 @@
  */
 #include "Week10MiniGame/Week10Level.h"
 #include "Components/Editor/EditorComponent.h"
-#include "Core/Config/Config.h"
-#include "Core/IsettaCore.h"
-#include "Graphics/CameraComponent.h"
-#include "Scene/Entity.h"
 #include "Week10MiniGame/W10NetworkManager.h"
 #include "Week10MiniGame/W10UIManager.h"
 

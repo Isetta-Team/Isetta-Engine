@@ -3,9 +3,6 @@
  */
 #include "ExampleComponent.h"
 
-#include "Core/IsettaCore.h"
-#include "Graphics/AnimationComponent.h"
-
 namespace Isetta {
 
 void ExampleComponent::Update() {
