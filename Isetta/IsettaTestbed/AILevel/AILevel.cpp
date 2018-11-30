@@ -4,12 +4,11 @@
 #include "AILevel.h"
 
 #include "AITestComponent.h"
-#include "Components/Editor/EditorComponent.h"
-#include "Core/IsettaCore.h"
 #include "Custom/EscapeExit.h"
 #include "Custom/KeyTransform.h"
 #include "Graphics/ParticleSystemComponent.h"
 #include "Scene/Primitive.h"
+#include "Input/Input.h"
 
 void Isetta::AILevel::Load() {
   Entity *camera = Entity::Instantiate("Camera");
@@ -22,7 +21,6 @@ void Isetta::AILevel::Load() {
                             Math::Vector3::one);
 
   camera->AddComponent<EscapeExit>();
-  // camera->AddComponent<EditorComponent>();
 
   // Create the cube you control
   Entity *moveCube{Primitive::Create(Primitive::Type::Cube)};

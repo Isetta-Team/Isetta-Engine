@@ -5,8 +5,6 @@
 #include "AI/Nav2DAgent.h"
 #include "AI/Nav2DPlane.h"
 #include "Core/DataStructures/Array.h"
-#include "Scene/Component.h"
-#include "Scene/Transform.h"
 
 namespace Isetta {
 BEGIN_COMPONENT(AITestComponent, Component, true)

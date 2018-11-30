@@ -2,7 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Scene/IsettaLevel.h"
 /**
  * @brief Level showing how navigation module works in the engine and how to use the particle system
  *

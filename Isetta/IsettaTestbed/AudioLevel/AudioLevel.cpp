@@ -3,7 +3,6 @@
  */
 #include "AudioLevel.h"
 
-#include "Core/Config/Config.h"
 #include "Core/IsettaCore.h"
 #include "Graphics/CameraComponent.h"
 

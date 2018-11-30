@@ -4,11 +4,6 @@
 #pragma once
 #include "AI/Nav2DAgent.h"
 #include "AI/Nav2DPlane.h"
-#include "Core/Debug/DebugDraw.h"
-#include "Core/Time/Time.h"
-#include "Scene/Component.h"
-#include "Scene/Transform.h"
-#include "Scene/Entity.h"
 
 BEGIN_COMPONENT(AITestAgent, Isetta::Component, true)
 Isetta::Nav2DPlane* navPlane;
