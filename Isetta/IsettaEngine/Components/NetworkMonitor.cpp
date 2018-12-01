@@ -11,7 +11,8 @@
 
 namespace Isetta {
 void NetworkMonitor::GuiUpdate() {
-  std::string log = "Invalid";
+  // Get a string that describes network role
+  std::string log = "Offline";
 
   if (NetworkManager::Instance().IsClient()) {
     log = "Client";
@@ -22,13 +23,14 @@ void NetworkMonitor::GuiUpdate() {
   }
 
   static bool isOpen = true;
+  // Draw a GUI window showing relevant information
   GUI::Window(
       RectTransform{Math::Rect{300, 80, 200, 300}, GUI::Pivot::Top,
                     GUI::Pivot::Top},
       "Network Monitor",
       [=]() {
         GUI::Text(RectTransform{Math::Rect{5, 0, 200, 50}},
-                  Util::StrFormat("Network role is %s", log.c_str()));
+                  Util::StrFormat("Network role: %s", log.c_str()));
         GUI::Text(RectTransform{Math::Rect{5, 20, 200, 50}},
                   Util::StrFormat("MachineName: %s",
                                   SystemInfo::GetMachineName().c_str()));
