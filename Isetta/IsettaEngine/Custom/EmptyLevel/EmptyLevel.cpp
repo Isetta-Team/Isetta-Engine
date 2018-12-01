@@ -5,6 +5,7 @@
 
 #include "Core/IsettaCore.h"
 #include "Graphics/CameraComponent.h"
+#include "Networking/NetworkManager.h"
 
 namespace Isetta {
 

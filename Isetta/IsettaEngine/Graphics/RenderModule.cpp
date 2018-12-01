@@ -58,10 +58,6 @@ void RenderModule::Update(float deltaTime) {
     }
     particle->UpdateEmitter(deltaTime);
   }
-  // if (cameraComponents.empty()) {
-  //  LevelManager::Instance().LoadLevel("NoCameraLevel");
-  //  return;
-  //}
   ASSERT(!cameraComponents.empty());
   CameraComponent::_main = cameraComponents.front();
   h3dRender(CameraComponent::_main->renderNode);
@@ -109,22 +105,18 @@ void RenderModule::InitResources() {  // 1. Add resources
       Config::Instance().renderConfig.hordePipeline.GetVal().c_str(), 0);
 
   LoadResourceFromDisk(
-      pipelineRes, true,
+      pipelineRes,
       "Render::InitPipeline => Error in loading pipeline resources");
 }
 
-void RenderModule::LoadResourceFromDisk(H3DRes resource, bool isEnginePath,
+void RenderModule::LoadResourceFromDisk(H3DRes resource,
                                         const std::string_view errorMessage) {
   PROFILE
   // horde3d loading won't load all resource files, it only load current
   // resource and ad nested resources into the resource list as unloaded
   // resources. So here, I need to iteratively load all unloaded resources.
   // Assumption: the resource handle is always increasing
-  std::string path;
-  if (isEnginePath)
-    path = CONFIG_VAL(enginePath);
-  else
-    path = CONFIG_VAL(resourcePath);
+  const std::string path = CONFIG_VAL(resourcePath);
   while (resource != 0 && !h3dIsResLoaded(resource)) {
     std::string filepath{h3dGetResName(resource)};
     Filesystem::Concat({path}, &filepath);

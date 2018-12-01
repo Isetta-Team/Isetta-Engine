@@ -10,8 +10,9 @@
 #include "BVHLevel/RandomMover.h"
 #include "Components/Editor/EditorComponent.h"
 #include "Custom/DebugCollision.h"
-#include "Custom/RaycastClick.h"
 #include "Custom/EscapeExit.h"
+#include "Custom/RaycastClick.h"
+#include "RandomMover.h"
 
 namespace Isetta {
 
@@ -36,6 +37,7 @@ void BVHLevel::Load() {
 
   Config::Instance().drawConfig.bvtDrawAABBs.SetVal("1");
 
+  // Enable/Disable the random movement of all entities
   static bool enable = true;
   Input::RegisterKeyPressCallback(KeyCode::SPACE, [&]() {
     enable = !enable;
@@ -44,11 +46,13 @@ void BVHLevel::Load() {
     }
   });
 
+  // Draw BVTree AABB boxes
   Input::RegisterKeyPressCallback(KeyCode::KP_ENTER, [&]() {
     Config::Instance().drawConfig.bvtDrawAABBs.SetVal(
         Config::Instance().drawConfig.bvtDrawAABBs.GetVal() ? "0" : "1");
   });
 
+  // Decrease/Increase the range the entities move with random walks
   static float range = 10;
   Input::RegisterKeyPressCallback(KeyCode::KP_7, [&]() {
     --range;
@@ -65,6 +69,7 @@ void BVHLevel::Load() {
     }
   });
 
+  // Instantiate 100 sphere collider entities with random walk in level
   Input::RegisterKeyPressCallback(KeyCode::KP_5, [&]() {
     for (int i = 0; i < 100; ++i) {
       ++count;
@@ -75,6 +80,7 @@ void BVHLevel::Load() {
       randomMovers.Back()->range = range;
       sphere->AddComponent<SphereCollider>();
       sphere->AddComponent<CollisionHandler>();
+      // Changes color of collider on collision
       sphere->AddComponent<DebugCollision>();
       const float size = 20;
       sphere->SetTransform(size *
@@ -84,6 +90,7 @@ void BVHLevel::Load() {
     }
   });
 
+  // Instantiate 1 sphere collider entity with random walk in level
   Input::RegisterKeyPressCallback(KeyCode::KP_6, [&]() {
     ++count;
     Entity* sphere{Entity::Instantiate(Util::StrFormat("Sphere (%d)", count))};
@@ -101,6 +108,7 @@ void BVHLevel::Load() {
     spheres.push(sphere);
   });
 
+  // Remove a single collider entity from the level
   Input::RegisterKeyPressCallback(KeyCode::KP_4, [&]() {
     if (!spheres.empty()) {
       count--;

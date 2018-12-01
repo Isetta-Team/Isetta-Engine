@@ -13,9 +13,11 @@ void EventLevel::Load() {
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
 
+  // Send/create event
   Entity* senderEntity = Entity::Instantiate("SenderEntity");
   senderEntity->AddComponent<EventSenderComponent>();
 
+  // Listen for event
   Entity* listenerEntity = Entity::Instantiate("ListenerEntity");
   listenerEntity->AddComponent<EventListenerComponent>();
 }

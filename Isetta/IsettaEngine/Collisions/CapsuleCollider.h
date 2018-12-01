@@ -22,18 +22,44 @@ protected:
 ColliderType GetType() const final { return Collider::ColliderType::CAPSULE; }
 
 public:
-// TODO(Jacob) refactor into an outside enum class
 enum class Direction { X_AXIS, Y_AXIS, Z_AXIS };
 
 float radius, height;
 Direction direction;
 
+/**
+ * @brief Construct a new Capsule Collider object
+ *
+ * @param radius of the capsule, scaled by max transform scale not in direction
+ * @param height of the capsule, scaled by transform scale in direction
+ * @param direction which the capsule initially lay (prior to transform
+ * rotation)
+ */
 CapsuleCollider(float radius = 0.5, float height = 2,
                 Direction direction = Direction::Y_AXIS)
     : Collider{}, radius{radius}, height{height}, direction{direction} {}
+/**
+ * @brief Construct a new Capsule Collider object
+ *
+ * @param center offset from transform position
+ * @param radius of the capsule, scaled by max transform scale not in direction
+ * @param height of the capsule, scaled by transform scale in direction
+ * @param direction which the capsule initially lay (prior to transform
+ * rotation)
+ */
 CapsuleCollider(const Math::Vector3& center, float radius = 0.5,
                 float height = 2, Direction direction = Direction::Y_AXIS)
     : Collider{center}, radius{radius}, height{height}, direction{direction} {}
+/**
+ * @brief Construct a new Capsule Collider object
+ *
+ * @param trigger whether collidable or trigger
+ * @param center offset from transform position
+ * @param radius of the capsule, scaled by max transform scale not in direction
+ * @param height of the capsule, scaled by transform scale in direction
+ * @param direction which the capsule initially lay (prior to transform
+ * rotation)
+ */
 CapsuleCollider(bool trigger, const Math::Vector3& center, float radius = 0.5,
                 float height = 2, Direction direction = Direction::Y_AXIS)
     : Collider{trigger, center},
@@ -41,11 +67,32 @@ CapsuleCollider(bool trigger, const Math::Vector3& center, float radius = 0.5,
       height{height},
       direction{direction} {}
 
+/**
+ * @brief Get the World Capsule object
+ *
+ * @param rotation transform rotation with direction axis factored in
+ * @param scale transform scale multiplied with direction axis multiplied by
+ * height and the other multiplied by radius
+ * @return float max transform scale not in direction
+ */
 float GetWorldCapsule(Math::Matrix4* rotation, Math::Matrix4* scale) const;
 
+/**
+ * @brief Cast ray at BoxCollider to determine RaycastHit.
+ *
+ * @param ray which is being cast
+ * @param hitInfo information associated with a hit of box and ray
+ * @param maxDistance that the ray will check against
+ * @return true ray intersected with BoxCollider
+ */
 bool Raycast(const Ray& ray, RaycastHit* const hitInfo,
              float maxDistance = 0) final;
 
+/**
+ * @brief Get the World Radius
+ *
+ * @return float max transform scale not in direction multiplied by radius
+ */
 inline float GetWorldRadius() const {
   switch (direction) {
     case Direction::X_AXIS:
@@ -59,6 +106,11 @@ inline float GetWorldRadius() const {
                                       transform->GetWorldScale().y);
   }
 }
+/**
+ * @brief Get the World Height object
+ *
+ * @return float transform scale in direction multiplied by height
+ */
 inline float GetWorldHeight() const {
   switch (direction) {
     case Direction::X_AXIS:

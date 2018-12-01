@@ -9,6 +9,8 @@
 namespace Isetta {
 DEFINE_COMPONENT(GridComponent, Component, false)
 public:
+#ifdef _EDITOR
 void Update() override;
+#endif
 DEFINE_COMPONENT_END(GridComponent, Component)
 }  // namespace Isetta

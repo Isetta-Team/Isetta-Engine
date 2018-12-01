@@ -114,7 +114,7 @@ class ISETTA_API_DECLARE NetworkManager {
   void UnregisterConnectedToServerCallback(U64& handle) const;
   U64 RegisterDisconnectedFromServerCallback(const Action<>& listener) const;
   void UnregisterDisconnectedFromServerCallback(U64& handle) const;
-  U64 AddClientConnectedListener(const Action<ClientInfo>& listener) const;
+  U64 RegisterClientConnectedCallback(const Action<ClientInfo>& listener) const;
   void UnregisterClientConnectedCallback(U64& handle) const;
   U64 RegisterClientDisconnectedCallback(const Action<ClientInfo>& listener) const;
   void UnregisterClientDisconnectedCallback(U64& handle) const;

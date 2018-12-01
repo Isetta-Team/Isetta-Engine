@@ -3,10 +3,10 @@
  */
 #pragma once
 #include "Core/Config/CVar.h"
+#include "Core/IsettaAlias.h"
 #include "Core/Math/Matrix4.h"
 #include "Horde3D/Horde3D/Bindings/C++/Horde3D.h"
 #include "Scene/Component.h"
-#include "Core/IsettaAlias.h"
 
 namespace Isetta {
 class Ray;
@@ -15,7 +15,7 @@ class Vector3;
 class Vector2;
 }  // namespace Math
 
-DEFINE_COMPONENT(CameraComponent, Component, true)
+DEFINE_COMPONENT(CameraComponent, Component, false)
 public:
 struct CameraConfig {
   CVar<float> fieldOfView{"field_of_view", 45.0};
@@ -32,7 +32,7 @@ enum class Property {
 
 CameraComponent();
 
-void Start() override;
+void Awake() override;
 void OnEnable() override;
 void OnDisable() override;
 void OnDestroy() override;

@@ -15,6 +15,8 @@ void GameManager::Start() {
 }
 
 void GameManager::OnEnable() {
+  // create zombie pool
+  // This is assuming game manager is only enabled once
   zombies.reserve(poolSize);
   for (int i = 0; i < poolSize; i++) {
     Entity* zombie{Entity::Instantiate(Util::StrFormat("Zombie (%d)", i))};
@@ -25,6 +27,7 @@ void GameManager::OnEnable() {
 }
 
 void GameManager::Update() {
+  // zombie spawn logic
   cooldown -= Time::GetDeltaTime();
   if (cooldown <= 0) {
     SpawnZombie();
@@ -35,6 +38,7 @@ void GameManager::Update() {
 void GameManager::GuiUpdate() {
   if (!font) font = Font::GetFont("Zombie", 48.f);
 
+  // draw tweakable values
   float base = 230;
   float padding = 20;
   GUI::SliderFloat(RectTransform{Math::Rect{-200, base, 300, 100},
@@ -52,6 +56,7 @@ void GameManager::GuiUpdate() {
 }
 
 void GameManager::SpawnZombie() const {
+  // spawn a zombie
   auto player = PlayerController::Instance();
   if (player == nullptr) return;
 
@@ -69,6 +74,7 @@ void GameManager::SpawnZombie() const {
     }
   }
 
+  // reanimate a zombie
   if (zombie != nullptr) {
     zombie->SetActive(true);
     zombie->SetTransform(zombiePos, Math::Vector3::zero,

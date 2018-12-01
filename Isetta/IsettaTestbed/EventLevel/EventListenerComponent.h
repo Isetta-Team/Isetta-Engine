@@ -3,8 +3,12 @@
  */
 #pragma once
 
+/**
+ * @brief Listen for event and output message
+ *
+ */
 namespace Isetta {
-DEFINE_COMPONENT(EventListenerComponent, Component, true)
+DEFINE_COMPONENT(EventListenerComponent, Component, false)
 private:
 int handle;
 

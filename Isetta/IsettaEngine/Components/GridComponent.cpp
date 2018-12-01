@@ -6,8 +6,11 @@
 #include "Core/Debug/DebugDraw.h"
 
 namespace Isetta {
+#ifdef _EDITOR
 void GridComponent::Update() {
+  // draw a grid and axis at origin
   DebugDraw::Grid();
   DebugDraw::Axis();
 }
+#endif
 }  // namespace Isetta

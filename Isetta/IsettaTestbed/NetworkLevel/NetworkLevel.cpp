@@ -8,6 +8,7 @@
 #include "Custom/EscapeExit.h"
 #include "Custom/KeyTransform.h"
 #include "NetworkLevel/NetworkTestComp.h"
+#include "Components/NetworkMonitor.h"
 
 using namespace Isetta;
 
@@ -348,6 +349,7 @@ void NetworkLevel::Load() {
   debugEntity->AddComponent<GridComponent>();
   debugEntity->AddComponent<EditorComponent>();
   debugEntity->AddComponent<EscapeExit>();
-  debugEntity->AddComponent<NetworkTestComp>();
   debugEntity->AddComponent<NetworkDiscovery>();
+  debugEntity->AddComponent<NetworkMonitor>(); // Draw network state as UI
+  debugEntity->AddComponent<NetworkTestComp>();
 }

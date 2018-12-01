@@ -78,7 +78,9 @@ void EngineLoop::StartUp() {
   renderModule->StartUp(windowModule->winHandle);
   inputModule->StartUp(windowModule->winHandle);
   guiModule->StartUp(windowModule->winHandle);
+#ifdef _EDITOR
   DebugDraw::StartUp();
+#endif
   collisionsModule->StartUp();
   collisionSolverModule->StartUp();
   audioModule->StartUp();
@@ -125,7 +127,9 @@ void EngineLoop::VariableUpdate(const float deltaTime) const {
   LevelManager::Instance().loadedLevel->LateUpdate();
   audioModule->Update(deltaTime);
   renderModule->Update(deltaTime);
+#ifdef _EDITOR
   DebugDraw::Update();
+#endif
   guiModule->Update(deltaTime);
   windowModule->Update(deltaTime);
   memoryManager->Update();
@@ -149,7 +153,9 @@ void EngineLoop::ShutDown() {
   audioModule->ShutDown();
   collisionsModule->ShutDown();
   collisionSolverModule->ShutDown();
+#ifdef _EDITOR
   DebugDraw::ShutDown();
+#endif
   guiModule->ShutDown();
   inputModule->ShutDown();
   renderModule->ShutDown();

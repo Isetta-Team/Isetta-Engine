@@ -23,8 +23,8 @@ AudioClip::AudioClip(const std::string_view filePath,
   clips.insert({SID(this->name.data()), this});
 }
 
-AudioClip* AudioClip::Load(std::string_view filePath,
-                           std::string_view soundName) {
+AudioClip* AudioClip::Load(const std::string_view filePath,
+                           const std::string_view soundName) {
   StringId sid = SID(soundName.data());
   if (soundName.empty()) sid = SID(filePath.data());
   auto nameClipPair = clips.find(sid);
