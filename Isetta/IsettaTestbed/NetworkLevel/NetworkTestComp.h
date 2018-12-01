@@ -7,6 +7,5 @@ namespace Isetta {
 DEFINE_COMPONENT(NetworkTestComp, Component, true)
 public:
 void Start() override;
-void GuiUpdate() override;
 DEFINE_COMPONENT_END(NetworkTestComp, Component)
 }  // namespace Isetta

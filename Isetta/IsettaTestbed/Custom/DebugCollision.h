@@ -2,8 +2,13 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+
+/**
+ * @brief Change the appearance of the collider on collision
+ *
+ */
 namespace Isetta {
-DEFINE_COMPONENT(DebugCollision, Component, true)
+DEFINE_COMPONENT(DebugCollision, Component, false)
 private:
 int collisions = 0;
 int enterHandle, exitHandle;

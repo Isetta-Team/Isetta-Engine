@@ -12,12 +12,12 @@ void Isetta::AILevel::Load() {
   camera->SetTransform(Math::Vector3{5, 5, 16}, Math::Vector3{-20, 0, 0},
                        Math::Vector3::one);
   camera->AddComponent<CameraComponent>();
+  camera->AddComponent<EscapeExit>();
+
   Entity *lightEntity{Entity::Instantiate("Light")};
   lightEntity->AddComponent<LightComponent>();
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
-
-  camera->AddComponent<EscapeExit>();
 
   // Create the cube you control
   Entity *moveCube{Primitive::Create(Primitive::Type::Cube)};

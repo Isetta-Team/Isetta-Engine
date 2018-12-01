@@ -9,6 +9,8 @@ PlayerController* PlayerController::instance;
 
 void PlayerController::OnEnable() {
   instance = this;
+
+  // initialize gunshot audio
   if (shootAudio == nullptr) {
     shootAudio = entity->AddComponent<AudioSource>(
         AudioClip::Load("Halves/Sound/gunshot.aiff"));
@@ -16,8 +18,9 @@ void PlayerController::OnEnable() {
 
   shootAudio->SetVolume(1.f);
   shootAudio->SetProperty(AudioSource::Property::IS_3D, false);
-  bullets.reserve(bulletPoolSize);
 
+  // create the bullet pool
+  bullets.reserve(bulletPoolSize);
   for (int i = 0; i < bulletPoolSize; i++) {
     Entity* bullet{Entity::Instantiate(Util::StrFormat("Bullet (%d)", i))};
     bullet->AddComponent<Bullet>();
@@ -31,6 +34,8 @@ void PlayerController::Start() {
 }
 
 void PlayerController::Update() {
+  // Legacy code, we were testing Entity::Destroy function
+  // But also an example of getting input from gamepad buttons
   if (Input::IsGamepadButtonPressed(GamepadButton::Y)) {
     auto light = LevelManager::Instance().loadedLevel->GetEntityByName("Light");
     if (light != nullptr) {
@@ -42,6 +47,7 @@ void PlayerController::Update() {
   Math::Vector3 lookDir;
   Math::Vector3 movement{};
 
+  // Get input from Gamepad joysticks
   movement +=
       Input::GetGamepadAxis(GamepadAxis::L_HORIZONTAL) * Math::Vector3::left +
       Input::GetGamepadAxis(GamepadAxis::L_VERTICAL) * Math::Vector3::forward;
@@ -81,6 +87,7 @@ void PlayerController::Update() {
 }
 
 void PlayerController::GuiUpdate() {
+  // Draw tweakable values
   float base = 50;
   float interval = 20;
   GUI::SliderFloat(RectTransform{Math::Rect{-200, base, 300, 100},
@@ -109,6 +116,7 @@ void PlayerController::Shoot() {
   shootAudio->Play();
   Entity* bullet = nullptr;
 
+  // Get a bullet from pool
   for (auto& bul : bullets) {
     if (!bul->GetActive()) {
       bullet = bul;
@@ -116,6 +124,7 @@ void PlayerController::Shoot() {
     }
   }
 
+  // Reactivate bullet
   if (bullet != nullptr) {
     bullet->SetActive(true);
     bullet->GetComponent<Bullet>()->Reactivate(
@@ -123,8 +132,6 @@ void PlayerController::Shoot() {
             transform->GetLeft() * 0.1 + transform->GetUp() * 1.5,
         transform->GetForward());
   }
-  // bulletComp->Initialize(transform->GetWorldPos(),
-  // transform->GetForward());
 }
 
 }  // namespace Isetta

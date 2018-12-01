@@ -6,6 +6,8 @@
 namespace Isetta {
 void EventListenerComponent::OnEnable() {
   // Register event listener to a specific event
+  //  param1: event name
+  //  param2: callback function
   handle = Events::Instance().RegisterEventListener(
       "RaiseEvent", [](const Isetta::EventObject& eventObject) {
         std::string message{std::get<std::string>(eventObject.eventParams[0])};
@@ -14,6 +16,7 @@ void EventListenerComponent::OnEnable() {
       });
 }
 
+// Unregister listener
 void EventListenerComponent::OnDisable() {
   Events::Instance().UnregisterEventListener("RaiseEvent", handle);
 }

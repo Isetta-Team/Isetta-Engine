@@ -2,6 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
+
 /**
  * @brief Loads the next level specified in constructor
  *

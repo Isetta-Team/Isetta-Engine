@@ -95,5 +95,6 @@ T LightComponent::GetProperty() const {
   } else if constexpr (Attr == Property::COLOR_MULTIPLIER) {
     return h3dGetNodeParamF(renderNode, H3DLight::ColorMultiplierF, 0);
   }
+  return nullptr;
 }
 }  // namespace Isetta
