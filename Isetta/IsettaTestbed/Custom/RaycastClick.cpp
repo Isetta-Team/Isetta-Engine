@@ -26,9 +26,9 @@ void RaycastClick::OnEnable() {
 }
 
 // Raycast colliders for closest hit, diplaying the closest hit
-void Raycast(const Ray& ray) {
+void RaycastClick::Raycast(const Ray& ray) {
   RaycastHit hitInfo;
-  if (Collisions::Raycast(r, &hitInfo, maxRayDistance)) {
+  if (Collisions::Raycast(ray, &hitInfo, maxRayDistance)) {
     DebugDraw::Point(hitInfo.GetPoint(), Color::red, 5, 5);
     LOG_INFO(Debug::Channel::Collisions, "Raycast Hit: %s",
              hitInfo.GetCollider()->entity->GetName().c_str());
@@ -39,7 +39,7 @@ void Raycast(const Ray& ray) {
 
 // Raycast all colliders, diplaying each hit point
 void RaycastClick::RaycastAll(const Ray& ray) {
-  Array<RaycastHit> hits = Collisions::RaycastAll(r, maxRayDistance);
+  Array<RaycastHit> hits = Collisions::RaycastAll(ray, maxRayDistance);
   LOG_INFO(Debug::Channel::Collisions, "Raycast Hits:");
   if (hits.Size() == 0) {
     LOG_INFO(Debug::Channel::Collisions, "~~~ None");
