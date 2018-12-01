@@ -8,6 +8,7 @@
 namespace Isetta {
 
 void AxisDrawer::Update() {
+  // draw the x-y-z axes at the entity's worldPos
   DebugDraw::Axis(transform->GetLocalToWorldMatrix());
 }
 }  // namespace Isetta

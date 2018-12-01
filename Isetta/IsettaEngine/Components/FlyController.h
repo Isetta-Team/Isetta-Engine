@@ -14,7 +14,6 @@ public:
 
   void OnEnable() override;
   void Update() override;
-  void GuiUpdate() override;
 
  private:
   Math::Vector2 lastFrameMousePos;
@@ -22,7 +21,7 @@ public:
   float rotY{};
   float lookRotationSpeed{-0.1f};
   float flySpeed = 15.f;
-  float flyMultiplier = 2.0f;
+  float flySpeedMultiplier = 2.0f;
   bool enableLook = true;
 DEFINE_COMPONENT_END(FlyController, Component)
 }  // namespace Isetta
