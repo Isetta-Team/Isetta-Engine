@@ -100,7 +100,7 @@ start_level = LEVEL_NAME
 |	`EditorLevel`		|	Level showing the editor components: inspector, heirarchy, and console and level loading menu  |	`ESC`: close window <br> `F1`:level menu <br> `CTRL+SHIFT+`: `H`-hierarchy, `I`-inspector, `F`-frame reporter, `C`-console, `M`-menu	|
 |	`EmptyLevel`		|	Empty level to be used as a starting point for user created levels				|	N/a				|
 |	`EventLevel`		|	Level demoing our event messaging system with sender and listener components	|	`A`: Raise a queued event <br> `S`: Raise an immediate event <br> `D` Raise three queued events with different priorities and timeframes				|
-|	`Example`			|	Level with an animating model and example component								|	`FlyController` <br> `UP_ARROW`: Move the wire box forward <br> `DOWN_ARROW`: Move the wire box backward <br> `LEFT_ARROW`: Make the wire box turn left <br> `RIGHT_ARROW`: Make the wire box turn Right |
+|	`ExampleLevel`			|	Level with an animating model and example component								|	`FlyController` <br> `UP_ARROW`: Move the wire box forward <br> `DOWN_ARROW`: Move the wire box backward <br> `LEFT_ARROW`: Make the wire box turn left <br> `RIGHT_ARROW`: Make the wire box turn Right |
 |	`GUILevel`			|	Level demoing some of our GUI capabilities										|	N/a				|
 |	`InputLevel`		|	Level demoing some of the input capabilities 									|	`A`: press/release messages <br> `MOUSE_LEFT`: message on 1st click <br> `GAMEPAD_{X,B,MOUSE_MIDDLE}`: message while pressed/down				|
 |	`LevelLoadingLevel`		|	Level showing a menu to browse levels and load specific level 										|	`ESC`: close window				|
