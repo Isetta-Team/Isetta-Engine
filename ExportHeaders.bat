@@ -11,7 +11,7 @@ set tools=Tools\
 
 REM Engine Parameters
 set engine=IsettaEngine\
-set resourceFolders=fonts primitives lights particles pipelines shaderutility
+set resourceFolders=fonts primitives lights particles pipelines shaders textures
 
 set externalFolders[0].folder=brofiler\ProfilerCore\
 set externalFolders[0].files=Brofiler.h
