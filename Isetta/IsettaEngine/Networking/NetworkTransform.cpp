@@ -336,7 +336,7 @@ void NetworkTransform::Update() {
     // TODO(Caleb): Find a way to make this more consistent
     // (netId->updateInterval isn't necessarily synced, and maxFPS does not
     // guarantee number of fixed update frames)
-    float netIdLerp = netId->updateInterval /
+    float netIdLerp = netId->updateInterval * netId->interpolationFactor /
                       (float)Config::Instance().loopConfig.maxFps.GetVal();
 
     // Translation

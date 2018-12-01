@@ -14,18 +14,46 @@ public:
 void FixedUpdate() override;
 void OnDestroy() override;
 
+/**
+ * @brief Begins broadcasting a message to the local area network through a
+ * predefined socket at a regular interval.
+ *
+ * @param data The message to broadcast
+ * @param duration The length of time to broadcast for until timing out
+ * @param interval The interval between message broadcasts
+ */
 void StartBroadcasting(const std::string &data, float duration, float interval);
 void StopBroadcasting();
 bool IsBroadcasting() const;
 
+/**
+ * @brief Begins listening for messages on the local area network through a
+ * predefined socket.
+ *
+ */
 void StartListening();
 void StopListening();
 bool IsListening() const;
 
+/**
+ * @brief Registers a callback that is run when a broadcasted message is
+ * received on a listening machine.
+ *
+ * @param onMessageReceived The function that is run when the message is
+ * received
+ * @return U64 The handle that is registered to the callback if we want to
+ * deregister it.
+ */
 U64 AddOnMessageReceivedListener(
     const std::function<void(const char *data, const char *fromIP)>
         &onMessageReceived);
-void RemoveOnMessageReceivedListener(U64& handle);
+/**
+ * @brief Removes a registered callback from running when a broadcasted message
+ * is received.
+ *
+ * @param handle Handle corresponding to the callback function to be removed.
+ */
+void RemoveOnMessageReceivedListener(U64 &handle);
 void RemoveAllOnMessageReceivedListeners();
 
 private:

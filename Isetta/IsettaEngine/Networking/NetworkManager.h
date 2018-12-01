@@ -27,6 +27,10 @@ class ISETTA_API_DECLARE NetworkManager {
  public:
   static NetworkManager& Instance();
 
+  /**
+   * @brief Enum that defines the current client connection state
+   *
+   */
   enum class ClientState {
     ConnectTokenExpired = -6,
     InvalidConnectToken = -5,
@@ -39,59 +43,156 @@ class ISETTA_API_DECLARE NetworkManager {
     Connected = 3,
   };
 
+  /**
+   * @brief Populates a message using a
+   * lambda function and sends it from the client to the server.
+   *
+   * @tparam T Class of the message to be sent
+   * @param messageInitializer Lambda function that takes a message pointer and
+   * populates its data
+   */
   template <typename T>
   void SendMessageFromClient(Action<T*> messageInitializer);
+  /**
+   * @brief Populates a message using a
+   * lambda function and sends it from the server to a client.
+   *
+   * @tparam T Class of the message to be sent
+   * @param clientIndex Index of the client that we are sending the message to
+   * @param messageInitializer Lambda function that takes a message pointer and
+   * populates its data
+   */
   template <typename T>
   void SendMessageFromServer(int clientIndex, Action<T*> messageInitializer);
 
+  /**
+   * @brief Populates a message using a
+   * lambda function and sends it from the server to all clients.
+   *
+   * @tparam T Class of the message to be sent
+   * @param messageInitializer Lambda function that takes a message pointer and
+   * populates its data
+   */
   template <typename T>
   void SendMessageFromServerToAll(Action<T*> messageInitializer);
 
-  // The following two are called when the user already have a message
+  // The following two functions are called when the user already have a message
+  /**
+   * @brief Populates a message using a reference message and sends it from the
+   * server to all clients.
+   *
+   * @tparam T Class of the message to be sent
+   * @param refMessage Message to populate our own message with
+   */
   template <typename T>
   void SendMessageFromServerToAll(yojimbo::Message* refMessage);
+  /**
+   * @brief Populates a message using a reference message and sends it from the
+   * server to all clients but the client at the given index.
+   *
+   * @tparam T Class of the message to be sent
+   * @param clientIdx Index of the client that we are sending the message to
+   * @param refMessage Message to populate our own message with
+   */
   template <typename T>
   void SendMessageFromServerToAllButClient(int clientIdx,
                                            yojimbo::Message* refMessage);
 
+  /**
+   * @brief Registers a callback function on the server for when we receive a
+   * message.
+   *
+   * @tparam T Class of the message to run the callback for
+   * @param func Function to run when the message is received
+   * @return int Handle of the function in the registry to unregister with
+   */
   template <typename T>
   int RegisterServerCallback(Action<int, yojimbo::Message*> func);
+  /**
+   * @brief Unregisters a callback function on the server corresponding to the
+   * handle.
+   *
+   * @tparam T Class of the message corresponding to the callback we want to
+   * remove
+   * @param handle Handle of the callback function in the registry that we want
+   * to remove
+   */
   template <typename T>
   void UnregisterServerCallback(int handle);
+  /**
+   * @brief Registers a callback function on the client for when we receive a
+   * message.
+   *
+   * @tparam T Class of the message to run the callback for
+   * @param func Function to run when the message is received
+   * @return int Handle of the function in the registry to unregister with
+   */
   template <typename T>
   int RegisterClientCallback(Action<yojimbo::Message*> func);
+  /**
+   * @brief Unregisters a callback function on the client corresponding to the
+   * handle.
+   *
+   * @tparam T Class of the message corresponding to the callback we want to
+   * remove
+   * @param handle Handle of the callback function in the registry that we want
+   * to remove
+   */
   template <typename T>
   void UnregisterClientCallback(int handle);
 
+  /**
+   * @brief Get the entity corresonding to the given network ID
+   *
+   * @param id The network ID of the entity that we want
+   * @return Entity* A pointer to the entity that we want; null if no such
+   * entity exists
+   */
   Entity* GetNetworkEntity(const U32 id);
+  /**
+   * @brief Get the NetworkID component corresponding to the given network ID
+   *
+   * @param id The network ID of the component that we want
+   * @return NetworkId* A pointer to the component that we want; null if no such
+   * component exists
+   */
   NetworkId* GetNetworkId(const U32 id);
 
   /**
-   * \brief Initializes the local Server object with the given address and port.
+   * @brief Initializes the local Server object with the given address and port.
    *
-   * \param serverIP Address of the server.
+   * @param serverIP Address of the server.
    */
   void StartServer(std::string_view serverIP) const;
   /**
-   * \brief Closes the local Server object and deallocates its allocated memory.
+   * @brief Closes the local Server object and deallocates its allocated memory.
    *
    */
   void StopServer() const;
   /**
-   * \brief Connects the local Client to a server at the given address.
+   * @brief Connects the local Client to a server at the given address.
    *
-   * \param serverIP Address of the server to connect the local Client to.
-   * \param onStarted Function to call when the connection request either
+   * @param serverIP Address of the server to connect the local Client to.
+   * @param onStarted Function to call when the connection request either
    * succeeds or fails. Passes a boolean indicating the success of the
    * connection.
    */
   void StartClient(std::string_view serverIP,
                    const Action<ClientState>& onStarted = nullptr) const;
   /**
-   * \brief Disconnects the local Client from the server it is connected to.
+   * @brief Disconnects the local Client from the server it is connected to.
    */
   void StopClient() const;
+  /**
+   * @brief Starts the server then starts a client and hooks it into it.
+   *
+   * @param hostIP The IP of the computer to host the server from
+   */
   void StartHost(std::string_view hostIP) const;
+  /**
+   * @brief Disconnects the client then stops the server.
+   *
+   */
   void StopHost() const;
 
   // Following three checks "pure role". i.e. a Host is not a Server
@@ -99,6 +200,12 @@ class ISETTA_API_DECLARE NetworkManager {
   bool IsHost() const;
   bool IsServer() const;
 
+  /**
+   * @brief Can only be run on the server, and tells all of the clients to load
+   * the given level.
+   *
+   * @param levelName Name of the level to be loaded by the clients
+   */
   void NetworkLoadLevel(std::string_view levelName);
 
   bool IsClientRunning() const;
@@ -110,13 +217,66 @@ class ISETTA_API_DECLARE NetworkManager {
 
   ~NetworkManager() = default;
 
+  /**
+   * @brief Registers a callback function that is called when the client
+   * connects to the server.
+   *
+   * @param listener Callback function
+   * @return U64 Handle of the callback function in the registry
+   */
   U64 RegisterConnectedToServerCallback(const Action<>& listener) const;
+  /**
+   * @brief Unregisters the corresponding callback function on the client for
+   * connecting to the server.
+   *
+   * @param handle Handle of the callback function to unregister
+   */
   void UnregisterConnectedToServerCallback(U64& handle) const;
+  /**
+   * @brief Registers a callback function that is called when the client
+   * disconnects from the server.
+   *
+   * @param listener Callback function
+   * @return U64 Handle of the callback function in the registry
+   */
   U64 RegisterDisconnectedFromServerCallback(const Action<>& listener) const;
+  /**
+   * @brief Unregisters the corresponding callback function on the client for
+   * disconnecting from the server.
+   *
+   * @param handle Handle of the callback function to unregister
+   */
   void UnregisterDisconnectedFromServerCallback(U64& handle) const;
+  /**
+   * @brief Registers a callback function that is called when the server gets a
+   * client connected to it.
+   *
+   * @param listener Callback function
+   * @return U64 Handle of the callback function in the registry
+   */
   U64 RegisterClientConnectedCallback(const Action<ClientInfo>& listener) const;
+  /**
+   * @brief Unregisters the corresponding callback function on the server for
+   * connecting to the server.
+   *
+   * @param handle Handle of the callback function to unregister
+   */
   void UnregisterClientConnectedCallback(U64& handle) const;
-  U64 RegisterClientDisconnectedCallback(const Action<ClientInfo>& listener) const;
+  /**
+   * @brief Registers a callback function that is called when the server gets a
+   * client disconnected from it.
+   *
+   * @param listener Callback function
+   * @return U64 Handle of the callback function in the registry
+   */
+  U64 RegisterClientDisconnectedCallback(
+      const Action<ClientInfo>& listener) const;
+  /**
+   * @brief Unregisters the corresponding callback function on the server for
+   * disconnecting from the server.
+   *
+   * @param handle Handle of the callback function to unregister
+   */
   void UnregisterClientDisconnectedCallback(U64& handle) const;
 
  private:

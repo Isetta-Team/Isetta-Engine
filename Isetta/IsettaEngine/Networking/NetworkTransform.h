@@ -15,16 +15,43 @@ void Start() override;
 void Update() override;
 void FixedUpdate() override;
 
+/**
+ * @brief Forcefully sends a transform over the network to be updated.
+ *
+ * @param snap Determines whether the transform should be snapped to
+ */
 void ForceSendTransform(bool snap = false);
+/**
+ * @brief Snaps our transform to its target position and stops interpolating.
+ *
+ */
 void SnapLocalTransform();
+/**
+ * @brief Sets the parent of our entity to the entity corresponding to the given
+ * network ID.
+ *
+ * @param netId The network ID corresponding to the entity who we should parent
+ * to ourself
+ * @return true if the entity with the given network ID exists
+ */
 bool SetNetworkedParent(int netId);
+/**
+ * @brief Unsets the parent of our entity
+ *
+ */
 void SetNetworkedParentToRoot();
 
+/// Distance that the entity needs to move before sending a network message for position
 float updateDistance = .01;
+/// Angle that the entity needs to rotate before sending a network message for rotation
 float updateRotation = 5;
+/// Size that the entity needs to scale before sending a network message for scale
 float updateScale = .005;
+/// Distance that the entity can move from our current position until our transform snaps to its target position
 float snapDistance = 5;
+/// Angle that the entity can rotate from our current rotation before our transform snaps to its target rotation
 float snapRotation = 30;
+/// Size that the entityi can scale from our current scale before our transform snaps to its target scale
 float snapScale = 1;
 
 private:
@@ -65,7 +92,8 @@ bool Serialize(Stream* stream) {
 }
 
 void Copy(const yojimbo::Message* otherMessage) override {
-  const ParentMessage* message = reinterpret_cast<const ParentMessage*>(otherMessage);
+  const ParentMessage* message =
+      reinterpret_cast<const ParentMessage*>(otherMessage);
 
   netId = message->netId;
   parentNetId = message->parentNetId;
@@ -76,8 +104,9 @@ int parentNetId = 0;
 
 DEFINE_NETWORK_MESSAGE_END
 
-DEFINE_NETWORK_MESSAGE(PositionMessage) template <typename Stream>
-  bool Serialize(Stream* stream) {
+DEFINE_NETWORK_MESSAGE(PositionMessage)
+template <typename Stream>
+bool Serialize(Stream* stream) {
   serialize_int(stream, netId, 0,
                 Config::Instance().networkConfig.maxNetID.GetVal());
 

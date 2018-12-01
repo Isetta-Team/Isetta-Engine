@@ -39,7 +39,7 @@ template <typename T>
 bool NetworkMessageRegistry<T>::registered =
     NetworkManager::Instance().RegisterMessageType<T>(sizeof(T), T::Create);
 
-#define DEFINE_NETWORK_MESSAGE(NAME)                                             \
+#define DEFINE_NETWORK_MESSAGE(NAME)                                         \
   class NAME : public yojimbo::Message,                                      \
                public Isetta::NetworkMessageRegistry<NAME> {                 \
    public:                                                                   \
@@ -47,7 +47,42 @@ bool NetworkMessageRegistry<T>::registered =
     static inline NAME* Create(void* memory) { return new (memory) NAME(); } \
     static std::string GetMessageName() { return #NAME; }
 
-#define DEFINE_NETWORK_MESSAGE_END               \
+// Serialize function sample below
+/**
+ * @brief Serialize the message in the given byte stream.
+ *
+ * @tparam Stream Byte stream data type given by yojimbo
+ * @param stream Byte stream to serialize the data into
+ * @return true if the serialization is successful
+ */
+/*
+  bool Serialize(Stream* stream) {
+    // Call serialize_int, serialize_string, or one of the other yojimbo
+    // serialization macros here serialize_string(stream, ip, sizeof(ip));
+    return true;  // DO NOT FORGET TO RETURN TRUE!
+  }
+*/
+
+/**
+ * @brief Copies the data from the given message into our own
+ * data.
+ *
+ * @param otherMessage The message to be copied--needs to be cast into the
+ * appropriate type first!
+ */
+// Copy function sample below
+/*
+  void Copy(const yojimbo::Message* otherMessage) override {
+    // Cast the message to our expected type first
+    const UserDefinedMessage* message =
+        reinterpret_cast<const UserDefinedMessage*>(otherMessage);
+
+    // Copy over all of the data to ourself
+    // ...
+  }
+*/
+
+#define DEFINE_NETWORK_MESSAGE_END       \
  public:                                 \
   YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS(); \
   }                                      \
@@ -91,10 +126,9 @@ class NetworkAllocator : public yojimbo::Allocator {
     if (!p) {
       return;
     }
+    // We just reset all of the memory regardless because this is LSR memory
     nextAvailable = reinterpret_cast<Size>(memPointer);
     // TrackFree(p, file, line);  // This causes a 64 byte memory leak
-
-    // Do nothing I guess? This is only supposed to be an LSR allocator
   }
 
  private:
@@ -109,11 +143,6 @@ class NetworkAllocator : public yojimbo::Allocator {
  */
 class CustomAdapter : public yojimbo::Adapter {
  public:
-  // TODO(Caleb): Change the CreateAllocator function to use our mem alloc
-  // instead of TLSF
-  // Actually, TLSF might be good if it all remains in LSR
-
-  // TODO(Caleb): something about the Linter with a const ref
   /**
    * @brief Creates a MessageFactory object that can be used to generate Message
    * objects specified by the IsettaMessageType enum.
