@@ -328,7 +328,7 @@ void Transform::RecalculateLocalToWorldMatrix() {
   localToParentMatrix.SetTopLeftMatrix3(localRot.GetMatrix3());  // rotation
   Math::Matrix4 temp;
   temp.SetDiagonal(localScale.x, localScale.y, localScale.z, 1);
-  localToParentMatrix = temp * localToParentMatrix;  // scale
+  localToParentMatrix = localToParentMatrix * temp;  // scale
   localToParentMatrix.SetCol(3, localPos, 1);
 
   if (parent != nullptr) {
