@@ -33,16 +33,46 @@ namespace Isetta {
 
 DEFINE_COMPONENT(Collider, Component, false)
 public:
+/**
+ * @brief trigger whether collidable or trigger
+ *
+ */
 bool isTrigger = false;
+/**
+ * @brief center offset from transform position
+ *
+ */
 Math::Vector3 center;
+/**
+ * @brief color of the DebugDraw collider
+ *
+ */
 Color debugColor = Color::green;
+/**
+ * @brief mass of collider, higher mass means harder to move
+ *
+ */
 float mass = 1;
 
 // TODO(Jacob) virtual Math::Vector3 ClosestPoint(Math::Vector3 point) = 0;
 // TODO(Jacob) Math::Vector3 ClosestPointOnAABB(Math::Vector3 point);
+
+/**
+ * @brief Cast ray at BoxCollider to determine RaycastHit.
+ *
+ * @param ray which is being cast
+ * @param hitInfo information associated with a hit of box and ray
+ * @param maxDistance that the ray will check against
+ * @return true ray intersected collider
+ */
 virtual bool Raycast(const class Ray& ray, class RaycastHit* const hitInfo,
                      float maxDistance = 0) = 0;
 
+/**
+ * @brief Get the World Center object
+ *
+ * @return Math::Vector3 center offset by transform position
+ */
 Math::Vector3 GetWorldCenter() const {
   return transform->WorldPosFromLocalPos(center);
 }

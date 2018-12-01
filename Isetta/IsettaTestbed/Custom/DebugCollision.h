@@ -11,7 +11,7 @@ namespace Isetta {
 DEFINE_COMPONENT(DebugCollision, Component, false)
 private:
 int collisions = 0;
-int enterHandle, exitHandle;
+U64 enterHandle, exitHandle;
 Array<class Collider*> colliders;
 class CollisionHandler* handler;
 

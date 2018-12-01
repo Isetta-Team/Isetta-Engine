@@ -7,6 +7,11 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
+/**
+ * @brief FrameReporter reports FPS, frame time, last frame time, and average
+ * frame time
+ *
+ */
 DEFINE_COMPONENT(FrameReporter, Component, false)
 public:
 void GuiUpdate() override;

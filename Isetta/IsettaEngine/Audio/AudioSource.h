@@ -22,7 +22,10 @@ enum class Property {
   LOOP,
   IS_MUTE,
 };
-// Default AudioClip to play
+/**
+ * @brief Default AudioClip to play
+ *
+ */
 class AudioClip* clip{nullptr};
 
 /**

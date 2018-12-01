@@ -64,7 +64,7 @@ void KnightMainLevel::Load() {
       Entity::Destroy(collider->entity);
       // Create Event
       EventObject eventObject{
-          GAMEOVER_EVENT, Time::GetTimeFrame(), EventPriority::HIGH, {}};
+          GAMEOVER_EVENT, Time::GetFrameCount(), EventPriority::HIGH, {}};
       // RaiseEvent
       Isetta::Events::Instance().RaiseImmediateEvent(eventObject);
     } else {

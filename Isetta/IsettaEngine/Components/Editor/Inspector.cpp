@@ -4,22 +4,22 @@
 #include "Components/Editor/Inspector.h"
 
 #include "Core/Debug/DebugDraw.h"
+#include "Core/Math/Matrix3.h"
 #include "Graphics/GUI.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 #include "imgui/imgui.h"
-#include "Core/Math/Matrix3.h"
 
 namespace Isetta {
-Inspector::Inspector(std::string title, const bool isOpen, Transform *const target)
+Inspector::Inspector(std::string title, const bool isOpen,
+                     Transform *const target)
     : target{target}, title{title}, isOpen{isOpen} {}
 
 void Inspector::GuiUpdate() {
-  if (!target) return;
-
   // Happens when selected entity is destroyed
-  if (target->entity == nullptr) {
+  if (!target || target->entity == nullptr) {
     target = nullptr;
+    GUI::Window(rectTransform, title, [&]() {}, &isOpen);
     return;
   }
 

@@ -16,7 +16,7 @@ EventObject::EventObject(std::string name, U64 frame, EventPriority priority,
 
 EventObject::EventObject(std::string name, Array<EventParam> params)
     : eventName{name},
-      timeFrame{Time::GetTimeFrame()},
+      timeFrame{Time::GetFrameCount()},
       eventPriority{EventPriority::MEDIUM},
       eventParams{params} {}
 

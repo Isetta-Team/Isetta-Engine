@@ -6,7 +6,7 @@
 
 namespace Isetta {
 
-FlyController::FlyController(bool inControl) : enableLook{inControl} {};
+FlyController::FlyController(bool enableLook) : enableLook{enableLook} {};
 
 void FlyController::OnEnable() {
   // user for look calculation

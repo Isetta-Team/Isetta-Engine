@@ -8,7 +8,7 @@ void EventSenderComponent::Start() {
     // Define an event object with name, parameters, time frame and priority
     Isetta::EventParam param{std::string{"RaiseEvent In Queue"}};
     Isetta::EventObject eventObject{"RaiseEvent",
-                                    Isetta::Time::GetTimeFrame(),
+                                    Isetta::Time::GetFrameCount(),
                                     Isetta::EventPriority::MEDIUM,
                                     {param}};
     // Raise a queued event
@@ -18,7 +18,7 @@ void EventSenderComponent::Start() {
   handleB = Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::S, [&]() {
     Isetta::EventParam param{std::string{"RaiseEvent Immediately"}};
     Isetta::EventObject eventObject{"RaiseEvent",
-                                    Isetta::Time::GetTimeFrame(),
+                                    Isetta::Time::GetFrameCount(),
                                     Isetta::EventPriority::MEDIUM,
                                     {param}};
     // Raise an immediate event
@@ -31,15 +31,15 @@ void EventSenderComponent::Start() {
     Isetta::EventParam param3{std::string{"RaiseEvent Late"}};
 
     Isetta::EventObject eventObject1{"RaiseEvent",
-                                     Isetta::Time::GetTimeFrame(),
+                                     Isetta::Time::GetFrameCount(),
                                      Isetta::EventPriority::HIGH,
                                      {param1}};
     Isetta::EventObject eventObject2{"RaiseEvent",
-                                     Isetta::Time::GetTimeFrame(),
+                                     Isetta::Time::GetFrameCount(),
                                      Isetta::EventPriority::LOW,
                                      {param2}};
     Isetta::EventObject eventObject3{"RaiseEvent",
-                                     Isetta::Time::GetTimeFrame() + 5,
+                                     Isetta::Time::GetFrameCount() + 5,
                                      Isetta::EventPriority::HIGH,
                                      {param3}};
 

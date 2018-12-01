@@ -24,14 +24,24 @@ ColliderType GetType() const final { return Collider::ColliderType::CAPSULE; }
 public:
 enum class Direction { X_AXIS, Y_AXIS, Z_AXIS };
 
+/**
+ * @brief radius before scaled by transform
+ * @brief height before scaled by transform
+ *
+ */
 float radius, height;
+/**
+ * @brief direction which the capsule initially lay (prior to transform
+ * rotation)
+ *
+ */
 Direction direction;
 
 /**
  * @brief Construct a new Capsule Collider object
  *
- * @param radius of the capsule, scaled by max transform scale not in direction
- * @param height of the capsule, scaled by transform scale in direction
+ * @param radius scaled by max transform scale not in direction
+ * @param height scaled by transform scale in direction
  * @param direction which the capsule initially lay (prior to transform
  * rotation)
  */
@@ -42,8 +52,8 @@ CapsuleCollider(float radius = 0.5, float height = 2,
  * @brief Construct a new Capsule Collider object
  *
  * @param center offset from transform position
- * @param radius of the capsule, scaled by max transform scale not in direction
- * @param height of the capsule, scaled by transform scale in direction
+ * @param radius scaled by max transform scale not in direction
+ * @param height scaled by transform scale in direction
  * @param direction which the capsule initially lay (prior to transform
  * rotation)
  */
@@ -55,8 +65,8 @@ CapsuleCollider(const Math::Vector3& center, float radius = 0.5,
  *
  * @param trigger whether collidable or trigger
  * @param center offset from transform position
- * @param radius of the capsule, scaled by max transform scale not in direction
- * @param height of the capsule, scaled by transform scale in direction
+ * @param radius scaled by max transform scale not in direction
+ * @param height scaled by transform scale in direction
  * @param direction which the capsule initially lay (prior to transform
  * rotation)
  */
@@ -78,12 +88,12 @@ CapsuleCollider(bool trigger, const Math::Vector3& center, float radius = 0.5,
 float GetWorldCapsule(Math::Matrix4* rotation, Math::Matrix4* scale) const;
 
 /**
- * @brief Cast ray at BoxCollider to determine RaycastHit.
+ * @brief Cast ray at CapsuleCollider to determine RaycastHit.
  *
  * @param ray which is being cast
  * @param hitInfo information associated with a hit of box and ray
  * @param maxDistance that the ray will check against
- * @return true ray intersected with BoxCollider
+ * @return true ray intersected collider
  */
 bool Raycast(const Ray& ray, RaycastHit* const hitInfo,
              float maxDistance = 0) final;

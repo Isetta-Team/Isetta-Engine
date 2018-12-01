@@ -87,11 +87,11 @@ void SkeletonLevel::Load() {
         positionFunc(mesh, rightFoot);
 
         Events::Instance().RaiseQueuedEvent(
-            EventObject("CustomUpdate", Time::GetTimeFrame() + 1,
+            EventObject("CustomUpdate", Time::GetFrameCount() + 1,
                         EventPriority::MEDIUM, {}));
       });
   Events::Instance().RaiseQueuedEvent(EventObject(
-      "CustomUpdate", Time::GetTimeFrame() + 1, EventPriority::MEDIUM, {}));
+      "CustomUpdate", Time::GetFrameCount() + 1, EventPriority::MEDIUM, {}));
   // cube->transform->SetLocalPos(2.f * Math::Vector3::up);
 }
 }  // namespace Isetta

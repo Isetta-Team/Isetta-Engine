@@ -129,7 +129,7 @@ void W10Player::InitPosition() {
   canOperate = false;
   Isetta::Events::Instance().RaiseQueuedEvent(
       Isetta::EventObject{"RegainInput",
-                          Isetta::Time::GetTimeFrame() + 200,
+                          Isetta::Time::GetFrameCount() + 200,
                           Isetta::EventPriority::MEDIUM,
                           {}});
 }

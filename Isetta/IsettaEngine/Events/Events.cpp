@@ -78,7 +78,7 @@ void Events::Update() {
 
   while (!eventQueue.IsEmpty()) {
     EventObject currEvent = eventQueue.Top();
-    if (currEvent.timeFrame > Time::GetTimeFrame()) {
+    if (currEvent.timeFrame > Time::GetFrameCount()) {
       break;
     }
     eventQueue.Pop();

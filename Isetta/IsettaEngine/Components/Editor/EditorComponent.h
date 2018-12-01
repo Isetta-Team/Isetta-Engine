@@ -2,10 +2,20 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Scene/Component.h"
 #include "Core/IsettaAlias.h"
+#include "Scene/Component.h"
 
 namespace Isetta {
+/**
+ * @brief EditorComponent contains other editor windows including: Console,
+ * FrameReporter, Hierarchy, and Inspector
+ *  ALT + SHIFT + M: Toggles open menu bar (can also open the other windows)
+ *  ALT + SHIFT + C: Toggles open console
+ *  ALT + SHIFT + H: Toggles open hierarchy
+ *  ALT + SHIFT + I: Toggles open inspector
+ *  ALT + SHIFT + F: Toggles open frame reporter
+ *
+ */
 DEFINE_COMPONENT(EditorComponent, Component, true)
 private:
 class Console* console;

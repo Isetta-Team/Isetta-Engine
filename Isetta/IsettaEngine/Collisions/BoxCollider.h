@@ -15,6 +15,10 @@ protected:
 ColliderType GetType() const final { return ColliderType::BOX; }
 
 public:
+/**
+ * @brief size of box before transform scale
+ *
+ */
 Math::Vector3 size;
 
 /**
@@ -44,7 +48,7 @@ BoxCollider(bool trigger, const Math::Vector3& center,
  * @param ray which is being cast
  * @param hitInfo information associated with a hit of box and ray
  * @param maxDistance that the ray will check against
- * @return true ray intersected with BoxCollider
+ * @return true ray intersected collider
  */
 bool Raycast(const class Ray& ray, RaycastHit* const hitInfo,
              float maxDistance = 0) final;

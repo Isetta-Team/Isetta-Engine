@@ -5,6 +5,11 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
+/**
+ * @brief Network monitor interface window for displaying useful networking
+ * information
+ *
+ */
 DEFINE_COMPONENT(NetworkMonitor, Component, true)
 public:
 void GuiUpdate() override;

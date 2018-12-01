@@ -21,7 +21,7 @@ namespace KnightGame {
 DEFINE_COMPONENT(Enemy, Component, true)
 private:
 CollisionHandler* handler;
-int handle;
+U64 handle;
 AudioSource* src;
 AudioClip* const swordClip;
 Entity* deadBody;
