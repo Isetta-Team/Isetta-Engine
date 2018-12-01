@@ -4,11 +4,14 @@
 #include "OscillateMove.h"
 
 namespace Isetta {
+// Check for valid axis of direction of movement (0-2)
 void OscillateMove::OnEnable() {
   if (axis < 0 || axis > Math::Vector3::ELEMENT_COUNT - 1) {
     this->SetActive(false);
   }
 }
+
+// Move the transform each update
 void OscillateMove::Update() {
   float dist = Math::Vector3::Dot(transform->GetLocalPos() - origin,
                                   transform->GetAxis(axis));

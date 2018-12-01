@@ -8,7 +8,7 @@
  *
  */
 namespace Isetta {
-DEFINE_COMPONENT(DebugComponent, Component, true)
+DEFINE_COMPONENT(DebugComponent, Component, false)
 public:
 void Update() override;
 DEFINE_COMPONENT_END(DebugComponent, Component)

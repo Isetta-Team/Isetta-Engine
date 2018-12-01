@@ -5,12 +5,15 @@
 
 namespace Isetta {
 void RandomMover::Update() {
+  // Get delta time
   float dt = Time::GetDeltaTime();
+  // Translate transform's world coordinates
   transform->TranslateWorld(velocity * dt);
 
   coolDown -= dt;
   if (coolDown <= 0) {
     coolDown = interval;
+    // Random values in each direction, with random speed
     velocity = Math::Vector3{Math::Random::GetRandom01() - 0.5f,
                              Math::Random::GetRandom01() - 0.5f,
                              Math::Random::GetRandom01() - 0.5f} *

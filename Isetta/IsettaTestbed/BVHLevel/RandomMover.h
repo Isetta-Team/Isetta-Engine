@@ -3,6 +3,10 @@
  */
 #pragma once
 
+/**
+ * @brief Moves the entity in a random direction for a given interval
+ *
+ */
 namespace Isetta {
 DEFINE_COMPONENT(RandomMover, Component, false)
 public:
@@ -15,7 +19,6 @@ float range{0.f};
 
 private:
 Math::Vector3 velocity;
-
 
 DEFINE_COMPONENT_END(RandomMover, Component)
 }  // namespace Isetta

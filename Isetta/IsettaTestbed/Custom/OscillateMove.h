@@ -3,8 +3,12 @@
  */
 #pragma once
 
+/**
+ * @brief Osciallate movement between distance at speed
+ *
+ */
 namespace Isetta {
-DEFINE_COMPONENT(OscillateMove, Component, true)
+DEFINE_COMPONENT(OscillateMove, Component, false)
 private:
 int axis = 0;
 int direction = 1;
