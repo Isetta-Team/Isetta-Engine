@@ -74,6 +74,33 @@ The configuration settings of the engine are placed with `config.cfg` within the
 For personal configuration settings, create a `user.cfg` in the same folder as `config.cfg`
 If you want any personal options when using the engine (such as selecting a level for your computer to run) without changing the `config.cfg` you will need a `user.cfg`. You will need a `user.cfg` for each project (ie. IsettaEngine, IsettaTest, and IsettaTestbed), this fill needs to be placed at the root directory of the project (not the .sln).
 
+### Predefined Components
+In our engine, we have lots of predefined components that you can use out of the box!
+- [AI](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaEngine/AI):
+
+|	Component Name			|	Component Description				|
+|		:-:			|			:-:				|
+|	[`Nav2DAgent`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaEngine/AI/Nav2DAgent.h)		|		Agent that is moved on a Nav2DPlane.			|
+|	[`Nav2DObstacle`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaEngine/AI/Nav2DObstacle.h)		|	Obstacle that blocks a Nav2DAgent's path on a Nav2DPlane.	|
+|	[`Nav2DPlane`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaEngine/AI/Nav2DPlane.h)		|	Planar surface that takes objects and targets and is used by Nav2DAgents for pathfinding and movement.	|
+
+- [Audio](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaEngine/Audio):
+
+|	Component Name			|	Component Description				|
+|		:-:			|			:-:				|
+|	[`AudioSource`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaEngine/Audio/AudioSource.h)		|		...			|
+|	[`AudioListener`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaEngine/Audio/AudioListener.h)		|		...			|
+
+- [Collisions](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaEngine/Collisions):
+
+|	Component Name			|	Component Description				|
+|		:-:			|			:-:				|
+|	[`BoxCollider`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaEngine/Collisions/BoxCollider.h)		|		...			|
+|	[`CapsuleCollider`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaEngine/Collisions/CapsuleCollider.h)		|		...			|
+|	[`SphereCollider`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaEngine/Collisions/SphereCollider.h)		|		...			|
+|	[`CollisionHandler`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaEngine/Collisions/CollisionHandler.h)		|		...			|
+
+
 ### Selectable Levels
 In your `user.cfg` add the lines: 
 ```
