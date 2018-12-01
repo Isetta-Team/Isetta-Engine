@@ -1,13 +1,17 @@
 #pragma once
-#include "Networking/Messages.h"
 #include "Core/Config/Config.h"
+#include "Networking/Messages.h"
 
+/**
+ * @brief ClientConnectedMessage is a network message that is sent from the
+ * client to the server when the client successfully connects to the server.
+ *
+ */
 DEFINE_NETWORK_MESSAGE(ClientConnectedMessage)
 template <typename Stream>
 bool Serialize(Stream* stream) {
   serialize_string(stream, ip, sizeof(ip));
   serialize_string(stream, machineName, sizeof(machineName));
-  serialize_int(stream, clientIndex, 0, CONFIG_VAL(networkConfig.maxClients));
   return true;
 }
 
@@ -17,15 +21,18 @@ void Copy(const yojimbo::Message* otherMessage) override {
 
   strcpy_s(ip, message->ip);
   strcpy_s(machineName, message->machineName);
-  clientIndex = message->clientIndex;
 }
 
-char ip[16];
-char machineName[16];
-int clientIndex;
+char ip[16];           // The IP address of the client
+char machineName[16];  // The machine name of the client
 
 DEFINE_NETWORK_MESSAGE_END
 
+/**
+ * @brief LoadLevelMessage is a network message that is sent from the server to
+ * the client to signal that a level should be loaded on each of the clients.
+ *
+ */
 DEFINE_NETWORK_MESSAGE(LoadLevelMessage)
 template <typename Stream>
 bool Serialize(Stream* stream) {
@@ -38,7 +45,7 @@ void Copy(const yojimbo::Message* otherMessage) override {
   strcpy_s(levelName, message->levelName);
 }
 
-char levelName[64];
+char levelName[levelNameMaxLength];  // Name of the level to be loaded
 
 public:
 inline const static int levelNameMaxLength = 64;

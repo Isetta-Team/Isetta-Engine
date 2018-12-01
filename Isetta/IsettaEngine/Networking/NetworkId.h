@@ -16,9 +16,13 @@ void OnDestroy() override;
 
 bool HasClientAuthority() const;
 
+/// Network ID that corresponds to our entity
 U32 id = 0;
+/// Client ID of the client who has authority over this entity
 int clientAuthorityId = 0;
+/// Update interval of any networked components on this entity
 int updateInterval = 5;
+// Interpolation speed of any networked components on this entity
 float interpolationFactor = 1;
 
 friend class NetworkManager;
