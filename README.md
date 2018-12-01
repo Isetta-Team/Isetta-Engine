@@ -82,35 +82,39 @@ start_level = LEVEL_NAME
 ```
 `LEVEL_NAME` can then be replaced with any of these options:
 - When running IsettaEngine:
+[Level Folder](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaEngine/Custom)
 
 |	Level Name			|	Level Description																|	Level Inputs	|
 |		:-:				|			:-:																		|		:-:			|
-|	`NoCameraLevel`		|	Level that may be used when the user doesn't have a camera in their own level	|	N/a 			|
+|	[`EmptyLevel`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaEngine/Custom/EmptyLevel)		|	Empty level to be used as a starting point for user created levels				|	N/a				|
+|	[`NoCameraLevel`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaEngine/Custom/NoCameraLevel)		|	Level that may be used when the user doesn't have a camera in their own level	|	N/a 			|
 
 - When running IsettaTestBed:
+[Level Folder](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaTestbed)
 
 |	Level Name			|	Level Description																|	Level Inputs	|
 |		:-:				|			:-:																		|		:-:			|
-|	`AILevel`			|	Level showing how navigation module works in the engine and how to use the particle system                                                               |	`WASD`: Move the cube around <br> `J`: Spawn one navigation agent <br> `K`: Spawn one hundred navigation agent <br> `L`: Turn off the fire <br> `O`: Turn on the fire <br> `P`: Remove the top left target				|
-|	`AudioLevel`		|	Level with 2D and 3D audio looping and one shot 								|	`NUM2`: 2D audio play/pause loop <br> `NUM3`: 3D audio play/pause one shot	|
-|	`BVHLevel`			|	Level testing our dynamic AABB tree												|	`FlyController` <br> `LEFT_CLICK`: Raycast colliders <br> `KP_5`: Spawn 100 entities each with their sphere collider <br> `KP_6`: Spawn 1 entity with sphere collider <br> `KP_4`: Destroy an entity spawn <br> `KP_ENTER`: Show/Hide AABB of spheres <br> `SPACE`: Start/Stop spheres from moving <br> `KP_7`: Decrease spheres' movement range <br> `KP_9`: Increase spheres' movement range |
-|	`CollisionsLevel`	|	Level testing our collision intersections										|	`FlyController` <br> `LEFT_CLICK`: Raycast colliders
-|   `CollisionSolverLevel`	|	Level testing our collision solving system							|   `FlyController` <br> `KeyTransform` <br> `1`: Select the box collider to move <br> `2`: Select the sphere collider to move <br> `3`: Select the capsule collider to move <br> `9`: Decrease the mass of the sphere collider by 10 (can go negative) <br> `0`: Increase the mass of the sphere collider by 10
-|	`Debug Level`		|	Level demoing our debug drawing capabilities									|	`FlyController` <br> `V`: Draw ray in a circle while pressed <br> `B`: Draw plane while pressed	|
-|	`EditorLevel`		|	Level showing the editor components: inspector, heirarchy, and console and level loading menu  |	`ESC`: close window <br> `F1`:level menu <br> `CTRL+SHIFT+`: `H`-hierarchy, `I`-inspector, `F`-frame reporter, `C`-console, `M`-menu	|
-|	`EmptyLevel`		|	Empty level to be used as a starting point for user created levels				|	N/a				|
-|	`EventLevel`		|	Level demoing our event messaging system with sender and listener components	|	`A`: Raise a queued event <br> `S`: Raise an immediate event <br> `D` Raise three queued events with different priorities and timeframes				|
-|	`ExampleLevel`			|	Level with an animating model and example component								|	`FlyController` <br> `UP_ARROW`: Move the wire box forward <br> `DOWN_ARROW`: Move the wire box backward <br> `LEFT_ARROW`: Make the wire box turn left <br> `RIGHT_ARROW`: Make the wire box turn Right |
-|	`GUILevel`			|	Level demoing some of our GUI capabilities										|	N/a				|
-|	`InputLevel`		|	Level demoing some of the input capabilities 									|	`A`: press/release messages <br> `MOUSE_LEFT`: message on 1st click <br> `GAMEPAD_{X,B,MOUSE_MIDDLE}`: message while pressed/down				|
-|	`LevelLoadingLevel`		|	Level showing a menu to browse levels and load specific level 										|	`ESC`: close window				|
-|	`MeshAnimLevel`		|	Level with a mesh that is being animated 										|	`FlyController`				|
-|	`NetworkLevel`		|	Level demoing some of our networking capabilities. The `default_server_ip` in config should be set to your LAN IP for this level to work. |	`FlyController` <br> `Y`: Spawn a zombie across the network <br> `H`: Despawn a zombie across the network (can only be done by the spawner!) <br> `U`: Spawn a zombie and set its parent to the previously spawned zombie <br> `I`: Parent the previously spawned zombie to the zombie spawned before it <br> `K`: Unparent the previously spawned zombie from its parent <br> `P`: Send a generic handle message with integer 0 <br>  `O`: Send a generic handle message with integer 1 <br> `Mouse Left`: Send a generic handle message with integer 2 <br> `F1`: Start host <br> `F2`: Start pure server <br> `F3`: Start client <br> `NUM1`: Start broadcasting messages to all computers in LAN <br> `NUM2`: Start listening to broadcast messages <br> `Keypad9`: Switch to another level using `NetworkLoadLevel` <br> `Keypad7`: Switch back to NetworkLevel using `NetworkLoadLevel` |
-|	`PrimitiveLevel`	|	Level displaying all the types of primitive objects 							|	`FlyController`				|
-|	`SkeletonLevel`		|	Level displaying a mesh and entities used to follow the skeleton 				|	N/a				|
-|	`Halves`			|	First demo twin-stick shooter game we created! Only support gamepads			| `LFET_STICK`: move around <br> `RIGHT_STICK`: shoot |
-|	`KnightGame`		|	Game with a knight and a sword, can you take down the most training dummies?	|	`LEFT_STICK`: moves knight <br> `RIGHT_TRIGGER`: raises/lowers sword <br> `RIGHT_STICK`: spin it in a complete circle for flame protection	|
-|	`Week10MiniGame`	|	First demo game with networking. Fool your enemy with your sword young man!		|	`NUM1`: Start as a host <br> `NUM2`: Start as a client <br> `R`: Ready for the fight <br> `AD`: Move left or right <br> `Up/Down Arrow`: Switch the sword position <br> `Space`: Stab!				|
+|	[`AILevel`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaTestbed/AILevel)			|	Level showing how navigation module works in the engine and how to use the particle system                                                               |	`WASD`: Move the cube around <br> `J`: Spawn one navigation agent <br> `K`: Spawn one hundred navigation agent <br> `L`: Turn off the fire <br> `O`: Turn on the fire <br> `P`: Remove the top left target				|
+|	[`AudioLevel`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaTestbed/AudioLevel)		|	Level with 2D and 3D audio looping and one shot 								|	`NUM2`: 2D audio play/pause loop <br> `NUM3`: 3D audio play/pause one shot	|
+|	[`BVHLevel`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaTestbed/BVHLevel)			|	Level testing our dynamic AABB tree												|	`FlyController` <br> `LEFT_CLICK`: Raycast colliders <br> `KP_5`: Spawn 100 entities each with their sphere collider <br> `KP_6`: Spawn 1 entity with sphere collider <br> `KP_4`: Destroy an entity spawn <br> `KP_ENTER`: Show/Hide AABB of spheres <br> `SPACE`: Start/Stop spheres from moving <br> `KP_7`: Decrease spheres' movement range <br> `KP_9`: Increase spheres' movement range |
+|	[`CollisionsLevel`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaTestbed/CollisionsLevel)	|	Level testing our collision intersections										|	`FlyController` <br> `LEFT_CLICK`: Raycast colliders
+|   [`CollisionSolverLevel`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaTestbed/CollisionSolverLevel)	|	Level testing our collision solving system							|   `FlyController` <br> `KeyTransform` <br> `1`: Select the box collider to move <br> `2`: Select the sphere collider to move <br> `3`: Select the capsule collider to move <br> `9`: Decrease the mass of the sphere collider by 10 (can go negative) <br> `0`: Increase the mass of the sphere collider by 10
+|	[`DebugLevel`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaTestbed/DebugLevel)		|	Level demoing our debug drawing capabilities									|	`FlyController` <br> `V`: Draw ray in a circle while pressed <br> `B`: Draw plane while pressed	|
+|	[`EditorLevel`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaTestbed/EditorLevel)		|	Level showing the editor components: inspector, heirarchy, and console and level loading menu  |	`ESC`: close window <br> `F1`:level menu <br> `CTRL+SHIFT+`: `H`-hierarchy, `I`-inspector, `F`-frame reporter, `C`-console, `M`-menu	|
+|	[`EmptyLevel`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaTestbed/EmptyLevel)		|	Empty level to be used as a starting point for user created levels				|	N/a				|
+|	[`EventLevel`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaTestbed/EventLevel)		|	Level demoing our event messaging system with sender and listener components	|	`A`: Raise a queued event <br> `S`: Raise an immediate event <br> `D` Raise three queued events with different priorities and timeframes				|
+|	[`ExampleLevel`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaTestbed/ExampleLevel)			|	Level with an animating model and example component								|	`FlyController` <br> `UP_ARROW`: Move the wire box forward <br> `DOWN_ARROW`: Move the wire box backward <br> `LEFT_ARROW`: Make the wire box turn left <br> `RIGHT_ARROW`: Make the wire box turn Right |
+|	[`GUILevel`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaTestbed/GUILevel)			|	Level demoing some of our GUI capabilities										|	N/a				|
+|	[`InputLevel`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaTestbed/InputLevel)		|	Level demoing some of the input capabilities 									|	`A`: press/release messages <br> `MOUSE_LEFT`: message on 1st click <br> `GAMEPAD_{X,B,MOUSE_MIDDLE}`: message while pressed/down				|
+|	[`LevelLoadingLevel`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaTestbed/LevelLoadingLevel)		|	Level showing a menu to browse levels and load specific level 										|	`ESC`: close window				|
+|	[`MeshAnimLevel`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaTestbed/MeshAnimLevel)		|	Level with a mesh that is being animated 										|	`FlyController`				|
+|	[`NetworkLevel`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaTestbed/NetworkLevel)		|	Level demoing some of our networking capabilities. The `default_server_ip` in config should be set to your LAN IP for this level to work. |	`FlyController` <br> `Y`: Spawn a zombie across the network <br> `H`: Despawn a zombie across the network (can only be done by the spawner!) <br> `U`: Spawn a zombie and set its parent to the previously spawned zombie <br> `I`: Parent the previously spawned zombie to the zombie spawned before it <br> `K`: Unparent the previously spawned zombie from its parent <br> `P`: Send a generic handle message with integer 0 <br>  `O`: Send a generic handle message with integer 1 <br> `Mouse Left`: Send a generic handle message with integer 2 <br> `F1`: Start host <br> `F2`: Start pure server <br> `F3`: Start client <br> `NUM1`: Start broadcasting messages to all computers in LAN <br> `NUM2`: Start listening to broadcast messages <br> `Keypad9`: Switch to another level using `NetworkLoadLevel` <br> `Keypad7`: Switch back to NetworkLevel using `NetworkLoadLevel` |
+|	[`PrimitiveLevel`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaTestbed/PrimitiveLevel)	|	Level displaying all the types of primitive objects 							|	`FlyController`				|
+|	[`SkeletonLevel`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaTestbed/SkeletonLevel)		|	Level displaying a mesh and entities used to follow the skeleton 				|	N/a				|
+|						|																					|					|
+|	[`Halves`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaTestbed/Halves)			|	First demo twin-stick shooter game we created! Only support gamepads			| `LFET_STICK`: move around <br> `RIGHT_STICK`: shoot |
+|	[`KnightGame`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaTestbed/KnightGame)		|	Game with a knight and a sword, can you take down the most training dummies?	|	`LEFT_STICK`: moves knight <br> `RIGHT_TRIGGER`: raises/lowers sword <br> `RIGHT_STICK`: spin it in a complete circle for flame protection	|
+|	[`Week10MiniGame`](https://github.com/Isetta-Team/Isetta-Engine/tree/master/Isetta/IsettaTestbed/Week10MiniGame)	|	First demo game with networking. Fool your enemy with your sword young man!		|	`NUM1`: Start as a host <br> `NUM2`: Start as a client <br> `R`: Ready for the fight <br> `AD`: Move left or right <br> `Up/Down Arrow`: Switch the sword position <br> `Space`: Stab!				|
 
 
 ## Dependencies/Plugins
@@ -120,7 +124,7 @@ start_level = LEVEL_NAME
 - [GLFW](https://github.com/glfw/glfw)
 - [Horde3D](https://github.com/horde3d/Horde3D)
 - [FMOD](https://www.fmod.com/api)
-- [SID (String ID](https://github.com/TheAllenChou/string-id)
+- [SID (String ID)](https://github.com/TheAllenChou/string-id)
 
 ## Stepping Time
 Assuming you have checked out master, you are looking at our latest work. If you would like to view the engine from the start you can use the tags feature to see the code week to week. If you are interested in a specific feature, there are branches for each of the major systems of development for you to `checkout` (the majority of development happened on those branches, we slipped up sometimes and made changes on staging).
