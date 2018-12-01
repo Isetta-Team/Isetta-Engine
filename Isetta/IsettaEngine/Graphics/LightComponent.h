@@ -9,7 +9,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-DEFINE_COMPONENT(LightComponent, Component, true)
+DEFINE_COMPONENT(LightComponent, Component, false)
 public:
 struct LightConfig {
   CVar<float> radius{"light_radius", 2500};
@@ -45,10 +45,10 @@ T GetProperty() const;
 
 private:
 static H3DRes LoadResourceFromFile(std::string_view resourceName);
+void UpdateH3DTransform() const;
 
 static class RenderModule* renderModule;
 friend class RenderModule;
-void UpdateH3DTransform() const;
 std::string_view name;
 H3DNode renderNode{0};
 H3DRes renderResource{0};

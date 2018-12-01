@@ -58,10 +58,6 @@ void RenderModule::Update(float deltaTime) {
     }
     particle->UpdateEmitter(deltaTime);
   }
-  // if (cameraComponents.empty()) {
-  //  LevelManager::Instance().LoadLevel("NoCameraLevel");
-  //  return;
-  //}
   ASSERT(!cameraComponents.empty());
   CameraComponent::_main = cameraComponents.front();
   h3dRender(CameraComponent::_main->renderNode);

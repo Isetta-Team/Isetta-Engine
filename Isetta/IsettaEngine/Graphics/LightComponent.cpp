@@ -12,7 +12,6 @@
 #include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
-
 RenderModule* LightComponent::renderModule{nullptr};
 
 LightComponent::LightComponent() : name{} {
@@ -42,6 +41,8 @@ H3DRes LightComponent::LoadResourceFromFile(std::string_view resourceName) {
 }
 
 void LightComponent::Awake() {
+  renderNode = h3dAddLightNode(H3DRootNode, entity->GetEntityIdString().data(),
+                               renderResource, "LIGHTING", "SHADOWMAP");
   SetProperty<Property::RADIUS>(CONFIG_M_VAL(lightConfig, radius));
   SetProperty<Property::FOV>(CONFIG_M_VAL(lightConfig, fieldOfView));
   SetProperty<Property::COLOR>(
@@ -55,13 +56,12 @@ void LightComponent::Awake() {
 }
 
 void LightComponent::OnEnable() {
-  if (renderNode == 0) {
+  if (!renderNode)
     renderNode =
         h3dAddLightNode(H3DRootNode, entity->GetEntityIdString().data(),
                         renderResource, "LIGHTING", "SHADOWMAP");
-  } else {
+  else
     h3dSetNodeFlags(renderNode, 0, true);
-  }
 }
 
 void LightComponent::OnDisable() {

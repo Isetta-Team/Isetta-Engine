@@ -30,16 +30,20 @@ CameraComponent::CameraComponent() : renderNode(NULL), renderResource(NULL) {
 }
 
 void CameraComponent::Awake() {
+  ASSERT(renderModule != nullptr);
+  renderNode =
+      h3dAddCameraNode(H3DRootNode, entity->GetEntityIdString().c_str(),
+                       renderModule->pipelineRes);
   SetProperty<Property::FOV>(CONFIG_VAL(cameraConfig.fieldOfView));
   SetProperty<Property::NEAR_PLANE>(CONFIG_VAL(cameraConfig.nearClippingPlane));
   SetProperty<Property::FAR_PLANE>(CONFIG_VAL(cameraConfig.farClippingPlane));
 }
 
 void CameraComponent::OnEnable() {
-  ASSERT(renderModule != nullptr);
-  renderNode =
-      h3dAddCameraNode(H3DRootNode, entity->GetEntityIdString().c_str(),
-                       renderModule->pipelineRes);
+  if (!renderNode)
+    renderNode =
+        h3dAddCameraNode(H3DRootNode, entity->GetEntityIdString().c_str(),
+                         renderModule->pipelineRes);
   h3dSetNodeParamI(renderNode, H3DCamera::OccCullingI, 1);
   int width, height;
   glfwGetWindowSize(renderModule->winHandle, &width, &height);
