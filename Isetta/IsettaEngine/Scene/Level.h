@@ -35,9 +35,6 @@ class ISETTA_API Level {
   class Entity* AddEntity(std::string name, class Entity* parent,
                           bool entityStatic = false);
 
-  class Entity* GetEntityByName(const std::string&);
-  class std::list<class Entity*> GetEntitiesByName(const std::string&);
-
   void Unload();
   void Update();
   void GUIUpdate();
@@ -68,6 +65,15 @@ class ISETTA_API Level {
    * \brief Get all entities in the level
    */
   class std::list<class Entity*> GetEntities() const;
+  /**
+   * \brief Get entitiy by name in the level, if multiple will return first
+   * found
+   */
+  class Entity* GetEntityByName(const std::string_view);
+  /**
+   * \brief Get all entities with the name in the level
+   */
+  class std::list<class Entity*> GetEntitiesByName(const std::string_view);
 
   /**
    * \brief This is where we put our "level loading script". This function is

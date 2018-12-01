@@ -10,17 +10,17 @@
 
 namespace Isetta {
 
-Entity* Level::GetEntityByName(const std::string& name) {
+Entity* Level::GetEntityByName(const std::string_view name) {
   for (const auto& entity : entities) {
     if (entity->entityName == name) {
       return entity;
     }
   }
-  LOG_WARNING(Debug::Channel::General, "Entity %s not found!", name.c_str());
+  LOG_WARNING(Debug::Channel::General, "Entity %s not found!", name.data());
   return nullptr;
 }
 
-std::list<Entity*> Level::GetEntitiesByName(const std::string& name) {
+std::list<Entity*> Level::GetEntitiesByName(const std::string_view name) {
   std::list<Entity*> returnEntities;
   for (const auto& entity : entities) {
     if (entity->entityName == name) {

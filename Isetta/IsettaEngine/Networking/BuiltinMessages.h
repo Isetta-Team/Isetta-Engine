@@ -8,6 +8,7 @@
  *
  */
 DEFINE_NETWORK_MESSAGE(ClientConnectedMessage)
+private:
 template <typename Stream>
 bool Serialize(Stream* stream) {
   serialize_string(stream, ip, sizeof(ip));
@@ -23,6 +24,7 @@ void Copy(const yojimbo::Message* otherMessage) override {
   strcpy_s(machineName, message->machineName);
 }
 
+public:
 char ip[16];           // The IP address of the client
 char machineName[16];  // The machine name of the client
 
@@ -34,6 +36,7 @@ DEFINE_NETWORK_MESSAGE_END
  *
  */
 DEFINE_NETWORK_MESSAGE(LoadLevelMessage)
+private:
 template <typename Stream>
 bool Serialize(Stream* stream) {
   serialize_string(stream, levelName, sizeof(levelName));
@@ -45,8 +48,8 @@ void Copy(const yojimbo::Message* otherMessage) override {
   strcpy_s(levelName, message->levelName);
 }
 
-char levelName[levelNameMaxLength];  // Name of the level to be loaded
-
 public:
 inline const static int levelNameMaxLength = 64;
+char levelName[levelNameMaxLength];  // Name of the level to be loaded
+
 DEFINE_NETWORK_MESSAGE_END
