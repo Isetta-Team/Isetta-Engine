@@ -117,6 +117,18 @@ Entity::~Entity() {
   CheckDestroy();
 }
 
+std::string Entity::GetEntityIdString() const {
+  std::array<char, 40> output;
+  snprintf(output.data(), output.size(),
+           "{%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x}",
+           entityId.Data1, entityId.Data2, entityId.Data3, entityId.Data4[0],
+           entityId.Data4[1], entityId.Data4[2], entityId.Data4[3],
+           entityId.Data4[4], entityId.Data4[5], entityId.Data4[6],
+           entityId.Data4[7]);
+
+  return std::string(output.data());
+}
+
 Entity *Entity::Instantiate(const std::string name, Entity *parent,
                             const bool entityStatic) {
   return LevelManager::Instance().loadedLevel->AddEntity(name, parent,

@@ -55,28 +55,46 @@ class ISETTA_API_DECLARE Entity {
  public:
   ~Entity();
 
+  /// Points to this entity's transform
   Transform *transform{};
 
   void SetName(std::string_view name) { entityName = name; }
   std::string GetName() const { return entityName; }
   GUID GetEntityId() const { return entityId; }
-  std::string GetEntityIdString() const {
-    std::array<char, 40> output;
-    snprintf(output.data(), output.size(),
-             "{%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x}",
-             entityId.Data1, entityId.Data2, entityId.Data3, entityId.Data4[0],
-             entityId.Data4[1], entityId.Data4[2], entityId.Data4[3],
-             entityId.Data4[4], entityId.Data4[5], entityId.Data4[6],
-             entityId.Data4[7]);
-
-    return std::string(output.data());
-  }
+  /**
+   * \brief Get a unique string that represents this entity's id
+   */
+  std::string GetEntityIdString() const;
+  /**
+   * \brief Instantiate a new empty entity
+   * \param name Entity name
+   * \param parent Entity's parent
+   * \param entityStatic Is the entity static? If it is, you won't be able to
+   * change it
+   * \return Pointer to the newly constructed Entity
+   */
   static Entity *Instantiate(std::string name, class Entity *parent = nullptr,
                              bool entityStatic = false);
+  /**
+   * \brief Destroy the entity. The entity will be actually destroyed at the end of frame
+   */
   static void Destroy(Entity *entity);
+  /**
+   * \brief Used internally to actually destroy entities
+   */
   static void DestroyHelper(Entity *entity);
+  /**
+   * \brief Destroy entity immediately, without waiting for the end of frame
+   */
   static void DestroyImmediately(Entity *entity);
+  /**
+   * \brief Get an entity that has the input name. Will return the first one
+   * found if there are multiple entities with the same name
+   */
   static Entity *GetEntityByName(const std::string &name);
+  /**
+   * \brief Get all entities that have the input name
+   */
   static std::list<Entity *> GetEntitiesByName(const std::string &name);
 
   void SetActive(bool inActive);
@@ -92,19 +110,45 @@ class ISETTA_API_DECLARE Entity {
   T *GetComponent();
   template <typename T>
   Array<T *> GetComponents();
+  /**
+   * \brief Get component in immediate parent
+   */
   template <typename T>
   T *GetComponentInParent();
+  /**
+   * \brief Get components in immediate parent
+   */
   template <typename T>
   Array<T *> GetComponentsInParent();
+  /**
+   * \brief Get component in immediate children but not self
+   */
   template <typename T>
   T *GetComponentInChildren();
+  /**
+   * \brief Get components in immediate children but not self
+   */
   template <typename T>
   Array<T *> GetComponentsInChildren();
+  /**
+   * \brief Get component in all descendants but not self
+   */
   template <typename T>
   T *GetComponentInDescendant();
+  /**
+   * \brief Get components in all descendants but not self
+   */
   template <typename T>
   Array<T *> GetComponentsInDescendant();
 
+  /**
+   * \brief Set world position, world rotation, and local scale of this
+   * transform 
+   * 
+   * \param worldPos World Position 
+   * \param worldEulerAngles World Rotation 
+   * \param localScale Local Scale
+   */
   void SetTransform(const Math::Vector3 &worldPos = Math::Vector3::zero,
                     const Math::Vector3 &worldEulerAngles = Math::Vector3::zero,
                     const Math::Vector3 &localScale = Math::Vector3::one);
@@ -144,8 +188,8 @@ T *Entity::AddComponent(Args &&... args) {
           typeIndex.name()));
     }
     T *component = MemoryManager::NewOnFreeList<T>(std::forward<Args>(args)...);
-    (Entity*&)(component->entity) = this;
-    (Transform*&)(component->transform) = transform;
+    (Entity *&)(component->entity) = this;
+    (Transform *&)(component->transform) = transform;
     component->SetActive(IsActive);
     if (IsActive) {
       component->Awake();

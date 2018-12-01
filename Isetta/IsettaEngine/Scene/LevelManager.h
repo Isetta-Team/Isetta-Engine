@@ -31,15 +31,25 @@ class ISETTA_API LevelManager {
     CVarString startLevel{"start_level", "EmptyLevel"};
   };
 
+  /// Access the current loaded level
   class Level* loadedLevel{nullptr};
 
   static LevelManager& Instance();
 
+  /**
+   * \brief Used internally
+   */
   bool Register(const std::string_view, Func<class Level*>);
+  /**
+   * \brief Get names of all levels registered
+   */
   std::vector<std::string> GetLevelNames() const;
 
   LevelManager() = default;
   ~LevelManager() = default;
+  /**
+   * \brief Load the level with the given level name
+   */
   void LoadLevel(std::string_view levelName);
 };
 

@@ -146,10 +146,6 @@ void Transform::RotateLocal(const Math::Vector3& axisWorldSpace,
   SetLocalRot(Math::Quaternion::FromAngleAxis(localAxis, angle) * localRot);
 }
 
-void Transform::RotateLocal(const Math::Quaternion& rotation) {
-  SetLocalRot(rotation * localRot);
-}
-
 Math::Vector3 Transform::GetWorldScale() {
   if (parent == nullptr) {
     worldScale = localScale;
@@ -213,16 +209,6 @@ void Transform::SetParent(Transform* const transform) {
   SetWorldRot(originalRot);
   SetWorldScale(originalScale);
   SetDirty();
-}
-
-Transform* Transform::GetRoot() const {
-  Transform* par = parent;
-  Transform* ret = par;
-  while (par != nullptr) {
-    ret = par;
-    par = par->GetParent();
-  }
-  return ret;
 }
 
 Math::Vector3 Transform::GetForward() {

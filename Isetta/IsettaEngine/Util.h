@@ -7,9 +7,16 @@
 #include "Core/Time/StopWatch.h"
 
 namespace Isetta::Util {
+/**
+ * \brief Conveniently bind a member function and pass it into somewhere else as
+ * a lambda
+ */
 #define BIND_1(callback, reference) \
   std::bind(&callback, reference, std::placeholders::_1)
 
+/**
+ * \brief Utility to allow printf style string formatting
+ */
 inline const char* StrFormat(const char* format, ...) {
   const int MAX_CHARS = 1023;
   static char charBuffer[MAX_CHARS + 1];
@@ -23,19 +30,17 @@ inline const char* StrFormat(const char* format, ...) {
   return charBuffer;
 }
 
-inline int FormatStringV(char* buf, size_t size, const char* format,
-                         va_list args) {
-  int w = vsnprintf(buf, size, format, args);
-  if (buf == NULL) return w;
-  if (w == -1 || w >= (int)size) w = (int)size - 1;
-  buf[w] = 0;
-  return w;
-}
-
+/**
+ * \brief Remove white spaces in the input string
+ */
 inline void StrRemoveSpaces(std::string* str) {
   str->erase(std::remove_if(str->begin(), str->end(), isspace), str->end());
 }
 
+/**
+ * \brief Split an input string into an array of strings using the input
+ * "separator" as separator
+ */
 inline Array<std::string> StrSplit(const std::string& inStr,
                                    const char separator) {
   if (inStr.empty()) return Array<std::string>{};
@@ -51,6 +56,10 @@ inline Array<std::string> StrSplit(const std::string& inStr,
   return results;
 }
 
+/**
+ * \brief Used to easily benchmark a given procedure and print the result out
+ * using the given name
+ */
 inline void Benchmark(const char* name, const Action<>& benchmark) {
   StopWatch stopWatch;
   stopWatch.Start();
@@ -59,6 +68,9 @@ inline void Benchmark(const char* name, const Action<>& benchmark) {
            stopWatch.EvaluateInSecond());
 }
 
+/**
+ * \brief Convert int in bytes to mega bytes
+ */
 inline float MegaBytesFromBytes(const int byte) {
   return byte / 1024.f / 1024.f;
 }
@@ -69,6 +81,9 @@ static const unsigned char BitsSetTable256[256] = {
 #define B6(n) B4(n), B4(n + 1), B4(n + 1), B4(n + 2)
     B6(0), B6(1), B6(1), B6(2)};
 
+/**
+ * \brief Count the number of bits set (to 1) in the input int
+ */
 inline unsigned int CountSetBits(int N) {
   // first chunk of 8 bits from right
   unsigned int cnt =
@@ -77,6 +92,10 @@ inline unsigned int CountSetBits(int N) {
   return cnt;
 }
 
+/**
+ * \brief A hash function that ignores order of the pair. i.e. {A, B} and {B, A}
+ * hash to the same thing
+ */
 struct UnorderedPairHash {
   template <typename T>
   std::size_t operator()(std::pair<T, T> const& p) const {
@@ -89,6 +108,10 @@ struct UnorderedPairHash {
     return false;
   }
 };
+
+/**
+ * \brief A normal pair hash function
+ */
 struct PairHash {
   template <typename T, typename S>
   std::size_t operator()(std::pair<T, S> const& p) const {
@@ -101,4 +124,4 @@ struct PairHash {
   }
 };
 
-}  // namespace Isetta::Util
+} // namespace Isetta::Util

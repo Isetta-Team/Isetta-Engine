@@ -30,14 +30,34 @@ class ISETTA_API Layers {
   static Constructor construct;
 
  public:
+  /**
+   * \brief Add a new layer
+   * \return index of the new layer
+   */
   static int NewLayer(const std::string_view layerName);
 
+  /**
+   * \brief Get the layer that has the input name
+   * \return That layer's index
+   */
   static int NameToLayer(const std::string_view layerName);
+  /**
+   * \brief Get the name of layer with input index
+   */
   static std::string LayerToName(int layer);
+  /**
+   * \brief Check if the input layer is valid and within capacity
+   */
   static int CheckLayer(int layer);
 
+  /**
+   * \brief Create a bit set according to the input int
+   */
   static std::bitset<LAYERS_CAPACITY> LayerMask(
       std::initializer_list<int> mask);
+  /**
+   * \brief Create a bit set according to the input string
+   */
   static std::bitset<LAYERS_CAPACITY> LayerMask(
       std::initializer_list<std::string> mask);
 };

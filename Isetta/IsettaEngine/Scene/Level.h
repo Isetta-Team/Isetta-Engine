@@ -35,6 +35,9 @@ class ISETTA_API Level {
   class Entity* AddEntity(std::string name, class Entity* parent,
                           bool entityStatic = false);
 
+  class Entity* GetEntityByName(const std::string&);
+  class std::list<class Entity*> GetEntitiesByName(const std::string&);
+
   void Unload();
   void Update();
   void GUIUpdate();
@@ -61,12 +64,25 @@ class ISETTA_API Level {
   virtual ~Level() = default;
 
   virtual std::string GetName() const = 0;
-  class Entity* GetEntityByName(const std::string&);
-  class std::list<class Entity*> GetEntitiesByName(const std::string&);
+  /**
+   * \brief Get all entities in the level
+   */
   class std::list<class Entity*> GetEntities() const;
 
+  /**
+   * \brief This is where we put our "level loading script". This function is
+   * called when the level is loaded, so this is where you should
+   * spawn/initialize your entities and layout your level
+   */
   virtual void Load() = 0;
+
+  /**
+   * \brief Called the this level has finished unloading
+   */
   virtual void OnUnload() {}
+  /**
+   * \brief Check if the level is loaded
+   */
   bool IsLevelLoaded() const;
 };
 }  // namespace Isetta
