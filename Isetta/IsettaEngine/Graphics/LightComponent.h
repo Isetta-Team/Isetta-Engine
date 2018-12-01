@@ -40,6 +40,9 @@ explicit LightComponent(std::string_view lightMaterial);
 template <Property Attr, typename T>
 void SetProperty(T value);
 
+void SetFloatProperty(H3DNode renderNode, int lightProp, int channel, float value);
+void SetIntProperty(H3DNode renderNode, int lightProp, int value);
+
 template <Property Attr, typename T>
 T GetProperty() const;
 
@@ -57,19 +60,19 @@ DEFINE_COMPONENT_END(LightComponent, Component)
 template <LightComponent::Property Attr, typename T>
 void LightComponent::SetProperty(T value) {
   if constexpr (Attr == Property::RADIUS) {
-    h3dSetNodeParamF(renderNode, H3DLight::RadiusF, 0, value);
+    SetFloatProperty(renderNode, H3DLight::RadiusF, 0, value);
   } else if constexpr (Attr == Property::FOV) {
-    h3dSetNodeParamF(renderNode, H3DLight::FovF, 0, value);
+    SetFloatProperty(renderNode, H3DLight::FovF, 0, value);
   } else if constexpr (Attr == Property::SHADOW_MAP_COUNT) {
-    h3dSetNodeParamI(renderNode, H3DLight::ShadowMapCountI, value);
+    SetIntProperty(renderNode, H3DLight::ShadowMapCountI, value);
   } else if constexpr (Attr == Property::SHADOW_MAP_BIAS) {
-    h3dSetNodeParamF(renderNode, H3DLight::ShadowMapBiasF, 0, value);
+    SetFloatProperty(renderNode, H3DLight::ShadowMapBiasF, 0, value);
   } else if constexpr (Attr == Property::COLOR) {
-    h3dSetNodeParamF(renderNode, H3DLight::ColorF3, 0, value.r);
-    h3dSetNodeParamF(renderNode, H3DLight::ColorF3, 1, value.g);
-    h3dSetNodeParamF(renderNode, H3DLight::ColorF3, 2, value.b);
+    SetFloatProperty(renderNode, H3DLight::ColorF3, 0, value.r);
+    SetFloatProperty(renderNode, H3DLight::ColorF3, 1, value.g);
+    SetFloatProperty(renderNode, H3DLight::ColorF3, 2, value.b);
   } else if constexpr (Attr == Property::COLOR_MULTIPLIER) {
-    h3dSetNodeParamF(renderNode, H3DLight::ColorMultiplierF, 0, value);
+    SetFloatProperty(renderNode, H3DLight::ColorMultiplierF, 0, value);
   }
 }
 

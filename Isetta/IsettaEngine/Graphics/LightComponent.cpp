@@ -28,6 +28,16 @@ LightComponent::LightComponent(std::string_view lightMaterial) {
   renderResource = LoadResourceFromFile(lightMaterial);
 }
 
+void LightComponent::SetFloatProperty(H3DNode renderNode, int lightProp,
+                                      int channel, float value) {
+  h3dSetNodeParamF(renderNode, lightProp, channel, value);
+}
+
+void LightComponent::SetIntProperty(H3DNode renderNode, int lightProp,
+                                    int value) {
+  h3dSetNodeParamI(renderNode, lightProp, value);
+}
+
 H3DRes LightComponent::LoadResourceFromFile(std::string_view resourceName) {
   H3DRes lightMatRes =
       h3dAddResource(H3DResTypes::Material, resourceName.data(), 0);
