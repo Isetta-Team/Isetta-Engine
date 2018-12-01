@@ -11,9 +11,7 @@
 namespace Isetta {
 AudioModule* AudioSource::audioModule;
 
-AudioSource::AudioSource() : properties{0b100} {}
-
-AudioSource::AudioSource(AudioClip* clip) : clip{clip}, properties{0b100} {}
+AudioSource::AudioSource(AudioClip* clip) : clip{clip} {}
 
 AudioSource::AudioSource(const std::bitset<3>& properties, AudioClip* clip)
     : clip{clip}, properties{properties} {}
