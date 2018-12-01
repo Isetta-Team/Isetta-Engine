@@ -54,8 +54,6 @@ bool AudioSource::GetProperty(const Property prop) const {
   return false;
 }
 
-void AudioSource::SetAudioClip(AudioClip* clip) { this->clip = clip; }
-
 void AudioSource::Play() {
   if (IsSoundValid()) {
     audioModule->Play(this);
