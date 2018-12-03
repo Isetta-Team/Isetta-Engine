@@ -21,7 +21,7 @@ void Texture::Load() {
       h3dres, Util::StrFormat("Texture::LoadResourceFromFile => "
                               "Cannot load the resource from %s",
                               fileName.data()));
-  U8* data = static_cast<U8*>(h3dMapResStream(
+  data = static_cast<U8*>(h3dMapResStream(
       h3dres, H3DTexRes::ImageElem, 0, H3DTexRes::ImgPixelStream, true, false));
   size.x =
       h3dGetResParamI(h3dres, H3DTexRes::ImageElem, 0, H3DTexRes::ImgWidthI);
@@ -29,11 +29,21 @@ void Texture::Load() {
       h3dGetResParamI(h3dres, H3DTexRes::ImageElem, 0, H3DTexRes::ImgHeightI);
   h3dUnmapResStream(h3dres);
 
+  int i = 0;
+  for (int y = 0; y < size.y; ++y) {
+    for (int x = 0; x < size.x; ++x) {
+      std::swap(data[i], data[i + 2]);
+      i += 4;
+    }
+  }
+
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_BGRA,
+  // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_BGRA,
+  //             GL_UNSIGNED_BYTE, data);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA,
                GL_UNSIGNED_BYTE, data);
 }
 void Texture::Unload() {

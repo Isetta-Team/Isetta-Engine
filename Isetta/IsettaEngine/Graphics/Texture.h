@@ -15,6 +15,7 @@ class ISETTA_API Texture {
   unsigned int texture = 0;
   Math::Vector2Int size;
   H3DRes h3dres;
+  U8* data;
 
  public:
   Texture() = default;
@@ -46,6 +47,7 @@ class ISETTA_API Texture {
   void Unload();
 
   inline unsigned int GetTexture() const { return texture; }
+  inline U8* GetData() const { return data; }
   inline int GetWidth() const { return size.x; }
   inline int GetHeight() const { return size.y; }
   inline Math::Vector2Int GetSize() const { return size; }

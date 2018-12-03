@@ -71,35 +71,35 @@ class InputModule {
    * \brief Check if the mouse button is pressed
    * \param mouseButton The mouse button to detect
    */
-  bool IsMouseButtonPressed(MouseButtonCode mouseButton) const;
+  bool IsMouseButtonPressed(MouseButton mouseButton) const;
   /**
    * \brief Register a callback function to the mouse press event and return its
    * handle
    * \param mouseButton The mouse button to detect
    * \param callback The callback function
    */
-  U64 RegisterMousePressCallback(MouseButtonCode mouseButton,
+  U64 RegisterMousePressCallback(MouseButton mouseButton,
                                  const Action<>& callback);
   /**
    * \brief Unregister a callback by the mouse button and handle
    * \param mouseButton The mouse button to detect
    * \param handle The handle to unregister
    */
-  void UnregisterMousePressCallback(MouseButtonCode mouseButton, U64& handle);
+  void UnregisterMousePressCallback(MouseButton mouseButton, U64& handle);
   /**
    * \brief Register a callback function to the mouse release event and return
    * its handle
    * \param mouseButton The mouse button to detect
    * \param callback The callback function
    */
-  U64 RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
+  U64 RegisterMouseReleaseCallback(MouseButton mouseButton,
                                    const Action<>& callback);
   /**
    * \brief Unregister a callback by the mouse button and handle
    * \param mouseButton The mouse button to detect
    * \param handle The handle to unregister
    */
-  void UnregisterMouseReleaseCallback(MouseButtonCode mouseButton, U64& handle);
+  void UnregisterMouseReleaseCallback(MouseButton mouseButton, U64& handle);
 
   U64 RegisterScrollCallback(const Action<double, double>& callback);
   void UnregisterScrollCallback(U64& handle);
@@ -148,7 +148,7 @@ class InputModule {
                        MouseMap* delegateMap);
   void UnregisterCallback(int key, U64& handle, MouseMap* delegateMap);
   int KeyCodeToGlfwKey(KeyCode key) const;
-  int MouseButtonToGlfwKey(MouseButtonCode mouseButton) const;
+  int MouseButtonToGlfwKey(MouseButton mouseButton) const;
   GLFWgamepadstate gamepadState;
   void UpdateGamepadState();
   void DeadZoneOptimize(float* horizontal, float* verticle);

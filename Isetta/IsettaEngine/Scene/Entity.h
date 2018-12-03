@@ -76,7 +76,8 @@ class ISETTA_API_DECLARE Entity {
   static Entity *Instantiate(std::string name, class Entity *parent = nullptr,
                              bool entityStatic = false);
   /**
-   * \brief Destroy the entity. The entity will be actually destroyed at the end of frame
+   * \brief Destroy the entity. The entity will be actually destroyed at the end
+   * of frame
    */
   static void Destroy(Entity *entity);
   /**
@@ -143,10 +144,10 @@ class ISETTA_API_DECLARE Entity {
 
   /**
    * \brief Set world position, world rotation, and local scale of this
-   * transform 
-   * 
-   * \param worldPos World Position 
-   * \param worldEulerAngles World Rotation 
+   * transform
+   *
+   * \param worldPos World Position
+   * \param worldEulerAngles World Rotation
    * \param localScale Local Scale
    */
   void SetTransform(const Math::Vector3 &worldPos = Math::Vector3::zero,

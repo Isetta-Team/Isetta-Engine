@@ -20,14 +20,14 @@
 
 namespace Isetta {
 RenderModule* CameraComponent::renderModule{nullptr};
+CameraComponent* CameraComponent::_main;
 
 CameraComponent::CameraComponent() : renderNode(NULL), renderResource(NULL) {
   ASSERT(renderModule != nullptr);
   renderModule->cameraComponents.push_back(this);
-  if (!_main) {
-    _main = this;
-  }
 }
+
+const CameraComponent* CameraComponent::Main() { return _main; }
 
 void CameraComponent::Awake() {
   ASSERT(renderModule != nullptr);
@@ -40,6 +40,7 @@ void CameraComponent::Awake() {
 }
 
 void CameraComponent::OnEnable() {
+  if (!_main) _main = this;
   if (!renderNode)
     renderNode =
         h3dAddCameraNode(H3DRootNode, entity->GetEntityIdString().c_str(),
