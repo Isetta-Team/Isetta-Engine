@@ -67,7 +67,7 @@ Collision CollisionSolverModule::Solve(Collider* collider,
       collision.pushDir = Math::Vector3::zero;
       collision.pushDir[maxAxis] = 1;
       collision.pushDir =
-          box->transform->WorldDirFromLocalDir(collision.pushDir);
+          box->transform->WorldDirFromLocalDir(collision.pushDir).Normalized();
       collision.onEdge = numEdges > 1;
       break;
     }
