@@ -6,7 +6,7 @@
 #include <glad/glad.h>
 #include <string_view>
 #include "Graphics/RenderModule.h"
-#include "Horde3D.h"
+#include "Horde3D/Horde3D/Bindings/C++/Horde3D.h"
 #include "Util.h"
 
 namespace Isetta {

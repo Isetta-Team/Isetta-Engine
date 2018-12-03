@@ -2,17 +2,17 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-
-#include <Horde3D.h>
-#include "Scene/Component.h"
 #include "Core/DataStructures/Array.h"
+#include "Horde3D/Horde3D/Bindings/C++/Horde3D.h"
+#include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(ParticleSystemComponent, Component, false)
+DEFINE_COMPONENT(ParticleSystemComponent, Component, false)
 H3DNode renderNode{0};
 Array<H3DNode> emitters;
 H3DRes renderResource{0};
 
+ParticleSystemComponent();
 explicit ParticleSystemComponent(std::string_view resourceName);
 // ~ParticleSystemComponent();
 
@@ -33,5 +33,5 @@ friend class RenderModule;
 
 static inline class RenderModule* renderModule;
 
-END_COMPONENT(ParticleSystemComponent, Component)
-}
+DEFINE_COMPONENT_END(ParticleSystemComponent, Component)
+}  // namespace Isetta

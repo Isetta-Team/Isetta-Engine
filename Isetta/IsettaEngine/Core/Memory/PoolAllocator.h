@@ -3,7 +3,7 @@
  */
 #pragma once
 #include "Core/IsettaAlias.h"
-#include <list>
+#include "Core/DataStructures/Array.h"
 
 namespace Isetta {
 class PoolAllocator {
@@ -28,7 +28,7 @@ class PoolAllocator {
   Size increment{};
   PoolNode* head{};
   void* memHead{};
-  std::list<void*> additionalMemory;
+  Array<void*> additionalMemory;
 };
 
 }  // namespace Isetta

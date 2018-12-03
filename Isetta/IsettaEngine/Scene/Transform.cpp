@@ -6,16 +6,18 @@
 #include "Core/Debug/Logger.h"
 #include "Core/Math/Matrix3.h"
 #include "Core/Math/Vector4.h"
+#include "Horde3D/Horde3D/Bindings/C++/Horde3D.h"
 #include "Scene/Entity.h"
 #include "Scene/Level.h"
 #include "Scene/LevelManager.h"
 #include "Util.h"
-#include "Horde3D.h"
 
 namespace Isetta {
 Transform::Transform(Entity* const entity) : entity(entity) {}
 
 void Transform::SetLocalToWorldMatrix(const Math::Matrix4& newMatrix) {
+  if (!entity->IsMoveable()) return;
+
   localToWorldMatrix = newMatrix;
   for (int i = 0; i < Math::Matrix3::ROW_COUNT; ++i) {
     axis[i] = localToWorldMatrix.GetCol(i).GetVector3().Normalized();
@@ -30,6 +32,7 @@ Math::Vector3 Transform::GetWorldPos() {
 Math::Vector3 Transform::GetLocalPos() const { return localPos; }
 
 void Transform::SetWorldPos(const Math::Vector3& newWorldPos) {
+  if (!entity->IsMoveable()) return;
   SetDirty();
 
   if (parent == nullptr) {
@@ -41,6 +44,8 @@ void Transform::SetWorldPos(const Math::Vector3& newWorldPos) {
 }
 
 void Transform::SetLocalPos(const Math::Vector3& newLocalPos) {
+  if (!entity->IsMoveable()) return;
+
   localPos = newLocalPos;
   SetDirty();
 }
@@ -74,6 +79,8 @@ Math::Vector3 Transform::GetLocalEulerAngles() const {
 }
 
 void Transform::SetWorldRot(const Math::Quaternion& newWorldRot) {
+  if (!entity->IsMoveable()) return;
+
   worldRot = newWorldRot;
   SetDirty();
 
@@ -89,6 +96,8 @@ void Transform::SetWorldRot(const Math::Vector3& worldEulers) {
 }
 
 void Transform::SetLocalRot(const Math::Quaternion& newLocalRot) {
+  if (!entity->IsMoveable()) return;
+
   localRot = newLocalRot;
   SetDirty();
 }
@@ -137,13 +146,7 @@ void Transform::RotateLocal(const Math::Vector3& axisWorldSpace,
   SetLocalRot(Math::Quaternion::FromAngleAxis(localAxis, angle) * localRot);
 }
 
-void Transform::RotateLocal(const Math::Quaternion& rotation) {
-  SetLocalRot(rotation * localRot);
-}
-
 Math::Vector3 Transform::GetWorldScale() {
-  // Potential reading:
-  // https://math.stackexchange.com/questions/237369/given-this-transformation-matrix-how-do-i-decompose-it-into-translation-rotati
   if (parent == nullptr) {
     worldScale = localScale;
   } else {
@@ -156,11 +159,15 @@ Math::Vector3 Transform::GetWorldScale() {
 Math::Vector3 Transform::GetLocalScale() const { return localScale; }
 
 void Transform::SetLocalScale(const Math::Vector3& newScale) {
+  if (!entity->IsMoveable()) return;
+
   localScale = newScale;
   SetDirty();
 }
 
 void Transform::SetWorldScale(const Math::Vector3& newWorldScale) {
+  if (!entity->IsMoveable()) return;
+
   worldScale = newWorldScale;
   SetDirty();
 
@@ -173,6 +180,8 @@ void Transform::SetWorldScale(const Math::Vector3& newWorldScale) {
 }
 
 void Transform::SetParent(Transform* const transform) {
+  if (!entity->IsMoveable()) return;
+
   Transform* targetTransform = transform;
   if (transform == nullptr) {
     targetTransform =
@@ -200,16 +209,6 @@ void Transform::SetParent(Transform* const transform) {
   SetWorldRot(originalRot);
   SetWorldScale(originalScale);
   SetDirty();
-}
-
-Transform* Transform::GetRoot() const {
-  Transform* par = parent;
-  Transform* ret = par;
-  while (par != nullptr) {
-    ret = par;
-    par = par->GetParent();
-  }
-  return ret;
 }
 
 Math::Vector3 Transform::GetForward() {
@@ -298,6 +297,8 @@ void Transform::ForDescendants(const Action<Transform*>& action) {
 void Transform::SetWorldTransform(const Math::Vector3& inPosition,
                                   const Math::Vector3& inEulerAngles,
                                   const Math::Vector3& inScale) {
+  if (!entity->IsMoveable()) return;
+
   SetWorldPos(inPosition);
   SetWorldRot(inEulerAngles);
   SetLocalScale(inScale);
@@ -327,7 +328,7 @@ void Transform::RecalculateLocalToWorldMatrix() {
   localToParentMatrix.SetTopLeftMatrix3(localRot.GetMatrix3());  // rotation
   Math::Matrix4 temp;
   temp.SetDiagonal(localScale.x, localScale.y, localScale.z, 1);
-  localToParentMatrix = temp * localToParentMatrix;  // scale
+  localToParentMatrix = localToParentMatrix * temp;  // scale
   localToParentMatrix.SetCol(3, localPos, 1);
 
   if (parent != nullptr) {

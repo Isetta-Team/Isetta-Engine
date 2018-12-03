@@ -43,25 +43,34 @@ void AudioModule::StartUp() {
   AudioSource::audioModule = this;
   AudioListener::audioModule = this;
   AudioClip::audioModule = this;
-  AudioClip::LoadConfigClips();
 }
 
 void AudioModule::Update(float deltaTime) const {
   BROFILER_CATEGORY("Audio Update", Profiler::Color::Maroon);
 
-  if (listeners.empty()) return;
-  const AudioListener* listener = *listeners.begin();
-  const Math::Vector3 position = listener->transform->GetWorldPos();
-  const Math::Vector3 forward = listener->transform->GetForward();
-  const Math::Vector3 up = listener->transform->GetUp();
+  if (listeners.size() > 1)
+    LOG_WARNING(Debug::Channel::Sound,
+                "Multiple audio listeners in the scene, only using the first "
+                "found instance.");
+  if (!listeners.empty())
+  // LOG_WARNING(Debug::Channel::Sound,
+  //            "No audio listeners in the scene, all audio will be 2D.");
+  // else
+  {
+    const AudioListener* listener = *listeners.begin();
+    const Math::Vector3 position = listener->transform->GetWorldPos();
+    const Math::Vector3 forward = listener->transform->GetForward();
+    const Math::Vector3 up = listener->transform->GetUp();
 
-  const FMOD_VECTOR fmodPosition{position.x, position.y, position.z};
-  const FMOD_VECTOR fmodForward{forward.x, forward.y, forward.z};
-  const FMOD_VECTOR fmodUp{up.x, up.y, up.z};
-  fmodSystem->set3DListenerAttributes(0, &fmodPosition, nullptr, &fmodForward,
-                                      &fmodUp);
+    const FMOD_VECTOR fmodPosition{position.x, position.y, position.z};
+    const FMOD_VECTOR fmodForward{forward.x, forward.y, forward.z};
+    const FMOD_VECTOR fmodUp{up.x, up.y, up.z};
+    fmodSystem->set3DListenerAttributes(0, &fmodPosition, nullptr, &fmodForward,
+                                        &fmodUp);
+  }
+
   fmodSystem->update();
-}
+}  // namespace Isetta
 
 void AudioModule::ShutDown() {
   AudioClip::UnloadAll();
@@ -101,9 +110,9 @@ void AudioModule::CheckStatus(const FMOD_RESULT status) {
 
 void AudioModule::LoadClip(AudioClip* const clip) const {
   clip->fmodSound = nullptr;
-  const std::string fullPath =
+  const std::string filePath =
       CONFIG_VAL(resourcePath) + R"(\)" + clip->filePath;
-  CheckStatus(fmodSystem->createSound(fullPath.c_str(), FMOD_LOWMEM, nullptr,
+  CheckStatus(fmodSystem->createSound(filePath.c_str(), FMOD_LOWMEM, nullptr,
                                       &clip->fmodSound));
 }
 
@@ -121,5 +130,8 @@ void AudioModule::Play(AudioSource* const source) const {
   CheckStatus(source->fmodChannel->setLoopCount(source->loopCount));
   CheckStatus(
       source->fmodChannel->setMute(source->GetProperty(Property::IS_MUTE)));
+  if (source->GetProperty(Property::IS_3D))
+    source->fmodChannel->set3DMinMaxDistance(source->minMaxDistance.x,
+                                             source->minMaxDistance.y);
 }
 }  // namespace Isetta

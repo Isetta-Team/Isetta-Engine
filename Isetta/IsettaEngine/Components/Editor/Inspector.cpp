@@ -11,11 +11,17 @@
 #include "imgui/imgui.h"
 
 namespace Isetta {
-Inspector::Inspector(std::string title, bool isOpen, Transform *const target)
-    : title{title}, isOpen{isOpen}, target{target} {}
+Inspector::Inspector(std::string title, const bool isOpen,
+                     Transform *const target)
+    : target{target}, title{title}, isOpen{isOpen} {}
 
 void Inspector::GuiUpdate() {
-  if (!target) return;
+  // Happens when selected entity is destroyed
+  if (!target || target->entity == nullptr) {
+    target = nullptr;
+    GUI::Window(rectTransform, title, [&]() {}, &isOpen);
+    return;
+  }
 
   GUI::Window(
       rectTransform, title,
@@ -72,7 +78,8 @@ void Inspector::GuiUpdate() {
         GUI::Text(RectTransform{Math::Rect{padding, rect.rect.y, 300, 100}},
                   "Components");
 
-        for (const auto &component : target->entity->GetComponents<Component>()) {
+        for (const auto &component :
+             target->entity->GetComponents<Component>()) {
           Component &comp = *component;
           rect.rect.y += padding;
           GUI::Text(RectTransform{Math::Rect{padding, rect.rect.y, 300, 100}},

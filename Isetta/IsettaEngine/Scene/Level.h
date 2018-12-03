@@ -3,12 +3,13 @@
  */
 #pragma once
 #include <list>
+#include <queue>
 #include <set>
-#include <stack>
 #include <string>
+#include "Core/Memory/TemplatePoolAllocator.h"
 #include "ISETTA_API.h"
 
-#define CREATE_LEVEL(NAME)                                                \
+#define DEFINE_LEVEL(NAME)                                                \
   class NAME : public Isetta::Level, public Isetta::LevelRegistry<NAME> { \
    public:                                                                \
     bool IsRegisteredInLevelManager() const { return registered; }        \
@@ -20,7 +21,7 @@
                                                                           \
    private:
 
-#define CREATE_LEVEL_END \
+#define DEFINE_LEVEL_END \
   }                      \
   ;
 
@@ -31,11 +32,18 @@ class ISETTA_API Level {
   void AddComponentToStart(class Component* component);
   void StartComponents();
 
-  void UnloadLevel();
+  class Entity* AddEntity(std::string name, class Entity* parent,
+                          bool entityStatic = false);
+
+  void Unload();
   void Update();
   void GUIUpdate();
   void FixedUpdate();
   void LateUpdate();
+
+  bool isLevelLoaded = false;
+
+  TemplatePoolAllocator<Entity> pool;
 
   friend class Entity;
   friend class EngineLoop;
@@ -44,7 +52,7 @@ class ISETTA_API Level {
 
  protected:
   std::list<class Entity*> entities;
-  std::stack<class Component*> componentsToStart;
+  std::queue<class Component*> componentsToStart;
   std::set<class Component*> componentsToDestroy;
 
  public:
@@ -53,15 +61,34 @@ class ISETTA_API Level {
   virtual ~Level() = default;
 
   virtual std::string GetName() const = 0;
-  class Entity* GetEntityByName(const std::string&);
-  class std::list<class Entity*> GetEntitiesByName(const std::string&);
+  /**
+   * \brief Get all entities in the level
+   */
   class std::list<class Entity*> GetEntities() const;
+  /**
+   * \brief Get entitiy by name in the level, if multiple will return first
+   * found
+   */
+  class Entity* GetEntityByName(const std::string_view);
+  /**
+   * \brief Get all entities with the name in the level
+   */
+  class std::list<class Entity*> GetEntitiesByName(const std::string_view);
 
-  virtual void OnLevelLoad() = 0;
-  virtual void OnLevelUnload() {}
+  /**
+   * \brief This is where we put our "level loading script". This function is
+   * called when the level is loaded, so this is where you should
+   * spawn/initialize your entities and layout your level
+   */
+  virtual void Load() = 0;
 
-  class Entity* AddEntity(std::string name, bool entityStatic = false);
-  class Entity* AddEntity(std::string name, class Entity* parent,
-                          bool entityStatic = false);
+  /**
+   * \brief Called the this level has finished unloading
+   */
+  virtual void OnUnload() {}
+  /**
+   * \brief Check if the level is loaded
+   */
+  bool IsLevelLoaded() const;
 };
 }  // namespace Isetta

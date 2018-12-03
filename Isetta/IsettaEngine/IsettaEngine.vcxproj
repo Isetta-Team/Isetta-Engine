@@ -9,6 +9,14 @@
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Release DLL|x64">
+      <Configuration>Release DLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseEditor DLL|x64">
+      <Configuration>ReleaseEditor DLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
@@ -43,6 +51,20 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release DLL|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor DLL|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -55,6 +77,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release DLL|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor DLL|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -72,6 +100,18 @@
     <OutDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)-intermediate\</IntDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release DLL|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <OutDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)-intermediate\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor DLL|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <OutDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)-intermediate\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
@@ -79,9 +119,12 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)IsettaEngine;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(SolutionDir)External\imgui\examples\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLFW_INCLUDE_NONE;IN_ENGINE;_EDITOR;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLFW_INCLUDE_NONE;_EDITOR;IN_ENGINE;_EDITOR;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ShowIncludes>false</ShowIncludes>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -93,7 +136,9 @@
       <Command>XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(ConfigurationName)\Horde3D.dll" "$(TargetDir)"
 XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(ConfigurationName)\Horde3DUtils.dll" "$(TargetDir)"
 XCOPY  /Y /R "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"
-XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Debug\$(Platform)\*.dll" "$(TargetDir)"</Command>
+XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Debug\$(Platform)\*.dll" "$(TargetDir)"
+XCOPY /Y /R /S /I "$(ProjectDir)Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R "$(ProjectDir)*.cfg" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug DLL|x64'">
@@ -103,8 +148,8 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Debug\$(Platform)\*.d
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)IsettaEngine;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(SolutionDir)External\imgui\examples\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLFW_INCLUDE_NONE;ISETTA_EXPORTS;_EDITOR;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);EDITOR</PreprocessorDefinitions>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>GLFW_INCLUDE_NONE;_EDITOR;ISETTA_EXPORTS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
@@ -116,8 +161,10 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Debug\$(Platform)\*.d
     <PostBuildEvent>
       <Command>XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\Debug\Horde3D.dll" "$(TargetDir)"
 XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\Debug\Horde3DUtils.dll" "$(TargetDir)"
-xcopy /y /d "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"
-XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Debug\$(Platform)\*.dll" "$(TargetDir)"</Command>
+XCOPY /Y /R "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"
+XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Debug\$(Platform)\*.dll" "$(TargetDir)"
+XCOPY /Y /R /S /I "$(ProjectDir)Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R "$(ProjectDir)*.cfg" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -130,7 +177,7 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Debug\$(Platform)\*.d
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)IsettaEngine;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(SolutionDir)External\imgui\examples\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <PreprocessorDefinitions>GLFW_INCLUDE_NONE;IN_ENGINE;_EDITOR;_MBCS;%(PreprocessorDefinitions);EDITOR</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLFW_INCLUDE_NONE;_MBCS;%(PreprocessorDefinitions);IN_EDITOR;</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -141,8 +188,68 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Debug\$(Platform)\*.d
     <PostBuildEvent>
       <Command>XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(ConfigurationName)\Horde3D.dll" "$(TargetDir)"
 XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\$(ConfigurationName)\Horde3DUtils.dll" "$(TargetDir)"
-XCOPY /Y /D "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"
-XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*.dll" "$(TargetDir)"</Command>
+XCOPY /Y /R "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"
+XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*.dll" "$(TargetDir)"
+XCOPY /Y /R /S /I "$(ProjectDir)Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R "$(ProjectDir)*.cfg" "$(TargetDir)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release DLL|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)IsettaEngine;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(SolutionDir)External\imgui\examples\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>GLFW_INCLUDE_NONE;ISETTA_EXPORTS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <ShowIncludes>false</ShowIncludes>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\FMOD\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(SolutionDir)External\brofiler\ProfilerCore\Release*\*.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\Release\Horde3DUtils.lib;$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\Release\*.lib;$(SolutionDir)External\GLFW\Build\src\Release\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\Release\Horde3D.lib;$(SolutionDir)External\imgui\lib\Release\imgui.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\Release\yojimbo.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\Release\Horde3D.dll" "$(TargetDir)"
+XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\Release\Horde3DUtils.dll" "$(TargetDir)"
+XCOPY /Y /R "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"
+XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*.dll" "$(TargetDir)"
+XCOPY /Y /R /S /I "$(ProjectDir)Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R "$(ProjectDir)*.cfg" "$(TargetDir)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor DLL|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)IsettaEngine;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(SolutionDir)External\imgui\examples\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>GLFW_INCLUDE_NONE;_EDITOR;ISETTA_EXPORTS;_CONSOLE_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <ShowIncludes>false</ShowIncludes>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\FMOD\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(SolutionDir)External\brofiler\ProfilerCore\Release*\*.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\Release\Horde3DUtils.lib;$(SolutionDir)External\brofiler\ProfilerCore\$(Platform)\Release\*.lib;$(SolutionDir)External\GLFW\Build\src\Release\glfw3.lib;opengl32.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\Release\Horde3D.lib;$(SolutionDir)External\imgui\lib\Release\imgui.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\Release\yojimbo.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\Release\Horde3D.dll" "$(TargetDir)"
+XCOPY /Y /R "$(SolutionDir)External\Horde3D\Build\Binaries\Windows\Release\Horde3DUtils.dll" "$(TargetDir)"
+XCOPY /Y /R "$(SolutionDir)External\FMOD\lib\*.dll" "$(TargetDir)"
+XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*.dll" "$(TargetDir)"
+XCOPY /Y /R /S /I "$(ProjectDir)Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R "$(ProjectDir)*.cfg" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -161,14 +268,11 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClCompile Include="Components\AxisDrawer.cpp" />
     <ClCompile Include="Components\Editor\EditorComponent.cpp" />
     <ClCompile Include="Components\Editor\Hierarchy.cpp" />
+    <ClCompile Include="Components\NetworkMonitor.cpp" />
     <ClCompile Include="Core\DataStructures\HandleBin.cpp" />
     <ClCompile Include="Core\DataStructures\Trie.cpp" />
-    <ClCompile Include="Custom\AILevel\AITestComponent.cpp" />
-    <ClCompile Include="Custom\AILevel\AITestLevel.cpp" />
-    <ClCompile Include="Custom\AudioLevel\AudioLevel.cpp" />
-    <ClCompile Include="Custom\AudioPlay.cpp" />
-    <ClCompile Include="Custom\CollisionSolverLevel\CollisionSolverLevel.cpp" />
-    <ClCompile Include="Custom\EditorLevel\EditorLevel.cpp" />
+    <ClCompile Include="Core\SystemInfo.cpp" />
+    <ClCompile Include="Core\EngineResource.cpp" />
     <ClCompile Include="Components\GridComponent.cpp" />
     <ClCompile Include="Components\FlyController.cpp" />
     <ClCompile Include="Components\Editor\Inspector.cpp" />
@@ -185,26 +289,11 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClCompile Include="Core\Memory\ObjectHandle.cpp" />
     <ClCompile Include="Core\Time\Clock.cpp" />
     <ClCompile Include="Core\Time\StopWatch.cpp" />
-    <ClCompile Include="Custom\BVHTestLevel\BVHLevel.cpp" />
-    <ClCompile Include="Custom\BVHTestLevel\RandomMover.cpp" />
-    <ClCompile Include="Custom\EmptyLevel\EmptyLevel.cpp" />
     <ClCompile Include="Components\Editor\FrameReporter.cpp" />
-    <ClCompile Include="Custom\EscapeExit.cpp" />
-    <ClCompile Include="Custom\EventTestLevel\EventListenerComponent.cpp" />
-    <ClCompile Include="Custom\DebugCollision.cpp" />
-    <ClCompile Include="Custom\EventTestLevel\EventSenderComponent.cpp" />
-    <ClCompile Include="Custom\EventTestLevel\EventTestLevel.cpp" />
-    <ClCompile Include="Custom\MeshAnimLevel\MeshAnimLevel.cpp" />
-    <ClCompile Include="Custom\KeyTransform.cpp" />
-    <ClCompile Include="Custom\LoadNextLevel.cpp" />
-    <ClCompile Include="Custom\NetworkLevel.cpp" />
+    <ClCompile Include="Custom\EmptyLevel\EmptyLevel.cpp" />
+    <ClCompile Include="Custom\LevelLoadingMenu.cpp" />
     <ClCompile Include="Custom\NoCameraLevel\NoCameraComponent.cpp" />
     <ClCompile Include="Custom\NoCameraLevel\NoCameraLevel.cpp" />
-    <ClCompile Include="Custom\OscillateMove.cpp" />
-    <ClCompile Include="Custom\CollisionsLevel\CollisionsLevel.cpp" />
-    <ClCompile Include="Custom\PrimitiveLevel\PrimitiveLevel.cpp" />
-    <ClCompile Include="Custom\RaycastClick.cpp" />
-    <ClCompile Include="Custom\SkeletonLevel\SkeletonLevel.cpp" />
     <ClCompile Include="EngineLoop.cpp" />
     <ClCompile Include="Events\EventObject.cpp" />
     <ClCompile Include="Events\Events.cpp" />
@@ -218,6 +307,7 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClCompile Include="Graphics\MeshComponent.cpp" />
     <ClCompile Include="Graphics\ParticleSystemComponent.cpp" />
     <ClCompile Include="Graphics\RenderModule.cpp" />
+    <ClCompile Include="Graphics\Window.cpp" />
     <ClCompile Include="Graphics\Texture.cpp" />
     <ClCompile Include="Input\GLFWInput.cpp" />
     <ClCompile Include="Input\InputModule.cpp" />
@@ -237,8 +327,9 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClCompile Include="Core\Debug\DebugDraw.cpp" />
     <ClCompile Include="Core\Memory\StackAllocator.cpp" />
     <ClCompile Include="Core\Memory\PoolAllocator.cpp" />
-    <ClCompile Include="Graphics\Window.cpp" />
+    <ClCompile Include="Graphics\WindowModule.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Networking\NetworkDiscovery.cpp" />
     <ClCompile Include="Networking\NetworkId.cpp" />
     <ClCompile Include="Networking\NetworkingModule.cpp" />
     <ClCompile Include="Networking\NetworkManager.cpp" />
@@ -257,7 +348,6 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClCompile Include="Scene\LevelManager.cpp" />
     <ClCompile Include="Scene\Primitive.cpp" />
     <ClCompile Include="Scene\Transform.cpp" />
-    <ClCompile Include="Custom\FontExample.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\Nav2DAgent.h" />
@@ -277,16 +367,14 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClInclude Include="Components\AxisDrawer.h" />
     <ClInclude Include="Components\Editor\EditorComponent.h" />
     <ClInclude Include="Components\Editor\Hierarchy.h" />
+    <ClInclude Include="Components\NetworkMonitor.h" />
     <ClInclude Include="Core\DataStructures\Array.h" />
+    <ClInclude Include="Core\DataStructures\Delegate.h" />
     <ClInclude Include="Core\DataStructures\HandleBin.h" />
     <ClInclude Include="Core\DataStructures\PriorityQueue.h" />
-    <ClInclude Include="Custom\AILevel\AITestAgent.h" />
-    <ClInclude Include="Custom\AILevel\AITestComponent.h" />
-    <ClInclude Include="Custom\AILevel\AITestLevel.h" />
-    <ClInclude Include="Custom\AudioLevel\AudioLevel.h" />
-    <ClInclude Include="Custom\AudioPlay.h" />
-    <ClInclude Include="Custom\CollisionSolverLevel\CollisionSolverLevel.h" />
-    <ClInclude Include="Custom\EditorLevel\EditorLevel.h" />
+    <ClInclude Include="Core\EngineResource.h" />
+    <ClInclude Include="Core\IsettaCore.h" />
+    <ClInclude Include="Core\SystemInfo.h" />
     <ClInclude Include="Components\GridComponent.h" />
     <ClInclude Include="Components\FlyController.h" />
     <ClInclude Include="Components\Editor\Inspector.h" />
@@ -328,27 +416,11 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClInclude Include="Core\Time\Clock.h" />
     <ClInclude Include="Core\Time\StopWatch.h" />
     <ClInclude Include="Core\Time\Time.h" />
-    <ClInclude Include="Custom\BVHTestLevel\BVHLevel.h" />
-    <ClInclude Include="Custom\BVHTestLevel\RandomMover.h" />
-    <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h" />
     <ClInclude Include="Components\Editor\FrameReporter.h" />
-    <ClInclude Include="Custom\DebugCollision.h" />
-    <ClInclude Include="Custom\EscapeExit.h" />
-    <ClInclude Include="Custom\EventTestLevel\EventListenerComponent.h" />
-    <ClInclude Include="Custom\EventTestLevel\EventSenderComponent.h" />
-    <ClInclude Include="Custom\EventTestLevel\EventTestLevel.h" />
-    <ClInclude Include="Custom\MeshAnimLevel\MeshAnimLevel.h" />
-    <ClInclude Include="Custom\IsettaCore.h" />
-    <ClInclude Include="Custom\KeyTransform.h" />
-    <ClInclude Include="Custom\LoadNextLevel.h" />
-    <ClInclude Include="Custom\NetworkLevel.h" />
+    <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h" />
+    <ClInclude Include="Custom\LevelLoadingMenu.h" />
     <ClInclude Include="Custom\NoCameraLevel\NoCameraComponent.h" />
     <ClInclude Include="Custom\NoCameraLevel\NoCameraLevel.h" />
-    <ClInclude Include="Custom\OscillateMove.h" />
-    <ClInclude Include="Custom\CollisionsLevel\CollisionsLevel.h" />
-    <ClInclude Include="Custom\PrimitiveLevel\PrimitiveLevel.h" />
-    <ClInclude Include="Custom\RaycastClick.h" />
-    <ClInclude Include="Custom\SkeletonLevel\SkeletonLevel.h" />
     <ClInclude Include="EngineLoop.h" />
     <ClInclude Include="Events\EventObject.h" />
     <ClInclude Include="Events\Events.h" />
@@ -363,11 +435,15 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClInclude Include="Graphics\ParticleSystemComponent.h" />
     <ClInclude Include="Graphics\RectTransform.h" />
     <ClInclude Include="Graphics\RenderModule.h" />
-    <ClInclude Include="Graphics\Texture.h" />
     <ClInclude Include="Graphics\Window.h" />
+    <ClInclude Include="Graphics\Texture.h" />
+    <ClInclude Include="Graphics\WindowModule.h" />
     <ClInclude Include="Input\GLFWInput.h" />
     <ClInclude Include="ISETTA_API.h" />
+    <ClInclude Include="Networking\BuiltinMessages.h" />
+    <ClInclude Include="Networking\ClientInfo.h" />
     <ClInclude Include="Networking\Messages.h" />
+    <ClInclude Include="Networking\NetworkDiscovery.h" />
     <ClInclude Include="Networking\NetworkId.h" />
     <ClInclude Include="Networking\NetworkingModule.h" />
     <ClInclude Include="Input\Input.h" />
@@ -391,7 +467,6 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <ClInclude Include="Scene\LevelManager.h" />
     <ClInclude Include="Scene\Primitive.h" />
     <ClInclude Include="Scene\Transform.h" />
-    <ClInclude Include="Custom\FontExample.h" />
     <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>
@@ -400,7 +475,6 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
   <ItemGroup>
     <None Include="config.cfg" />
     <None Include="cpp.hint" />
-    <None Include="Resources\test\Low-Poly-Racing-Car.geo" />
     <None Include="user.cfg" />
   </ItemGroup>
   <ItemGroup>
@@ -412,8 +486,6 @@ XCOPY  /Y /R "$(SolutionDir)External\brofiler\ProfilerCore\Release\$(Platform)\*
     <Xml Include="Resources\pipelines\globalSettings.material.xml" />
     <Xml Include="Resources\pipelines\hdr.pipeline.xml" />
     <Xml Include="Resources\pipelines\postHDR.material.xml" />
-    <Xml Include="Resources\test\Low-Poly-Racing-Car.scene.xml" />
-    <Xml Include="Resources\test\m0DefaultMaterial.material.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\External\brofiler\ProfilerCore\ProfilerCore.vcxproj">

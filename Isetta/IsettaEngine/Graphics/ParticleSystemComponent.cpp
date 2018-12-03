@@ -2,14 +2,18 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Graphics/ParticleSystemComponent.h"
+#include "Core/EngineResource.h"
 #include "Graphics/RenderModule.h"
 #include "Scene/Transform.h"
 #include "Util.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
 
+Isetta::ParticleSystemComponent::ParticleSystemComponent() {
+  renderResource = LoadResourceFromFile(EngineResource::defaultParticle);
+}
+
 Isetta::ParticleSystemComponent::ParticleSystemComponent(
-    std::string_view resourceName)
-    : Component() {
+    std::string_view resourceName) {
   renderResource = LoadResourceFromFile(resourceName);
 }
 

@@ -2,36 +2,38 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Scene/Layers.h"
+
 #include "SID/sid.h"
+#include "Util.h"
 
 namespace Isetta {
 std::string Layers::layers[LAYERS_CAPACITY] = {"Default", "Ignore Raycast"};
 std::unordered_map<class StringId, int> Layers::layerIndex;
+int Layers::size = READONLY_LAYERS;
 
 Layers::Constructor::Constructor() {
   layerIndex.reserve(LAYERS_CAPACITY);
   for (int i = 0; i < READONLY_LAYERS; ++i) {
-    layerIndex.insert(std::make_pair(SID(layers[i].c_str()), i));
+    layerIndex.insert({SID(layers[i].c_str()), i});
   }
 }
 
-void Layers::NameLayer(int layer, std::string layerName) {
-  if (layer < READONLY_LAYERS)
-    throw std::out_of_range(
-        "Layer::NameLayer => Layer must not be READONLY Layer");
-  if (layer >= LAYERS_CAPACITY)
+int Layers::NewLayer(const std::string_view layerName) {
+  if (size == LAYERS_CAPACITY)
     throw std::out_of_range(
         "Layer::NameLayer => Layer must not be larger than LAYERS_CAPACITY(" +
         std::to_string(LAYERS_CAPACITY) + ")");
-  layers[layer] = layerName;
-  layerIndex.insert(std::make_pair(SID(layers[layer].c_str()), layer));
+  layers[size] = layerName;
+  layerIndex.insert({SID(layerName.data()), size});
+  return size++;
 }
 
-int Layers::NameToLayer(std::string layerName) {
-  auto it = layerIndex.find(SID(layerName.c_str()));
+int Layers::NameToLayer(const std::string_view layerName) {
+  auto it = layerIndex.find(SID(layerName.data()));
   if (it == layerIndex.end())
-    throw std::out_of_range("Layer::StringToIndex => Layer name(" + layerName +
-                            ") does not exist");
+    throw std::out_of_range(
+        Util::StrFormat("Layer::StringToIndex => Layer name(%s) does not exist",
+                        layerName.data()));
   return it->second;
 }
 

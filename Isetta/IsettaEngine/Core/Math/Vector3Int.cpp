@@ -22,10 +22,10 @@ const Vector3Int Vector3Int::back = Vector3Int(0, 0, -1);
 Vector3Int::Vector3Int(const Vector2Int& inVector, int inZ)
     : x{inVector.x}, y{inVector.y}, z{inZ} {}
 
-Vector3Int::Vector3Int(const Vector3& inIntVector)
-    : x{static_cast<int>(inIntVector.x)},
-      y{static_cast<int>(inIntVector.y)},
-      z{static_cast<int>(inIntVector.z)} {}
+Vector3Int::Vector3Int(const Vector3& inVector)
+    : x{static_cast<int>(inVector.x)},
+      y{static_cast<int>(inVector.y)},
+      z{static_cast<int>(inVector.z)} {}
 
 Vector3Int::operator class Vector2Int() { return Vector2Int(x, y); }
 

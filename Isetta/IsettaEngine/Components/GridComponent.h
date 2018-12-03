@@ -7,8 +7,15 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(GridComponent, Component, false)
+/**
+ * @brief Draws a debug grid and axis at the origin to help orient, hidden
+ * without _EDITOR
+ *
+ */
+DEFINE_COMPONENT(GridComponent, Component, false)
 public:
+#ifdef _EDITOR
 void Update() override;
-END_COMPONENT(GridComponent, Component)
+#endif
+DEFINE_COMPONENT_END(GridComponent, Component)
 }  // namespace Isetta

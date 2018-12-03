@@ -12,8 +12,7 @@
 namespace Isetta {
 RenderModule* MeshComponent::renderModule{nullptr};
 
-MeshComponent::MeshComponent(std::string_view resourceName) : Component() {
-  // SetAttribute(ComponentAttributes::NEED_UPDATE, false);
+MeshComponent::MeshComponent(std::string_view resourceName) {
   ASSERT(renderModule != nullptr);
   renderModule->meshComponents.push_back(this);
   renderResource = LoadResourceFromFile(resourceName);
@@ -59,12 +58,14 @@ void MeshComponent::OnDisable() {
   h3dSetNodeFlags(renderNode, H3DNodeFlags::Inactive, true);
 }
 
-void MeshComponent::OnDestroy() {
-  h3dRemoveNode(renderNode);
-}
+void MeshComponent::OnDestroy() { h3dRemoveNode(renderNode); }
 
 std::tuple<Math::Vector3, Math::Quaternion>
 MeshComponent::GetJointWorldTransform(std::string jointName) {
+  if (joints.find(SID(jointName.c_str())) == joints.end()) {
+    throw std::logic_error(
+        "MeshComponent::GetJointWorldTransform => No such joint in this mesh");
+  }
   H3DNode jointNode = joints.at(SID(jointName.c_str()));
   const float* data[4];
   const float** testPtr = &data[0];

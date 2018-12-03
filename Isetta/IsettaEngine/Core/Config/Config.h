@@ -15,9 +15,10 @@
 #include "Core/Memory/MemoryManager.h"
 #include "EngineLoop.h"
 #include "Graphics/CameraComponent.h"
+#include "Graphics/GUIModule.h"
 #include "Graphics/LightComponent.h"
 #include "Graphics/RenderModule.h"
-#include "Graphics/Window.h"
+#include "Graphics/WindowModule.h"
 #include "Networking/NetworkingModule.h"
 #include "Scene/LevelManager.h"
 
@@ -47,7 +48,7 @@ class ISETTA_API Config {
   RenderModule::RenderConfig renderConfig;
   CameraComponent::CameraConfig cameraConfig;
   LightComponent::LightConfig lightConfig;
-
+  GUIModule::GUIModuleConfig guiConfig;
   NetworkingModule::NetworkConfig networkConfig;
   MemoryManager::MemoryConfig memoryConfig;
   AudioModule::AudioConfig audioConfig;
@@ -55,10 +56,6 @@ class ISETTA_API Config {
   CollisionsModule::CollisionConfig collisionConfig;
   Debug::DrawConfig drawConfig;
 
-  /// Max FPS of the engine
-  CVar<int> maxFps = {"max_fps", 16};
-  /// Max simulation count of update loop
-  CVar<int> maxSimCount = {"max_simulation_count", 5};
   /// File path for the resources of game/engine
   CVarString resourcePath{"resource_path", "Resources"};
 

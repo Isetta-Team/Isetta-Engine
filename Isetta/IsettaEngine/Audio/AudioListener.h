@@ -5,7 +5,7 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(AudioListener, Component, true)
+DEFINE_COMPONENT(AudioListener, Component, true)
 private:
 inline static class AudioModule* audioModule;
 friend class AudioModule;
@@ -13,5 +13,5 @@ friend class AudioModule;
 public:
 void OnEnable() override;
 void OnDisable() override;
-END_COMPONENT(AudioListener, Component);
+DEFINE_COMPONENT_END(AudioListener, Component);
 }  // namespace Isetta

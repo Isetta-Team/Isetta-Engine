@@ -2,9 +2,18 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Scene/Component.h"
+using namespace Isetta;
 
-BEGIN_COMPONENT(InputTestComponent, Isetta::Component, false)
-void Start() override;
+/**
+ * @brief Demoing of some input capabilities
+ *
+ */
+DEFINE_COMPONENT(InputTestComponent, Component, false)
+private:
+U64 handleA, handleB, handleC;
+
+public:
+void OnEnable() override;
+void OnDisable() override;
 void Update() override;
-END_COMPONENT(InputTestComponent, Isetta::Component)
+DEFINE_COMPONENT_END(InputTestComponent, Component)

@@ -6,6 +6,11 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
+/**
+ * @brief NOT DONE
+ *  ----- IN DEVELOPMENT -----
+ *
+ */
 BEGIN_COMPONENT(PauseComponent, Component, true)
 private:
 bool pause;

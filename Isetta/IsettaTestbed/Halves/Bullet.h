@@ -2,12 +2,9 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Audio/AudioSource.h"
-#include "Core/Math/Vector3.h"
-#include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(Bullet, Component, true)
+DEFINE_COMPONENT(Bullet, Component, true)
 public:
 void Reactivate(const Math::Vector3& pos, const Math::Vector3& flyDir);
 void OnEnable() override;
@@ -23,5 +20,5 @@ float damage{35};
 Math::Vector3 dir{};
 bool initialized = false;
 AudioSource* audio;
-END_COMPONENT(Bullet, Component)
+DEFINE_COMPONENT_END(Bullet, Component)
 }  // namespace Isetta

@@ -35,7 +35,8 @@ void BVTree::Node::SwapOutChild(Node *const oldChild, Node *const newChild) {
   }
 }
 
-BVTree::BVTree() : nodePool(CONFIG_VAL(collisionConfig.bvTreeNodeSize),
+BVTree::BVTree()
+    : nodePool(CONFIG_VAL(collisionConfig.bvTreeNodeSize),
                CONFIG_VAL(memoryConfig.defaultPoolIncrement)) {}
 
 void BVTree::AddCollider(Collider *const collider) {
@@ -108,6 +109,29 @@ bool BVTree::Raycast(Node *const node, const Ray &ray,
 
   return Raycast(node->left, ray, hitInfo, maxDistance) ||
          Raycast(node->right, ray, hitInfo, maxDistance);
+}
+
+Array<RaycastHit> BVTree::RaycastAll(const Ray &ray, float maxDistance) const {
+  Array<RaycastHit> hits;
+  RaycastAll(root, &hits, ray, maxDistance);
+  return hits;
+}
+void BVTree::RaycastAll(Node *const node, Array<RaycastHit> *hits, const Ray &ray,
+                                     float maxDistance) const {
+  if (node == nullptr || !node->aabb.Raycast(ray, nullptr, maxDistance)) {
+    return;
+  }
+  if (node->IsLeaf()) {
+    RaycastHit hitTmp{};
+    if (node->collider->Raycast(ray, &hitTmp, maxDistance)) {
+      hits->PushBack(std::move(hitTmp));
+    }
+
+    return;
+  }
+
+  RaycastAll(node->left, hits, ray, maxDistance);
+  RaycastAll(node->right, hits, ray, maxDistance);
 }
 
 const CollisionUtil::ColliderPairSet &BVTree::GetCollisionPairs() {
@@ -296,9 +320,9 @@ void BVTree::DebugDraw() const {
     if (cur->IsLeaf()) {
 #if _EDITOR
       // if (collisionSet.find(cur->collider) != collisionSet.end()) {
-        color = Color::red;
+      color = Color::red;
       // } else {
-        color = Color::green;
+      color = Color::green;
       // }
       DebugDraw::WireCube(Math::Matrix4::Translate(cur->aabb.GetCenter()) *
                               Math::Matrix4::Scale({cur->aabb.GetSize()}),

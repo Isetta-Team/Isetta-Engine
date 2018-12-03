@@ -14,7 +14,6 @@ class AudioModule {
  public:
   struct AudioConfig {
     CVar<Size> memorySize{"audio_memory_size", 10485760};
-    CVarString audioClips{"audio_clips", ""};
   };
 
  private:
@@ -54,13 +53,13 @@ class AudioModule {
   void Play(class AudioSource* const source) const;
 
   FMOD::System* fmodSystem;
-  std::string soundFilesRoot;
   std::list<class AudioListener*> listeners;
 
   friend class AudioClip;
   friend class AudioSource;
   friend class AudioListener;
   friend class EngineLoop;
+  friend class StackAllocator;
 };
 
 }  // namespace Isetta

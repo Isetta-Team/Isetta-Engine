@@ -5,9 +5,11 @@
 
 #include <functional>
 #include "Core/Config/CVar.h"
+#include "Core/DataStructures/Delegate.h"
 #include "Core/DataStructures/RingBuffer.h"
-#include "Networking/Messages.h"
 #include "Core/Time/Clock.h"
+#include "Networking/ClientInfo.h"
+#include "Networking/Messages.h"
 #include "yojimbo/yojimbo.h"
 
 namespace Isetta {
@@ -23,6 +25,7 @@ class NetworkingModule {
    *
    */
   struct NetworkConfig {
+    CVarString ipPrefix{"ip_prefix", "128"};
     /// Default client IP address
     CVarString defaultClientIP{"default_client_ip", "0.0.0.0"};
     /// Default server IP address
@@ -57,36 +60,47 @@ class NetworkingModule {
   /// Keeps time for the client and server. Mainly used for timeouts.
   Clock clock;
 
-  /// Local client's current address and port.
-  yojimbo::Address clientAddress;
-  /// Local client.
-  yojimbo::Client* client;
+  /// Configuration data for both the network and the client. This should
+  /// probably stay the same among connected clients and servers.
+  yojimbo::ClientServerConfig yojimboConfig;
+
+  /// Key used to join the server.
+  U8* privateKey;
+
+  // ------------------- Server Stuff -------------------
   /// Local server's current address and port.
   yojimbo::Address serverAddress;
   /// Local server.
   yojimbo::Server* server;
-  /// Configuration data for both the network and the client. This should
-  /// probably stay the same among connected clients and servers.
-  yojimbo::ClientServerConfig yojimboConfig;
-  /// TODO(Caleb): Figure out how to allocate server at runtime instead of at
-  /// startup
-  NetworkAllocator* clientAllocator;
   NetworkAllocator* serverAllocator;
-
-  /// Key used to join the server.
-  U8* privateKey;
-  /// Identifier for the client on its remote server (might be unused).
-  U64 clientId;
-
-  /// Queue of messages to be sent from the local client in the next network
-  /// update.
-  RingBuffer<yojimbo::Message*>* clientSendBuffer;
   /// Queue of messages to be sent from the local server in the next network
   /// update.
   RingBuffer<yojimbo::Message*>* serverSendBufferArray;
+  ClientInfo* clientInfos;
+  Delegate<ClientInfo> onClientConnected;
+  Delegate<ClientInfo> onClientDisconnected;
+  bool* wasClientConnectedLastFrame;
+  int clientConnectedCallbackHandle;
+
+  // ------------------- Client Stuff -------------------
+  /// Local client's current address and port.
+  yojimbo::Address clientAddress;
+  /// Local client.
+  yojimbo::Client* client;
+  /// TODO(Caleb): Figure out how to allocate server at runtime instead of at
+  /// startup
+  NetworkAllocator* clientAllocator;
+  /// Identifier for the client on its remote server (might be unused).
+  U64 clientId;
+  /// Queue of messages to be sent from the local client in the next network
+  /// update.
+  RingBuffer<yojimbo::Message*>* clientSendBuffer;
+  Delegate<> onConnectedToServer;
+  Delegate<> onDisconnectedFromServer;
+  bool wasClientRunningLastFrame;
+  int loadLevelCallbackHandle;
 
   // Constructors
-
   NetworkingModule() = default;
   ~NetworkingModule() = default;
 
@@ -118,7 +132,7 @@ class NetworkingModule {
    * @param message Pointer to a Message object that should have been created by
    * a MessageFactory.
    */
-  void AddClientToServerMessage(yojimbo::Message* message);
+  void AddClientToServerMessage(yojimbo::Message* message) const;
   /**
    * @brief Adds the given Message into the local Server's send queue to the
    * given client.
@@ -143,26 +157,26 @@ class NetworkingModule {
    * @brief Sends the local Client's queued messages.
    *
    */
-  void SendClientToServerMessages();
+  void SendClientToServerMessages() const;
   /**
    * @brief Sends the local Server's queued messages for the given client.
    *
    * @param clientIdx Index of the client who will receive the sent messages.
    */
-  void SendServerToClientMessages(int clientIdx);
+  void SendServerToClientMessages(int clientIdx) const;
   /**
    * @brief Receives the remote Client's messages as packets, constructs them
    * into Message objects, then handles them depending on their type and data.
    *
    * @param clientIdx Index of the client who sent the received messages.
    */
-  void ProcessClientToServerMessages(int clientIdx);
+  void ProcessClientToServerMessages(int clientIdx) const;
   /**
    * @brief Receives the remote Server's messages as packets, constructs them
    * into Message objects, then handles them depending on their type and data.
    *
    */
-  void ProcessServerToClientMessages();
+  void ProcessServerToClientMessages() const;
 
   /**
    * @brief Attempts to connect the local Client to a server at the given
@@ -176,13 +190,13 @@ class NetworkingModule {
    * connection.
    */
   void Connect(const char* serverAddress, int serverPort,
-               Action<bool> callback = nullptr);
+               Action<NetworkManager::ClientState> callback = nullptr);
   /**
    * @brief Disconnects the local Client from its connected server, or throws an
    * exception if the Client is not already connected to a server.
    *
    */
-  void Disconnect();
+  void Disconnect() const;
 
   /**
    * @brief Initializes the local Server object with the given address and port.
@@ -198,10 +212,16 @@ class NetworkingModule {
    *
    */
   void CloseServer();
+  bool IsClient() const;
+  bool IsHost() const;
+  bool IsServer() const;
 
-  // Other
+  bool IsClientRunning() const;
+  bool IsServerRunning() const;
+  bool IsClientConnected(int clientIndex) const;
 
   friend class NetworkManager;
   friend class EngineLoop;
+  friend class StackAllocator;
 };
 }  // namespace Isetta

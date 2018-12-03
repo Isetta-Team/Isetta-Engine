@@ -1,0 +1,4 @@
+<Model name="Sphere" geometry="primitives/Sphere/Sphere.geo">
+
+	<Mesh name="Sphere" material="primitives/Sphere/Sphere.material.xml" batchStart="0" batchCount="2880" vertRStart="0" vertREnd="481" />
+</Model>

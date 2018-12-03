@@ -62,6 +62,9 @@ void Entity::CheckDestroy() {
   PROFILE
   if (GetAttribute(EntityAttributes::NEED_DESTROY)) {
     // Destroy itself
+    if (GetActive()) {
+      OnDisable();
+    }
     DestroyImmediately(this);
   } else {
     // Destroy components
@@ -70,8 +73,9 @@ void Entity::CheckDestroy() {
     while (typeIter != componentTypes.end() && compIter != components.end()) {
       Component *comp = *compIter;
       if (comp->GetAttribute(Component::ComponentAttributes::NEED_DESTROY)) {
-        comp->~Component();
+        if (comp->GetActive()) comp->OnDisable();
         comp->OnDestroy();
+        comp->~Component();
         MemoryManager::DeleteOnFreeList<Component>(comp);
         components.Erase(compIter);
         componentTypes.erase(typeIter);
@@ -86,7 +90,7 @@ void Entity::CheckDestroy() {
 void Entity::OnDisable() {
   PROFILE
   for (auto &comp : components) {
-    comp->OnDisable();
+    if (comp->GetActive()) comp->OnDisable();
   }
 }
 
@@ -98,25 +102,37 @@ bool Entity::GetAttribute(EntityAttributes attr) const {
   return attributes.test(static_cast<int>(attr));
 }
 
-Entity::Entity(const std::string &name)
-    : internalTransform(this), attributes{0b101}, entityName{name}, transform(&internalTransform), isStatic{false} {
-  CoCreateGuid(&entityId);
-  OnEnable();
-}
-
-Entity::Entity(const std::string &name, const bool &entityStatic)
+Entity::Entity(const std::string &name, const bool entityStatic)
     : internalTransform(this),
       attributes{0b101},
-      entityName{name}, transform(&internalTransform),
+      entityName{name},
+      transform(&internalTransform),
       isStatic{entityStatic} {
   CoCreateGuid(&entityId);
   OnEnable();
 }
 
 Entity::~Entity() {
-  OnDisable();
   Destroy(this);
   CheckDestroy();
+}
+
+std::string Entity::GetEntityIdString() const {
+  std::array<char, 40> output;
+  snprintf(output.data(), output.size(),
+           "{%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x}",
+           entityId.Data1, entityId.Data2, entityId.Data3, entityId.Data4[0],
+           entityId.Data4[1], entityId.Data4[2], entityId.Data4[3],
+           entityId.Data4[4], entityId.Data4[5], entityId.Data4[6],
+           entityId.Data4[7]);
+
+  return std::string(output.data());
+}
+
+Entity *Entity::Instantiate(const std::string name, Entity *parent,
+                            const bool entityStatic) {
+  return LevelManager::Instance().loadedLevel->AddEntity(name, parent,
+                                                         entityStatic);
 }
 
 void Entity::Destroy(Entity *entity) {
@@ -132,11 +148,11 @@ void Entity::Destroy(Entity *entity) {
 void Entity::DestroyHelper(Entity *entity) {
   Array<Transform *> removingChildren;
   entity->SetAttribute(EntityAttributes::NEED_DESTROY, true);
-  for (Transform* child : entity->transform->children) {
+  for (Transform *child : entity->transform->children) {
     removingChildren.PushBack(child);
     DestroyHelper(child->entity);
   }
-  for (Transform* child : removingChildren) {
+  for (Transform *child : removingChildren) {
     entity->transform->RemoveChild(child);
   }
   entity->transform->parent = nullptr;
@@ -175,6 +191,10 @@ void Entity::SetActive(const bool inActive) {
 
 bool Entity::GetActive() const {
   return GetAttribute(EntityAttributes::IS_ACTIVE);
+}
+
+bool Entity::IsMoveable() const {
+  return !isStatic || !LevelManager::Instance().loadedLevel->IsLevelLoaded();
 }
 
 void Entity::SetTransform(const Math::Vector3 &worldPos,

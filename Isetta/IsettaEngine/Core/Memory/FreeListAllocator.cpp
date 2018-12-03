@@ -4,7 +4,6 @@
 #include "Core/Memory/FreeListAllocator.h"
 #include "Core/Config/Config.h"
 #include "Core/Memory/MemUtil.h"
-#include <iostream>
 
 namespace Isetta {
 
@@ -22,8 +21,33 @@ FreeListAllocator::~FreeListAllocator() {
   }
 
 #if _DEBUG
-  LOG_WARNING(Debug::Channel::Memory, "Memory leak of %I64u detect on freelist",
-              sizeUsed);
+  if (sizeUsed > 0) {
+    LOG_WARNING(Debug::Channel::Memory,
+                "You did %I64u news and %I64u deletes; %I64u newArrs and %I64u "
+                "deleteArrs %I64u allocs and %I64u frees.",
+                numOfNews, numOfDeletes, numOfArrNews, numOfArrDeletes,
+                numOfAllocs, numOfFrees);
+
+    LOG_WARNING(Debug::Channel::Memory,
+                "Memory leak of %I64u detected on freelist", sizeUsed);
+
+    LOG_WARNING(Debug::Channel::Memory,
+                "\u2193\u2193\u2193\u2193\u2193\u2193\u2193\u2193\u2193\u2193 "
+                "Dumping Memory Leaks Below "
+                "\u2193\u2193\u2193\u2193\u2193\u2193\u2193\u2193\u2193\u2193");
+    LOG_WARNING(Debug::Channel::Memory, "Name \t\t\t Count");
+    for (auto& pair : monitor) {
+      Allocations allocations = pair.second;
+      LOG_WARNING(Debug::Channel::Memory, "%s \t %d", allocations.first.c_str(),
+                  allocations.second);
+    }
+    LOG_WARNING(Debug::Channel::Memory,
+                "\u2191\u2191\u2191\u2191\u2191\u2191\u2191\u2191\u2191\u2191 "
+                "See Memory Leak Dump Above "
+                "\u2191\u2191\u2191\u2191\u2191\u2191\u2191\u2191\u2191\u2191");
+  } else {
+    LOG_INFO(Debug::Channel::Memory, "NO MEMORY LEAK! YOU ARE FUNOMENAL!!!");
+  }
 #endif
 
   std::free(memHead);
@@ -88,6 +112,19 @@ void* FreeListAllocator::Alloc(const Size size, const U8 alignment) {
       AllocHeader(allocSize, adjustment);
 #if _DEBUG
   sizeUsed += allocSize;
+  if (monitorPureAlloc) {
+    numOfAllocs++;
+    auto name = Util::StrFormat("AllocSize[%I64u]", allocSize);
+    StringId sid = SID(name);
+    auto it = monitor.find(sid);
+    if (it != monitor.end()) {
+      Allocations allocations = it->second;
+      allocations.second++;
+      it->second = allocations;
+    } else {
+      monitor.insert({sid, {name, 1}});
+    }
+  }
 #endif
 
   void* ret = reinterpret_cast<void*>(alignedAddress);
@@ -100,11 +137,26 @@ void FreeListAllocator::Free(void* memPtr) {
   auto* allocHeader = reinterpret_cast<AllocHeader*>(allocHeaderAdd);
 #if _DEBUG
   sizeUsed -= allocHeader->size;
+  if (monitorPureAlloc) {
+    numOfFrees++;
+    auto name = Util::StrFormat("AllocSize[%I64u]", allocHeader->size);
+    StringId sid = SID(name);
+    auto it = monitor.find(sid);
+    ASSERT(it != monitor.end());
+    Allocations allocations = it->second;
+    allocations.second--;
+    if (allocations.second == 0) {
+      monitor.erase(it);
+    } else {
+      it->second = allocations;
+    }
+  }
 #endif
   PtrInt nodeAddress = allocHeaderAdd - allocHeader->adjustment;
   auto* newNode =
       new (reinterpret_cast<void*>(nodeAddress)) Node(allocHeader->size);
-  memset(newNode + 1, 0xD, newNode->size - nodeSize);
+
+  memset(newNode + 1, 0x0, newNode->size - nodeSize);
 
   InsertNode(newNode);
 }
@@ -126,7 +178,8 @@ void FreeListAllocator::Expand() {
   Node* newNode = new (newMem) Node{increment};
   InsertNode(newNode);
   additionalMemory.push_back(newMem);
-  LOG_INFO(Debug::Channel::Memory, "Freelist just expanded by %I64u", increment);
+  LOG_INFO(Debug::Channel::Memory, "Freelist just expanded by %I64u",
+           increment);
 #if _DEBUG
   totalSize += increment;
 #endif
@@ -188,7 +241,7 @@ void FreeListAllocator::TryMergeWithNext(Node* node) {
     // if the adjacent next address is a node
     node->size += node->next->size;
     node->next = node->next->next;
-    memset(node + 1, 0xD, node->size - nodeSize);
+    memset(node + 1, 0x0, node->size - nodeSize);
     // the original node->next is effectively deleted cause no one has reference
     // to it
   }
@@ -200,9 +253,10 @@ void FreeListAllocator::Print() const {
   static int i = interval;
   ++i;
   if (i > interval) {
-    LOG_INFO(Debug::Channel::Memory, "Freelist usage: %I64u / %I64u = %.3f %%",
-             sizeUsed, totalSize,
-             static_cast<float>(sizeUsed) / totalSize * 100);
+    // LOG_INFO(Debug::Channel::Memory, "Freelist usage: %I64u / %I64u = %.3f
+    // %%",
+    //          sizeUsed, totalSize,
+    //          static_cast<float>(sizeUsed) / totalSize * 100);
     i = 0;
   }
 }

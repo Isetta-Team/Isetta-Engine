@@ -3,14 +3,18 @@
  */
 #include "Graphics/GUIModule.h"
 
+#include "Core/Config/Config.h"
 #include "Core/Debug/Logger.h"
 #include "Core/Memory/MemoryManager.h"
+#include "Graphics/Font.h"
 #include "Graphics/GUI.h"
 #include "Input/GLFWInput.h"
 #include "Scene/Level.h"
 #include "Scene/LevelManager.h"
 
+#include "SID/sid.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
+#include "glad/glad.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
@@ -54,8 +58,8 @@ void GUIModule::StartUp(const GLFWwindow* win) {
   // Setup Dear ImGui binding
   ImGui_ImplGlfw_InitForOpenGL(const_cast<GLFWwindow*>(winHandle), false);
   ImGui_ImplOpenGL3_Init();
-  // io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard
-  // Controls io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;   // Enable
+  // io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Controls
+  io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable
   // Gamepad Controls
 
   // Setup style
@@ -75,6 +79,16 @@ void GUIModule::StartUp(const GLFWwindow* win) {
   // io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f,
   // NULL, io.Fonts->GetGlyphRangesJapanese());
   // IM_ASSERT(font != NULL);
+  const std::string fontName = "Lato-Regular";
+  const std::string filepath =
+      CONFIG_VAL(resourcePath) + "\\fonts\\" + fontName + ".ttf";
+  const float fontSize = CONFIG_VAL(guiConfig.defaultFontSize);
+  auto font = io.Fonts->AddFontFromFileTTF(filepath.c_str(), fontSize);
+  std::unordered_map<float, Font*> fontSizes{
+      {fontSize, reinterpret_cast<Font*>(font)}};
+  Font::fonts.insert({SID(fontName.c_str()), {filepath, fontSizes}});
+  io.FontDefault = font;
+  ASSERT(font != NULL);
 
   GLFWInput::RegisterMouseButtonCallback(ImGui_ImplGlfw_MouseButtonCallback);
   GLFWInput::RegisterScrollCallback(ImGui_ImplGlfw_ScrollCallback);
@@ -84,6 +98,16 @@ void GUIModule::StartUp(const GLFWwindow* win) {
 
 void GUIModule::Update(float deltaTime) {
   BROFILER_CATEGORY("GUI Update", Profiler::Color::PowderBlue);
+
+  const bool empty = Font::loadFonts.empty();
+  while (!Font::loadFonts.empty()) {
+    auto [fontId, filepath, fontSize] = Font::loadFonts.top();
+    auto font = reinterpret_cast<Font*>(
+        ImGui::GetIO().Fonts->AddFontFromFileTTF(filepath.c_str(), fontSize));
+    Font::fonts.find(fontId)->second.second.insert({fontSize, font});
+    Font::loadFonts.pop();
+  }
+  if (!empty) ImGui_ImplOpenGL3_CreateDeviceObjects();
 
   // LOG_INFO(Isetta::Debug::Channel::GUI,
   //         "-------------GUI UPDATE 1-------------");
@@ -101,7 +125,7 @@ void GUIModule::Update(float deltaTime) {
   ImGui::SetNextWindowSize(
       ImVec2{static_cast<float>(winWidth), static_cast<float>(winHeight)});
   ImGui::Begin(
-      "MainWindow", NULL,
+      "###MainWindow", NULL,
       ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
           ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar |
           ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse |

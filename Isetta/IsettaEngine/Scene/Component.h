@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include "ISETTA_API.h"
 
-#define BEGIN_COMPONENT(NAME, BASE, UNIQUE)                    \
+#define DEFINE_COMPONENT(NAME, BASE, UNIQUE)                   \
   template <bool Unique>                                       \
   class ISETTA_API_DECLARE                                     \
       Isetta::ComponentRegistry<class NAME, BASE, Unique> {    \
@@ -23,13 +23,18 @@
                                                                \
    private:
 
-#define END_COMPONENT(NAME, BASE)                                        \
+#define DEFINE_COMPONENT_END(NAME, BASE)                                 \
   }                                                                      \
   ;                                                                      \
   template <bool Unique>                                                 \
   bool Isetta::ComponentRegistry<NAME, BASE, Unique>::NAME##Registered = \
       Component::RegisterComponent(std::type_index(typeid(NAME)),        \
                                    std::type_index(typeid(BASE)), Unique);
+
+#define REGISTER_COMPONENT(NAME, BASE, UNIQUE)                           \
+  bool Isetta::ComponentRegistry<NAME, BASE, UNIQUE>::NAME##Registered = \
+      Component::RegisterComponent(std::type_index(typeid(NAME)),        \
+                                   std::type_index(typeid(BASE)), UNIQUE);
 
 namespace Isetta {
 
@@ -57,9 +62,6 @@ class ISETTA_API Component {
   static void FlattenHelper(std::type_index parent, std::type_index curr);
   static bool isFlattened;
 
-  inline static class Entity* curEntity{nullptr};
-  inline static class Transform* curTransform{nullptr};
-
  protected:
   enum class ComponentAttributes {
     IS_ACTIVE,
@@ -84,22 +86,52 @@ class ISETTA_API Component {
   class Entity* const entity;
   class Transform* const transform;
 
-  virtual void OnEnable() {}
+  /**
+   * \brief Awake is called once, immediately when the component is first
+   * created and enabled
+   */
   virtual void Awake() {}
+  /**
+   * \brief OnEnable is called immediately each time the component becomes
+   * active, including after creation
+   */
+  virtual void OnEnable() {}
+  /**
+   * \brief Start is called once, on the first update frame after the component
+   * is created and enabled
+   */
   virtual void Start() {}
+  /**
+   * \brief GuiUpdate is called each frame (variable delta time), GUI can only be called in GuiUpdate
+   */
   virtual void GuiUpdate() {
     SetAttribute(ComponentAttributes::NEED_GUI_UPDATE, false);
   }
+  /**
+   * \brief Update is called each frame (variable delta time)
+   */
   virtual void Update() {
     SetAttribute(ComponentAttributes::NEED_UPDATE, false);
   }
+  /**
+   * \brief LateUpdate is called each frame (variable delta time)
+   */
   virtual void LateUpdate() {
     SetAttribute(ComponentAttributes::NEED_LATE_UPDATE, false);
   }
+  /**
+   * \brief FixedUpdate is called on fixed time (constant delta time)
+   */
   virtual void FixedUpdate() {
     SetAttribute(ComponentAttributes::NEED_FIXED_UPDATE, false);
   }
+  /**
+   * \brief OnDestroy is called once when the component is destroyed
+   */
   virtual void OnDestroy() {}
+  /**
+   * \brief OnDisable is called immediately each time the component becomes inactive
+   */
   virtual void OnDisable() {}
 
   static bool RegisterComponent(std::type_index curr, std::type_index base,

@@ -13,6 +13,7 @@ class ISETTA_API EngineLoop {
     CVar<int> maxSimCount{"max_simulation_count", 5};
   };
 
+  // Start the whole game
   EngineLoop();
   ~EngineLoop();
 

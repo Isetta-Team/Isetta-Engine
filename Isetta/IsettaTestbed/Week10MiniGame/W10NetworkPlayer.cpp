@@ -2,11 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Week10MiniGame/W10NetworkPlayer.h"
-#include "Networking/NetworkTransform.h"
-#include "Custom/IsettaCore.h"
-#include "Events/EventObject.h"
-#include "Events/Events.h"
-#include "Networking/NetworkId.h"
 #include "W10NetworkManager.h"
 
 void W10NetworkPlayer::InitPosition() {
@@ -30,10 +25,9 @@ W10NetworkPlayer::W10NetworkPlayer(bool isRight, int swordNetID,
 
 void W10NetworkPlayer::Awake() {
   entity->AddComponent<Isetta::MeshComponent>(
-      "blockFencing/Enemy.scene.xml");
+      "Week10/Enemy.scene.xml");
 
-  swordEntity = CREATE_ENTITY("Sword2");
-  swordEntity->AddComponent<Isetta::MeshComponent>("primitive/cube.scene.xml");
+  swordEntity = Isetta::Primitive::Create(Isetta::Primitive::Type::Cube);
   auto networkId = swordEntity->AddComponent<Isetta::NetworkId>(swordNetId);
   networkId->clientAuthorityId = clientAuthorityId;
   swordEntity->AddComponent<Isetta::NetworkTransform>();

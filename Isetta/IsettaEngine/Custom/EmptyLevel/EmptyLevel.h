@@ -3,10 +3,13 @@
  */
 #pragma once
 #include "Scene/IsettaLevel.h"
-#include "Scene/Level.h"
 
+/**
+ * @brief Empty level to be used as a starting point for user created levels
+ *
+ */
 namespace Isetta {
-CREATE_LEVEL(EmptyLevel)
-void OnLevelLoad() override;
-CREATE_LEVEL_END
+DEFINE_LEVEL(EmptyLevel)
+void Load() override;
+DEFINE_LEVEL_END
 }  // namespace Isetta

@@ -4,6 +4,7 @@
 
 #include "Networking/NetworkManager.h"
 #include "Core/Config/Config.h"
+#include "Networking/BuiltinMessages.h"
 #include "Networking/NetworkId.h"
 #include "Networking/NetworkTransform.h"
 #include "Networking/NetworkingModule.h"
@@ -11,73 +12,147 @@
 
 namespace Isetta {
 
-NetworkManager::NetworkManager() : networkIds(1){};
+NetworkManager::NetworkManager() : networkIds(1) {}
 
 NetworkManager& NetworkManager::Instance() {
   static NetworkManager instance;
   return instance;
 }
 
-void NetworkManager::SendMessageFromClient(yojimbo::Message* message) {
+void NetworkManager::SendMessageFromClient(yojimbo::Message* message) const {
   networkingModule->AddClientToServerMessage(message);
 }
 
-void NetworkManager::SendMessageFromServer(int clientIdx,
-                                           yojimbo::Message* message) {
+void NetworkManager::SendMessageFromServer(const int clientIdx,
+                                           yojimbo::Message* message) const {
   networkingModule->AddServerToClientMessage(clientIdx, message);
 }
 
-void NetworkManager::ConnectToServer(const char* serverAddress,
-                                     Action<bool> callback) {
-  networkingModule->Connect(
-      serverAddress, Config::Instance().networkConfig.serverPort.GetVal(),
-      callback);
+bool NetworkManager::IsClientRunning() const {
+  return networkingModule->IsClientRunning();
 }
 
-void NetworkManager::DisconnectFromServer() { networkingModule->Disconnect(); }
-
-void NetworkManager::CreateServer(const char* address) {
-  networkingModule->CreateServer(
-      address, Config::Instance().networkConfig.serverPort.GetVal());
+bool NetworkManager::IsServerRunning() const {
+  return networkingModule->IsServerRunning();
 }
 
-bool NetworkManager::LocalClientIsConnected() {
-  return networkingModule->client->IsConnected();
-}
-
-bool NetworkManager::ClientIsConnected(int clientIdx) {
-  return networkingModule->server->IsClientConnected(clientIdx);
-}
-
-bool NetworkManager::ServerIsRunning() {
-  return networkingModule->server && networkingModule->server->IsRunning();
+bool NetworkManager::IsClientConnected(const int clientIdx) const {
+  return networkingModule->IsClientConnected(clientIdx);
 }
 
 int NetworkManager::GetMaxClients() {
-  return Config::Instance().networkConfig.maxClients.GetVal();
+  return CONFIG_VAL(networkConfig.maxClients);
 }
 
-int NetworkManager::GetClientIndex() {
+int NetworkManager::GetClientIndex() const {
   return networkingModule->client->GetClientIndex();
 }
 
-void NetworkManager::CloseServer() { networkingModule->CloseServer(); }
+U64 NetworkManager::RegisterConnectedToServerCallback(
+    const Action<>& listener) const {
+  return networkingModule->onConnectedToServer.Subscribe(listener);
+}
+
+void NetworkManager::UnregisterConnectedToServerCallback(U64& handle) const {
+  networkingModule->onConnectedToServer.Unsubscribe(handle);
+}
+
+U64 NetworkManager::RegisterDisconnectedFromServerCallback(
+    const Action<>& listener) const {
+  return networkingModule->onDisconnectedFromServer.Subscribe(listener);
+}
+
+void NetworkManager::UnregisterDisconnectedFromServerCallback(U64& handle) const {
+  networkingModule->onDisconnectedFromServer.Unsubscribe(handle);
+}
+
+U64 NetworkManager::RegisterClientConnectedCallback(
+    const Action<ClientInfo>& listener) const {
+  return networkingModule->onClientConnected.Subscribe(listener);
+}
+
+void NetworkManager::UnregisterClientConnectedCallback(U64& handle) const {
+  networkingModule->onClientConnected.Unsubscribe(handle);
+}
+
+U64 NetworkManager::RegisterClientDisconnectedCallback(
+    const Action<ClientInfo>& listener) const {
+  return networkingModule->onClientDisconnected.Subscribe(listener);
+}
+
+void NetworkManager::UnregisterClientDisconnectedCallback(U64& handle) const {
+  networkingModule->onClientDisconnected.Unsubscribe(handle);
+}
+
+void NetworkManager::StartServer(std::string_view serverIP) const {
+  networkingModule->CreateServer(serverIP.data(), GetServerPort());
+}
+
+void NetworkManager::StopServer() const { networkingModule->CloseServer(); }
+
+void NetworkManager::StartClient(std::string_view serverIP,
+                                 const Action<ClientState>& onStarted) const {
+  networkingModule->Connect(serverIP.data(), GetServerPort(), onStarted);
+}
+
+void NetworkManager::StopClient() const { networkingModule->Disconnect(); }
+
+void NetworkManager::StartHost(std::string_view hostIP) const {
+  networkingModule->CreateServer(hostIP.data(), GetServerPort());
+  networkingModule->Connect(hostIP.data(), GetServerPort());
+  LOG_INFO(Debug::Channel::Networking, "Host Started on %s", hostIP.data());
+}
+
+void NetworkManager::StopHost() const {
+  networkingModule->Disconnect();
+  networkingModule->CloseServer();
+}
+
+bool NetworkManager::IsClient() const { return networkingModule->IsClient(); }
+
+bool NetworkManager::IsHost() const { return networkingModule->IsHost(); }
+
+bool NetworkManager::IsServer() const { return networkingModule->IsServer(); }
+
+void NetworkManager::NetworkLoadLevel(std::string_view levelName) {
+  if (!IsServerRunning()) {
+    LOG_ERROR(Debug::Channel::Networking,
+              "NetworkLevel can only be called when server running");
+    return;
+  }
+  if (levelName.length() >= LoadLevelMessage::levelNameMaxLength) {
+    LOG_ERROR(Debug::Channel::Networking,
+              "Level name [%s] is too long and cannot be sent over network, "
+              "consider giving it a short name",
+              levelName.data());
+    return;
+  }
+  SendMessageFromServerToAll<LoadLevelMessage>(
+      [levelName](LoadLevelMessage* inMessage) {
+        strcpy_s(inMessage->levelName, levelName.data());
+      });
+
+  if (!IsClientRunning()) {
+    LevelManager::Instance().LoadLevel(levelName);
+  }
+}
 
 std::list<std::pair<U16, Action<yojimbo::Message*>>>
-NetworkManager::GetClientFunctions(int type) {
+NetworkManager::GetClientFunctions(const int type) {
   return clientCallbacks[type];
 }
 std::list<std::pair<U16, Action<int, yojimbo::Message*>>>
-NetworkManager::GetServerFunctions(int type) {
+NetworkManager::GetServerFunctions(const int type) {
   return serverCallbacks[type];
 }
 
-yojimbo::Message* NetworkManager::CreateClientMessage(int messageId) {
+yojimbo::Message* NetworkManager::CreateClientMessage(
+    const int messageId) const {
   return networkingModule->client->CreateMessage(messageId);
 }
 
-yojimbo::Message* NetworkManager::CreateServerMessage(int clientIdx,
-                                                      int messageId) {
+yojimbo::Message* NetworkManager::CreateServerMessage(
+    const int clientIdx, const int messageId) const {
   return networkingModule->server->CreateMessage(clientIdx, messageId);
 }
 
@@ -86,7 +161,7 @@ Entity* NetworkManager::GetNetworkEntity(const U32 id) {
   if (it != networkIdToComponentMap.end()) {
     return it->second->entity;
   }
-  return NULL;
+  return nullptr;
 }
 
 NetworkId* NetworkManager::GetNetworkId(const U32 id) {
@@ -94,11 +169,11 @@ NetworkId* NetworkManager::GetNetworkId(const U32 id) {
   if (it != networkIdToComponentMap.end()) {
     return it->second;
   }
-  return NULL;
+  return nullptr;
 }
 
 U32 NetworkManager::CreateNetworkId(NetworkId* networkId) {
-  if (!ServerIsRunning()) {
+  if (!IsServerRunning()) {
     throw std::exception("Cannot create a new network id on a client");
   }
   U32 netId = networkIds.GetHandle();
@@ -132,5 +207,9 @@ void NetworkManager::RemoveNetworkId(NetworkId* networkId) {
   networkIdToComponentMap.erase(networkId->id);
   networkIds.ReturnHandle(networkId->id);
   networkId->id = NULL;
+}
+
+inline U16 NetworkManager::GetServerPort() {
+  return CONFIG_VAL(networkConfig.serverPort);
 }
 }  // namespace Isetta

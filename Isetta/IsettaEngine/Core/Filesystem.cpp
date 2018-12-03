@@ -121,28 +121,33 @@ void Filesystem::GetReadWriteError() {
     case ERROR_IO_PENDING:  // not an error
       break;
     case ERROR_INVALID_USER_BUFFER:
-      throw std::exception(
+      LOG_ERROR(
+          Debug::Channel::FileIO,
           "Filesystem::GetReadWriteError() => ERROR_INVALID_USER_BUFFER too "
           "many outstanding asynchronous I/O requests");
       break;
     case ERROR_NOT_ENOUGH_MEMORY:
-      throw std::exception(
+      LOG_ERROR(
+          Debug::Channel::FileIO,
           "Filesystem::GetReadWriteError() => ERROR_NOT_ENOUGH_MEMORY too many "
           "outstanding asynchronous I/O "
           "requests");
       break;
     case ERROR_NOT_ENOUGH_QUOTA:
-      throw std::exception(
+      LOG_ERROR(
+          Debug::Channel::FileIO,
           "Filesystem::GetReadWriteError() => ERROR_NOT_ENOUGH_QUOTA process's "
           "buffer could not be page-locked");
       break;
     case ERROR_INSUFFICIENT_BUFFER:
-      throw std::exception(
+      LOG_ERROR(
+          Debug::Channel::FileIO,
           "Filesystem::GetReadWriteError() => ERROR_INSUFFICIENT_BUFFER read "
           "from a mailslot that has a buffer that is too small");
       break;
     case ERROR_OPERATION_ABORTED:
-      throw std::exception("Filesystem::GetError() => ERROR_OPERATION_ABORTED");
+      LOG_ERROR(Debug::Channel::FileIO,
+                "Filesystem::GetError() => ERROR_OPERATION_ABORTED");
     default: {
       // Decode any other errors codes.
       LPCTSTR errMsg = ErrorMessage(dwError);
@@ -152,7 +157,7 @@ void Filesystem::GetReadWriteError() {
       int n = sprintf_s(buffer, 1023, "GetOverlappedResult failed (%d): %s\n",
                         dwError, errMsg);
       buffer[n] = '\0';
-      throw std::exception(buffer);
+      LOG_ERROR(Debug::Channel::FileIO, buffer);
     }
   }
 }
@@ -168,14 +173,14 @@ DWORD Filesystem::GetFileError() {
       //    "exists, cannot be created");
       break;
     case ERROR_FILE_EXISTS:
-      throw std::exception(
-          "Filesystem::GetFileError ERROR_FILE_EXISTS file cannot be "
-          "created, file exists");
+      LOG_ERROR(Debug::Channel::FileIO,
+                "Filesystem::GetFileError ERROR_FILE_EXISTS file cannot be "
+                "created, file exists");
       break;
     case ERROR_FILE_NOT_FOUND:
-      throw std::exception(
-          "Filesystem::GetFileError ERROR_FILE_NOT_FOUND file cannot be "
-          "opened, not found");
+      LOG_ERROR(Debug::Channel::FileIO,
+                "Filesystem::GetFileError ERROR_FILE_NOT_FOUND file cannot be "
+                "opened, not found");
       break;
     default: {
       // Decode any other errors codes.
@@ -186,7 +191,7 @@ DWORD Filesystem::GetFileError() {
       int n = sprintf_s(buffer, 1023, "GetOverlappedResult failed (%d): %s\n",
                         dwError, errMsg);
       buffer[n] = '\0';
-      throw std::exception(buffer);
+      LOG_ERROR(Debug::Channel::FileIO, buffer);
     }
   }
   return dwError;

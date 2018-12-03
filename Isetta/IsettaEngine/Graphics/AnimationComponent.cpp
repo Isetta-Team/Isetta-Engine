@@ -4,7 +4,7 @@
 #include "Graphics/AnimationComponent.h"
 
 #include "Core/Config/Config.h"
-#include "Horde3D.h"
+#include "Horde3D/Horde3D/Bindings/C++/Horde3D.h"
 #include "Util.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
 

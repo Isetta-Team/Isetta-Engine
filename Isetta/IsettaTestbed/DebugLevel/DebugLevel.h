@@ -2,12 +2,12 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Core/Memory/MemoryManager.h"
-#include "Scene/Level.h"
-#include "Scene/LevelManager.h"
-
 using namespace Isetta;
 
-CREATE_LEVEL(DebugLevel)
-void OnLevelLoad() override;
-CREATE_LEVEL_END
+/**
+ * @brief Level demoing our debug drawing capabilities
+ *
+ */
+DEFINE_LEVEL(DebugLevel)
+void Load() override;
+DEFINE_LEVEL_END

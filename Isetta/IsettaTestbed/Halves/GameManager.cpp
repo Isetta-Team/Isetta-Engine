@@ -3,11 +3,6 @@
  */
 #include "GameManager.h"
 
-#include "Bullet.h"
-#include "Core/Math/Random.h"
-#include "Custom/IsettaCore.h"
-#include "Graphics/Font.h"
-#include "Graphics/GUI.h"
 #include "PlayerController.h"
 #include "Zombie.h"
 
@@ -16,13 +11,15 @@ std::vector<Entity*> GameManager::zombies;
 int GameManager::score = 0;
 
 void GameManager::Start() {
-  font = Font::AddFontFromFile("Resources/Fonts/ZOMBIE.TTF", 48.0f);
+  Font::AddFontFromFile("Halves/ZOMBIE.TTF", 48.0f, "Zombie");
 }
 
 void GameManager::OnEnable() {
+  // create zombie pool
+  // This is assuming game manager is only enabled once
   zombies.reserve(poolSize);
   for (int i = 0; i < poolSize; i++) {
-    Entity* zombie{CREATE_ENTITY(Util::StrFormat("Zombie (%d)", i))};
+    Entity* zombie{Entity::Instantiate(Util::StrFormat("Zombie (%d)", i))};
     zombie->AddComponent<Zombie, true>();
     zombie->SetActive(false);
     zombies.push_back(zombie);
@@ -30,6 +27,7 @@ void GameManager::OnEnable() {
 }
 
 void GameManager::Update() {
+  // zombie spawn logic
   cooldown -= Time::GetDeltaTime();
   if (cooldown <= 0) {
     SpawnZombie();
@@ -38,6 +36,9 @@ void GameManager::Update() {
 }
 
 void GameManager::GuiUpdate() {
+  if (!font) font = Font::GetFont("Zombie", 48.f);
+
+  // draw tweakable values
   float base = 230;
   float padding = 20;
   GUI::SliderFloat(RectTransform{Math::Rect{-200, base, 300, 100},
@@ -55,6 +56,7 @@ void GameManager::GuiUpdate() {
 }
 
 void GameManager::SpawnZombie() const {
+  // spawn a zombie
   auto player = PlayerController::Instance();
   if (player == nullptr) return;
 
@@ -72,6 +74,7 @@ void GameManager::SpawnZombie() const {
     }
   }
 
+  // reanimate a zombie
   if (zombie != nullptr) {
     zombie->SetActive(true);
     zombie->SetTransform(zombiePos, Math::Vector3::zero,

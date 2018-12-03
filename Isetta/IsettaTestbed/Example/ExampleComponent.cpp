@@ -2,21 +2,8 @@
  * Copyright (c) 2018 Isetta
  */
 #include "ExampleComponent.h"
-#include "Custom/IsettaCore.h"
-#include "Graphics/AnimationComponent.h"
 
 namespace Isetta {
-
-void ExampleComponent::OnEnable() {
-  Input::RegisterKeyPressCallback(KeyCode::F1, [&]() {
-    Entity* man = Entity::GetEntityByName("PushAnim");
-    if (man->transform->GetParent() == transform) {
-      man->transform->SetParent(nullptr);
-    } else {
-      man->transform->SetParent(transform);
-    }
-  });
-}
 
 void ExampleComponent::Update() {
   DebugDraw::WireCube(transform->GetLocalToWorldMatrix());
@@ -27,7 +14,7 @@ void ExampleComponent::Update() {
       entity->GetComponent<MeshComponent>()->SetActive(false);
     }
     if (Input::IsKeyPressed(KeyCode::M)) {
-      entity->GetComponent<AnimationComponent>()->Play();
+      entity->GetComponent<MeshComponent>()->SetActive(true);
     }
   }
 

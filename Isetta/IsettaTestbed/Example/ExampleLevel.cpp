@@ -3,47 +3,48 @@
  */
 #include "ExampleLevel.h"
 
-#include "ExampleComponent.h"
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
-#include "Core/Color.h"
-#include "Core/Config/Config.h"
-#include "Graphics/AnimationComponent.h"
-#include "Graphics/CameraComponent.h"
-#include "Graphics/LightComponent.h"
-#include "Scene/Entity.h"
+#include "ExampleComponent.h"
 
 namespace Isetta {
 
-using LightProperty = LightComponent::Property;
-using CameraProperty = CameraComponent::Property;
-
-void ExampleLevel::OnLevelLoad() {
-  Entity* cameraEntity{AddEntity("Camera")};
-  CameraComponent* camComp =
-      cameraEntity->AddComponent<CameraComponent, true>("Camera");
+void ExampleLevel::Load() {
+  // Instantiate entity
+  Entity* cameraEntity = Entity::Instantiate("Camera");
+  // Add CameraComponent: what renders anything on screen
+  //  NEED Camera each level
+  cameraEntity->AddComponent<CameraComponent>();
+  // Sets the transform of the entity: WorldPosition, WorldRotation, LocalScale
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
-  cameraEntity->AddComponent<FlyController, true>();
+  // Add FlyController: see FlyController for more details
+  cameraEntity->AddComponent<FlyController>();
 
-  Entity* lightEntity{AddEntity("Light")};
-  LightComponent* lightComp = lightEntity->AddComponent<LightComponent, true>(
-      "materials/light.material.xml", "LIGHT_1");
+  Entity* lightEntity = Entity::Instantiate("Light");
+  // Add LightComponent: settings for light component
+  // can be found in LightComponent.h
+  lightEntity->AddComponent<LightComponent>();
   lightEntity->SetTransform(Math::Vector3{0, 200, 600}, Math::Vector3::zero,
                             Math::Vector3::one);
 
-  Entity* man{AddEntity("PushAnim")};
+  Entity* man = Entity::Instantiate("PushAnim");
   man->SetTransform(Math::Vector3{0, 0, 0}, Math::Vector3{0, 90, 0});
-  // man->AddComponent<PlayerController, true>();
+  // Add and cache MeshComponent: argument is filepath of scene file of mesh
   MeshComponent* pushMesh =
-      man->AddComponent<MeshComponent, true>("push/Pushing.scene.xml");
+      man->AddComponent<MeshComponent>("Example/Pushing.scene.xml");
+  // Add and cache AnimationComponent: arguments are:
+  //  - filepath of animation file (.anim)
+  //  - layer of animation
+  //  - startingNode of animation system
+  //  - whether the animation is additive
+  AnimationComponent* ani = man->AddComponent<AnimationComponent>(pushMesh);
+  ani->AddAnimation("Example/Pushing.anim", 0, "", false);
 
-  AnimationComponent* ani =
-      man->AddComponent<AnimationComponent, true>(pushMesh);
-  ani->AddAnimation("push/Pushing.anim", 0, "", false);
-
-  Entity* customEntity{AddEntity("custom")};
-  customEntity->AddComponent<ExampleComponent, true>();
+  Entity* customEntity = Entity::Instantiate("custom");
+  // Add ExampleComponent: empty component just demoing components
+  customEntity->AddComponent<ExampleComponent>();
+  // Add GridComponent: displays debug drawing grid
   customEntity->AddComponent<GridComponent>();
 }
 }  // namespace Isetta

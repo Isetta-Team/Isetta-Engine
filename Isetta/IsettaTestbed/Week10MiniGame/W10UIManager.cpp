@@ -2,11 +2,6 @@
  * Copyright (c) 2018 Isetta
  */
 #include "Week10MiniGame/W10UIManager.h"
-#include "Events/Events.h"
-#include "Graphics/GUI.h"
-#include "Graphics/RectTransform.h"
-#include "Input/Input.h"
-#include "Util.h"
 
 void W10UIManager::Awake() {
   Isetta::Events::Instance().RegisterEventListener(

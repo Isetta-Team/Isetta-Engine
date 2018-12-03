@@ -31,19 +31,48 @@ namespace Isetta {
     };                                                      \
   }
 
-BEGIN_COMPONENT(Collider, Component, false)
+DEFINE_COMPONENT(Collider, Component, false)
 public:
-
- bool isTrigger = false;
- Math::Vector3 center;
- Color debugColor = Color::green;
- float mass = 1;
+/**
+ * @brief trigger whether collidable or trigger
+ *
+ */
+bool isTrigger = false;
+/**
+ * @brief center offset from transform position
+ *
+ */
+Math::Vector3 center;
+/**
+ * @brief color of the DebugDraw collider
+ *
+ */
+Color debugColor = Color::green;
+/**
+ * @brief mass of collider, higher mass means harder to move
+ *
+ */
+float mass = 1;
 
 // TODO(Jacob) virtual Math::Vector3 ClosestPoint(Math::Vector3 point) = 0;
 // TODO(Jacob) Math::Vector3 ClosestPointOnAABB(Math::Vector3 point);
+
+/**
+ * @brief Cast ray at BoxCollider to determine RaycastHit.
+ *
+ * @param ray which is being cast
+ * @param hitInfo information associated with a hit of box and ray
+ * @param maxDistance that the ray will check against
+ * @return true ray intersected collider
+ */
 virtual bool Raycast(const class Ray& ray, class RaycastHit* const hitInfo,
                      float maxDistance = 0) = 0;
 
+/**
+ * @brief Get the World Center object
+ *
+ * @return Math::Vector3 center offset by transform position
+ */
 Math::Vector3 GetWorldCenter() const {
   return transform->WorldPosFromLocalPos(center);
 }
@@ -73,12 +102,10 @@ friend class CollisionSolverModule;
 protected:
 inline static float fatFactor = 0.2f;
 
-Collider(const Math::Vector3& center) : center{center}, isTrigger{false} {}
+Collider(const Math::Vector3& center) : center{center} {}
 Collider(const bool trigger = false,
          const Math::Vector3& center = Math::Vector3::zero)
-    : center{center} {
-  isTrigger = trigger;
-}
+    : center{center}, isTrigger{trigger} {}
 virtual ~Collider() = default;
 
 friend class BoxCollider;
@@ -91,5 +118,5 @@ virtual ColliderType GetType() const = 0;
 virtual bool Intersection(Collider* other) = 0;
 void RaycastHitCtor(class RaycastHit* hitInfo, float distance,
                     const Math::Vector3& point, const Math::Vector3& normal);
-END_COMPONENT(Collider, Component)
+DEFINE_COMPONENT_END(Collider, Component)
 }  // namespace Isetta

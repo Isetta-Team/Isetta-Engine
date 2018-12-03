@@ -2,15 +2,14 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include <Horde3D.h>
 #include <string>
-#include <string_view>
 #include "Core/Math/Math.h"
+#include "Horde3D/Horde3D/Bindings/C++/Horde3D.h"
 #include "SID/sid.h"
 #include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(MeshComponent, Component, false)
+DEFINE_COMPONENT(MeshComponent, Component, false)
 H3DNode renderNode{0};
 H3DRes renderResource{0};
 
@@ -39,5 +38,5 @@ std::tuple<Math::Vector3, Math::Quaternion> GetJointWorldTransform(
     std::string jointName);
 
 static class RenderModule* renderModule;
-END_COMPONENT(MeshComponent, Component)
+DEFINE_COMPONENT_END(MeshComponent, Component)
 }  // namespace Isetta

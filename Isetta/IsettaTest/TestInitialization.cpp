@@ -15,8 +15,8 @@ class TestInitialization {
   // static void TestClassInitialize() { engineLoop.StartUp(); };
   // static void TestClassCleanup() { engineLoop.ShutDown(); };
 
-  static void TestClassInitialize() { memory.StartUp(); };
-  static void TestClassCleanup() { memory.ShutDown(); };
+  static void TestClassInitialize() {  };
+  static void TestClassCleanup() {  };
 
  private:
   // static EngineLoop engineLoop;

@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
-      <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
+    <ProjectConfiguration Include="ReleaseEditor|x64">
+      <Configuration>ReleaseEditor</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
@@ -25,19 +21,6 @@
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -51,31 +34,44 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="IsettaEngine.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="IsettaEngine.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="IsettaEngine.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)-intermediate\</IntDir>
+    <OutDir>$(SolutionDir)Build\$(ProjectName)-$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Build\$(ProjectName)-$(Platform)-$(Configuration)-intermediate\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)..\Build\$(ProjectName)-$(Platform)-$(Configuration)-intermediate\</IntDir>
+    <OutDir>$(SolutionDir)Build\$(ProjectName)-$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Build\$(ProjectName)-$(Platform)-$(Configuration)-intermediate\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor|x64'">
+    <OutDir>$(SolutionDir)Build\$(ProjectName)-$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Build\$(ProjectName)-$(Platform)-$(Configuration)-intermediate\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -85,40 +81,25 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)IsettaEngine;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>_EDITOR;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ShowIncludes>false</ShowIncludes>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL\*.lib;$(SolutionDir)External\imgui\lib\$(Configuration)\imgui.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)Build\IsettaEngine-$(Platform)-$(Configuration) DLL\*.lib;$(SolutionDir)External\imgui\lib\$(Configuration)\imgui.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>XCOPY /Y /R "$(ProjectDir)..\Build\IsettaEngine-$(Platform)-Debug DLL" "$(TargetDir)"</Command>
+      <Command>XCOPY /Y /R "$(SolutionDir)Build\IsettaEngine-$(Platform)-Debug DLL" "$(TargetDir)"</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>XCOPY /Y /R /S /I "$(SolutionDir)Build\IsettaEngine-$(Platform)-$(Configuration) DLL\Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R /S /I "$(ProjectDir)Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R "$(ProjectDir)*.cfg" "$(TargetDir)"</Command>
     </PostBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-    </ClCompile>
-    <Link>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -130,18 +111,95 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)IsettaEngine;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <PreprocessorDefinitions>_EDITOR;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL\*.lib;$(SolutionDir)External\imgui\lib\$(Configuration)\imgui.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)Build\IsettaEngine-$(Platform)-$(Configuration) DLL\*.lib;$(SolutionDir)External\imgui\lib\$(Configuration)\imgui.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\$(ConfigurationName)\Horde3D.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\$(ConfigurationName)\Horde3DUtils.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\$(ConfigurationName)\yojimbo.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>XCOPY /Y /R "$(ProjectDir)..\Build\IsettaEngine-$(Platform)-Debug DLL" "$(TargetDir)"</Command>
+      <Command>XCOPY /Y /R "$(SolutionDir)Build\IsettaEngine-$(Platform)-Release DLL" "$(TargetDir)"</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>XCOPY /Y /R /S /I "$(SolutionDir)Build\IsettaEngine-$(Platform)-$(Configuration) DLL\Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R /S /I "$(ProjectDir)Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R "$(ProjectDir)*.cfg" "$(TargetDir)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)IsettaEngine;$(SolutionDir)External;$(SolutionDir)External\brofiler\ProfilerCore\;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Horde3D\Horde3D\Source\Shared;$(SolutionDir)External\Horde3D\Horde3D\Source\Horde3DEngine;$(SolutionDir)External\Horde3D\Horde3D\Bindings\C++;$(SolutionDir)External\imgui\;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\imgui\examples\libs\glfw\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <PreprocessorDefinitions>_EDITOR;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>$(SolutionDir)Build\IsettaEngine-$(Platform)-$(Configuration) DLL\*.lib;$(SolutionDir)External\imgui\lib\Release\imgui.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DEngine\Release\Horde3D.lib;$(SolutionDir)External\Horde3D\Build\Horde3D\Source\Horde3DUtils\Release\Horde3DUtils.lib;$(SolutionDir)External\yojimbo\bin\$(Platform)\Release\yojimbo.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Build\IsettaEngine-$(Platform)-$(Configuration) DLL;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <PreBuildEvent>
+      <Command>XCOPY /Y /R "$(SolutionDir)Build\IsettaEngine-$(Platform)-ReleaseEditor DLL" "$(TargetDir)"</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>XCOPY /Y /R /S /I "$(SolutionDir)Build\IsettaEngine-$(Platform)-$(Configuration) DLL\Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R /S /I "$(ProjectDir)Resources\*" "$(TargetDir)Resources"
+XCOPY /Y /R "$(ProjectDir)*.cfg" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AILevel\AILevel.cpp" />
+    <ClCompile Include="AILevel\AITestComponent.cpp" />
+    <ClCompile Include="AudioLevel\AudioLevel.cpp" />
+    <ClCompile Include="AudioLevel\AudioPlay.cpp" />
+    <ClCompile Include="BVHLevel\BVHLevel.cpp" />
+    <ClCompile Include="BVHLevel\RandomMover.cpp" />
+    <ClCompile Include="CollisionsLevel\CollisionsLevel.cpp" />
+    <ClCompile Include="CollisionSolverLevel\CollisionSolverLevel.cpp" />
+    <ClCompile Include="Custom\DebugCollision.cpp" />
+    <ClCompile Include="EditorLevel\EditorLevel.cpp" />
+    <ClCompile Include="EmptyLevel\EmptyLevel.cpp" />
+    <ClCompile Include="Custom\EscapeExit.cpp" />
+    <ClCompile Include="EventLevel\EventListenerComponent.cpp" />
+    <ClCompile Include="EventLevel\EventSenderComponent.cpp" />
+    <ClCompile Include="EventLevel\EventLevel.cpp" />
+    <ClCompile Include="GUILevel\FontExample.cpp" />
+    <ClCompile Include="Custom\KeyTransform.cpp" />
+    <ClCompile Include="LevelLoadingLevel\LoadNextLevel.cpp" />
+    <ClCompile Include="MeshAnimLevel\MeshAnimLevel.cpp" />
+    <ClCompile Include="NetworkLevel\EmptyLevelForNetworkLoadLevel.cpp" />
+    <ClCompile Include="NetworkLevel\NetworkLevel.cpp" />
+    <ClCompile Include="Custom\OscillateMove.cpp" />
+    <ClCompile Include="NetworkLevel\NetworkTestComp.cpp" />
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor|x64'">pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="PrimitiveLevel\PrimitiveLevel.cpp" />
+    <ClCompile Include="Custom\RaycastClick.cpp" />
+    <ClCompile Include="SkeletonLevel\SkeletonLevel.cpp" />
     <ClCompile Include="DebugLevel\DebugComponent.cpp" />
     <ClCompile Include="DebugLevel\DebugLevel.cpp" />
     <ClCompile Include="Example\ExampleComponent.cpp" />
@@ -151,11 +209,21 @@
     <ClCompile Include="Halves\Bullet.cpp" />
     <ClCompile Include="Halves\CameraController.cpp" />
     <ClCompile Include="Halves\GameManager.cpp" />
-    <ClCompile Include="Halves\Level1.cpp" />
+    <ClCompile Include="Halves\HalvesLevel.cpp" />
     <ClCompile Include="Halves\PlayerController.cpp" />
     <ClCompile Include="Halves\Zombie.cpp" />
     <ClCompile Include="InputLevel\InputLevel.cpp" />
     <ClCompile Include="InputLevel\InputTestComponent.cpp" />
+    <ClCompile Include="KnightGame\Gameplay\ScoreManager.cpp" />
+    <ClCompile Include="KnightGame\Gameplay\ScreenShifter.cpp" />
+    <ClCompile Include="KnightGame\Gameplay\FireballCircle.cpp" />
+    <ClCompile Include="KnightGame\Gameplay\FollowComponent.cpp" />
+    <ClCompile Include="KnightGame\Gameplay\Enemy.cpp" />
+    <ClCompile Include="KnightGame\Gameplay\KnightController.cpp" />
+    <ClCompile Include="KnightGame\Gameplay\SpinAttack.cpp" />
+    <ClCompile Include="KnightGame\Gameplay\SwordController.cpp" />
+    <ClCompile Include="KnightGame\Level\KnightMainLevel.cpp" />
+    <ClCompile Include="LevelLoadingLevel\LevelLoadingLevel.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Week10MiniGame\W10GameManager.cpp" />
     <ClCompile Include="Week10MiniGame\W10NetworkManager.cpp" />
@@ -170,6 +238,34 @@
     <None Include="user.cfg" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AILevel\AITestAgent.h" />
+    <ClInclude Include="AILevel\AITestComponent.h" />
+    <ClInclude Include="AILevel\AILevel.h" />
+    <ClInclude Include="AudioLevel\AudioLevel.h" />
+    <ClInclude Include="AudioLevel\AudioPlay.h" />
+    <ClInclude Include="BVHLevel\BVHLevel.h" />
+    <ClInclude Include="BVHLevel\RandomMover.h" />
+    <ClInclude Include="CollisionsLevel\CollisionsLevel.h" />
+    <ClInclude Include="CollisionSolverLevel\CollisionSolverLevel.h" />
+    <ClInclude Include="Custom\DebugCollision.h" />
+    <ClInclude Include="EditorLevel\EditorLevel.h" />
+    <ClInclude Include="EmptyLevel\EmptyLevel.h" />
+    <ClInclude Include="Custom\EscapeExit.h" />
+    <ClInclude Include="EventLevel\EventListenerComponent.h" />
+    <ClInclude Include="EventLevel\EventSenderComponent.h" />
+    <ClInclude Include="EventLevel\EventLevel.h" />
+    <ClInclude Include="GUILevel\FontExample.h" />
+    <ClInclude Include="Custom\KeyTransform.h" />
+    <ClInclude Include="LevelLoadingLevel\LoadNextLevel.h" />
+    <ClInclude Include="MeshAnimLevel\MeshAnimLevel.h" />
+    <ClInclude Include="NetworkLevel\EmptyLevelForNetworkLoadLevel.h" />
+    <ClInclude Include="NetworkLevel\NetworkLevel.h" />
+    <ClInclude Include="Custom\OscillateMove.h" />
+    <ClInclude Include="NetworkLevel\NetworkTestComp.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="PrimitiveLevel\PrimitiveLevel.h" />
+    <ClInclude Include="Custom\RaycastClick.h" />
+    <ClInclude Include="SkeletonLevel\SkeletonLevel.h" />
     <ClInclude Include="DebugLevel\DebugComponent.h" />
     <ClInclude Include="DebugLevel\DebugLevel.h" />
     <ClInclude Include="Example\ExampleComponent.h" />
@@ -179,11 +275,22 @@
     <ClInclude Include="Halves\Bullet.h" />
     <ClInclude Include="Halves\CameraController.h" />
     <ClInclude Include="Halves\GameManager.h" />
-    <ClInclude Include="Halves\Level1.h" />
+    <ClInclude Include="Halves\HalvesLevel.h" />
     <ClInclude Include="Halves\PlayerController.h" />
     <ClInclude Include="Halves\Zombie.h" />
     <ClInclude Include="InputLevel\InputLevel.h" />
     <ClInclude Include="InputLevel\InputTestComponent.h" />
+    <ClInclude Include="KnightGame\Constants.h" />
+    <ClInclude Include="KnightGame\Gameplay\ScoreManager.h" />
+    <ClInclude Include="KnightGame\Gameplay\ScreenShifter.h" />
+    <ClInclude Include="KnightGame\Gameplay\FireballCircle.h" />
+    <ClInclude Include="KnightGame\Gameplay\FollowComponent.h" />
+    <ClInclude Include="KnightGame\Gameplay\Enemy.h" />
+    <ClInclude Include="KnightGame\Gameplay\KnightController.h" />
+    <ClInclude Include="KnightGame\Gameplay\SpinAttack.h" />
+    <ClInclude Include="KnightGame\Gameplay\SwordController.h" />
+    <ClInclude Include="KnightGame\Level\KnightMainLevel.h" />
+    <ClInclude Include="LevelLoadingLevel\LevelLoadingLevel.h" />
     <ClInclude Include="Week10MiniGame\W10GameManager.h" />
     <ClInclude Include="Week10MiniGame\W10NetworkManager.h" />
     <ClInclude Include="Week10MiniGame\W10NetworkPlayer.h" />

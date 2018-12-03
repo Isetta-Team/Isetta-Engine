@@ -11,47 +11,25 @@
 namespace Isetta {
 AudioModule* AudioSource::audioModule;
 
-AudioSource::AudioSource()
-    : properties{0b100}, volume{1.f}, speed{1.f}, loopCount{-1} {}
-
-AudioSource::AudioSource(std::string_view clipName)
-    : properties{0b100}, volume{1.f}, speed{1.f}, loopCount{-1} {
-  if (!clipName.empty()) clip = AudioClip::GetClip(clipName);
-}
-
-AudioSource::AudioSource(AudioClip* clip)
-    : clip{clip}, properties{0b100}, volume{1.f}, speed{1.f}, loopCount{-1} {}
-
-AudioSource::AudioSource(const std::bitset<3>& properties,
-                         std::string_view clipName)
-    : properties{properties}, volume{1.f}, speed{1.f}, loopCount{-1} {
-  if (!clipName.empty()) clip = AudioClip::GetClip(clipName);
-}
+AudioSource::AudioSource(AudioClip* clip) : clip{clip} {}
 
 AudioSource::AudioSource(const std::bitset<3>& properties, AudioClip* clip)
-    : clip{clip},
-      properties{properties},
-      volume{1.f},
-      speed{1.f},
-      loopCount{-1} {}
+    : clip{clip}, properties{properties} {}
 
 void AudioSource::Update() {
-  if (IsValidHandle() && IsPlaying() && GetProperty(Property::IS_3D)) {
+  if (IsChannelValid() && IsPlaying() && GetProperty(Property::IS_3D)) {
     const Math::Vector3 position = transform->GetWorldPos();
     const FMOD_VECTOR fmodPosition{position.x, position.y, position.z};
     fmodChannel->set3DAttributes(&fmodPosition, nullptr);
   }
 }
 
-void AudioSource::SetProperty(const Property prop, bool value) {
+void AudioSource::SetProperty(const Property prop, const bool value) {
   switch (prop) {
     case Property::IS_3D:
       properties.set(static_cast<int>(Property::IS_3D), value);
       if (clip) {
-        if (value)
-          clip->fmodSound->setMode(FMOD_3D);
-        else
-          clip->fmodSound->setMode(FMOD_2D);
+        clip->fmodSound->setMode(value ? FMOD_3D : FMOD_2D);
       }
       break;
     case Property::LOOP:
@@ -72,11 +50,8 @@ bool AudioSource::GetProperty(const Property prop) const {
       return properties.test(static_cast<int>(Property::LOOP));
     case Property::IS_MUTE:
       return properties.test(static_cast<int>(Property::IS_MUTE));
-  };
-}
-
-void AudioSource::SetAudioClip(const std::string_view audioClip) {
-  this->clip = AudioClip::GetClip(audioClip);
+  }
+  return false;
 }
 
 void AudioSource::Play() {
@@ -105,13 +80,22 @@ void AudioSource::Stop() const {
 
 void AudioSource::SetVolume(const float inVolume) {
   volume = Math::Util::Clamp01(inVolume);
-  if (fmodChannel) AudioModule::CheckStatus(fmodChannel->setVolume(volume));
+  if (IsChannelValid()) {
+    AudioModule::CheckStatus(fmodChannel->setVolume(volume));
+  }
 }
 
-void AudioSource::Mute(bool mute) {
-  SetProperty(Property::IS_MUTE, mute);
-  if (fmodChannel) AudioModule::CheckStatus(fmodChannel->setMute(mute));
+float AudioSource::GetVolume() const { return volume; }
+
+void AudioSource::SetMinMaxDistance(Math::Vector2 minMax) {
+  minMaxDistance = minMax;
+  if (IsChannelValid() && GetProperty(Property::IS_3D)) {
+    AudioModule::CheckStatus(
+        fmodChannel->set3DMinMaxDistance(minMax.x, minMax.y));
+  }
 }
+
+Math::Vector2 AudioSource::GetMinMaxDistance() const { return minMaxDistance; }
 
 // void AudioSource::SetSpeed(const float inSpeed) {
 //  speed = inSpeed;
@@ -120,7 +104,7 @@ void AudioSource::Mute(bool mute) {
 // float AudioSource::GetSpeed() const { return speed; }
 
 bool AudioSource::IsPlaying() const {
-  if (IsValidHandle()) {
+  if (IsChannelValid()) {
     bool isPlaying{false}, isPaused{false};
     AudioModule::CheckStatus(fmodChannel->isPlaying(&isPlaying));
     AudioModule::CheckStatus(fmodChannel->getPaused(&isPaused));
@@ -130,7 +114,7 @@ bool AudioSource::IsPlaying() const {
 }
 
 bool AudioSource::IsPaused() const {
-  if (IsValidHandle()) {
+  if (IsChannelValid()) {
     bool isPaused;
     AudioModule::CheckStatus(fmodChannel->getPaused(&isPaused));
     return isPaused;
@@ -139,7 +123,7 @@ bool AudioSource::IsPaused() const {
 }
 
 bool AudioSource::IsStarted() const {
-  if (IsValidHandle()) {
+  if (IsChannelValid()) {
     bool isPlaying;
     AudioModule::CheckStatus(fmodChannel->isPlaying(&isPlaying));
     return isPlaying;
@@ -147,28 +131,18 @@ bool AudioSource::IsStarted() const {
   return false;
 }
 
-void AudioSource::LoopFor(int count) {
+void AudioSource::LoopFor(const int count) {
   loopCount = count;
   SetProperty(Property::LOOP, count > 0);
 }
 
-bool AudioSource::IsValidHandle() const {
+bool AudioSource::IsChannelValid() const {
   if (!fmodChannel) return false;
   int index;
   FMOD_RESULT res = fmodChannel->getIndex(&index);
   if (res == FMOD_ERR_INVALID_HANDLE || res == FMOD_ERR_CHANNEL_STOLEN) {
     return false;
   }
-  return true;
-}
-
-bool AudioSource::IsChannelValid() const {
-  if (!fmodChannel) {
-    throw std::exception{
-        "AudioSource::isChannelValid => There is no sound playing on this "
-        "AudioSource"};
-  }
-
   return true;
 }
 

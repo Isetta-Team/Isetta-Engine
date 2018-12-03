@@ -50,40 +50,36 @@ void CollisionHandler::SetColliderHandler(
   }
 }
 void CollisionHandler::OnCollisionEnter(Collider* const col) {
-  OnCollisionCallback(onEnter, col);
+  onEnter.Invoke(col);
 }
 void CollisionHandler::OnCollisionStay(Collider* const col) {
-  OnCollisionCallback(onStay, col);
+  onStay.Invoke(col);
 }
 void CollisionHandler::OnCollisionExit(Collider* const col) {
-  OnCollisionCallback(onExit, col);
+  onExit.Invoke(col);
 }
-void CollisionHandler::OnCollisionCallback(
-    const std::unordered_map<U16, Action<Collider*>>& callbacks,
-    Collider* const col) {
-  for (const auto& callback : callbacks) {
-    callback.second(col);
-  }
+
+U64 CollisionHandler::RegisterOnEnter(
+    const Action<class Collider* const>& callback) {
+  return onEnter.Subscribe(callback);
 }
-U16 CollisionHandler::RegisterOnEnter(
-    const Action<class Collider* const>& action) {
-  int handle = ++handles;
-  onEnter.insert(std::make_pair(handle, action));
-  return handle;
+void CollisionHandler::UnregisterOnEnter(U64& handle) {
+  onEnter.Unsubscribe(handle);
 }
-void CollisionHandler::UnregisterOnEnter(U16 handle) { onEnter.erase(handle); }
-U16 CollisionHandler::RegisterOnStay(
-    const Action<class Collider* const>& action) {
-  int handle = ++handles;
-  onStay.insert(std::make_pair(handle, action));
-  return handle;
+
+U64 CollisionHandler::RegisterOnStay(
+    const Action<class Collider* const>& callback) {
+  return onStay.Subscribe(callback);
 }
-void CollisionHandler::UnregisterOnStay(U16 handle) { onStay.erase(handle); }
-U16 CollisionHandler::RegisterOnExit(
-    const Action<class Collider* const>& action) {
-  int handle = ++handles;
-  onExit.insert(std::make_pair(handle, action));
-  return handle;
+void CollisionHandler::UnregisterOnStay(U64& handle) {
+  onStay.Unsubscribe(handle);
 }
-void CollisionHandler::UnregisterOnExit(U16 handle) { onExit.erase(handle); }
+
+U64 CollisionHandler::RegisterOnExit(
+    const Action<class Collider* const>& callback) {
+  return onExit.Subscribe(callback);
+}
+void CollisionHandler::UnregisterOnExit(U64& handle) {
+  onExit.Unsubscribe(handle);
+}
 }  // namespace Isetta

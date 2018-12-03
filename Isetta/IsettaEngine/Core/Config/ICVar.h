@@ -25,7 +25,7 @@ class ISETTA_API ICVar {
    *
    * @param strVal convert from this string
    */
-  virtual void SetVal(const std::string& strVal) = 0;
+  virtual void SetVal(const std::string_view strVal) = 0;
   // virtual StringId GetType() const { return typeID; }
 
  protected:
@@ -35,7 +35,8 @@ class ISETTA_API ICVar {
    *
    * @param name
    */
-  explicit ICVar(std::string name) : name{name}, nameID{SID(name.c_str())} {}
+  explicit ICVar(std::string_view name)
+      : name{name}, nameID{SID(name.data())} {}
   /**
    * @brief Destroy the ICVar object, cannot instance ICVar
    *

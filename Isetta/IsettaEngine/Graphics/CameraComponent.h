@@ -2,10 +2,11 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Core/Math/Matrix4.h"
-#include "Horde3D.h"
-#include "Scene/Component.h"
 #include "Core/Config/CVar.h"
+#include "Core/IsettaAlias.h"
+#include "Core/Math/Matrix4.h"
+#include "Horde3D/Horde3D/Bindings/C++/Horde3D.h"
+#include "Scene/Component.h"
 
 namespace Isetta {
 class Ray;
@@ -14,7 +15,13 @@ class Vector3;
 class Vector2;
 }  // namespace Math
 
-BEGIN_COMPONENT(CameraComponent, Component, true)
+/**
+ * @brief Component controlling what is seen in the level
+ * NEED 1 CAMERA IN AT ALL TIMES
+ * Currently don't support multiple viewport cameras
+ *
+ */
+DEFINE_COMPONENT(CameraComponent, Component, false)
 public:
 struct CameraConfig {
   CVar<float> fieldOfView{"field_of_view", 45.0};
@@ -22,6 +29,10 @@ struct CameraConfig {
   CVar<float> farClippingPlane{"far_clipping_plane", 1000.0};
 };
 
+/**
+ * @brief Properties of camera
+ *
+ */
 enum class Property {
   FOV,
   NEAR_PLANE,
@@ -29,20 +40,38 @@ enum class Property {
   PROJECTION,
 };
 
-explicit CameraComponent(std::string cameraName);
+CameraComponent();
 
-void Start() override;
+void Awake() override;
 void OnEnable() override;
 void OnDisable() override;
 void OnDestroy() override;
 
+/**
+ * @brief Set the Property
+ *
+ * @tparam Attr property to set
+ * @tparam T optional template type of property, will be deduced given a value
+ * @param value to set the property to
+ */
 template <Property Attr, typename T>
 void SetProperty(T value);
-
+/**
+ * @brief Get the Property
+ *
+ * @tparam Attr property to set
+ * @tparam T type of the property required
+ * @return T value set of that property
+ */
 template <Property Attr, typename T>
 T GetProperty() const;
 
-static const CameraComponent* Main() { return _main; }
+/**
+ * @brief Main camera, camera being used to render
+ *
+ * @return const CameraComponent*
+ */
+static inline const CameraComponent* Main() { return _main; }
 
 Math::Matrix4 GetHordeTransform() const {
   const float* transformPtr;
@@ -50,11 +79,39 @@ Math::Matrix4 GetHordeTransform() const {
   return Math::Matrix4(transformPtr);
 }
 
-Ray ScreenPointToRay(const Math::Vector2& position) const;
-// TODO(all) ScreenToViewportPoint
+/**
+ * @brief Convert a screen point to ray
+ *
+ * @param point on the screen with (0,0) as top-left and (screen-width,
+ * screen-height) as bottom-right
+ * @return Ray
+ */
+Ray ScreenPointToRay(const Math::Vector2& point) const;
+/**
+ * @brief Convert a screen point to viewport point
+ *
+ * @param point on the screen with (0,0) as top-left and (screen-width,
+ * screen-height) as bottom-right
+ * @return Math::Vector2 point in viewport with (0,0) as top-left and (1,1)
+ * as bottom-right
+ */
+Math::Vector2 ScreenToViewportPoint(const Math::Vector2& point) const;
+/**
+ * @brief Convert a viewport point to screen point
+ *
+ * @param point on the viewport with (0,0) as top-left and (1,1) as bottom-right
+ * @return Math::Vector2 point in screen with (0,0) as top-left and
+ * (screen-width, screen-height) as bottom-right
+ */
+Math::Vector2 ViewportToScreenPoint(const Math::Vector2& point) const;
+/**
+ * @brief Convert a viewport point to ray
+ *
+ * @param point on the viewport with (0,0) as top-left and (1,1) as bottom-right
+ * @return Ray
+ */
+Ray ViewportPointToRay(const Math::Vector2& position) const;
 // TODO(all) ScreenToWorldPoint
-// TODO(all) ViewportPointToRay
-// TODO(all) ViewportToScreenPoint
 // TODO(all) ViewportToWorldPoint
 // TODO(all) WorldToScreenPoint
 // TODO(all) WorldToViewportPoint
@@ -64,7 +121,7 @@ void UpdateH3DTransform() const;
 void ResizeViewport(int width, int height);
 void SetupCameraViewport() const;
 
-static CameraComponent* _main;
+static inline CameraComponent* _main;
 
 static class RenderModule* renderModule;
 friend class RenderModule;
@@ -74,11 +131,10 @@ float nearPlane{};
 float farPlane{};
 Math::Matrix4 projMat;
 
-std::string name;
 H3DNode renderNode;
 H3DRes renderResource;
-int resizeHandle;
-END_COMPONENT(CameraComponent, Component)
+U64 resizeHandle;
+DEFINE_COMPONENT_END(CameraComponent, Component)
 
 template <CameraComponent::Property Attr, typename T>
 void CameraComponent::SetProperty(T value) {

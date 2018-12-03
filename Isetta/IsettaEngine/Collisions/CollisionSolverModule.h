@@ -33,5 +33,6 @@ class CollisionSolverModule {
 
   friend class EngineLoop;
   friend class CollisionsModule;
+  friend class StackAllocator;
 };
 }  // namespace Isetta

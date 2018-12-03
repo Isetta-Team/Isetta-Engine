@@ -3,25 +3,24 @@
  */
 #include "Scene/Level.h"
 #include "Audio/AudioModule.h"
-#include "Core/Memory/MemoryManager.h"
-#include "Input/Input.h"
+#include "Core/Config/Config.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
 
 namespace Isetta {
 
-Entity* Level::GetEntityByName(const std::string& name) {
+Entity* Level::GetEntityByName(const std::string_view name) {
   for (const auto& entity : entities) {
     if (entity->entityName == name) {
       return entity;
     }
   }
-  LOG_WARNING(Debug::Channel::General, "Entity %s not found!", name.c_str());
+  LOG_WARNING(Debug::Channel::General, "Entity %s not found!", name.data());
   return nullptr;
 }
 
-std::list<Entity*> Level::GetEntitiesByName(const std::string& name) {
+std::list<Entity*> Level::GetEntitiesByName(const std::string_view name) {
   std::list<Entity*> returnEntities;
   for (const auto& entity : entities) {
     if (entity->entityName == name) {
@@ -31,22 +30,18 @@ std::list<Entity*> Level::GetEntitiesByName(const std::string& name) {
   return returnEntities;
 }
 
+bool Level::IsLevelLoaded() const { return isLevelLoaded; }
+
 std::list<class Entity*> Level::GetEntities() const { return entities; }
 
-void Level::UnloadLevel() {
+void Level::Unload() {
   PROFILE
-  // for (auto& entity : entities) {
-  //   if (entity->transform->GetParent() == levelRootTransform) {
-  //     MemoryManager::DeleteOnFreeList<Entity>(entity);
-  //   }
-  // }
-  OnLevelUnload();
-  MemoryManager::DeleteOnFreeList<Entity>(levelRoot);
+  OnUnload();
+  pool.Free(levelRoot);
   for (auto& entity : entities) {
-    MemoryManager::DeleteOnFreeList<Entity>(entity);
+    pool.Free(entity);
     entity = nullptr;
   }
-  Input::Clear();
 }
 
 void Level::AddComponentToStart(Component* component) {
@@ -56,21 +51,17 @@ void Level::AddComponentToStart(Component* component) {
 void Level::StartComponents() {
   PROFILE
   while (!componentsToStart.empty()) {
-    componentsToStart.top()->Start();
+    componentsToStart.front()->Start();
     componentsToStart.pop();
   }
 }
 
-Entity* Level::AddEntity(std::string name, bool entityStatic) {
-  return AddEntity(name, levelRoot, entityStatic);
-}
-
 Entity* Level::AddEntity(std::string name, Entity* parent, bool entityStatic) {
   PROFILE
-  Entity* entity = MemoryManager::NewOnFreeList<Entity>(name, entityStatic);
+  Entity* entity = pool.Get(name, entityStatic);
+  entity->transform->SetParent(parent != nullptr ? parent->transform
+                                                 : levelRoot->transform);
   entities.push_back(entity);
-  // TODO(YIDI): Change it when transform returns pointer
-  entity->transform->SetParent(parent->transform);
   return entity;
 }
 
@@ -108,7 +99,7 @@ void Level::LateUpdate() {
 
   for (auto& entity : entities) {
     if (entity->GetAttribute(Entity::EntityAttributes::NEED_DESTROY)) {
-      MemoryManager::DeleteOnFreeList<Entity>(entity);
+      pool.Free(entity);
       entity = nullptr;
     }
   }
@@ -116,5 +107,8 @@ void Level::LateUpdate() {
   entities.remove_if([](Entity*& entity) { return entity == nullptr; });
 }
 
-Level::Level() : levelRoot{MemoryManager::NewOnFreeList<Entity>("Root")} {}
+Level::Level()
+    : pool(CONFIG_VAL(memoryConfig.entityPoolInitialSize),
+           CONFIG_VAL(memoryConfig.entityPoolIncrement)),
+      levelRoot(pool.Get("Root")) {}
 }  // namespace Isetta

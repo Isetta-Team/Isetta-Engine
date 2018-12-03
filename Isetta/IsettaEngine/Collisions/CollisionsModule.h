@@ -40,6 +40,7 @@ class CollisionsModule {
 
   bool Raycast(const class Ray &ray, class RaycastHit *const hitInfo,
                float maxDistance = 0);
+  Array<RaycastHit> RaycastAll(const class Ray &ray, float maxDistance = 0);
 
   static float ClosestPtRaySegment(const class Ray &, const Math::Vector3 &,
                                    const Math::Vector3 &, float *const,
@@ -52,7 +53,7 @@ class CollisionsModule {
   ~CollisionsModule() = default;
 
   // probably mark them as "still colliding"
-  CollisionUtil::ColliderPairSet collidingPairs;
+  CollisionUtil::ColliderPairSet collidingPairs, lastFramePairs;
   CollisionUtil::ColliderPairSet ignoreColliderPairs;
 
   BVTree bvTree;
@@ -62,13 +63,9 @@ class CollisionsModule {
 
   void StartUp();
   void Update(float deltaTime);
+  void LateUpdate(float deltaTime);
   void ShutDown();
-  Array<Collider*> GetPossibleColliders(Collider* collider) const;
-
-  friend class EngineLoop;
-  friend class Collider;
-  friend class Collisions;
-  friend class CollisionSolverModule;
+  Array<Collider *> GetPossibleColliders(Collider *collider) const;
 
   // Utilities
   bool GetIgnoreLayerCollision(int layer1, int layer2) const;
@@ -83,8 +80,7 @@ class CollisionsModule {
                                 const BoxCollider &);
   static Math::Vector3 ClosestPtPointSegment(const Math::Vector3 &point,
                                              const Math::Vector3 &p0,
-                                             const Math::Vector3 &p1,
-                                             float *);
+                                             const Math::Vector3 &p1, float *);
   // static float ClosestPtRaySegment(const Ray &, const Math::Vector3 &,
   //                                 const Math::Vector3 &, float *const,
   //                                 float *const, Math::Vector3 *const,
@@ -121,5 +117,11 @@ class CollisionsModule {
   static Math::Vector3 ClosestPtSegmentOBB(const Math::Vector3 &,
                                            const Math::Vector3 &,
                                            const class BoxCollider &);
+
+  friend class EngineLoop;
+  friend class Collider;
+  friend class Collisions;
+  friend class CollisionSolverModule;
+  friend class StackAllocator;
 };
 }  // namespace Isetta

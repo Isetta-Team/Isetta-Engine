@@ -144,6 +144,16 @@ void Nav2DPlane::AddTarget(class Transform* transform) {
   // SetTargetNode(GetIndexByPosition(position));
 }
 
+void Nav2DPlane::RemoveTarget(Transform* transform) {
+  Array<Transform*>::iterator targetIter =
+      std::find(currTargets.begin(), currTargets.end(), transform);
+  if (targetIter == currTargets.end()) {
+    throw std::logic_error("Nav2DPlane:RemoveTarget => No target found");
+  } else {
+    currTargets.Erase(targetIter);
+  }
+}
+
 void Nav2DPlane::UpdateRoute() {
   costMatrix.Assign(costMatrix.Size(), 255);
   for (const auto transform : currTargets) {

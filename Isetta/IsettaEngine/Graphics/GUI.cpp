@@ -134,10 +134,10 @@ void GUI::Toggle(const RectTransform& transform, const std::string& label,
 }
 
 // TEXT
-void GUI::Text(const RectTransform& transform, const std::string& format,
+void GUI::Text(const RectTransform& transform, const std::string_view format,
                const TextStyle& style) {
   Font::PushFont(style.font);
-  const char* formatCStr = format.c_str();
+  const char* formatCStr = format.data();
   RectTransform rectTransform{transform};
   if (rectTransform.rect.width <= 0)
     rectTransform.rect.width = ImGui::CalcTextSize(formatCStr).x;
@@ -162,6 +162,7 @@ void GUI::Text(const RectTransform& transform, const std::string& format,
   ImGui::PopItemWidth();
   Font::PopFont();
 }
+
 // Doesn't seem like its needed
 // void GUI::Label(const RectTransform& transform, const std::string_view&
 // label,

@@ -2,10 +2,7 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Scene/Component.h"
-#include "Scene/Entity.h"
-
-BEGIN_COMPONENT(W10NetworkPlayer, Isetta::Component, true)
+DEFINE_COMPONENT(W10NetworkPlayer, Isetta::Component, true)
 int swordNetId;
 bool isOnRight;
 int clientAuthorityId;
@@ -18,4 +15,4 @@ void SwordBlocked();
 void Update() override;
 Isetta::Entity* swordEntity;
 
-END_COMPONENT(W10NetworkPlayer, Isetta::Component)
+DEFINE_COMPONENT_END(W10NetworkPlayer, Isetta::Component)

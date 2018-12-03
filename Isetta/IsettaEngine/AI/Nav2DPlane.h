@@ -9,9 +9,10 @@
 #include "Core/Math/Vector2Int.h"
 #include "Core/math/Vector2.h"
 #include "Nav2DObstacle.h"
+#include "ISETTA_API.h"
 
 namespace Isetta {
-class Nav2DPlane {
+class ISETTA_API Nav2DPlane {
   Array<U8> costMatrix;
   Array<Math::Vector2> dirMatrix;
   Array<bool> isObstacle;
@@ -42,6 +43,7 @@ class Nav2DPlane {
   void DebugDisplay() const;
 #endif
   void AddTarget(class Transform* transform);
+  void RemoveTarget(class Transform* transform);
   void UpdateRoute();
   void AddObstacle(const Nav2DObstacle& obstacle);
   Math::Vector2 GetDirectionByPosition(Math::Vector2 position);

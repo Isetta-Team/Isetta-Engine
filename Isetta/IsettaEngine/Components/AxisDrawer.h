@@ -5,8 +5,14 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(AxisDrawer, Component, true)
+/**
+ * @brief Draws local axis which are hidden without _EDITOR
+ *
+ */
+DEFINE_COMPONENT(AxisDrawer, Component, true)
 public:
+#ifdef _EDITOR
 void Update() override;
-END_COMPONENT(AxisDrawer, Component)
+#endif
+DEFINE_COMPONENT_END(AxisDrawer, Component)
 }  // namespace Isetta

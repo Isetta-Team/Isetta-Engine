@@ -16,16 +16,17 @@ namespace Isetta {
 void BoxCollider::Update() {
   DebugDraw::WireCube(
       Math::Matrix4::Translate(transform->GetWorldPos() + center) *
+          (Math::Matrix4)transform->GetWorldRot() *
           Math::Matrix4::Scale(
-              Math::Vector3::Scale(transform->GetWorldScale(), size)) *
-          (Math::Matrix4)transform->GetWorldRot(),
+              Math::Vector3::Scale(transform->GetWorldScale(), size)),
       debugColor);
 }
 #endif
 
 bool BoxCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
                           float maxDistance) {
-  float tmin = -INFINITY, tmax = maxDistance > 0 ? maxDistance : INFINITY;
+  maxDistance = maxDistance <= 0 ? INFINITY : maxDistance;
+  float tmin = -INFINITY, tmax = INFINITY;
   Math::Vector3 e = GetWorldExtents();
   Math::Vector3 o = transform->LocalPosFromWorldPos(ray.GetOrigin());
   Math::Vector3 d = transform->LocalDirFromWorldDir(ray.GetDirection());
@@ -44,6 +45,7 @@ bool BoxCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
                        Math::Util::Max(t[4], t[5])});
   if (tmax < 0 || tmin > tmax) return false;
   if (tmin < 0) tmin = tmax;
+  if (tmin > maxDistance) return false;
 
   Math::Vector3 pt = transform->WorldPosFromLocalPos(o) +
                      transform->WorldDirFromLocalDir(d) * tmin;

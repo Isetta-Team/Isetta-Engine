@@ -2,42 +2,74 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include <unordered_map>
+// #include <unordered_map>
+#include "Core/DataStructures/Delegate.h"
 #include "Core/IsettaAlias.h"
 #include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(CollisionHandler, Component, true)
-private : std::unordered_map<U16, Action<class Collider*>> onEnter,
-          onStay,
-          onExit;
-U16 handles;
+DEFINE_COMPONENT(CollisionHandler, Component, true)
+private:
+Delegate<class Collider*> onEnter, onStay, onExit;
 
-  static void SetColliderHandler(Transform* transform,
-                                 const Action<Collider* const>& action);
+static void SetColliderHandler(Transform* transform,
+                               const Action<Collider* const>& action);
 
-  void OnCollisionEnter(class Collider* const col);
-  void OnCollisionStay(class Collider* const col);
-  void OnCollisionExit(class Collider* const col);
+void OnCollisionEnter(class Collider* const col);
+void OnCollisionStay(class Collider* const col);
+void OnCollisionExit(class Collider* const col);
 
-  friend class CollisionsModule;
+friend class CollisionsModule;
 
- protected:
-  void OnCollisionCallback(
-      const std::unordered_map<U16, Action<class Collider*>>& callbacks,
-      class Collider* const col);
+public:
+CollisionHandler() = default;
 
- public:
-  CollisionHandler() = default;
+void OnEnable() override;
+void OnDisable() override;
 
-  void OnEnable() override;
-  void OnDisable() override;
+/**
+ * @brief Register callback when collider enters attached entity's colliders or
+ * child colliders
+ *
+ * @param callback that occurs on event
+ * @return U16 handle to unregister the callback
+ */
+U64 RegisterOnEnter(const Action<class Collider* const>& callback);
+/**
+ * @brief Unregister on enter callback
+ *
+ * @param handle to unregister
+ */
+void UnregisterOnEnter(U64& handle);
 
-  U16 RegisterOnEnter(const Action<class Collider* const>& action);
-  void UnregisterOnEnter(U16 handle);
-  U16 RegisterOnStay(const Action<class Collider* const>& action);
-  void UnregisterOnStay(U16 handle);
-  U16 RegisterOnExit(const Action<class Collider* const>& action);
-  void UnregisterOnExit(U16 handle);
-END_COMPONENT(CollisionHandler, Component)
+/**
+ * @brief Register callback when collider remains in attached entity's colliders
+ * or child colliders, occurs each FixedUpdated
+ *
+ * @param callback that occurs on event
+ * @return U16 handle to unregister the callback
+ */
+U64 RegisterOnStay(const Action<class Collider* const>& callback);
+/**
+ * @brief Unregister on stay callback
+ *
+ * @param handle to unregister
+ */
+void UnregisterOnStay(U64& handle);
+
+/**
+ * @brief Register callback when collider exits attached entity's colliders or
+ * child colliders
+ *
+ * @param callback that occurs on event
+ * @return U16 handle to unregister the callback
+ */
+U64 RegisterOnExit(const Action<class Collider* const>& callback);
+/**
+ * @brief Unregister on exit callback
+ *
+ * @param handle to unregister
+ */
+void UnregisterOnExit(U64& handle);
+DEFINE_COMPONENT_END(CollisionHandler, Component)
 }  // namespace Isetta

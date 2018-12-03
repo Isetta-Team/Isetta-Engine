@@ -1,0 +1,3 @@
+## Audio
+- sword.aiff: https://freesound.org/people/lostchocolatelab/sounds/1434/
+- flames.aiff: https://freesound.org/people/nextmaking/sounds/86049/

@@ -12,7 +12,7 @@
 #include "Scene/Transform.h"
 
 namespace Isetta {
-#if _EDITOR
+#ifdef _EDITOR
 void SphereCollider::Update() {
   DebugDraw::AxisSphere(
       Math::Matrix4::Translate(transform->GetWorldPos() + center) *
@@ -24,6 +24,7 @@ void SphereCollider::Update() {
 
 bool SphereCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
                              float maxDistance) {
+  maxDistance = maxDistance <= 0 ? INFINITY : maxDistance;
   Math::Vector3 to = ray.GetOrigin() - GetWorldCenter();
   float b = Math::Vector3::Dot(to, ray.GetDirection());
   float c = Math::Vector3::Dot(to, to) - GetWorldRadius() * GetWorldRadius();
@@ -35,6 +36,7 @@ bool SphereCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
   discrim = Math::Util::Sqrt(discrim);
   float t = -b - discrim;
   if (t < 0.f) t = -b + discrim;
+  if (t > maxDistance) return false;
   Math::Vector3 pt = ray.GetPoint(t);
   RaycastHitCtor(hitInfo, t, pt, pt - GetWorldCenter());
   return true;

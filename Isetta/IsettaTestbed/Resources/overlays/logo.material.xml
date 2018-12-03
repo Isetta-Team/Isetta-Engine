@@ -1,5 +1,0 @@
-<Material>
-	<Shader source="shaders/overlay.shader"/>
-	
-	<Sampler name="albedoMap" map="overlays/logo.tga" />
-</Material>

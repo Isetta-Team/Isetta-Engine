@@ -12,41 +12,38 @@ LevelManager& LevelManager::Instance() {
   return instance;
 }
 
-bool LevelManager::Register(const std::string& name, Func<Level*> level) {
-  levels.insert_or_assign(SID(name.c_str()), level);
+bool LevelManager::Register(const std::string_view name, Func<Level*> level) {
+  levels.insert_or_assign(SID(name.data()), level);
+  levelNames.push_back(name.data());
   return true;
+}
+
+std::vector<std::string> LevelManager::GetLevelNames() const {
+  return levelNames;
 }
 
 void LevelManager::LoadLevel() {
   if (pendingLoadLevel != nullptr) {
+    if (loadedLevel != nullptr) {
+      UnloadLevel();
+    }
     loadedLevel = pendingLoadLevel;
     pendingLoadLevel = nullptr;
     LOG("Loading......%s", loadedLevel->GetName().c_str());
-    loadedLevel->OnLevelLoad();
+    loadedLevel->Load();
     LOG("Loading Complete");
+    loadedLevel->isLevelLoaded = true;
   }
 }
 
 void LevelManager::UnloadLevel() {
   if (loadedLevel != nullptr) {
-    loadedLevel->UnloadLevel();
+    loadedLevel->Unload();
     LOG("Unloaded: %s", loadedLevel->GetName().c_str());
     loadedLevel->~Level();
     loadedLevel = nullptr;
   }
 }
-
-// void LevelManager::LoadStartupLevel() {
-//  currentLevelName = Config::Instance().levelConfig.startLevel.GetVal();
-//  OnLevelLoad();
-//}
-
-// void LevelManager::OnLevelLoad() {
-//  currentLevel = levels.at(SID(currentLevelName.c_str()))();
-//  if (currentLevel != nullptr) {
-//    currentLevel->OnLevelLoad();
-//  }
-//}
 
 void LevelManager::LoadLevel(std::string_view levelName) {
   pendingLoadLevel = levels.at(SID(levelName.data()))();

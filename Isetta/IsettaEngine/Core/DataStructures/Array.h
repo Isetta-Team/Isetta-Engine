@@ -124,25 +124,30 @@ class ISETTA_API_DECLARE Array {
  public:
   Array() : size{0}, capacity{0}, data{nullptr} {}
   explicit Array(size_type capacity) : size{0}, capacity{capacity} {
+    capacity = Math::Util::Max(1, capacity);
     data = MemoryManager::NewArrOnFreeList<T>(capacity);
   }
   Array(size_type capacity, const value_type &val)
       : size{capacity}, capacity{capacity} {
+    capacity = Math::Util::Max(1, capacity);
     data = MemoryManager::NewArrOnFreeList<T>(capacity);
     for (int i = 0; i < size; ++i) data[i] = val;
   }
   Array(const std::initializer_list<T> &list) : size{0}, capacity{list.size()} {
+    capacity = Math::Util::Max(1, capacity);
     data = MemoryManager::NewArrOnFreeList<T>(capacity);
     Insert(begin(), list.begin(), list.end());
   }
   Array(iterator beginIter, iterator endIter)
       : size{0}, capacity{static_cast<size_type>(endIter - beginIter)} {
+    capacity = Math::Util::Max(1, capacity);
     data = MemoryManager::NewArrOnFreeList<T>(capacity);
     Insert(begin(), beginIter, endIter);
   }
   Array(const T *beginPtr, const T *endPtr)
       : size{static_cast<size_type>(endPtr - beginPtr)},
         capacity{static_cast<size_type>(endPtr - beginPtr)} {
+    capacity = Math::Util::Max(1, capacity);
     data = MemoryManager::NewArrOnFreeList<T>(capacity);
     for (int i = 0; i < capacity; ++i) data[i] = *(beginPtr + i);
   }
@@ -153,6 +158,7 @@ class ISETTA_API_DECLARE Array {
 
   Array(const Array &inVector)
       : size{inVector.size}, capacity{inVector.capacity} {
+    capacity = Math::Util::Max(1, capacity);
     data = MemoryManager::NewArrOnFreeList<T>(capacity);
     for (int i = 0; i < size; ++i) data[i] = inVector[i];
   }
@@ -170,6 +176,8 @@ class ISETTA_API_DECLARE Array {
     return *this;
   }
   inline Array &operator=(Array &&inVector) noexcept {
+    if (this->data && this->data != inVector.data)
+      MemoryManager::DeleteArrOnFreeList<T>(capacity, data);
     capacity = inVector.capacity;
     size = inVector.size;
     data = inVector.data;
@@ -196,6 +204,7 @@ class ISETTA_API_DECLARE Array {
   }
 
   inline bool operator==(const Array &rhs) const;
+  inline bool operator!=(const Array &rhs) const;
 
   inline size_type Size() const { return size; }
   inline size_type MaxSize() const { return std::numeric_limits<U64>::max{}; }
@@ -220,6 +229,7 @@ class ISETTA_API_DECLARE Array {
   inline void Assign(iterator begin, iterator end);
   inline void Assign(const T *begin, const T *end);
   inline void Assign(std::initializer_list<T> list);
+  inline void PushBack(value_type &&val);
   inline void PushBack(const value_type &val);
   inline void PopBack();
   inline iterator Insert(iterator position, const value_type &val);
@@ -265,9 +275,24 @@ inline bool Array<T>::operator==(const Array &rhs) const {
   if (size != rhs.size) return false;
   for (const_iterator lhsIt = begin(), rhsIt = rhs.begin();
        lhsIt != end(), rhsIt != rhs.end(); ++lhsIt, ++rhsIt) {
-    if (*lhsIt != *rhsIt) return false;
+    if (lhsIt != rhsIt) return false;
   }
   return true;
+}
+
+template <typename T>
+inline bool operator==(const Array<T> &lhs, const Array<T> &rhs) {
+  return lhs.operator==(rhs);
+}
+
+template <typename T>
+inline bool Array<T>::operator!=(const Array &rhs) const {
+  return !(this == rhs);
+}
+
+template <typename T>
+inline bool operator!=(const Array<T> &lhs, const Array<T> &rhs) {
+  return lhs.operator!=(rhs);
 }
 
 template <typename T>
@@ -285,9 +310,10 @@ inline void Array<T>::ReservePow2(int inCapacity) {
   T *tmpData = MemoryManager::NewArrOnFreeList<T>(inCapacity);
   for (int i = 0; i < size; ++i) {
     tmpData[i] = std::move(data[i]);
-    data[i].~T();
   }
-  if (capacity > 0) MemoryManager::FreeOnFreeList(data);
+  if (capacity > 0) {
+    MemoryManager::DeleteArrOnFreeList<T>(capacity, data);
+  }
   capacity = inCapacity;
   data = tmpData;
   tmpData = nullptr;
@@ -299,25 +325,24 @@ inline void Array<T>::Reserve(int inCapacity) {
   T *tmpData = MemoryManager::NewArrOnFreeList<T>(inCapacity);
   for (int i = 0; i < size; ++i) {
     tmpData[i] = std::move(data[i]);
-    data[i].~T();
   }
-  if (capacity > 0) MemoryManager::FreeOnFreeList(data);
+  if (capacity > 0) {
+    MemoryManager::DeleteArrOnFreeList<T>(capacity, data);
+  }
   capacity = inCapacity;
   data = tmpData;
 }
 template <typename T>
 inline void Array<T>::Shrink() {
   if (size == capacity) return;
-  // TODO(Jacob) + TODO(Yidi) + TODO(Caleb) can I just shift the pointer?
-  // realloc free list
-  // MemoryManager::FreeOnFreeList(data + size * sizeof(T));
+  // TODO(YIDI): Use realloc
   T *tmpData = MemoryManager::NewArrOnFreeList<T>(size);
   for (int i = 0; i < size; ++i) {
     tmpData[i] = std::move(data[i]);
-    data[i].~T();
   }
-  for (int i = size; i < capacity; ++i) data[i].~T();
-  if (capacity > 0) MemoryManager::FreeOnFreeList(data);
+  if (capacity > 0) {
+    MemoryManager::DeleteArrOnFreeList<T>(capacity, data);
+  }
   capacity = size;
   data = tmpData;
 }
@@ -402,11 +427,16 @@ inline void Array<T>::Assign(std::initializer_list<T> list) {
   if (list.size() > capacity) ReservePow2(list.size());
   size = list.size();
   iterator itThis = begin();
-  for (auto it = list.begin(); it != list.end(); +++it, ++itThis) {
+  for (auto it = list.begin(); it != list.end(); ++it, ++itThis) {
     (*itThis).~T();
     *itThis = *it;
   }
   for (; itThis != end(); ++itThis) (*itThis).~T();
+}
+template <typename T>
+inline void Array<T>::PushBack(value_type &&val) {
+  if (size + 1 > capacity) ReservePow2(size + 1);
+  data[size++] = std::move(val);
 }
 template <typename T>
 inline void Array<T>::PushBack(const value_type &val) {
@@ -441,7 +471,7 @@ inline typename Array<T>::iterator Array<T>::Insert(iterator position,
       *it = *itThis;
       (*itThis).~T();
     }
-    if (capacity > 0) MemoryManager::FreeOnFreeList(data);
+    if (capacity > 0) MemoryManager::DeleteArrOnFreeList(capacity, data);
     capacity = inCapacity;
     data = tmpData;
   } else {
@@ -473,7 +503,7 @@ inline typename Array<T>::iterator Array<T>::Insert(iterator position,
       *it = *itThis;
       (*itThis).~T();
     }
-    if (capacity > 0) MemoryManager::FreeOnFreeList(data);
+    if (capacity > 0) MemoryManager::DeleteArrOnFreeList(capacity, data);
     capacity = inCapacity;
     data = tmpData;
   } else {
@@ -505,7 +535,7 @@ inline typename Array<T>::iterator Array<T>::Insert(iterator position,
       *it = *itThis;
       (*itThis).~T();
     }
-    if (capacity > 0) MemoryManager::FreeOnFreeList(data);
+    if (capacity > 0) MemoryManager::DeleteArrOnFreeList(capacity, data);
     capacity = inCapacity;
     data = tmpData;
   } else {
@@ -538,7 +568,7 @@ inline typename Array<T>::iterator Array<T>::Insert(iterator position,
       *it = *itThis;
       (*itThis).~T();
     }
-    if (capacity > 0) MemoryManager::FreeOnFreeList(data);
+    if (capacity > 0) MemoryManager::DeleteArrOnFreeList(capacity, data);
     capacity = inCapacity;
     data = tmpData;
   } else {
@@ -606,7 +636,7 @@ inline typename Array<T>::iterator Array<T>::Emplace(iterator position,
       *it = *itThis;
       (*itThis).~T();
     }
-    if (capacity > 0) MemoryManager::FreeOnFreeList(data);
+    if (capacity > 0) MemoryManager::DeleteArrOnFreeList(capacity, data);
     capacity = inCapacity;
     data = tmpData;
   } else {
@@ -639,7 +669,7 @@ inline typename Array<T>::iterator Array<T>::Emplace(const_iterator position,
       *it = *itThis;
       (*itThis).~T();
     }
-    if (capacity > 0) MemoryManager::FreeOnFreeList(data);
+    if (capacity > 0) MemoryManager::DeleteArrOnFreeList(capacity, data);
     capacity = inCapacity;
     data = tmpData;
   } else {

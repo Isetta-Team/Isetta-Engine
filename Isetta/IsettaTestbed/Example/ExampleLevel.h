@@ -2,12 +2,13 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Core/Memory/MemoryManager.h"
-#include "Scene/Level.h"
-#include "Scene/LevelManager.h"
 
+/**
+ * @brief Level with an animating model and example component
+ *
+ */
 namespace Isetta {
-CREATE_LEVEL(ExampleLevel)
-void OnLevelLoad() override;
-CREATE_LEVEL_END
+DEFINE_LEVEL(ExampleLevel)
+void Load() override;
+DEFINE_LEVEL_END
 }  // namespace Isetta

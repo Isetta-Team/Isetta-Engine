@@ -21,8 +21,8 @@ void CapsuleCollider::Update() {
   Math::Matrix4 rotation;
   GetWorldCapsule(&rotation, &scale);
   DebugDraw::WireCapsule(
-      Math::Matrix4::Translate(transform->GetWorldPos() + center) * scale *
-          rotation,
+      Math::Matrix4::Translate(transform->GetWorldPos() + center) * rotation *
+          scale,
       radius, height, debugColor);
 
   Math::Vector3 dir =
@@ -52,6 +52,7 @@ bool CapsuleCollider::RaycastSphere(const Math::Vector3& center, float radius,
   discrim = Math::Util::Sqrt(discrim);
   float t = -b - discrim;
   if (t < 0.f) t = -b + discrim;
+  if (t > maxDistance) return false;
   Math::Vector3 pt = ray.GetPoint(t);
   RaycastHitCtor(hitInfo, t, pt, pt - center);
   return true;
@@ -88,6 +89,7 @@ float CapsuleCollider::GetWorldCapsule(Math::Matrix4* rotation,
 }
 bool CapsuleCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
                               float maxDistance) {
+  maxDistance = maxDistance <= 0 ? INFINITY : maxDistance;
   Math::Matrix4 rot, scale;
   float radiusScale = GetWorldCapsule(&rot, &scale);
   Math::Vector3 dir = (Math::Vector3)(
@@ -132,6 +134,7 @@ bool CapsuleCollider::Raycast(const Ray& ray, RaycastHit* const hitInfo,
   float tmin = -(b + sqrtDiscrim) * denom;
   float tmax = (-b + sqrtDiscrim) * denom;
   if (tmin > tmax) std::swap(tmin, tmax);
+  if (tmin > maxDistance) return false;
 
   float tkMin = tmin * m + n;
   if (tkMin < 0.f) {

@@ -3,8 +3,8 @@
  */
 #include "Core/Debug/DebugDraw.h"
 
-#include <GLFW/glfw3.h>
-#include <glad/glad.h>
+#include "GLFW/include/GLFW/glfw3.h"
+#include "glad/glad.h"
 
 #include "Core/Debug/Logger.h"
 #include "Core/Math/Matrix4.h"
@@ -240,6 +240,9 @@ void DebugDraw::Update() {
     }
   }
 }
+
+void DebugDraw::Clear() { durationDraw.clear(); }
+
 void DebugDraw::ShutDown() {
   glDeleteVertexArrays(1, &VAO);
   glDeleteBuffers(1, &VBO);
@@ -249,19 +252,23 @@ void DebugDraw::ShutDown() {
 
 void DebugDraw::Point(const Math::Vector3 point, const Color& color, float size,
                       float duration, bool depthTest) {
+#ifdef _EDITOR
   durationDraw.push_back(
       std::pair(duration, std::bind(DrawPoint, point, color, size, depthTest)));
+#endif
 }
-
 void DebugDraw::Line(const Math::Vector3& start, const Math::Vector3& end,
                      const Color& color, float thickness, float duration,
                      bool depthTest) {
+#ifdef _EDITOR
   durationDraw.push_back(std::pair(
       duration, std::bind(DrawLine, start, end, color, thickness, depthTest)));
+#endif
 }
 void DebugDraw::Ray(const Math::Vector3& start, const Math::Vector3& dir,
                     const Color& color, float thickness, float duration,
                     bool depthTest) {
+#ifdef _EDITOR
   Line(
       start,
       start +
@@ -269,85 +276,107 @@ void DebugDraw::Ray(const Math::Vector3& start, const Math::Vector3& dir,
                   ->GetProperty<CameraComponent::Property::FAR_PLANE, float>() *
               dir.Normalized(),
       color, thickness, duration, depthTest);
+#endif
 }
 void DebugDraw::Plane(const Math::Matrix4& transformation, const Color& color,
                       float duration, bool depthTest) {
+#ifdef _EDITOR
   durationDraw.push_back(std::pair(
       duration,
       std::bind(OpenGLDraw, transformation, color, 0, depthTest, []() {
         glDrawElements(GL_TRIANGLES, PLANE_INDICIES, GL_UNSIGNED_INT, (void*)0);
       })));
+#endif
 }
 void DebugDraw::WirePlane(const Math::Matrix4& transformation,
                           const Color& color, float thickness, float duration,
                           bool depthTest) {
+#ifdef _EDITOR
   durationDraw.push_back(std::pair(
       duration,
       std::bind(OpenGLDraw, transformation, color, thickness, depthTest,
                 []() { glDrawArrays(GL_LINE_LOOP, PLANE, PLANE_VERTICIES); })));
+#endif
 }
 void DebugDraw::Cube(const Math::Matrix4& transformation, const Color& color,
                      float duration, bool depthTest) {
+#ifdef _EDITOR
   durationDraw.push_back(std::pair(
       duration,
       std::bind(OpenGLDraw, transformation, color, 0, depthTest, []() {
         glDrawElements(GL_TRIANGLES, CUBE_INDICIES, GL_UNSIGNED_INT,
                        (void*)(sizeof(int) * (PLANE_INDICIES)));
       })));
+#endif
 }
 void DebugDraw::WireCube(const Math::Matrix4& transformation,
                          const Color& color, float thickness, float duration,
                          bool depthTest) {
+#ifdef _EDITOR
   durationDraw.push_back(std::pair(
       duration,
       std::bind(OpenGLDraw, transformation, color, thickness, depthTest, []() {
         glDrawElements(GL_LINES, CUBE_WIRE_INDICIES, GL_UNSIGNED_INT,
                        (void*)(sizeof(int) * (PLANE_INDICIES + CUBE_INDICIES)));
       })));
+#endif
 }
 void DebugDraw::Sphere(const Math::Matrix4& transformation, const Color& color,
                        float duration, bool depthTest) {
+#ifdef _EDITOR
   throw std::exception("DebugDraw::Sphere => NOT IMPLEMENTED");
 
   durationDraw.push_back(std::pair(
       duration, std::bind(DrawSphere, transformation, color, depthTest)));
+#endif
 }
 void DebugDraw::Sphere(const Math::Vector3& position, float radius,
                        const Color& color, float duration, bool depthTest) {
+#ifdef _EDITOR
   throw std::exception("DebugDraw::Sphere => NOT IMPLEMENTED");
   Sphere(Math::Matrix4::Transform(position, Math::Vector3::zero,
                                   radius * Math::Vector3::one),
          color, duration, depthTest);
+#endif
 }
 void DebugDraw::WireSphere(const Math::Matrix4& transformation,
                            const Color& color, float thickness, float duration,
                            bool depthTest) {
+#ifdef _EDITOR
   durationDraw.push_back(std::pair(
       duration,
       std::bind(DrawWireSphere, transformation, color, thickness, depthTest)));
+#endif
 }
 void DebugDraw::WireSphere(const Math::Vector3& position, float radius,
                            const Color& color, float thickness, float duration,
                            bool depthTest) {
+#ifdef _EDITOR
   WireSphere(Math::Matrix4::Transform(position, Math::Vector3::zero,
                                       radius * Math::Vector3::one),
              color, thickness, duration, depthTest);
+#endif
 }
 void DebugDraw::WireCapsule(const Math::Matrix4& transformation, float radius,
                             float height, const Color& color, float thickness,
                             float duration, bool depthTest) {
+#ifdef _EDITOR
   durationDraw.push_back(
       std::pair(duration, std::bind(DrawWireCapsule, transformation, radius,
                                     height, color, thickness, depthTest)));
+#endif
 }
 void DebugDraw::Grid(const Math::Matrix4& transformation, int lines,
                      const Color& color, float thickness, float duration) {
+#ifdef _EDITOR
   durationDraw.push_back(std::pair(
       duration, std::bind(DrawGrid, transformation, lines, color, thickness)));
+#endif
 }
 void DebugDraw::Axis(const Math::Matrix4& transformation, const Color& xColor,
                      const Color& yColor, const Color& zColor, float thickness,
                      float duration, bool depthTest) {
+#ifdef _EDITOR
   Math::Vector3 start = static_cast<Math::Vector3>(transformation.GetCol(3));
   Math::Vector3 right = static_cast<Math::Vector3>(transformation.GetCol(0));
   Math::Vector3 up = static_cast<Math::Vector3>(transformation.GetCol(1));
@@ -355,22 +384,27 @@ void DebugDraw::Axis(const Math::Matrix4& transformation, const Color& xColor,
   Line(start, start + right, xColor, thickness, duration, depthTest);
   Line(start, start + up, yColor, thickness, duration, depthTest);
   Line(start, start + forward, zColor, thickness, duration, depthTest);
+#endif
 }
 void DebugDraw::AxisSphere(const Math::Matrix4& transformation,
                            const Color& xColor, const Color& yColor,
                            const Color& zColor, float thickness, float duration,
                            bool depthTest) {
+#ifdef _EDITOR
   durationDraw.push_back(
       std::pair(duration, std::bind(DrawAxisSphere, transformation, xColor,
                                     yColor, zColor, thickness, depthTest)));
+#endif
 }
 void DebugDraw::AxisSphere(const Math::Vector3& position, float radius,
                            const Color& xColor, const Color& yColor,
                            const Color& zColor, float thickness, float duration,
                            bool depthTest) {
+#ifdef _EDITOR
   AxisSphere(Math::Matrix4::Transform(position, Math::Vector3::zero,
                                       radius * Math::Vector3::one),
              xColor, yColor, zColor, thickness, duration, depthTest);
+#endif
 }
 void DebugDraw::OpenGLDraw(const Math::Matrix4& transformation,
                            const Color& color, float thickness, bool depthTest,
@@ -655,11 +689,11 @@ void DebugDraw::DrawGrid(const Math::Matrix4& transformation, int lines,
       CameraComponent::Main()
           ->GetProperty<CameraComponent::Property::PROJECTION, Math::Matrix4>()
           .Transpose() *
-      CameraComponent::Main()->transform->GetWorldToLocalMatrix();
+      CameraComponent::Main()->transform->GetWorldToLocalMatrix() *
+      transformation;
   glUniformMatrix4fv(modelViewProjectionLoc, 1, GL_FALSE,
                      mvpMat.Transpose().data);
   glUniform4fv(colorLoc, 1, color.rgba);
-  // glUniformMatrix4fv(modelLoc, 1, GL_FALSE, model.data);
   GLError();
 
   glEnable(GL_DEPTH_TEST);

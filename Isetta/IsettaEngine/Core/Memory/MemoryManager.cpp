@@ -59,7 +59,7 @@ void MemoryManager::Update() {
   doubleBufferedAllocator.ClearCurrentBuffer();
   dynamicArena.Defragment();
 #if _DEBUG
-  freeListAllocator.Print();
+  // freeListAllocator.Print();
 #endif
 }
 

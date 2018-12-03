@@ -4,6 +4,7 @@
 #include "Collisions/CollisionsModule.h"
 
 #include "Collisions/AABB.h"
+#include "Collisions/RaycastHit.h"
 #include "Core/Geometry/Ray.h"
 #include "Core/Math/Matrix3.h"
 #include "Core/Math/Vector3.h"
@@ -37,11 +38,12 @@ void CollisionsModule::Update(float deltaTime) {
 
   // By the end of the checking loop, pairs left in the lastFramePairs
   // are those who are no longer colliding
-  auto lastFramePairs = collidingPairs;
+  lastFramePairs = collidingPairs;
 
   collidingPairs.clear();
 
-  for (const auto &pair : bvTree.GetCollisionPairs()) {
+  auto pairs = bvTree.GetCollisionPairs();
+  for (const auto &pair : pairs) {
     Collider *collider1 = pair.first;
     Collider *collider2 = pair.second;
     // Ignore Single/Layer Collisions continue
@@ -58,31 +60,37 @@ void CollisionsModule::Update(float deltaTime) {
         handler2 && handler1 == handler2)
       continue;
 
-    if (collider1->Intersection(collider2)) {
-      collidingPairs.insert(pair);
+    if (collider1->Intersection(collider2)) collidingPairs.insert(pair);
+  }
+}
 
-      // Colliders with the same handler shouldn't have their functions called
-      if (handler1 == handler2) continue;
+void CollisionsModule::LateUpdate(float deltaTime) {
+  for (const auto &pair : collidingPairs) {
+    Collider *collider1 = pair.first;
+    Collider *collider2 = pair.second;
 
-      // if they do collide
-      auto it = lastFramePairs.find(pair);
+    CollisionHandler *handler1 = collider1->GetHandler();
+    CollisionHandler *handler2 = collider2->GetHandler();
+    if (handler1 == handler2) continue;
 
-      if (it != lastFramePairs.end()) {
-        // pair was colliding last frame
-        if (handler1) handler1->OnCollisionStay(collider2);
-        if (handler2) handler2->OnCollisionStay(collider1);
-        lastFramePairs.erase(it);
-      } else {
-        // pair is new
-        if (handler1) handler1->OnCollisionEnter(collider2);
-        if (handler2) handler2->OnCollisionEnter(collider1);
-      }
+    auto it = lastFramePairs.find(pair);
+
+    if (it != lastFramePairs.end()) {
+      // pair was colliding last frame
+      if (handler1) handler1->OnCollisionStay(collider2);
+      if (handler2) handler2->OnCollisionStay(collider1);
+      lastFramePairs.erase(it);
+    } else {
+      // pair is new
+      if (handler1) handler1->OnCollisionEnter(collider2);
+      if (handler2) handler2->OnCollisionEnter(collider1);
     }
   }
 
   for (const auto &pair : lastFramePairs) {
     Collider *collider1 = pair.first;
     Collider *collider2 = pair.second;
+    if (!collider1->entity || !collider2->entity) continue;
 
     CollisionHandler *handler1 = collider1->GetHandler();
     CollisionHandler *handler2 = collider2->GetHandler();
@@ -220,6 +228,8 @@ bool CollisionsModule::Intersection(const BoxCollider &box,
       .5;
   Math::Vector3 p0 = capsule.GetWorldCenter() - dir;
   Math::Vector3 p1 = capsule.GetWorldCenter() + dir;
+  // DebugDraw::Point(p0, Color::magenta, 10, 0.1f);
+  // DebugDraw::Point(p1, Color::magenta, 10, 0.1f);
   return SqDistSegmentOBB(p0, p1, box) <=
          Math::Util::Square(capsule.radius * radiusScale);
 
@@ -307,21 +317,14 @@ bool CollisionsModule::Intersection(const CapsuleCollider &capsule,
 bool CollisionsModule::Raycast(const Ray &ray, RaycastHit *const hitInfo,
                                float maxDistance) {
   PROFILE
-  // TODO(YIDI) + TODO(JACOB) raycast bvtree
-  // for (auto &col : colliders) {
-  //  RaycastHit hit{};
-  //  if (col->Raycast(ray, &hit, maxDistance)) {
-  //    if (hit.GetDistance() < hitInfo->GetDistance()) {
-  //      *hitInfo = hit;
-  //    }
-  //  }
-  //}
-  // return hitInfo->GetDistance() < INFINITY;
   return bvTree.Raycast(ray, hitInfo, maxDistance);
 }
+Array<RaycastHit> CollisionsModule::RaycastAll(const Ray &ray,
+                                               float maxDistance) {
+  PROFILE
+  return bvTree.RaycastAll(ray, maxDistance);
+}
 bool CollisionsModule::GetIgnoreLayerCollision(int layer1, int layer2) const {
-  Layers::CheckLayer(layer1);
-  Layers::CheckLayer(layer2);
   if (layer1 < layer2)
     return ignoreCollisionLayer.test(layer1 * Layers::LAYERS_CAPACITY + layer2);
   else
@@ -396,19 +399,18 @@ float CollisionsModule::SqDistSegmentOBB(const Math::Vector3 &p0,
   // Line line = Line{p0, p1 - p0};
   float t, distSq;
   Math::Vector3 pt = ClosestPtLineOBB(line, box, &t, &distSq);
-  // DebugDraw::Point(pt, Color::red, 20, 0.1, false);
+  // DebugDraw::Point(pt, Color::red, 10, 0.1);
   // LOG_INFO(Debug::Channel::Collisions, "(%f)", t);
   // LOG_INFO(Debug::Channel::Collisions, "(%f, %f, %f)", pt.x, pt.y, pt.z);
-  if (t < 0) {
+  if (t <= 0) {
     distSq = SqDistPointOBB(p0, box);
-    // DebugDraw::Point(p0, Color::white, 20, 0.1, false);
-  } else if (t > 1) {
+    // DebugDraw::Point(p0, Color::white, 10, 0.1, false);
+  } else if (t >= 1) {
     distSq = SqDistPointOBB(p1, box);
-    // DebugDraw::Point(p1, Color::white, 20, 0.1, false);
+    // DebugDraw::Point(p1, Color::white, 10, 0.1, false);
+  } else {
+    // DebugDraw::Point(line.GetPoint(t), Color::white, 10, 0.1, false);
   }
-  // else {
-  //  DebugDraw::Point(line.GetPoint(t), Color::white, 20, 0.1, false);
-  //}
   return distSq;
 }
 Math::Vector3 CollisionsModule::ClosestPtPointSegment(
@@ -905,154 +907,155 @@ bool CollisionsModule::CapsuleAABBIntersect(const Math::Vector3 &start,
   // https://www.youtube.com/watch?v=fa0gz0t61oA&t=971s
   // Youtube video on the
   // topic: https://www.youtube.com/watch?v=1OVZDeqkBvU&t=955s
-  Math::Vector3 to = end - start;
-  Math::Vector3 denom = 1.0f / to;
-  Math::Vector3 cneg = Math::Vector3::Scale(
-      (-extents - radius * Math::Vector3::one - start), denom);
-  Math::Vector3 cpos = Math::Vector3::Scale(
-      (extents + radius * Math::Vector3::one - start), denom);
 
-  Math::Vector3 ineg[Math::Vector3::ELEMENT_COUNT];
-  Math::Vector3 ipos[Math::Vector3::ELEMENT_COUNT];
-  for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
-    ineg[i] = cneg[i] * to + start;
-    ipos[i] = cpos[i] * to + start;
-  }
+  // Math::Vector3 to = end - start;
+  // Math::Vector3 denom = 1.0f / to;
+  // Math::Vector3 cneg = Math::Vector3::Scale(
+  //    (-extents - radius * Math::Vector3::one - start), denom);
+  // Math::Vector3 cpos = Math::Vector3::Scale(
+  //    (extents + radius * Math::Vector3::one - start), denom);
 
-  for (int x = 0; x < Math::Vector3::ELEMENT_COUNT; ++x) {
-    int y = (x + 1) % 3;
-    int z = (x + 2) % 3;
-    if (Math::Util::Abs(ineg[x][y]) > extents[y] ||
-        Math::Util::Abs(ineg[x][z]) > extents[z]) {
-      cneg[x] = INFINITY;
-    }
-    if (Math::Util::Abs(ipos[x][y]) > extents[y] ||
-        Math::Util::Abs(ipos[x][z]) > extents[z]) {
-      cpos[x] = INFINITY;
-    }
-  }
+  // Math::Vector3 ineg[Math::Vector3::ELEMENT_COUNT];
+  // Math::Vector3 ipos[Math::Vector3::ELEMENT_COUNT];
+  // for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
+  //  ineg[i] = cneg[i] * to + start;
+  //  ipos[i] = cpos[i] * to + start;
+  //}
 
-  Math::Vector3 c;
-  float s;
+  // for (int x = 0; x < Math::Vector3::ELEMENT_COUNT; ++x) {
+  //  int y = (x + 1) % 3;
+  //  int z = (x + 2) % 3;
+  //  if (Math::Util::Abs(ineg[x][y]) > extents[y] ||
+  //      Math::Util::Abs(ineg[x][z]) > extents[z]) {
+  //    cneg[x] = INFINITY;
+  //  }
+  //  if (Math::Util::Abs(ipos[x][y]) > extents[y] ||
+  //      Math::Util::Abs(ipos[x][z]) > extents[z]) {
+  //    cpos[x] = INFINITY;
+  //  }
+  //}
 
-  // 8 points
-  // 12 lines
-  // 6 faces
+  // Math::Vector3 c;
+  // float s;
 
-  float line[12];
-  float point[8];
-  Math::Vector3 face[4] = {Math::Vector3{1, 1, 0}, Math::Vector3{1, 0, 1},
-                           Math::Vector3{0, 1, 1}, Math::Vector3::one};
+  //// 8 points
+  //// 12 lines
+  //// 6 faces
 
-  // lines
-  line[0] = INFINITY;
-  c = Math::Vector3{-extents.x, extents.y, 0};
-  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[0], &s))
-    line[0] = s;
+  // float line[12];
+  // float point[8];
+  // Math::Vector3 face[4] = {Math::Vector3{1, 1, 0}, Math::Vector3{1, 0, 1},
+  //                         Math::Vector3{0, 1, 1}, Math::Vector3::one};
 
-  line[1] = INFINITY;
-  c = Math::Vector3{extents.x, extents.y, 0};
-  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[0], &s))
-    line[1] = s;
+  //// lines
+  // line[0] = INFINITY;
+  // c = Math::Vector3{-extents.x, extents.y, 0};
+  // if (RaySphereIntersectLimited(start, end, c, radius, extents, face[0], &s))
+  //  line[0] = s;
 
-  line[2] = INFINITY;
-  c = Math::Vector3{0, extents.y, -extents.z};
-  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[2], &s))
-    line[2] = s;
+  // line[1] = INFINITY;
+  // c = Math::Vector3{extents.x, extents.y, 0};
+  // if (RaySphereIntersectLimited(start, end, c, radius, extents, face[0], &s))
+  //  line[1] = s;
 
-  line[3] = INFINITY;
-  c = Math::Vector3{0, extents.y, extents.z};
-  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[2], &s))
-    line[3] = s;
+  // line[2] = INFINITY;
+  // c = Math::Vector3{0, extents.y, -extents.z};
+  // if (RaySphereIntersectLimited(start, end, c, radius, extents, face[2], &s))
+  //  line[2] = s;
 
-  line[4] = INFINITY;
-  c = Math::Vector3{-extents.x, -extents.y, 0};
-  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[0], &s))
-    line[4] = s;
+  // line[3] = INFINITY;
+  // c = Math::Vector3{0, extents.y, extents.z};
+  // if (RaySphereIntersectLimited(start, end, c, radius, extents, face[2], &s))
+  //  line[3] = s;
 
-  line[5] = INFINITY;
-  c = Math::Vector3{extents.x, -extents.y, 0};
-  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[0], &s))
-    line[5] = s;
+  // line[4] = INFINITY;
+  // c = Math::Vector3{-extents.x, -extents.y, 0};
+  // if (RaySphereIntersectLimited(start, end, c, radius, extents, face[0], &s))
+  //  line[4] = s;
 
-  line[6] = INFINITY;
-  c = Math::Vector3{0, -extents.y, -extents.z};
-  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[2], &s))
-    line[6] = s;
+  // line[5] = INFINITY;
+  // c = Math::Vector3{extents.x, -extents.y, 0};
+  // if (RaySphereIntersectLimited(start, end, c, radius, extents, face[0], &s))
+  //  line[5] = s;
 
-  line[7] = INFINITY;
-  c = Math::Vector3{0, -extents.y, extents.z};
-  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[2], &s))
-    line[7] = s;
+  // line[6] = INFINITY;
+  // c = Math::Vector3{0, -extents.y, -extents.z};
+  // if (RaySphereIntersectLimited(start, end, c, radius, extents, face[2], &s))
+  //  line[6] = s;
 
-  line[8] = INFINITY;
-  c = Math::Vector3{extents.x, 0, extents.z};
-  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[1], &s))
-    line[8] = s;
+  // line[7] = INFINITY;
+  // c = Math::Vector3{0, -extents.y, extents.z};
+  // if (RaySphereIntersectLimited(start, end, c, radius, extents, face[2], &s))
+  //  line[7] = s;
 
-  line[9] = INFINITY;
-  c = Math::Vector3{extents.x, 0, -extents.z};
-  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[1], &s))
-    line[9] = s;
+  // line[8] = INFINITY;
+  // c = Math::Vector3{extents.x, 0, extents.z};
+  // if (RaySphereIntersectLimited(start, end, c, radius, extents, face[1], &s))
+  //  line[8] = s;
 
-  line[10] = INFINITY;
-  c = Math::Vector3{-extents.x, 0, extents.z};
-  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[1], &s))
-    line[10] = s;
+  // line[9] = INFINITY;
+  // c = Math::Vector3{extents.x, 0, -extents.z};
+  // if (RaySphereIntersectLimited(start, end, c, radius, extents, face[1], &s))
+  //  line[9] = s;
 
-  line[11] = INFINITY;
-  c = Math::Vector3{-extents.x, 0, -extents.z};
-  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[1], &s))
-    line[11] = s;
+  // line[10] = INFINITY;
+  // c = Math::Vector3{-extents.x, 0, extents.z};
+  // if (RaySphereIntersectLimited(start, end, c, radius, extents, face[1], &s))
+  //  line[10] = s;
 
-  // points
-  point[0] = INFINITY;
-  c = Math::Vector3{extents.x, extents.y, extents.z};
-  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
-    point[0] = s;
+  // line[11] = INFINITY;
+  // c = Math::Vector3{-extents.x, 0, -extents.z};
+  // if (RaySphereIntersectLimited(start, end, c, radius, extents, face[1], &s))
+  //  line[11] = s;
 
-  point[1] = INFINITY;
-  c = Math::Vector3{extents.x, extents.y, -extents.z};
-  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
-    point[1] = s;
+  //// points
+  // point[0] = INFINITY;
+  // c = Math::Vector3{extents.x, extents.y, extents.z};
+  // if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
+  //  point[0] = s;
 
-  point[2] = INFINITY;
-  c = Math::Vector3{extents.x, -extents.y, extents.z};
-  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
-    point[2] = s;
+  // point[1] = INFINITY;
+  // c = Math::Vector3{extents.x, extents.y, -extents.z};
+  // if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
+  //  point[1] = s;
 
-  point[3] = INFINITY;
-  c = Math::Vector3{extents.x, -extents.y, -extents.z};
-  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
-    point[3] = s;
+  // point[2] = INFINITY;
+  // c = Math::Vector3{extents.x, -extents.y, extents.z};
+  // if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
+  //  point[2] = s;
 
-  point[4] = INFINITY;
-  c = Math::Vector3{-extents.x, extents.y, extents.z};
-  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
-    point[4] = s;
+  // point[3] = INFINITY;
+  // c = Math::Vector3{extents.x, -extents.y, -extents.z};
+  // if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
+  //  point[3] = s;
 
-  point[5] = INFINITY;
-  c = Math::Vector3{-extents.x, extents.y, -extents.z};
-  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
-    point[5] = s;
+  // point[4] = INFINITY;
+  // c = Math::Vector3{-extents.x, extents.y, extents.z};
+  // if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
+  //  point[4] = s;
 
-  point[6] = INFINITY;
-  c = Math::Vector3{-extents.x, -extents.y, extents.z};
-  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
-    point[6] = s;
+  // point[5] = INFINITY;
+  // c = Math::Vector3{-extents.x, extents.y, -extents.z};
+  // if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
+  //  point[5] = s;
 
-  point[7] = INFINITY;
-  c = Math::Vector3{-extents.x, -extents.y, -extents.z};
-  if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
-    point[7] = s;
+  // point[6] = INFINITY;
+  // c = Math::Vector3{-extents.x, -extents.y, extents.z};
+  // if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
+  //  point[6] = s;
 
-  *t = Math::Util::Min(
-      {cneg[0],  cneg[1],  cneg[2],  cpos[0],  cpos[1],  cpos[2],  line[0],
-       line[1],  line[2],  line[3],  line[4],  line[5],  line[6],  line[7],
-       line[8],  line[9],  line[10], line[11], point[0], point[1], point[2],
-       point[3], point[4], point[5], point[6], point[7]});
+  // point[7] = INFINITY;
+  // c = Math::Vector3{-extents.x, -extents.y, -extents.z};
+  // if (RaySphereIntersectLimited(start, end, c, radius, extents, face[3], &s))
+  //  point[7] = s;
 
-  return *t < INFINITY;
+  //*t = Math::Util::Min(
+  //    {cneg[0],  cneg[1],  cneg[2],  cpos[0],  cpos[1],  cpos[2],  line[0],
+  //     line[1],  line[2],  line[3],  line[4],  line[5],  line[6],  line[7],
+  //     line[8],  line[9],  line[10], line[11], point[0], point[1], point[2],
+  //     point[3], point[4], point[5], point[6], point[7]});
+
+  // return *t < INFINITY;
 }
 bool CollisionsModule::RaySphereIntersectLimited(
     const Math::Vector3 &start, const Math::Vector3 &end,

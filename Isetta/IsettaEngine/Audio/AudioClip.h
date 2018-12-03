@@ -13,24 +13,38 @@ class StringId;
 
 namespace Isetta {
 class ISETTA_API AudioClip {
- private:
-  std::string filePath, name;
-  FMOD::Sound* fmodSound;
-
-  static class AudioModule* audioModule;
-  friend class AudioModule;
-  friend class AudioSource;
-
-  static std::unordered_map<StringId, AudioClip*> clips;
-
-  static void LoadConfigClips();
-  static void UnloadAll();
-
  public:
-  AudioClip(const std::string_view filePath, const std::string_view name = "");
   ~AudioClip();
 
-  // void Unload() const;
-  static AudioClip* GetClip(const std::string_view name);
+  /**
+   * @brief Load the AudioClip
+   *
+   * @param filePath under the resource_path where audio located
+   * @param soundName user defined name for easy access, defaults to filepath
+   * @return AudioClip* AudioClip that is loaded
+   */
+  static AudioClip* Load(const std::string_view filePath,
+                         const std::string_view soundName = "");
+  /**
+   * @brief Finds the AudioClip by name
+   *
+   * @param name of the AudioClip (user defined name on load)
+   * @return AudioClip* AudioClip associated with name or nullptr
+   */
+  static AudioClip* Find(const std::string_view name);
+
+ private:
+  explicit AudioClip(std::string_view filePath, std::string_view name);
+  static void UnloadAll();
+
+  std::string filePath, name;
+  FMOD::Sound* fmodSound{};
+
+  static class AudioModule* audioModule;
+  static std::unordered_map<StringId, AudioClip*> clips;
+
+  friend class AudioModule;
+  friend class AudioSource;
+  friend class FreeListAllocator;
 };
 }  // namespace Isetta

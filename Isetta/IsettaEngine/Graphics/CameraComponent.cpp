@@ -10,7 +10,6 @@
 #include "Scene/Component.h"
 #include "Scene/Entity.h"
 #include "Scene/Transform.h"
-#include "Util.h"
 #include "brofiler/ProfilerCore/Brofiler.h"
 
 #include "Core/Config/Config.h"
@@ -21,10 +20,8 @@
 
 namespace Isetta {
 RenderModule* CameraComponent::renderModule{nullptr};
-CameraComponent* CameraComponent::_main{nullptr};
 
-CameraComponent::CameraComponent(std::string cameraName)
-    : name{std::move(cameraName)}, renderNode(NULL), renderResource(NULL) {
+CameraComponent::CameraComponent() : renderNode(NULL), renderResource(NULL) {
   ASSERT(renderModule != nullptr);
   renderModule->cameraComponents.push_back(this);
   if (!_main) {
@@ -32,16 +29,21 @@ CameraComponent::CameraComponent(std::string cameraName)
   }
 }
 
-void CameraComponent::Start() {
+void CameraComponent::Awake() {
+  ASSERT(renderModule != nullptr);
+  renderNode =
+      h3dAddCameraNode(H3DRootNode, entity->GetEntityIdString().c_str(),
+                       renderModule->pipelineRes);
   SetProperty<Property::FOV>(CONFIG_VAL(cameraConfig.fieldOfView));
   SetProperty<Property::NEAR_PLANE>(CONFIG_VAL(cameraConfig.nearClippingPlane));
   SetProperty<Property::FAR_PLANE>(CONFIG_VAL(cameraConfig.farClippingPlane));
 }
 
 void CameraComponent::OnEnable() {
-  ASSERT(renderModule != nullptr);
-  renderNode =
-      h3dAddCameraNode(H3DRootNode, name.c_str(), renderModule->pipelineRes);
+  if (!renderNode)
+    renderNode =
+        h3dAddCameraNode(H3DRootNode, entity->GetEntityIdString().c_str(),
+                         renderModule->pipelineRes);
   h3dSetNodeParamI(renderNode, H3DCamera::OccCullingI, 1);
   int width, height;
   glfwGetWindowSize(renderModule->winHandle, &width, &height);
@@ -72,6 +74,24 @@ Ray Isetta::CameraComponent::ScreenPointToRay(
   Math::Vector3 dir =
       transform->WorldDirFromLocalDir(Math::Vector3{px, py, -1});
   return Ray{o, dir};
+}
+
+Math::Vector2 CameraComponent::ScreenToViewportPoint(
+    const Math::Vector2& position) const {
+  int width, height;
+  glfwGetWindowSize(renderModule->winHandle, &width, &height);
+  return {position.x / width, position.y / height};
+}
+
+Math::Vector2 CameraComponent::ViewportToScreenPoint(
+    const Math::Vector2& position) const {
+  int width, height;
+  glfwGetWindowSize(renderModule->winHandle, &width, &height);
+  return {position.x * width, position.y * height};
+}
+
+Ray CameraComponent::ViewportPointToRay(const Math::Vector2& position) const {
+  return ScreenPointToRay(ViewportToScreenPoint(position));
 }
 
 void CameraComponent::UpdateH3DTransform() const {

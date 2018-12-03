@@ -7,7 +7,12 @@
 #include "Scene/Component.h"
 
 namespace Isetta {
-BEGIN_COMPONENT(FrameReporter, Component, false)
+/**
+ * @brief FrameReporter reports FPS, frame time, last frame time, and average
+ * frame time
+ *
+ */
+DEFINE_COMPONENT(FrameReporter, Component, false)
 public:
 void GuiUpdate() override;
 void Open();
@@ -23,5 +28,5 @@ Size frameCountForAvg{60};
 std::queue<float> frameDurations;
 
 bool isOpen{false};
-END_COMPONENT(FrameReporter, Component)
+DEFINE_COMPONENT_END(FrameReporter, Component)
 }  // namespace Isetta

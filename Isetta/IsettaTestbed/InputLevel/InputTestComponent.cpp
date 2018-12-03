@@ -1,37 +1,59 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "InputLevel/InputTestComponent.h"
-#include "Core/Debug/Logger.h"
-#include "Core/IsettaAlias.h"
-#include "Input/Input.h"
+#include "InputTestComponent.h"
+using namespace Isetta;
 
-void InputTestComponent::Start() {
-  Isetta::U64 handleA, handleB, handleC;
-  Isetta::Input::RegisterKeyPressCallback(Isetta::KeyCode::A, [&handleA]() {
-    LOG_INFO(Isetta::Debug::Channel::General, "A pressed");
-  });
-  Isetta::Input::RegisterKeyReleaseCallback(Isetta::KeyCode::A, [&handleB]() {
-    LOG_INFO(Isetta::Debug::Channel::General, "A released");
-  });
-  handleC = Isetta::Input::RegisterMousePressCallback(
-      Isetta::MouseButtonCode::MOUSE_LEFT, [&handleC]() {
-        LOG_INFO(Isetta::Debug::Channel::General,
-                 {"Left pressed at: " +
-                  Isetta::Input::GetMousePosition().ToString()});
-        Isetta::Input::UnregisterMousePressCallback(
-            Isetta::MouseButtonCode::MOUSE_LEFT, handleC);
+void InputTestComponent::OnEnable() {
+  // Registering Input Key Pressed - callback occurs on key press
+  // param1: key to trigger callback
+  // param2: callback function
+  //  Register returns handle used to Unregister
+  //  It is good practice to unregister your input,
+  //  LevelUnload will automatically unregister all input
+  handleA = Input::RegisterKeyPressCallback(
+      KeyCode::A, []() { LOG_INFO(Debug::Channel::General, "A pressed"); });
+
+  // Register Input Key Release - callback occurs on key release
+  handleB = Input::RegisterKeyReleaseCallback(
+      KeyCode::A, []() { LOG_INFO(Debug::Channel::General, "A released"); });
+
+  // Register Mouse Button Press - callback occurs on mouse press
+  handleC =
+      Input::RegisterMousePressCallback(MouseButtonCode::MOUSE_LEFT, [&]() {
+        LOG_INFO(Debug::Channel::General,
+                 {"Left pressed at: " + Input::GetMousePosition().ToString()});
+
+        // Unregister Mouse Press Callback
+        //  param1: key/button handle was registered to
+        //  param2: handle received on register
+        Input::UnregisterMousePressCallback(MouseButtonCode::MOUSE_LEFT,
+                                            handleC);
+        // Invalidate the handle
+        handleC = -1;
       });
 }
 
+void InputTestComponent::OnDisable() {
+  // Unregister Input
+  //  It is good practice to unregister all input,
+  //  LevelUnload will automatically unregister all input
+  Isetta::Input::UnregisterKeyPressCallback(KeyCode::A, handleA);
+  Isetta::Input::UnregisterKeyReleaseCallback(KeyCode::A, handleB);
+  if (handleC >= 0)
+    Input::UnregisterMousePressCallback(MouseButtonCode::MOUSE_LEFT, handleC);
+}
+
 void InputTestComponent::Update() {
-  if (Isetta::Input::IsGamepadButtonPressed(Isetta::GamepadButton::X)) {
-    LOG_INFO(Isetta::Debug::Channel::General, "X pressing");
+  // IsXXXPressed checks each frame is key/button/mouse is pressed
+  //  Returns true if pressed
+  if (Input::IsGamepadButtonPressed(GamepadButton::X)) {
+    LOG_INFO(Debug::Channel::General, "X pressing");
   }
-  if (Isetta::Input::IsKeyPressed(Isetta::KeyCode::B)) {
-    LOG_INFO(Isetta::Debug::Channel::General, "B pressing");
+  if (Input::IsKeyPressed(KeyCode::B)) {
+    LOG_INFO(Debug::Channel::General, "B pressing");
   }
-  if (Isetta::Input::IsMouseButtonPressed(Isetta::MouseButtonCode::MOUSE_MIDDLE)) {
-    LOG_INFO(Isetta::Debug::Channel::General, "Middle pressing");
+  if (Input::IsMouseButtonPressed(MouseButtonCode::MOUSE_MIDDLE)) {
+    LOG_INFO(Debug::Channel::General, "Middle pressing");
   }
 }

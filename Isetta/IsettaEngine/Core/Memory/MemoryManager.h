@@ -23,6 +23,8 @@ class ISETTA_API MemoryManager {
     CVar<Size> freeListAllocatorSize{"free_list_allocator_size", 10_MB};
     CVar<Size> freeListIncrement{"free_list_increment", 10_MB};
     CVar<Size> defaultPoolIncrement{"default_pool_increment", 50};
+    CVar<Size> entityPoolInitialSize{"entity_pool_initial_size", 100};
+    CVar<Size> entityPoolIncrement{"entity_pool_increment", 50};
   };
 
   /**
@@ -212,8 +214,7 @@ T* MemoryManager::NewOnFreeList(Args&&... argList) {
 
 template <typename T>
 void MemoryManager::DeleteOnFreeList(T* ptrToDelete) {
-  ptrToDelete->~T();
-  FreeOnFreeList(ptrToDelete);
+  GetInstance()->freeListAllocator.Delete(ptrToDelete);
 }
 
 template <typename T>
@@ -222,9 +223,8 @@ T* MemoryManager::NewArrOnFreeList(const Size length, const U8 alignment) {
 }
 
 template <typename T>
-inline void MemoryManager::DeleteArrOnFreeList(Size length, T* ptrToDelete) {
-  for (int i = 0; i < length; ++i) ptrToDelete[i].~T();
-  FreeOnFreeList(ptrToDelete);
+void MemoryManager::DeleteArrOnFreeList(Size length, T* ptrToDelete) {
+  GetInstance()->freeListAllocator.DeleteArr(length, ptrToDelete);
 }
 
 template <typename T, typename... Args>

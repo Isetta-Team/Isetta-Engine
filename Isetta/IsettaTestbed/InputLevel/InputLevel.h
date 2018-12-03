@@ -2,11 +2,12 @@
  * Copyright (c) 2018 Isetta
  */
 #pragma once
-#include "Core/Memory/MemoryManager.h"
-#include "Scene/Level.h"
-#include "Scene/LevelManager.h"
-
 using namespace Isetta;
-CREATE_LEVEL(InputLevel)
-void OnLevelLoad() override;
-CREATE_LEVEL_END
+
+/**
+ * @brief Level demoing some of the input capabilities
+ *
+ */
+DEFINE_LEVEL(InputLevel)
+void Load() override;
+DEFINE_LEVEL_END
