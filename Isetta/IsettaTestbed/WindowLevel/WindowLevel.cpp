@@ -18,6 +18,13 @@ void WindowLevel::Load() {
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
 
+  Texture icon{"Images\\isetta_logo.png", true};
+  Window::SetIcon(icon);
+  icon.Unload();
+
+  Input::RegisterKeyPressCallback(
+      KeyCode::F, []() { Window::SetFullscreen(!Window::IsFullscreen()); });
+
   Input::RegisterKeyPressCallback(
       KeyCode::NUM1, []() { Window::SetCursorIcon(Window::Cursor::Arrow); });
   Input::RegisterKeyPressCallback(
@@ -32,7 +39,7 @@ void WindowLevel::Load() {
     Window::SetCursorIcon(Window::Cursor::Crosshair);
   });
   Input::RegisterKeyPressCallback(KeyCode::NUM7, []() {
-    Texture icon{"isetta_logo.png", true};
+    Texture icon{"Images\\isetta_logo.png", true};
     Window::SetCursorIcon(icon);
     icon.Unload();
   });
