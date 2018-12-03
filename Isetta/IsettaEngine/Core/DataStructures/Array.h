@@ -306,7 +306,7 @@ inline void Array<T>::Resize(int inSize, value_type val) {
 template <typename T>
 inline void Array<T>::ReservePow2(int inCapacity) {
   inCapacity = Math::Util::NextPowerOfTwo(inCapacity);
-  if (inCapacity < capacity) return;
+  if (inCapacity <= capacity) return;
   T *tmpData = MemoryManager::NewArrOnFreeList<T>(inCapacity);
   for (int i = 0; i < size; ++i) {
     tmpData[i] = std::move(data[i]);
@@ -321,7 +321,7 @@ inline void Array<T>::ReservePow2(int inCapacity) {
 
 template <typename T>
 inline void Array<T>::Reserve(int inCapacity) {
-  if (inCapacity < capacity) return;
+  if (inCapacity <= capacity) return;
   T *tmpData = MemoryManager::NewArrOnFreeList<T>(inCapacity);
   for (int i = 0; i < size; ++i) {
     tmpData[i] = std::move(data[i]);

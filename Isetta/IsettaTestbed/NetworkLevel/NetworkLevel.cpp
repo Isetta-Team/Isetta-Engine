@@ -5,10 +5,10 @@
 #include "Components/Editor/EditorComponent.h"
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
+#include "Components/NetworkMonitor.h"
 #include "Custom/EscapeExit.h"
 #include "Custom/KeyTransform.h"
 #include "NetworkLevel/NetworkTestComp.h"
-#include "Components/NetworkMonitor.h"
 
 using namespace Isetta;
 
@@ -324,7 +324,7 @@ void NetworkLevel::Load() {
 
   // Send out a generic handle message with 2 (this one won't be responded
   // to!)
-  Input::RegisterMousePressCallback(MouseButtonCode::MOUSE_LEFT, []() {
+  Input::RegisterMousePressCallback(MouseButton::LEFT, []() {
     if (NetworkManager::Instance().IsClientRunning()) {
       NetworkManager::Instance().SendMessageFromClient<HandleMessage>(
           [](HandleMessage* message) { message->handle = 2; });
@@ -350,6 +350,6 @@ void NetworkLevel::Load() {
   debugEntity->AddComponent<EditorComponent>();
   debugEntity->AddComponent<EscapeExit>();
   debugEntity->AddComponent<NetworkDiscovery>();
-  debugEntity->AddComponent<NetworkMonitor>(); // Draw network state as UI
+  debugEntity->AddComponent<NetworkMonitor>();  // Draw network state as UI
   debugEntity->AddComponent<NetworkTestComp>();
 }

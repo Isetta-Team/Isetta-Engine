@@ -6,6 +6,7 @@
 #include <string>
 #include "Core/Config/CVar.h"
 #include "GLFW/include/GLFW/glfw3.h"
+#include "Window.h"
 
 namespace Isetta::Math {
 class Vector2;
@@ -26,11 +27,17 @@ class WindowModule {
   WindowModule() = default;
   ~WindowModule() = default;
 
+  int xPos, yPos, width, height;
+  GLFWcursor* customCursor;
+  Window::Cursor cursor;
+
   void StartUp();
   void Update(float deltaTime);
   void ShutDown();
 
   void InitWindow();
+  // GLFWmonitor* GetCurrentMonitor() const;
+  void SetFullscreen(bool fullscreen);
 
   GLFWwindow* winHandle;
 
