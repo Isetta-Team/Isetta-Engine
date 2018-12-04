@@ -46,6 +46,7 @@ void CollisionSolverLevel::Load() {
   staticCol[0]->SetTransform(Math::Vector3{0, 1, 0}, Math::Vector3{0, 0, 0});
   // Add our box collider
   staticCol[0]->AddComponent<BoxCollider>();
+  staticCol[0]->AddComponent<CollisionHandler>();
   staticCol[0]->AddComponent<DebugCollision>();  // This will let us know when
                                                  // collisions occur
 
@@ -53,6 +54,7 @@ void CollisionSolverLevel::Load() {
   staticCol[1] = Entity::Instantiate("sphere-collider", nullptr, true);
   staticCol[1]->SetTransform(Math::Vector3{0, 1, -4});
   staticCol[1]->AddComponent<SphereCollider>();
+  staticCol[1]->AddComponent<CollisionHandler>();
   staticCol[1]->AddComponent<DebugCollision>();
 
   // Static capsule collider
@@ -62,6 +64,7 @@ void CollisionSolverLevel::Load() {
   // components to correctly set the orientation
   staticCol[2]->AddComponent<CapsuleCollider>(
       false, Math::Vector3::zero, 0.5, 2, CapsuleCollider::Direction::X_AXIS);
+  staticCol[2]->AddComponent<CollisionHandler>();
   staticCol[2]->AddComponent<DebugCollision>();
 
   // DYNAMIC - These colliders will be movable throughout the scene

@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
+#pragma once
 #include <string>
 #include "Core/IsettaAlias.h"
 #include "Core/Math/Vector2Int.h"
