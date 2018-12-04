@@ -17,7 +17,7 @@ AnimationComponent::AnimationComponent(MeshComponent* model)
       totalStates{0},
       animatedModel{model},
       isPlaying{false},
-      blendWeight{0} {
+      blendWeight{1} {
   ASSERT(renderModule != nullptr);
   renderModule->animationComponents.push_back(this);
 }
