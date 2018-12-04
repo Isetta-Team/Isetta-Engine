@@ -367,7 +367,6 @@ void Filesystem::Touch(const char* filename) {
     LOG_ERROR(Debug::Channel::FileIO, "Filesystem::ReadAsync => file: " +
                                           std::string{filename} + e.what());
     throw e;
-    return NULL;
   }
   CloseHandle(hFile);
 }
