@@ -79,4 +79,44 @@ void WindowModule::InitWindow() {  // Create OpenGL window
                        ? GLFW_CURSOR_NORMAL
                        : GLFW_CURSOR_DISABLED);
 }
+
+void WindowModule::SetFullscreen(bool fullscreen) {
+  if (fullscreen) {
+    glfwGetWindowPos(winHandle, &xPos, &yPos);
+    glfwGetWindowSize(winHandle, &width, &height);
+    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+    glfwSetWindowMonitor(winHandle, monitor, 0, 0, mode->width, mode->height,
+                         mode->refreshRate);
+  } else {
+    glfwSetWindowMonitor(winHandle, nullptr, xPos, yPos, width, height, 0);
+  }
+}
+
+// GLFWmonitor* WindowModule::GetCurrentMonitor() const {
+//  GLFWmonitor* current = NULL;
+//  GLFWmonitor** monitors;
+//  GLFWvidmode* mode;
+//  int monitorCnt;
+//  monitors = glfwGetMonitors(&monitorCnt);
+//
+//  int posX, posY, width, height;
+//  glfwGetWindowPos(winHandle, &posX, &posY);
+//  glfwGetWindowSize(winHandle, &width, &height);
+//
+//  int x, y, w, h;
+//  for (int i = 0; i < monitorCnt; ++i) {
+//    const GLFWvidmode* mode = glfwGetVideoMode(monitors[i]);
+//    glfwGetMonitorPos(monitors[i], &x, &y);
+//
+//    w = mode->width;
+//    h = mode->height;
+//
+//    if (currentOverlap < overlap) {
+//      currentOverlap = overlap;
+//      current = monitors[i];
+//    }
+//  }
+//  return current;
+//}
 }  // namespace Isetta

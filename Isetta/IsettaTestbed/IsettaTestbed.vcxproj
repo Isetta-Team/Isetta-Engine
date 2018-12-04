@@ -231,6 +231,7 @@ XCOPY /Y /R "$(ProjectDir)*.cfg" "$(TargetDir)"</Command>
     <ClCompile Include="Week10MiniGame\W10Player.cpp" />
     <ClCompile Include="Week10MiniGame\W10UIManager.cpp" />
     <ClCompile Include="Week10MiniGame\Week10Level.cpp" />
+    <ClCompile Include="WindowLevel\WindowLevel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
@@ -297,6 +298,7 @@ XCOPY /Y /R "$(ProjectDir)*.cfg" "$(TargetDir)"</Command>
     <ClInclude Include="Week10MiniGame\W10Player.h" />
     <ClInclude Include="Week10MiniGame\W10UIManager.h" />
     <ClInclude Include="Week10MiniGame\Week10Level.h" />
+    <ClInclude Include="WindowLevel\WindowLevel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

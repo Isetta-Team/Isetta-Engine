@@ -126,7 +126,7 @@ enum class KeyCode {
   RIGHT_SUPER,
   MENU
 };
-enum class MouseButtonCode { MOUSE_LEFT, MOUSE_RIGHT, MOUSE_MIDDLE, ALL };
+enum class MouseButton { LEFT, RIGHT, MIDDLE };
 enum class ModifierKeys : U8 {
   SHIFT = 1 << 0,
   CTRL = 1 << 1,

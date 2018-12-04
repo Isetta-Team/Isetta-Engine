@@ -344,6 +344,11 @@ T* NetworkManager::GenerateMessageFromServer(int clientIdx) {
 
 template <typename T>
 void NetworkManager::SendMessageFromClient(Action<T*> messageInitializer) {
+  if (!IsClientRunning()) {
+    LOG_ERROR(Debug::Channel::Networking,
+              "Cannot send message from client, client not running");
+    return;
+  }
   yojimbo::Message* newMessage = GenerateMessageFromClient<T>();
   messageInitializer(reinterpret_cast<T*>(newMessage));
   SendMessageFromClient(newMessage);
@@ -352,6 +357,11 @@ void NetworkManager::SendMessageFromClient(Action<T*> messageInitializer) {
 template <typename T>
 void NetworkManager::SendMessageFromServer(const int clientIndex,
                                            Action<T*> messageInitializer) {
+  if (!IsServerRunning()) {
+    LOG_ERROR(Debug::Channel::Networking,
+              "Cannot send message from server, server not running");
+    return;
+  }
   yojimbo::Message* newMessage = GenerateMessageFromServer<T>(clientIndex);
   messageInitializer(reinterpret_cast<T*>(newMessage));
   SendMessageFromServer(clientIndex, newMessage);
@@ -364,6 +374,11 @@ int NetworkManager::GetMessageTypeId() {
 
 template <typename T>
 void NetworkManager::SendMessageFromServerToAll(yojimbo::Message* refMessage) {
+  if (!IsServerRunning()) {
+    LOG_ERROR(Debug::Channel::Networking,
+              "Cannot send message from server to all, server not running");
+    return;
+  }
   for (int i = 0; i < GetMaxClients(); ++i) {
     if (!IsClientConnected(i)) {
       continue;
@@ -379,7 +394,7 @@ template <typename T>
 void NetworkManager::SendMessageFromServerToAll(Action<T*> messageInitializer) {
   if (!IsServerRunning()) {
     LOG_ERROR(Debug::Channel::Networking,
-              "Server is not running, cannot SendMessageFromServer");
+              "Cannot send message from server to all, server not running");
     return;
   }
 
@@ -397,6 +412,13 @@ void NetworkManager::SendMessageFromServerToAll(Action<T*> messageInitializer) {
 template <typename T>
 void NetworkManager::SendMessageFromServerToAllButClient(
     int clientIdx, yojimbo::Message* refMessage) {
+  if (!IsServerRunning()) {
+    LOG_ERROR(Debug::Channel::Networking,
+              "Cannot send message from server to all but client %d, server "
+              "not running",
+              clientIdx);
+    return;
+  }
   for (int i = 0; i < GetMaxClients(); ++i) {
     if (!IsClientConnected(i) || i == clientIdx) {
       continue;

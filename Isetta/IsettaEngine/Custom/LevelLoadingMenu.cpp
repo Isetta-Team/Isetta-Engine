@@ -10,6 +10,8 @@
 #include "Scene/Level.h"
 #include "Scene/LevelManager.h"
 
+#include "Graphics/Font.h"
+
 namespace Isetta {
 LevelLoadingMenu* LevelLoadingMenu::instance = nullptr;
 LevelLoadingMenu::LevelLoadingMenu()

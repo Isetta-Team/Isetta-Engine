@@ -3,12 +3,12 @@
  */
 #pragma once
 
-#include <bitset>
 #include <string>
 #include "Core/Color.h"
 #include "Core/IsettaAlias.h"
 #include "Core/Math/Rect.h"
 #include "Core/Math/Vector2.h"
+#include "Input/KeyCode.h"
 
 class ImGuiInputTextCallbackData;
 class ImGuiTextFilter;
@@ -911,6 +911,8 @@ class ISETTA_API GUI {
       int offset);  // TODO(Jacob) do we allow offset? if so change name
   */
   // TODO(Jacob) LogToTTY/LogToFile/LogToClipboard
+  static bool IsWindowFocused(FocusedFlags flags = FocusedFlags::None);
+  static bool IsItemClicked(MouseButton code);
 
   // STYLING
   ////////////////////////////////////////
