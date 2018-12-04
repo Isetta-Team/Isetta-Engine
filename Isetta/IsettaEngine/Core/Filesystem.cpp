@@ -121,33 +121,28 @@ void Filesystem::GetReadWriteError() {
     case ERROR_IO_PENDING:  // not an error
       break;
     case ERROR_INVALID_USER_BUFFER:
-      LOG_ERROR(
-          Debug::Channel::FileIO,
+      throw std::exception(
           "Filesystem::GetReadWriteError() => ERROR_INVALID_USER_BUFFER too "
           "many outstanding asynchronous I/O requests");
       break;
     case ERROR_NOT_ENOUGH_MEMORY:
-      LOG_ERROR(
-          Debug::Channel::FileIO,
+      throw std::exception(
           "Filesystem::GetReadWriteError() => ERROR_NOT_ENOUGH_MEMORY too many "
           "outstanding asynchronous I/O "
           "requests");
       break;
     case ERROR_NOT_ENOUGH_QUOTA:
-      LOG_ERROR(
-          Debug::Channel::FileIO,
+      throw std::exception(
           "Filesystem::GetReadWriteError() => ERROR_NOT_ENOUGH_QUOTA process's "
           "buffer could not be page-locked");
       break;
     case ERROR_INSUFFICIENT_BUFFER:
-      LOG_ERROR(
-          Debug::Channel::FileIO,
+      throw std::exception(
           "Filesystem::GetReadWriteError() => ERROR_INSUFFICIENT_BUFFER read "
           "from a mailslot that has a buffer that is too small");
       break;
     case ERROR_OPERATION_ABORTED:
-      LOG_ERROR(Debug::Channel::FileIO,
-                "Filesystem::GetError() => ERROR_OPERATION_ABORTED");
+      throw std::exception("Filesystem::GetError() => ERROR_OPERATION_ABORTED");
     default: {
       // Decode any other errors codes.
       LPCTSTR errMsg = ErrorMessage(dwError);
@@ -157,7 +152,7 @@ void Filesystem::GetReadWriteError() {
       int n = sprintf_s(buffer, 1023, "GetOverlappedResult failed (%d): %s\n",
                         dwError, errMsg);
       buffer[n] = '\0';
-      LOG_ERROR(Debug::Channel::FileIO, buffer);
+      throw std::exception(buffer);
     }
   }
 }
@@ -173,14 +168,14 @@ DWORD Filesystem::GetFileError() {
       //    "exists, cannot be created");
       break;
     case ERROR_FILE_EXISTS:
-      LOG_ERROR(Debug::Channel::FileIO,
-                "Filesystem::GetFileError ERROR_FILE_EXISTS file cannot be "
-                "created, file exists");
+      throw std::exception(
+          "Filesystem::GetFileError ERROR_FILE_EXISTS file cannot be "
+          "created, file exists");
       break;
     case ERROR_FILE_NOT_FOUND:
-      LOG_ERROR(Debug::Channel::FileIO,
-                "Filesystem::GetFileError ERROR_FILE_NOT_FOUND file cannot be "
-                "opened, not found");
+      throw std::exception(
+          "Filesystem::GetFileError ERROR_FILE_NOT_FOUND file cannot be "
+          "opened, not found");
       break;
     default: {
       // Decode any other errors codes.
@@ -191,7 +186,7 @@ DWORD Filesystem::GetFileError() {
       int n = sprintf_s(buffer, 1023, "GetOverlappedResult failed (%d): %s\n",
                         dwError, errMsg);
       buffer[n] = '\0';
-      LOG_ERROR(Debug::Channel::FileIO, buffer);
+      throw std::exception(buffer);
     }
   }
   return dwError;
@@ -208,9 +203,14 @@ LPCTSTR Filesystem::ErrorMessage(DWORD error) {
   return ((LPCTSTR)lpMsgBuf);
 }
 
-char* Filesystem::Read(const char* fileName) {
-  HANDLE hFile = AccessFile(fileName, GENERIC_READ, NULL, OPEN_EXISTING, NULL);
-  if (GetFileError()) {
+char* Filesystem::Read(const char* filename) {
+  HANDLE hFile = AccessFile(filename, GENERIC_READ, NULL, OPEN_EXISTING, NULL);
+  try {
+    GetFileError();
+  } catch (const std::exception& e) {
+    LOG_ERROR(Debug::Channel::FileIO,
+              "Filesystem::Read => file: " + std::string{filename} + e.what());
+    throw e;
     return NULL;
   }
 
@@ -220,18 +220,29 @@ char* Filesystem::Read(const char* fileName) {
   char* buffer = new char[dwFileSize + 1];
 
   if (!ReadFile(hFile, buffer, dwFileSize, &dwBytesRead, NULL)) {
-    GetReadWriteError();
+    try {
+      GetReadWriteError();
+    } catch (const std::exception& e) {
+      LOG_ERROR(Debug::Channel::FileIO, "Filesystem::Read => file: " +
+                                            std::string{filename} + e.what());
+      throw e;
+    }
   }
   CloseHandle(hFile);
   buffer[dwFileSize] = '\0';
   return buffer;
 }
 
-HANDLE Filesystem::ReadAsync(const char* fileName,
+HANDLE Filesystem::ReadAsync(const char* filename,
                              const Action<const char*>& callback) {
-  HANDLE hFile = AccessFile(fileName, GENERIC_READ, NULL, OPEN_EXISTING,
+  HANDLE hFile = AccessFile(filename, GENERIC_READ, NULL, OPEN_EXISTING,
                             FILE_FLAG_OVERLAPPED);
-  if (GetFileError()) {
+  try {
+    GetFileError();
+  } catch (const std::exception& e) {
+    LOG_ERROR(Debug::Channel::FileIO, "Filesystem::ReadAsync => file: " +
+                                          std::string{filename} + e.what());
+    throw e;
     return NULL;
   }
   AssociateFileCompletionPort(hIOCP, hFile, IOCP_WRITE);
@@ -248,25 +259,36 @@ HANDLE Filesystem::ReadAsync(const char* fileName,
 
   if (!ReadFile(hFile, info->buffer, dwFileSize, &dwBytesRead,
                 &info->overlapped)) {
-    GetReadWriteError();
+    try {
+      GetReadWriteError();
+    } catch (const std::exception& e) {
+      LOG_ERROR(Debug::Channel::FileIO, "Filesystem::Read => file: " +
+                                            std::string{filename} + e.what());
+      throw e;
+    }
   }
   PostQueuedCompletionStatus(hIOCP, 0, IOCP_EOF, &(info->overlapped));
 
   return hFile;
 }
 
-HANDLE Filesystem::WriteAsync(const char* fileName, const char* contentBuffer,
+HANDLE Filesystem::WriteAsync(const char* filename, const char* contentBuffer,
                               const Action<const char*>& callback,
                               const bool appendData) {
   HANDLE hFile;
   if (appendData) {
-    hFile = AccessFile(fileName, GENERIC_WRITE, FILE_SHARE_WRITE, OPEN_EXISTING,
+    hFile = AccessFile(filename, GENERIC_WRITE, FILE_SHARE_WRITE, OPEN_EXISTING,
                        FILE_FLAG_OVERLAPPED);
   } else {
-    hFile = AccessFile(fileName, GENERIC_WRITE, FILE_SHARE_WRITE, CREATE_ALWAYS,
+    hFile = AccessFile(filename, GENERIC_WRITE, FILE_SHARE_WRITE, CREATE_ALWAYS,
                        FILE_FLAG_OVERLAPPED);
   }
-  if (GetFileError()) {
+  try {
+    GetFileError();
+  } catch (const std::exception& e) {
+    LOG_ERROR(Debug::Channel::FileIO, "Filesystem::ReadAsync => file: " +
+                                          std::string{filename} + e.what());
+    throw e;
     return NULL;
   }
 
@@ -288,7 +310,13 @@ HANDLE Filesystem::WriteAsync(const char* fileName, const char* contentBuffer,
   }
   if (!WriteFile(info->hFile, info->buffer, strlen(info->buffer), &dwBytesRead,
                  &info->overlapped)) {
-    GetReadWriteError();
+    try {
+      GetReadWriteError();
+    } catch (const std::exception& e) {
+      LOG_ERROR(Debug::Channel::FileIO, "Filesystem::Read => file: " +
+                                            std::string{filename} + e.what());
+      throw e;
+    }
   }
   PostQueuedCompletionStatus(hIOCP, 0, IOCP_EOF, &(info->overlapped));
   return hFile;
@@ -331,19 +359,28 @@ HANDLE Filesystem::WriteAsync(const std::string& fileName,
 //  return completionStatus;
 //}
 
-void Filesystem::Touch(const char* fileName) {
-  HANDLE hFile = AccessFile(fileName, NULL, NULL, CREATE_ALWAYS, NULL);
-  if (GetFileError()) {
-    return;
+void Filesystem::Touch(const char* filename) {
+  HANDLE hFile = AccessFile(filename, NULL, NULL, CREATE_ALWAYS, NULL);
+  try {
+    GetFileError();
+  } catch (const std::exception& e) {
+    LOG_ERROR(Debug::Channel::FileIO, "Filesystem::ReadAsync => file: " +
+                                          std::string{filename} + e.what());
+    throw e;
   }
   CloseHandle(hFile);
 }
-void Filesystem::Touch(const std::string& fileName) { Touch(fileName.c_str()); }
+void Filesystem::Touch(const std::string& filename) { Touch(filename.c_str()); }
 
-int Filesystem::GetFileLength(const std::string& fileName) {
-  HANDLE hFile = AccessFile(fileName.c_str(), FILE_READ_DATA, FILE_SHARE_READ,
+int Filesystem::GetFileLength(const std::string& filename) {
+  HANDLE hFile = AccessFile(filename.c_str(), FILE_READ_DATA, FILE_SHARE_READ,
                             OPEN_EXISTING, NULL);
-  if (GetFileError()) {
+  try {
+    GetFileError();
+  } catch (const std::exception& e) {
+    LOG_ERROR(Debug::Channel::FileIO, "Filesystem::ReadAsync => file: " +
+                                          std::string{filename} + e.what());
+    throw e;
     return NULL;
   }
 
