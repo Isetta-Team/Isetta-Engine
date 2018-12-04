@@ -16,9 +16,14 @@ AnimationComponent::AnimationComponent(MeshComponent* model)
       currentState{0},
       totalStates{0},
       animatedModel{model},
-      isPlaying{false} {
+      isPlaying{false},
+      blendWeight{0} {
   ASSERT(renderModule != nullptr);
   renderModule->animationComponents.push_back(this);
+}
+
+int AnimationComponent::AddAnimation(std::string_view filename) {
+  return AddAnimation(filename, 0, "", false, totalStates++);
 }
 
 int AnimationComponent::AddAnimation(std::string_view animationFilename,
