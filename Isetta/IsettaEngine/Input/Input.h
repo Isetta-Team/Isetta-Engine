@@ -64,21 +64,21 @@ class ISETTA_API_DECLARE Input {
    * \brief Check if the mouse button is pressed
    * \param mouseButton The mouse button to detect
    */
-  static bool IsMouseButtonPressed(MouseButtonCode mouseButton);
+  static bool IsMouseButtonPressed(MouseButton mouseButton);
   /**
    * \brief Register a callback function to the mouse press event and return its
    * handle
    * \param mouseButton The mouse button to detect
    * \param callback The callback function
    */
-  static U64 RegisterMousePressCallback(MouseButtonCode mouseButton,
+  static U64 RegisterMousePressCallback(MouseButton mouseButton,
                                         const Action<>& callback);
   /**
    * \brief Unregister a callback by the mouse button and handle
    * \param mouseButton The mouse button to detect
    * \param handle The handle to unregister
    */
-  static void UnregisterMousePressCallback(MouseButtonCode mouseButton,
+  static void UnregisterMousePressCallback(MouseButton mouseButton,
                                            U64& handle);
   /**
    * \brief Register a callback function to the mouse release event and return
@@ -86,14 +86,14 @@ class ISETTA_API_DECLARE Input {
    * \param mouseButton The mouse button to detect
    * \param callback The callback function
    */
-  static U64 RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
+  static U64 RegisterMouseReleaseCallback(MouseButton mouseButton,
                                           const Action<>& callback);
   /**
    * \brief Unregister a callback by the mouse button and handle
    * \param mouseButton The mouse button to detect
    * \param handle The handle to unregister
    */
-  static void UnregisterMouseReleaseCallback(MouseButtonCode mouseButton,
+  static void UnregisterMouseReleaseCallback(MouseButton mouseButton,
                                              U64& handle);
 
   static U16 RegisterScrollCallback(const Action<double, double>& callback);

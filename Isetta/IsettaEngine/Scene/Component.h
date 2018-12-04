@@ -31,6 +31,12 @@
       Component::RegisterComponent(std::type_index(typeid(NAME)),        \
                                    std::type_index(typeid(BASE)), Unique);
 
+/**
+ * @brief: Replace DEFINE_COMPONENT_END with class and namespace closing
+ * parenthesis. Use this over DEFINE_COMPONENT_END when your component is
+ * wrapped in a namespace.
+ *
+ */
 #define REGISTER_COMPONENT(NAME, BASE, UNIQUE)                           \
   bool Isetta::ComponentRegistry<NAME, BASE, UNIQUE>::NAME##Registered = \
       Component::RegisterComponent(std::type_index(typeid(NAME)),        \
@@ -102,7 +108,8 @@ class ISETTA_API Component {
    */
   virtual void Start() {}
   /**
-   * \brief GuiUpdate is called each frame (variable delta time), GUI can only be called in GuiUpdate
+   * \brief GuiUpdate is called each frame (variable delta time), GUI can only
+   * be called in GuiUpdate
    */
   virtual void GuiUpdate() {
     SetAttribute(ComponentAttributes::NEED_GUI_UPDATE, false);
@@ -130,7 +137,8 @@ class ISETTA_API Component {
    */
   virtual void OnDestroy() {}
   /**
-   * \brief OnDisable is called immediately each time the component becomes inactive
+   * \brief OnDisable is called immediately each time the component becomes
+   * inactive
    */
   virtual void OnDisable() {}
 

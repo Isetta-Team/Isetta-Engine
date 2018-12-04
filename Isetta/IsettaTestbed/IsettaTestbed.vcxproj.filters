@@ -171,6 +171,9 @@
     <ClCompile Include="LevelLoadingLevel\LoadNextLevel.cpp">
       <Filter>LevelLoadingLevel</Filter>
     </ClCompile>
+    <ClCompile Include="WindowLevel\WindowLevel.cpp">
+      <Filter>WindowLevel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.cfg" />
@@ -246,6 +249,9 @@
     </Filter>
     <Filter Include="LevelLoadingLevel">
       <UniqueIdentifier>{80b5e4d7-453e-43a7-8629-1b94a7cbae69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WindowLevel">
+      <UniqueIdentifier>{43cce180-0759-4808-b3a1-790093f1b40c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -424,5 +430,8 @@
       <Filter>NetworkLevel</Filter>
     </ClInclude>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="WindowLevel\WindowLevel.h">
+      <Filter>WindowLevel</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

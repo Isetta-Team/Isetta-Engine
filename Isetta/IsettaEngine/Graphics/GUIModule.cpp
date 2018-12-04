@@ -113,10 +113,13 @@ void GUIModule::Update(float deltaTime) {
   //         "-------------GUI UPDATE 1-------------");
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
+  auto cursor = ImGui::GetMouseCursor();
   ImGui::NewFrame();
   // LOG_INFO(Isetta::Debug::Channel::GUI,
   //         "-------------GUI UPDATE 2-------------");
   glfwGetWindowSize(const_cast<GLFWwindow*>(winHandle), &winWidth, &winHeight);
+
+  ImGui::SetMouseCursor(cursor);
 
   ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2());
@@ -136,7 +139,6 @@ void GUIModule::Update(float deltaTime) {
 
   // TODO Don't love this coupling
   LevelManager::Instance().loadedLevel->GUIUpdate();
-
   ImGui::End();
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

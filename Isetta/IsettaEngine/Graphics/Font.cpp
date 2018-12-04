@@ -37,14 +37,12 @@ Font* Font::GetFont(const std::string_view fontName, float size) {
     auto fontSizeMap = fontList->second.second;
     const auto find = fontSizeMap.find(size);
     if (find == fontSizeMap.end()) {
-      std::string_view filepath = fontList->second.first;
-      font = reinterpret_cast<Font*>(
-          ImGui::GetIO().Fonts->AddFontFromFileTTF(filepath.data(), size));
-      fontSizeMap.insert({size, font});
+      loadFonts.push({fontList->first, fontList->second.first, size});
+      return nullptr;
     } else {
       font = find->second;
+      return font;
     }
-    return font;
   }
   return nullptr;
 }

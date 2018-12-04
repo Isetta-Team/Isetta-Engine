@@ -31,6 +31,14 @@ EngineLoop& EngineLoop::Instance() {
   return instance;
 }
 
+/**
+ * @brief:
+ * Initialize the logger for debugging
+ * Read the configuration files
+ * Start memory manager 1st
+ * Ordering of the others isn't relevant
+ *
+ */
 EngineLoop::EngineLoop() {
   Logger::NewSession();
   Config::Instance().Read("config.cfg");
@@ -51,6 +59,12 @@ EngineLoop::EngineLoop() {
   events = MemoryManager::NewOnStack<Events>();
 }
 
+/**
+ * @brief:
+ * Delete memory manager last
+ * Ordering of others isn't relevant
+ *
+ */
 EngineLoop::~EngineLoop() {
   windowModule->~WindowModule();
   renderModule->~RenderModule();
@@ -64,6 +78,12 @@ EngineLoop::~EngineLoop() {
   delete memoryManager;
 }
 
+/**
+ * @brief: order that matters
+ *  Window before Render/Input/Gui
+ *  Level after all modules
+ *
+ */
 void EngineLoop::StartUp() {
   BROFILER_EVENT("Start Up");
 
@@ -87,7 +107,9 @@ void EngineLoop::StartUp() {
   networkingModule->StartUp();
   events->StartUp();
 
+  // Set which level to load
   LevelManager::Instance().LoadLevel(CONFIG_VAL(levelConfig.startLevel));
+  // Actual perform the load
   LevelManager::Instance().LoadLevel();
 
   StartGameClock();
@@ -109,6 +131,12 @@ void EngineLoop::Update() {
   VariableUpdate(GetGameClock().GetDeltaTime());
 }
 
+/**
+ * @brief: order that matters
+ * Level FixedUpdate must be last
+ * CollisionSolver must be sandwiched between Collision Update and LateUpdate
+ *
+ */
 void EngineLoop::FixedUpdate(const float deltaTime) const {
   BROFILER_CATEGORY("Fixed Update", Profiler::Color::IndianRed);
 
@@ -118,6 +146,21 @@ void EngineLoop::FixedUpdate(const float deltaTime) const {
   collisionsModule->LateUpdate(deltaTime);
   LevelManager::Instance().loadedLevel->FixedUpdate();
 }
+
+/**
+ * @brief: order that matters
+ * Input before Level Update
+ * Event after Level Update
+ * Level LateUpdate after Event
+ * Audio after all Level Updates
+ * Render after all Level
+ * Render before DebugDraw/GUI/Window
+ * Window after Render/DebugDraw/GUI/Window
+ * Memory last
+ * Load level after frame - more of a decision, could possibly (not probable)
+ * work in middle of frame
+ *
+ */
 void EngineLoop::VariableUpdate(const float deltaTime) const {
   BROFILER_CATEGORY("Variable Update", Profiler::Color::SteelBlue);
 
@@ -144,6 +187,12 @@ void EngineLoop::VariableUpdate(const float deltaTime) const {
   }
 }
 
+/**
+ * @brief: order that matters
+ * Unload level before anything else
+ * Shut down in reverse order of Startup
+ *
+ */
 void EngineLoop::ShutDown() {
   BROFILER_EVENT("Shut Down");
 

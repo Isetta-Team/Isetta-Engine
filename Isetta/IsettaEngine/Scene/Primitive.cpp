@@ -28,7 +28,8 @@ Entity* Primitive::Create(Type type, bool withCollider) {
   return nullptr;
 }
 
-Entity* Primitive::Create(Type type, std::string name, bool withCollider) {
+Entity* Primitive::Create(Type type, const std::string_view name,
+                          bool withCollider) {
   Entity* entity = Entity::Instantiate("");
   switch (type) {
     case Type::Capsule:

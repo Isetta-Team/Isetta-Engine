@@ -5,10 +5,8 @@
 
 #include "Core/IsettaCore.h"
 #include "Graphics/CameraComponent.h"
-#include "Networking/NetworkManager.h"
 
 namespace Isetta {
-
 void EmptyLevel::Load() {
   Entity* cameraEntity = Entity::Instantiate("Camera");
   cameraEntity->AddComponent<CameraComponent>();

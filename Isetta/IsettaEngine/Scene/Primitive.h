@@ -19,7 +19,8 @@ struct ISETTA_API Primitive {
    * \brief Create a primitive with the given name, with the option to specific
    * if it has a collider attached
    */
-  static class Entity* Create(Type type, std::string name, bool withCollider);
+  static class Entity* Create(Type type, const std::string_view name,
+                              bool withCollider);
   /**
    * \brief Create a primitive, with the option to specific if it has a collider
    * attached

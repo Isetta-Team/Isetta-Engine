@@ -71,30 +71,30 @@ Math::Vector2 InputModule::GetMousePosition() const {
   return Math::Vector2{static_cast<float>(xPos), static_cast<float>(yPos)};
 }
 
-bool InputModule::IsMouseButtonPressed(MouseButtonCode mouseButton) const {
+bool InputModule::IsMouseButtonPressed(MouseButton mouseButton) const {
   int state = glfwGetMouseButton(winHandle, MouseButtonToGlfwKey(mouseButton));
   return state == GLFW_PRESS;
 }
 
-U64 InputModule::RegisterMousePressCallback(MouseButtonCode mouseButton,
+U64 InputModule::RegisterMousePressCallback(MouseButton mouseButton,
                                             const Action<>& callback) {
   return RegisterCallback(MouseButtonToGlfwKey(mouseButton), callback,
                           &mousePressDelegates);
 }
 
-void InputModule::UnregisterMousePressCallback(MouseButtonCode mouseButton,
+void InputModule::UnregisterMousePressCallback(MouseButton mouseButton,
                                                U64& handle) {
   UnregisterCallback(MouseButtonToGlfwKey(mouseButton), handle,
                      &mousePressDelegates);
 }
 
-U64 InputModule::RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
+U64 InputModule::RegisterMouseReleaseCallback(MouseButton mouseButton,
                                               const Action<>& callback) {
   return RegisterCallback(MouseButtonToGlfwKey(mouseButton), callback,
                           &mouseReleaseDelegates);
 }
 
-void InputModule::UnregisterMouseReleaseCallback(MouseButtonCode mouseButton,
+void InputModule::UnregisterMouseReleaseCallback(MouseButton mouseButton,
                                                  U64& handle) {
   UnregisterCallback(MouseButtonToGlfwKey(mouseButton), handle,
                      &mouseReleaseDelegates);
@@ -411,7 +411,7 @@ int InputModule::KeyCodeToGlfwKey(KeyCode key) const {
   return glfwKey;
 }
 
-int InputModule::MouseButtonToGlfwKey(MouseButtonCode mouseButton) const {
+int InputModule::MouseButtonToGlfwKey(MouseButton mouseButton) const {
   return static_cast<int>(mouseButton);
 }
 

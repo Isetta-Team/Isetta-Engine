@@ -536,6 +536,14 @@ void GUI::ProgressBar(const RectTransform& transform, float fraction,
   }
 }
 
+bool GUI::IsWindowFocused(FocusedFlags flags) {
+  return ImGui::IsWindowFocused(static_cast<ImGuiFocusedFlags>(flags));
+}
+
+bool GUI::IsItemClicked(MouseButton code) {
+  return ImGui::IsItemClicked(static_cast<int>(code));
+}
+
 void GUI::PushID(std::string_view id) { ImGui::PushID(id.data()); }
 void GUI::PopID() { ImGui::PopID(); }
 

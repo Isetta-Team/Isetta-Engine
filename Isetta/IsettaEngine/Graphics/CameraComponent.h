@@ -71,7 +71,7 @@ T GetProperty() const;
  *
  * @return const CameraComponent*
  */
-static inline const CameraComponent* Main() { return _main; }
+static const CameraComponent* Main();
 
 Math::Matrix4 GetHordeTransform() const {
   const float* transformPtr;
@@ -121,7 +121,7 @@ void UpdateH3DTransform() const;
 void ResizeViewport(int width, int height);
 void SetupCameraViewport() const;
 
-static inline CameraComponent* _main;
+static CameraComponent* _main;
 
 static class RenderModule* renderModule;
 friend class RenderModule;

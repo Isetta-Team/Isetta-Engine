@@ -9,7 +9,7 @@ RaycastClick::RaycastClick(bool raycastAll, float maxDistance)
 
 // Register left mouse click to raycast and display line
 void RaycastClick::OnEnable() {
-  Input::RegisterMousePressCallback(MouseButtonCode::MOUSE_LEFT, [&]() {
+  Input::RegisterMousePressCallback(MouseButton::LEFT, [this]() {
     Ray r =
         CameraComponent::Main()->ScreenPointToRay(Input::GetMousePosition());
     DebugDraw::Line(r.GetOrigin(),

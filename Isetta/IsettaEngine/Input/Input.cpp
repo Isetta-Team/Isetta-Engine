@@ -57,26 +57,26 @@ Math::Vector2 Input::GetMousePosition() {
   return inputModule->GetMousePosition();
 }
 
-bool Input::IsMouseButtonPressed(MouseButtonCode mouseButton) {
+bool Input::IsMouseButtonPressed(MouseButton mouseButton) {
   return inputModule->IsMouseButtonPressed(mouseButton);
 }
 
-U64 Input::RegisterMousePressCallback(MouseButtonCode mouseButton,
+U64 Input::RegisterMousePressCallback(MouseButton mouseButton,
                                       const Action<>& callback) {
   return inputModule->RegisterMousePressCallback(mouseButton, callback);
 }
 
-void Input::UnregisterMousePressCallback(MouseButtonCode mouseButton,
+void Input::UnregisterMousePressCallback(MouseButton mouseButton,
                                          U64& handle) {
   inputModule->UnregisterMousePressCallback(mouseButton, handle);
 }
 
-U64 Input::RegisterMouseReleaseCallback(MouseButtonCode mouseButton,
+U64 Input::RegisterMouseReleaseCallback(MouseButton mouseButton,
                                         const Action<>& callback) {
   return inputModule->RegisterMouseReleaseCallback(mouseButton, callback);
 }
 
-void Input::UnregisterMouseReleaseCallback(MouseButtonCode mouseButton,
+void Input::UnregisterMouseReleaseCallback(MouseButton mouseButton,
                                            U64& handle) {
   inputModule->UnregisterMouseReleaseCallback(mouseButton, handle);
 }

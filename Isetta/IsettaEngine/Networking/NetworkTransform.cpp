@@ -316,7 +316,7 @@ void NetworkTransform::Start() {
 
     NetworkTransform::registeredCallbacks = true;
   }
-  netId = entity->GetComponent<NetworkId>();
+
   targetPos = entity->transform->GetLocalPos();
   prevPos = targetPos;
   targetRot = entity->transform->GetLocalRot();
@@ -327,6 +327,16 @@ void NetworkTransform::Start() {
   lastPosMessage = 0;
   lastRotMessage = 0;
   lastScaleMessage = 0;
+
+  netId = entity->GetComponent<NetworkId>();
+
+  if (netId == nullptr) {
+    LOG_ERROR(Debug::Channel::Networking,
+              "Didn't find a NetId component on Entity [%s], NetworkTransform "
+              "needs NetId to function properly",
+              entity->GetName().c_str());
+    return;
+  }
 }
 
 void NetworkTransform::Update() {
@@ -357,6 +367,19 @@ void NetworkTransform::Update() {
 }
 
 void NetworkTransform::FixedUpdate() {
+  if (netId == nullptr) {
+    netId = entity->GetComponent<NetworkId>();
+
+    if (netId == nullptr) {
+      LOG_ERROR(
+          Debug::Channel::Networking,
+          "Didn't find a NetId component on Entity [%s], NetworkTransform "
+          "needs NetId to function properly",
+          entity->GetName().c_str());
+      return;
+    }
+  }
+
   if (netId->HasClientAuthority()) {
     ++updateCounter;
 
@@ -421,6 +444,14 @@ void NetworkTransform::SnapLocalTransform() {
 }
 
 void NetworkTransform::ForceSendTransform(bool snap) {
+  if (netId == nullptr) {
+    LOG_ERROR(Debug::Channel::Networking,
+              "Didn't find a NetId component on Entity [%s], NetworkTransform "
+              "needs NetId to function properly",
+              entity->GetName().c_str());
+    return;
+  }
+
   if (netId->HasClientAuthority()) {
     Transform* t = entity->transform;
     prevPos = t->GetLocalPos();
@@ -440,6 +471,14 @@ void NetworkTransform::ForceSendTransform(bool snap) {
 }
 
 void NetworkTransform::SetNetworkedParentToRoot() {
+  if (netId == nullptr) {
+    LOG_ERROR(Debug::Channel::Networking,
+              "Didn't find a NetId component on Entity [%s], NetworkTransform "
+              "needs NetId to function properly",
+              entity->GetName().c_str());
+    return;
+  }
+
   NetworkManager::Instance().SendMessageFromClient<ParentMessage>(
       [this](ParentMessage* message) {
         message->netId = this->netId->id;
