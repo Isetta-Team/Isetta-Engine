@@ -62,7 +62,7 @@ class ISETTA_API_DECLARE Transform {
   void SetWorldScale(const Math::Vector3& newWorldScale);
 
   // hierarchy
-  void SetParent(Transform* const transform);
+  void SetParent(Transform* const transform, bool inheritTransform = true);
   Transform* GetParent() const { return parent; }
 
   // helper
@@ -122,10 +122,10 @@ class ISETTA_API_DECLARE Transform {
 
   /**
    * \brief Set world position, world rotation, and world scale of this
-   * transform 
-   * 
-   * \param inPosition World Position 
-   * \param inEulerAngles World Rotation 
+   * transform
+   *
+   * \param inPosition World Position
+   * \param inEulerAngles World Rotation
    * \param inScale World Scale
    */
   void SetWorldTransform(const Math::Vector3& inPosition,
