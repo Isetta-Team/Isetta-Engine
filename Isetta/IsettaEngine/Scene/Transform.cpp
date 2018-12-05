@@ -196,7 +196,7 @@ void Transform::SetParent(Transform* const transform, bool inheritTransform) {
   }
   Math::Vector3 originalPos, originalScale;
   Math::Quaternion originalRot;
-  if (inheritTransform) {
+  if (!inheritTransform) {
     originalPos = GetWorldPos();
     originalRot = GetWorldRot();
     originalScale = GetWorldScale();
@@ -209,7 +209,7 @@ void Transform::SetParent(Transform* const transform, bool inheritTransform) {
     targetTransform->AddChild(this);
   }
   parent = targetTransform;
-  if (inheritTransform) {
+  if (!inheritTransform) {
     SetWorldPos(originalPos);
     SetWorldRot(originalRot);
     SetWorldScale(originalScale);
