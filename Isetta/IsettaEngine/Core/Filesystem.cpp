@@ -208,8 +208,9 @@ char* Filesystem::Read(const char* filename) {
   try {
     GetFileError();
   } catch (const std::exception& e) {
-    LOG_ERROR(Debug::Channel::FileIO,
-              "Filesystem::Read => file: " + std::string{filename} + e.what());
+    LOG_ERROR(
+        Debug::Channel::FileIO,
+        "Filesystem::Read => file: " + std::string{filename} + "\n" + e.what());
     throw e;
     return NULL;
   }
@@ -223,8 +224,9 @@ char* Filesystem::Read(const char* filename) {
     try {
       GetReadWriteError();
     } catch (const std::exception& e) {
-      LOG_ERROR(Debug::Channel::FileIO, "Filesystem::Read => file: " +
-                                            std::string{filename} + e.what());
+      LOG_ERROR(Debug::Channel::FileIO,
+                "Filesystem::Read => file: " + std::string{filename} + "\n" +
+                    e.what());
       throw e;
     }
   }
@@ -240,8 +242,9 @@ HANDLE Filesystem::ReadAsync(const char* filename,
   try {
     GetFileError();
   } catch (const std::exception& e) {
-    LOG_ERROR(Debug::Channel::FileIO, "Filesystem::ReadAsync => file: " +
-                                          std::string{filename} + e.what());
+    LOG_ERROR(Debug::Channel::FileIO,
+              "Filesystem::ReadAsync => file: " + std::string{filename} + "\n" +
+                  e.what());
     throw e;
     return NULL;
   }
@@ -262,8 +265,9 @@ HANDLE Filesystem::ReadAsync(const char* filename,
     try {
       GetReadWriteError();
     } catch (const std::exception& e) {
-      LOG_ERROR(Debug::Channel::FileIO, "Filesystem::Read => file: " +
-                                            std::string{filename} + e.what());
+      LOG_ERROR(Debug::Channel::FileIO,
+                "Filesystem::Read => file: " + std::string{filename} + "\n" +
+                    e.what());
       throw e;
     }
   }
@@ -286,8 +290,9 @@ HANDLE Filesystem::WriteAsync(const char* filename, const char* contentBuffer,
   try {
     GetFileError();
   } catch (const std::exception& e) {
-    LOG_ERROR(Debug::Channel::FileIO, "Filesystem::ReadAsync => file: " +
-                                          std::string{filename} + e.what());
+    LOG_ERROR(Debug::Channel::FileIO,
+              "Filesystem::ReadAsync => file: " + std::string{filename} + "\n" +
+                  e.what());
     throw e;
     return NULL;
   }
@@ -313,8 +318,9 @@ HANDLE Filesystem::WriteAsync(const char* filename, const char* contentBuffer,
     try {
       GetReadWriteError();
     } catch (const std::exception& e) {
-      LOG_ERROR(Debug::Channel::FileIO, "Filesystem::Read => file: " +
-                                            std::string{filename} + e.what());
+      LOG_ERROR(Debug::Channel::FileIO,
+                "Filesystem::Read => file: " + std::string{filename} + "\n" +
+                    e.what());
       throw e;
     }
   }
@@ -364,8 +370,9 @@ void Filesystem::Touch(const char* filename) {
   try {
     GetFileError();
   } catch (const std::exception& e) {
-    LOG_ERROR(Debug::Channel::FileIO, "Filesystem::ReadAsync => file: " +
-                                          std::string{filename} + e.what());
+    LOG_ERROR(Debug::Channel::FileIO,
+              "Filesystem::ReadAsync => file: " + std::string{filename} + "\n" +
+                  e.what());
     throw e;
   }
   CloseHandle(hFile);
@@ -378,8 +385,9 @@ int Filesystem::GetFileLength(const std::string& filename) {
   try {
     GetFileError();
   } catch (const std::exception& e) {
-    LOG_ERROR(Debug::Channel::FileIO, "Filesystem::ReadAsync => file: " +
-                                          std::string{filename} + e.what());
+    LOG_ERROR(Debug::Channel::FileIO,
+              "Filesystem::ReadAsync => file: " + std::string{filename} + "\n" +
+                  e.what());
     throw e;
     return NULL;
   }

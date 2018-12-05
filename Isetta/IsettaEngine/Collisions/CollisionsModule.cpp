@@ -47,7 +47,8 @@ void CollisionsModule::Update(float deltaTime) {
     Collider *collider1 = pair.first;
     Collider *collider2 = pair.second;
     // Ignore Single/Layer Collisions continue
-    if (ignoreColliderPairs.find(pair) != ignoreColliderPairs.end() ||
+    if (collider1->entity == collider2->entity ||
+        ignoreColliderPairs.find(pair) != ignoreColliderPairs.end() ||
         GetIgnoreLayerCollision(collider1->entity->GetLayerIndex(),
                                 collider2->entity->GetLayerIndex()))
       continue;

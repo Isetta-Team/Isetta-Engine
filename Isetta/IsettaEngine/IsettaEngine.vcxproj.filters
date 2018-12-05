@@ -304,6 +304,9 @@
     <ClCompile Include="Components\NetworkMonitor.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="Components\JointFollow.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -706,6 +709,9 @@
       <Filter>Custom\EmptyLevel</Filter>
     </ClInclude>
     <ClInclude Include="Components\NetworkMonitor.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\JointFollow.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
