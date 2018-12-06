@@ -124,26 +124,26 @@ class ISETTA_API_DECLARE Array {
  public:
   Array() : size{0}, capacity{0}, data{nullptr} {}
   explicit Array(size_type capacity) : size{0}, capacity{capacity} {
-    data = MemoryManager::NewArrOnFreeList<T>(capacity);
+    if (capacity > 0) data = MemoryManager::NewArrOnFreeList<T>(capacity);
   }
   Array(size_type capacity, const value_type &val)
       : size{capacity}, capacity{capacity} {
-    data = MemoryManager::NewArrOnFreeList<T>(capacity);
+    if (capacity > 0) data = MemoryManager::NewArrOnFreeList<T>(capacity);
     for (int i = 0; i < size; ++i) data[i] = val;
   }
   Array(const std::initializer_list<T> &list) : size{0}, capacity{list.size()} {
-    data = MemoryManager::NewArrOnFreeList<T>(capacity);
+    if (capacity > 0) data = MemoryManager::NewArrOnFreeList<T>(capacity);
     Insert(begin(), list.begin(), list.end());
   }
   Array(iterator beginIter, iterator endIter)
       : size{0}, capacity{static_cast<size_type>(endIter - beginIter)} {
-    data = MemoryManager::NewArrOnFreeList<T>(capacity);
+    if (capacity > 0) data = MemoryManager::NewArrOnFreeList<T>(capacity);
     Insert(begin(), beginIter, endIter);
   }
   Array(const T *beginPtr, const T *endPtr)
       : size{static_cast<size_type>(endPtr - beginPtr)},
         capacity{static_cast<size_type>(endPtr - beginPtr)} {
-    data = MemoryManager::NewArrOnFreeList<T>(capacity);
+    if (capacity > 0) data = MemoryManager::NewArrOnFreeList<T>(capacity);
     for (int i = 0; i < capacity; ++i) data[i] = *(beginPtr + i);
   }
   ~Array();
@@ -153,7 +153,7 @@ class ISETTA_API_DECLARE Array {
 
   Array(const Array &inVector)
       : size{inVector.size}, capacity{inVector.capacity} {
-    data = MemoryManager::NewArrOnFreeList<T>(capacity);
+    if (capacity > 0) data = MemoryManager::NewArrOnFreeList<T>(capacity);
     for (int i = 0; i < size; ++i) data[i] = inVector[i];
   }
   Array(Array &&inVector) noexcept
@@ -165,7 +165,7 @@ class ISETTA_API_DECLARE Array {
     if (capacity > 0) MemoryManager::DeleteArrOnFreeList<T>(capacity, data);
     size = inVector.size;
     capacity = inVector.capacity;
-    data = MemoryManager::NewArrOnFreeList<T>(capacity);
+    if (capacity > 0) data = MemoryManager::NewArrOnFreeList<T>(capacity);
     for (int i = 0; i < size; ++i) data[i] = inVector[i];
     return *this;
   }
