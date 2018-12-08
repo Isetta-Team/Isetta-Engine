@@ -119,6 +119,9 @@ void Nav2DPlane::DebugDisplay() const {
           Math::Matrix4::Transform(position, Math::Vector3::zero,
                                    Math::Vector3::one * 0.1),
           colors[Math::Util::Clamp(0, 7, costMatrix[index] / 3)]);
+      DebugDraw::Line(position,
+                      position + 0.25 * Math::Vector3{dirMatrix[index].x, 0,
+                                                      dirMatrix[index].y});
     }
   }
   for (const auto& obstacle : obstacles) {
