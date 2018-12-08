@@ -13,6 +13,7 @@
 
 namespace Isetta {
 class ISETTA_API Nav2DPlane {
+public:
   Array<U8> costMatrix;
   Array<Math::Vector2> dirMatrix;
   Array<bool> isObstacle;
