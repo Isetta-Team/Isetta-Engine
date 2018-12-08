@@ -10,8 +10,9 @@
 using namespace Isetta;
 
 Math::Vector2Int Nav2DPlane::GetIndexByPosition(Math::Vector2 position) const {
-  return Math::Vector2Int{Math::Util::FloorToInt((position.x - surface.x) / nodeSize.x),
-                          Math::Util::FloorToInt((position.y - surface.y) / nodeSize.y)};
+  return Math::Vector2Int{
+      Math::Util::FloorToInt((position.x - surface.x) / nodeSize.x),
+      Math::Util::FloorToInt((position.y - surface.y) / nodeSize.y)};
 }
 
 int Nav2DPlane::Vector2IndexToInt(Math::Vector2Int index) const {
@@ -237,13 +238,17 @@ Math::Vector2 Nav2DPlane::GetDirectionByPosition(Math::Vector2 position) {
   return dirMatrix[Vector2IndexToInt(index)];
 }
 
-float Nav2DPlane::GetDistanceToTarget(Math::Vector2 position) const {
+std::tuple<float, Transform*> Nav2DPlane::GetDistanceToTarget(
+    Math::Vector2 position) const {
   float distance{surface.width * surface.height};
+  Transform* minTarget = nullptr;
   for (auto transform : currTargets) {
-    distance = Math::Util::Min(
-        distance,
-        Math::Vector2::Distance(position, {transform->GetWorldPos().x,
-                                           transform->GetWorldPos().z}));
+    float currDistance = Math::Vector2::Distance(
+        position, {transform->GetWorldPos().x, transform->GetWorldPos().z});
+    if (currDistance < distance) {
+      distance = currDistance;
+      minTarget = transform;
+    }
   }
-  return distance;
+  return {distance, minTarget};
 }

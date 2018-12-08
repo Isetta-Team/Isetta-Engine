@@ -84,6 +84,7 @@ MeshComponent* animatedModel;
 bool isPlaying;
 // TODO(Chaojie): SubClock?
 float animationTime;
+float prevAnimationTime;
 float blendWeight;
 float blendDuration;
 

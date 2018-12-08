@@ -47,6 +47,6 @@ class ISETTA_API Nav2DPlane {
   void UpdateRoute();
   void AddObstacle(const Nav2DObstacle& obstacle);
   Math::Vector2 GetDirectionByPosition(Math::Vector2 position);
-  float GetDistanceToTarget(Math::Vector2 position) const;
+  std::tuple<float, Transform*> GetDistanceToTarget(Math::Vector2 position) const;
 };
 }  // namespace Isetta

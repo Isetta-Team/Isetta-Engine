@@ -17,6 +17,8 @@ AnimationComponent::AnimationComponent(MeshComponent* model)
       totalStates{0},
       animatedModel{model},
       isPlaying{false},
+      animationTime{0},
+      prevAnimationTime{0},
       blendWeight{1} {
   ASSERT(renderModule != nullptr);
   renderModule->animationComponents.push_back(this);
@@ -46,6 +48,7 @@ void AnimationComponent::UpdateAnimation(float deltaTime) {
   PROFILE
   if (isPlaying) {
     // TODO(Chaojie): Animation frame rate;
+    prevAnimationTime += deltaTime * 30;
     animationTime += deltaTime * 30;
     if (blendWeight >= 1) {
       h3dSetModelAnimParams(animatedModel->renderNode, currentState,
@@ -54,7 +57,7 @@ void AnimationComponent::UpdateAnimation(float deltaTime) {
       blendWeight += deltaTime / blendDuration;
       if (blendWeight > 1) blendWeight = 1;
       h3dSetModelAnimParams(animatedModel->renderNode, previousState,
-                            animationTime, 1 - blendWeight);
+                            prevAnimationTime, 1 - blendWeight);
       h3dSetModelAnimParams(animatedModel->renderNode, currentState,
                             animationTime, blendWeight);
     }
@@ -68,6 +71,8 @@ void AnimationComponent::UpdateAnimation(float deltaTime) {
 void AnimationComponent::TransitToAnimationState(int state, float duration) {
   if (state == currentState) return;
   previousState = currentState;
+  prevAnimationTime = animationTime;
+  animationTime = 0;
   currentState = state;
   blendWeight = 0;
   blendDuration = duration;
