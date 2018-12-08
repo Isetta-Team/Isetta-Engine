@@ -12,7 +12,7 @@ Math::Vector2 Nav2DAgent::GetAIMovement(Math::Vector2 agentPosition,
   Math::Vector2 velocity;
   if (distance < stopDistance) {
     velocity = Math::Vector2::zero;
-    onTargetArrive.Invoke(transform);
+    onTargetArrive.Invoke(target);
   } else {
     velocity = GetAIMovement(deltaTime);
   }
