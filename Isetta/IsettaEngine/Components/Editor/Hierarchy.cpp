@@ -50,7 +50,7 @@ void Hierarchy::GuiUpdate() {
           }
           GUI::PopID();
           height += 1.25f * buttonHeight;
-          for (auto& it = t->begin(); it != t->end(); ++it) action(*it);
+          for (auto it = t->begin(); it != t->end(); ++it) action(*it);
         };
         for (const auto& entity : entities) {
           if (entity->transform->GetParent() ==

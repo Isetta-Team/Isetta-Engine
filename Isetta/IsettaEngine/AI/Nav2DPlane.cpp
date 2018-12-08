@@ -10,8 +10,8 @@
 using namespace Isetta;
 
 Math::Vector2Int Nav2DPlane::GetIndexByPosition(Math::Vector2 position) const {
-  return Math::Vector2Int{Math::Util::FloorToInt(position.x / nodeSize.x),
-                          Math::Util::FloorToInt(position.y / nodeSize.y)};
+  return Math::Vector2Int{Math::Util::FloorToInt((position.x - surface.x) / nodeSize.x),
+                          Math::Util::FloorToInt((position.y - surface.y) / nodeSize.y)};
 }
 
 int Nav2DPlane::Vector2IndexToInt(Math::Vector2Int index) const {
@@ -119,9 +119,6 @@ void Nav2DPlane::DebugDisplay() const {
           Math::Matrix4::Transform(position, Math::Vector3::zero,
                                    Math::Vector3::one * 0.1),
           colors[Math::Util::Clamp(0, 7, costMatrix[index] / 3)]);
-      DebugDraw::Line(position,
-                      position + 0.25 * Math::Vector3{dirMatrix[index].x, 0,
-                                                      dirMatrix[index].y});
     }
   }
   for (const auto& obstacle : obstacles) {
