@@ -56,7 +56,9 @@ void RenderModule::Update(float deltaTime) {
             Entity::EntityAttributes::IS_TRANSFORM_DIRTY)) {
       particle->UpdateTransform();
     }
-    particle->UpdateEmitter(deltaTime);
+    if (particle->hasStarted) {
+      particle->UpdateEmitter(deltaTime);
+    }
   }
   ASSERT(!cameraComponents.empty());
   CameraComponent::_main = cameraComponents.front();

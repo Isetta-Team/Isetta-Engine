@@ -65,3 +65,7 @@ void Isetta::ParticleSystemComponent::OnDisable() {
 void Isetta::ParticleSystemComponent::OnDestroy() {
   renderModule->particleSystemComponents.remove(this);
 }
+
+void Isetta::ParticleSystemComponent::StartEmttting() {
+  hasStarted = true;
+}
