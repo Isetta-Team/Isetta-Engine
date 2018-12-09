@@ -41,13 +41,14 @@ Nav2DAgent::Nav2DAgent(Nav2DPlane* plane, float maxAcc, float maxV,
 
 void Nav2DAgent::UpdateSteeringData(Math::Vector2 position, float distance) {
   float targetSpeed;
+  Math::Vector2 targetVelocity;
   if (distance > stopDistance * 2) {
     targetSpeed = maxVelocity;
+    targetVelocity = navPlane->GetDirectionByPosition(position) * targetSpeed;
+
   } else {
     targetSpeed = maxVelocity * distance / (stopDistance * 2);
   }
-  Math::Vector2 targetVelocity =
-      navPlane->GetDirectionByPosition(position) * targetSpeed;
   linear = targetVelocity - velocity;
   linear /= timeToTarget;
   if (linear.SqrMagnitude() > maxAcceleration2) {

@@ -91,6 +91,7 @@ class ISETTA_API Component {
   bool GetActive() const;
   class Entity* const entity;
   class Transform* const transform;
+  static void Destroy(Component* component);
 
   /**
    * \brief Awake is called once, immediately when the component is first

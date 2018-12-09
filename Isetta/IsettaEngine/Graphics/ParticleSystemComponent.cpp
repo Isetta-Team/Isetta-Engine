@@ -59,7 +59,7 @@ void Isetta::ParticleSystemComponent::OnEnable() {
 }
 
 void Isetta::ParticleSystemComponent::OnDisable() {
-  h3dSetNodeFlags(renderNode, H3DNodeFlags::Inactive, true);
+  h3dSetNodeFlags(renderNode, H3DNodeFlags::NoDraw, true);
 }
 
 void Isetta::ParticleSystemComponent::OnDestroy() {
