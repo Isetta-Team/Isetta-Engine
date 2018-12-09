@@ -23,13 +23,13 @@ Nav2DObstacle Nav2DObstacle::Rectangle(const Math::Rect& rect) {
 }
 
 Nav2DObstacle Nav2DObstacle::Circle(const Math::Vector2& position, float radius,
-                                    int segments) {
+                                    float angleOffset, int segments) {
   Nav2DObstacle obstacle;
   obstacle.points.Reserve(segments);
   float angle = 2 * Math::Util::PI / segments;
   for (int i = 0; i < segments; ++i) {
-    float x = radius * Math::Util::Cos(i * angle);
-    float y = radius * Math::Util::Sin(i * angle);
+    float x = radius * Math::Util::Cos(i * angle + angleOffset);
+    float y = radius * Math::Util::Sin(i * angle + angleOffset);
     obstacle.points.PushBack(Math::Vector2{x, y} + position);
   }
   return obstacle;

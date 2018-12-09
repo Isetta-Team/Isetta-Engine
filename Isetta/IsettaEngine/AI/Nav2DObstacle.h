@@ -18,7 +18,7 @@ struct ISETTA_API Nav2DObstacle {
 
   static Nav2DObstacle Rectangle(const Math::Rect& rectangle);
   static Nav2DObstacle Circle(const Math::Vector2& position, float radius,
-                              int segments = 12);
+                              float angleOffset = 0, int segments = 12);
 
 #ifdef _EDITOR
   void DebugDraw() const;
