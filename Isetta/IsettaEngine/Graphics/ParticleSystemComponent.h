@@ -11,6 +11,7 @@ DEFINE_COMPONENT(ParticleSystemComponent, Component, false)
 H3DNode renderNode{0};
 Array<H3DNode> emitters;
 H3DRes renderResource{0};
+bool hasStarted{false};
 
 ParticleSystemComponent();
 explicit ParticleSystemComponent(std::string_view resourceName);
@@ -32,6 +33,9 @@ friend class FreeListAllocator;
 friend class RenderModule;
 
 static inline class RenderModule* renderModule;
+
+public:
+void StartEmttting();
 
 DEFINE_COMPONENT_END(ParticleSystemComponent, Component)
 }  // namespace Isetta
