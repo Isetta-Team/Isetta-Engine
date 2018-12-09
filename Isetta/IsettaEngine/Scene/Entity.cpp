@@ -118,6 +118,10 @@ Entity::~Entity() {
   CheckDestroy();
 }
 
+bool Entity::operator==(const Entity &rhs) const {
+  return entityId == rhs.entityId;
+}
+
 std::string Entity::GetEntityIdString() const {
   std::array<char, 40> output;
   snprintf(output.data(), output.size(),

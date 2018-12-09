@@ -27,14 +27,20 @@ class Transform* target;
  * @param isOpen whether starts open
  * @param target transformation to display information
  */
-Inspector(std::string title, bool isOpen, class Transform* target = nullptr);
+Inspector(std::string title, bool isOpen, bool isStatic = false,
+          class Transform* target = nullptr);
 void GuiUpdate() override;
 
 void Open();
+bool IsSelected(const Transform* const transform) const;
+void SetAsInstance(bool isStatic = true);
+
+static const Inspector* Instance();
 
 private:
 std::string title;
 bool isOpen = true;
+static Inspector* instance;
 RectTransform rectTransform{{30, 300, 350, 300}};
 DEFINE_COMPONENT_END(Inspector, Component)
 }  // namespace Isetta

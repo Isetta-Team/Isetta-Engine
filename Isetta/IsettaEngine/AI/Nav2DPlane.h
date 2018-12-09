@@ -8,8 +8,8 @@
 #include "Core/Math/Rect.h"
 #include "Core/Math/Vector2Int.h"
 #include "Core/math/Vector2.h"
-#include "Nav2DObstacle.h"
 #include "ISETTA_API.h"
+#include "Nav2DObstacle.h"
 
 namespace Isetta {
 class ISETTA_API Nav2DPlane {
@@ -40,13 +40,14 @@ class ISETTA_API Nav2DPlane {
   Nav2DPlane() = default;
   Nav2DPlane(const Math::Rect& gridSurface, const Math::Vector2Int& divideNums);
 #ifdef _EDITOR
-  void DebugDisplay() const;
+  void DebugDraw() const;
 #endif
   void AddTarget(class Transform* transform);
   void RemoveTarget(class Transform* transform);
   void UpdateRoute();
   void AddObstacle(const Nav2DObstacle& obstacle);
   Math::Vector2 GetDirectionByPosition(Math::Vector2 position);
-  std::tuple<float, Transform*> GetDistanceToTarget(Math::Vector2 position) const;
+  std::tuple<float, Transform*> GetDistanceToTarget(
+      Math::Vector2 position) const;
 };
 }  // namespace Isetta

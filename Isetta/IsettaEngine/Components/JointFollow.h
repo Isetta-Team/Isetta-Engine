@@ -25,5 +25,9 @@ JointFollow(MeshComponent* follow, const std::string_view jointName,
       rotOffset{rotOffset} {}
 
 void Update() override;
+#ifdef _EDITOR
+void GuiUpdate() override;
+void Open();
+#endif
 DEFINE_COMPONENT_END(JointFollow, Component)
 }  // namespace Isetta
