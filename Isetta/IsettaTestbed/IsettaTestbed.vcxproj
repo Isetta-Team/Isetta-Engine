@@ -113,7 +113,7 @@ XCOPY /Y /R "$(ProjectDir)*.cfg" "$(TargetDir)"</Command>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
-      <PreprocessorDefinitions>_EDITOR;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
