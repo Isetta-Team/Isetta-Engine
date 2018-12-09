@@ -16,7 +16,7 @@
 namespace Isetta {
 void EditorComponent::Awake() {
   console = entity->AddComponent<Console>("Console", true);
-  inspector = entity->AddComponent<Inspector>("Inspector", false);
+  inspector = entity->AddComponent<Inspector>("Inspector", false, true);
   hierarchy = entity->AddComponent<Hierarchy>("Hierarchy", true, inspector);
   frameReporter = entity->AddComponent<FrameReporter>();
 }

@@ -38,29 +38,34 @@ void Hierarchy::GuiUpdate() {
           return i;
         };
 
+        Action<Transform*> action = [&](Transform* t) {
+          int level = countLevel(t);
+          GUI::PushID(t->entity->GetEntityIdString());
+          float offset = (level - 1) * padding;
+          if (GUI::Button(
+                  RectTransform{Math::Rect{left + offset, height,
+                                           buttonWidth - offset, buttonHeight}},
+                  t->GetName())) {
+            target = t;
+          }
+          GUI::PopID();
+          height += 1.25f * buttonHeight;
+          for (auto it = t->begin(); it != t->end(); ++it) action(*it);
+        };
         for (const auto& entity : entities) {
-          Action<Transform*> action = [&](Transform* t) {
-            int level = countLevel(t);
-            GUI::PushID(t->entity->GetEntityIdString());
-            float offset = (level - 1) * padding;
-            if (GUI::Button(RectTransform{Math::Rect{left + offset, height,
-                                                     buttonWidth - offset,
-                                                     buttonHeight}},
-                            t->GetName())) {
-              target = t;
-            }
-            GUI::PopID();
-            height += 1.25f * buttonHeight;
-          };
-          action(entity->transform);
+          if (entity->transform->GetParent() ==
+              LevelManager::Instance().loadedLevel->levelRoot->transform)
+            action(entity->transform);
         }
-        if (GUI::IsWindowFocused() &&
-            Input::IsMouseButtonPressed(MouseButton::LEFT) && !target)
-          inspector->target = target;
 
-        if (inspector && target) {
-          inspector->target = target;
-          inspector->Open();
+        if (inspector) {
+          if (GUI::IsWindowFocused() &&
+              Input::IsMouseButtonPressed(MouseButton::LEFT) && !target)
+            inspector->target = target;
+          if (target) {
+            inspector->target = target;
+            inspector->Open();
+          }
         }
       },
       &isOpen, {}, GUI::WindowFlags::HorizontalScrollbar);

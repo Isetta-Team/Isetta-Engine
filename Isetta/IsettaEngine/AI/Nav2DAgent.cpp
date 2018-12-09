@@ -6,12 +6,13 @@
 namespace Isetta {
 Math::Vector2 Nav2DAgent::GetAIMovement(Math::Vector2 agentPosition,
                                         float deltaTime) {
-  float distance = navPlane->GetDistanceToTarget(agentPosition);
+  auto [distance, target] = navPlane->GetDistanceToTarget(agentPosition);
 
   UpdateSteeringData(agentPosition, distance);
   Math::Vector2 velocity;
   if (distance < stopDistance) {
     velocity = Math::Vector2::zero;
+    onTargetArrive.Invoke(target);
   } else {
     velocity = GetAIMovement(deltaTime);
   }
@@ -40,13 +41,14 @@ Nav2DAgent::Nav2DAgent(Nav2DPlane* plane, float maxAcc, float maxV,
 
 void Nav2DAgent::UpdateSteeringData(Math::Vector2 position, float distance) {
   float targetSpeed;
+  Math::Vector2 targetVelocity;
   if (distance > stopDistance * 2) {
     targetSpeed = maxVelocity;
+    targetVelocity = navPlane->GetDirectionByPosition(position) * targetSpeed;
+
   } else {
     targetSpeed = maxVelocity * distance / (stopDistance * 2);
   }
-  Math::Vector2 targetVelocity =
-      navPlane->GetDirectionByPosition(position) * targetSpeed;
   linear = targetVelocity - velocity;
   linear /= timeToTarget;
   if (linear.SqrMagnitude() > maxAcceleration2) {

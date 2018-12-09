@@ -5,6 +5,7 @@
 #include "Core/Math/Vector2.h"
 #include "Nav2DPlane.h"
 #include "Scene/Component.h"
+#include "Core/DataStructures/Delegate.h"
 
 namespace Isetta {
 DEFINE_COMPONENT(Nav2DAgent, Component, true)
@@ -26,5 +27,6 @@ DEFINE_COMPONENT(Nav2DAgent, Component, true)
   explicit Nav2DAgent(Nav2DPlane* plane, float maxAcc = 2.f, float maxV = 2.f, float timeToTarget = 0.1f, float arriving = 0.5f);
   Math::Vector2 GetAIMovement(Math::Vector2 agentPosition,
                               float deltaTime);
+  Delegate<Transform*> onTargetArrive;
 DEFINE_COMPONENT_END(Nav2DAgent, Component)
 }  // namespace Isetta

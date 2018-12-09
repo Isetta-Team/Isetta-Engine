@@ -4,7 +4,6 @@
 #include "ExampleComponent.h"
 
 namespace Isetta {
-
 void ExampleComponent::Update() {
   DebugDraw::WireCube(transform->GetLocalToWorldMatrix());
   Entity* entity = Entity::GetEntityByName("PushAnim");

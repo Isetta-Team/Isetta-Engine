@@ -4,7 +4,6 @@
 #pragma once
 #include <string>
 #include "Core/Math/Vector2Int.h"
-#include "GLFW/include/GLFW/glfw3.h"
 #include "ISETTA_API.h"
 
 namespace Isetta::Math {

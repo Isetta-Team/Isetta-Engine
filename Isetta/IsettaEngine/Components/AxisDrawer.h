@@ -9,7 +9,7 @@ namespace Isetta {
  * @brief Draws local axis which are hidden without _EDITOR
  *
  */
-DEFINE_COMPONENT(AxisDrawer, Component, true)
+DEFINE_COMPONENT(AxisDrawer, Component, false)
 public:
 #ifdef _EDITOR
 void Update() override;

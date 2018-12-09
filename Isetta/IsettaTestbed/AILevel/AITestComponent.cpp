@@ -15,7 +15,7 @@ void Isetta::AITestComponent::Update() {
   // plane, based on its targets' position
   navPlane.UpdateRoute();
 #ifdef _EDITOR
-  navPlane.DebugDisplay();
+  navPlane.DebugDraw();
 #endif
 }
 

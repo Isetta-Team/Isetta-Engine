@@ -18,6 +18,7 @@ public:
  */
 explicit AnimationComponent(MeshComponent* model);
 
+int AddAnimation(std::string_view filename);
 /**
  * @brief Add animation to be able to transition/animate
  *
@@ -83,6 +84,7 @@ MeshComponent* animatedModel;
 bool isPlaying;
 // TODO(Chaojie): SubClock?
 float animationTime;
+float prevAnimationTime;
 float blendWeight;
 float blendDuration;
 

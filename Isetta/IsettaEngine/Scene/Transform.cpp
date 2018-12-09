@@ -179,7 +179,7 @@ void Transform::SetWorldScale(const Math::Vector3& newWorldScale) {
   }
 }
 
-void Transform::SetParent(Transform* const transform) {
+void Transform::SetParent(Transform* const transform, bool inheritTransform) {
   if (!entity->IsMoveable()) return;
 
   Transform* targetTransform = transform;
@@ -194,9 +194,13 @@ void Transform::SetParent(Transform* const transform) {
                 GetName().c_str(), targetTransform->GetName().c_str());
     return;
   }
-  Math::Vector3 originalPos = GetWorldPos();
-  Math::Quaternion originalRot = GetWorldRot();
-  Math::Vector3 originalScale = GetWorldScale();
+  Math::Vector3 originalPos, originalScale;
+  Math::Quaternion originalRot;
+  if (!inheritTransform) {
+    originalPos = GetWorldPos();
+    originalRot = GetWorldRot();
+    originalScale = GetWorldScale();
+  }
 
   if (parent != nullptr) {
     parent->RemoveChild(this);
@@ -205,9 +209,11 @@ void Transform::SetParent(Transform* const transform) {
     targetTransform->AddChild(this);
   }
   parent = targetTransform;
-  SetWorldPos(originalPos);
-  SetWorldRot(originalRot);
-  SetWorldScale(originalScale);
+  if (!inheritTransform) {
+    SetWorldPos(originalPos);
+    SetWorldRot(originalRot);
+    SetWorldScale(originalScale);
+  }
   SetDirty();
 }
 

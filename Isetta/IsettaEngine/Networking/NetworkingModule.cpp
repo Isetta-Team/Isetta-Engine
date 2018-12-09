@@ -63,18 +63,6 @@ void NetworkingModule::StartUp() {
   clientSendBuffer =
       MemoryManager::NewArrOnFreeList<RingBuffer<yojimbo::Message*>>(
           CONFIG_VAL(networkConfig.clientQueueSize));
-
-  // Initialize server
-  if (CONFIG_VAL(networkConfig.runServer)) {
-    Size serverMemorySize = (yojimboConfig.serverPerClientMemory +
-                             yojimboConfig.serverGlobalMemory) *
-                            (CONFIG_VAL(networkConfig.maxClients) + 1);
-
-    serverAllocator =
-        new (MemoryManager::AllocOnStack(sizeof(NetworkAllocator)))
-            NetworkAllocator(MemoryManager::AllocOnStack(serverMemorySize),
-                             serverMemorySize);
-  }
 }
 
 void NetworkingModule::Update(float deltaTime) {
@@ -336,6 +324,16 @@ void NetworkingModule::CreateServer(const char* address, int port) {
     return;
   }
 
+  // Create the server allocator
+  Size serverMemorySize =
+    (yojimboConfig.serverPerClientMemory + yojimboConfig.serverGlobalMemory) *
+    (CONFIG_VAL(networkConfig.maxClients) + 1);
+
+  serverAllocator = new (MemoryManager::AllocOnStack(sizeof(NetworkAllocator)))
+      NetworkAllocator(MemoryManager::AllocOnStack(serverMemorySize),
+                       serverMemorySize);
+
+  // Create the buffers for the server messages
   int maxClients = CONFIG_VAL(networkConfig.maxClients);
   serverSendBufferArray =
       MemoryManager::NewArrOnFreeList<RingBuffer<yojimbo::Message*>>(

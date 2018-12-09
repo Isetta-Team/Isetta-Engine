@@ -26,8 +26,8 @@ void ScoreManager::OnDisable() {
 }
 
 void ScoreManager::GuiUpdate() {
-  if (titleFont) titleFont = Font::GetFont("KnightsQuest", 72.f);
-  if (scoreFont) scoreFont = Font::GetFont("KnightsQuest", 42.f);
+  if (!titleFont) titleFont = Font::GetFont("KnightsQuest", 72.f);
+  if (!scoreFont) scoreFont = Font::GetFont("KnightsQuest", 42.f);
 
   GUI::Text(RectTransform{{0, 100, 0, 0}, GUI::Pivot::Top, GUI::Pivot::Top},
             "KNIGHT'S CONQUEST", GUI::TextStyle{titleFont});

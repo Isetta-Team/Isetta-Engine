@@ -73,6 +73,7 @@ void KnightMainLevel::Load() {
       if (enemy)
         enemy->Reset();
       else {
+        collider->entity->transform->SetLocalPos(Math::Vector3::zero);
         enemy = collider->entity->GetComponentInParent<Enemy>();
         if (enemy) enemy->Reset();
       }

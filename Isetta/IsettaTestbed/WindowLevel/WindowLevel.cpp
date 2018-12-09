@@ -18,9 +18,9 @@ void WindowLevel::Load() {
   cameraEntity->SetTransform(Math::Vector3{0, 5, 10}, Math::Vector3{-15, 0, 0},
                              Math::Vector3::one);
 
-  //Texture icon{"Images\\isetta_logo.png", true};
-  //Window::SetIcon(icon);
-  //icon.Unload();
+  Texture icon{"Images\\isetta_logo.png", true};
+  Window::SetIcon(icon);
+  icon.Unload();
 
   Input::RegisterKeyPressCallback(
       KeyCode::F, []() { Window::SetFullscreen(!Window::IsFullscreen()); });
@@ -39,9 +39,9 @@ void WindowLevel::Load() {
     Window::SetCursorIcon(Window::Cursor::Crosshair);
   });
   Input::RegisterKeyPressCallback(KeyCode::NUM7, []() {
-    //Texture icon{"Images\\isetta_logo.png", true};
-    //Window::SetCursorIcon(icon);
-    //icon.Unload();
+    Texture icon{"Images\\isetta_logo.png", true};
+    Window::SetCursorIcon(icon);
+    icon.Unload();
   });
 
   static Window::CursorMode mode = Window::CursorMode::Normal;

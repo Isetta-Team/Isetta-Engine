@@ -89,4 +89,8 @@ void Component::SetActive(bool value) {
 bool Component::GetActive() const {
   return GetAttribute(ComponentAttributes::IS_ACTIVE);
 }
+
+void Component::Destroy(Component* component) {
+  component->SetAttribute(ComponentAttributes::NEED_DESTROY, true);
+}
 }  // namespace Isetta

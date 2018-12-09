@@ -7,7 +7,6 @@
 #include "Graphics/CameraComponent.h"
 
 namespace Isetta {
-
 void EmptyLevel::Load() {
   Entity* cameraEntity = Entity::Instantiate("Camera");
   cameraEntity->AddComponent<CameraComponent>();

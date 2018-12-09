@@ -46,8 +46,7 @@ void CollisionSolverLevel::Load() {
   staticCol[0]->SetTransform(Math::Vector3{0, 1, 0}, Math::Vector3{0, 0, 0});
   // Add our box collider
   staticCol[0]->AddComponent<BoxCollider>();
-  staticCol[0]
-      ->AddComponent<CollisionHandler>();
+  staticCol[0]->AddComponent<CollisionHandler>();
   staticCol[0]->AddComponent<DebugCollision>();  // This will let us know when
                                                  // collisions occur
 
@@ -71,7 +70,7 @@ void CollisionSolverLevel::Load() {
   // DYNAMIC - These colliders will be movable throughout the scene
   box = Entity::Instantiate("box-collider-dynamic");
   box->SetTransform(Math::Vector3{3, 1, 0}, Math::Vector3{0, 0, 0});
-  box->AddComponent<BoxCollider>()->mass = 0;
+  box->AddComponent<BoxCollider>();
   box->AddComponent<KeyTransform>();  // We want to be able to move this
                                       // collider using our keyboard
 
