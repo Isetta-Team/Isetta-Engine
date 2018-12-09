@@ -19,7 +19,7 @@ class CollisionSolverModule {
   CollisionSolverModule() = default;
   ~CollisionSolverModule() = default;
 
-  Collision Solve(Collider* collider, Math::Vector3 point);
+  Collision Solve(Collider* collider, Collider* other);
   Math::Vector3 Resolve(Collider* collider1, Collision collision1,
                         Collider* collider2, Collision collision2);
 

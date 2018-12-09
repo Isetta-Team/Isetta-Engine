@@ -27,10 +27,56 @@ CollisionsModule* CollisionSolverModule::collisionsModule{nullptr};
 void CollisionSolverModule::StartUp(){};
 void CollisionSolverModule::ShutDown(){};
 
-Collision CollisionSolverModule::Solve(Collider* collider,
-                                       Math::Vector3 point) {
+Collision CollisionSolverModule::Solve(Collider* collider, Collider* other) {
   PROFILE
   Collision collision;
+
+  Math::Vector3 point;
+  bool otherOnEdge = false;
+
+  // Project the "center point" to the appropriate position depending on the
+  // other collider
+  switch (other->GetType()) {
+    case Collider::ColliderType::BOX: {
+      BoxCollider* box = static_cast<BoxCollider*>(other);
+
+      Math::Vector3 p =
+          box->transform->LocalPosFromWorldPos(collider->GetWorldCenter()) -
+          box->center;  // TODO(Caleb): Check if this is supposed
+                        // to be converted from world space
+
+      Math::Vector3 extents = box->size * .5;
+
+      int numEdges = 0;
+      int maxAxis = 0;
+      float maxDist = Math::Util::Abs(p[0]);
+
+      for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
+        if (Math::Util::Abs(p[i]) > maxDist) {
+          maxDist = Math::Util::Abs(p[i]);
+          maxAxis = i;
+        }
+
+        if (Math::Util::Abs(p[i]) >= extents[i]) ++numEdges;
+      }
+
+      // If we're hitting an edge, then we should push based off of object
+      // center anyways
+      if (numEdges > 1) {
+        point = other->GetWorldCenter();
+      } else {
+        point = collider->GetWorldCenter() +
+                Math::Vector3::Scale(
+                    box->GetWorldCenter() - collider->GetWorldCenter(),
+                    box->transform->GetAxis(maxAxis));
+      }
+      break;
+    }
+    default: {
+      point = other->GetWorldCenter();
+      break;
+    }
+  }
 
   switch (collider->GetType()) {
     case Collider::ColliderType::BOX: {
@@ -167,8 +213,8 @@ void CollisionSolverModule::Update() {
       }
 
       Collision collision1, collision2;
-      collision1 = Solve(collider1, collider2->GetWorldCenter());
-      collision2 = Solve(collider2, collider1->GetWorldCenter());
+      collision1 = Solve(collider1, collider2);
+      collision2 = Solve(collider2, collider1);
 
       Math::Vector3 response =
           Resolve(collider1, collision1, collider2, collision2);
