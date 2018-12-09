@@ -55,6 +55,8 @@ class ISETTA_API_DECLARE Entity {
  public:
   ~Entity();
 
+  bool operator==(const Entity &rhs) const;
+
   /// Points to this entity's transform
   Transform *transform{};
 

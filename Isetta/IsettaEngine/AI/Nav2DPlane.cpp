@@ -100,9 +100,10 @@ Nav2DPlane::Nav2DPlane(const Math::Rect& gridSurface,
       divideInfo{divideNums},
       nodeSize{gridSurface.width / divideNums.x,
                gridSurface.height / divideNums.y} {}
+
 #ifdef _EDITOR
-void Nav2DPlane::DebugDisplay() const {
-  Math::Vector2 startingPoint{surface.Min() + 0.5 * nodeSize};
+void Nav2DPlane::DebugDraw() const {
+  const Math::Vector2 startingPoint{surface.Min() + 0.5 * nodeSize};
   int index = -1;
   for (int i = 0; i < divideInfo.y; ++i) {
     for (int j = 0; j < divideInfo.x; ++j) {
@@ -113,27 +114,21 @@ void Nav2DPlane::DebugDisplay() const {
         DebugDraw::WireCube(
             Math::Matrix4::Transform(position, Math::Vector3::zero,
                                      Math::Vector3::one * 0.1),
-            colors[8]);
+            colors[8], 1, 0, false);
         continue;
       }
       DebugDraw::WireCube(
           Math::Matrix4::Transform(position, Math::Vector3::zero,
                                    Math::Vector3::one * 0.1),
-          colors[Math::Util::Clamp(0, 7, costMatrix[index] / 3)]);
+          colors[Math::Util::Clamp(0, 7, costMatrix[index] / 3)], 1, 0, false);
       DebugDraw::Line(position,
                       position + 0.25 * Math::Vector3{dirMatrix[index].x, 0,
-                                                      dirMatrix[index].y});
+                                                      dirMatrix[index].y},
+                      Color::white, 1, 0, false);
     }
   }
   for (const auto& obstacle : obstacles) {
-    for (int i = 0; i < obstacle.obstaclePoints.Size(); ++i) {
-      DebugDraw::Line(
-          {obstacle.obstaclePoints[i].x, 0, obstacle.obstaclePoints[i].y},
-          {obstacle.obstaclePoints[(i + 1) % obstacle.obstaclePoints.Size()].x,
-           0,
-           obstacle.obstaclePoints[(i + 1) % obstacle.obstaclePoints.Size()].y},
-          Color::brown);
-    }
+    obstacle.DebugDraw();
   }
 }
 #endif
@@ -226,9 +221,9 @@ void Nav2DPlane::AddLine(Math::Vector2 start, Math::Vector2 end) {
 
 void Nav2DPlane::AddObstacle(const Nav2DObstacle& obstacle) {
   obstacles.PushBack(obstacle);
-  for (int i = 0; i < obstacle.obstaclePoints.Size(); ++i) {
-    AddLine(obstacle.obstaclePoints[i],
-            obstacle.obstaclePoints[(i + 1) % obstacle.obstaclePoints.Size()]);
+  for (int i = 0; i < obstacle.points.Size(); ++i) {
+    AddLine(obstacle.points[i],
+            obstacle.points[(i + 1) % obstacle.points.Size()]);
   }
 }
 

@@ -11,9 +11,13 @@
 #include "imgui/imgui.h"
 
 namespace Isetta {
-Inspector::Inspector(std::string title, const bool isOpen,
+Inspector *Inspector::instance = nullptr;
+
+Inspector::Inspector(std::string title, const bool isOpen, bool isStatic,
                      Transform *const target)
-    : target{target}, title{title}, isOpen{isOpen} {}
+    : target{target}, title{title}, isOpen{isOpen} {
+  if (isStatic) instance = this;
+}
 
 void Inspector::GuiUpdate() {
   // Happens when selected entity is destroyed
@@ -101,4 +105,18 @@ void Inspector::GuiUpdate() {
 }
 
 void Inspector::Open() { isOpen = true; }
+
+bool Inspector::IsSelected(const Transform *const transform) const {
+  return target && transform->entity == target->entity;
+}
+
+void Inspector::SetAsInstance(bool isStatic) {
+  if (isStatic)
+    instance = this;
+  else  // TODO(Jacob) Maybe perform a check to see if this Inspector was
+        // instance Inspector?
+    instance = nullptr;
+}
+
+const Inspector *Inspector::Instance() { return instance; }
 }  // namespace Isetta
