@@ -10,8 +10,10 @@ namespace Isetta {
  * information
  *
  */
-DEFINE_COMPONENT(NetworkMonitor, Component, true)
+DEFINE_COMPONENT(NetworkMonitor, Component, false)
+#ifdef _EDITOR
 public:
 void GuiUpdate() override;
+#endif
 DEFINE_COMPONENT_END(NetworkMonitor, Component)
 }  // namespace Isetta

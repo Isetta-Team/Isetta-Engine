@@ -14,6 +14,7 @@
 #include "Components/Editor/Inspector.h"
 
 namespace Isetta {
+#ifdef _EDITOR
 void EditorComponent::Awake() {
   console = entity->AddComponent<Console>("Console", true);
   inspector = entity->AddComponent<Inspector>("Inspector", false, true);
@@ -66,4 +67,5 @@ void EditorComponent::GuiUpdate() {
       },
       true);
 }
+#endif
 }  // namespace Isetta

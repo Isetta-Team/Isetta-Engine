@@ -16,7 +16,8 @@ namespace Isetta {
  *  ALT + SHIFT + F: Toggles open frame reporter
  *
  */
-DEFINE_COMPONENT(EditorComponent, Component, true)
+DEFINE_COMPONENT(EditorComponent, Component, false)
+#ifdef _EDITOR
 private:
 class Console* console;
 class Inspector* inspector;
@@ -35,5 +36,6 @@ EditorComponent() = default;
 
 void Awake() override;
 void OnEnable() override;
+#endif
 DEFINE_COMPONENT_END(EditorComponent, Component)
 }  // namespace Isetta

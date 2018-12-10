@@ -17,6 +17,7 @@ namespace Isetta {
  *
  */
 DEFINE_COMPONENT(Console, Component, false)
+#ifdef _EDITOR
 private:
 const char USER_DELIM = '|', CFG_DELIM = '=';
 
@@ -100,5 +101,6 @@ inline Array<std::string> GetHistory() { return history; }
  *
  */
 void Open();
+#endif
 DEFINE_COMPONENT_END(Console, Component)
 }  // namespace Isetta

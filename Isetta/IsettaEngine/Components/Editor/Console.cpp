@@ -16,6 +16,7 @@
 #include "Util.h"
 
 namespace Isetta {
+#ifdef _EDITOR
 Array<std::string_view> Console::cfgCmds;
 std::unordered_map<std::string_view, Action<Console* const, std::string_view>>
     Console::userCmds;
@@ -356,4 +357,5 @@ void Console::AddCommand(
 }
 
 void Console::Open() { isOpen = true; }
+#endif
 }  // namespace Isetta

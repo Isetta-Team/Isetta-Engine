@@ -11,7 +11,8 @@ namespace Isetta {
  * can select entities to open inspector (if one is attached)
  *
  */
-DEFINE_COMPONENT(Hierarchy, Component, true)
+DEFINE_COMPONENT(Hierarchy, Component, false)
+#ifdef _EDITOR
 private:
 std::string title;
 bool isOpen = true;
@@ -35,5 +36,6 @@ Hierarchy(std::string title, bool isOpen, class Inspector* inspector = nullptr);
 void GuiUpdate() override;
 
 void Open();
+#endif
 DEFINE_COMPONENT_END(Hierarchy, Component)
 }  // namespace Isetta

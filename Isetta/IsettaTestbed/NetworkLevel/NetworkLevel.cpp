@@ -3,9 +3,9 @@
  */
 #include "NetworkLevel.h"
 #include "Components/Editor/EditorComponent.h"
+#include "Components/Editor/NetworkMonitor.h"
 #include "Components/FlyController.h"
 #include "Components/GridComponent.h"
-#include "Components/NetworkMonitor.h"
 #include "Custom/EscapeExit.h"
 #include "Custom/KeyTransform.h"
 #include "NetworkLevel/NetworkTestComp.h"

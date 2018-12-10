@@ -301,11 +301,11 @@
     <ClCompile Include="Custom\EmptyLevel\EmptyLevel.cpp">
       <Filter>Custom\EmptyLevel</Filter>
     </ClCompile>
-    <ClCompile Include="Components\NetworkMonitor.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="Components\JointFollow.cpp">
       <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Editor\NetworkMonitor.cpp">
+      <Filter>Components\Editor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -708,11 +708,11 @@
     <ClInclude Include="Custom\EmptyLevel\EmptyLevel.h">
       <Filter>Custom\EmptyLevel</Filter>
     </ClInclude>
-    <ClInclude Include="Components\NetworkMonitor.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="Components\JointFollow.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Editor\NetworkMonitor.h">
+      <Filter>Components\Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

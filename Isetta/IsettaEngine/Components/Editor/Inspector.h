@@ -12,7 +12,8 @@ namespace Isetta {
  * information
  *
  */
-DEFINE_COMPONENT(Inspector, Component, true)
+DEFINE_COMPONENT(Inspector, Component, false)
+#ifdef _EDITOR
 public:
 /**
  * @brief Transform debug information is about
@@ -42,5 +43,6 @@ std::string title;
 bool isOpen = true;
 static Inspector* instance;
 RectTransform rectTransform{{30, 300, 350, 300}};
+#endif
 DEFINE_COMPONENT_END(Inspector, Component)
 }  // namespace Isetta
