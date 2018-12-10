@@ -15,7 +15,7 @@ namespace Isetta {
 #ifdef _EDITOR
 void SphereCollider::Update() {
   DebugDraw::AxisSphere(
-      Math::Matrix4::Translate(transform->GetWorldPos() + center) *
+      Math::Matrix4::Translate(GetWorldCenter()) *
           Math::Matrix4::Scale(
               Math::Vector3{radius * transform->GetWorldScale().Max()}),
       debugColor, debugColor, debugColor);

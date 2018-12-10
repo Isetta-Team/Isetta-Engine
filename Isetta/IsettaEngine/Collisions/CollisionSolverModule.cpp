@@ -113,7 +113,7 @@ Collision CollisionSolverModule::Solve(Collider* collider, Collider* other) {
           Math::Util::Sign(hitPoint[maxAxis]) * extents[maxAxis];
 
       collision.hitPoint =
-          box->transform->WorldPosFromLocalPos(hitPoint) + box->center;
+          box->transform->WorldPosFromLocalPos(hitPoint + box->center);
       collision.pushDir = Math::Vector3::zero;
       collision.pushDir[maxAxis] = 1;
       collision.pushDir =
