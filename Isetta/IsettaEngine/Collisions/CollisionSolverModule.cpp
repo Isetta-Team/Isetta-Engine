@@ -46,14 +46,22 @@ Collision CollisionSolverModule::Solve(Collider* collider, Collider* other) {
                         // to be converted from world space
 
       Math::Vector3 extents = box->size * .5;
+      Math::Vector3 scale = box->transform->GetWorldScale();
 
       int numEdges = 0;
       int maxAxis = 0;
-      float maxDist = Math::Util::Abs(p[0]);
+      int minAxis = 0;
+      float maxDist = (extents[0] - Math::Util::Abs(p[0])) * scale[0];
+      float minDist = (extents[0] - Math::Util::Abs(p[0])) * scale[0];
 
       for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
-        if (Math::Util::Abs(p[i]) > maxDist) {
-          maxDist = Math::Util::Abs(p[i]);
+        if ((extents[i] - Math::Util::Abs(p[i])) * scale[i] < minDist) {
+          minDist = (extents[i] - Math::Util::Abs(p[i])) * scale[i];
+          minAxis = i;
+        }
+
+        if ((extents[i] - Math::Util::Abs(p[i])) * scale[i] > maxDist) {
+          maxDist = (extents[i] - Math::Util::Abs(p[i])) * scale[i];
           maxAxis = i;
         }
 
@@ -63,16 +71,23 @@ Collision CollisionSolverModule::Solve(Collider* collider, Collider* other) {
       // If we're hitting an edge, then we should push based off of object
       // center anyways
       if (numEdges > 1) {
-        point = other->GetWorldCenter();
+        Math::Vector3 multiplier =
+            Math::Vector3{1.0f - (maxAxis == 0), 1.0f - (maxAxis == 1),
+                          1.0f - (maxAxis == 2)};
+        Math::Vector3 nMultiplier = Math::Vector3{
+            1.0f - multiplier[0], 1.0f - multiplier[1], 1.0f - multiplier[2]};
+
+        point = Math::Vector3::Scale(
+            box->GetWorldCenter(),
+            multiplier) + Math::Vector3::Scale(collider->GetWorldCenter(), nMultiplier);
       } else {
-        Math::Vector3 axis = box->transform->GetAxis(maxAxis);
+        Math::Vector3 axis = box->transform->GetAxis(minAxis);
         axis.x = Math::Util::Abs(axis.x);
         axis.y = Math::Util::Abs(axis.y);
         axis.z = Math::Util::Abs(axis.z);
         point = collider->GetWorldCenter() +
                 Math::Vector3::Scale(
-                    box->GetWorldCenter() - collider->GetWorldCenter(),
-                    axis);
+                    box->GetWorldCenter() - collider->GetWorldCenter(), axis);
       }
       break;
     }
@@ -92,30 +107,31 @@ Collision CollisionSolverModule::Solve(Collider* collider, Collider* other) {
 
       Math::Vector3 extents = box->size * .5;
       Math::Vector3 hitPoint = Math::Vector3::zero;
+      Math::Vector3 scale = box->transform->GetWorldScale();
 
       int numEdges = 0;
-      int maxAxis = 0;
-      float maxDist = Math::Util::Abs(p[0]);
+      int minAxis = 0;
+      float minDist = (extents[0] - Math::Util::Abs(p[0])) * scale[0];
 
       for (int i = 0; i < Math::Vector3::ELEMENT_COUNT; ++i) {
         hitPoint[i] =
             Math::Util::Min(Math::Util::Max(p[i], -extents[i]), extents[i]);
 
-        if (Math::Util::Abs(p[i]) > maxDist) {
-          maxDist = Math::Util::Abs(p[i]);
-          maxAxis = i;
+        if ((extents[i] - Math::Util::Abs(p[i])) * scale[i] < minDist) {
+          minDist = (extents[i] - Math::Util::Abs(p[i])) * scale[i];
+          minAxis = i;
         }
 
         if (Math::Util::Abs(hitPoint[i]) >= extents[i]) ++numEdges;
       }
 
-      hitPoint[maxAxis] =
-          Math::Util::Sign(hitPoint[maxAxis]) * extents[maxAxis];
+      hitPoint[minAxis] =
+          Math::Util::Sign(hitPoint[minAxis]) * extents[minAxis];
 
       collision.hitPoint =
           box->transform->WorldPosFromLocalPos(hitPoint + box->center);
       collision.pushDir = Math::Vector3::zero;
-      collision.pushDir[maxAxis] = 1;
+      collision.pushDir[minAxis] = 1;
       collision.pushDir =
           box->transform->WorldDirFromLocalDir(collision.pushDir).Normalized();
       collision.onEdge = numEdges > 1;
