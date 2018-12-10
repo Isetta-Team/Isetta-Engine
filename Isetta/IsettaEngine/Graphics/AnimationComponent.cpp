@@ -41,6 +41,7 @@ int AnimationComponent::AddAnimation(std::string_view animationFilename,
   H3DRes res = LoadResourceFromFile(animationFilename);
   h3dSetupModelAnimStage(animatedModel->renderNode, stateIndex, res, layer,
                          startNode.data(), additive);
+  h3dSetModelAnimParams(animatedModel->renderNode, stateIndex, 0, 1);
   return stateIndex;
 }
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Isetta
  */
-#include "Components/NetworkMonitor.h"
+#include "NetworkMonitor.h"
 
 #include "Core/Config/Config.h"
 #include "Core/SystemInfo.h"
@@ -10,6 +10,7 @@
 #include "Networking/NetworkManager.h"
 
 namespace Isetta {
+#ifdef _EDITOR
 void NetworkMonitor::GuiUpdate() {
   // Get a string that describes network role
   std::string log = "Offline";
@@ -45,4 +46,5 @@ void NetworkMonitor::GuiUpdate() {
       },
       &isOpen);
 }
+#endif
 }  // namespace Isetta

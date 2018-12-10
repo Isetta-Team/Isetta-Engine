@@ -13,6 +13,7 @@ namespace Isetta {
  *
  */
 DEFINE_COMPONENT(FrameReporter, Component, false)
+#ifdef _EDITOR
 public:
 void GuiUpdate() override;
 void Open();
@@ -28,5 +29,6 @@ Size frameCountForAvg{60};
 std::queue<float> frameDurations;
 
 bool isOpen{false};
+#endif
 DEFINE_COMPONENT_END(FrameReporter, Component)
 }  // namespace Isetta

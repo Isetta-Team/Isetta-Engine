@@ -13,6 +13,7 @@
 #include "Scene/Transform.h"
 
 namespace Isetta {
+#ifdef _EDITOR
 Hierarchy::Hierarchy(std::string title, bool isOpen, Inspector* inspector)
     : title{title}, isOpen{isOpen}, inspector{inspector} {}
 void Hierarchy::GuiUpdate() {
@@ -72,4 +73,5 @@ void Hierarchy::GuiUpdate() {
 }
 
 void Hierarchy::Open() { isOpen = true; }
+#endif
 }  // namespace Isetta

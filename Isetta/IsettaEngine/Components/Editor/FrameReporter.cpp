@@ -9,6 +9,7 @@
 #include "Util.h"
 
 namespace Isetta {
+#ifdef _EDITOR
 void FrameReporter::GuiUpdate() {
   ++count;
   float dt = Time::GetDeltaTime();
@@ -44,4 +45,5 @@ void FrameReporter::GuiUpdate() {
               &isOpen);
 }
 void FrameReporter::Open() { isOpen = true; }
+#endif
 }  // namespace Isetta

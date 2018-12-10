@@ -11,6 +11,7 @@
 #include "imgui/imgui.h"
 
 namespace Isetta {
+#ifdef _EDITOR
 Inspector *Inspector::instance = nullptr;
 
 Inspector::Inspector(std::string title, const bool isOpen, bool isStatic,
@@ -119,4 +120,5 @@ void Inspector::SetAsInstance(bool isStatic) {
 }
 
 const Inspector *Inspector::Instance() { return instance; }
+#endif
 }  // namespace Isetta
