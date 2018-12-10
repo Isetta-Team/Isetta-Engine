@@ -34,7 +34,7 @@ Nav2DObstacle Nav2DObstacle::Circle(const Math::Vector2& position, float radius,
   }
   return obstacle;
 }
-
+#ifdef _EDITOR
 void Nav2DObstacle::DebugDraw() const {
   for (int i = 0; i < points.Size(); ++i) {
     DebugDraw::Line({points[i].x, 0, points[i].y},
@@ -43,6 +43,7 @@ void Nav2DObstacle::DebugDraw() const {
                     Color::brown, 1, 0, true);
   }
 }
+#endif
 
 // Nav2DObstacle::Nav2DObstacle(const BoxCollider& collider, bool useYPos) {
 //  points.Reserve(4);
