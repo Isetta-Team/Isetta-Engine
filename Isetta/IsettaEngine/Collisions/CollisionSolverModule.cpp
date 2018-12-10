@@ -65,10 +65,14 @@ Collision CollisionSolverModule::Solve(Collider* collider, Collider* other) {
       if (numEdges > 1) {
         point = other->GetWorldCenter();
       } else {
+        Math::Vector3 axis = box->transform->GetAxis(maxAxis);
+        axis.x = Math::Util::Abs(axis.x);
+        axis.y = Math::Util::Abs(axis.y);
+        axis.z = Math::Util::Abs(axis.z);
         point = collider->GetWorldCenter() +
                 Math::Vector3::Scale(
                     box->GetWorldCenter() - collider->GetWorldCenter(),
-                    box->transform->GetAxis(maxAxis));
+                    axis);
       }
       break;
     }
